@@ -200,6 +200,7 @@ void ConfigItem::updateMenu(void)
 		prompt += " (NEW)";
 set_prompt:
 	setText(promptColIdx, prompt);
+
 }
 
 void ConfigItem::testUpdateMenu(bool v)
@@ -247,6 +248,7 @@ void ConfigItem::init(void)
 		}
 	}
 	updateMenu();
+
 }
 
 /*
@@ -439,6 +441,7 @@ void ConfigList::updateSelection(void)
 	type = menu->prompt ? menu->prompt->type : P_UNKNOWN;
 	if (mode == menuMode && type == P_MENU)
 		emit menuSelected(menu);
+	updateConflictsViewColorization();
 }
 
 void ConfigList::updateList()
