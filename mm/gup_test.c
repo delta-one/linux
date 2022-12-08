@@ -4,7 +4,10 @@
 #include <linux/uaccess.h>
 #include <linux/ktime.h>
 #include <linux/debugfs.h>
+<<<<<<< HEAD
 #include <linux/highmem.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "gup_test.h"
 
 static void put_back_pages(unsigned int cmd, struct page **pages,
@@ -204,6 +207,7 @@ free_pages:
 	return ret;
 }
 
+<<<<<<< HEAD
 static DEFINE_MUTEX(pin_longterm_test_mutex);
 static struct page **pin_longterm_test_pages;
 static unsigned long pin_longterm_test_nr_pages;
@@ -336,6 +340,8 @@ static long pin_longterm_test_ioctl(struct file *filep, unsigned int cmd,
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static long gup_test_ioctl(struct file *filep, unsigned int cmd,
 		unsigned long arg)
 {
@@ -350,10 +356,13 @@ static long gup_test_ioctl(struct file *filep, unsigned int cmd,
 	case PIN_BASIC_TEST:
 	case DUMP_USER_PAGES_TEST:
 		break;
+<<<<<<< HEAD
 	case PIN_LONGTERM_TEST_START:
 	case PIN_LONGTERM_TEST_STOP:
 	case PIN_LONGTERM_TEST_READ:
 		return pin_longterm_test_ioctl(filep, cmd, arg);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		return -EINVAL;
 	}
@@ -371,6 +380,7 @@ static long gup_test_ioctl(struct file *filep, unsigned int cmd,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int gup_test_release(struct inode *inode, struct file *file)
 {
 	pin_longterm_test_stop();
@@ -382,6 +392,11 @@ static const struct file_operations gup_test_fops = {
 	.open = nonseekable_open,
 	.unlocked_ioctl = gup_test_ioctl,
 	.release = gup_test_release,
+=======
+static const struct file_operations gup_test_fops = {
+	.open = nonseekable_open,
+	.unlocked_ioctl = gup_test_ioctl,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int __init gup_test_init(void)

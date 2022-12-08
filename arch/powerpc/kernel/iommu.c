@@ -35,7 +35,10 @@
 #include <asm/vio.h>
 #include <asm/tce.h>
 #include <asm/mmu_context.h>
+<<<<<<< HEAD
 #include <asm/ppc-pci.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define DBG(...)
 
@@ -68,9 +71,17 @@ static void iommu_debugfs_add(struct iommu_table *tbl)
 static void iommu_debugfs_del(struct iommu_table *tbl)
 {
 	char name[10];
+<<<<<<< HEAD
 
 	sprintf(name, "%08lx", tbl->it_index);
 	debugfs_lookup_and_remove(name, iommu_debugfs_dir);
+=======
+	struct dentry *liobn_entry;
+
+	sprintf(name, "%08lx", tbl->it_index);
+	liobn_entry = debugfs_lookup(name, iommu_debugfs_dir);
+	debugfs_remove(liobn_entry);
+>>>>>>> b7ba80a49124 (Commit)
 }
 #else
 static void iommu_debugfs_add(struct iommu_table *tbl){}
@@ -1087,7 +1098,11 @@ void iommu_tce_kill(struct iommu_table *tbl,
 }
 EXPORT_SYMBOL_GPL(iommu_tce_kill);
 
+<<<<<<< HEAD
 static int iommu_take_ownership(struct iommu_table *tbl)
+=======
+int iommu_take_ownership(struct iommu_table *tbl)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long flags, i, sz = (tbl->it_size + 7) >> 3;
 	int ret = 0;
@@ -1119,8 +1134,14 @@ static int iommu_take_ownership(struct iommu_table *tbl)
 
 	return ret;
 }
+<<<<<<< HEAD
 
 static void iommu_release_ownership(struct iommu_table *tbl)
+=======
+EXPORT_SYMBOL_GPL(iommu_take_ownership);
+
+void iommu_release_ownership(struct iommu_table *tbl)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long flags, i, sz = (tbl->it_size + 7) >> 3;
 
@@ -1137,6 +1158,10 @@ static void iommu_release_ownership(struct iommu_table *tbl)
 		spin_unlock(&tbl->pools[i].lock);
 	spin_unlock_irqrestore(&tbl->large_pool.lock, flags);
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(iommu_release_ownership);
+>>>>>>> b7ba80a49124 (Commit)
 
 int iommu_add_device(struct iommu_table_group *table_group, struct device *dev)
 {
@@ -1157,6 +1182,7 @@ int iommu_add_device(struct iommu_table_group *table_group, struct device *dev)
 
 	pr_debug("%s: Adding %s to iommu group %d\n",
 		 __func__, dev_name(dev),  iommu_group_id(table_group->group));
+<<<<<<< HEAD
 	/*
 	 * This is still not adding devices via the IOMMU bus notifier because
 	 * of pcibios_init() from arch/powerpc/kernel/pci_64.c which calls
@@ -1165,6 +1191,10 @@ int iommu_add_device(struct iommu_table_group *table_group, struct device *dev)
 	 * configures DMA for buses which also creates PEs and IOMMU groups.
 	 */
 	return iommu_probe_device(dev);
+=======
+
+	return iommu_group_add_device(table_group->group, dev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(iommu_add_device);
 
@@ -1184,6 +1214,7 @@ void iommu_del_device(struct device *dev)
 	iommu_group_remove_device(dev);
 }
 EXPORT_SYMBOL_GPL(iommu_del_device);
+<<<<<<< HEAD
 
 /*
  * A simple iommu_table_group_ops which only allows reusing the existing
@@ -1413,4 +1444,6 @@ static int __init spapr_tce_setup_phb_iommus_initcall(void)
 }
 postcore_initcall_sync(spapr_tce_setup_phb_iommus_initcall);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_IOMMU_API */

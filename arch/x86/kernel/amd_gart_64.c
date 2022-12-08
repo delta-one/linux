@@ -504,7 +504,11 @@ static __init unsigned long check_iommu_size(unsigned long aper, u64 aper_size)
 	}
 
 	a = aper + iommu_size;
+<<<<<<< HEAD
 	iommu_size -= round_up(a, PMD_SIZE) - a;
+=======
+	iommu_size -= round_up(a, PMD_PAGE_SIZE) - a;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (iommu_size < 64*1024*1024) {
 		pr_warn("PCI-DMA: Warning: Small IOMMU %luMB."

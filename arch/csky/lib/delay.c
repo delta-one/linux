@@ -5,7 +5,11 @@
 #include <linux/init.h>
 #include <linux/delay.h>
 
+<<<<<<< HEAD
 void __aligned(8) __delay(unsigned long loops)
+=======
+void __delay(unsigned long loops)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	asm volatile (
 		"mov r0, r0\n"

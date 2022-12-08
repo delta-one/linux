@@ -1551,6 +1551,12 @@ int __bpf_core_types_match(const struct btf *local_btf, __u32 local_id, const st
 	if (level <= 0)
 		return -EINVAL;
 
+<<<<<<< HEAD
+=======
+	local_t = btf_type_by_id(local_btf, local_id);
+	targ_t = btf_type_by_id(targ_btf, targ_id);
+
+>>>>>>> b7ba80a49124 (Commit)
 recur:
 	depth--;
 	if (depth < 0)

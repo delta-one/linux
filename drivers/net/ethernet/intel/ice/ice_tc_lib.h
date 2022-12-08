@@ -31,8 +31,11 @@
 #define ICE_TC_FLWR_FIELD_ENC_IP_TOS		BIT(24)
 #define ICE_TC_FLWR_FIELD_ENC_IP_TTL		BIT(25)
 #define ICE_TC_FLWR_FIELD_L2TPV3_SESSID		BIT(26)
+<<<<<<< HEAD
 #define ICE_TC_FLWR_FIELD_VLAN_PRIO		BIT(27)
 #define ICE_TC_FLWR_FIELD_CVLAN_PRIO		BIT(28)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define ICE_TC_FLOWER_MASK_32   0xFFFFFFFF
 
@@ -45,6 +48,7 @@ struct ice_indr_block_priv {
 };
 
 struct ice_tc_flower_action {
+<<<<<<< HEAD
 	/* forward action specific params */
 	union {
 		struct {
@@ -59,12 +63,19 @@ struct ice_tc_flower_action {
 			u16 hw_queue;
 		} q;
 	} fwd;
+=======
+	u32 tc_class;
+>>>>>>> b7ba80a49124 (Commit)
 	enum ice_sw_fwd_act_type fltr_act;
 };
 
 struct ice_tc_vlan_hdr {
 	__be16 vlan_id; /* Only last 12 bits valid */
+<<<<<<< HEAD
 	__be16 vlan_prio; /* Only last 3 bits valid (valid values: 0..7) */
+=======
+	u16 vlan_prio; /* Only last 3 bits valid (valid values: 0..7) */
+>>>>>>> b7ba80a49124 (Commit)
 	__be16 vlan_tpid;
 };
 
@@ -144,11 +155,19 @@ struct ice_tc_flower_fltr {
 	 */
 	u16 rid;
 	u16 rule_id;
+<<<<<<< HEAD
 	/* VSI handle of the destination VSI (it could be main PF VSI, CHNL_VSI,
 	 * VF VSI)
 	 */
 	u16 dest_vsi_handle;
 	/* ptr to destination VSI */
+=======
+	/* this could be queue/vsi_idx (sw handle)/queue_group, depending upon
+	 * destination type
+	 */
+	u16 dest_id;
+	/* if dest_id is vsi_idx, then need to store destination VSI ptr */
+>>>>>>> b7ba80a49124 (Commit)
 	struct ice_vsi *dest_vsi;
 	/* direction of fltr for eswitch use case */
 	enum ice_eswitch_fltr_direction direction;
@@ -175,6 +194,7 @@ struct ice_tc_flower_fltr {
  * @f: Pointer to tc-flower filter
  *
  * Criteria to determine of given filter is valid channel filter
+<<<<<<< HEAD
  * or not is based on its destination.
  * For forward to VSI action, if destination is valid hw_tc (aka tc_class)
  * and in supported range of TCs for ADQ, then return true.
@@ -192,6 +212,14 @@ static inline bool ice_is_chnl_fltr(struct ice_tc_flower_fltr *f)
 		return f->dest_vsi && f->dest_vsi->type == ICE_VSI_CHNL;
 
 	return false;
+=======
+ * or not is based on its "destination". If destination is hw_tc (aka tc_class)
+ * and it is non-zero, then it is valid channel (aka ADQ) filter
+ */
+static inline bool ice_is_chnl_fltr(struct ice_tc_flower_fltr *f)
+{
+	return !!f->action.tc_class;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -211,6 +239,7 @@ ice_del_cls_flower(struct ice_vsi *vsi, struct flow_cls_offload *cls_flower);
 void ice_replay_tc_fltrs(struct ice_pf *pf);
 bool ice_is_tunnel_supported(struct net_device *dev);
 
+<<<<<<< HEAD
 static inline bool ice_is_forward_action(enum ice_sw_fwd_act_type fltr_act)
 {
 	switch (fltr_act) {
@@ -221,4 +250,6 @@ static inline bool ice_is_forward_action(enum ice_sw_fwd_act_type fltr_act)
 		return false;
 	}
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _ICE_TC_LIB_H_ */

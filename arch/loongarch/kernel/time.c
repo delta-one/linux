@@ -115,17 +115,25 @@ static unsigned long __init get_loops_per_jiffy(void)
 	return lpj;
 }
 
+<<<<<<< HEAD
 static long init_offset __nosavedata;
 
 void save_counter(void)
 {
 	init_offset = drdtime();
 }
+=======
+static long init_timeval;
+>>>>>>> b7ba80a49124 (Commit)
 
 void sync_counter(void)
 {
 	/* Ensure counter begin at 0 */
+<<<<<<< HEAD
 	csr_write64(init_offset, LOONGARCH_CSR_CNTC);
+=======
+	csr_write64(-init_timeval, LOONGARCH_CSR_CNTC);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int get_timer_irq(void)
@@ -140,10 +148,15 @@ static int get_timer_irq(void)
 
 int constant_clockevent_init(void)
 {
+<<<<<<< HEAD
+=======
+	int irq;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int cpu = smp_processor_id();
 	unsigned long min_delta = 0x600;
 	unsigned long max_delta = (1UL << 48) - 1;
 	struct clock_event_device *cd;
+<<<<<<< HEAD
 	static int irq = 0, timer_irq_installed = 0;
 
 	if (!timer_irq_installed) {
@@ -151,6 +164,13 @@ int constant_clockevent_init(void)
 		if (irq < 0)
 			pr_err("Failed to map irq %d (timer)\n", irq);
 	}
+=======
+	static int timer_irq_installed = 0;
+
+	irq = get_timer_irq();
+	if (irq < 0)
+		pr_err("Failed to map irq %d (timer)\n", irq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	cd = &per_cpu(constant_clockevent_device, cpu);
 
@@ -225,7 +245,11 @@ void __init time_init(void)
 	else
 		const_clock_freq = calc_const_freq();
 
+<<<<<<< HEAD
 	init_offset = -(drdtime() - csr_read64(LOONGARCH_CSR_CNTC));
+=======
+	init_timeval = drdtime() - csr_read64(LOONGARCH_CSR_CNTC);
+>>>>>>> b7ba80a49124 (Commit)
 
 	constant_clockevent_init();
 	constant_clocksource_init();

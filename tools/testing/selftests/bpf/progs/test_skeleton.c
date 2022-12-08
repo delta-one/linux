@@ -53,6 +53,7 @@ int out_mostly_var;
 
 char huge_arr[16 * 1024 * 1024];
 
+<<<<<<< HEAD
 /* non-mmapable custom .data section */
 
 struct my_value { int x, y, z; };
@@ -67,6 +68,8 @@ struct {
 	__uint(max_entries, 1);
 } my_map SEC(".maps");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 SEC("raw_tp/sys_enter")
 int handler(const void *ctx)
 {
@@ -89,9 +92,12 @@ int handler(const void *ctx)
 
 	huge_arr[sizeof(huge_arr) - 1] = 123;
 
+<<<<<<< HEAD
 	/* make sure zero_key and zero_value are not optimized out */
 	bpf_map_update_elem(&my_map, &zero_key, &zero_value, BPF_ANY);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

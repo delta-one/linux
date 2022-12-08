@@ -20,7 +20,10 @@
 #include <asm/assembler.h>
 #include <asm/cp15.h>
 
+<<<<<<< HEAD
 	.arch armv7-a
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.text
 /*
  * Returns the coherency base address in r1 (r0 is untouched), or 0 if

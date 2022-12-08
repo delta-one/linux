@@ -1,16 +1,27 @@
 # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 %YAML 1.2
 ---
+<<<<<<< HEAD
 $id: http://devicetree.org/schemas/mmc/arasan,sdhci.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
 title: Arasan SDHCI Controller
+=======
+$id: "http://devicetree.org/schemas/mmc/arasan,sdhci.yaml#"
+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+
+title: Device Tree Bindings for the Arasan SDHCI Controller
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Adrian Hunter <adrian.hunter@intel.com>
 
 allOf:
+<<<<<<< HEAD
   - $ref: mmc-controller.yaml#
+=======
+  - $ref: "mmc-controller.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         compatible:
@@ -88,6 +99,15 @@ properties:
         description:
           For this device it is strongly suggested to include
           arasan,soc-ctl-syscon.
+<<<<<<< HEAD
+=======
+      - items:
+          - const: intel,thunderbay-sdhci-5.1   # Intel Thunder Bay eMMC PHY
+          - const: arasan,sdhci-5.1
+        description:
+          For this device it is strongly suggested to include
+          clock-output-names and '#clock-cells'.
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1
@@ -303,3 +323,25 @@ examples:
                    <&scmi_clk KEEM_BAY_PSS_SD0>;
           arasan,soc-ctl-syscon = <&sd0_phy_syscon>;
     };
+<<<<<<< HEAD
+=======
+
+  - |
+    #define EMMC_XIN_CLK
+    #define EMMC_AXI_CLK
+    #define TBH_PSS_EMMC_RST_N
+    mmc@80420000 {
+          compatible = "intel,thunderbay-sdhci-5.1", "arasan,sdhci-5.1";
+          interrupts = <GIC_SPI 714 IRQ_TYPE_LEVEL_HIGH>;
+          reg = <0x80420000 0x400>;
+          clocks = <&scmi_clk EMMC_XIN_CLK>,
+                   <&scmi_clk EMMC_AXI_CLK>;
+          clock-names = "clk_xin", "clk_ahb";
+          phys = <&emmc_phy>;
+          phy-names = "phy_arasan";
+          assigned-clocks = <&scmi_clk EMMC_XIN_CLK>;
+          clock-output-names = "emmc_cardclock";
+          resets = <&rst_pss1 TBH_PSS_EMMC_RST_N>;
+          #clock-cells = <0x0>;
+    };
+>>>>>>> b7ba80a49124 (Commit)

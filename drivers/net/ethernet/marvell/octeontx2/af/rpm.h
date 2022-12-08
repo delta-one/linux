@@ -12,19 +12,29 @@
 
 /* PCI device IDs */
 #define PCI_DEVID_CN10K_RPM		0xA060
+<<<<<<< HEAD
 #define PCI_SUBSYS_DEVID_CNF10KB_RPM	0xBC00
 #define PCI_DEVID_CN10KB_RPM		0xA09F
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Registers */
 #define RPMX_CMRX_CFG			0x00
 #define RPMX_RX_TS_PREPEND              BIT_ULL(22)
 #define RPMX_TX_PTP_1S_SUPPORT          BIT_ULL(17)
+<<<<<<< HEAD
 #define RPMX_CMRX_RX_ID_MAP		0x80
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define RPMX_CMRX_SW_INT                0x180
 #define RPMX_CMRX_SW_INT_W1S            0x188
 #define RPMX_CMRX_SW_INT_ENA_W1S        0x198
 #define RPMX_CMRX_LINK_CFG		0x1070
 #define RPMX_MTI_PCS100X_CONTROL1       0x20000
+<<<<<<< HEAD
+=======
+#define RPMX_MTI_LPCSX_CONTROL1         0x30000
+>>>>>>> b7ba80a49124 (Commit)
 #define RPMX_MTI_PCS_LBK                BIT_ULL(14)
 #define RPMX_MTI_LPCSX_CONTROL(id)     (0x30000 | ((id) * 0x100))
 
@@ -78,6 +88,7 @@
 #define RPMX_MTI_MAC100X_XIF_MODE		        0x8100
 #define RPMX_ONESTEP_ENABLE				BIT_ULL(5)
 #define RPMX_TS_BINARY_MODE				BIT_ULL(11)
+<<<<<<< HEAD
 #define RPMX_CONST1					0x2008
 
 /* FEC stats */
@@ -106,12 +117,17 @@
 #define  RPM2_CMRX_RX_STAT2				0x3010
 #define  RPM2_USX_PCSX_CONTROL1				0x80000
 #define  RPM2_USX_PCS_LBK				BIT_ULL(14)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Function Declarations */
 int rpm_get_nr_lmacs(void *rpmd);
 u8 rpm_get_lmac_type(void *rpmd, int lmac_id);
 u32 rpm_get_lmac_fifo_len(void *rpmd, int lmac_id);
+<<<<<<< HEAD
 u32 rpm2_get_lmac_fifo_len(void *rpmd, int lmac_id);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int rpm_lmac_internal_loopback(void *rpmd, int lmac_id, bool enable);
 void rpm_lmac_enadis_rx_pause_fwding(void *rpmd, int lmac_id, bool enable);
 int rpm_lmac_get_pause_frm_status(void *cgxd, int lmac_id, u8 *tx_pause,
@@ -128,7 +144,10 @@ int rpm_lmac_pfc_config(void *rpmd, int lmac_id, u8 tx_pause, u8 rx_pause,
 			u16 pfc_en);
 int rpm_lmac_get_pfc_frm_cfg(void *rpmd, int lmac_id, u8 *tx_pause,
 			     u8 *rx_pause);
+<<<<<<< HEAD
 int rpm2_get_nr_lmacs(void *rpmd);
 bool is_dev_rpm2(void *rpmd);
 int rpm_get_fec_stats(void *cgxd, int lmac_id, struct cgx_fec_stats_rsp *rsp);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* RPM_H */

@@ -252,12 +252,25 @@ static int
 xfs_trans_log_finish_refcount_update(
 	struct xfs_trans		*tp,
 	struct xfs_cud_log_item		*cudp,
+<<<<<<< HEAD
 	struct xfs_refcount_intent	*ri,
+=======
+	enum xfs_refcount_intent_type	type,
+	xfs_fsblock_t			startblock,
+	xfs_extlen_t			blockcount,
+	xfs_fsblock_t			*new_fsb,
+	xfs_extlen_t			*new_len,
+>>>>>>> b7ba80a49124 (Commit)
 	struct xfs_btree_cur		**pcur)
 {
 	int				error;
 
+<<<<<<< HEAD
 	error = xfs_refcount_finish_one(tp, ri, pcur);
+=======
+	error = xfs_refcount_finish_one(tp, type, startblock,
+			blockcount, new_fsb, new_len, pcur);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Mark the transaction dirty, even on error. This ensures the
@@ -292,16 +305,27 @@ xfs_refcount_update_diff_items(
 /* Set the phys extent flags for this reverse mapping. */
 static void
 xfs_trans_set_refcount_flags(
+<<<<<<< HEAD
 	struct xfs_phys_extent		*pmap,
 	enum xfs_refcount_intent_type	type)
 {
 	pmap->pe_flags = 0;
+=======
+	struct xfs_phys_extent		*refc,
+	enum xfs_refcount_intent_type	type)
+{
+	refc->pe_flags = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	switch (type) {
 	case XFS_REFCOUNT_INCREASE:
 	case XFS_REFCOUNT_DECREASE:
 	case XFS_REFCOUNT_ALLOC_COW:
 	case XFS_REFCOUNT_FREE_COW:
+<<<<<<< HEAD
 		pmap->pe_flags |= type;
+=======
+		refc->pe_flags |= type;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		ASSERT(0);
@@ -313,10 +337,17 @@ STATIC void
 xfs_refcount_update_log_item(
 	struct xfs_trans		*tp,
 	struct xfs_cui_log_item		*cuip,
+<<<<<<< HEAD
 	struct xfs_refcount_intent	*ri)
 {
 	uint				next_extent;
 	struct xfs_phys_extent		*pmap;
+=======
+	struct xfs_refcount_intent	*refc)
+{
+	uint				next_extent;
+	struct xfs_phys_extent		*ext;
+>>>>>>> b7ba80a49124 (Commit)
 
 	tp->t_flags |= XFS_TRANS_DIRTY;
 	set_bit(XFS_LI_DIRTY, &cuip->cui_item.li_flags);
@@ -328,10 +359,17 @@ xfs_refcount_update_log_item(
 	 */
 	next_extent = atomic_inc_return(&cuip->cui_next_extent) - 1;
 	ASSERT(next_extent < cuip->cui_format.cui_nextents);
+<<<<<<< HEAD
 	pmap = &cuip->cui_format.cui_extents[next_extent];
 	pmap->pe_startblock = ri->ri_startblock;
 	pmap->pe_len = ri->ri_blockcount;
 	xfs_trans_set_refcount_flags(pmap, ri->ri_type);
+=======
+	ext = &cuip->cui_format.cui_extents[next_extent];
+	ext->pe_startblock = refc->ri_startblock;
+	ext->pe_len = refc->ri_blockcount;
+	xfs_trans_set_refcount_flags(ext, refc->ri_type);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct xfs_log_item *
@@ -343,15 +381,24 @@ xfs_refcount_update_create_intent(
 {
 	struct xfs_mount		*mp = tp->t_mountp;
 	struct xfs_cui_log_item		*cuip = xfs_cui_init(mp, count);
+<<<<<<< HEAD
 	struct xfs_refcount_intent	*ri;
+=======
+	struct xfs_refcount_intent	*refc;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ASSERT(count > 0);
 
 	xfs_trans_add_item(tp, &cuip->cui_item);
 	if (sort)
 		list_sort(mp, items, xfs_refcount_update_diff_items);
+<<<<<<< HEAD
 	list_for_each_entry(ri, items, ri_list)
 		xfs_refcount_update_log_item(tp, cuip, ri);
+=======
+	list_for_each_entry(refc, items, ri_list)
+		xfs_refcount_update_log_item(tp, cuip, refc);
+>>>>>>> b7ba80a49124 (Commit)
 	return &cuip->cui_item;
 }
 
@@ -373,6 +420,7 @@ xfs_refcount_update_finish_item(
 	struct list_head		*item,
 	struct xfs_btree_cur		**state)
 {
+<<<<<<< HEAD
 	struct xfs_refcount_intent	*ri;
 	int				error;
 
@@ -387,6 +435,27 @@ xfs_refcount_update_finish_item(
 		return -EAGAIN;
 	}
 	kmem_cache_free(xfs_refcount_intent_cache, ri);
+=======
+	struct xfs_refcount_intent	*refc;
+	xfs_fsblock_t			new_fsb;
+	xfs_extlen_t			new_aglen;
+	int				error;
+
+	refc = container_of(item, struct xfs_refcount_intent, ri_list);
+	error = xfs_trans_log_finish_refcount_update(tp, CUD_ITEM(done),
+			refc->ri_type, refc->ri_startblock, refc->ri_blockcount,
+			&new_fsb, &new_aglen, state);
+
+	/* Did we run out of reservation?  Requeue what we didn't finish. */
+	if (!error && new_aglen > 0) {
+		ASSERT(refc->ri_type == XFS_REFCOUNT_INCREASE ||
+		       refc->ri_type == XFS_REFCOUNT_DECREASE);
+		refc->ri_startblock = new_fsb;
+		refc->ri_blockcount = new_aglen;
+		return -EAGAIN;
+	}
+	kmem_cache_free(xfs_refcount_intent_cache, refc);
+>>>>>>> b7ba80a49124 (Commit)
 	return error;
 }
 
@@ -403,10 +472,17 @@ STATIC void
 xfs_refcount_update_cancel_item(
 	struct list_head		*item)
 {
+<<<<<<< HEAD
 	struct xfs_refcount_intent	*ri;
 
 	ri = container_of(item, struct xfs_refcount_intent, ri_list);
 	kmem_cache_free(xfs_refcount_intent_cache, ri);
+=======
+	struct xfs_refcount_intent	*refc;
+
+	refc = container_of(item, struct xfs_refcount_intent, ri_list);
+	kmem_cache_free(xfs_refcount_intent_cache, refc);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 const struct xfs_defer_op_type xfs_refcount_update_defer_type = {
@@ -423,15 +499,26 @@ const struct xfs_defer_op_type xfs_refcount_update_defer_type = {
 static inline bool
 xfs_cui_validate_phys(
 	struct xfs_mount		*mp,
+<<<<<<< HEAD
 	struct xfs_phys_extent		*pmap)
+=======
+	struct xfs_phys_extent		*refc)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (!xfs_has_reflink(mp))
 		return false;
 
+<<<<<<< HEAD
 	if (pmap->pe_flags & ~XFS_REFCOUNT_EXTENT_FLAGS)
 		return false;
 
 	switch (pmap->pe_flags & XFS_REFCOUNT_EXTENT_TYPE_MASK) {
+=======
+	if (refc->pe_flags & ~XFS_REFCOUNT_EXTENT_FLAGS)
+		return false;
+
+	switch (refc->pe_flags & XFS_REFCOUNT_EXTENT_TYPE_MASK) {
+>>>>>>> b7ba80a49124 (Commit)
 	case XFS_REFCOUNT_INCREASE:
 	case XFS_REFCOUNT_DECREASE:
 	case XFS_REFCOUNT_ALLOC_COW:
@@ -441,7 +528,11 @@ xfs_cui_validate_phys(
 		return false;
 	}
 
+<<<<<<< HEAD
 	return xfs_verify_fsbext(mp, pmap->pe_startblock, pmap->pe_len);
+=======
+	return xfs_verify_fsbext(mp, refc->pe_startblock, refc->pe_len);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -453,13 +544,27 @@ xfs_cui_item_recover(
 	struct xfs_log_item		*lip,
 	struct list_head		*capture_list)
 {
+<<<<<<< HEAD
 	struct xfs_cui_log_item		*cuip = CUI_ITEM(lip);
+=======
+	struct xfs_bmbt_irec		irec;
+	struct xfs_cui_log_item		*cuip = CUI_ITEM(lip);
+	struct xfs_phys_extent		*refc;
+>>>>>>> b7ba80a49124 (Commit)
 	struct xfs_cud_log_item		*cudp;
 	struct xfs_trans		*tp;
 	struct xfs_btree_cur		*rcur = NULL;
 	struct xfs_mount		*mp = lip->li_log->l_mp;
+<<<<<<< HEAD
 	unsigned int			refc_type;
 	bool				requeue_only = false;
+=======
+	xfs_fsblock_t			new_fsb;
+	xfs_extlen_t			new_len;
+	unsigned int			refc_type;
+	bool				requeue_only = false;
+	enum xfs_refcount_intent_type	type;
+>>>>>>> b7ba80a49124 (Commit)
 	int				i;
 	int				error = 0;
 
@@ -498,16 +603,22 @@ xfs_cui_item_recover(
 	cudp = xfs_trans_get_cud(tp, cuip);
 
 	for (i = 0; i < cuip->cui_format.cui_nextents; i++) {
+<<<<<<< HEAD
 		struct xfs_refcount_intent	fake = { };
 		struct xfs_phys_extent		*pmap;
 
 		pmap = &cuip->cui_format.cui_extents[i];
 		refc_type = pmap->pe_flags & XFS_REFCOUNT_EXTENT_TYPE_MASK;
+=======
+		refc = &cuip->cui_format.cui_extents[i];
+		refc_type = refc->pe_flags & XFS_REFCOUNT_EXTENT_TYPE_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 		switch (refc_type) {
 		case XFS_REFCOUNT_INCREASE:
 		case XFS_REFCOUNT_DECREASE:
 		case XFS_REFCOUNT_ALLOC_COW:
 		case XFS_REFCOUNT_FREE_COW:
+<<<<<<< HEAD
 			fake.ri_type = refc_type;
 			break;
 		default:
@@ -527,10 +638,30 @@ xfs_cui_item_recover(
 			XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp,
 					&cuip->cui_format,
 					sizeof(cuip->cui_format));
+=======
+			type = refc_type;
+			break;
+		default:
+			XFS_ERROR_REPORT(__func__, XFS_ERRLEVEL_LOW, mp);
+			error = -EFSCORRUPTED;
+			goto abort_error;
+		}
+		if (requeue_only) {
+			new_fsb = refc->pe_startblock;
+			new_len = refc->pe_len;
+		} else
+			error = xfs_trans_log_finish_refcount_update(tp, cudp,
+				type, refc->pe_startblock, refc->pe_len,
+				&new_fsb, &new_len, &rcur);
+		if (error == -EFSCORRUPTED)
+			XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp,
+					refc, sizeof(*refc));
+>>>>>>> b7ba80a49124 (Commit)
 		if (error)
 			goto abort_error;
 
 		/* Requeue what we didn't finish. */
+<<<<<<< HEAD
 		if (fake.ri_blockcount > 0) {
 			struct xfs_bmbt_irec	irec = {
 				.br_startblock	= fake.ri_startblock,
@@ -538,6 +669,12 @@ xfs_cui_item_recover(
 			};
 
 			switch (fake.ri_type) {
+=======
+		if (new_len > 0) {
+			irec.br_startblock = new_fsb;
+			irec.br_blockcount = new_len;
+			switch (type) {
+>>>>>>> b7ba80a49124 (Commit)
 			case XFS_REFCOUNT_INCREASE:
 				xfs_refcount_increase_extent(tp, &irec);
 				break;
@@ -586,18 +723,30 @@ xfs_cui_item_relog(
 {
 	struct xfs_cud_log_item		*cudp;
 	struct xfs_cui_log_item		*cuip;
+<<<<<<< HEAD
 	struct xfs_phys_extent		*pmap;
 	unsigned int			count;
 
 	count = CUI_ITEM(intent)->cui_format.cui_nextents;
 	pmap = CUI_ITEM(intent)->cui_format.cui_extents;
+=======
+	struct xfs_phys_extent		*extp;
+	unsigned int			count;
+
+	count = CUI_ITEM(intent)->cui_format.cui_nextents;
+	extp = CUI_ITEM(intent)->cui_format.cui_extents;
+>>>>>>> b7ba80a49124 (Commit)
 
 	tp->t_flags |= XFS_TRANS_DIRTY;
 	cudp = xfs_trans_get_cud(tp, CUI_ITEM(intent));
 	set_bit(XFS_LI_DIRTY, &cudp->cud_item.li_flags);
 
 	cuip = xfs_cui_init(tp->t_mountp, count);
+<<<<<<< HEAD
 	memcpy(cuip->cui_format.cui_extents, pmap, count * sizeof(*pmap));
+=======
+	memcpy(cuip->cui_format.cui_extents, extp, count * sizeof(*extp));
+>>>>>>> b7ba80a49124 (Commit)
 	atomic_set(&cuip->cui_next_extent, count);
 	xfs_trans_add_item(tp, &cuip->cui_item);
 	set_bit(XFS_LI_DIRTY, &cuip->cui_item.li_flags);
@@ -615,6 +764,7 @@ static const struct xfs_item_ops xfs_cui_item_ops = {
 	.iop_relog	= xfs_cui_item_relog,
 };
 
+<<<<<<< HEAD
 static inline void
 xfs_cui_copy_format(
 	struct xfs_cui_log_format	*dst,
@@ -627,6 +777,30 @@ xfs_cui_copy_format(
 	for (i = 0; i < src->cui_nextents; i++)
 		memcpy(&dst->cui_extents[i], &src->cui_extents[i],
 				sizeof(struct xfs_phys_extent));
+=======
+/*
+ * Copy an CUI format buffer from the given buf, and into the destination
+ * CUI format structure.  The CUI/CUD items were designed not to need any
+ * special alignment handling.
+ */
+static int
+xfs_cui_copy_format(
+	struct xfs_log_iovec		*buf,
+	struct xfs_cui_log_format	*dst_cui_fmt)
+{
+	struct xfs_cui_log_format	*src_cui_fmt;
+	uint				len;
+
+	src_cui_fmt = buf->i_addr;
+	len = xfs_cui_log_format_sizeof(src_cui_fmt->cui_nextents);
+
+	if (buf->i_len == len) {
+		memcpy(dst_cui_fmt, src_cui_fmt, len);
+		return 0;
+	}
+	XFS_ERROR_REPORT(__func__, XFS_ERRLEVEL_LOW, NULL);
+	return -EFSCORRUPTED;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -643,6 +817,7 @@ xlog_recover_cui_commit_pass2(
 	struct xlog_recover_item	*item,
 	xfs_lsn_t			lsn)
 {
+<<<<<<< HEAD
 	struct xfs_mount		*mp = log->l_mp;
 	struct xfs_cui_log_item		*cuip;
 	struct xfs_cui_log_format	*cui_formatp;
@@ -665,6 +840,21 @@ xlog_recover_cui_commit_pass2(
 
 	cuip = xfs_cui_init(mp, cui_formatp->cui_nextents);
 	xfs_cui_copy_format(&cuip->cui_format, cui_formatp);
+=======
+	int				error;
+	struct xfs_mount		*mp = log->l_mp;
+	struct xfs_cui_log_item		*cuip;
+	struct xfs_cui_log_format	*cui_formatp;
+
+	cui_formatp = item->ri_buf[0].i_addr;
+
+	cuip = xfs_cui_init(mp, cui_formatp->cui_nextents);
+	error = xfs_cui_copy_format(&item->ri_buf[0], &cuip->cui_format);
+	if (error) {
+		xfs_cui_item_free(cuip);
+		return error;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	atomic_set(&cuip->cui_next_extent, cui_formatp->cui_nextents);
 	/*
 	 * Insert the intent into the AIL directly and drop one reference so
@@ -698,8 +888,12 @@ xlog_recover_cud_commit_pass2(
 
 	cud_formatp = item->ri_buf[0].i_addr;
 	if (item->ri_buf[0].i_len != sizeof(struct xfs_cud_log_format)) {
+<<<<<<< HEAD
 		XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, log->l_mp,
 				item->ri_buf[0].i_addr, item->ri_buf[0].i_len);
+=======
+		XFS_ERROR_REPORT(__func__, XFS_ERRLEVEL_LOW, log->l_mp);
+>>>>>>> b7ba80a49124 (Commit)
 		return -EFSCORRUPTED;
 	}
 

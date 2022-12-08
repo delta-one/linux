@@ -319,7 +319,10 @@ static const struct mtk_pinctrl_devdata mt8516_pinctrl_data = {
 		.ports     = 6,
 		.ap_num    = 169,
 		.db_cnt    = 64,
+<<<<<<< HEAD
 		.db_time   = debounce_time_mt6795,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 

@@ -33,7 +33,11 @@ config PPC_BOOK3S_32
 
 config PPC_85xx
 	bool "Freescale 85xx"
+<<<<<<< HEAD
 	select PPC_E500
+=======
+	select E500
+>>>>>>> b7ba80a49124 (Commit)
 
 config PPC_8xx
 	bool "Freescale 8xx"
@@ -107,8 +111,12 @@ config PPC_BOOK3S_64
 
 config PPC_BOOK3E_64
 	bool "Embedded processors"
+<<<<<<< HEAD
 	select PPC_E500
 	select PPC_E500MC
+=======
+	select PPC_FSL_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 	select PPC_FPU # Make it a choice ?
 	select PPC_SMP_MUXED_IPI
 	select PPC_DOORBELL
@@ -118,23 +126,39 @@ endchoice
 
 choice
 	prompt "CPU selection"
+<<<<<<< HEAD
+=======
+	default GENERIC_CPU
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  This will create a kernel which is optimised for a particular CPU.
 	  The resulting kernel may not run on other CPUs, so use this with care.
 
 	  If unsure, select Generic.
 
+<<<<<<< HEAD
 config POWERPC64_CPU
 	bool "Generic (POWER5 and PowerPC 970 and above)"
 	depends on PPC_BOOK3S_64 && !CPU_LITTLE_ENDIAN
 	select PPC_64S_HASH_MMU
 
 config POWERPC64_CPU
+=======
+config GENERIC_CPU
+	bool "Generic (POWER4 and above)"
+	depends on PPC_BOOK3S_64 && !CPU_LITTLE_ENDIAN
+	select PPC_64S_HASH_MMU
+
+config GENERIC_CPU
+>>>>>>> b7ba80a49124 (Commit)
 	bool "Generic (POWER8 and above)"
 	depends on PPC_BOOK3S_64 && CPU_LITTLE_ENDIAN
 	select ARCH_HAS_FAST_MULTIPLIER
 	select PPC_64S_HASH_MMU
+<<<<<<< HEAD
 	select PPC_HAS_LBARX_LHARX
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 config POWERPC_CPU
 	bool "Generic 32 bits powerpc"
@@ -143,11 +167,18 @@ config POWERPC_CPU
 config CELL_CPU
 	bool "Cell Broadband Engine"
 	depends on PPC_BOOK3S_64 && !CPU_LITTLE_ENDIAN
+<<<<<<< HEAD
 	depends on !CC_IS_CLANG
 	select PPC_64S_HASH_MMU
 
 config PPC_970_CPU
 	bool "PowerPC 970 (including PowerPC G5)"
+=======
+	select PPC_64S_HASH_MMU
+
+config POWER5_CPU
+	bool "POWER5"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on PPC_BOOK3S_64 && !CPU_LITTLE_ENDIAN
 	select PPC_64S_HASH_MMU
 
@@ -161,19 +192,26 @@ config POWER7_CPU
 	depends on PPC_BOOK3S_64
 	select ARCH_HAS_FAST_MULTIPLIER
 	select PPC_64S_HASH_MMU
+<<<<<<< HEAD
 	select PPC_HAS_LBARX_LHARX
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 config POWER8_CPU
 	bool "POWER8"
 	depends on PPC_BOOK3S_64
 	select ARCH_HAS_FAST_MULTIPLIER
 	select PPC_64S_HASH_MMU
+<<<<<<< HEAD
 	select PPC_HAS_LBARX_LHARX
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 config POWER9_CPU
 	bool "POWER9"
 	depends on PPC_BOOK3S_64
 	select ARCH_HAS_FAST_MULTIPLIER
+<<<<<<< HEAD
 	select PPC_HAS_LBARX_LHARX
 
 config POWER10_CPU
@@ -190,11 +228,24 @@ config E6500_CPU
 	depends on PPC64 && PPC_E500
 	depends on !CC_IS_CLANG
 	select PPC_HAS_LBARX_LHARX
+=======
+
+config E5500_CPU
+	bool "Freescale e5500"
+	depends on PPC64 && E500
+
+config E6500_CPU
+	bool "Freescale e6500"
+	depends on PPC64 && E500
+>>>>>>> b7ba80a49124 (Commit)
 
 config 405_CPU
 	bool "40x family"
 	depends on 40x
+<<<<<<< HEAD
 	depends on !CC_IS_CLANG
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 config 440_CPU
 	bool "440 (44x family)"
@@ -203,27 +254,42 @@ config 440_CPU
 config 464_CPU
 	bool "464 (44x family)"
 	depends on 44x
+<<<<<<< HEAD
 	depends on !CC_IS_CLANG
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 config 476_CPU
 	bool "476 (47x family)"
 	depends on PPC_47x
+<<<<<<< HEAD
 	depends on !CC_IS_CLANG
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 config 860_CPU
 	bool "8xx family"
 	depends on PPC_8xx
+<<<<<<< HEAD
 	depends on !CC_IS_CLANG
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 config E300C2_CPU
 	bool "e300c2 (832x)"
 	depends on PPC_BOOK3S_32
+<<<<<<< HEAD
 	depends on !CC_IS_CLANG
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 config E300C3_CPU
 	bool "e300c3 (831x)"
 	depends on PPC_BOOK3S_32
+<<<<<<< HEAD
 	depends on !CC_IS_CLANG
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 config G4_CPU
 	bool "G4 (74xx)"
@@ -240,27 +306,42 @@ config E500MC_CPU
 
 config TOOLCHAIN_DEFAULT_CPU
 	bool "Rely on the toolchain's implicit default CPU"
+<<<<<<< HEAD
+=======
+	depends on PPC32
+>>>>>>> b7ba80a49124 (Commit)
 
 endchoice
 
 config TARGET_CPU_BOOL
 	bool
+<<<<<<< HEAD
 	default !TOOLCHAIN_DEFAULT_CPU
+=======
+	default !GENERIC_CPU && !TOOLCHAIN_DEFAULT_CPU
+>>>>>>> b7ba80a49124 (Commit)
 
 config TARGET_CPU
 	string
 	depends on TARGET_CPU_BOOL
 	default "cell" if CELL_CPU
+<<<<<<< HEAD
 	default "970" if PPC_970_CPU
+=======
+	default "power5" if POWER5_CPU
+>>>>>>> b7ba80a49124 (Commit)
 	default "power6" if POWER6_CPU
 	default "power7" if POWER7_CPU
 	default "power8" if POWER8_CPU
 	default "power9" if POWER9_CPU
+<<<<<<< HEAD
 	default "power10" if POWER10_CPU
 	default "e5500" if E5500_CPU
 	default "e6500" if E6500_CPU
 	default "power4" if POWERPC64_CPU && !CPU_LITTLE_ENDIAN
 	default "power8" if POWERPC64_CPU && CPU_LITTLE_ENDIAN
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default "405" if 405_CPU
 	default "440" if 440_CPU
 	default "464" if 464_CPU
@@ -277,6 +358,7 @@ config PPC_BOOK3S
 	def_bool y
 	depends on PPC_BOOK3S_32 || PPC_BOOK3S_64
 
+<<<<<<< HEAD
 config PPC_E500
 	select FSL_EMB_PERFMON
 	bool
@@ -284,12 +366,26 @@ config PPC_E500
 	select PPC_SMP_MUXED_IPI
 	select PPC_DOORBELL
 	select PPC_KUEP
+=======
+config PPC_BOOK3E
+	def_bool y
+	depends on PPC_BOOK3E_64
+
+config E500
+	select FSL_EMB_PERFMON
+	select PPC_FSL_BOOK3E
+	bool
+>>>>>>> b7ba80a49124 (Commit)
 
 config PPC_E500MC
 	bool "e500mc Support"
 	select PPC_FPU
 	select COMMON_CLK
+<<<<<<< HEAD
 	depends on PPC_E500
+=======
+	depends on E500
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  This must be enabled for running on e500mc (and derivatives
 	  such as e5500/e6500), and must be disabled for running on
@@ -312,7 +408,11 @@ config PPC_FPU
 
 config FSL_EMB_PERFMON
 	bool "Freescale Embedded Perfmon"
+<<<<<<< HEAD
 	depends on PPC_E500 || PPC_83xx
+=======
+	depends on E500 || PPC_83xx
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  This is the Performance Monitor support found on the e500 core
 	  and some e300 cores (c3 and c4).  Select this only if your
@@ -325,7 +425,11 @@ config FSL_EMB_PERF_EVENT
 
 config FSL_EMB_PERF_EVENT_E500
 	bool
+<<<<<<< HEAD
 	depends on FSL_EMB_PERF_EVENT && PPC_E500
+=======
+	depends on FSL_EMB_PERF_EVENT && E500
+>>>>>>> b7ba80a49124 (Commit)
 	default y
 
 config 4xx
@@ -335,7 +439,11 @@ config 4xx
 
 config BOOKE
 	bool
+<<<<<<< HEAD
 	depends on PPC_E500 || 44x
+=======
+	depends on E500 || 44x || PPC_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 	default y
 
 config BOOKE_OR_40x
@@ -343,6 +451,7 @@ config BOOKE_OR_40x
 	depends on BOOKE || 40x
 	default y
 
+<<<<<<< HEAD
 config PTE_64BIT
 	bool
 	depends on 44x || PPC_E500 || PPC_86xx
@@ -351,6 +460,31 @@ config PTE_64BIT
 config PHYS_64BIT
 	bool 'Large physical address support' if PPC_E500 || PPC_86xx
 	depends on (44x || PPC_E500 || PPC_86xx) && !PPC_83xx && !PPC_82xx
+=======
+config FSL_BOOKE
+	bool
+	depends on E500 && PPC32
+	default y
+
+# this is for common code between PPC32 & PPC64 FSL BOOKE
+config PPC_FSL_BOOK3E
+	bool
+	select ARCH_SUPPORTS_HUGETLBFS if PHYS_64BIT || PPC64
+	imply FSL_EMB_PERFMON
+	select PPC_SMP_MUXED_IPI
+	select PPC_DOORBELL
+	select PPC_KUEP
+	default y if FSL_BOOKE
+
+config PTE_64BIT
+	bool
+	depends on 44x || E500 || PPC_86xx
+	default y if PHYS_64BIT
+
+config PHYS_64BIT
+	bool 'Large physical address support' if E500 || PPC_86xx
+	depends on (44x || E500 || PPC_86xx) && !PPC_83xx && !PPC_82xx
+>>>>>>> b7ba80a49124 (Commit)
 	select PHYS_ADDR_T_64BIT
 	help
 	  This option enables kernel support for larger than 32-bit physical
@@ -397,7 +531,11 @@ config VSX
 
 config SPE_POSSIBLE
 	def_bool y
+<<<<<<< HEAD
 	depends on PPC_E500 && !PPC_E500MC
+=======
+	depends on E500 && !PPC_E500MC
+>>>>>>> b7ba80a49124 (Commit)
 
 config SPE
 	bool "SPE Support"
@@ -487,6 +625,13 @@ config PPC_MMU_NOHASH
 	def_bool y
 	depends on !PPC_BOOK3S
 
+<<<<<<< HEAD
+=======
+config PPC_BOOK3E_MMU
+	def_bool y
+	depends on FSL_BOOKE || PPC_BOOK3E
+
+>>>>>>> b7ba80a49124 (Commit)
 config PPC_HAVE_PMU_SUPPORT
 	bool
 
@@ -508,7 +653,11 @@ config FORCE_SMP
 	select SMP
 
 config SMP
+<<<<<<< HEAD
 	depends on PPC_BOOK3S || PPC_E500 || PPC_47x
+=======
+	depends on PPC_BOOK3S || PPC_BOOK3E || FSL_BOOKE || PPC_47x
+>>>>>>> b7ba80a49124 (Commit)
 	select GENERIC_IRQ_MIGRATION
 	bool "Symmetric multi-processing support" if !FORCE_SMP
 	help
@@ -590,10 +739,17 @@ config CPU_LITTLE_ENDIAN
 endchoice
 
 config PPC64_ELF_ABI_V1
+<<<<<<< HEAD
 	def_bool PPC64 && (CPU_BIG_ENDIAN && !PPC64_BIG_ENDIAN_ELF_ABI_V2)
 
 config PPC64_ELF_ABI_V2
 	def_bool PPC64 && !PPC64_ELF_ABI_V1
+=======
+	def_bool PPC64 && CPU_BIG_ENDIAN
+
+config PPC64_ELF_ABI_V2
+	def_bool PPC64 && CPU_LITTLE_ENDIAN
+>>>>>>> b7ba80a49124 (Commit)
 
 config PPC64_BOOT_WRAPPER
 	def_bool n

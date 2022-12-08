@@ -114,9 +114,13 @@ static void test_icr(struct xapic_vcpu *x)
 	 * vCPUs, not vcpu.id + 1.  Arbitrarily use vector 0xff.
 	 */
 	icr = APIC_INT_ASSERT | 0xff;
+<<<<<<< HEAD
 	for (i = 0; i < 0xff; i++) {
 		if (i == vcpu->id)
 			continue;
+=======
+	for (i = vcpu->id + 1; i < 0xff; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 		for (j = 0; j < 8; j++)
 			__test_icr(x, i << (32 + 24) | icr | (j << 8));
 	}
@@ -132,6 +136,7 @@ static void test_icr(struct xapic_vcpu *x)
 	__test_icr(x, -1ull & ~APIC_DM_FIXED_MASK);
 }
 
+<<<<<<< HEAD
 static void __test_apic_id(struct kvm_vcpu *vcpu, uint64_t apic_base)
 {
 	uint32_t apic_id, expected;
@@ -185,6 +190,8 @@ static void test_apic_id(void)
 	kvm_vm_free(vm);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int main(int argc, char *argv[])
 {
 	struct xapic_vcpu x = {
@@ -210,6 +217,9 @@ int main(int argc, char *argv[])
 	virt_pg_map(vm, APIC_DEFAULT_GPA, APIC_DEFAULT_GPA);
 	test_icr(&x);
 	kvm_vm_free(vm);
+<<<<<<< HEAD
 
 	test_apic_id();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }

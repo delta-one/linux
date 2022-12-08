@@ -5,7 +5,11 @@ TEST_PROGS := mitigation-patching.sh
 
 top_srcdir = ../../../../..
 
+<<<<<<< HEAD
 CFLAGS += $(KHDR_INCLUDES)
+=======
+CFLAGS += -I../../../../../usr/include
+>>>>>>> b7ba80a49124 (Commit)
 
 include ../../lib.mk
 

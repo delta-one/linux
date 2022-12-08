@@ -60,7 +60,11 @@ int sof_tgl_ops_init(struct snd_sof_dev *sdev)
 	memcpy(&sof_tgl_ops, &sof_hda_common_ops, sizeof(struct snd_sof_dsp_ops));
 
 	/* probe/remove/shutdown */
+<<<<<<< HEAD
 	sof_tgl_ops.shutdown	= hda_dsp_shutdown_dma_flush;
+=======
+	sof_tgl_ops.shutdown	= hda_dsp_shutdown;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (sdev->pdata->ipc_type == SOF_IPC) {
 		/* doorbell */
@@ -68,9 +72,12 @@ int sof_tgl_ops_init(struct snd_sof_dev *sdev)
 
 		/* ipc */
 		sof_tgl_ops.send_msg	= cnl_ipc_send_msg;
+<<<<<<< HEAD
 
 		/* debug */
 		sof_tgl_ops.ipc_dump	= cnl_ipc_dump;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (sdev->pdata->ipc_type == SOF_INTEL_IPC4) {
@@ -85,17 +92,23 @@ int sof_tgl_ops_init(struct snd_sof_dev *sdev)
 
 		ipc4_data->mtrace_type = SOF_IPC4_MTRACE_INTEL_CAVS_2;
 
+<<<<<<< HEAD
 		/* External library loading support */
 		ipc4_data->load_library = hda_dsp_ipc4_load_library;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* doorbell */
 		sof_tgl_ops.irq_thread	= cnl_ipc4_irq_thread;
 
 		/* ipc */
 		sof_tgl_ops.send_msg	= cnl_ipc4_send_msg;
+<<<<<<< HEAD
 
 		/* debug */
 		sof_tgl_ops.ipc_dump	= cnl_ipc4_dump;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* set DAI driver ops */
@@ -104,6 +117,10 @@ int sof_tgl_ops_init(struct snd_sof_dev *sdev)
 	/* debug */
 	sof_tgl_ops.debug_map	= tgl_dsp_debugfs;
 	sof_tgl_ops.debug_map_count	= ARRAY_SIZE(tgl_dsp_debugfs);
+<<<<<<< HEAD
+=======
+	sof_tgl_ops.ipc_dump	= cnl_ipc_dump;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* pre/post fw run */
 	sof_tgl_ops.post_fw_run = hda_dsp_post_fw_run;
@@ -135,6 +152,7 @@ const struct sof_intel_dsp_desc tgl_chip_info = {
 	.ssp_base_offset = CNL_SSP_BASE_OFFSET,
 	.sdw_shim_base = SDW_SHIM_BASE,
 	.sdw_alh_base = SDW_ALH_BASE,
+<<<<<<< HEAD
 	.d0i3_offset = SOF_HDA_VS_D0I3C,
 	.read_sdw_lcount =  hda_sdw_check_lcount_common,
 	.enable_sdw_irq	= hda_common_enable_sdw_irq,
@@ -143,6 +161,11 @@ const struct sof_intel_dsp_desc tgl_chip_info = {
 	.cl_init = cl_dsp_init,
 	.power_down_dsp = hda_power_down_dsp,
 	.disable_interrupts = hda_dsp_disable_interrupts,
+=======
+	.check_sdw_irq	= hda_common_check_sdw_irq,
+	.check_ipc_irq	= hda_dsp_check_ipc_irq,
+	.cl_init = cl_dsp_init,
+>>>>>>> b7ba80a49124 (Commit)
 	.hw_ip_version = SOF_INTEL_CAVS_2_5,
 };
 EXPORT_SYMBOL_NS(tgl_chip_info, SND_SOC_SOF_INTEL_HDA_COMMON);
@@ -163,6 +186,7 @@ const struct sof_intel_dsp_desc tglh_chip_info = {
 	.ssp_base_offset = CNL_SSP_BASE_OFFSET,
 	.sdw_shim_base = SDW_SHIM_BASE,
 	.sdw_alh_base = SDW_ALH_BASE,
+<<<<<<< HEAD
 	.d0i3_offset = SOF_HDA_VS_D0I3C,
 	.read_sdw_lcount =  hda_sdw_check_lcount_common,
 	.enable_sdw_irq	= hda_common_enable_sdw_irq,
@@ -171,6 +195,11 @@ const struct sof_intel_dsp_desc tglh_chip_info = {
 	.cl_init = cl_dsp_init,
 	.power_down_dsp = hda_power_down_dsp,
 	.disable_interrupts = hda_dsp_disable_interrupts,
+=======
+	.check_sdw_irq	= hda_common_check_sdw_irq,
+	.check_ipc_irq	= hda_dsp_check_ipc_irq,
+	.cl_init = cl_dsp_init,
+>>>>>>> b7ba80a49124 (Commit)
 	.hw_ip_version = SOF_INTEL_CAVS_2_5,
 };
 EXPORT_SYMBOL_NS(tglh_chip_info, SND_SOC_SOF_INTEL_HDA_COMMON);
@@ -191,6 +220,7 @@ const struct sof_intel_dsp_desc ehl_chip_info = {
 	.ssp_base_offset = CNL_SSP_BASE_OFFSET,
 	.sdw_shim_base = SDW_SHIM_BASE,
 	.sdw_alh_base = SDW_ALH_BASE,
+<<<<<<< HEAD
 	.d0i3_offset = SOF_HDA_VS_D0I3C,
 	.read_sdw_lcount =  hda_sdw_check_lcount_common,
 	.enable_sdw_irq	= hda_common_enable_sdw_irq,
@@ -199,6 +229,11 @@ const struct sof_intel_dsp_desc ehl_chip_info = {
 	.cl_init = cl_dsp_init,
 	.power_down_dsp = hda_power_down_dsp,
 	.disable_interrupts = hda_dsp_disable_interrupts,
+=======
+	.check_sdw_irq	= hda_common_check_sdw_irq,
+	.check_ipc_irq	= hda_dsp_check_ipc_irq,
+	.cl_init = cl_dsp_init,
+>>>>>>> b7ba80a49124 (Commit)
 	.hw_ip_version = SOF_INTEL_CAVS_2_5,
 };
 EXPORT_SYMBOL_NS(ehl_chip_info, SND_SOC_SOF_INTEL_HDA_COMMON);
@@ -219,6 +254,7 @@ const struct sof_intel_dsp_desc adls_chip_info = {
 	.ssp_base_offset = CNL_SSP_BASE_OFFSET,
 	.sdw_shim_base = SDW_SHIM_BASE,
 	.sdw_alh_base = SDW_ALH_BASE,
+<<<<<<< HEAD
 	.d0i3_offset = SOF_HDA_VS_D0I3C,
 	.read_sdw_lcount =  hda_sdw_check_lcount_common,
 	.enable_sdw_irq	= hda_common_enable_sdw_irq,
@@ -227,6 +263,11 @@ const struct sof_intel_dsp_desc adls_chip_info = {
 	.cl_init = cl_dsp_init,
 	.power_down_dsp = hda_power_down_dsp,
 	.disable_interrupts = hda_dsp_disable_interrupts,
+=======
+	.check_sdw_irq	= hda_common_check_sdw_irq,
+	.check_ipc_irq	= hda_dsp_check_ipc_irq,
+	.cl_init = cl_dsp_init,
+>>>>>>> b7ba80a49124 (Commit)
 	.hw_ip_version = SOF_INTEL_CAVS_2_5,
 };
 EXPORT_SYMBOL_NS(adls_chip_info, SND_SOC_SOF_INTEL_HDA_COMMON);

@@ -134,7 +134,11 @@ void *squashfs_decompressor_setup(struct super_block *sb, unsigned short flags)
 	if (IS_ERR(comp_opts))
 		return comp_opts;
 
+<<<<<<< HEAD
 	stream = msblk->thread_ops->create(msblk, comp_opts);
+=======
+	stream = squashfs_decompressor_create(msblk, comp_opts);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(stream))
 		kfree(comp_opts);
 

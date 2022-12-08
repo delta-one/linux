@@ -69,6 +69,10 @@ int mt7663u_mcu_init(struct mt7615_dev *dev)
 		.tailroom = MT_USB_TAIL_SIZE,
 		.mcu_skb_send_msg = mt7663u_mcu_send_message,
 		.mcu_parse_response = mt7615_mcu_parse_response,
+<<<<<<< HEAD
+=======
+		.mcu_restart = mt7615_mcu_restart,
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	int ret;
 

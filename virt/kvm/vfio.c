@@ -24,9 +24,12 @@
 struct kvm_vfio_group {
 	struct list_head node;
 	struct file *file;
+<<<<<<< HEAD
 #ifdef CONFIG_SPAPR_TCE_IOMMU
 	struct iommu_group *iommu_group;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct kvm_vfio {
@@ -64,6 +67,7 @@ static bool kvm_vfio_file_enforced_coherent(struct file *file)
 	return ret;
 }
 
+<<<<<<< HEAD
 static bool kvm_vfio_file_is_group(struct file *file)
 {
 	bool (*fn)(struct file *file);
@@ -81,6 +85,8 @@ static bool kvm_vfio_file_is_group(struct file *file)
 }
 
 #ifdef CONFIG_SPAPR_TCE_IOMMU
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct iommu_group *kvm_vfio_file_iommu_group(struct file *file)
 {
 	struct iommu_group *(*fn)(struct file *file);
@@ -97,6 +103,7 @@ static struct iommu_group *kvm_vfio_file_iommu_group(struct file *file)
 	return ret;
 }
 
+<<<<<<< HEAD
 static void kvm_spapr_tce_release_vfio_group(struct kvm *kvm,
 					     struct kvm_vfio_group *kvg)
 {
@@ -106,6 +113,18 @@ static void kvm_spapr_tce_release_vfio_group(struct kvm *kvm,
 	kvm_spapr_tce_release_iommu_group(kvm, kvg->iommu_group);
 	iommu_group_put(kvg->iommu_group);
 	kvg->iommu_group = NULL;
+=======
+#ifdef CONFIG_SPAPR_TCE_IOMMU
+static void kvm_spapr_tce_release_vfio_group(struct kvm *kvm,
+					     struct kvm_vfio_group *kvg)
+{
+	struct iommu_group *grp = kvm_vfio_file_iommu_group(kvg->file);
+
+	if (WARN_ON_ONCE(!grp))
+		return;
+
+	kvm_spapr_tce_release_iommu_group(kvm, grp);
+>>>>>>> b7ba80a49124 (Commit)
 }
 #endif
 
@@ -155,7 +174,11 @@ static int kvm_vfio_group_add(struct kvm_device *dev, unsigned int fd)
 		return -EBADF;
 
 	/* Ensure the FD is a vfio group FD.*/
+<<<<<<< HEAD
 	if (!kvm_vfio_file_is_group(filp)) {
+=======
+	if (!kvm_vfio_file_iommu_group(filp)) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = -EINVAL;
 		goto err_fput;
 	}
@@ -255,6 +278,7 @@ static int kvm_vfio_group_set_spapr_tce(struct kvm_device *dev,
 	mutex_lock(&kv->lock);
 
 	list_for_each_entry(kvg, &kv->group_list, node) {
+<<<<<<< HEAD
 		if (kvg->file != f.file)
 			continue;
 
@@ -268,6 +292,21 @@ static int kvm_vfio_group_set_spapr_tce(struct kvm_device *dev,
 
 		ret = kvm_spapr_tce_attach_iommu_group(dev->kvm, param.tablefd,
 						       kvg->iommu_group);
+=======
+		struct iommu_group *grp;
+
+		if (kvg->file != f.file)
+			continue;
+
+		grp = kvm_vfio_file_iommu_group(kvg->file);
+		if (WARN_ON_ONCE(!grp)) {
+			ret = -EIO;
+			goto err_fdput;
+		}
+
+		ret = kvm_spapr_tce_attach_iommu_group(dev->kvm, param.tablefd,
+						       grp);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 
@@ -336,7 +375,11 @@ static int kvm_vfio_has_attr(struct kvm_device *dev,
 	return -ENXIO;
 }
 
+<<<<<<< HEAD
 static void kvm_vfio_release(struct kvm_device *dev)
+=======
+static void kvm_vfio_destroy(struct kvm_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct kvm_vfio *kv = dev->private;
 	struct kvm_vfio_group *kvg, *tmp;
@@ -355,7 +398,11 @@ static void kvm_vfio_release(struct kvm_device *dev)
 	kvm_vfio_update_coherency(dev);
 
 	kfree(kv);
+<<<<<<< HEAD
 	kfree(dev); /* alloc by kvm_ioctl_create_device, free by .release */
+=======
+	kfree(dev); /* alloc by kvm_ioctl_create_device, free by .destroy */
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int kvm_vfio_create(struct kvm_device *dev, u32 type);
@@ -363,7 +410,11 @@ static int kvm_vfio_create(struct kvm_device *dev, u32 type);
 static struct kvm_device_ops kvm_vfio_ops = {
 	.name = "kvm-vfio",
 	.create = kvm_vfio_create,
+<<<<<<< HEAD
 	.release = kvm_vfio_release,
+=======
+	.destroy = kvm_vfio_destroy,
+>>>>>>> b7ba80a49124 (Commit)
 	.set_attr = kvm_vfio_set_attr,
 	.has_attr = kvm_vfio_has_attr,
 };

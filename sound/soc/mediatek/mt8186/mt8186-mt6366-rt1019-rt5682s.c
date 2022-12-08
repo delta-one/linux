@@ -7,8 +7,11 @@
 // Author: Jiaxin Yu <jiaxin.yu@mediatek.com>
 //
 
+<<<<<<< HEAD
 #include <linux/gpio.h>
 #include <linux/gpio/consumer.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/input.h>
 #include <linux/module.h>
 #include <linux/of_device.h>
@@ -41,6 +44,7 @@
 
 struct mt8186_mt6366_rt1019_rt5682s_priv {
 	struct snd_soc_jack headset_jack, hdmi_jack;
+<<<<<<< HEAD
 	struct gpio_desc *dmic_sel;
 	int dmic_switch;
 };
@@ -55,6 +59,8 @@ static struct snd_soc_jack_pin mt8186_jack_pins[] = {
 		.pin = "Headset Mic",
 		.mask = SND_JACK_MICROPHONE,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct snd_soc_codec_conf mt8186_mt6366_rt1019_rt5682s_codec_conf[] = {
@@ -72,6 +78,7 @@ static struct snd_soc_codec_conf mt8186_mt6366_rt1019_rt5682s_codec_conf[] = {
 	},
 };
 
+<<<<<<< HEAD
 static int dmic_get(struct snd_kcontrol *kcontrol,
 		    struct snd_ctl_elem_value *ucontrol)
 {
@@ -160,6 +167,8 @@ static int primary_codec_init(struct snd_soc_pcm_runtime *rtd)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mt8186_rt5682s_init(struct snd_soc_pcm_runtime *rtd)
 {
 	struct snd_soc_component *cmpnt_afe =
@@ -179,12 +188,20 @@ static int mt8186_rt5682s_init(struct snd_soc_pcm_runtime *rtd)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	ret = snd_soc_card_jack_new_pins(rtd->card, "Headset Jack",
 				    SND_JACK_HEADSET | SND_JACK_BTN_0 |
 				    SND_JACK_BTN_1 | SND_JACK_BTN_2 |
 				    SND_JACK_BTN_3,
 				    jack, mt8186_jack_pins,
 				    ARRAY_SIZE(mt8186_jack_pins));
+=======
+	ret = snd_soc_card_jack_new(rtd->card, "Headset Jack",
+				    SND_JACK_HEADSET | SND_JACK_BTN_0 |
+				    SND_JACK_BTN_1 | SND_JACK_BTN_2 |
+				    SND_JACK_BTN_3,
+				    jack);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dev_err(rtd->dev, "Headset Jack creation failed: %d\n", ret);
 		return ret;
@@ -260,7 +277,11 @@ static int mt8186_mt6366_rt1019_rt5682s_hdmi_init(struct snd_soc_pcm_runtime *rt
 	struct mt8186_mt6366_rt1019_rt5682s_priv *priv = soc_card_data->mach_priv;
 	int ret;
 
+<<<<<<< HEAD
 	ret = mt8186_dai_i2s_set_share(afe, "I2S2", "I2S3");
+=======
+	ret = mt8186_dai_i2s_set_share(afe, "I2S3", "I2S2");
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dev_err(rtd->dev, "Failed to set up shared clocks\n");
 		return ret;
@@ -867,7 +888,11 @@ static struct snd_soc_dai_link mt8186_mt6366_rt1019_rt5682s_dai_links[] = {
 		.dpcm_playback = 1,
 		.dpcm_capture = 1,
 		.ignore_suspend = 1,
+<<<<<<< HEAD
 		.init = primary_codec_init,
+=======
+		.init = mt8186_mt6366_init,
+>>>>>>> b7ba80a49124 (Commit)
 		SND_SOC_DAILINK_REG(adda),
 	},
 	{
@@ -1031,8 +1056,11 @@ static struct snd_soc_dai_link mt8186_mt6366_rt1019_rt5682s_dai_links[] = {
 static const struct snd_soc_dapm_widget
 mt8186_mt6366_rt1019_rt5682s_widgets[] = {
 	SND_SOC_DAPM_SPK("Speakers", NULL),
+<<<<<<< HEAD
 	SND_SOC_DAPM_HP("Headphone", NULL),
 	SND_SOC_DAPM_MIC("Headset Mic", NULL),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	SND_SOC_DAPM_OUTPUT("HDMI1"),
 	SND_SOC_DAPM_MIXER(SOF_DMA_DL1, SND_SOC_NOPM, 0, 0, NULL, 0),
 	SND_SOC_DAPM_MIXER(SOF_DMA_DL2, SND_SOC_NOPM, 0, 0, NULL, 0),
@@ -1044,10 +1072,13 @@ static const struct snd_soc_dapm_route
 mt8186_mt6366_rt1019_rt5682s_routes[] = {
 	/* SPK */
 	{ "Speakers", NULL, "Speaker" },
+<<<<<<< HEAD
 	/* Headset */
 	{ "Headphone", NULL, "HPOL" },
 	{ "Headphone", NULL, "HPOR" },
 	{ "IN1P", NULL, "Headset Mic" },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* HDMI */
 	{ "HDMI1", NULL, "TX" },
 	/* SOF Uplink */
@@ -1063,8 +1094,11 @@ mt8186_mt6366_rt1019_rt5682s_routes[] = {
 static const struct snd_kcontrol_new
 mt8186_mt6366_rt1019_rt5682s_controls[] = {
 	SOC_DAPM_PIN_SWITCH("Speakers"),
+<<<<<<< HEAD
 	SOC_DAPM_PIN_SWITCH("Headphone"),
 	SOC_DAPM_PIN_SWITCH("Headset Mic"),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	SOC_DAPM_PIN_SWITCH("HDMI1"),
 };
 
@@ -1083,6 +1117,7 @@ static struct snd_soc_card mt8186_mt6366_rt1019_rt5682s_soc_card = {
 	.num_configs = ARRAY_SIZE(mt8186_mt6366_rt1019_rt5682s_codec_conf),
 };
 
+<<<<<<< HEAD
 static struct snd_soc_card mt8186_mt6366_rt5682s_max98360_soc_card = {
 	.name = "mt8186_rt5682s_max98360",
 	.owner = THIS_MODULE,
@@ -1098,6 +1133,8 @@ static struct snd_soc_card mt8186_mt6366_rt5682s_max98360_soc_card = {
 	.num_configs = ARRAY_SIZE(mt8186_mt6366_rt1019_rt5682s_codec_conf),
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mt8186_mt6366_rt1019_rt5682s_dev_probe(struct platform_device *pdev)
 {
 	struct snd_soc_card *card;
@@ -1122,6 +1159,7 @@ static int mt8186_mt6366_rt1019_rt5682s_dev_probe(struct platform_device *pdev)
 
 	soc_card_data->mach_priv = mach_priv;
 
+<<<<<<< HEAD
 	mach_priv->dmic_sel = devm_gpiod_get_optional(&pdev->dev,
 						      "dmic", GPIOD_OUT_LOW);
 	if (IS_ERR(mach_priv->dmic_sel)) {
@@ -1130,6 +1168,8 @@ static int mt8186_mt6366_rt1019_rt5682s_dev_probe(struct platform_device *pdev)
 		return PTR_ERR(mach_priv->dmic_sel);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	adsp_node = of_parse_phandle(pdev->dev.of_node, "mediatek,adsp", 0);
 	if (adsp_node) {
 		struct mtk_sof_priv *sof_priv;
@@ -1247,6 +1287,7 @@ err_adsp_node:
 
 #if IS_ENABLED(CONFIG_OF)
 static const struct of_device_id mt8186_mt6366_rt1019_rt5682s_dt_match[] = {
+<<<<<<< HEAD
 	{
 		.compatible = "mediatek,mt8186-mt6366-rt1019-rt5682s-sound",
 		.data = &mt8186_mt6366_rt1019_rt5682s_soc_card,
@@ -1258,6 +1299,13 @@ static const struct of_device_id mt8186_mt6366_rt1019_rt5682s_dt_match[] = {
 	{}
 };
 MODULE_DEVICE_TABLE(of, mt8186_mt6366_rt1019_rt5682s_dt_match);
+=======
+	{	.compatible = "mediatek,mt8186-mt6366-rt1019-rt5682s-sound",
+		.data = &mt8186_mt6366_rt1019_rt5682s_soc_card,
+	},
+	{}
+};
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 static struct platform_driver mt8186_mt6366_rt1019_rt5682s_driver = {

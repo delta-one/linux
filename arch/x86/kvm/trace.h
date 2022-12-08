@@ -113,6 +113,7 @@ TRACE_EVENT(kvm_hv_hypercall_done,
  * Tracepoint for Xen hypercall.
  */
 TRACE_EVENT(kvm_xen_hypercall,
+<<<<<<< HEAD
 	    TP_PROTO(u8 cpl, unsigned long nr,
 		     unsigned long a0, unsigned long a1, unsigned long a2,
 		     unsigned long a3, unsigned long a4, unsigned long a5),
@@ -120,6 +121,14 @@ TRACE_EVENT(kvm_xen_hypercall,
 
 	TP_STRUCT__entry(
 		__field(u8, cpl)
+=======
+	TP_PROTO(unsigned long nr, unsigned long a0, unsigned long a1,
+		 unsigned long a2, unsigned long a3, unsigned long a4,
+		 unsigned long a5),
+	    TP_ARGS(nr, a0, a1, a2, a3, a4, a5),
+
+	TP_STRUCT__entry(
+>>>>>>> b7ba80a49124 (Commit)
 		__field(unsigned long, nr)
 		__field(unsigned long, a0)
 		__field(unsigned long, a1)
@@ -130,7 +139,10 @@ TRACE_EVENT(kvm_xen_hypercall,
 	),
 
 	TP_fast_assign(
+<<<<<<< HEAD
 		__entry->cpl = cpl;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		__entry->nr = nr;
 		__entry->a0 = a0;
 		__entry->a1 = a1;
@@ -140,9 +152,14 @@ TRACE_EVENT(kvm_xen_hypercall,
 		__entry->a4 = a5;
 	),
 
+<<<<<<< HEAD
 	TP_printk("cpl %d nr 0x%lx a0 0x%lx a1 0x%lx a2 0x%lx a3 0x%lx a4 0x%lx a5 %lx",
 		  __entry->cpl, __entry->nr,
 		  __entry->a0, __entry->a1, __entry->a2,
+=======
+	TP_printk("nr 0x%lx a0 0x%lx a1 0x%lx a2 0x%lx a3 0x%lx a4 0x%lx a5 %lx",
+		  __entry->nr, __entry->a0, __entry->a1,  __entry->a2,
+>>>>>>> b7ba80a49124 (Commit)
 		  __entry->a3, __entry->a4, __entry->a5)
 );
 
@@ -397,6 +414,7 @@ TRACE_EVENT(kvm_inj_exception,
  * Tracepoint for page fault.
  */
 TRACE_EVENT(kvm_page_fault,
+<<<<<<< HEAD
 	TP_PROTO(struct kvm_vcpu *vcpu, u64 fault_address, u64 error_code),
 	TP_ARGS(vcpu, fault_address, error_code),
 
@@ -410,12 +428,27 @@ TRACE_EVENT(kvm_page_fault,
 	TP_fast_assign(
 		__entry->vcpu_id	= vcpu->vcpu_id;
 		__entry->guest_rip	= kvm_rip_read(vcpu);
+=======
+	TP_PROTO(unsigned long fault_address, unsigned int error_code),
+	TP_ARGS(fault_address, error_code),
+
+	TP_STRUCT__entry(
+		__field(	unsigned long,	fault_address	)
+		__field(	unsigned int,	error_code	)
+	),
+
+	TP_fast_assign(
+>>>>>>> b7ba80a49124 (Commit)
 		__entry->fault_address	= fault_address;
 		__entry->error_code	= error_code;
 	),
 
+<<<<<<< HEAD
 	TP_printk("vcpu %u rip 0x%lx address 0x%016llx error_code 0x%llx",
 		  __entry->vcpu_id, __entry->guest_rip,
+=======
+	TP_printk("address %lx error_code %x",
+>>>>>>> b7ba80a49124 (Commit)
 		  __entry->fault_address, __entry->error_code)
 );
 
@@ -597,12 +630,19 @@ TRACE_EVENT(kvm_pv_eoi,
 /*
  * Tracepoint for nested VMRUN
  */
+<<<<<<< HEAD
 TRACE_EVENT(kvm_nested_vmenter,
 	    TP_PROTO(__u64 rip, __u64 vmcb, __u64 nested_rip, __u32 int_ctl,
 		     __u32 event_inj, bool tdp_enabled, __u64 guest_tdp_pgd,
 		     __u64 guest_cr3, __u32 isa),
 	    TP_ARGS(rip, vmcb, nested_rip, int_ctl, event_inj, tdp_enabled,
 		    guest_tdp_pgd, guest_cr3, isa),
+=======
+TRACE_EVENT(kvm_nested_vmrun,
+	    TP_PROTO(__u64 rip, __u64 vmcb, __u64 nested_rip, __u32 int_ctl,
+		     __u32 event_inj, bool npt),
+	    TP_ARGS(rip, vmcb, nested_rip, int_ctl, event_inj, npt),
+>>>>>>> b7ba80a49124 (Commit)
 
 	TP_STRUCT__entry(
 		__field(	__u64,		rip		)
@@ -610,9 +650,13 @@ TRACE_EVENT(kvm_nested_vmenter,
 		__field(	__u64,		nested_rip	)
 		__field(	__u32,		int_ctl		)
 		__field(	__u32,		event_inj	)
+<<<<<<< HEAD
 		__field(	bool,		tdp_enabled	)
 		__field(	__u64,		guest_pgd	)
 		__field(	__u32,		isa		)
+=======
+		__field(	bool,		npt		)
+>>>>>>> b7ba80a49124 (Commit)
 	),
 
 	TP_fast_assign(
@@ -621,6 +665,7 @@ TRACE_EVENT(kvm_nested_vmenter,
 		__entry->nested_rip	= nested_rip;
 		__entry->int_ctl	= int_ctl;
 		__entry->event_inj	= event_inj;
+<<<<<<< HEAD
 		__entry->tdp_enabled	= tdp_enabled;
 		__entry->guest_pgd	= tdp_enabled ? guest_tdp_pgd : guest_cr3;
 		__entry->isa		= isa;
@@ -639,6 +684,16 @@ TRACE_EVENT(kvm_nested_vmenter,
 		  !__entry->tdp_enabled ? "guest_cr3" :
 		  __entry->isa == KVM_ISA_VMX ? "nested_eptp" : "nested_cr3",
 		  __entry->guest_pgd)
+=======
+		__entry->npt		= npt;
+	),
+
+	TP_printk("rip: 0x%016llx vmcb: 0x%016llx nrip: 0x%016llx int_ctl: 0x%08x "
+		  "event_inj: 0x%08x npt: %s",
+		__entry->rip, __entry->vmcb, __entry->nested_rip,
+		__entry->int_ctl, __entry->event_inj,
+		__entry->npt ? "on" : "off")
+>>>>>>> b7ba80a49124 (Commit)
 );
 
 TRACE_EVENT(kvm_nested_intercepts,
@@ -1550,41 +1605,65 @@ TRACE_EVENT(kvm_hv_timer_state,
  * Tracepoint for kvm_hv_flush_tlb.
  */
 TRACE_EVENT(kvm_hv_flush_tlb,
+<<<<<<< HEAD
 	TP_PROTO(u64 processor_mask, u64 address_space, u64 flags, bool guest_mode),
 	TP_ARGS(processor_mask, address_space, flags, guest_mode),
+=======
+	TP_PROTO(u64 processor_mask, u64 address_space, u64 flags),
+	TP_ARGS(processor_mask, address_space, flags),
+>>>>>>> b7ba80a49124 (Commit)
 
 	TP_STRUCT__entry(
 		__field(u64, processor_mask)
 		__field(u64, address_space)
 		__field(u64, flags)
+<<<<<<< HEAD
 		__field(bool, guest_mode)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	),
 
 	TP_fast_assign(
 		__entry->processor_mask = processor_mask;
 		__entry->address_space = address_space;
 		__entry->flags = flags;
+<<<<<<< HEAD
 		__entry->guest_mode = guest_mode;
 	),
 
 	TP_printk("processor_mask 0x%llx address_space 0x%llx flags 0x%llx %s",
 		  __entry->processor_mask, __entry->address_space,
 		  __entry->flags, __entry->guest_mode ? "(L2)" : "")
+=======
+	),
+
+	TP_printk("processor_mask 0x%llx address_space 0x%llx flags 0x%llx",
+		  __entry->processor_mask, __entry->address_space,
+		  __entry->flags)
+>>>>>>> b7ba80a49124 (Commit)
 );
 
 /*
  * Tracepoint for kvm_hv_flush_tlb_ex.
  */
 TRACE_EVENT(kvm_hv_flush_tlb_ex,
+<<<<<<< HEAD
 	TP_PROTO(u64 valid_bank_mask, u64 format, u64 address_space, u64 flags, bool guest_mode),
 	TP_ARGS(valid_bank_mask, format, address_space, flags, guest_mode),
+=======
+	TP_PROTO(u64 valid_bank_mask, u64 format, u64 address_space, u64 flags),
+	TP_ARGS(valid_bank_mask, format, address_space, flags),
+>>>>>>> b7ba80a49124 (Commit)
 
 	TP_STRUCT__entry(
 		__field(u64, valid_bank_mask)
 		__field(u64, format)
 		__field(u64, address_space)
 		__field(u64, flags)
+<<<<<<< HEAD
 		__field(bool, guest_mode)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	),
 
 	TP_fast_assign(
@@ -1592,6 +1671,7 @@ TRACE_EVENT(kvm_hv_flush_tlb_ex,
 		__entry->format = format;
 		__entry->address_space = address_space;
 		__entry->flags = flags;
+<<<<<<< HEAD
 		__entry->guest_mode = guest_mode;
 	),
 
@@ -1600,6 +1680,14 @@ TRACE_EVENT(kvm_hv_flush_tlb_ex,
 		  __entry->valid_bank_mask, __entry->format,
 		  __entry->address_space, __entry->flags,
 		  __entry->guest_mode ? "(L2)" : "")
+=======
+	),
+
+	TP_printk("valid_bank_mask 0x%llx format 0x%llx "
+		  "address_space 0x%llx flags 0x%llx",
+		  __entry->valid_bank_mask, __entry->format,
+		  __entry->address_space, __entry->flags)
+>>>>>>> b7ba80a49124 (Commit)
 );
 
 /*

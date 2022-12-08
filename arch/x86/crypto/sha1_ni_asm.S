@@ -54,7 +54,10 @@
  */
 
 #include <linux/linkage.h>
+<<<<<<< HEAD
 #include <linux/cfi_types.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define DIGEST_PTR	%rdi	/* 1st arg */
 #define DATA_PTR	%rsi	/* 2nd arg */
@@ -93,7 +96,12 @@
  * numBlocks: Number of blocks to process
  */
 .text
+<<<<<<< HEAD
 SYM_TYPED_FUNC_START(sha1_ni_transform)
+=======
+.align 32
+SYM_FUNC_START(sha1_ni_transform)
+>>>>>>> b7ba80a49124 (Commit)
 	push		%rbp
 	mov		%rsp, %rbp
 	sub		$FRAME_SIZE, %rsp

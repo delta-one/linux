@@ -1488,7 +1488,11 @@ Example of command to set keyboard language is mentioned below::
 Text corresponding to keyboard layout to be set in sysfs are: be(Belgian),
 cz(Czech), da(Danish), de(German), en(English), es(Spain), et(Estonian),
 fr(French), fr-ch(French(Switzerland)), hu(Hungarian), it(Italy), jp (Japan),
+<<<<<<< HEAD
 nl(Dutch), nn(Norway), pl(Polish), pt(portuguese), sl(Slovenian), sv(Sweden),
+=======
+nl(Dutch), nn(Norway), pl(Polish), pt(portugese), sl(Slovenian), sv(Sweden),
+>>>>>>> b7ba80a49124 (Commit)
 tr(Turkey)
 
 WWAN Antenna type

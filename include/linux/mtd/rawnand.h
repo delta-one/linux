@@ -67,8 +67,11 @@ struct gpio_desc;
 
 /* Extended commands for large page devices */
 #define NAND_CMD_READSTART	0x30
+<<<<<<< HEAD
 #define NAND_CMD_READCACHESEQ	0x31
 #define NAND_CMD_READCACHEEND	0x3f
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define NAND_CMD_RNDOUTSTART	0xE0
 #define NAND_CMD_CACHEDPROG	0x15
 
@@ -1075,7 +1078,11 @@ static inline void nand_op_trace(const char *prefix,
  * @exec_op:	 controller specific method to execute NAND operations.
  *		 This method replaces chip->legacy.cmdfunc(),
  *		 chip->legacy.{read,write}_{buf,byte,word}(),
+<<<<<<< HEAD
  *		 chip->legacy.dev_ready() and chip->legacy.waitfunc().
+=======
+ *		 chip->legacy.dev_ready() and chip->legacy.waifunc().
+>>>>>>> b7ba80a49124 (Commit)
  * @setup_interface: setup the data interface and timing. If chipnr is set to
  *		     %NAND_DATA_IFACE_CHECK_ONLY this means the configuration
  *		     should not be applied but only checked.
@@ -1096,20 +1103,26 @@ struct nand_controller_ops {
  *
  * @lock:		lock used to serialize accesses to the NAND controller
  * @ops:		NAND controller operations.
+<<<<<<< HEAD
  * @supported_op:	NAND controller known-to-be-supported operations,
  *			only writable by the core after initial checking.
  * @supported_op.data_only_read: The controller supports reading more data from
  *			the bus without restarting an entire read operation nor
  *			changing the column.
  * @supported_op.cont_read: The controller supports sequential cache reads.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct nand_controller {
 	struct mutex lock;
 	const struct nand_controller_ops *ops;
+<<<<<<< HEAD
 	struct {
 		unsigned int data_only_read: 1;
 		unsigned int cont_read: 1;
 	} supported_op;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline void nand_controller_init(struct nand_controller *nfc)
@@ -1260,10 +1273,13 @@ struct nand_secure_region {
  * @read_retries: The number of read retry modes supported
  * @secure_regions: Structure containing the secure regions info
  * @nr_secure_regions: Number of secure regions
+<<<<<<< HEAD
  * @cont_read: Sequential page read internals
  * @cont_read.ongoing: Whether a continuous read is ongoing or not
  * @cont_read.first_page: Start of the continuous read operation
  * @cont_read.last_page: End of the continuous read operation
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @controller: The hardware controller	structure which is shared among multiple
  *              independent devices
  * @ecc: The ECC controller structure
@@ -1316,11 +1332,14 @@ struct nand_chip {
 	int read_retries;
 	struct nand_secure_region *secure_regions;
 	u8 nr_secure_regions;
+<<<<<<< HEAD
 	struct {
 		bool ongoing;
 		unsigned int first_page;
 		unsigned int last_page;
 	} cont_read;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Externals */
 	struct nand_controller *controller;

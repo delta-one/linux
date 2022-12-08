@@ -193,12 +193,21 @@ fail:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void imx_sgtl5000_remove(struct platform_device *pdev)
+=======
+static int imx_sgtl5000_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct snd_soc_card *card = platform_get_drvdata(pdev);
 	struct imx_sgtl5000_data *data = snd_soc_card_get_drvdata(card);
 
 	clk_put(data->codec_clk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id imx_sgtl5000_dt_ids[] = {
@@ -214,7 +223,11 @@ static struct platform_driver imx_sgtl5000_driver = {
 		.of_match_table = imx_sgtl5000_dt_ids,
 	},
 	.probe = imx_sgtl5000_probe,
+<<<<<<< HEAD
 	.remove_new = imx_sgtl5000_remove,
+=======
+	.remove = imx_sgtl5000_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(imx_sgtl5000_driver);
 

@@ -1285,6 +1285,7 @@
 #define MDIO_PMA_RX_CTRL1		0x8051
 #endif
 
+<<<<<<< HEAD
 #ifndef MDIO_PMA_RX_LSTS
 #define MDIO_PMA_RX_LSTS		0x018020
 #endif
@@ -1301,6 +1302,8 @@
 #define MDIO_PMA_PHY_RX_EQ_CEU		0x1800E
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef MDIO_PCS_DIG_CTRL
 #define MDIO_PCS_DIG_CTRL		0x8000
 #endif
@@ -1411,6 +1414,7 @@
 #define XGBE_PMA_RX_RST_0_RESET_ON	0x10
 #define XGBE_PMA_RX_RST_0_RESET_OFF	0x00
 
+<<<<<<< HEAD
 #define XGBE_PMA_RX_SIG_DET_0_MASK	BIT(4)
 #define XGBE_PMA_RX_SIG_DET_0_ENABLE	BIT(4)
 #define XGBE_PMA_RX_SIG_DET_0_DISABLE	0x0000
@@ -1433,6 +1437,8 @@
 					 XGBE_PMA_CFF_UPDT0_VLD | \
 					 XGBE_PMA_CFF_UPDT1_VLD)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define XGBE_PMA_PLL_CTRL_MASK		BIT(15)
 #define XGBE_PMA_PLL_CTRL_ENABLE	BIT(15)
 #define XGBE_PMA_PLL_CTRL_DISABLE	0x0000
@@ -1737,6 +1743,7 @@ do {									\
 } while (0)
 
 /* Macros for building, reading or writing register values or bits
+<<<<<<< HEAD
  * using MDIO.
  */
 
@@ -1745,13 +1752,26 @@ do {									\
 #define XMDIO_READ(_pdata, _mmd, _reg)					\
 	((_pdata)->hw_if.read_mmd_regs((_pdata), 0,			\
 		XGBE_ADDR_C45 | (_mmd << 16) | ((_reg) & 0xffff)))
+=======
+ * using MDIO.  Different from above because of the use of standardized
+ * Linux include values.  No shifting is performed with the bit
+ * operations, everything works on mask values.
+ */
+#define XMDIO_READ(_pdata, _mmd, _reg)					\
+	((_pdata)->hw_if.read_mmd_regs((_pdata), 0,			\
+		MII_ADDR_C45 | (_mmd << 16) | ((_reg) & 0xffff)))
+>>>>>>> b7ba80a49124 (Commit)
 
 #define XMDIO_READ_BITS(_pdata, _mmd, _reg, _mask)			\
 	(XMDIO_READ((_pdata), _mmd, _reg) & _mask)
 
 #define XMDIO_WRITE(_pdata, _mmd, _reg, _val)				\
 	((_pdata)->hw_if.write_mmd_regs((_pdata), 0,			\
+<<<<<<< HEAD
 		XGBE_ADDR_C45 | (_mmd << 16) | ((_reg) & 0xffff), (_val)))
+=======
+		MII_ADDR_C45 | (_mmd << 16) | ((_reg) & 0xffff), (_val)))
+>>>>>>> b7ba80a49124 (Commit)
 
 #define XMDIO_WRITE_BITS(_pdata, _mmd, _reg, _mask, _val)		\
 do {									\

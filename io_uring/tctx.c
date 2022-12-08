@@ -83,7 +83,11 @@ __cold int io_uring_alloc_task_context(struct task_struct *task,
 
 	xa_init(&tctx->xa);
 	init_waitqueue_head(&tctx->wait);
+<<<<<<< HEAD
 	atomic_set(&tctx->in_cancel, 0);
+=======
+	atomic_set(&tctx->in_idle, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	atomic_set(&tctx->inflight_tracked, 0);
 	task->io_uring = tctx;
 	init_llist_head(&tctx->task_list);
@@ -91,12 +95,39 @@ __cold int io_uring_alloc_task_context(struct task_struct *task,
 	return 0;
 }
 
+<<<<<<< HEAD
 int __io_uring_add_tctx_node(struct io_ring_ctx *ctx)
+=======
+static int io_register_submitter(struct io_ring_ctx *ctx)
+{
+	int ret = 0;
+
+	mutex_lock(&ctx->uring_lock);
+	if (!ctx->submitter_task)
+		ctx->submitter_task = get_task_struct(current);
+	else if (ctx->submitter_task != current)
+		ret = -EEXIST;
+	mutex_unlock(&ctx->uring_lock);
+
+	return ret;
+}
+
+int __io_uring_add_tctx_node(struct io_ring_ctx *ctx, bool submitter)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct io_uring_task *tctx = current->io_uring;
 	struct io_tctx_node *node;
 	int ret;
 
+<<<<<<< HEAD
+=======
+	if ((ctx->flags & IORING_SETUP_SINGLE_ISSUER) && submitter) {
+		ret = io_register_submitter(ctx);
+		if (ret)
+			return ret;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(!tctx)) {
 		ret = io_uring_alloc_task_context(current, ctx);
 		if (unlikely(ret))
@@ -130,6 +161,7 @@ int __io_uring_add_tctx_node(struct io_ring_ctx *ctx)
 		list_add(&node->ctx_node, &ctx->tctx_list);
 		mutex_unlock(&ctx->uring_lock);
 	}
+<<<<<<< HEAD
 	return 0;
 }
 
@@ -146,6 +178,10 @@ int __io_uring_add_tctx_node_from_submit(struct io_ring_ctx *ctx)
 		return ret;
 
 	current->io_uring->last = ctx;
+=======
+	if (submitter)
+		tctx->last = ctx;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -253,7 +289,11 @@ int io_ringfd_register(struct io_ring_ctx *ctx, void __user *__arg,
 		return -EINVAL;
 
 	mutex_unlock(&ctx->uring_lock);
+<<<<<<< HEAD
 	ret = __io_uring_add_tctx_node(ctx);
+=======
+	ret = __io_uring_add_tctx_node(ctx, false);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&ctx->uring_lock);
 	if (ret)
 		return ret;

@@ -4,7 +4,10 @@
 #ifndef __MTK_WED_REGS_H
 #define __MTK_WED_REGS_H
 
+<<<<<<< HEAD
 #define MTK_WFDMA_DESC_CTRL_TO_HOST		BIT(8)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MTK_WDMA_DESC_CTRL_LEN1			GENMASK(14, 0)
 #define MTK_WDMA_DESC_CTRL_LEN1_V2		GENMASK(13, 0)
 #define MTK_WDMA_DESC_CTRL_LAST_SEG1		BIT(15)
@@ -20,6 +23,7 @@ struct mtk_wdma_desc {
 	__le32 info;
 } __packed __aligned(4);
 
+<<<<<<< HEAD
 #define MTK_WED_REV_ID					0x004
 
 #define MTK_WED_RESET					0x008
@@ -37,6 +41,17 @@ struct mtk_wdma_desc {
 #define MTK_WED_RESET_WDMA_INT_AGENT			BIT(19)
 #define MTK_WED_RESET_RX_RRO_QM				BIT(20)
 #define MTK_WED_RESET_RX_ROUTE_QM			BIT(21)
+=======
+#define MTK_WED_RESET					0x008
+#define MTK_WED_RESET_TX_BM				BIT(0)
+#define MTK_WED_RESET_TX_FREE_AGENT			BIT(4)
+#define MTK_WED_RESET_WPDMA_TX_DRV			BIT(8)
+#define MTK_WED_RESET_WPDMA_RX_DRV			BIT(9)
+#define MTK_WED_RESET_WPDMA_INT_AGENT			BIT(11)
+#define MTK_WED_RESET_WED_TX_DMA			BIT(12)
+#define MTK_WED_RESET_WDMA_RX_DRV			BIT(17)
+#define MTK_WED_RESET_WDMA_INT_AGENT			BIT(19)
+>>>>>>> b7ba80a49124 (Commit)
 #define MTK_WED_RESET_WED				BIT(31)
 
 #define MTK_WED_CTRL					0x00c
@@ -48,12 +63,17 @@ struct mtk_wdma_desc {
 #define MTK_WED_CTRL_WED_TX_BM_BUSY			BIT(9)
 #define MTK_WED_CTRL_WED_TX_FREE_AGENT_EN		BIT(10)
 #define MTK_WED_CTRL_WED_TX_FREE_AGENT_BUSY		BIT(11)
+<<<<<<< HEAD
 #define MTK_WED_CTRL_WED_RX_BM_EN			BIT(12)
 #define MTK_WED_CTRL_WED_RX_BM_BUSY			BIT(13)
 #define MTK_WED_CTRL_RX_RRO_QM_EN			BIT(14)
 #define MTK_WED_CTRL_RX_RRO_QM_BUSY			BIT(15)
 #define MTK_WED_CTRL_RX_ROUTE_QM_EN			BIT(16)
 #define MTK_WED_CTRL_RX_ROUTE_QM_BUSY			BIT(17)
+=======
+#define MTK_WED_CTRL_RESERVE_EN				BIT(12)
+#define MTK_WED_CTRL_RESERVE_BUSY			BIT(13)
+>>>>>>> b7ba80a49124 (Commit)
 #define MTK_WED_CTRL_FINAL_DIDX_READ			BIT(24)
 #define MTK_WED_CTRL_ETH_DMAD_FMT			BIT(25)
 #define MTK_WED_CTRL_MIB_READ_CLEAR			BIT(28)
@@ -75,9 +95,12 @@ struct mtk_wdma_desc {
 #define MTK_WED_EXT_INT_STATUS_TX_DMA_R_RESP_ERR	BIT(22)
 #define MTK_WED_EXT_INT_STATUS_TX_DMA_W_RESP_ERR	BIT(23)
 #define MTK_WED_EXT_INT_STATUS_RX_DRV_DMA_RECYCLE	BIT(24)
+<<<<<<< HEAD
 #define MTK_WED_EXT_INT_STATUS_RX_DRV_GET_BM_DMAD_SKIP	BIT(25)
 #define MTK_WED_EXT_INT_STATUS_WPDMA_RX_D_DRV_ERR	BIT(26)
 #define MTK_WED_EXT_INT_STATUS_WPDMA_MID_RDY		BIT(27)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MTK_WED_EXT_INT_STATUS_ERROR_MASK		(MTK_WED_EXT_INT_STATUS_TF_LEN_ERR | \
 							 MTK_WED_EXT_INT_STATUS_TKID_WO_PYLD | \
 							 MTK_WED_EXT_INT_STATUS_TKID_TITO_INVALID | \
@@ -87,8 +110,11 @@ struct mtk_wdma_desc {
 							 MTK_WED_EXT_INT_STATUS_TX_DMA_R_RESP_ERR)
 
 #define MTK_WED_EXT_INT_MASK				0x028
+<<<<<<< HEAD
 #define MTK_WED_EXT_INT_MASK1				0x02c
 #define MTK_WED_EXT_INT_MASK2				0x030
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MTK_WED_STATUS					0x060
 #define MTK_WED_STATUS_TX				GENMASK(15, 8)
@@ -162,8 +188,11 @@ struct mtk_wdma_desc {
 #define MTK_WED_RESET_IDX				0x20c
 #define MTK_WED_RESET_IDX_TX				GENMASK(3, 0)
 #define MTK_WED_RESET_IDX_RX				GENMASK(17, 16)
+<<<<<<< HEAD
 #define MTK_WED_RESET_IDX_RX_V2				GENMASK(7, 6)
 #define MTK_WED_RESET_WPDMA_IDX_RX			GENMASK(31, 30)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MTK_WED_TX_MIB(_n)				(0x2a0 + (_n) * 4)
 #define MTK_WED_RX_MIB(_n)				(0x2e0 + (_n) * 4)
@@ -171,9 +200,13 @@ struct mtk_wdma_desc {
 #define MTK_WED_RING_TX(_n)				(0x300 + (_n) * 0x10)
 
 #define MTK_WED_RING_RX(_n)				(0x400 + (_n) * 0x10)
+<<<<<<< HEAD
 #define MTK_WED_RING_RX_DATA(_n)			(0x420 + (_n) * 0x10)
 
 #define MTK_WED_SCR0					0x3c0
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 #define MTK_WED_WPDMA_INT_TRIGGER			0x504
 #define MTK_WED_WPDMA_INT_TRIGGER_RX_DONE		BIT(1)
 #define MTK_WED_WPDMA_INT_TRIGGER_TX_DONE		GENMASK(5, 4)
@@ -234,12 +267,15 @@ struct mtk_wdma_desc {
 #define MTK_WED_WPDMA_INT_CTRL_TX1_DONE_TRIG		GENMASK(14, 10)
 
 #define MTK_WED_WPDMA_INT_CTRL_RX			0x534
+<<<<<<< HEAD
 #define MTK_WED_WPDMA_INT_CTRL_RX0_EN			BIT(0)
 #define MTK_WED_WPDMA_INT_CTRL_RX0_CLR			BIT(1)
 #define MTK_WED_WPDMA_INT_CTRL_RX0_DONE_TRIG		GENMASK(6, 2)
 #define MTK_WED_WPDMA_INT_CTRL_RX1_EN			BIT(8)
 #define MTK_WED_WPDMA_INT_CTRL_RX1_CLR			BIT(9)
 #define MTK_WED_WPDMA_INT_CTRL_RX1_DONE_TRIG		GENMASK(14, 10)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MTK_WED_WPDMA_INT_CTRL_TX_FREE			0x538
 #define MTK_WED_WPDMA_INT_CTRL_TX_FREE_DONE_EN		BIT(0)
@@ -269,6 +305,7 @@ struct mtk_wdma_desc {
 
 #define MTK_WED_WPDMA_RING_TX(_n)			(0x600 + (_n) * 0x10)
 #define MTK_WED_WPDMA_RING_RX(_n)			(0x700 + (_n) * 0x10)
+<<<<<<< HEAD
 #define MTK_WED_WPDMA_RING_RX_DATA(_n)			(0x730 + (_n) * 0x10)
 
 #define MTK_WED_WPDMA_RX_D_GLO_CFG			0x75c
@@ -294,12 +331,17 @@ struct mtk_wdma_desc {
 
 #define MTK_WED_WDMA_TX_MIB				0x810
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MTK_WED_WDMA_RING_RX(_n)			(0x900 + (_n) * 0x10)
 #define MTK_WED_WDMA_RX_THRES(_n)			(0x940 + (_n) * 0x4)
 
 #define MTK_WED_WDMA_GLO_CFG				0xa04
 #define MTK_WED_WDMA_GLO_CFG_TX_DRV_EN			BIT(0)
+<<<<<<< HEAD
 #define MTK_WED_WDMA_GLO_CFG_TX_DDONE_CHK		BIT(1)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MTK_WED_WDMA_GLO_CFG_RX_DRV_EN			BIT(2)
 #define MTK_WED_WDMA_GLO_CFG_RX_DRV_BUSY		BIT(3)
 #define MTK_WED_WDMA_GLO_CFG_BT_SIZE			GENMASK(5, 4)
@@ -344,6 +386,7 @@ struct mtk_wdma_desc {
 #define MTK_WED_WDMA_RX_RECYCLE_MIB(_n)			(0xae8 + (_n) * 4)
 #define MTK_WED_WDMA_RX_PROCESSED_MIB(_n)		(0xaf0 + (_n) * 4)
 
+<<<<<<< HEAD
 #define MTK_WED_RX_BM_RX_DMAD				0xd80
 #define MTK_WED_RX_BM_RX_DMAD_SDL0			GENMASK(13, 0)
 
@@ -358,6 +401,8 @@ struct mtk_wdma_desc {
 #define MTK_WED_RX_BM_DYN_ALLOC_TH_H			GENMASK(31, 16)
 #define MTK_WED_RX_BM_DYN_ALLOC_TH_L			GENMASK(15, 0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MTK_WED_RING_OFS_BASE				0x00
 #define MTK_WED_RING_OFS_COUNT				0x04
 #define MTK_WED_RING_OFS_CPU_IDX			0x08
@@ -368,9 +413,13 @@ struct mtk_wdma_desc {
 
 #define MTK_WDMA_GLO_CFG				0x204
 #define MTK_WDMA_GLO_CFG_TX_DMA_EN			BIT(0)
+<<<<<<< HEAD
 #define MTK_WDMA_GLO_CFG_TX_DMA_BUSY			BIT(1)
 #define MTK_WDMA_GLO_CFG_RX_DMA_EN			BIT(2)
 #define MTK_WDMA_GLO_CFG_RX_DMA_BUSY			BIT(3)
+=======
+#define MTK_WDMA_GLO_CFG_RX_DMA_EN			BIT(2)
+>>>>>>> b7ba80a49124 (Commit)
 #define MTK_WDMA_GLO_CFG_RX_INFO3_PRERES		BIT(26)
 #define MTK_WDMA_GLO_CFG_RX_INFO2_PRERES		BIT(27)
 #define MTK_WDMA_GLO_CFG_RX_INFO1_PRERES		BIT(28)
@@ -399,6 +448,7 @@ struct mtk_wdma_desc {
 /* DMA channel mapping */
 #define HIFSYS_DMA_AG_MAP				0x008
 
+<<<<<<< HEAD
 #define MTK_WED_RTQM_GLO_CFG				0xb00
 #define MTK_WED_RTQM_BUSY				BIT(1)
 #define MTK_WED_RTQM_Q_RST				BIT(2)
@@ -465,4 +515,6 @@ struct mtk_wdma_desc {
 #define MTK_WED_WOCPU_VIEW_MIOD_BASE			0x8000
 #define MTK_WED_PCIE_INT_MASK				0x0
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

@@ -21,6 +21,7 @@ struct mm_walk;
  *			depth is -1 if not known, 0:PGD, 1:P4D, 2:PUD, 3:PMD.
  *			Any folded depths (where PTRS_PER_P?D is equal to 1)
  *			are skipped.
+<<<<<<< HEAD
  * @hugetlb_entry:	if set, called for each hugetlb entry. This hook
  *			function is called with the vma lock held, in order to
  *			protect against a concurrent freeing of the pte_t* or
@@ -31,13 +32,19 @@ struct mm_walk;
  *			ptl after dropping the vma lock, or else revalidate
  *			those items after re-acquiring the vma lock and before
  *			accessing them.
+=======
+ * @hugetlb_entry:	if set, called for each hugetlb entry
+>>>>>>> b7ba80a49124 (Commit)
  * @test_walk:		caller specific callback function to determine whether
  *			we walk over the current vma or not. Returning 0 means
  *			"do page table walk over the current vma", returning
  *			a negative value means "abort current page table walk
  *			right now" and returning 1 means "skip the current vma"
+<<<<<<< HEAD
  *			Note that this callback is not called when the caller
  *			passes in a single VMA as for walk_page_vma().
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @pre_vma:            if set, called before starting walk on a non-null vma.
  * @post_vma:           if set, called after a walk on a non-null vma, provided
  *                      that @pre_vma and the vma walk succeeded.
@@ -110,9 +117,12 @@ int walk_page_range_novma(struct mm_struct *mm, unsigned long start,
 			  unsigned long end, const struct mm_walk_ops *ops,
 			  pgd_t *pgd,
 			  void *private);
+<<<<<<< HEAD
 int walk_page_range_vma(struct vm_area_struct *vma, unsigned long start,
 			unsigned long end, const struct mm_walk_ops *ops,
 			void *private);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int walk_page_vma(struct vm_area_struct *vma, const struct mm_walk_ops *ops,
 		void *private);
 int walk_page_mapping(struct address_space *mapping, pgoff_t first_index,

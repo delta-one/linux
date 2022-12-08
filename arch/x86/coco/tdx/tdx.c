@@ -5,8 +5,11 @@
 #define pr_fmt(fmt)     "tdx: " fmt
 
 #include <linux/cpufeature.h>
+<<<<<<< HEAD
 #include <linux/export.h>
 #include <linux/io.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/coco.h>
 #include <asm/tdx.h>
 #include <asm/vmx.h>
@@ -17,6 +20,7 @@
 /* TDX module Call Leaf IDs */
 #define TDX_GET_INFO			1
 #define TDX_GET_VEINFO			3
+<<<<<<< HEAD
 #define TDX_GET_REPORT			4
 #define TDX_ACCEPT_PAGE			6
 #define TDX_WR				8
@@ -27,6 +31,12 @@
 /* TDX hypercall Leaf IDs */
 #define TDVMCALL_MAP_GPA		0x10001
 #define TDVMCALL_REPORT_FATAL_ERROR	0x10003
+=======
+#define TDX_ACCEPT_PAGE			6
+
+/* TDX hypercall Leaf IDs */
+#define TDVMCALL_MAP_GPA		0x10001
+>>>>>>> b7ba80a49124 (Commit)
 
 /* MMIO direction */
 #define EPT_READ	0
@@ -42,6 +52,7 @@
 #define VE_GET_PORT_NUM(e)	((e) >> 16)
 #define VE_IS_IO_STRING(e)	((e) & BIT(4))
 
+<<<<<<< HEAD
 #define ATTR_DEBUG		BIT(0)
 #define ATTR_SEPT_VE_DISABLE	BIT(28)
 
@@ -51,6 +62,8 @@
 
 #define TDREPORT_SUBTYPE_0	0
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Wrapper for standard use of __tdx_hypercall with no output aside from
  * return code.
@@ -66,6 +79,7 @@ static inline u64 _tdx_hypercall(u64 fn, u64 r12, u64 r13, u64 r14, u64 r15)
 		.r15 = r15,
 	};
 
+<<<<<<< HEAD
 	return __tdx_hypercall(&args);
 }
 
@@ -73,6 +87,14 @@ static inline u64 _tdx_hypercall(u64 fn, u64 r12, u64 r13, u64 r14, u64 r15)
 noinstr void __tdx_hypercall_failed(void)
 {
 	instrumentation_begin();
+=======
+	return __tdx_hypercall(&args, 0);
+}
+
+/* Called from __tdx_hypercall() for unrecoverable failure */
+void __tdx_hypercall_failed(void)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	panic("TDVMCALL failed. TDX module bug?");
 }
 
@@ -82,7 +104,11 @@ noinstr void __tdx_hypercall_failed(void)
  * Reusing the KVM EXIT_REASON macros makes it easier to connect the host and
  * guest sides of these calls.
  */
+<<<<<<< HEAD
 static __always_inline u64 hcall_func(u64 exit_reason)
+=======
+static u64 hcall_func(u64 exit_reason)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return exit_reason;
 }
@@ -99,7 +125,11 @@ long tdx_kvm_hypercall(unsigned int nr, unsigned long p1, unsigned long p2,
 		.r14 = p4,
 	};
 
+<<<<<<< HEAD
 	return __tdx_hypercall(&args);
+=======
+	return __tdx_hypercall(&args, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(tdx_kvm_hypercall);
 #endif
@@ -116,6 +146,7 @@ static inline void tdx_module_call(u64 fn, u64 rcx, u64 rdx, u64 r8, u64 r9,
 		panic("TDCALL %lld failed (Buggy TDX module!)\n", fn);
 }
 
+<<<<<<< HEAD
 /**
  * tdx_mcall_get_report0() - Wrapper to get TDREPORT0 (a.k.a. TDREPORT
  *                           subtype 0) using TDG.MR.REPORT TDCALL.
@@ -187,6 +218,12 @@ static void tdx_parse_tdinfo(u64 *cc_mask)
 	struct tdx_module_output out;
 	unsigned int gpa_width;
 	u64 td_attr;
+=======
+static u64 get_cc_mask(void)
+{
+	struct tdx_module_output out;
+	unsigned int gpa_width;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * TDINFO TDX module call is used to get the TD execution environment
@@ -194,16 +231,20 @@ static void tdx_parse_tdinfo(u64 *cc_mask)
 	 * information, etc. More details about the ABI can be found in TDX
 	 * Guest-Host-Communication Interface (GHCI), section 2.4.2 TDCALL
 	 * [TDG.VP.INFO].
+<<<<<<< HEAD
 	 */
 	tdx_module_call(TDX_GET_INFO, 0, 0, 0, 0, &out);
 
 	/*
 	 * The highest bit of a guest physical address is the "sharing" bit.
 	 * Set it for shared pages and clear it for private pages.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 *
 	 * The GPA width that comes out of this call is critical. TDX guests
 	 * can not meaningfully run without it.
 	 */
+<<<<<<< HEAD
 	gpa_width = out.rcx & GENMASK(5, 0);
 	*cc_mask = BIT_ULL(gpa_width - 1);
 
@@ -222,6 +263,17 @@ static void tdx_parse_tdinfo(u64 *cc_mask)
 		else
 			tdx_panic(msg);
 	}
+=======
+	tdx_module_call(TDX_GET_INFO, 0, 0, 0, 0, &out);
+
+	gpa_width = out.rcx & GENMASK(5, 0);
+
+	/*
+	 * The highest bit of a guest physical address is the "sharing" bit.
+	 * Set it for shared pages and clear it for private pages.
+	 */
+	return BIT_ULL(gpa_width - 1);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -269,7 +321,11 @@ static int ve_instr_len(struct ve_info *ve)
 	}
 }
 
+<<<<<<< HEAD
 static u64 __cpuidle __halt(const bool irq_disabled)
+=======
+static u64 __cpuidle __halt(const bool irq_disabled, const bool do_sti)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tdx_hypercall_args args = {
 		.r10 = TDX_HYPERCALL_STANDARD,
@@ -289,14 +345,30 @@ static u64 __cpuidle __halt(const bool irq_disabled)
 	 * can keep the vCPU in virtual HLT, even if an IRQ is
 	 * pending, without hanging/breaking the guest.
 	 */
+<<<<<<< HEAD
 	return __tdx_hypercall(&args);
+=======
+	return __tdx_hypercall(&args, do_sti ? TDX_HCALL_ISSUE_STI : 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int handle_halt(struct ve_info *ve)
 {
+<<<<<<< HEAD
 	const bool irq_disabled = irqs_disabled();
 
 	if (__halt(irq_disabled))
+=======
+	/*
+	 * Since non safe halt is mainly used in CPU offlining
+	 * and the guest will always stay in the halt state, don't
+	 * call the STI instruction (set do_sti as false).
+	 */
+	const bool irq_disabled = irqs_disabled();
+	const bool do_sti = false;
+
+	if (__halt(irq_disabled, do_sti))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EIO;
 
 	return ve_instr_len(ve);
@@ -304,12 +376,26 @@ static int handle_halt(struct ve_info *ve)
 
 void __cpuidle tdx_safe_halt(void)
 {
+<<<<<<< HEAD
 	const bool irq_disabled = false;
+=======
+	 /*
+	  * For do_sti=true case, __tdx_hypercall() function enables
+	  * interrupts using the STI instruction before the TDCALL. So
+	  * set irq_disabled as false.
+	  */
+	const bool irq_disabled = false;
+	const bool do_sti = true;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Use WARN_ONCE() to report the failure.
 	 */
+<<<<<<< HEAD
 	if (__halt(irq_disabled))
+=======
+	if (__halt(irq_disabled, do_sti))
+>>>>>>> b7ba80a49124 (Commit)
 		WARN_ONCE(1, "HLT instruction emulation failed\n");
 }
 
@@ -326,7 +412,11 @@ static int read_msr(struct pt_regs *regs, struct ve_info *ve)
 	 * can be found in TDX Guest-Host-Communication Interface
 	 * (GHCI), section titled "TDG.VP.VMCALL<Instruction.RDMSR>".
 	 */
+<<<<<<< HEAD
 	if (__tdx_hypercall_ret(&args))
+=======
+	if (__tdx_hypercall(&args, TDX_HCALL_HAS_OUTPUT))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EIO;
 
 	regs->ax = lower_32_bits(args.r11);
@@ -348,7 +438,11 @@ static int write_msr(struct pt_regs *regs, struct ve_info *ve)
 	 * can be found in TDX Guest-Host-Communication Interface
 	 * (GHCI) section titled "TDG.VP.VMCALL<Instruction.WRMSR>".
 	 */
+<<<<<<< HEAD
 	if (__tdx_hypercall(&args))
+=======
+	if (__tdx_hypercall(&args, 0))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EIO;
 
 	return ve_instr_len(ve);
@@ -380,7 +474,11 @@ static int handle_cpuid(struct pt_regs *regs, struct ve_info *ve)
 	 * ABI can be found in TDX Guest-Host-Communication Interface
 	 * (GHCI), section titled "VP.VMCALL<Instruction.CPUID>".
 	 */
+<<<<<<< HEAD
 	if (__tdx_hypercall_ret(&args))
+=======
+	if (__tdx_hypercall(&args, TDX_HCALL_HAS_OUTPUT))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EIO;
 
 	/*
@@ -407,7 +505,11 @@ static bool mmio_read(int size, unsigned long addr, unsigned long *val)
 		.r15 = *val,
 	};
 
+<<<<<<< HEAD
 	if (__tdx_hypercall_ret(&args))
+=======
+	if (__tdx_hypercall(&args, TDX_HCALL_HAS_OUTPUT))
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 	*val = args.r11;
 	return true;
@@ -423,8 +525,13 @@ static int handle_mmio(struct pt_regs *regs, struct ve_info *ve)
 {
 	unsigned long *reg, val, vaddr;
 	char buffer[MAX_INSN_SIZE];
+<<<<<<< HEAD
 	enum insn_mmio_type mmio;
 	struct insn insn = {};
+=======
+	struct insn insn = {};
+	enum mmio_type mmio;
+>>>>>>> b7ba80a49124 (Commit)
 	int size, extend_size;
 	u8 extend_val = 0;
 
@@ -439,10 +546,17 @@ static int handle_mmio(struct pt_regs *regs, struct ve_info *ve)
 		return -EINVAL;
 
 	mmio = insn_decode_mmio(&insn, &size);
+<<<<<<< HEAD
 	if (WARN_ON_ONCE(mmio == INSN_MMIO_DECODE_FAILED))
 		return -EINVAL;
 
 	if (mmio != INSN_MMIO_WRITE_IMM && mmio != INSN_MMIO_MOVS) {
+=======
+	if (WARN_ON_ONCE(mmio == MMIO_DECODE_FAILED))
+		return -EINVAL;
+
+	if (mmio != MMIO_WRITE_IMM && mmio != MMIO_MOVS) {
+>>>>>>> b7ba80a49124 (Commit)
 		reg = insn_get_modrm_reg_ptr(&insn, regs);
 		if (!reg)
 			return -EINVAL;
@@ -463,16 +577,25 @@ static int handle_mmio(struct pt_regs *regs, struct ve_info *ve)
 
 	/* Handle writes first */
 	switch (mmio) {
+<<<<<<< HEAD
 	case INSN_MMIO_WRITE:
+=======
+	case MMIO_WRITE:
+>>>>>>> b7ba80a49124 (Commit)
 		memcpy(&val, reg, size);
 		if (!mmio_write(size, ve->gpa, val))
 			return -EIO;
 		return insn.length;
+<<<<<<< HEAD
 	case INSN_MMIO_WRITE_IMM:
+=======
+	case MMIO_WRITE_IMM:
+>>>>>>> b7ba80a49124 (Commit)
 		val = insn.immediate.value;
 		if (!mmio_write(size, ve->gpa, val))
 			return -EIO;
 		return insn.length;
+<<<<<<< HEAD
 	case INSN_MMIO_READ:
 	case INSN_MMIO_READ_ZERO_EXTEND:
 	case INSN_MMIO_READ_SIGN_EXTEND:
@@ -480,6 +603,15 @@ static int handle_mmio(struct pt_regs *regs, struct ve_info *ve)
 		break;
 	case INSN_MMIO_MOVS:
 	case INSN_MMIO_DECODE_FAILED:
+=======
+	case MMIO_READ:
+	case MMIO_READ_ZERO_EXTEND:
+	case MMIO_READ_SIGN_EXTEND:
+		/* Reads are handled below */
+		break;
+	case MMIO_MOVS:
+	case MMIO_DECODE_FAILED:
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * MMIO was accessed with an instruction that could not be
 		 * decoded or handled properly. It was likely not using io.h
@@ -496,6 +628,7 @@ static int handle_mmio(struct pt_regs *regs, struct ve_info *ve)
 		return -EIO;
 
 	switch (mmio) {
+<<<<<<< HEAD
 	case INSN_MMIO_READ:
 		/* Zero-extend for 32-bit operation */
 		extend_size = size == 4 ? sizeof(*reg) : 0;
@@ -505,6 +638,17 @@ static int handle_mmio(struct pt_regs *regs, struct ve_info *ve)
 		extend_size = insn.opnd_bytes;
 		break;
 	case INSN_MMIO_READ_SIGN_EXTEND:
+=======
+	case MMIO_READ:
+		/* Zero-extend for 32-bit operation */
+		extend_size = size == 4 ? sizeof(*reg) : 0;
+		break;
+	case MMIO_READ_ZERO_EXTEND:
+		/* Zero extend based on operand size */
+		extend_size = insn.opnd_bytes;
+		break;
+	case MMIO_READ_SIGN_EXTEND:
+>>>>>>> b7ba80a49124 (Commit)
 		/* Sign extend based on operand size */
 		extend_size = insn.opnd_bytes;
 		if (size == 1 && val & BIT(7))
@@ -541,7 +685,11 @@ static bool handle_in(struct pt_regs *regs, int size, int port)
 	 * in TDX Guest-Host-Communication Interface (GHCI) section titled
 	 * "TDG.VP.VMCALL<Instruction.IO>".
 	 */
+<<<<<<< HEAD
 	success = !__tdx_hypercall_ret(&args);
+=======
+	success = !__tdx_hypercall(&args, TDX_HCALL_HAS_OUTPUT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Update part of the register affected by the emulated instruction */
 	regs->ax &= ~mask;
@@ -665,11 +813,14 @@ static int virt_exception_user(struct pt_regs *regs, struct ve_info *ve)
 	}
 }
 
+<<<<<<< HEAD
 static inline bool is_private_gpa(u64 gpa)
 {
 	return gpa == cc_mkenc(gpa);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Handle the kernel #VE.
  *
@@ -688,8 +839,11 @@ static int virt_exception_kernel(struct pt_regs *regs, struct ve_info *ve)
 	case EXIT_REASON_CPUID:
 		return handle_cpuid(regs, ve);
 	case EXIT_REASON_EPT_VIOLATION:
+<<<<<<< HEAD
 		if (is_private_gpa(ve->gpa))
 			panic("Unexpected EPT-violation on private memory.");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return handle_mmio(regs, ve);
 	case EXIT_REASON_IO_INSTRUCTION:
 		return handle_io(regs, ve);
@@ -853,12 +1007,18 @@ void __init tdx_early_init(void)
 	setup_force_cpu_cap(X86_FEATURE_TDX_GUEST);
 
 	cc_set_vendor(CC_VENDOR_INTEL);
+<<<<<<< HEAD
 	tdx_parse_tdinfo(&cc_mask);
 	cc_set_mask(cc_mask);
 
 	/* Kernel does not use NOTIFY_ENABLES and does not need random #VEs */
 	tdx_module_call(TDX_WR, 0, TDCS_NOTIFY_ENABLES, 0, -1ULL, NULL);
 
+=======
+	cc_mask = get_cc_mask();
+	cc_set_mask(cc_mask);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * All bits above GPA width are reserved and kernel treats shared bit
 	 * as flag, not as part of physical address.

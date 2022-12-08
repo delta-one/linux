@@ -35,6 +35,7 @@
  */
 
 /**
+<<<<<<< HEAD
  *  dc_stat_get_dmub_notification
  *
  * Calls dmub layer to retrieve dmub notification
@@ -44,6 +45,21 @@
  *
  * Returns
  *     None
+=======
+ *****************************************************************************
+ *  Function: dc_stat_get_dmub_notification
+ *
+ *  @brief
+ *		Calls dmub layer to retrieve dmub notification
+ *
+ *  @param
+ *		[in] dc: dc structure
+ *		[in] notify: dmub notification structure
+ *
+ *  @return
+ *     None
+ *****************************************************************************
+>>>>>>> b7ba80a49124 (Commit)
  */
 void dc_stat_get_dmub_notification(const struct dc *dc, struct dmub_notification *notify)
 {
@@ -61,7 +77,10 @@ void dc_stat_get_dmub_notification(const struct dc *dc, struct dmub_notification
 	/* For HPD/HPD RX, convert dpia port index into link index */
 	if (notify->type == DMUB_NOTIFICATION_HPD ||
 	    notify->type == DMUB_NOTIFICATION_HPD_IRQ ||
+<<<<<<< HEAD
 		notify->type == DMUB_NOTIFICATION_DPIA_NOTIFICATION ||
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	    notify->type == DMUB_NOTIFICATION_SET_CONFIG_REPLY) {
 		notify->link_index =
 			get_link_index_from_dpia_port_index(dc, notify->link_index);
@@ -69,6 +88,7 @@ void dc_stat_get_dmub_notification(const struct dc *dc, struct dmub_notification
 }
 
 /**
+<<<<<<< HEAD
  * dc_stat_get_dmub_dataout
  *
  * Calls dmub layer to retrieve dmub gpint dataout
@@ -78,6 +98,21 @@ void dc_stat_get_dmub_notification(const struct dc *dc, struct dmub_notification
  *
  * Returns
  *     None
+=======
+ *****************************************************************************
+ *  Function: dc_stat_get_dmub_dataout
+ *
+ *  @brief
+ *		Calls dmub layer to retrieve dmub gpint dataout
+ *
+ *  @param
+ *		[in] dc: dc structure
+ *		[in] dataout: dmub gpint dataout
+ *
+ *  @return
+ *     None
+ *****************************************************************************
+>>>>>>> b7ba80a49124 (Commit)
  */
 void dc_stat_get_dmub_dataout(const struct dc *dc, uint32_t *dataout)
 {

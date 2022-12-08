@@ -209,6 +209,7 @@ static struct vport *new_vport(const struct vport_parms *parms)
 	return vport;
 }
 
+<<<<<<< HEAD
 static void ovs_vport_update_upcall_stats(struct sk_buff *skb,
 					  const struct dp_upcall_info *upcall_info,
 					  bool upcall_result)
@@ -229,6 +230,8 @@ static void ovs_vport_update_upcall_stats(struct sk_buff *skb,
 	u64_stats_update_end(&stats->syncp);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void ovs_dp_detach_port(struct vport *p)
 {
 	ASSERT_OVSL();
@@ -236,9 +239,12 @@ void ovs_dp_detach_port(struct vport *p)
 	/* First drop references to device. */
 	hlist_del_rcu(&p->dp_hash_node);
 
+<<<<<<< HEAD
 	/* Free percpu memory */
 	free_percpu(p->upcall_stats);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Then destroy it. */
 	ovs_vport_del(p);
 }
@@ -328,8 +334,11 @@ int ovs_dp_upcall(struct datapath *dp, struct sk_buff *skb,
 		err = queue_userspace_packet(dp, skb, key, upcall_info, cutlen);
 	else
 		err = queue_gso_packets(dp, skb, key, upcall_info, cutlen);
+<<<<<<< HEAD
 
 	ovs_vport_update_upcall_stats(skb, upcall_info, !err);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto err;
 
@@ -741,9 +750,15 @@ static void get_dp_stats(const struct datapath *dp, struct ovs_dp_stats *stats,
 		percpu_stats = per_cpu_ptr(dp->stats_percpu, i);
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&percpu_stats->syncp);
 			local_stats = *percpu_stats;
 		} while (u64_stats_fetch_retry(&percpu_stats->syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&percpu_stats->syncp);
+			local_stats = *percpu_stats;
+		} while (u64_stats_fetch_retry_irq(&percpu_stats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		stats->n_hit += local_stats.n_hit;
 		stats->n_missed += local_stats.n_missed;
@@ -973,7 +988,10 @@ static int ovs_flow_cmd_new(struct sk_buff *skb, struct genl_info *info)
 	struct sw_flow_mask mask;
 	struct sk_buff *reply;
 	struct datapath *dp;
+<<<<<<< HEAD
 	struct sw_flow_key *key;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct sw_flow_actions *acts;
 	struct sw_flow_match match;
 	u32 ufid_flags = ovs_nla_get_ufid_flags(a[OVS_FLOW_ATTR_UFID_FLAGS]);
@@ -1001,6 +1019,7 @@ static int ovs_flow_cmd_new(struct sk_buff *skb, struct genl_info *info)
 	}
 
 	/* Extract key. */
+<<<<<<< HEAD
 	key = kzalloc(sizeof(*key), GFP_KERNEL);
 	if (!key) {
 		error = -ENOMEM;
@@ -1020,13 +1039,36 @@ static int ovs_flow_cmd_new(struct sk_buff *skb, struct genl_info *info)
 				       key, log);
 	if (error)
 		goto err_kfree_key;
+=======
+	ovs_match_init(&match, &new_flow->key, false, &mask);
+	error = ovs_nla_get_match(net, &match, a[OVS_FLOW_ATTR_KEY],
+				  a[OVS_FLOW_ATTR_MASK], log);
+	if (error)
+		goto err_kfree_flow;
+
+	/* Extract flow identifier. */
+	error = ovs_nla_get_identifier(&new_flow->id, a[OVS_FLOW_ATTR_UFID],
+				       &new_flow->key, log);
+	if (error)
+		goto err_kfree_flow;
+
+	/* unmasked key is needed to match when ufid is not used. */
+	if (ovs_identifier_is_key(&new_flow->id))
+		match.key = new_flow->id.unmasked_key;
+
+	ovs_flow_mask_key(&new_flow->key, &new_flow->key, true, &mask);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Validate actions. */
 	error = ovs_nla_copy_actions(net, a[OVS_FLOW_ATTR_ACTIONS],
 				     &new_flow->key, &acts, log);
 	if (error) {
 		OVS_NLERR(log, "Flow actions may not be safe on all matching packets.");
+<<<<<<< HEAD
 		goto err_kfree_key;
+=======
+		goto err_kfree_flow;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	reply = ovs_flow_cmd_alloc_info(acts, &new_flow->id, info, false,
@@ -1047,7 +1089,11 @@ static int ovs_flow_cmd_new(struct sk_buff *skb, struct genl_info *info)
 	if (ovs_identifier_is_ufid(&new_flow->id))
 		flow = ovs_flow_tbl_lookup_ufid(&dp->table, &new_flow->id);
 	if (!flow)
+<<<<<<< HEAD
 		flow = ovs_flow_tbl_lookup(&dp->table, key);
+=======
+		flow = ovs_flow_tbl_lookup(&dp->table, &new_flow->key);
+>>>>>>> b7ba80a49124 (Commit)
 	if (likely(!flow)) {
 		rcu_assign_pointer(new_flow->sf_acts, acts);
 
@@ -1117,8 +1163,11 @@ static int ovs_flow_cmd_new(struct sk_buff *skb, struct genl_info *info)
 
 	if (reply)
 		ovs_notify(&dp_flow_genl_family, reply, info);
+<<<<<<< HEAD
 
 	kfree(key);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 err_unlock_ovs:
@@ -1126,8 +1175,11 @@ err_unlock_ovs:
 	kfree_skb(reply);
 err_kfree_acts:
 	ovs_nla_free_flow_actions(acts);
+<<<<<<< HEAD
 err_kfree_key:
 	kfree(key);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err_kfree_flow:
 	ovs_flow_free(new_flow, false);
 error:
@@ -1648,8 +1700,12 @@ static void ovs_dp_reset_user_features(struct sk_buff *skb,
 	if (IS_ERR(dp))
 		return;
 
+<<<<<<< HEAD
 	pr_warn("%s: Dropping previously announced user features\n",
 		ovs_dp_name(dp));
+=======
+	WARN(dp->user_features, "Dropping previously announced user features\n");
+>>>>>>> b7ba80a49124 (Commit)
 	dp->user_features = 0;
 }
 
@@ -1858,12 +1914,15 @@ static int ovs_dp_cmd_new(struct sk_buff *skb, struct genl_info *info)
 		goto err_destroy_portids;
 	}
 
+<<<<<<< HEAD
 	vport->upcall_stats = netdev_alloc_pcpu_stats(struct vport_upcall_stats_percpu);
 	if (!vport->upcall_stats) {
 		err = -ENOMEM;
 		goto err_destroy_vport;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = ovs_dp_cmd_fill_info(dp, reply, info->snd_portid,
 				   info->snd_seq, 0, OVS_DP_CMD_NEW);
 	BUG_ON(err < 0);
@@ -1876,8 +1935,11 @@ static int ovs_dp_cmd_new(struct sk_buff *skb, struct genl_info *info)
 	ovs_notify(&dp_datapath_genl_family, reply, info);
 	return 0;
 
+<<<<<<< HEAD
 err_destroy_vport:
 	ovs_dp_detach_port(vport);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err_destroy_portids:
 	kfree(rcu_dereference_raw(dp->upcall_portids));
 err_unlock_and_destroy_meters:
@@ -2138,9 +2200,12 @@ static int ovs_vport_cmd_fill_info(struct vport *vport, struct sk_buff *skb,
 			  OVS_VPORT_ATTR_PAD))
 		goto nla_put_failure;
 
+<<<<<<< HEAD
 	if (ovs_vport_get_upcall_stats(vport, skb))
 		goto nla_put_failure;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (ovs_vport_get_upcall_portids(vport, skb))
 		goto nla_put_failure;
 
@@ -2322,12 +2387,15 @@ restart:
 		goto exit_unlock_free;
 	}
 
+<<<<<<< HEAD
 	vport->upcall_stats = netdev_alloc_pcpu_stats(struct vport_upcall_stats_percpu);
 	if (!vport->upcall_stats) {
 		err = -ENOMEM;
 		goto exit_unlock_free_vport;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = ovs_vport_cmd_fill_info(vport, reply, genl_info_net(info),
 				      info->snd_portid, info->snd_seq, 0,
 				      OVS_VPORT_CMD_NEW, GFP_KERNEL);
@@ -2345,8 +2413,11 @@ restart:
 	ovs_notify(&dp_vport_genl_family, reply, info);
 	return 0;
 
+<<<<<<< HEAD
 exit_unlock_free_vport:
 	ovs_dp_detach_port(vport);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 exit_unlock_free:
 	ovs_unlock();
 	kfree_skb(reply);
@@ -2559,7 +2630,10 @@ static const struct nla_policy vport_policy[OVS_VPORT_ATTR_MAX + 1] = {
 	[OVS_VPORT_ATTR_OPTIONS] = { .type = NLA_NESTED },
 	[OVS_VPORT_ATTR_IFINDEX] = { .type = NLA_U32 },
 	[OVS_VPORT_ATTR_NETNSID] = { .type = NLA_S32 },
+<<<<<<< HEAD
 	[OVS_VPORT_ATTR_UPCALL_STATS] = { .type = NLA_NESTED },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct genl_small_ops dp_vport_genl_ops[] = {
@@ -2596,7 +2670,10 @@ struct genl_family dp_vport_genl_family __ro_after_init = {
 	.parallel_ops = true,
 	.small_ops = dp_vport_genl_ops,
 	.n_small_ops = ARRAY_SIZE(dp_vport_genl_ops),
+<<<<<<< HEAD
 	.resv_start_op = OVS_VPORT_CMD_SET + 1,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.mcgrps = &ovs_dp_vport_multicast_group,
 	.n_mcgrps = 1,
 	.module = THIS_MODULE,

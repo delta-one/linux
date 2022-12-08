@@ -328,7 +328,11 @@ static int sil24_scr_write(struct ata_link *link, unsigned sc_reg, u32 val);
 static int sil24_qc_defer(struct ata_queued_cmd *qc);
 static enum ata_completion_errors sil24_qc_prep(struct ata_queued_cmd *qc);
 static unsigned int sil24_qc_issue(struct ata_queued_cmd *qc);
+<<<<<<< HEAD
 static void sil24_qc_fill_rtf(struct ata_queued_cmd *qc);
+=======
+static bool sil24_qc_fill_rtf(struct ata_queued_cmd *qc);
+>>>>>>> b7ba80a49124 (Commit)
 static void sil24_pmp_attach(struct ata_port *ap);
 static void sil24_pmp_detach(struct ata_port *ap);
 static void sil24_freeze(struct ata_port *ap);
@@ -901,9 +905,16 @@ static unsigned int sil24_qc_issue(struct ata_queued_cmd *qc)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void sil24_qc_fill_rtf(struct ata_queued_cmd *qc)
 {
 	sil24_read_tf(qc->ap, qc->hw_tag, &qc->result_tf);
+=======
+static bool sil24_qc_fill_rtf(struct ata_queued_cmd *qc)
+{
+	sil24_read_tf(qc->ap, qc->hw_tag, &qc->result_tf);
+	return true;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void sil24_pmp_attach(struct ata_port *ap)
@@ -1184,7 +1195,11 @@ static void sil24_post_internal_cmd(struct ata_queued_cmd *qc)
 	struct ata_port *ap = qc->ap;
 
 	/* make DMA engine forget about the failed command */
+<<<<<<< HEAD
 	if ((qc->flags & ATA_QCFLAG_EH) && sil24_init_port(ap))
+=======
+	if ((qc->flags & ATA_QCFLAG_FAILED) && sil24_init_port(ap))
+>>>>>>> b7ba80a49124 (Commit)
 		ata_eh_freeze_port(ap);
 }
 

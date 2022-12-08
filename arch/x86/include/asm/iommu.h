@@ -25,10 +25,15 @@ arch_rmrr_sanity_check(struct acpi_dmar_reserved_memory *rmrr)
 {
 	u64 start = rmrr->base_address;
 	u64 end = rmrr->end_address + 1;
+<<<<<<< HEAD
 	int entry_type;
 
 	entry_type = e820__get_entry_type(start, end);
 	if (entry_type == E820_TYPE_RESERVED || entry_type == E820_TYPE_NVS)
+=======
+
+	if (e820__mapped_all(start, end, E820_TYPE_RESERVED))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	pr_err(FW_BUG "No firmware reserved region can cover this RMRR [%#018Lx-%#018Lx], contact BIOS vendor for fixes\n",

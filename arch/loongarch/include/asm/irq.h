@@ -93,7 +93,11 @@ int liointc_acpi_init(struct irq_domain *parent,
 int eiointc_acpi_init(struct irq_domain *parent,
 					struct acpi_madt_eio_pic *acpi_eiointc);
 
+<<<<<<< HEAD
 int htvec_acpi_init(struct irq_domain *parent,
+=======
+struct irq_domain *htvec_acpi_init(struct irq_domain *parent,
+>>>>>>> b7ba80a49124 (Commit)
 					struct acpi_madt_ht_pic *acpi_htvec);
 int pch_lpc_acpi_init(struct irq_domain *parent,
 					struct acpi_madt_lpc_pic *acpi_pchlpc);
@@ -117,7 +121,11 @@ extern struct fwnode_handle *liointc_handle;
 extern struct fwnode_handle *pch_lpc_handle;
 extern struct fwnode_handle *pch_pic_handle[MAX_IO_PICS];
 
+<<<<<<< HEAD
 extern irqreturn_t loongson_ipi_interrupt(int irq, void *dev);
+=======
+extern irqreturn_t loongson3_ipi_interrupt(int irq, void *dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm-generic/irq.h>
 

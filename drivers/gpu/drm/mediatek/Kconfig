@@ -7,6 +7,10 @@ config DRM_MEDIATEK
 	depends on HAVE_ARM_SMCCC
 	depends on OF
 	depends on MTK_MMSYS
+<<<<<<< HEAD
+=======
+	select DRM_GEM_DMA_HELPER
+>>>>>>> b7ba80a49124 (Commit)
 	select DRM_KMS_HELPER
 	select DRM_MIPI_DSI
 	select DRM_PANEL

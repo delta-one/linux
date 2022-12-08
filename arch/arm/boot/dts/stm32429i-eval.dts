@@ -50,7 +50,10 @@
 #include "stm32f429-pinctrl.dtsi"
 #include <dt-bindings/input/input.h>
 #include <dt-bindings/gpio/gpio.h>
+<<<<<<< HEAD
 #include <dt-bindings/media/video-interfaces.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 / {
 	model = "STMicroelectronics STM32429i-EVAL board";
@@ -187,7 +190,11 @@
 	port {
 		dcmi_0: endpoint {
 			remote-endpoint = <&ov2640_0>;
+<<<<<<< HEAD
 			bus-type = <MEDIA_BUS_TYPE_PARALLEL>;
+=======
+			bus-type = <5>;
+>>>>>>> b7ba80a49124 (Commit)
 			bus-width = <8>;
 			hsync-active = <0>;
 			vsync-active = <0>;

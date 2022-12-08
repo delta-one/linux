@@ -277,7 +277,11 @@ static struct attribute *irq_attrs[] = {
 };
 ATTRIBUTE_GROUPS(irq);
 
+<<<<<<< HEAD
 static const struct kobj_type irq_kobj_type = {
+=======
+static struct kobj_type irq_kobj_type = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release	= irq_kobj_release,
 	.sysfs_ops	= &kobj_sysfs_ops,
 	.default_groups = irq_groups,
@@ -288,6 +292,7 @@ static void irq_sysfs_add(int irq, struct irq_desc *desc)
 	if (irq_kobj_base) {
 		/*
 		 * Continue even in case of failure as this is nothing
+<<<<<<< HEAD
 		 * crucial and failures in the late irq_sysfs_init()
 		 * cannot be rolled back.
 		 */
@@ -295,18 +300,33 @@ static void irq_sysfs_add(int irq, struct irq_desc *desc)
 			pr_warn("Failed to add kobject for irq %d\n", irq);
 		else
 			desc->istate |= IRQS_SYSFS;
+=======
+		 * crucial.
+		 */
+		if (kobject_add(&desc->kobj, irq_kobj_base, "%d", irq))
+			pr_warn("Failed to add kobject for irq %d\n", irq);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
 static void irq_sysfs_del(struct irq_desc *desc)
 {
 	/*
+<<<<<<< HEAD
 	 * Only invoke kobject_del() when kobject_add() was successfully
 	 * invoked for the descriptor. This covers both early boot, where
 	 * sysfs is not initialized yet, and the case of a failed
 	 * kobject_add() invocation.
 	 */
 	if (desc->istate & IRQS_SYSFS)
+=======
+	 * If irq_sysfs_init() has not yet been invoked (early boot), then
+	 * irq_kobj_base is NULL and the descriptor was never added.
+	 * kobject_del() complains about a object with no parent, so make
+	 * it conditional.
+	 */
+	if (irq_kobj_base)
+>>>>>>> b7ba80a49124 (Commit)
 		kobject_del(&desc->kobj);
 }
 
@@ -335,7 +355,11 @@ postcore_initcall(irq_sysfs_init);
 
 #else /* !CONFIG_SYSFS */
 
+<<<<<<< HEAD
 static const struct kobj_type irq_kobj_type = {
+=======
+static struct kobj_type irq_kobj_type = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release	= irq_kobj_release,
 };
 

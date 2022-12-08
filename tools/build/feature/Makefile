@@ -23,7 +23,10 @@ FILES=                                          \
          test-libbfd-liberty.bin                \
          test-libbfd-liberty-z.bin              \
          test-cplus-demangle.bin                \
+<<<<<<< HEAD
          test-cxa-demangle.bin                  \
+=======
+>>>>>>> b7ba80a49124 (Commit)
          test-libcap.bin			\
          test-libelf.bin                        \
          test-libelf-getphdrnum.bin             \
@@ -59,6 +62,15 @@ FILES=                                          \
          test-lzma.bin                          \
          test-bpf.bin                           \
          test-libbpf.bin                        \
+<<<<<<< HEAD
+=======
+         test-libbpf-btf__load_from_kernel_by_id.bin	\
+         test-libbpf-bpf_prog_load.bin          \
+         test-libbpf-bpf_map_create.bin		\
+         test-libbpf-bpf_object__next_program.bin \
+         test-libbpf-bpf_object__next_map.bin   \
+         test-libbpf-btf__raw_data.bin          \
+>>>>>>> b7ba80a49124 (Commit)
          test-get_cpuid.bin                     \
          test-sdt.bin                           \
          test-cxx.bin                           \
@@ -263,9 +275,12 @@ $(OUTPUT)test-libbfd-liberty-z.bin:
 $(OUTPUT)test-cplus-demangle.bin:
 	$(BUILD) -liberty
 
+<<<<<<< HEAD
 $(OUTPUT)test-cxa-demangle.bin:
 	$(BUILDXX)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 $(OUTPUT)test-backtrace.bin:
 	$(BUILD)
 
@@ -314,9 +329,12 @@ $(OUTPUT)test-libbpf-bpf_object__next_program.bin:
 $(OUTPUT)test-libbpf-bpf_object__next_map.bin:
 	$(BUILD) -lbpf
 
+<<<<<<< HEAD
 $(OUTPUT)test-libbpf-bpf_program__set_insns.bin:
 	$(BUILD) -lbpf
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 $(OUTPUT)test-libbpf-btf__raw_data.bin:
 	$(BUILD) -lbpf
 

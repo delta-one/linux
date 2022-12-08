@@ -256,7 +256,11 @@ int __rtc_read_alarm(struct rtc_device *rtc, struct rtc_wkalrm *alarm)
 	 *
 	 * This could all instead be done in the lower level driver,
 	 * but since more than one lower level RTC implementation needs it,
+<<<<<<< HEAD
 	 * then it's probably best to do it here instead of there..
+=======
+	 * then it's probably best best to do it here instead of there..
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 
 	/* Get the "before" timestamp */
@@ -392,7 +396,11 @@ int rtc_read_alarm(struct rtc_device *rtc, struct rtc_wkalrm *alarm)
 		return err;
 	if (!rtc->ops) {
 		err = -ENODEV;
+<<<<<<< HEAD
 	} else if (!test_bit(RTC_FEATURE_ALARM, rtc->features)) {
+=======
+	} else if (!test_bit(RTC_FEATURE_ALARM, rtc->features) || !rtc->ops->read_alarm) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = -EINVAL;
 	} else {
 		memset(alarm, 0, sizeof(struct rtc_wkalrm));

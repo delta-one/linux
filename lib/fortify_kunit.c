@@ -16,10 +16,14 @@
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
 #include <kunit/test.h>
+<<<<<<< HEAD
 #include <linux/device.h>
 #include <linux/slab.h>
 #include <linux/string.h>
 #include <linux/vmalloc.h>
+=======
+#include <linux/string.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 static const char array_of_10[] = "this is 10";
 static const char *ptr_of_11 = "this is 11!";
@@ -63,6 +67,7 @@ static void control_flow_split_test(struct kunit *test)
 	KUNIT_EXPECT_EQ(test, want_minus_one(pick), SIZE_MAX);
 }
 
+<<<<<<< HEAD
 #define KUNIT_EXPECT_BOS(test, p, expected, name)			\
 	KUNIT_EXPECT_EQ_MSG(test, __builtin_object_size(p, 1),		\
 		expected,						\
@@ -318,6 +323,11 @@ static struct kunit_case fortify_test_cases[] = {
 	KUNIT_CASE(alloc_size_kvmalloc_dynamic_test),
 	KUNIT_CASE(alloc_size_devm_kmalloc_const_test),
 	KUNIT_CASE(alloc_size_devm_kmalloc_dynamic_test),
+=======
+static struct kunit_case fortify_test_cases[] = {
+	KUNIT_CASE(known_sizes_test),
+	KUNIT_CASE(control_flow_split_test),
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 

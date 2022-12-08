@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0
+<<<<<<< HEAD
 /*
  * Copyright (c) 2018, Linaro Limited
  */
+=======
+// Copyright (c) 2018, Linaro Limited
+>>>>>>> b7ba80a49124 (Commit)
 
 /dts-v1/;
 
@@ -39,54 +43,91 @@
 };
 
 &tlmm {
+<<<<<<< HEAD
 	ethernet_defaults: ethernet-defaults-state {
 		int-pins {
+=======
+	ethernet_defaults: ethernet-defaults {
+		int {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio61";
 			function = "rgmii_int";
 			bias-disable;
 			drive-strength = <2>;
 		};
+<<<<<<< HEAD
 		mdc-pins {
+=======
+		mdc {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio76";
 			function = "rgmii_mdc";
 			bias-pull-up;
 		};
+<<<<<<< HEAD
 		mdio-pins {
+=======
+		mdio {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio75";
 			function = "rgmii_mdio";
 			bias-pull-up;
 		};
+<<<<<<< HEAD
 		tx-pins {
+=======
+		tx {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio67", "gpio66", "gpio65", "gpio64";
 			function = "rgmii_tx";
 			bias-pull-up;
 			drive-strength = <16>;
 		};
+<<<<<<< HEAD
 		rx-pins {
+=======
+		rx {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio73", "gpio72", "gpio71", "gpio70";
 			function = "rgmii_rx";
 			bias-disable;
 			drive-strength = <2>;
 		};
+<<<<<<< HEAD
 		tx-ctl-pins {
+=======
+		tx-ctl {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio68";
 			function = "rgmii_ctl";
 			bias-pull-up;
 			drive-strength = <16>;
 		};
+<<<<<<< HEAD
 		rx-ctl-pins {
+=======
+		rx-ctl {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio74";
 			function = "rgmii_ctl";
 			bias-disable;
 			drive-strength = <2>;
 		};
+<<<<<<< HEAD
 		tx-ck-pins {
+=======
+		tx-ck {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio63";
 			function = "rgmii_ck";
 			bias-pull-up;
 			drive-strength = <16>;
 		};
+<<<<<<< HEAD
 		rx-ck-pins {
+=======
+		rx-ck {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "gpio69";
 			function = "rgmii_ck";
 			bias-disable;

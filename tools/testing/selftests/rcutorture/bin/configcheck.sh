@@ -10,9 +10,16 @@
 T="`mktemp -d ${TMPDIR-/tmp}/configcheck.sh.XXXXXX`"
 trap 'rm -rf $T' 0
 
+<<<<<<< HEAD
 sed -e 's/"//g' < $1 > $T/.config
 
 sed -e 's/"//g' -e 's/\(.*\)=n/# \1 is not set/' -e 's/^#CHECK#//' < $2 |
+=======
+cat $1 > $T/.config
+
+cat $2 | sed -e 's/\(.*\)=n/# \1 is not set/' -e 's/^#CHECK#//' |
+grep -v '^CONFIG_INITRAMFS_SOURCE' |
+>>>>>>> b7ba80a49124 (Commit)
 awk	'
 {
 		print "if grep -q \"" $0 "\" < '"$T/.config"'";

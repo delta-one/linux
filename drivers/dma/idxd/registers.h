@@ -54,8 +54,12 @@ union wq_cap_reg {
 		u64 priority:1;
 		u64 occupancy:1;
 		u64 occupancy_int:1;
+<<<<<<< HEAD
 		u64 op_config:1;
 		u64 rsvd3:9;
+=======
+		u64 rsvd3:10;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	u64 bits;
 } __packed;
@@ -68,8 +72,12 @@ union group_cap_reg {
 		u64 total_rdbufs:8;	/* formerly total_tokens */
 		u64 rdbuf_ctrl:1;	/* formerly token_en */
 		u64 rdbuf_limit:1;	/* formerly token_limit */
+<<<<<<< HEAD
 		u64 progress_limit:1;	/* descriptor and batch descriptor */
 		u64 rsvd:45;
+=======
+		u64 rsvd:46;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	u64 bits;
 } __packed;
@@ -92,8 +100,11 @@ struct opcap {
 	u64 bits[4];
 };
 
+<<<<<<< HEAD
 #define IDXD_MAX_OPCAP_BITS		256U
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define IDXD_OPCAP_OFFSET		0x40
 
 #define IDXD_TABLE_OFFSET		0x60
@@ -289,6 +300,7 @@ union msix_perm {
 
 union group_flags {
 	struct {
+<<<<<<< HEAD
 		u64 tc_a:3;
 		u64 tc_b:3;
 		u64 rsvd:1;
@@ -303,6 +315,18 @@ union group_flags {
 		u64 rsvd5:26;
 	};
 	u64 bits;
+=======
+		u32 tc_a:3;
+		u32 tc_b:3;
+		u32 rsvd:1;
+		u32 use_rdbuf_limit:1;
+		u32 rdbufs_reserved:8;
+		u32 rsvd2:4;
+		u32 rdbufs_allowed:8;
+		u32 rsvd3:4;
+	};
+	u32 bits;
+>>>>>>> b7ba80a49124 (Commit)
 } __packed;
 
 struct grpcfg {
@@ -356,11 +380,16 @@ union wqcfg {
 
 		/* bytes 28-31 */
 		u32 rsvd8;
+<<<<<<< HEAD
 
 		/* bytes 32-63 */
 		u64 op_config[4];
 	};
 	u32 bits[16];
+=======
+	};
+	u32 bits[8];
+>>>>>>> b7ba80a49124 (Commit)
 } __packed;
 
 #define WQCFG_PASID_IDX                2

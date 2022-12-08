@@ -19,6 +19,7 @@
 #include <regex.h>
 #include <perf/cpumap.h>
 #include <fnmatch.h>
+<<<<<<< HEAD
 #include <math.h>
 #include "debug.h"
 #include "evsel.h"
@@ -26,6 +27,12 @@
 #include "pmus.h"
 #include "parse-events.h"
 #include "print-events.h"
+=======
+#include "debug.h"
+#include "evsel.h"
+#include "pmu.h"
+#include "parse-events.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "header.h"
 #include "string2.h"
 #include "strbuf.h"
@@ -34,6 +41,7 @@
 
 struct perf_pmu perf_pmu__fake;
 
+<<<<<<< HEAD
 /**
  * struct perf_pmu_format - Values from a format file read from
  * <sysfs>/devices/cpu/format/ held in struct perf_pmu.
@@ -54,12 +62,22 @@ struct perf_pmu_format {
 	/** @bits: Which config bits are set by this format value. */
 	DECLARE_BITMAP(bits, PERF_PMU_FORMAT_BITS);
 	/** @list: Element on list within struct perf_pmu. */
+=======
+struct perf_pmu_format {
+	char *name;
+	int value;
+	DECLARE_BITMAP(bits, PERF_PMU_FORMAT_BITS);
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head list;
 };
 
 int perf_pmu_parse(struct list_head *list, char *name);
 extern FILE *perf_pmu_in;
 
+<<<<<<< HEAD
+=======
+static LIST_HEAD(pmus);
+>>>>>>> b7ba80a49124 (Commit)
 static bool hybrid_scanned;
 
 /*
@@ -108,10 +126,21 @@ int perf_pmu__format_parse(char *dir, struct list_head *head)
 static int pmu_format(const char *name, struct list_head *format)
 {
 	char path[PATH_MAX];
+<<<<<<< HEAD
 
 	if (!perf_pmu__pathname_scnprintf(path, sizeof(path), name, "format"))
 		return -1;
 
+=======
+	const char *sysfs = sysfs__mountpoint();
+
+	if (!sysfs)
+		return -1;
+
+	snprintf(path, PATH_MAX,
+		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/format", sysfs, name);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!file_available(path))
 		return 0;
 
@@ -280,6 +309,13 @@ static void perf_pmu_update_alias(struct perf_pmu_alias *old,
 	perf_pmu_assign_str(old->name, "long_desc", &old->long_desc,
 			    &newalias->long_desc);
 	perf_pmu_assign_str(old->name, "topic", &old->topic, &newalias->topic);
+<<<<<<< HEAD
+=======
+	perf_pmu_assign_str(old->name, "metric_expr", &old->metric_expr,
+			    &newalias->metric_expr);
+	perf_pmu_assign_str(old->name, "metric_name", &old->metric_name,
+			    &newalias->metric_name);
+>>>>>>> b7ba80a49124 (Commit)
 	perf_pmu_assign_str(old->name, "value", &old->str, &newalias->str);
 	old->scale = newalias->scale;
 	old->per_pkg = newalias->per_pkg;
@@ -295,6 +331,11 @@ void perf_pmu_free_alias(struct perf_pmu_alias *newalias)
 	zfree(&newalias->long_desc);
 	zfree(&newalias->topic);
 	zfree(&newalias->str);
+<<<<<<< HEAD
+=======
+	zfree(&newalias->metric_expr);
+	zfree(&newalias->metric_name);
+>>>>>>> b7ba80a49124 (Commit)
 	zfree(&newalias->pmu_name);
 	parse_events_terms__purge(&newalias->terms);
 	free(newalias);
@@ -328,16 +369,31 @@ static int __perf_pmu__new_alias(struct list_head *list, char *dir, char *name,
 	struct parse_events_term *term;
 	struct perf_pmu_alias *alias;
 	int ret;
+<<<<<<< HEAD
 	char newval[256];
 	char *long_desc = NULL, *topic = NULL, *unit = NULL, *pmu_name = NULL;
 	bool deprecated = false, perpkg = false;
+=======
+	int num;
+	char newval[256];
+	char *long_desc = NULL, *topic = NULL, *unit = NULL, *perpkg = NULL,
+	     *metric_expr = NULL, *metric_name = NULL, *deprecated = NULL,
+	     *pmu_name = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (pe) {
 		long_desc = (char *)pe->long_desc;
 		topic = (char *)pe->topic;
 		unit = (char *)pe->unit;
+<<<<<<< HEAD
 		perpkg = pe->perpkg;
 		deprecated = pe->deprecated;
+=======
+		perpkg = (char *)pe->perpkg;
+		metric_expr = (char *)pe->metric_expr;
+		metric_name = (char *)pe->metric_name;
+		deprecated = (char *)pe->deprecated;
+>>>>>>> b7ba80a49124 (Commit)
 		pmu_name = (char *)pe->pmu;
 	}
 
@@ -348,9 +404,15 @@ static int __perf_pmu__new_alias(struct list_head *list, char *dir, char *name,
 	INIT_LIST_HEAD(&alias->terms);
 	alias->scale = 1.0;
 	alias->unit[0] = '\0';
+<<<<<<< HEAD
 	alias->per_pkg = perpkg;
 	alias->snapshot = false;
 	alias->deprecated = deprecated;
+=======
+	alias->per_pkg = false;
+	alias->snapshot = false;
+	alias->deprecated = false;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = parse_events_terms(&alias->terms, val);
 	if (ret) {
@@ -391,6 +453,11 @@ static int __perf_pmu__new_alias(struct list_head *list, char *dir, char *name,
 		perf_pmu__parse_snapshot(alias, dir, name);
 	}
 
+<<<<<<< HEAD
+=======
+	alias->metric_expr = metric_expr ? strdup(metric_expr) : NULL;
+	alias->metric_name = metric_name ? strdup(metric_name): NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	alias->desc = desc ? strdup(desc) : NULL;
 	alias->long_desc = long_desc ? strdup(long_desc) :
 				desc ? strdup(desc) : NULL;
@@ -400,9 +467,19 @@ static int __perf_pmu__new_alias(struct list_head *list, char *dir, char *name,
 			return -1;
 		snprintf(alias->unit, sizeof(alias->unit), "%s", unit);
 	}
+<<<<<<< HEAD
 	alias->str = strdup(newval);
 	alias->pmu_name = pmu_name ? strdup(pmu_name) : NULL;
 
+=======
+	alias->per_pkg = perpkg && sscanf(perpkg, "%d", &num) == 1 && num == 1;
+	alias->str = strdup(newval);
+	alias->pmu_name = pmu_name ? strdup(pmu_name) : NULL;
+
+	if (deprecated)
+		alias->deprecated = true;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!perf_pmu_merge_alias(alias, list))
 		list_add_tail(&alias->list, list);
 
@@ -494,10 +571,21 @@ static int pmu_aliases_parse(char *dir, struct list_head *head)
 static int pmu_aliases(const char *name, struct list_head *head)
 {
 	char path[PATH_MAX];
+<<<<<<< HEAD
 
 	if (!perf_pmu__pathname_scnprintf(path, sizeof(path), name, "events"))
 		return -1;
 
+=======
+	const char *sysfs = sysfs__mountpoint();
+
+	if (!sysfs)
+		return -1;
+
+	snprintf(path, PATH_MAX,
+		 "%s/bus/event_source/devices/%s/events", sysfs, name);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!file_available(path))
 		return 0;
 
@@ -531,16 +619,62 @@ static int pmu_alias_terms(struct perf_pmu_alias *alias,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+/*
+ * Reading/parsing the default pmu type value, which should be
+ * located at:
+ * /sys/bus/event_source/devices/<dev>/type as sysfs attribute.
+ */
+static int pmu_type(const char *name, __u32 *type)
+{
+	char path[PATH_MAX];
+	FILE *file;
+	int ret = 0;
+	const char *sysfs = sysfs__mountpoint();
+
+	if (!sysfs)
+		return -1;
+
+	snprintf(path, PATH_MAX,
+		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/type", sysfs, name);
+
+	if (access(path, R_OK) < 0)
+		return -1;
+
+	file = fopen(path, "r");
+	if (!file)
+		return -EINVAL;
+
+	if (1 != fscanf(file, "%u", type))
+		ret = -1;
+
+	fclose(file);
+	return ret;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Add all pmus in sysfs to pmu list: */
 static void pmu_read_sysfs(void)
 {
 	char path[PATH_MAX];
 	DIR *dir;
 	struct dirent *dent;
+<<<<<<< HEAD
 
 	if (!perf_pmu__event_source_devices_scnprintf(path, sizeof(path)))
 		return;
 
+=======
+	const char *sysfs = sysfs__mountpoint();
+
+	if (!sysfs)
+		return;
+
+	snprintf(path, PATH_MAX,
+		 "%s" EVENT_SOURCE_DEVICE_PATH, sysfs);
+
+>>>>>>> b7ba80a49124 (Commit)
 	dir = opendir(path);
 	if (!dir)
 		return;
@@ -555,10 +689,28 @@ static void pmu_read_sysfs(void)
 	closedir(dir);
 }
 
+<<<<<<< HEAD
+=======
+static struct perf_cpu_map *__pmu_cpumask(const char *path)
+{
+	FILE *file;
+	struct perf_cpu_map *cpus;
+
+	file = fopen(path, "r");
+	if (!file)
+		return NULL;
+
+	cpus = perf_cpu_map__read(file);
+	fclose(file);
+	return cpus;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Uncore PMUs have a "cpumask" file under sysfs. CPU PMUs (e.g. on arm/arm64)
  * may have a "cpus" file.
  */
+<<<<<<< HEAD
 static struct perf_cpu_map *pmu_cpumask(const char *name)
 {
 	struct perf_cpu_map *cpus;
@@ -578,6 +730,29 @@ static struct perf_cpu_map *pmu_cpumask(const char *name)
 		if (!file)
 			continue;
 		cpus = perf_cpu_map__read(file);
+=======
+#define SYS_TEMPLATE_ID	"./bus/event_source/devices/%s/identifier"
+#define CPUS_TEMPLATE_UNCORE	"%s/bus/event_source/devices/%s/cpumask"
+
+static struct perf_cpu_map *pmu_cpumask(const char *name)
+{
+	char path[PATH_MAX];
+	struct perf_cpu_map *cpus;
+	const char *sysfs = sysfs__mountpoint();
+	const char *templates[] = {
+		CPUS_TEMPLATE_UNCORE,
+		CPUS_TEMPLATE_CPU,
+		NULL
+	};
+	const char **template;
+
+	if (!sysfs)
+		return NULL;
+
+	for (template = templates; *template; template++) {
+		snprintf(path, PATH_MAX, *template, sysfs, name);
+		cpus = __pmu_cpumask(path);
+>>>>>>> b7ba80a49124 (Commit)
 		if (cpus)
 			return cpus;
 	}
@@ -588,11 +763,20 @@ static struct perf_cpu_map *pmu_cpumask(const char *name)
 static bool pmu_is_uncore(const char *name)
 {
 	char path[PATH_MAX];
+<<<<<<< HEAD
+=======
+	const char *sysfs;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (perf_pmu__hybrid_mounted(name))
 		return false;
 
+<<<<<<< HEAD
 	perf_pmu__pathname_scnprintf(path, sizeof(path), name, "cpumask");
+=======
+	sysfs = sysfs__mountpoint();
+	snprintf(path, PATH_MAX, CPUS_TEMPLATE_UNCORE, sysfs, name);
+>>>>>>> b7ba80a49124 (Commit)
 	return file_available(path);
 }
 
@@ -601,9 +785,15 @@ static char *pmu_id(const char *name)
 	char path[PATH_MAX], *str;
 	size_t len;
 
+<<<<<<< HEAD
 	perf_pmu__pathname_scnprintf(path, sizeof(path), name, "identifier");
 
 	if (filename__read_str(path, &str, &len) < 0)
+=======
+	snprintf(path, PATH_MAX, SYS_TEMPLATE_ID, name);
+
+	if (sysfs__read_str(path, &str, &len) < 0)
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 
 	str[len - 1] = 0; /* remove line feed */
@@ -619,9 +809,20 @@ static char *pmu_id(const char *name)
 static int is_arm_pmu_core(const char *name)
 {
 	char path[PATH_MAX];
+<<<<<<< HEAD
 
 	if (!perf_pmu__pathname_scnprintf(path, sizeof(path), name, "cpus"))
 		return 0;
+=======
+	const char *sysfs = sysfs__mountpoint();
+
+	if (!sysfs)
+		return 0;
+
+	/* Look for cpu sysfs (specific to arm) */
+	scnprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s/cpus",
+				sysfs, name);
+>>>>>>> b7ba80a49124 (Commit)
 	return file_available(path);
 }
 
@@ -647,12 +848,16 @@ char *perf_pmu__getcpuid(struct perf_pmu *pmu)
 
 __weak const struct pmu_events_table *pmu_events_table__find(void)
 {
+<<<<<<< HEAD
 	return perf_pmu__find_events_table(NULL);
 }
 
 __weak const struct pmu_metrics_table *pmu_metrics_table__find(void)
 {
 	return perf_pmu__find_metrics_table(NULL);
+=======
+	return perf_pmu__find_table(NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -745,6 +950,12 @@ static int pmu_add_cpu_aliases_map_callback(const struct pmu_event *pe,
 	struct pmu_add_cpu_aliases_map_data *data = vdata;
 	const char *pname = pe->pmu ? pe->pmu : data->cpu_name;
 
+<<<<<<< HEAD
+=======
+	if (!pe->name)
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (data->pmu->is_uncore && pmu_uncore_alias_match(pname, data->name))
 		goto new_alias;
 
@@ -780,7 +991,11 @@ static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
 {
 	const struct pmu_events_table *table;
 
+<<<<<<< HEAD
 	table = perf_pmu__find_events_table(pmu);
+=======
+	table = perf_pmu__find_table(pmu);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!table)
 		return;
 
@@ -799,6 +1014,15 @@ static int pmu_add_sys_aliases_iter_fn(const struct pmu_event *pe,
 	struct pmu_sys_event_iter_data *idata = data;
 	struct perf_pmu *pmu = idata->pmu;
 
+<<<<<<< HEAD
+=======
+	if (!pe->name) {
+		if (pe->metric_group || pe->metric_name)
+			return 0;
+		return -EINVAL;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!pe->compat || !pe->pmu)
 		return 0;
 
@@ -845,11 +1069,24 @@ pmu_find_alias_name(const char *name __maybe_unused)
 	return NULL;
 }
 
+<<<<<<< HEAD
 static int pmu_max_precise(struct perf_pmu *pmu)
 {
 	int max_precise = -1;
 
 	perf_pmu__scan_file(pmu, "caps/max_precise", "%d", &max_precise);
+=======
+static int pmu_max_precise(const char *name)
+{
+	char path[PATH_MAX];
+	int max_precise = -1;
+
+	scnprintf(path, PATH_MAX,
+		 "bus/event_source/devices/%s/caps/max_precise",
+		 name);
+
+	sysfs__read_int(path, &max_precise);
+>>>>>>> b7ba80a49124 (Commit)
 	return max_precise;
 }
 
@@ -878,8 +1115,16 @@ static struct perf_pmu *pmu_lookup(const char *lookup_name)
 		return NULL;
 
 	/*
+<<<<<<< HEAD
 	 * Check the aliases first to avoid unnecessary work.
 	 */
+=======
+	 * Check the type first to avoid unnecessary work.
+	 */
+	if (pmu_type(name, &type))
+		return NULL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (pmu_aliases(name, &aliases))
 		return NULL;
 
@@ -889,6 +1134,7 @@ static struct perf_pmu *pmu_lookup(const char *lookup_name)
 
 	pmu->cpus = pmu_cpumask(name);
 	pmu->name = strdup(name);
+<<<<<<< HEAD
 
 	if (!pmu->name)
 		goto err;
@@ -897,6 +1143,11 @@ static struct perf_pmu *pmu_lookup(const char *lookup_name)
 	if (perf_pmu__scan_file(pmu, "type", "%u", &type) != 1)
 		goto err;
 
+=======
+	if (!pmu->name)
+		goto err;
+
+>>>>>>> b7ba80a49124 (Commit)
 	alias_name = pmu_find_alias_name(name);
 	if (alias_name) {
 		pmu->alias_name = strdup(alias_name);
@@ -908,7 +1159,12 @@ static struct perf_pmu *pmu_lookup(const char *lookup_name)
 	pmu->is_uncore = pmu_is_uncore(name);
 	if (pmu->is_uncore)
 		pmu->id = pmu_id(name);
+<<<<<<< HEAD
 	pmu->max_precise = pmu_max_precise(pmu);
+=======
+	pmu->is_hybrid = is_hybrid;
+	pmu->max_precise = pmu_max_precise(name);
+>>>>>>> b7ba80a49124 (Commit)
 	pmu_add_cpu_aliases(&aliases, pmu);
 	pmu_add_sys_aliases(&aliases, pmu);
 
@@ -919,7 +1175,11 @@ static struct perf_pmu *pmu_lookup(const char *lookup_name)
 	list_splice(&aliases, &pmu->aliases);
 	list_add_tail(&pmu->list, &pmus);
 
+<<<<<<< HEAD
 	if (is_hybrid)
+=======
+	if (pmu->is_hybrid)
+>>>>>>> b7ba80a49124 (Commit)
 		list_add_tail(&pmu->hybrid_list, &perf_pmu__hybrid_pmus);
 
 	pmu->default_config = perf_pmu__get_default_config(pmu);
@@ -932,6 +1192,7 @@ err:
 	return NULL;
 }
 
+<<<<<<< HEAD
 void perf_pmu__warn_invalid_formats(struct perf_pmu *pmu)
 {
 	struct perf_pmu_format *format;
@@ -949,6 +1210,8 @@ void perf_pmu__warn_invalid_formats(struct perf_pmu *pmu)
 		}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct perf_pmu *pmu_find(const char *name)
 {
 	struct perf_pmu *pmu;
@@ -988,6 +1251,7 @@ struct perf_pmu *perf_pmu__scan(struct perf_pmu *pmu)
 	return NULL;
 }
 
+<<<<<<< HEAD
 struct perf_pmu *evsel__find_pmu(const struct evsel *evsel)
 {
 	struct perf_pmu *pmu = NULL;
@@ -995,16 +1259,29 @@ struct perf_pmu *evsel__find_pmu(const struct evsel *evsel)
 	if (evsel->pmu)
 		return evsel->pmu;
 
+=======
+struct perf_pmu *evsel__find_pmu(struct evsel *evsel)
+{
+	struct perf_pmu *pmu = NULL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
 		if (pmu->type == evsel->core.attr.type)
 			break;
 	}
 
+<<<<<<< HEAD
 	((struct evsel *)evsel)->pmu = pmu;
 	return pmu;
 }
 
 bool evsel__is_aux_event(const struct evsel *evsel)
+=======
+	return pmu;
+}
+
+bool evsel__is_aux_event(struct evsel *evsel)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct perf_pmu *pmu = evsel__find_pmu(evsel);
 
@@ -1380,6 +1657,11 @@ int perf_pmu__check_alias(struct perf_pmu *pmu, struct list_head *head_terms,
 	info->unit     = NULL;
 	info->scale    = 0.0;
 	info->snapshot = false;
+<<<<<<< HEAD
+=======
+	info->metric_expr = NULL;
+	info->metric_name = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	list_for_each_entry_safe(term, h, head_terms, list) {
 		alias = pmu_find_alias(pmu, term);
@@ -1395,6 +1677,11 @@ int perf_pmu__check_alias(struct perf_pmu *pmu, struct list_head *head_terms,
 
 		if (alias->per_pkg)
 			info->per_pkg = true;
+<<<<<<< HEAD
+=======
+		info->metric_expr = alias->metric_expr;
+		info->metric_name = alias->metric_name;
+>>>>>>> b7ba80a49124 (Commit)
 
 		list_del_init(&term->list);
 		parse_events_term__delete(term);
@@ -1440,7 +1727,11 @@ void perf_pmu__set_format(unsigned long *bits, long from, long to)
 
 	memset(bits, 0, BITS_TO_BYTES(PERF_PMU_FORMAT_BITS));
 	for (b = from; b <= to; b++)
+<<<<<<< HEAD
 		__set_bit(b, bits);
+=======
+		set_bit(b, bits);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void perf_pmu__del_formats(struct list_head *formats)
@@ -1461,8 +1752,13 @@ static int sub_non_neg(int a, int b)
 	return a - b;
 }
 
+<<<<<<< HEAD
 static char *format_alias(char *buf, int len, const struct perf_pmu *pmu,
 			  const struct perf_pmu_alias *alias)
+=======
+static char *format_alias(char *buf, int len, struct perf_pmu *pmu,
+			  struct perf_pmu_alias *alias)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct parse_events_term *term;
 	int used = snprintf(buf, len, "%s/%s", pmu->name, alias->name);
@@ -1487,6 +1783,7 @@ static char *format_alias(char *buf, int len, const struct perf_pmu *pmu,
 	return buf;
 }
 
+<<<<<<< HEAD
 /** Struct for ordering events as output in perf list. */
 struct sevent {
 	/** PMU for event. */
@@ -1498,12 +1795,31 @@ struct sevent {
 	const struct perf_pmu_alias *event;
 	/** Is the PMU for the CPU? */
 	bool is_cpu;
+=======
+static char *format_alias_or(char *buf, int len, struct perf_pmu *pmu,
+			     struct perf_pmu_alias *alias)
+{
+	snprintf(buf, len, "%s OR %s/%s/", alias->name, pmu->name, alias->name);
+	return buf;
+}
+
+struct sevent {
+	char *name;
+	char *desc;
+	char *topic;
+	char *str;
+	char *pmu;
+	char *metric_expr;
+	char *metric_name;
+	int is_cpu;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int cmp_sevent(const void *a, const void *b)
 {
 	const struct sevent *as = a;
 	const struct sevent *bs = b;
+<<<<<<< HEAD
 	const char *a_pmu_name, *b_pmu_name;
 	const char *a_name = "//", *a_desc = NULL, *a_topic = "";
 	const char *b_name = "//", *b_desc = NULL, *b_topic = "";
@@ -1541,6 +1857,52 @@ static int cmp_sevent(const void *a, const void *b)
 
 	/* Order by event name. */
 	return strcmp(a_name, b_name);
+=======
+	int ret;
+
+	/* Put extra events last */
+	if (!!as->desc != !!bs->desc)
+		return !!as->desc - !!bs->desc;
+	if (as->topic && bs->topic) {
+		int n = strcmp(as->topic, bs->topic);
+
+		if (n)
+			return n;
+	}
+
+	/* Order CPU core events to be first */
+	if (as->is_cpu != bs->is_cpu)
+		return bs->is_cpu - as->is_cpu;
+
+	ret = strcmp(as->name, bs->name);
+	if (!ret) {
+		if (as->pmu && bs->pmu)
+			return strcmp(as->pmu, bs->pmu);
+	}
+
+	return ret;
+}
+
+static void wordwrap(char *s, int start, int max, int corr)
+{
+	int column = start;
+	int n;
+
+	while (*s) {
+		int wlen = strcspn(s, " \t");
+
+		if (column + wlen >= max && column > start) {
+			printf("\n%*s", start, "");
+			column = start + corr;
+		}
+		n = printf("%s%.*s", column > start ? " " : "", wlen, s);
+		if (n <= 0)
+			break;
+		s += wlen;
+		column += n;
+		s = skip_spaces(s);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 bool is_pmu_core(const char *name)
@@ -1551,6 +1913,7 @@ bool is_pmu_core(const char *name)
 static bool pmu_alias_is_duplicate(struct sevent *alias_a,
 				   struct sevent *alias_b)
 {
+<<<<<<< HEAD
 	const char *a_pmu_name, *b_pmu_name;
 	const char *a_name = alias_a->event ? alias_a->event->name : "//";
 	const char *b_name = alias_b->event ? alias_b->event->name : "//";
@@ -1569,20 +1932,51 @@ void print_pmu_events(const struct print_callbacks *print_cb, void *print_state)
 {
 	struct perf_pmu *pmu;
 	struct perf_pmu_alias *event;
+=======
+	/* Different names -> never duplicates */
+	if (strcmp(alias_a->name, alias_b->name))
+		return false;
+
+	/* Don't remove duplicates for hybrid PMUs */
+	if (perf_pmu__is_hybrid(alias_a->pmu) &&
+	    perf_pmu__is_hybrid(alias_b->pmu))
+		return false;
+
+	return true;
+}
+
+void print_pmu_events(const char *event_glob, bool name_only, bool quiet_flag,
+			bool long_desc, bool details_flag, bool deprecated,
+			const char *pmu_name)
+{
+	struct perf_pmu *pmu;
+	struct perf_pmu_alias *alias;
+>>>>>>> b7ba80a49124 (Commit)
 	char buf[1024];
 	int printed = 0;
 	int len, j;
 	struct sevent *aliases;
+<<<<<<< HEAD
+=======
+	int numdesc = 0;
+	int columns = pager_get_columns();
+	char *topic = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pmu = NULL;
 	len = 0;
 	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
+<<<<<<< HEAD
 		list_for_each_entry(event, &pmu->aliases, list)
+=======
+		list_for_each_entry(alias, &pmu->aliases, list)
+>>>>>>> b7ba80a49124 (Commit)
 			len++;
 		if (pmu->selectable)
 			len++;
 	}
 	aliases = zalloc(sizeof(struct sevent) * len);
+<<<<<<< HEAD
 	if (!aliases) {
 		pr_err("FATAL: not enough memory to print PMU events\n");
 		return;
@@ -1602,22 +1996,83 @@ void print_pmu_events(const struct print_callbacks *print_cb, void *print_state)
 			aliases[j].event = NULL;
 			aliases[j].pmu = pmu;
 			aliases[j].is_cpu = is_cpu;
+=======
+	if (!aliases)
+		goto out_enomem;
+	pmu = NULL;
+	j = 0;
+	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
+		if (pmu_name && perf_pmu__is_hybrid(pmu->name) &&
+		    strcmp(pmu_name, pmu->name)) {
+			continue;
+		}
+
+		list_for_each_entry(alias, &pmu->aliases, list) {
+			char *name = alias->desc ? alias->name :
+				format_alias(buf, sizeof(buf), pmu, alias);
+			bool is_cpu = is_pmu_core(pmu->name) ||
+				      perf_pmu__is_hybrid(pmu->name);
+
+			if (alias->deprecated && !deprecated)
+				continue;
+
+			if (event_glob != NULL &&
+			    !(strglobmatch_nocase(name, event_glob) ||
+			      (!is_cpu && strglobmatch_nocase(alias->name,
+						       event_glob)) ||
+			      (alias->topic &&
+			       strglobmatch_nocase(alias->topic, event_glob))))
+				continue;
+
+			if (is_cpu && !name_only && !alias->desc)
+				name = format_alias_or(buf, sizeof(buf), pmu, alias);
+
+			aliases[j].name = name;
+			if (is_cpu && !name_only && !alias->desc)
+				aliases[j].name = format_alias_or(buf,
+								  sizeof(buf),
+								  pmu, alias);
+			aliases[j].name = strdup(aliases[j].name);
+			if (!aliases[j].name)
+				goto out_enomem;
+
+			aliases[j].desc = long_desc ? alias->long_desc :
+						alias->desc;
+			aliases[j].topic = alias->topic;
+			aliases[j].str = alias->str;
+			aliases[j].pmu = pmu->name;
+			aliases[j].metric_expr = alias->metric_expr;
+			aliases[j].metric_name = alias->metric_name;
+			aliases[j].is_cpu = is_cpu;
+			j++;
+		}
+		if (pmu->selectable &&
+		    (event_glob == NULL || strglobmatch(pmu->name, event_glob))) {
+			char *s;
+			if (asprintf(&s, "%s//", pmu->name) < 0)
+				goto out_enomem;
+			aliases[j].name = s;
+>>>>>>> b7ba80a49124 (Commit)
 			j++;
 		}
 	}
 	len = j;
 	qsort(aliases, len, sizeof(struct sevent), cmp_sevent);
 	for (j = 0; j < len; j++) {
+<<<<<<< HEAD
 		const char *name, *alias = NULL, *scale_unit = NULL,
 			*desc = NULL, *long_desc = NULL,
 			*encoding_desc = NULL, *topic = NULL;
 		bool deprecated = false;
 		size_t buf_used;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* Skip duplicates */
 		if (j > 0 && pmu_alias_is_duplicate(&aliases[j], &aliases[j - 1]))
 			continue;
 
+<<<<<<< HEAD
 		if (!aliases[j].event) {
 			/* A selectable event. */
 			buf_used = snprintf(buf, sizeof(buf), "%s//", aliases[j].pmu->name) + 1;
@@ -1667,6 +2122,49 @@ void print_pmu_events(const struct print_callbacks *print_cb, void *print_state)
 
 	zfree(&aliases);
 	return;
+=======
+		if (name_only) {
+			printf("%s ", aliases[j].name);
+			continue;
+		}
+		if (aliases[j].desc && !quiet_flag) {
+			if (numdesc++ == 0)
+				printf("\n");
+			if (aliases[j].topic && (!topic ||
+					strcmp(topic, aliases[j].topic))) {
+				printf("%s%s:\n", topic ? "\n" : "",
+						aliases[j].topic);
+				topic = aliases[j].topic;
+			}
+			printf("  %-50s\n", aliases[j].name);
+			printf("%*s", 8, "[");
+			wordwrap(aliases[j].desc, 8, columns, 0);
+			printf("]\n");
+			if (details_flag) {
+				printf("%*s%s/%s/ ", 8, "", aliases[j].pmu, aliases[j].str);
+				if (aliases[j].metric_name)
+					printf(" MetricName: %s", aliases[j].metric_name);
+				if (aliases[j].metric_expr)
+					printf(" MetricExpr: %s", aliases[j].metric_expr);
+				putchar('\n');
+			}
+		} else
+			printf("  %-50s [Kernel PMU event]\n", aliases[j].name);
+		printed++;
+	}
+	if (printed && pager_in_use())
+		printf("\n");
+out_free:
+	for (j = 0; j < len; j++)
+		zfree(&aliases[j].name);
+	zfree(&aliases);
+	return;
+
+out_enomem:
+	printf("FATAL: not enough memory to print PMU events\n");
+	if (aliases)
+		goto out_free;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 bool pmu_have_event(const char *pname, const char *name)
@@ -1685,6 +2183,7 @@ bool pmu_have_event(const char *pname, const char *name)
 	return false;
 }
 
+<<<<<<< HEAD
 FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name)
 {
 	char path[PATH_MAX];
@@ -1693,6 +2192,21 @@ FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name)
 	    !file_available(path))
 		return NULL;
 
+=======
+static FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name)
+{
+	char path[PATH_MAX];
+	const char *sysfs;
+
+	sysfs = sysfs__mountpoint();
+	if (!sysfs)
+		return NULL;
+
+	snprintf(path, PATH_MAX,
+		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/%s", sysfs, pmu->name, name);
+	if (!file_available(path))
+		return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	return fopen(path, "r");
 }
 
@@ -1713,6 +2227,7 @@ int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt,
 	return ret;
 }
 
+<<<<<<< HEAD
 bool perf_pmu__file_exists(struct perf_pmu *pmu, const char *name)
 {
 	char path[PATH_MAX];
@@ -1723,6 +2238,8 @@ bool perf_pmu__file_exists(struct perf_pmu *pmu, const char *name)
 	return file_available(path);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int perf_pmu__new_caps(struct list_head *list, char *name, char *value)
 {
 	struct perf_pmu_caps *caps = zalloc(sizeof(*caps));
@@ -1756,6 +2273,10 @@ int perf_pmu__caps_parse(struct perf_pmu *pmu)
 {
 	struct stat st;
 	char caps_path[PATH_MAX];
+<<<<<<< HEAD
+=======
+	const char *sysfs = sysfs__mountpoint();
+>>>>>>> b7ba80a49124 (Commit)
 	DIR *caps_dir;
 	struct dirent *evt_ent;
 
@@ -1764,9 +2285,18 @@ int perf_pmu__caps_parse(struct perf_pmu *pmu)
 
 	pmu->nr_caps = 0;
 
+<<<<<<< HEAD
 	if (!perf_pmu__pathname_scnprintf(caps_path, sizeof(caps_path), pmu->name, "caps"))
 		return -1;
 
+=======
+	if (!sysfs)
+		return -1;
+
+	snprintf(caps_path, PATH_MAX,
+		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/caps", sysfs, pmu->name);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (stat(caps_path, &st) < 0) {
 		pmu->caps_initialized = true;
 		return 0;	/* no error if caps does not exist */
@@ -1896,6 +2426,7 @@ int perf_pmu__cpus_match(struct perf_pmu *pmu, struct perf_cpu_map *cpus,
 	*ucpus_ptr = unmatched_cpus;
 	return 0;
 }
+<<<<<<< HEAD
 
 double __weak perf_pmu__cpu_slots_per_cycle(void)
 {
@@ -1929,3 +2460,5 @@ int perf_pmu__pathname_scnprintf(char *buf, size_t size,
 		return 0;
 	return scnprintf(buf, size, "%s%s/%s", base_path, pmu_name, filename);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

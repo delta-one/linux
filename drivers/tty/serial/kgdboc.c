@@ -171,7 +171,10 @@ static int configure_kgdboc(void)
 	int err = -ENODEV;
 	char *cptr = config;
 	struct console *cons;
+<<<<<<< HEAD
 	int cookie;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!strlen(config) || isspace(config[0])) {
 		err = 0;
@@ -194,6 +197,7 @@ static int configure_kgdboc(void)
 	if (!p)
 		goto noconfig;
 
+<<<<<<< HEAD
 	/*
 	 * Take console_lock to serialize device() callback with
 	 * other console operations. For example, fg_console is
@@ -203,6 +207,9 @@ static int configure_kgdboc(void)
 
 	cookie = console_srcu_read_lock();
 	for_each_console_srcu(cons) {
+=======
+	for_each_console(cons) {
+>>>>>>> b7ba80a49124 (Commit)
 		int idx;
 		if (cons->device && cons->device(cons, &idx) == p &&
 		    idx == tty_line) {
@@ -210,9 +217,12 @@ static int configure_kgdboc(void)
 			break;
 		}
 	}
+<<<<<<< HEAD
 	console_srcu_read_unlock(cookie);
 
 	console_unlock();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	kgdb_tty_driver = p;
 	kgdb_tty_line = tty_line;
@@ -461,7 +471,10 @@ static void kgdboc_earlycon_pre_exp_handler(void)
 {
 	struct console *con;
 	static bool already_warned;
+<<<<<<< HEAD
 	int cookie;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (already_warned)
 		return;
@@ -474,6 +487,7 @@ static void kgdboc_earlycon_pre_exp_handler(void)
 	 * serial drivers might be OK with this, print a warning once per
 	 * boot if we detect this case.
 	 */
+<<<<<<< HEAD
 	cookie = console_srcu_read_lock();
 	for_each_console_srcu(con) {
 		if (con == kgdboc_earlycon_io_ops.cons)
@@ -482,6 +496,11 @@ static void kgdboc_earlycon_pre_exp_handler(void)
 	console_srcu_read_unlock(cookie);
 	if (con)
 		return;
+=======
+	for_each_console(con)
+		if (con == kgdboc_earlycon_io_ops.cons)
+			return;
+>>>>>>> b7ba80a49124 (Commit)
 
 	already_warned = true;
 	pr_warn("kgdboc_earlycon is still using bootconsole\n");
@@ -546,6 +565,7 @@ static int __init kgdboc_earlycon_init(char *opt)
 	 * Look for a matching console, or if the name was left blank just
 	 * pick the first one we find.
 	 */
+<<<<<<< HEAD
 
 	/*
 	 * Hold the console_list_lock to guarantee that no consoles are
@@ -555,6 +575,9 @@ static int __init kgdboc_earlycon_init(char *opt)
 	 * traversal of the console list and race-free reading of @flags.
 	 */
 	console_list_lock();
+=======
+	console_lock();
+>>>>>>> b7ba80a49124 (Commit)
 	for_each_console(con) {
 		if (con->write && con->read &&
 		    (con->flags & (CON_BOOT | CON_ENABLED)) &&
@@ -596,7 +619,11 @@ static int __init kgdboc_earlycon_init(char *opt)
 	}
 
 unlock:
+<<<<<<< HEAD
 	console_list_unlock();
+=======
+	console_unlock();
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Non-zero means malformed option so we always return zero */
 	return 0;

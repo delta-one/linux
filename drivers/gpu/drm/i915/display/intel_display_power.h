@@ -6,12 +6,19 @@
 #ifndef __INTEL_DISPLAY_POWER_H__
 #define __INTEL_DISPLAY_POWER_H__
 
+<<<<<<< HEAD
 #include "intel_wakeref.h"
+=======
+#include "intel_runtime_pm.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 enum aux_ch;
 enum dpio_channel;
 enum dpio_phy;
+<<<<<<< HEAD
 enum i915_drm_suspend_mode;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum port;
 struct drm_i915_private;
 struct i915_power_well;
@@ -77,6 +84,7 @@ enum intel_display_power_domain {
 	POWER_DOMAIN_VGA,
 	POWER_DOMAIN_AUDIO_MMIO,
 	POWER_DOMAIN_AUDIO_PLAYBACK,
+<<<<<<< HEAD
 
 	POWER_DOMAIN_AUX_IO_A,
 	POWER_DOMAIN_AUX_IO_B,
@@ -85,6 +93,8 @@ enum intel_display_power_domain {
 	POWER_DOMAIN_AUX_IO_E,
 	POWER_DOMAIN_AUX_IO_F,
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_AUX_A,
 	POWER_DOMAIN_AUX_B,
 	POWER_DOMAIN_AUX_C,
@@ -99,6 +109,11 @@ enum intel_display_power_domain {
 	POWER_DOMAIN_AUX_USBC5,
 	POWER_DOMAIN_AUX_USBC6,
 
+<<<<<<< HEAD
+=======
+	POWER_DOMAIN_AUX_IO_A,
+
+>>>>>>> b7ba80a49124 (Commit)
 	POWER_DOMAIN_AUX_TBT1,
 	POWER_DOMAIN_AUX_TBT2,
 	POWER_DOMAIN_AUX_TBT3,
@@ -137,10 +152,13 @@ struct i915_power_domains {
 	bool display_core_suspended;
 	int power_well_count;
 
+<<<<<<< HEAD
 	u32 dc_state;
 	u32 target_dc_state;
 	u32 allowed_dc_mask;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	intel_wakeref_t init_wakeref;
 	intel_wakeref_t disable_wakeref;
 
@@ -260,8 +278,11 @@ intel_display_power_ddi_lanes_domain(struct drm_i915_private *i915, enum port po
 enum intel_display_power_domain
 intel_display_power_ddi_io_domain(struct drm_i915_private *i915, enum port port);
 enum intel_display_power_domain
+<<<<<<< HEAD
 intel_display_power_aux_io_domain(struct drm_i915_private *i915, enum aux_ch aux_ch);
 enum intel_display_power_domain
+=======
+>>>>>>> b7ba80a49124 (Commit)
 intel_display_power_legacy_aux_domain(struct drm_i915_private *i915, enum aux_ch aux_ch);
 enum intel_display_power_domain
 intel_display_power_tbt_aux_domain(struct drm_i915_private *i915, enum aux_ch aux_ch);

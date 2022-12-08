@@ -109,7 +109,11 @@ struct clk *ahci_platform_find_clk(struct ahci_host_priv *hpriv, const char *con
 	int i;
 
 	for (i = 0; i < hpriv->n_clks; i++) {
+<<<<<<< HEAD
 		if (hpriv->clks[i].id && !strcmp(hpriv->clks[i].id, con_id))
+=======
+		if (!strcmp(hpriv->clks[i].id, con_id))
+>>>>>>> b7ba80a49124 (Commit)
 			return hpriv->clks[i].clk;
 	}
 
@@ -363,7 +367,11 @@ static int ahci_platform_get_phy(struct ahci_host_priv *hpriv, u32 port,
 	switch (rc) {
 	case -ENOSYS:
 		/* No PHY support. Check if PHY is required. */
+<<<<<<< HEAD
 		if (of_property_present(node, "phys")) {
+=======
+		if (of_find_property(node, "phys", NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 			dev_err(dev,
 				"couldn't get PHY in node %pOFn: ENOSYS\n",
 				node);

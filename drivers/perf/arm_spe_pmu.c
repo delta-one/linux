@@ -12,7 +12,10 @@
 #define DRVNAME					PMUNAME "_pmu"
 #define pr_fmt(fmt)				DRVNAME ": " fmt
 
+<<<<<<< HEAD
 #include <linux/bitfield.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/bitops.h>
 #include <linux/bug.h>
 #include <linux/capability.h>
@@ -85,7 +88,10 @@ struct arm_spe_pmu {
 #define SPE_PMU_FEAT_ARCH_INST			(1UL << 3)
 #define SPE_PMU_FEAT_LDS			(1UL << 4)
 #define SPE_PMU_FEAT_ERND			(1UL << 5)
+<<<<<<< HEAD
 #define SPE_PMU_FEAT_INV_FILT_EVT		(1UL << 6)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define SPE_PMU_FEAT_DEV_PROBED			(1UL << 63)
 	u64					features;
 
@@ -203,10 +209,13 @@ static const struct attribute_group arm_spe_pmu_cap_group = {
 #define ATTR_CFG_FLD_min_latency_LO		0
 #define ATTR_CFG_FLD_min_latency_HI		11
 
+<<<<<<< HEAD
 #define ATTR_CFG_FLD_inv_event_filter_CFG	config3	/* PMSNEVFR_EL1 */
 #define ATTR_CFG_FLD_inv_event_filter_LO	0
 #define ATTR_CFG_FLD_inv_event_filter_HI	63
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Why does everything I do descend into this? */
 #define __GEN_PMU_FORMAT_ATTR(cfg, lo, hi)				\
 	(lo) == (hi) ? #cfg ":" #lo "\n" : #cfg ":" #lo "-" #hi
@@ -237,7 +246,10 @@ GEN_PMU_FORMAT_ATTR(branch_filter);
 GEN_PMU_FORMAT_ATTR(load_filter);
 GEN_PMU_FORMAT_ATTR(store_filter);
 GEN_PMU_FORMAT_ATTR(event_filter);
+<<<<<<< HEAD
 GEN_PMU_FORMAT_ATTR(inv_event_filter);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 GEN_PMU_FORMAT_ATTR(min_latency);
 
 static struct attribute *arm_spe_pmu_formats_attr[] = {
@@ -249,11 +261,15 @@ static struct attribute *arm_spe_pmu_formats_attr[] = {
 	&format_attr_load_filter.attr,
 	&format_attr_store_filter.attr,
 	&format_attr_event_filter.attr,
+<<<<<<< HEAD
 	&format_attr_inv_event_filter.attr,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	&format_attr_min_latency.attr,
 	NULL,
 };
 
+<<<<<<< HEAD
 static umode_t arm_spe_pmu_format_attr_is_visible(struct kobject *kobj,
 						  struct attribute *attr,
 						  int unused)
@@ -270,6 +286,10 @@ static umode_t arm_spe_pmu_format_attr_is_visible(struct kobject *kobj,
 static const struct attribute_group arm_spe_pmu_format_group = {
 	.name	= "format",
 	.is_visible = arm_spe_pmu_format_attr_is_visible,
+=======
+static const struct attribute_group arm_spe_pmu_format_group = {
+	.name	= "format",
+>>>>>>> b7ba80a49124 (Commit)
 	.attrs	= arm_spe_pmu_formats_attr,
 };
 
@@ -304,6 +324,7 @@ static u64 arm_spe_event_to_pmscr(struct perf_event *event)
 	struct perf_event_attr *attr = &event->attr;
 	u64 reg = 0;
 
+<<<<<<< HEAD
 	reg |= FIELD_PREP(PMSCR_EL1_TS, ATTR_CFG_GET_FLD(attr, ts_enable));
 	reg |= FIELD_PREP(PMSCR_EL1_PA, ATTR_CFG_GET_FLD(attr, pa_enable));
 	reg |= FIELD_PREP(PMSCR_EL1_PCT, ATTR_CFG_GET_FLD(attr, pct_enable));
@@ -316,6 +337,20 @@ static u64 arm_spe_event_to_pmscr(struct perf_event *event)
 
 	if (get_spe_event_has_cx(event))
 		reg |= PMSCR_EL1_CX;
+=======
+	reg |= ATTR_CFG_GET_FLD(attr, ts_enable) << SYS_PMSCR_EL1_TS_SHIFT;
+	reg |= ATTR_CFG_GET_FLD(attr, pa_enable) << SYS_PMSCR_EL1_PA_SHIFT;
+	reg |= ATTR_CFG_GET_FLD(attr, pct_enable) << SYS_PMSCR_EL1_PCT_SHIFT;
+
+	if (!attr->exclude_user)
+		reg |= BIT(SYS_PMSCR_EL1_E0SPE_SHIFT);
+
+	if (!attr->exclude_kernel)
+		reg |= BIT(SYS_PMSCR_EL1_E1SPE_SHIFT);
+
+	if (get_spe_event_has_cx(event))
+		reg |= BIT(SYS_PMSCR_EL1_CX_SHIFT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return reg;
 }
@@ -324,7 +359,12 @@ static void arm_spe_event_sanitise_period(struct perf_event *event)
 {
 	struct arm_spe_pmu *spe_pmu = to_spe_pmu(event->pmu);
 	u64 period = event->hw.sample_period;
+<<<<<<< HEAD
 	u64 max_period = PMSIRR_EL1_INTERVAL_MASK;
+=======
+	u64 max_period = SYS_PMSIRR_EL1_INTERVAL_MASK
+			 << SYS_PMSIRR_EL1_INTERVAL_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (period < spe_pmu->min_period)
 		period = spe_pmu->min_period;
@@ -343,7 +383,11 @@ static u64 arm_spe_event_to_pmsirr(struct perf_event *event)
 
 	arm_spe_event_sanitise_period(event);
 
+<<<<<<< HEAD
 	reg |= FIELD_PREP(PMSIRR_EL1_RND, ATTR_CFG_GET_FLD(attr, jitter));
+=======
+	reg |= ATTR_CFG_GET_FLD(attr, jitter) << SYS_PMSIRR_EL1_RND_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 	reg |= event->hw.sample_period;
 
 	return reg;
@@ -354,6 +398,7 @@ static u64 arm_spe_event_to_pmsfcr(struct perf_event *event)
 	struct perf_event_attr *attr = &event->attr;
 	u64 reg = 0;
 
+<<<<<<< HEAD
 	reg |= FIELD_PREP(PMSFCR_EL1_LD, ATTR_CFG_GET_FLD(attr, load_filter));
 	reg |= FIELD_PREP(PMSFCR_EL1_ST, ATTR_CFG_GET_FLD(attr, store_filter));
 	reg |= FIELD_PREP(PMSFCR_EL1_B, ATTR_CFG_GET_FLD(attr, branch_filter));
@@ -369,6 +414,20 @@ static u64 arm_spe_event_to_pmsfcr(struct perf_event *event)
 
 	if (ATTR_CFG_GET_FLD(attr, min_latency))
 		reg |= PMSFCR_EL1_FL;
+=======
+	reg |= ATTR_CFG_GET_FLD(attr, load_filter) << SYS_PMSFCR_EL1_LD_SHIFT;
+	reg |= ATTR_CFG_GET_FLD(attr, store_filter) << SYS_PMSFCR_EL1_ST_SHIFT;
+	reg |= ATTR_CFG_GET_FLD(attr, branch_filter) << SYS_PMSFCR_EL1_B_SHIFT;
+
+	if (reg)
+		reg |= BIT(SYS_PMSFCR_EL1_FT_SHIFT);
+
+	if (ATTR_CFG_GET_FLD(attr, event_filter))
+		reg |= BIT(SYS_PMSFCR_EL1_FE_SHIFT);
+
+	if (ATTR_CFG_GET_FLD(attr, min_latency))
+		reg |= BIT(SYS_PMSFCR_EL1_FL_SHIFT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return reg;
 }
@@ -379,6 +438,7 @@ static u64 arm_spe_event_to_pmsevfr(struct perf_event *event)
 	return ATTR_CFG_GET_FLD(attr, event_filter);
 }
 
+<<<<<<< HEAD
 static u64 arm_spe_event_to_pmsnevfr(struct perf_event *event)
 {
 	struct perf_event_attr *attr = &event->attr;
@@ -389,6 +449,13 @@ static u64 arm_spe_event_to_pmslatfr(struct perf_event *event)
 {
 	struct perf_event_attr *attr = &event->attr;
 	return FIELD_PREP(PMSLATFR_EL1_MINLAT, ATTR_CFG_GET_FLD(attr, min_latency));
+=======
+static u64 arm_spe_event_to_pmslatfr(struct perf_event *event)
+{
+	struct perf_event_attr *attr = &event->attr;
+	return ATTR_CFG_GET_FLD(attr, min_latency)
+	       << SYS_PMSLATFR_EL1_MINLAT_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void arm_spe_pmu_pad_buf(struct perf_output_handle *handle, int len)
@@ -540,7 +607,11 @@ static void arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
 	limit = buf->snapshot ? arm_spe_pmu_next_snapshot_off(handle)
 			      : arm_spe_pmu_next_off(handle);
 	if (limit)
+<<<<<<< HEAD
 		limit |= PMBLIMITR_EL1_E;
+=======
+		limit |= BIT(SYS_PMBLIMITR_EL1_E_SHIFT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	limit += (u64)buf->base;
 	base = (u64)buf->base + PERF_IDX2OFF(handle->head, buf);
@@ -599,18 +670,27 @@ arm_spe_pmu_buf_get_fault_act(struct perf_output_handle *handle)
 
 	/* Service required? */
 	pmbsr = read_sysreg_s(SYS_PMBSR_EL1);
+<<<<<<< HEAD
 	if (!FIELD_GET(PMBSR_EL1_S, pmbsr))
+=======
+	if (!(pmbsr & BIT(SYS_PMBSR_EL1_S_SHIFT)))
+>>>>>>> b7ba80a49124 (Commit)
 		return SPE_PMU_BUF_FAULT_ACT_SPURIOUS;
 
 	/*
 	 * If we've lost data, disable profiling and also set the PARTIAL
 	 * flag to indicate that the last record is corrupted.
 	 */
+<<<<<<< HEAD
 	if (FIELD_GET(PMBSR_EL1_DL, pmbsr))
+=======
+	if (pmbsr & BIT(SYS_PMBSR_EL1_DL_SHIFT))
+>>>>>>> b7ba80a49124 (Commit)
 		perf_aux_output_flag(handle, PERF_AUX_FLAG_TRUNCATED |
 					     PERF_AUX_FLAG_PARTIAL);
 
 	/* Report collisions to userspace so that it can up the period */
+<<<<<<< HEAD
 	if (FIELD_GET(PMBSR_EL1_COLL, pmbsr))
 		perf_aux_output_flag(handle, PERF_AUX_FLAG_COLLISION);
 
@@ -621,6 +701,18 @@ arm_spe_pmu_buf_get_fault_act(struct perf_output_handle *handle)
 		break;
 	case PMBSR_EL1_EC_FAULT_S1:
 	case PMBSR_EL1_EC_FAULT_S2:
+=======
+	if (pmbsr & BIT(SYS_PMBSR_EL1_COLL_SHIFT))
+		perf_aux_output_flag(handle, PERF_AUX_FLAG_COLLISION);
+
+	/* We only expect buffer management events */
+	switch (pmbsr & (SYS_PMBSR_EL1_EC_MASK << SYS_PMBSR_EL1_EC_SHIFT)) {
+	case SYS_PMBSR_EL1_EC_BUF:
+		/* Handled below */
+		break;
+	case SYS_PMBSR_EL1_EC_FAULT_S1:
+	case SYS_PMBSR_EL1_EC_FAULT_S2:
+>>>>>>> b7ba80a49124 (Commit)
 		err_str = "Unexpected buffer fault";
 		goto out_err;
 	default:
@@ -629,8 +721,14 @@ arm_spe_pmu_buf_get_fault_act(struct perf_output_handle *handle)
 	}
 
 	/* Buffer management event */
+<<<<<<< HEAD
 	switch (FIELD_GET(PMBSR_EL1_BUF_BSC_MASK, pmbsr)) {
 	case PMBSR_EL1_BUF_BSC_FULL:
+=======
+	switch (pmbsr &
+		(SYS_PMBSR_EL1_BUF_BSC_MASK << SYS_PMBSR_EL1_BUF_BSC_SHIFT)) {
+	case SYS_PMBSR_EL1_BUF_BSC_FULL:
+>>>>>>> b7ba80a49124 (Commit)
 		ret = SPE_PMU_BUF_FAULT_ACT_OK;
 		goto out_stop;
 	default:
@@ -705,6 +803,7 @@ static u64 arm_spe_pmsevfr_res0(u16 pmsver)
 {
 	switch (pmsver) {
 	case ID_AA64DFR0_EL1_PMSVer_IMP:
+<<<<<<< HEAD
 		return PMSEVFR_EL1_RES0_IMP;
 	case ID_AA64DFR0_EL1_PMSVer_V1P1:
 		return PMSEVFR_EL1_RES0_V1P1;
@@ -712,6 +811,13 @@ static u64 arm_spe_pmsevfr_res0(u16 pmsver)
 	/* Return the highest version we support in default */
 	default:
 		return PMSEVFR_EL1_RES0_V1P2;
+=======
+		return SYS_PMSEVFR_EL1_RES0_8_2;
+	case ID_AA64DFR0_EL1_PMSVer_V1P1:
+	/* Return the highest version we support in default */
+	default:
+		return SYS_PMSEVFR_EL1_RES0_8_3;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -733,9 +839,12 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
 	if (arm_spe_event_to_pmsevfr(event) & arm_spe_pmsevfr_res0(spe_pmu->pmsver))
 		return -EOPNOTSUPP;
 
+<<<<<<< HEAD
 	if (arm_spe_event_to_pmsnevfr(event) & arm_spe_pmsevfr_res0(spe_pmu->pmsver))
 		return -EOPNOTSUPP;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (attr->exclude_idle)
 		return -EOPNOTSUPP;
 
@@ -750,6 +859,7 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
 		return -EINVAL;
 
 	reg = arm_spe_event_to_pmsfcr(event);
+<<<<<<< HEAD
 	if ((FIELD_GET(PMSFCR_EL1_FE, reg)) &&
 	    !(spe_pmu->features & SPE_PMU_FEAT_FILT_EVT))
 		return -EOPNOTSUPP;
@@ -763,13 +873,29 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
 		return -EOPNOTSUPP;
 
 	if ((FIELD_GET(PMSFCR_EL1_FL, reg)) &&
+=======
+	if ((reg & BIT(SYS_PMSFCR_EL1_FE_SHIFT)) &&
+	    !(spe_pmu->features & SPE_PMU_FEAT_FILT_EVT))
+		return -EOPNOTSUPP;
+
+	if ((reg & BIT(SYS_PMSFCR_EL1_FT_SHIFT)) &&
+	    !(spe_pmu->features & SPE_PMU_FEAT_FILT_TYP))
+		return -EOPNOTSUPP;
+
+	if ((reg & BIT(SYS_PMSFCR_EL1_FL_SHIFT)) &&
+>>>>>>> b7ba80a49124 (Commit)
 	    !(spe_pmu->features & SPE_PMU_FEAT_FILT_LAT))
 		return -EOPNOTSUPP;
 
 	set_spe_event_has_cx(event);
 	reg = arm_spe_event_to_pmscr(event);
 	if (!perfmon_capable() &&
+<<<<<<< HEAD
 	    (reg & (PMSCR_EL1_PA | PMSCR_EL1_PCT)))
+=======
+	    (reg & (BIT(SYS_PMSCR_EL1_PA_SHIFT) |
+		    BIT(SYS_PMSCR_EL1_PCT_SHIFT))))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EACCES;
 
 	return 0;
@@ -793,11 +919,14 @@ static void arm_spe_pmu_start(struct perf_event *event, int flags)
 	reg = arm_spe_event_to_pmsevfr(event);
 	write_sysreg_s(reg, SYS_PMSEVFR_EL1);
 
+<<<<<<< HEAD
 	if (spe_pmu->features & SPE_PMU_FEAT_INV_FILT_EVT) {
 		reg = arm_spe_event_to_pmsnevfr(event);
 		write_sysreg_s(reg, SYS_PMSNEVFR_EL1);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	reg = arm_spe_event_to_pmslatfr(event);
 	write_sysreg_s(reg, SYS_PMSLATFR_EL1);
 
@@ -1012,14 +1141,22 @@ static void __arm_spe_pmu_dev_probe(void *info)
 
 	/* Read PMBIDR first to determine whether or not we have access */
 	reg = read_sysreg_s(SYS_PMBIDR_EL1);
+<<<<<<< HEAD
 	if (FIELD_GET(PMBIDR_EL1_P, reg)) {
+=======
+	if (reg & BIT(SYS_PMBIDR_EL1_P_SHIFT)) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(dev,
 			"profiling buffer owned by higher exception level\n");
 		return;
 	}
 
 	/* Minimum alignment. If it's out-of-range, then fail the probe */
+<<<<<<< HEAD
 	fld = FIELD_GET(PMBIDR_EL1_ALIGN, reg);
+=======
+	fld = reg >> SYS_PMBIDR_EL1_ALIGN_SHIFT & SYS_PMBIDR_EL1_ALIGN_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 	spe_pmu->align = 1 << fld;
 	if (spe_pmu->align > SZ_2K) {
 		dev_err(dev, "unsupported PMBIDR.Align [%d] on CPU %d\n",
@@ -1029,6 +1166,7 @@ static void __arm_spe_pmu_dev_probe(void *info)
 
 	/* It's now safe to read PMSIDR and figure out what we've got */
 	reg = read_sysreg_s(SYS_PMSIDR_EL1);
+<<<<<<< HEAD
 	if (FIELD_GET(PMSIDR_EL1_FE, reg))
 		spe_pmu->features |= SPE_PMU_FEAT_FILT_EVT;
 
@@ -1072,18 +1210,68 @@ static void __arm_spe_pmu_dev_probe(void *info)
 		spe_pmu->min_period = 2048;
 		break;
 	case PMSIDR_EL1_INTERVAL_3072:
+=======
+	if (reg & BIT(SYS_PMSIDR_EL1_FE_SHIFT))
+		spe_pmu->features |= SPE_PMU_FEAT_FILT_EVT;
+
+	if (reg & BIT(SYS_PMSIDR_EL1_FT_SHIFT))
+		spe_pmu->features |= SPE_PMU_FEAT_FILT_TYP;
+
+	if (reg & BIT(SYS_PMSIDR_EL1_FL_SHIFT))
+		spe_pmu->features |= SPE_PMU_FEAT_FILT_LAT;
+
+	if (reg & BIT(SYS_PMSIDR_EL1_ARCHINST_SHIFT))
+		spe_pmu->features |= SPE_PMU_FEAT_ARCH_INST;
+
+	if (reg & BIT(SYS_PMSIDR_EL1_LDS_SHIFT))
+		spe_pmu->features |= SPE_PMU_FEAT_LDS;
+
+	if (reg & BIT(SYS_PMSIDR_EL1_ERND_SHIFT))
+		spe_pmu->features |= SPE_PMU_FEAT_ERND;
+
+	/* This field has a spaced out encoding, so just use a look-up */
+	fld = reg >> SYS_PMSIDR_EL1_INTERVAL_SHIFT & SYS_PMSIDR_EL1_INTERVAL_MASK;
+	switch (fld) {
+	case 0:
+		spe_pmu->min_period = 256;
+		break;
+	case 2:
+		spe_pmu->min_period = 512;
+		break;
+	case 3:
+		spe_pmu->min_period = 768;
+		break;
+	case 4:
+		spe_pmu->min_period = 1024;
+		break;
+	case 5:
+		spe_pmu->min_period = 1536;
+		break;
+	case 6:
+		spe_pmu->min_period = 2048;
+		break;
+	case 7:
+>>>>>>> b7ba80a49124 (Commit)
 		spe_pmu->min_period = 3072;
 		break;
 	default:
 		dev_warn(dev, "unknown PMSIDR_EL1.Interval [%d]; assuming 8\n",
 			 fld);
 		fallthrough;
+<<<<<<< HEAD
 	case PMSIDR_EL1_INTERVAL_4096:
+=======
+	case 8:
+>>>>>>> b7ba80a49124 (Commit)
 		spe_pmu->min_period = 4096;
 	}
 
 	/* Maximum record size. If it's out-of-range, then fail the probe */
+<<<<<<< HEAD
 	fld = FIELD_GET(PMSIDR_EL1_MAXSIZE, reg);
+=======
+	fld = reg >> SYS_PMSIDR_EL1_MAXSIZE_SHIFT & SYS_PMSIDR_EL1_MAXSIZE_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 	spe_pmu->max_record_sz = 1 << fld;
 	if (spe_pmu->max_record_sz > SZ_2K || spe_pmu->max_record_sz < 16) {
 		dev_err(dev, "unsupported PMSIDR_EL1.MaxSize [%d] on CPU %d\n",
@@ -1091,22 +1279,38 @@ static void __arm_spe_pmu_dev_probe(void *info)
 		return;
 	}
 
+<<<<<<< HEAD
 	fld = FIELD_GET(PMSIDR_EL1_COUNTSIZE, reg);
+=======
+	fld = reg >> SYS_PMSIDR_EL1_COUNTSIZE_SHIFT & SYS_PMSIDR_EL1_COUNTSIZE_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 	switch (fld) {
 	default:
 		dev_warn(dev, "unknown PMSIDR_EL1.CountSize [%d]; assuming 2\n",
 			 fld);
 		fallthrough;
+<<<<<<< HEAD
 	case PMSIDR_EL1_COUNTSIZE_12_BIT_SAT:
 		spe_pmu->counter_sz = 12;
 		break;
 	case PMSIDR_EL1_COUNTSIZE_16_BIT_SAT:
+=======
+	case 2:
+		spe_pmu->counter_sz = 12;
+		break;
+	case 3:
+>>>>>>> b7ba80a49124 (Commit)
 		spe_pmu->counter_sz = 16;
 	}
 
 	dev_info(dev,
+<<<<<<< HEAD
 		 "probed SPEv1.%d for CPUs %*pbl [max_record_sz %u, align %u, features 0x%llx]\n",
 		 spe_pmu->pmsver - 1, cpumask_pr_args(&spe_pmu->supported_cpus),
+=======
+		 "probed for CPUs %*pbl [max_record_sz %u, align %u, features 0x%llx]\n",
+		 cpumask_pr_args(&spe_pmu->supported_cpus),
+>>>>>>> b7ba80a49124 (Commit)
 		 spe_pmu->max_record_sz, spe_pmu->align, spe_pmu->features);
 
 	spe_pmu->features |= SPE_PMU_FEAT_DEV_PROBED;

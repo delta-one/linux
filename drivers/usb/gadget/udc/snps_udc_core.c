@@ -1933,6 +1933,10 @@ static int amd5536_udc_start(struct usb_gadget *g,
 	struct udc *dev = to_amd5536_udc(g);
 	u32 tmp;
 
+<<<<<<< HEAD
+=======
+	driver->driver.bus = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	dev->driver = driver;
 
 	/* Some gadget drivers use both ep0 directions.

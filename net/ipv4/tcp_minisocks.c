@@ -240,6 +240,7 @@ kill:
 }
 EXPORT_SYMBOL(tcp_timewait_state_process);
 
+<<<<<<< HEAD
 static void tcp_time_wait_init(struct sock *sk, struct tcp_timewait_sock *tcptw)
 {
 #ifdef CONFIG_TCP_MD5SIG
@@ -274,6 +275,8 @@ out_free:
 #endif
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Move a socket to time-wait or dead fin-wait-2 state.
  */
@@ -316,7 +319,30 @@ void tcp_time_wait(struct sock *sk, int state, int timeo)
 		}
 #endif
 
+<<<<<<< HEAD
 		tcp_time_wait_init(sk, tcptw);
+=======
+#ifdef CONFIG_TCP_MD5SIG
+		/*
+		 * The timewait bucket does not have the key DB from the
+		 * sock structure. We just make a quick copy of the
+		 * md5 key being used (if indeed we are using one)
+		 * so the timewait ack generating code has the key.
+		 */
+		do {
+			tcptw->tw_md5_key = NULL;
+			if (static_branch_unlikely(&tcp_md5_needed)) {
+				struct tcp_md5sig_key *key;
+
+				key = tp->af_specific->md5_lookup(sk, sk);
+				if (key) {
+					tcptw->tw_md5_key = kmemdup(key, sizeof(*key), GFP_ATOMIC);
+					BUG_ON(tcptw->tw_md5_key && !tcp_alloc_md5sig_pool());
+				}
+			}
+		} while (0);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Get the TIME_WAIT timeout firing. */
 		if (timeo < rto)
@@ -352,6 +378,7 @@ EXPORT_SYMBOL(tcp_time_wait);
 void tcp_twsk_destructor(struct sock *sk)
 {
 #ifdef CONFIG_TCP_MD5SIG
+<<<<<<< HEAD
 	if (static_branch_unlikely(&tcp_md5_needed.key)) {
 		struct tcp_timewait_sock *twsk = tcp_twsk(sk);
 
@@ -359,6 +386,13 @@ void tcp_twsk_destructor(struct sock *sk)
 			kfree_rcu(twsk->tw_md5_key, rcu);
 			static_branch_slow_dec_deferred(&tcp_md5_needed);
 		}
+=======
+	if (static_branch_unlikely(&tcp_md5_needed)) {
+		struct tcp_timewait_sock *twsk = tcp_twsk(sk);
+
+		if (twsk->tw_md5_key)
+			kfree_rcu(twsk->tw_md5_key, rcu);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 #endif
 }
@@ -370,6 +404,7 @@ void tcp_twsk_purge(struct list_head *net_exit_list, int family)
 	struct net *net;
 
 	list_for_each_entry(net, net_exit_list, exit_list) {
+<<<<<<< HEAD
 		if (net->ipv4.tcp_death_row.hashinfo->pernet) {
 			/* Even if tw_refcount == 1, we must clean up kernel reqsk */
 			inet_twsk_purge(net->ipv4.tcp_death_row.hashinfo, family);
@@ -378,6 +413,15 @@ void tcp_twsk_purge(struct list_head *net_exit_list, int family)
 			if (refcount_read(&net->ipv4.tcp_death_row.tw_refcount) == 1)
 				continue;
 
+=======
+		/* The last refcount is decremented in tcp_sk_exit_batch() */
+		if (refcount_read(&net->ipv4.tcp_death_row.tw_refcount) == 1)
+			continue;
+
+		if (net->ipv4.tcp_death_row.hashinfo->pernet) {
+			inet_twsk_purge(net->ipv4.tcp_death_row.hashinfo, family);
+		} else if (!purged_once) {
+>>>>>>> b7ba80a49124 (Commit)
 			inet_twsk_purge(&tcp_hashinfo, family);
 			purged_once = true;
 		}
@@ -463,7 +507,11 @@ void tcp_ca_openreq_child(struct sock *sk, const struct dst_entry *dst)
 }
 EXPORT_SYMBOL_GPL(tcp_ca_openreq_child);
 
+<<<<<<< HEAD
 static void smc_check_reset_syn_req(const struct tcp_sock *oldtp,
+=======
+static void smc_check_reset_syn_req(struct tcp_sock *oldtp,
+>>>>>>> b7ba80a49124 (Commit)
 				    struct request_sock *req,
 				    struct tcp_sock *newtp)
 {
@@ -492,8 +540,12 @@ struct sock *tcp_create_openreq_child(const struct sock *sk,
 	const struct inet_request_sock *ireq = inet_rsk(req);
 	struct tcp_request_sock *treq = tcp_rsk(req);
 	struct inet_connection_sock *newicsk;
+<<<<<<< HEAD
 	const struct tcp_sock *oldtp;
 	struct tcp_sock *newtp;
+=======
+	struct tcp_sock *oldtp, *newtp;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 seq;
 
 	if (!newsk)
@@ -580,7 +632,10 @@ struct sock *tcp_create_openreq_child(const struct sock *sk,
 	newtp->fastopen_req = NULL;
 	RCU_INIT_POINTER(newtp->fastopen_rsk, NULL);
 
+<<<<<<< HEAD
 	newtp->bpf_chg_cc_inprogress = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	tcp_bpf_clone(sk, newsk);
 
 	__TCP_INC_STATS(sock_net(sk), TCP_MIB_PASSIVEOPENS);
@@ -598,9 +653,12 @@ EXPORT_SYMBOL(tcp_create_openreq_child);
  * validation and inside tcp_v4_reqsk_send_ack(). Can we do better?
  *
  * We don't need to initialize tmp_opt.sack_ok as we don't use the results
+<<<<<<< HEAD
  *
  * Note: If @fastopen is true, this can be called from process context.
  *       Otherwise, this is from BH context.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 struct sock *tcp_check_req(struct sock *sk, struct sk_buff *skb,
@@ -752,7 +810,11 @@ struct sock *tcp_check_req(struct sock *sk, struct sk_buff *skb,
 					  &tcp_rsk(req)->last_oow_ack_time))
 			req->rsk_ops->send_ack(sk, skb, req);
 		if (paws_reject)
+<<<<<<< HEAD
 			NET_INC_STATS(sock_net(sk), LINUX_MIB_PAWSESTABREJECTED);
+=======
+			__NET_INC_STATS(sock_net(sk), LINUX_MIB_PAWSESTABREJECTED);
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 	}
 
@@ -771,7 +833,11 @@ struct sock *tcp_check_req(struct sock *sk, struct sk_buff *skb,
 	 *	   "fourth, check the SYN bit"
 	 */
 	if (flg & (TCP_FLAG_RST|TCP_FLAG_SYN)) {
+<<<<<<< HEAD
 		TCP_INC_STATS(sock_net(sk), TCP_MIB_ATTEMPTFAILS);
+=======
+		__TCP_INC_STATS(sock_net(sk), TCP_MIB_ATTEMPTFAILS);
+>>>>>>> b7ba80a49124 (Commit)
 		goto embryonic_reset;
 	}
 

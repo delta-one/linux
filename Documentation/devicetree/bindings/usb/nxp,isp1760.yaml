@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/usb/nxp,isp1760.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: NXP ISP1760 family controller
+=======
+title: NXP ISP1760 family controller bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Sebastian Siewior <bigeasy@linutronix.de>

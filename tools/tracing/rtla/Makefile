@@ -119,8 +119,11 @@ install: doc_install
 	$(STRIP) $(DESTDIR)$(BINDIR)/rtla
 	@test ! -f $(DESTDIR)$(BINDIR)/osnoise || rm $(DESTDIR)$(BINDIR)/osnoise
 	ln -s rtla $(DESTDIR)$(BINDIR)/osnoise
+<<<<<<< HEAD
 	@test ! -f $(DESTDIR)$(BINDIR)/hwnoise || rm $(DESTDIR)$(BINDIR)/hwnoise
 	ln -s rtla $(DESTDIR)$(BINDIR)/hwnoise
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	@test ! -f $(DESTDIR)$(BINDIR)/timerlat || rm $(DESTDIR)$(BINDIR)/timerlat
 	ln -s rtla $(DESTDIR)$(BINDIR)/timerlat
 

@@ -98,6 +98,7 @@ EXPORT_SYMBOL(__devm_mdiobus_register);
 
 #if IS_ENABLED(CONFIG_OF_MDIO)
 /**
+<<<<<<< HEAD
  * __devm_of_mdiobus_register - Resource managed variant of of_mdiobus_register()
  * @dev:	Device to register mii_bus for
  * @mdio:	MII bus structure to register
@@ -106,6 +107,15 @@ EXPORT_SYMBOL(__devm_mdiobus_register);
  */
 int __devm_of_mdiobus_register(struct device *dev, struct mii_bus *mdio,
 			       struct device_node *np, struct module *owner)
+=======
+ * devm_of_mdiobus_register - Resource managed variant of of_mdiobus_register()
+ * @dev:	Device to register mii_bus for
+ * @mdio:	MII bus structure to register
+ * @np:		Device node to parse
+ */
+int devm_of_mdiobus_register(struct device *dev, struct mii_bus *mdio,
+			     struct device_node *np)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mdiobus_devres *dr;
 	int ret;
@@ -118,7 +128,11 @@ int __devm_of_mdiobus_register(struct device *dev, struct mii_bus *mdio,
 	if (!dr)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	ret = __of_mdiobus_register(mdio, np, owner);
+=======
+	ret = of_mdiobus_register(mdio, np);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		devres_free(dr);
 		return ret;
@@ -128,7 +142,11 @@ int __devm_of_mdiobus_register(struct device *dev, struct mii_bus *mdio,
 	devres_add(dev, dr);
 	return 0;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(__devm_of_mdiobus_register);
+=======
+EXPORT_SYMBOL(devm_of_mdiobus_register);
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_OF_MDIO */
 
 MODULE_LICENSE("GPL");

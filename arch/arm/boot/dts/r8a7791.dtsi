@@ -1223,7 +1223,11 @@
 
 		rcar_sound: sound@ec500000 {
 			/*
+<<<<<<< HEAD
 			 * #sound-dai-cells is required if simple-card
+=======
+			 * #sound-dai-cells is required
+>>>>>>> b7ba80a49124 (Commit)
 			 *
 			 * Single DAI : #sound-dai-cells = <0>;         <&rcar_sound>;
 			 * Multi  DAI : #sound-dai-cells = <1>;         <&rcar_sound N>;
@@ -1365,7 +1369,11 @@
 					dma-names = "rx", "tx", "rxu", "txu";
 				};
 				ssi1: ssi-1 {
+<<<<<<< HEAD
 					interrupts = <GIC_SPI 371 IRQ_TYPE_LEVEL_HIGH>;
+=======
+					 interrupts = <GIC_SPI 371 IRQ_TYPE_LEVEL_HIGH>;
+>>>>>>> b7ba80a49124 (Commit)
 					dmas = <&audma0 0x03>, <&audma1 0x04>,
 					       <&audma0 0x49>, <&audma1 0x4a>;
 					dma-names = "rx", "tx", "rxu", "txu";

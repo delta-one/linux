@@ -375,6 +375,7 @@ static int smu10_enable_gfx_off(struct pp_hwmgr *hwmgr)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void smu10_populate_umdpstate_clocks(struct pp_hwmgr *hwmgr)
 {
 	hwmgr->pstate_sclk = SMU10_UMD_PSTATE_GFXCLK;
@@ -386,6 +387,8 @@ static void smu10_populate_umdpstate_clocks(struct pp_hwmgr *hwmgr)
 	hwmgr->pstate_mclk_peak = SMU10_UMD_PSTATE_PEAK_FCLK;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int smu10_enable_dpm_tasks(struct pp_hwmgr *hwmgr)
 {
 	struct amdgpu_device *adev = hwmgr->adev;
@@ -409,8 +412,11 @@ static int smu10_enable_dpm_tasks(struct pp_hwmgr *hwmgr)
 			return ret;
 	}
 
+<<<<<<< HEAD
 	smu10_populate_umdpstate_clocks(hwmgr);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -587,6 +593,12 @@ static int smu10_hwmgr_backend_init(struct pp_hwmgr *hwmgr)
 
 	hwmgr->platform_descriptor.minimumClocksReductionPercentage = 50;
 
+<<<<<<< HEAD
+=======
+	hwmgr->pstate_sclk = SMU10_UMD_PSTATE_GFXCLK * 100;
+	hwmgr->pstate_mclk = SMU10_UMD_PSTATE_FCLK * 100;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* enable the pp_od_clk_voltage sysfs file */
 	hwmgr->od_enabled = 1;
 	/* disabled fine grain tuning function by default */

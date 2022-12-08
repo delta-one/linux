@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0
+<<<<<<< HEAD
 obj-y += testcases.dtbo.o
 
 obj-$(CONFIG_OF_OVERLAY) += overlay.dtbo.o \
@@ -33,6 +34,42 @@ obj-$(CONFIG_OF_OVERLAY) += overlay.dtbo.o \
 			    overlay_gpio_03.dtbo.o \
 			    overlay_gpio_04a.dtbo.o \
 			    overlay_gpio_04b.dtbo.o
+=======
+obj-y += testcases.dtb.o
+
+obj-$(CONFIG_OF_OVERLAY) += overlay.dtb.o \
+			    overlay_0.dtb.o \
+			    overlay_1.dtb.o \
+			    overlay_2.dtb.o \
+			    overlay_3.dtb.o \
+			    overlay_4.dtb.o \
+			    overlay_5.dtb.o \
+			    overlay_6.dtb.o \
+			    overlay_7.dtb.o \
+			    overlay_8.dtb.o \
+			    overlay_9.dtb.o \
+			    overlay_10.dtb.o \
+			    overlay_11.dtb.o \
+			    overlay_12.dtb.o \
+			    overlay_13.dtb.o \
+			    overlay_15.dtb.o \
+			    overlay_16.dtb.o \
+			    overlay_17.dtb.o \
+			    overlay_18.dtb.o \
+			    overlay_19.dtb.o \
+			    overlay_20.dtb.o \
+			    overlay_bad_add_dup_node.dtb.o \
+			    overlay_bad_add_dup_prop.dtb.o \
+			    overlay_bad_phandle.dtb.o \
+			    overlay_bad_symbol.dtb.o \
+			    overlay_base.dtb.o \
+			    overlay_gpio_01.dtb.o \
+			    overlay_gpio_02a.dtb.o \
+			    overlay_gpio_02b.dtb.o \
+			    overlay_gpio_03.dtb.o \
+			    overlay_gpio_04a.dtb.o \
+			    overlay_gpio_04b.dtb.o
+>>>>>>> b7ba80a49124 (Commit)
 
 # enable creation of __symbols__ node
 DTC_FLAGS_overlay += -@

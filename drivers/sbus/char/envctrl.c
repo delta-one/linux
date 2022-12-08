@@ -363,8 +363,13 @@ static int envctrl_read_cpu_info(int cpu, struct i2c_child_t *pchild,
 				 char mon_type, unsigned char *bufdata)
 {
 	unsigned char data;
+<<<<<<< HEAD
 	int i, j = -1;
 	char *tbl;
+=======
+	int i;
+	char *tbl, j = -1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Find the right monitor type and channel. */
 	for (i = 0; i < PCF8584_MAX_CHANNELS; i++) {

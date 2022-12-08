@@ -112,7 +112,11 @@ void amdtp_hid_wakeup(struct hid_device *hid)
 	}
 }
 
+<<<<<<< HEAD
 static const struct hid_ll_driver amdtp_hid_ll_driver = {
+=======
+static struct hid_ll_driver amdtp_hid_ll_driver = {
+>>>>>>> b7ba80a49124 (Commit)
 	.parse	=	amdtp_hid_parse,
 	.start	=	amdtp_hid_start,
 	.stop	=	amdtp_hid_stop,

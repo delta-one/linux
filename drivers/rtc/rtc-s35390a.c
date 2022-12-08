@@ -211,7 +211,11 @@ static int s35390a_rtc_set_time(struct device *dev, struct rtc_time *tm)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct s35390a	*s35390a = i2c_get_clientdata(client);
+<<<<<<< HEAD
 	int i;
+=======
+	int i, err;
+>>>>>>> b7ba80a49124 (Commit)
 	char buf[7], status;
 
 	dev_dbg(&client->dev, "%s: tm is secs=%d, mins=%d, hours=%d mday=%d, "
@@ -234,7 +238,13 @@ static int s35390a_rtc_set_time(struct device *dev, struct rtc_time *tm)
 	for (i = 0; i < 7; ++i)
 		buf[i] = bitrev8(buf[i]);
 
+<<<<<<< HEAD
 	return s35390a_set_reg(s35390a, S35390A_CMD_TIME1, buf, sizeof(buf));
+=======
+	err = s35390a_set_reg(s35390a, S35390A_CMD_TIME1, buf, sizeof(buf));
+
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int s35390a_rtc_read_time(struct device *dev, struct rtc_time *tm)

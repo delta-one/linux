@@ -364,6 +364,7 @@ static irqreturn_t icn8505_irq(int irq, void *dev_id)
 
 static int icn8505_probe_acpi(struct icn8505_data *icn8505, struct device *dev)
 {
+<<<<<<< HEAD
 	const char *subsys;
 	int error;
 
@@ -373,11 +374,38 @@ static int icn8505_probe_acpi(struct icn8505_data *icn8505, struct device *dev)
 		subsys = "unknown";
 	else if (error)
 		return error;
+=======
+	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+	const char *subsys = "unknown";
+	struct acpi_device *adev;
+	union acpi_object *obj;
+	acpi_status status;
+
+	adev = ACPI_COMPANION(dev);
+	if (!adev)
+		return -ENODEV;
+
+	status = acpi_evaluate_object(adev->handle, "_SUB", NULL, &buffer);
+	if (ACPI_SUCCESS(status)) {
+		obj = buffer.pointer;
+		if (obj->type == ACPI_TYPE_STRING)
+			subsys = obj->string.pointer;
+		else
+			dev_warn(dev, "Warning ACPI _SUB did not return a string\n");
+	} else {
+		dev_warn(dev, "Warning ACPI _SUB failed: %#x\n", status);
+		buffer.pointer = NULL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	snprintf(icn8505->firmware_name, sizeof(icn8505->firmware_name),
 		 "chipone/icn8505-%s.fw", subsys);
 
+<<<<<<< HEAD
 	kfree_const(subsys);
+=======
+	kfree(buffer.pointer);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -460,7 +488,11 @@ static int icn8505_probe(struct i2c_client *client)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int icn8505_suspend(struct device *dev)
+=======
+static int __maybe_unused icn8505_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct icn8505_data *icn8505 = i2c_get_clientdata(to_i2c_client(dev));
 
@@ -471,7 +503,11 @@ static int icn8505_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int icn8505_resume(struct device *dev)
+=======
+static int __maybe_unused icn8505_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct icn8505_data *icn8505 = i2c_get_clientdata(to_i2c_client(dev));
 	int error;
@@ -484,7 +520,11 @@ static int icn8505_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(icn8505_pm_ops, icn8505_suspend, icn8505_resume);
+=======
+static SIMPLE_DEV_PM_OPS(icn8505_pm_ops, icn8505_suspend, icn8505_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct acpi_device_id icn8505_acpi_match[] = {
 	{ "CHPN0001" },
@@ -495,7 +535,11 @@ MODULE_DEVICE_TABLE(acpi, icn8505_acpi_match);
 static struct i2c_driver icn8505_driver = {
 	.driver = {
 		.name	= "chipone_icn8505",
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&icn8505_pm_ops),
+=======
+		.pm	= &icn8505_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		.acpi_match_table = icn8505_acpi_match,
 	},
 	.probe_new = icn8505_probe,

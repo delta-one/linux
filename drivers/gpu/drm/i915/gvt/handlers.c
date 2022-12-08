@@ -43,7 +43,10 @@
 #include "intel_mchbar_regs.h"
 #include "display/intel_display_types.h"
 #include "display/intel_dmc_regs.h"
+<<<<<<< HEAD
 #include "display/intel_dpio_phy.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "display/intel_fbc.h"
 #include "display/vlv_dsi_pll_regs.h"
 #include "gt/intel_gt_regs.h"
@@ -666,8 +669,13 @@ static void vgpu_update_refresh_rate(struct intel_vgpu *vgpu)
 	link_n = vgpu_vreg_t(vgpu, PIPE_LINK_N1(TRANSCODER_A));
 
 	/* Get H/V total from transcoder timing */
+<<<<<<< HEAD
 	htotal = (vgpu_vreg_t(vgpu, TRANS_HTOTAL(TRANSCODER_A)) >> TRANS_HTOTAL_SHIFT);
 	vtotal = (vgpu_vreg_t(vgpu, TRANS_VTOTAL(TRANSCODER_A)) >> TRANS_VTOTAL_SHIFT);
+=======
+	htotal = (vgpu_vreg_t(vgpu, HTOTAL(TRANSCODER_A)) >> TRANS_HTOTAL_SHIFT);
+	vtotal = (vgpu_vreg_t(vgpu, VTOTAL(TRANSCODER_A)) >> TRANS_VTOTAL_SHIFT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (dp_br && link_n && htotal && vtotal) {
 		u64 pixel_clk = 0;
@@ -697,12 +705,21 @@ static int pipeconf_mmio_write(struct intel_vgpu *vgpu, unsigned int offset,
 	write_vreg(vgpu, offset, p_data, bytes);
 	data = vgpu_vreg(vgpu, offset);
 
+<<<<<<< HEAD
 	if (data & TRANSCONF_ENABLE) {
 		vgpu_vreg(vgpu, offset) |= TRANSCONF_STATE_ENABLE;
 		vgpu_update_refresh_rate(vgpu);
 		vgpu_update_vblank_emulation(vgpu, true);
 	} else {
 		vgpu_vreg(vgpu, offset) &= ~TRANSCONF_STATE_ENABLE;
+=======
+	if (data & PIPECONF_ENABLE) {
+		vgpu_vreg(vgpu, offset) |= PIPECONF_STATE_ENABLE;
+		vgpu_update_refresh_rate(vgpu);
+		vgpu_update_vblank_emulation(vgpu, true);
+	} else {
+		vgpu_vreg(vgpu, offset) &= ~PIPECONF_STATE_ENABLE;
+>>>>>>> b7ba80a49124 (Commit)
 		vgpu_update_vblank_emulation(vgpu, false);
 	}
 	return 0;
@@ -735,7 +752,11 @@ static i915_reg_t force_nonpriv_white_list[] = {
 	_MMIO(0x770c),
 	_MMIO(0x83a8),
 	_MMIO(0xb110),
+<<<<<<< HEAD
 	_MMIO(0xb118),
+=======
+	GEN8_L3SQCREG4,//_MMIO(0xb118)
+>>>>>>> b7ba80a49124 (Commit)
 	_MMIO(0xe100),
 	_MMIO(0xe18c),
 	_MMIO(0xe48c),
@@ -2258,6 +2279,7 @@ static int init_generic_mmio_info(struct intel_gvt *gvt)
 	MMIO_DFH(_MMIO(0x2438), D_ALL, F_CMD_ACCESS, NULL, NULL);
 	MMIO_DFH(_MMIO(0x243c), D_ALL, F_CMD_ACCESS, NULL, NULL);
 	MMIO_DFH(_MMIO(0x7018), D_ALL, F_MODE_MASK | F_CMD_ACCESS, NULL, NULL);
+<<<<<<< HEAD
 	MMIO_DFH(HSW_HALF_SLICE_CHICKEN3, D_ALL, F_MODE_MASK | F_CMD_ACCESS, NULL, NULL);
 	MMIO_DFH(GEN7_HALF_SLICE_CHICKEN1, D_ALL, F_MODE_MASK | F_CMD_ACCESS, NULL, NULL);
 
@@ -2266,6 +2288,16 @@ static int init_generic_mmio_info(struct intel_gvt *gvt)
 	MMIO_DH(TRANSCONF(TRANSCODER_B), D_ALL, NULL, pipeconf_mmio_write);
 	MMIO_DH(TRANSCONF(TRANSCODER_C), D_ALL, NULL, pipeconf_mmio_write);
 	MMIO_DH(TRANSCONF(TRANSCODER_EDP), D_ALL, NULL, pipeconf_mmio_write);
+=======
+	MMIO_DFH(HALF_SLICE_CHICKEN3, D_ALL, F_MODE_MASK | F_CMD_ACCESS, NULL, NULL);
+	MMIO_DFH(GEN7_HALF_SLICE_CHICKEN1, D_ALL, F_MODE_MASK | F_CMD_ACCESS, NULL, NULL);
+
+	/* display */
+	MMIO_DH(PIPECONF(PIPE_A), D_ALL, NULL, pipeconf_mmio_write);
+	MMIO_DH(PIPECONF(PIPE_B), D_ALL, NULL, pipeconf_mmio_write);
+	MMIO_DH(PIPECONF(PIPE_C), D_ALL, NULL, pipeconf_mmio_write);
+	MMIO_DH(PIPECONF(_PIPE_EDP), D_ALL, NULL, pipeconf_mmio_write);
+>>>>>>> b7ba80a49124 (Commit)
 	MMIO_DH(DSPSURF(PIPE_A), D_ALL, NULL, pri_surf_mmio_write);
 	MMIO_DH(REG_50080(PIPE_A, PLANE_PRIMARY), D_ALL, NULL,
 		reg50080_mmio_write);

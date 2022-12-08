@@ -87,6 +87,14 @@ struct sbitmap {
  */
 struct sbq_wait_state {
 	/**
+<<<<<<< HEAD
+=======
+	 * @wait_cnt: Number of frees remaining before we wake up.
+	 */
+	atomic_t wait_cnt;
+
+	/**
+>>>>>>> b7ba80a49124 (Commit)
 	 * @wait: Wait queue.
 	 */
 	wait_queue_head_t wait;
@@ -133,6 +141,7 @@ struct sbitmap_queue {
 	 * sbitmap_queue_get_shallow()
 	 */
 	unsigned int min_shallow_depth;
+<<<<<<< HEAD
 
 	/**
 	 * @completion_cnt: Number of bits cleared passed to the
@@ -144,6 +153,8 @@ struct sbitmap_queue {
 	 * @wakeup_cnt: Number of thread wake ups issued.
 	 */
 	atomic_t wakeup_cnt;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**

@@ -12,7 +12,10 @@
 #include "util/target.h"
 #include "util/callchain.h"
 #include "util/lock-contention.h"
+<<<<<<< HEAD
 #include "util/bpf_skel/lock_data.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <subcmd/pager.h>
 #include <subcmd/parse-options.h>
@@ -25,14 +28,20 @@
 #include "util/data.h"
 #include "util/string2.h"
 #include "util/map.h"
+<<<<<<< HEAD
 #include "util/util.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <sys/types.h>
 #include <sys/prctl.h>
 #include <semaphore.h>
 #include <math.h>
 #include <limits.h>
+<<<<<<< HEAD
 #include <ctype.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/list.h>
 #include <linux/hash.h>
@@ -57,6 +66,7 @@ static struct rb_root		thread_stats;
 
 static bool combine_locks;
 static bool show_thread_stats;
+<<<<<<< HEAD
 static bool show_lock_addrs;
 static bool show_lock_owner;
 static bool use_bpf;
@@ -79,6 +89,21 @@ static bool needs_callstack(void)
 {
 	return verbose > 0 || !list_empty(&callstack_filters);
 }
+=======
+static bool use_bpf;
+static unsigned long bpf_map_entries = 10240;
+
+static enum {
+	LOCK_AGGR_ADDR,
+	LOCK_AGGR_TASK,
+	LOCK_AGGR_CALLER,
+} aggr_mode = LOCK_AGGR_ADDR;
+
+static u64 sched_text_start;
+static u64 sched_text_end;
+static u64 lock_text_start;
+static u64 lock_text_end;
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct thread_stat *thread_stat_find(u32 tid)
 {
@@ -466,7 +491,11 @@ static struct lock_stat *pop_from_result(void)
 	return container_of(node, struct lock_stat, rb);
 }
 
+<<<<<<< HEAD
 struct lock_stat *lock_stat_find(u64 addr)
+=======
+static struct lock_stat *lock_stat_find(u64 addr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hlist_head *entry = lockhashentry(addr);
 	struct lock_stat *ret;
@@ -478,7 +507,11 @@ struct lock_stat *lock_stat_find(u64 addr)
 	return NULL;
 }
 
+<<<<<<< HEAD
 struct lock_stat *lock_stat_findnew(u64 addr, const char *name, int flags)
+=======
+static struct lock_stat *lock_stat_findnew(u64 addr, const char *name, int flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hlist_head *entry = lockhashentry(addr);
 	struct lock_stat *ret, *new;
@@ -510,6 +543,7 @@ alloc_failed:
 	return NULL;
 }
 
+<<<<<<< HEAD
 bool match_callstack_filter(struct machine *machine, u64 *callstack)
 {
 	struct map *kmap;
@@ -538,6 +572,8 @@ bool match_callstack_filter(struct machine *machine, u64 *callstack)
 	return false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct trace_lock_handler {
 	/* it's used on CONFIG_LOCKDEP */
 	int (*acquire_event)(struct evsel *evsel,
@@ -890,6 +926,7 @@ end:
 	return 0;
 }
 
+<<<<<<< HEAD
 static int get_symbol_name_offset(struct map *map, struct symbol *sym, u64 ip,
 				  char *buf, int size)
 {
@@ -907,6 +944,57 @@ static int get_symbol_name_offset(struct map *map, struct symbol *sym, u64 ip,
 	else
 		return strlcpy(buf, sym->name, size);
 }
+=======
+bool is_lock_function(struct machine *machine, u64 addr)
+{
+	if (!sched_text_start) {
+		struct map *kmap;
+		struct symbol *sym;
+
+		sym = machine__find_kernel_symbol_by_name(machine,
+							  "__sched_text_start",
+							  &kmap);
+		if (!sym) {
+			/* to avoid retry */
+			sched_text_start = 1;
+			return false;
+		}
+
+		sched_text_start = kmap->unmap_ip(kmap, sym->start);
+
+		/* should not fail from here */
+		sym = machine__find_kernel_symbol_by_name(machine,
+							  "__sched_text_end",
+							  &kmap);
+		sched_text_end = kmap->unmap_ip(kmap, sym->start);
+
+		sym = machine__find_kernel_symbol_by_name(machine,
+							  "__lock_text_start",
+							  &kmap);
+		lock_text_start = kmap->unmap_ip(kmap, sym->start);
+
+		sym = machine__find_kernel_symbol_by_name(machine,
+							  "__lock_text_end",
+							  &kmap);
+		lock_text_end = kmap->unmap_ip(kmap, sym->start);
+	}
+
+	/* failed to get kernel symbols */
+	if (sched_text_start == 1)
+		return false;
+
+	/* mutex and rwsem functions are in sched text section */
+	if (sched_text_start <= addr && addr < sched_text_end)
+		return true;
+
+	/* spinlock functions are in lock text section */
+	if (lock_text_start <= addr && addr < lock_text_end)
+		return true;
+
+	return false;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int lock_contention_caller(struct evsel *evsel, struct perf_sample *sample,
 				  char *buf, int size)
 {
@@ -927,7 +1015,11 @@ static int lock_contention_caller(struct evsel *evsel, struct perf_sample *sampl
 
 	/* use caller function name from the callchain */
 	ret = thread__resolve_callchain(thread, cursor, evsel, sample,
+<<<<<<< HEAD
 					NULL, NULL, max_stack_depth);
+=======
+					NULL, NULL, CONTENTION_STACK_DEPTH);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret != 0) {
 		thread__put(thread);
 		return -1;
@@ -944,6 +1036,7 @@ static int lock_contention_caller(struct evsel *evsel, struct perf_sample *sampl
 			break;
 
 		/* skip first few entries - for lock functions */
+<<<<<<< HEAD
 		if (++skip <= stack_skip)
 			goto next;
 
@@ -951,6 +1044,22 @@ static int lock_contention_caller(struct evsel *evsel, struct perf_sample *sampl
 		if (sym && !machine__is_lock_function(machine, node->ip)) {
 			get_symbol_name_offset(node->ms.map, sym, node->ip,
 					       buf, size);
+=======
+		if (++skip <= CONTENTION_STACK_SKIP)
+			goto next;
+
+		sym = node->ms.sym;
+		if (sym && !is_lock_function(machine, node->ip)) {
+			struct map *map = node->ms.map;
+			u64 offset;
+
+			offset = map->map_ip(map, node->ip) - sym->start;
+
+			if (offset)
+				scnprintf(buf, size, "%s+%#lx", sym->name, offset);
+			else
+				strlcpy(buf, sym->name, size);
+>>>>>>> b7ba80a49124 (Commit)
 			return 0;
 		}
 
@@ -975,7 +1084,11 @@ static u64 callchain_id(struct evsel *evsel, struct perf_sample *sample)
 
 	/* use caller function name from the callchain */
 	ret = thread__resolve_callchain(thread, cursor, evsel, sample,
+<<<<<<< HEAD
 					NULL, NULL, max_stack_depth);
+=======
+					NULL, NULL, CONTENTION_STACK_DEPTH);
+>>>>>>> b7ba80a49124 (Commit)
 	thread__put(thread);
 
 	if (ret != 0)
@@ -991,10 +1104,17 @@ static u64 callchain_id(struct evsel *evsel, struct perf_sample *sample)
 			break;
 
 		/* skip first few entries - for lock functions */
+<<<<<<< HEAD
 		if (++skip <= stack_skip)
 			goto next;
 
 		if (node->ms.sym && machine__is_lock_function(machine, node->ip))
+=======
+		if (++skip <= CONTENTION_STACK_SKIP)
+			goto next;
+
+		if (node->ms.sym && is_lock_function(machine, node->ip))
+>>>>>>> b7ba80a49124 (Commit)
 			goto next;
 
 		hash ^= hash_long((unsigned long)node->ip, 64);
@@ -1005,6 +1125,7 @@ next:
 	return hash;
 }
 
+<<<<<<< HEAD
 static u64 *get_callstack(struct perf_sample *sample, int max_stack)
 {
 	u64 *callstack;
@@ -1026,6 +1147,8 @@ static u64 *get_callstack(struct perf_sample *sample, int max_stack)
 	return callstack;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int report_lock_contention_begin_event(struct evsel *evsel,
 					      struct perf_sample *sample)
 {
@@ -1033,6 +1156,7 @@ static int report_lock_contention_begin_event(struct evsel *evsel,
 	struct thread_stat *ts;
 	struct lock_seq_stat *seq;
 	u64 addr = evsel__intval(evsel, sample, "lock_addr");
+<<<<<<< HEAD
 	unsigned int flags = evsel__intval(evsel, sample, "flags");
 	u64 key;
 	int i, ret;
@@ -1040,11 +1164,16 @@ static int report_lock_contention_begin_event(struct evsel *evsel,
 	struct machine *machine = &session->machines.host;
 	struct map *kmap;
 	struct symbol *sym;
+=======
+	u64 key;
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = get_key_by_aggr_mode(&key, addr, evsel, sample);
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
 	if (!kmap_loaded) {
 		unsigned long *addrs;
 
@@ -1097,10 +1226,23 @@ static int report_lock_contention_begin_event(struct evsel *evsel,
 		}
 
 		ls = lock_stat_findnew(key, name, flags);
+=======
+	ls = lock_stat_find(key);
+	if (!ls) {
+		char buf[128];
+		const char *caller = buf;
+		unsigned int flags = evsel__intval(evsel, sample, "flags");
+
+		if (lock_contention_caller(evsel, sample, buf, sizeof(buf)) < 0)
+			caller = "Unknown";
+
+		ls = lock_stat_findnew(key, caller, flags);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!ls)
 			return -ENOMEM;
 	}
 
+<<<<<<< HEAD
 	if (filters.nr_types) {
 		bool found = false;
 
@@ -1145,6 +1287,8 @@ static int report_lock_contention_begin_event(struct evsel *evsel,
 			free(callstack);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ts = thread_stat_findnew(sample->tid);
 	if (!ts)
 		return -ENOMEM;
@@ -1323,7 +1467,11 @@ static void print_bad_events(int bad, int total)
 	for (i = 0; i < BROKEN_MAX; i++)
 		broken += bad_hist[i];
 
+<<<<<<< HEAD
 	if (quiet || (broken == 0 && verbose <= 0))
+=======
+	if (broken == 0 && !verbose)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	pr_info("\n=== output for debug===\n\n");
@@ -1340,6 +1488,7 @@ static void print_result(void)
 	struct lock_stat *st;
 	struct lock_key *key;
 	char cut_name[20];
+<<<<<<< HEAD
 	int bad, total, printed;
 
 	if (!quiet) {
@@ -1350,6 +1499,16 @@ static void print_result(void)
 	}
 
 	bad = total = printed = 0;
+=======
+	int bad, total;
+
+	pr_info("%20s ", "Name");
+	list_for_each_entry(key, &lock_keys, list)
+		pr_info("%*s ", key->len, key->header);
+	pr_info("\n\n");
+
+	bad = total = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	while ((st = pop_from_result())) {
 		total++;
 		if (st->broken)
@@ -1387,9 +1546,12 @@ static void print_result(void)
 			pr_info(" ");
 		}
 		pr_info("\n");
+<<<<<<< HEAD
 
 		if (++printed >= print_nr_entries)
 			break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	print_bad_events(bad, total);
@@ -1462,6 +1624,7 @@ static int dump_info(void)
 	return rc;
 }
 
+<<<<<<< HEAD
 static const struct evsel_str_handler lock_tracepoints[] = {
 	{ "lock:lock_acquire",	 evsel__process_lock_acquire,   }, /* CONFIG_LOCKDEP */
 	{ "lock:lock_acquired",	 evsel__process_lock_acquired,  }, /* CONFIG_LOCKDEP, CONFIG_LOCK_STAT */
@@ -1490,6 +1653,8 @@ static int process_event_update(struct perf_tool *tool,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 typedef int (*tracepoint_handler)(struct evsel *evsel,
 				  struct perf_sample *sample);
 
@@ -1546,6 +1711,7 @@ static void sort_result(void)
 	}
 }
 
+<<<<<<< HEAD
 static const struct {
 	unsigned int flags;
 	const char *str;
@@ -1575,10 +1741,37 @@ static const char *get_type_str(unsigned int flags)
 	for (unsigned int i = 0; i < ARRAY_SIZE(lock_type_table); i++) {
 		if (lock_type_table[i].flags == flags)
 			return lock_type_table[i].str;
+=======
+static const char *get_type_str(struct lock_stat *st)
+{
+	static const struct {
+		unsigned int flags;
+		const char *name;
+	} table[] = {
+		{ 0,				"semaphore" },
+		{ LCB_F_SPIN,			"spinlock" },
+		{ LCB_F_SPIN | LCB_F_READ,	"rwlock:R" },
+		{ LCB_F_SPIN | LCB_F_WRITE,	"rwlock:W"},
+		{ LCB_F_READ,			"rwsem:R" },
+		{ LCB_F_WRITE,			"rwsem:W" },
+		{ LCB_F_RT,			"rtmutex" },
+		{ LCB_F_RT | LCB_F_READ,	"rwlock-rt:R" },
+		{ LCB_F_RT | LCB_F_WRITE,	"rwlock-rt:W"},
+		{ LCB_F_PERCPU | LCB_F_READ,	"pcpu-sem:R" },
+		{ LCB_F_PERCPU | LCB_F_WRITE,	"pcpu-sem:W" },
+		{ LCB_F_MUTEX,			"mutex" },
+		{ LCB_F_MUTEX | LCB_F_SPIN,	"mutex" },
+	};
+
+	for (unsigned int i = 0; i < ARRAY_SIZE(table); i++) {
+		if (table[i].flags == st->flags)
+			return table[i].name;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return "unknown";
 }
 
+<<<<<<< HEAD
 static const char *get_type_name(unsigned int flags)
 {
 	flags &= LCB_F_MAX_FLAGS - 1;
@@ -1614,11 +1807,14 @@ static void lock_filter_finish(void)
 	filters.nr_syms = 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void sort_contention_result(void)
 {
 	sort_result();
 }
 
+<<<<<<< HEAD
 static void print_contention_result(struct lock_contention *con)
 {
 	struct lock_stat *st;
@@ -1646,25 +1842,49 @@ static void print_contention_result(struct lock_contention *con)
 	}
 
 	bad = total = printed = 0;
+=======
+static void print_contention_result(void)
+{
+	struct lock_stat *st;
+	struct lock_key *key;
+	int bad, total;
+
+	list_for_each_entry(key, &lock_keys, list)
+		pr_info("%*s ", key->len, key->header);
+
+	if (show_thread_stats)
+		pr_info("  %10s   %s\n\n", "pid", "comm");
+	else
+		pr_info("  %10s   %s\n\n", "type", "caller");
+
+	bad = total = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	if (use_bpf)
 		bad = bad_hist[BROKEN_CONTENDED];
 
 	while ((st = pop_from_result())) {
+<<<<<<< HEAD
 		struct thread *t;
 		int pid;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		total += use_bpf ? st->nr_contended : 1;
 		if (st->broken)
 			bad++;
 
+<<<<<<< HEAD
 		if (!st->wait_time_total)
 			continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		list_for_each_entry(key, &lock_keys, list) {
 			key->print(key, st);
 			pr_info(" ");
 		}
 
+<<<<<<< HEAD
 		switch (aggr_mode) {
 		case LOCK_AGGR_CALLER:
 			pr_info("  %10s   %s\n", get_type_str(st->flags), st->name);
@@ -1702,24 +1922,58 @@ static void print_contention_result(struct lock_contention *con)
 
 		if (++printed >= print_nr_entries)
 			break;
+=======
+		if (show_thread_stats) {
+			struct thread *t;
+			int pid = st->addr;
+
+			/* st->addr contains tid of thread */
+			t = perf_session__findnew(session, pid);
+			pr_info("  %10d   %s\n", pid, thread__comm_str(t));
+			continue;
+		}
+
+		pr_info("  %10s   %s\n", get_type_str(st), st->name);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	print_bad_events(bad, total);
 }
 
+<<<<<<< HEAD
+=======
+static const struct evsel_str_handler lock_tracepoints[] = {
+	{ "lock:lock_acquire",	 evsel__process_lock_acquire,   }, /* CONFIG_LOCKDEP */
+	{ "lock:lock_acquired",	 evsel__process_lock_acquired,  }, /* CONFIG_LOCKDEP, CONFIG_LOCK_STAT */
+	{ "lock:lock_contended", evsel__process_lock_contended, }, /* CONFIG_LOCKDEP, CONFIG_LOCK_STAT */
+	{ "lock:lock_release",	 evsel__process_lock_release,   }, /* CONFIG_LOCKDEP */
+};
+
+static const struct evsel_str_handler contention_tracepoints[] = {
+	{ "lock:contention_begin", evsel__process_contention_begin, },
+	{ "lock:contention_end",   evsel__process_contention_end,   },
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static bool force;
 
 static int __cmd_report(bool display_info)
 {
 	int err = -EINVAL;
 	struct perf_tool eops = {
+<<<<<<< HEAD
 		.attr		 = perf_event__process_attr,
 		.event_update	 = process_event_update,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.sample		 = process_sample_event,
 		.comm		 = perf_event__process_comm,
 		.mmap		 = perf_event__process_mmap,
 		.namespaces	 = perf_event__process_namespaces,
+<<<<<<< HEAD
 		.tracing_data	 = perf_event__process_tracing_data,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.ordered_events	 = true,
 	};
 	struct perf_data data = {
@@ -1736,6 +1990,7 @@ static int __cmd_report(bool display_info)
 
 	/* for lock function check */
 	symbol_conf.sort_by_name = true;
+<<<<<<< HEAD
 	symbol_conf.allow_aliases = true;
 	symbol__init(&session->header.env);
 
@@ -1752,6 +2007,21 @@ static int __cmd_report(bool display_info)
 			pr_err("Initializing perf session tracepoint handlers failed\n");
 			goto out_delete;
 		}
+=======
+	symbol__init(&session->header.env);
+
+	if (!perf_session__has_traces(session, "lock record"))
+		goto out_delete;
+
+	if (perf_session__set_tracepoints_handlers(session, lock_tracepoints)) {
+		pr_err("Initializing perf session tracepoint handlers failed\n");
+		goto out_delete;
+	}
+
+	if (perf_session__set_tracepoints_handlers(session, contention_tracepoints)) {
+		pr_err("Initializing perf session tracepoint handlers failed\n");
+		goto out_delete;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (setup_output_field(false, output_fields))
@@ -1785,6 +2055,7 @@ static void sighandler(int sig __maybe_unused)
 {
 }
 
+<<<<<<< HEAD
 static int check_lock_contention_options(const struct option *options,
 					 const char * const *usage)
 
@@ -1816,16 +2087,24 @@ static int check_lock_contention_options(const struct option *options,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __cmd_contention(int argc, const char **argv)
 {
 	int err = -EINVAL;
 	struct perf_tool eops = {
+<<<<<<< HEAD
 		.attr		 = perf_event__process_attr,
 		.event_update	 = process_event_update,
 		.sample		 = process_sample_event,
 		.comm		 = perf_event__process_comm,
 		.mmap		 = perf_event__process_mmap,
 		.tracing_data	 = perf_event__process_tracing_data,
+=======
+		.sample		 = process_sample_event,
+		.comm		 = perf_event__process_comm,
+		.mmap		 = perf_event__process_mmap,
+>>>>>>> b7ba80a49124 (Commit)
 		.ordered_events	 = true,
 	};
 	struct perf_data data = {
@@ -1837,11 +2116,14 @@ static int __cmd_contention(int argc, const char **argv)
 		.target = &target,
 		.result = &lockhash_table[0],
 		.map_nr_entries = bpf_map_entries,
+<<<<<<< HEAD
 		.max_stack = max_stack_depth,
 		.stack_skip = stack_skip,
 		.filters = &filters,
 		.save_callstack = needs_callstack(),
 		.owner = show_lock_owner,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	session = perf_session__new(use_bpf ? NULL : &data, &eops);
@@ -1850,6 +2132,7 @@ static int __cmd_contention(int argc, const char **argv)
 		return PTR_ERR(session);
 	}
 
+<<<<<<< HEAD
 	con.machine = &session->machines.host;
 
 	con.aggr_mode = aggr_mode = show_thread_stats ? LOCK_AGGR_TASK :
@@ -1861,6 +2144,10 @@ static int __cmd_contention(int argc, const char **argv)
 	/* for lock function check */
 	symbol_conf.sort_by_name = true;
 	symbol_conf.allow_aliases = true;
+=======
+	/* for lock function check */
+	symbol_conf.sort_by_name = true;
+>>>>>>> b7ba80a49124 (Commit)
 	symbol__init(&session->header.env);
 
 	if (use_bpf) {
@@ -1877,6 +2164,11 @@ static int __cmd_contention(int argc, const char **argv)
 		signal(SIGCHLD, sighandler);
 		signal(SIGTERM, sighandler);
 
+<<<<<<< HEAD
+=======
+		con.machine = &session->machines.host;
+
+>>>>>>> b7ba80a49124 (Commit)
 		con.evlist = evlist__new();
 		if (con.evlist == NULL) {
 			err = -ENOMEM;
@@ -1898,7 +2190,11 @@ static int __cmd_contention(int argc, const char **argv)
 			pr_err("lock contention BPF setup failed\n");
 			goto out_delete;
 		}
+<<<<<<< HEAD
 	} else if (!data.is_pipe) {
+=======
+	} else {
+>>>>>>> b7ba80a49124 (Commit)
 		if (!perf_session__has_traces(session, "lock record"))
 			goto out_delete;
 
@@ -1921,6 +2217,14 @@ static int __cmd_contention(int argc, const char **argv)
 	if (select_key(true))
 		goto out_delete;
 
+<<<<<<< HEAD
+=======
+	if (show_thread_stats)
+		aggr_mode = LOCK_AGGR_TASK;
+	else
+		aggr_mode = LOCK_AGGR_CALLER;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (use_bpf) {
 		lock_contention_start();
 		if (argc)
@@ -1943,10 +2247,16 @@ static int __cmd_contention(int argc, const char **argv)
 	setup_pager();
 
 	sort_contention_result();
+<<<<<<< HEAD
 	print_contention_result(&con);
 
 out_delete:
 	lock_filter_finish();
+=======
+	print_contention_result();
+
+out_delete:
+>>>>>>> b7ba80a49124 (Commit)
 	evlist__delete(con.evlist);
 	lock_contention_finish();
 	perf_session__delete(session);
@@ -2055,6 +2365,7 @@ static int parse_map_entry(const struct option *opt, const char *str,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int parse_max_stack(const struct option *opt, const char *str,
 			   int unset __maybe_unused)
 {
@@ -2252,6 +2563,8 @@ static int parse_call_stack(const struct option *opt __maybe_unused, const char 
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int cmd_lock(int argc, const char **argv)
 {
 	const struct option lock_options[] = {
@@ -2263,7 +2576,10 @@ int cmd_lock(int argc, const char **argv)
 		   "file", "vmlinux pathname"),
 	OPT_STRING(0, "kallsyms", &symbol_conf.kallsyms_name,
 		   "file", "kallsyms pathname"),
+<<<<<<< HEAD
 	OPT_BOOLEAN('q', "quiet", &quiet, "Do not show any warnings or messages"),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	OPT_END()
 	};
 
@@ -2285,7 +2601,10 @@ int cmd_lock(int argc, const char **argv)
 		    "combine locks in the same class"),
 	OPT_BOOLEAN('t', "threads", &show_thread_stats,
 		    "show per-thread lock stats"),
+<<<<<<< HEAD
 	OPT_INTEGER('E', "entries", &print_nr_entries, "display this many functions"),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	OPT_PARENT(lock_options)
 	};
 
@@ -2307,6 +2626,7 @@ int cmd_lock(int argc, const char **argv)
 		   "Trace on existing thread id (exclusive to --pid)"),
 	OPT_CALLBACK(0, "map-nr-entries", &bpf_map_entries, "num",
 		     "Max number of BPF map entries", parse_map_entry),
+<<<<<<< HEAD
 	OPT_CALLBACK(0, "max-stack", &max_stack_depth, "num",
 		     "Set the maximum stack depth when collecting lopck contention, "
 		     "Default: " __stringify(CONTENTION_STACK_DEPTH), parse_max_stack),
@@ -2322,6 +2642,8 @@ int cmd_lock(int argc, const char **argv)
 	OPT_CALLBACK('S', "callstack-filter", NULL, "NAMES",
 		     "Filter specific function in the callstack", parse_call_stack),
 	OPT_BOOLEAN('o', "lock-owner", &show_lock_owner, "show lock owners instead of waiters"),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	OPT_PARENT(lock_options)
 	};
 
@@ -2385,17 +2707,24 @@ int cmd_lock(int argc, const char **argv)
 
 #ifndef HAVE_BPF_SKEL
 		set_option_nobuild(contention_options, 'b', "use-bpf",
+<<<<<<< HEAD
 				   "NO_BPF_SKEL=1", false);
+=======
+				   "no BUILD_BPF_SKEL=1", false);
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 		if (argc) {
 			argc = parse_options(argc, argv, contention_options,
 					     contention_usage, 0);
 		}
+<<<<<<< HEAD
 
 		if (check_lock_contention_options(contention_options,
 						  contention_usage) < 0)
 			return -1;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		rc = __cmd_contention(argc, argv);
 	} else {
 		usage_with_options(lock_usage, lock_options);

@@ -618,7 +618,12 @@ static int max8998_pmic_dt_parse_pdata(struct max8998_dev *iodev,
 	if (ret)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	pdata->buck_voltage_lock = of_property_read_bool(pmic_np, "max8998,pmic-buck-voltage-lock");
+=======
+	if (of_find_property(pmic_np, "max8998,pmic-buck-voltage-lock", NULL))
+		pdata->buck_voltage_lock = true;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = of_property_read_u32(pmic_np,
 					"max8998,pmic-buck1-default-dvs-idx",
@@ -803,7 +808,10 @@ MODULE_DEVICE_TABLE(platform, max8998_pmic_id);
 static struct platform_driver max8998_pmic_driver = {
 	.driver = {
 		.name = "max8998-pmic",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = max8998_pmic_probe,
 	.id_table = max8998_pmic_id,

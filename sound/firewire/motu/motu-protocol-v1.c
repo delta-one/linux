@@ -1,7 +1,16 @@
 // SPDX-License-Identifier: GPL-2.0-only
+<<<<<<< HEAD
 // motu-protocol-v1.c - a part of driver for MOTU FireWire series
 //
 // Copyright (c) 2021 Takashi Sakamoto <o-takashi@sakamocchi.jp>
+=======
+
+// motu-protocol-v1.c - a part of driver for MOTU FireWire series
+//
+// Copyright (c) 2021 Takashi Sakamoto <o-takashi@sakamocchi.jp>
+//
+// Licensed under the terms of the GNU General Public License, version 2.
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "motu.h"
 

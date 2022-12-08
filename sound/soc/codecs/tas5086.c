@@ -840,7 +840,11 @@ static int tas5086_probe(struct snd_soc_component *component)
 			snprintf(name, sizeof(name),
 				 "ti,mid-z-channel-%d", i + 1);
 
+<<<<<<< HEAD
 			if (of_property_read_bool(of_node, name))
+=======
+			if (of_get_property(of_node, name, NULL) != NULL)
+>>>>>>> b7ba80a49124 (Commit)
 				priv->pwm_start_mid_z |= 1 << i;
 		}
 	}

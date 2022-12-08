@@ -63,7 +63,10 @@ struct sof_es8336_private {
 	struct snd_soc_jack jack;
 	struct list_head hdmi_pcm_list;
 	bool speaker_en;
+<<<<<<< HEAD
 	struct delayed_work pcm_pop_work;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct sof_hdmi_pcm {
@@ -112,6 +115,7 @@ static void log_quirks(struct device *dev)
 		dev_info(dev, "quirk headset at mic1 port enabled\n");
 }
 
+<<<<<<< HEAD
 static void pcm_pop_work_events(struct work_struct *work)
 {
 	struct sof_es8336_private *priv =
@@ -152,6 +156,8 @@ static int sof_8336_trigger(struct snd_pcm_substream *substream, int cmd)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int sof_es8316_speaker_power_event(struct snd_soc_dapm_widget *w,
 					  struct snd_kcontrol *kcontrol, int event)
 {
@@ -163,7 +169,23 @@ static int sof_es8316_speaker_power_event(struct snd_soc_dapm_widget *w,
 
 	priv->speaker_en = !SND_SOC_DAPM_EVENT_ON(event);
 
+<<<<<<< HEAD
 	queue_delayed_work(system_wq, &priv->pcm_pop_work, msecs_to_jiffies(70));
+=======
+	if (SND_SOC_DAPM_EVENT_ON(event))
+		msleep(70);
+
+	gpiod_set_value_cansleep(priv->gpio_speakers, priv->speaker_en);
+
+	if (!(quirk & SOF_ES8336_HEADPHONE_GPIO))
+		return 0;
+
+	if (SND_SOC_DAPM_EVENT_ON(event))
+		msleep(70);
+
+	gpiod_set_value_cansleep(priv->gpio_headphone, priv->speaker_en);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -373,7 +395,10 @@ static int sof_es8336_hw_params(struct snd_pcm_substream *substream,
 /* machine stream operations */
 static struct snd_soc_ops sof_es8336_ops = {
 	.hw_params = sof_es8336_hw_params,
+<<<<<<< HEAD
 	.trigger = sof_8336_trigger,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct snd_soc_dai_link_component platform_component[] = {
@@ -681,6 +706,10 @@ static int sof_es8336_probe(struct platform_device *pdev)
 	if (adev) {
 		snprintf(codec_name, sizeof(codec_name),
 			 "i2c-%s", acpi_dev_name(adev));
+<<<<<<< HEAD
+=======
+		put_device(&adev->dev);
+>>>>>>> b7ba80a49124 (Commit)
 		dai_links[0].codecs->name = codec_name;
 
 		/* also fixup codec dai name if relevant */
@@ -691,12 +720,22 @@ static int sof_es8336_probe(struct platform_device *pdev)
 		return -ENXIO;
 	}
 
+<<<<<<< HEAD
 	codec_dev = acpi_get_first_physical_node(adev);
 	acpi_dev_put(adev);
+=======
+	ret = snd_soc_fixup_dai_links_platform_name(&sof_es8336_card,
+						    mach->mach_params.platform);
+	if (ret)
+		return ret;
+
+	codec_dev = acpi_get_first_physical_node(adev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!codec_dev)
 		return -EPROBE_DEFER;
 	priv->codec_dev = get_device(codec_dev);
 
+<<<<<<< HEAD
 	ret = snd_soc_fixup_dai_links_platform_name(&sof_es8336_card,
 						    mach->mach_params.platform);
 	if (ret) {
@@ -704,6 +743,8 @@ static int sof_es8336_probe(struct platform_device *pdev)
 		return ret;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (quirk & SOF_ES8336_JD_INVERTED)
 		props[cnt++] = PROPERTY_ENTRY_BOOL("everest,jack-detect-inverted");
 
@@ -755,8 +796,12 @@ static int sof_es8336_probe(struct platform_device *pdev)
 	}
 
 	INIT_LIST_HEAD(&priv->hdmi_pcm_list);
+<<<<<<< HEAD
 	INIT_DELAYED_WORK(&priv->pcm_pop_work,
 				pcm_pop_work_events);
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	snd_soc_card_set_drvdata(card, priv);
 
 	if (mach->mach_params.dmic_num > 0) {
@@ -780,15 +825,27 @@ err_put_codec:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void sof_es8336_remove(struct platform_device *pdev)
+=======
+static int sof_es8336_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct snd_soc_card *card = platform_get_drvdata(pdev);
 	struct sof_es8336_private *priv = snd_soc_card_get_drvdata(card);
 
+<<<<<<< HEAD
 	cancel_delayed_work_sync(&priv->pcm_pop_work);
 	gpiod_put(priv->gpio_speakers);
 	device_remove_software_node(priv->codec_dev);
 	put_device(priv->codec_dev);
+=======
+	gpiod_put(priv->gpio_speakers);
+	device_remove_software_node(priv->codec_dev);
+	put_device(priv->codec_dev);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct platform_device_id board_ids[] = {
@@ -815,7 +872,11 @@ static struct platform_driver sof_es8336_driver = {
 		.pm = &snd_soc_pm_ops,
 	},
 	.probe = sof_es8336_probe,
+<<<<<<< HEAD
 	.remove_new = sof_es8336_remove,
+=======
+	.remove = sof_es8336_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = board_ids,
 };
 module_platform_driver(sof_es8336_driver);

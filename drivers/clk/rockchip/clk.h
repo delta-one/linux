@@ -235,6 +235,7 @@ struct clk;
 #define RK3568_PMU_CLKGATE_CON(x)	((x) * 0x4 + 0x180)
 #define RK3568_PMU_SOFTRST_CON(x)	((x) * 0x4 + 0x200)
 
+<<<<<<< HEAD
 #define RK3588_PHP_CRU_BASE		0x8000
 #define RK3588_PMU_CRU_BASE		0x30000
 #define RK3588_BIGCORE0_CRU_BASE	0x50000
@@ -280,13 +281,18 @@ struct clk;
 #define RK3588_DSU_CLKGATE_CON(x)	((x) * 0x4 + RK3588_DSU_CRU_BASE + 0x800)
 #define RK3588_DSU_SOFTRST_CON(x)	((x) * 0x4 + RK3588_DSU_CRU_BASE + 0xa00)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum rockchip_pll_type {
 	pll_rk3036,
 	pll_rk3066,
 	pll_rk3328,
 	pll_rk3399,
+<<<<<<< HEAD
 	pll_rk3588,
 	pll_rk3588_core,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define RK3036_PLL_RATE(_rate, _refdiv, _fbdiv, _postdiv1,	\
@@ -319,6 +325,7 @@ enum rockchip_pll_type {
 	.nb = _nb,						\
 }
 
+<<<<<<< HEAD
 #define RK3588_PLL_RATE(_rate, _p, _m, _s, _k)			\
 {								\
 	.rate   = _rate##U,					\
@@ -328,6 +335,8 @@ enum rockchip_pll_type {
 	.k = _k,						\
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct rockchip_clk_provider - information about clock provider
  * @reg_base: virtual address for the register base.
@@ -363,6 +372,7 @@ struct rockchip_pll_rate_table {
 			unsigned int dsmpd;
 			unsigned int frac;
 		};
+<<<<<<< HEAD
 		struct {
 			/* for RK3588 */
 			unsigned int m;
@@ -370,6 +380,8 @@ struct rockchip_pll_rate_table {
 			unsigned int s;
 			unsigned int k;
 		};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
@@ -439,13 +451,20 @@ struct rockchip_cpuclk_clksel {
 	u32 val;
 };
 
+<<<<<<< HEAD
 #define ROCKCHIP_CPUCLK_NUM_DIVIDERS	6
+=======
+#define ROCKCHIP_CPUCLK_NUM_DIVIDERS	5
+>>>>>>> b7ba80a49124 (Commit)
 #define ROCKCHIP_CPUCLK_MAX_CORES	4
 struct rockchip_cpuclk_rate_table {
 	unsigned long prate;
 	struct rockchip_cpuclk_clksel divs[ROCKCHIP_CPUCLK_NUM_DIVIDERS];
+<<<<<<< HEAD
 	struct rockchip_cpuclk_clksel pre_muxs[ROCKCHIP_CPUCLK_NUM_DIVIDERS];
 	struct rockchip_cpuclk_clksel post_muxs[ROCKCHIP_CPUCLK_NUM_DIVIDERS];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -454,8 +473,11 @@ struct rockchip_cpuclk_rate_table {
  * @div_core_shift[]:	cores divider offset used to divide the pll value
  * @div_core_mask[]:	cores divider mask
  * @num_cores:	number of cpu cores
+<<<<<<< HEAD
  * @mux_core_reg:       register offset of the cores select parent
  * @mux_core_alt:       mux value to select alternate parent
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @mux_core_main:	mux value to select main parent of core
  * @mux_core_shift:	offset of the core multiplexer
  * @mux_core_mask:	core multiplexer mask
@@ -465,7 +487,10 @@ struct rockchip_cpuclk_reg_data {
 	u8	div_core_shift[ROCKCHIP_CPUCLK_MAX_CORES];
 	u32	div_core_mask[ROCKCHIP_CPUCLK_MAX_CORES];
 	int	num_cores;
+<<<<<<< HEAD
 	int	mux_core_reg;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u8	mux_core_alt;
 	u8	mux_core_main;
 	u8	mux_core_shift;
@@ -973,6 +998,11 @@ struct rockchip_clk_provider *rockchip_clk_init(struct device_node *np,
 			void __iomem *base, unsigned long nr_clks);
 void rockchip_clk_of_add_provider(struct device_node *np,
 				struct rockchip_clk_provider *ctx);
+<<<<<<< HEAD
+=======
+void rockchip_clk_add_lookup(struct rockchip_clk_provider *ctx,
+			     struct clk *clk, unsigned int id);
+>>>>>>> b7ba80a49124 (Commit)
 void rockchip_clk_register_branches(struct rockchip_clk_provider *ctx,
 				    struct rockchip_clk_branch *list,
 				    unsigned int nr_clk);
@@ -1003,6 +1033,7 @@ struct clk *rockchip_clk_register_halfdiv(const char *name,
 					  spinlock_t *lock);
 
 #ifdef CONFIG_RESET_CONTROLLER
+<<<<<<< HEAD
 void rockchip_register_softrst_lut(struct device_node *np,
 				   const int *lookup_table,
 				   unsigned int num_regs,
@@ -1024,5 +1055,17 @@ static inline void rockchip_register_softrst(struct device_node *np,
 }
 
 void rk3588_rst_init(struct device_node *np, void __iomem *reg_base);
+=======
+void rockchip_register_softrst(struct device_node *np,
+			       unsigned int num_regs,
+			       void __iomem *base, u8 flags);
+#else
+static inline void rockchip_register_softrst(struct device_node *np,
+			       unsigned int num_regs,
+			       void __iomem *base, u8 flags)
+{
+}
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

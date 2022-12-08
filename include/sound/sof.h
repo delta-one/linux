@@ -59,11 +59,21 @@ enum sof_ipc_type {
  * SOF Platform data.
  */
 struct snd_sof_pdata {
+<<<<<<< HEAD
+=======
+	const struct firmware *fw;
+>>>>>>> b7ba80a49124 (Commit)
 	const char *name;
 	const char *platform;
 
 	struct device *dev;
 
+<<<<<<< HEAD
+=======
+	/* indicate how many first bytes shouldn't be loaded into DSP memory. */
+	size_t fw_offset;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * notification callback used if the hardware initialization
 	 * can take time or is handled in a workqueue. This callback
@@ -82,9 +92,12 @@ struct snd_sof_pdata {
 	const char *tplg_filename_prefix;
 	const char *tplg_filename;
 
+<<<<<<< HEAD
 	/* loadable external libraries available under this directory */
 	const char *fw_lib_prefix;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* machine */
 	struct platform_device *pdev_mach;
 	const struct snd_soc_acpi_mach *machine;
@@ -130,9 +143,14 @@ struct sof_dev_desc {
 	unsigned int ipc_supported_mask;
 	enum sof_ipc_type ipc_default;
 
+<<<<<<< HEAD
 	/* defaults paths for firmware, library and topology files */
 	const char *default_fw_path[SOF_IPC_TYPE_COUNT];
 	const char *default_lib_path[SOF_IPC_TYPE_COUNT];
+=======
+	/* defaults paths for firmware and topology files */
+	const char *default_fw_path[SOF_IPC_TYPE_COUNT];
+>>>>>>> b7ba80a49124 (Commit)
 	const char *default_tplg_path[SOF_IPC_TYPE_COUNT];
 
 	/* default firmware name */

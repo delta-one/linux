@@ -228,8 +228,12 @@ static int ncsi_cmd_handler_oem(struct sk_buff *skb,
 	len += max(payload, padding_bytes);
 
 	cmd = skb_put_zero(skb, len);
+<<<<<<< HEAD
 	unsafe_memcpy(&cmd->mfr_id, nca->data, nca->payload,
 		      /* skb allocated with enough to load the payload */);
+=======
+	memcpy(&cmd->mfr_id, nca->data, nca->payload);
+>>>>>>> b7ba80a49124 (Commit)
 	ncsi_cmd_build_header(&cmd->cmd.common, nca);
 
 	return 0;

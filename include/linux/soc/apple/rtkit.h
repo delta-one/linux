@@ -22,7 +22,10 @@
  * @size:      Size of the shared memory buffer.
  * @iova:      Device VA of shared memory buffer.
  * @is_mapped: Shared memory buffer is managed by the co-processor.
+<<<<<<< HEAD
  * @private:   Private data pointer for the parent driver.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 struct apple_rtkit_shmem {
@@ -31,7 +34,10 @@ struct apple_rtkit_shmem {
 	size_t size;
 	dma_addr_t iova;
 	bool is_mapped;
+<<<<<<< HEAD
 	void *private;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -80,6 +86,7 @@ struct apple_rtkit *devm_apple_rtkit_init(struct device *dev, void *cookie,
 					  const struct apple_rtkit_ops *ops);
 
 /*
+<<<<<<< HEAD
  * Non-devm version of devm_apple_rtkit_init. Must be freed with
  * apple_rtkit_free.
  *
@@ -99,6 +106,8 @@ struct apple_rtkit *apple_rtkit_init(struct device *dev, void *cookie,
 void apple_rtkit_free(struct apple_rtkit *rtk);
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Reinitialize internal structures. Must only be called with the co-processor
  * is held in reset.
  */
@@ -126,11 +135,14 @@ int apple_rtkit_wake(struct apple_rtkit *rtk);
 int apple_rtkit_shutdown(struct apple_rtkit *rtk);
 
 /*
+<<<<<<< HEAD
  * Put the co-processor into idle mode
  */
 int apple_rtkit_idle(struct apple_rtkit *rtk);
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Checks if RTKit is running and ready to handle messages.
  */
 bool apple_rtkit_is_running(struct apple_rtkit *rtk);
@@ -178,6 +190,7 @@ int apple_rtkit_send_message(struct apple_rtkit *rtk, u8 ep, u64 message,
 int apple_rtkit_send_message_wait(struct apple_rtkit *rtk, u8 ep, u64 message,
 				  unsigned long timeout, bool atomic);
 
+<<<<<<< HEAD
 /*
  * Process incoming messages in atomic context.
  * This only guarantees that messages arrive as far as the recv_message_early
@@ -190,4 +203,6 @@ int apple_rtkit_send_message_wait(struct apple_rtkit *rtk, u8 ep, u64 message,
  */
 int apple_rtkit_poll(struct apple_rtkit *rtk);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _LINUX_APPLE_RTKIT_H_ */

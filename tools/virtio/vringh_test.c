@@ -308,7 +308,10 @@ static int parallel_test(u64 features,
 
 		gvdev.vdev.features = features;
 		INIT_LIST_HEAD(&gvdev.vdev.vqs);
+<<<<<<< HEAD
 		spin_lock_init(&gvdev.vdev.vqs_list_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		gvdev.to_host_fd = to_host[1];
 		gvdev.notifies = 0;
 
@@ -456,7 +459,10 @@ int main(int argc, char *argv[])
 	getrange = getrange_iov;
 	vdev.features = 0;
 	INIT_LIST_HEAD(&vdev.vqs);
+<<<<<<< HEAD
 	spin_lock_init(&vdev.vqs_list_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	while (argv[1]) {
 		if (strcmp(argv[1], "--indirect") == 0)

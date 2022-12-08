@@ -6,6 +6,7 @@
  *
  * Driver allows to use AxB5xx unused pins to be used as GPIO
  */
+<<<<<<< HEAD
 #include <linux/bitops.h>
 #include <linux/err.h>
 #include <linux/gpio/driver.h>
@@ -31,12 +32,40 @@
 #include <linux/pinctrl/pinctrl.h>
 #include <linux/pinctrl/pinmux.h>
 
+=======
+#include <linux/kernel.h>
+#include <linux/types.h>
+#include <linux/slab.h>
+#include <linux/init.h>
+#include <linux/err.h>
+#include <linux/of.h>
+#include <linux/of_device.h>
+#include <linux/platform_device.h>
+#include <linux/gpio/driver.h>
+#include <linux/irq.h>
+#include <linux/irqdomain.h>
+#include <linux/interrupt.h>
+#include <linux/bitops.h>
+#include <linux/mfd/abx500.h>
+#include <linux/mfd/abx500/ab8500.h>
+#include <linux/pinctrl/pinctrl.h>
+#include <linux/pinctrl/consumer.h>
+#include <linux/pinctrl/pinmux.h>
+#include <linux/pinctrl/pinconf.h>
+#include <linux/pinctrl/pinconf-generic.h>
+#include <linux/pinctrl/machine.h>
+
+#include "pinctrl-abx500.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "../core.h"
 #include "../pinconf.h"
 #include "../pinctrl-utils.h"
 
+<<<<<<< HEAD
 #include "pinctrl-abx500.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * GPIO registers offset
  * Bank: 0x10
@@ -446,6 +475,11 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+#include <linux/seq_file.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 static void abx500_gpio_dbg_show_one(struct seq_file *s,
 				     struct pinctrl_dev *pctldev,
 				     struct gpio_chip *chip,

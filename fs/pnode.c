@@ -244,7 +244,11 @@ static int propagate_one(struct mount *m)
 		}
 		do {
 			struct mount *parent = last_source->mnt_parent;
+<<<<<<< HEAD
 			if (peers(last_source, first_source))
+=======
+			if (last_source == first_source)
+>>>>>>> b7ba80a49124 (Commit)
 				break;
 			done = parent->mnt_master == p;
 			if (done && peers(n, parent))

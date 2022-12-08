@@ -24,6 +24,11 @@
 #include <linux/spinlock.h>
 #include <linux/pm_runtime.h>
 
+<<<<<<< HEAD
+=======
+#include <asm-generic/gpio.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 #define MAX_REGS_BANKS 5
 #define MAX_INT_PER_BANK 32
 
@@ -215,6 +220,12 @@ static int davinci_gpio_probe(struct platform_device *pdev)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	if (WARN_ON(ARCH_NR_GPIOS < ngpio))
+		ngpio = ARCH_NR_GPIOS;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * If there are unbanked interrupts then the number of
 	 * interrupts is equal to number of gpios else all are banked so
@@ -250,6 +261,10 @@ static int davinci_gpio_probe(struct platform_device *pdev)
 	chips->chip.base = pdata->no_auto_base ? pdata->base : -1;
 
 #ifdef CONFIG_OF_GPIO
+<<<<<<< HEAD
+=======
+	chips->chip.of_gpio_n_cells = 2;
+>>>>>>> b7ba80a49124 (Commit)
 	chips->chip.parent = dev;
 	chips->chip.request = gpiochip_generic_request;
 	chips->chip.free = gpiochip_generic_free;
@@ -531,7 +546,11 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
 	}
 
 	/*
+<<<<<<< HEAD
 	 * Arrange gpiod_to_irq() support, handling either direct IRQs or
+=======
+	 * Arrange gpio_to_irq() support, handling either direct IRQs or
+>>>>>>> b7ba80a49124 (Commit)
 	 * banked IRQs.  Having GPIOs in the first GPIO bank use direct
 	 * IRQs, while the others use banked IRQs, would need some setup
 	 * tweaks to recognize hardware which can do that.
@@ -724,6 +743,7 @@ static int __init davinci_gpio_drv_reg(void)
 	return platform_driver_register(&davinci_gpio_driver);
 }
 postcore_initcall(davinci_gpio_drv_reg);
+<<<<<<< HEAD
 
 static void __exit davinci_gpio_exit(void)
 {
@@ -735,3 +755,5 @@ MODULE_AUTHOR("Jan Kotas <jank@cadence.com>");
 MODULE_DESCRIPTION("DAVINCI GPIO driver");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("platform:gpio-davinci");
+=======
+>>>>>>> b7ba80a49124 (Commit)

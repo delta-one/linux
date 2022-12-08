@@ -163,7 +163,11 @@ static void ext2_put_super (struct super_block * sb)
 	db_count = sbi->s_gdb_count;
 	for (i = 0; i < db_count; i++)
 		brelse(sbi->s_group_desc[i]);
+<<<<<<< HEAD
 	kvfree(sbi->s_group_desc);
+=======
+	kfree(sbi->s_group_desc);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(sbi->s_debts);
 	percpu_counter_destroy(&sbi->s_freeblocks_counter);
 	percpu_counter_destroy(&sbi->s_freeinodes_counter);
@@ -945,6 +949,7 @@ static int ext2_fill_super(struct super_block *sb, void *data, int silent)
 		goto failed_mount;
 	}
 
+<<<<<<< HEAD
 	if (le32_to_cpu(es->s_log_block_size) >
 	    (EXT2_MAX_BLOCK_LOG_SIZE - BLOCK_SIZE_BITS)) {
 		ext2_msg(sb, KERN_ERR,
@@ -952,6 +957,8 @@ static int ext2_fill_super(struct super_block *sb, void *data, int silent)
 			 le32_to_cpu(es->s_log_block_size));
 		goto failed_mount;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	blocksize = BLOCK_SIZE << le32_to_cpu(sbi->s_es->s_log_block_size);
 
 	if (test_opt(sb, DAX)) {
@@ -1059,6 +1066,7 @@ static int ext2_fill_super(struct super_block *sb, void *data, int silent)
 			sbi->s_blocks_per_group);
 		goto failed_mount;
 	}
+<<<<<<< HEAD
 	/* At least inode table, bitmaps, and sb have to fit in one group */
 	if (sbi->s_blocks_per_group <= sbi->s_itb_per_group + 3) {
 		ext2_msg(sb, KERN_ERR,
@@ -1066,6 +1074,8 @@ static int ext2_fill_super(struct super_block *sb, void *data, int silent)
 			sbi->s_blocks_per_group, sbi->s_inodes_per_group + 3);
 		goto failed_mount;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (sbi->s_frags_per_group > sb->s_blocksize * 8) {
 		ext2_msg(sb, KERN_ERR,
 			"error: #fragments per group too big: %lu",
@@ -1079,6 +1089,7 @@ static int ext2_fill_super(struct super_block *sb, void *data, int silent)
 			sbi->s_inodes_per_group);
 		goto failed_mount;
 	}
+<<<<<<< HEAD
 	if (sb_bdev_nr_blocks(sb) < le32_to_cpu(es->s_blocks_count)) {
 		ext2_msg(sb, KERN_ERR,
 			 "bad geometry: block count %u exceeds size of device (%u blocks)",
@@ -1087,6 +1098,11 @@ static int ext2_fill_super(struct super_block *sb, void *data, int silent)
 		goto failed_mount;
 	}
 
+=======
+
+	if (EXT2_BLOCKS_PER_GROUP(sb) == 0)
+		goto cantfind_ext2;
+>>>>>>> b7ba80a49124 (Commit)
 	sbi->s_groups_count = ((le32_to_cpu(es->s_blocks_count) -
 				le32_to_cpu(es->s_first_data_block) - 1)
 					/ EXT2_BLOCKS_PER_GROUP(sb)) + 1;
@@ -1099,7 +1115,11 @@ static int ext2_fill_super(struct super_block *sb, void *data, int silent)
 	}
 	db_count = (sbi->s_groups_count + EXT2_DESC_PER_BLOCK(sb) - 1) /
 		   EXT2_DESC_PER_BLOCK(sb);
+<<<<<<< HEAD
 	sbi->s_group_desc = kvmalloc_array(db_count,
+=======
+	sbi->s_group_desc = kmalloc_array(db_count,
+>>>>>>> b7ba80a49124 (Commit)
 					   sizeof(struct buffer_head *),
 					   GFP_KERNEL);
 	if (sbi->s_group_desc == NULL) {
@@ -1225,7 +1245,11 @@ failed_mount2:
 	for (i = 0; i < db_count; i++)
 		brelse(sbi->s_group_desc[i]);
 failed_mount_group_desc:
+<<<<<<< HEAD
 	kvfree(sbi->s_group_desc);
+=======
+	kfree(sbi->s_group_desc);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(sbi->s_debts);
 failed_mount:
 	brelse(bh);
@@ -1655,7 +1679,11 @@ static int __init init_ext2_fs(void)
 	err = init_inodecache();
 	if (err)
 		return err;
+<<<<<<< HEAD
 	err = register_filesystem(&ext2_fs_type);
+=======
+        err = register_filesystem(&ext2_fs_type);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto out;
 	return 0;

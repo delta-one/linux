@@ -310,7 +310,11 @@ extern void __bad_size_call_parameter(void);
 #ifdef CONFIG_DEBUG_PREEMPT
 extern void __this_cpu_preempt_check(const char *op);
 #else
+<<<<<<< HEAD
 static __always_inline void __this_cpu_preempt_check(const char *op) { }
+=======
+static inline void __this_cpu_preempt_check(const char *op) { }
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #define __pcpu_size_call_return(stem, variable)				\
@@ -513,8 +517,11 @@ do {									\
 #define this_cpu_xchg(pcp, nval)	__pcpu_size_call_return2(this_cpu_xchg_, pcp, nval)
 #define this_cpu_cmpxchg(pcp, oval, nval) \
 	__pcpu_size_call_return2(this_cpu_cmpxchg_, pcp, oval, nval)
+<<<<<<< HEAD
 #define this_cpu_cmpxchg_local(pcp, oval, nval) \
 	__pcpu_size_call_return2(this_cpu_cmpxchg_local_, pcp, oval, nval)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define this_cpu_cmpxchg_double(pcp1, pcp2, oval1, oval2, nval1, nval2) \
 	__pcpu_double_call_return_bool(this_cpu_cmpxchg_double_, pcp1, pcp2, oval1, oval2, nval1, nval2)
 

@@ -12,7 +12,10 @@
 #include "rmnet_handlers.h"
 #include "rmnet_vnd.h"
 #include "rmnet_private.h"
+<<<<<<< HEAD
 #include "rmnet_map.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Local Definitions and Declarations */
 
@@ -40,8 +43,11 @@ static int rmnet_unregister_real_device(struct net_device *real_dev)
 	if (port->nr_rmnet_devs)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	rmnet_map_tx_aggregate_exit(port);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	netdev_rx_handler_unregister(real_dev);
 
 	kfree(port);
@@ -82,8 +88,11 @@ static int rmnet_register_real_device(struct net_device *real_dev,
 	for (entry = 0; entry < RMNET_MAX_LOGICAL_EP; entry++)
 		INIT_HLIST_HEAD(&port->muxed_ep[entry]);
 
+<<<<<<< HEAD
 	rmnet_map_tx_aggregate_init(port);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	netdev_dbg(real_dev, "registered with rmnet\n");
 	return 0;
 }

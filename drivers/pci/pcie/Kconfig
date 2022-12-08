@@ -4,7 +4,10 @@
 #
 config PCIEPORTBUS
 	bool "PCI Express Port Bus support"
+<<<<<<< HEAD
 	default y if USB4
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  This enables PCI Express Port Bus support. Users can then enable
 	  support for Native Hot-Plug, Advanced Error Reporting, Power
@@ -16,12 +19,18 @@ config PCIEPORTBUS
 config HOTPLUG_PCI_PCIE
 	bool "PCI Express Hotplug driver"
 	depends on HOTPLUG_PCI && PCIEPORTBUS
+<<<<<<< HEAD
 	default y if USB4
 	help
 	  Say Y here if you have a motherboard that supports PCIe native
 	  hotplug.
 
 	  Thunderbolt/USB4 PCIe tunneling depends on native PCIe hotplug.
+=======
+	help
+	  Say Y here if you have a motherboard that supports PCI Express Native
+	  Hotplug
+>>>>>>> b7ba80a49124 (Commit)
 
 	  When in doubt, say N.
 

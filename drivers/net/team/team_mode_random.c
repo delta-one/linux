@@ -16,7 +16,11 @@ static bool rnd_transmit(struct team *team, struct sk_buff *skb)
 	struct team_port *port;
 	int port_index;
 
+<<<<<<< HEAD
 	port_index = get_random_u32_below(team->en_port_count);
+=======
+	port_index = prandom_u32_max(team->en_port_count);
+>>>>>>> b7ba80a49124 (Commit)
 	port = team_get_port_by_index_rcu(team, port_index);
 	if (unlikely(!port))
 		goto drop;

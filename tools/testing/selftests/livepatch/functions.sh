@@ -6,7 +6,10 @@
 
 MAX_RETRIES=600
 RETRY_INTERVAL=".1"	# seconds
+<<<<<<< HEAD
 KLP_SYSFS_DIR="/sys/kernel/livepatch"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 # Kselftest framework requirement - SKIP code is 4
 ksft_skip=4
@@ -87,7 +90,11 @@ function set_ftrace_enabled() {
 
 	if [[ "$result" != "$1" ]] ; then
 		if [[ $can_fail -eq 1 ]] ; then
+<<<<<<< HEAD
 			echo "livepatch: $err" | sed 's#/proc/sys/kernel/#kernel.#' > /dev/kmsg
+=======
+			echo "livepatch: $err" > /dev/kmsg
+>>>>>>> b7ba80a49124 (Commit)
 			return
 		fi
 
@@ -309,6 +316,7 @@ function check_result {
 
 	cleanup_dmesg_file
 }
+<<<<<<< HEAD
 
 # check_sysfs_rights(modname, rel_path, expected_rights) - check sysfs
 # path permissions
@@ -342,3 +350,5 @@ function check_sysfs_value() {
 		die "Unexpected value in $path: $expected_value vs. $value"
 	fi
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

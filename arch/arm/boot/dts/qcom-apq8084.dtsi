@@ -72,7 +72,11 @@
 		};
 
 		L2: l2-cache {
+<<<<<<< HEAD
 			compatible = "cache";
+=======
+			compatible = "qcom,arch-cache";
+>>>>>>> b7ba80a49124 (Commit)
 			cache-level = <2>;
 			qcom,saw = <&saw_l2>;
 		};
@@ -249,6 +253,7 @@
 			reg = <0xfc4bc000 0x1000>;
 			#address-cells = <1>;
 			#size-cells = <1>;
+<<<<<<< HEAD
 
 			tsens_base1: base1@d0 {
 				reg = <0xd0 0x1>;
@@ -503,10 +508,18 @@
 			tsens_s4_p2_backup: s4-p2_backup@44e {
 				reg = <0x44e 0x1>;
 				bits = <2 6>;
+=======
+			tsens_calib: calib@d0 {
+				reg = <0xd0 0x18>;
+			};
+			tsens_backup: backup@440 {
+				reg = <0x440 0x10>;
+>>>>>>> b7ba80a49124 (Commit)
 			};
 		};
 
 		tsens: thermal-sensor@fc4a8000 {
+<<<<<<< HEAD
 			compatible = "qcom,msm8974-tsens", "qcom,tsens-v0_1";
 			reg = <0xfc4a9000 0x1000>, /* TM */
 			      <0xfc4a8000 0x1000>; /* SROT */
@@ -567,6 +580,14 @@
 			#qcom,sensors = <11>;
 			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
 			interrupt-names = "uplow";
+=======
+			compatible = "qcom,msm8974-tsens";
+			reg = <0xfc4a9000 0x1000>, /* TM */
+			      <0xfc4a8000 0x1000>; /* SROT */
+			nvmem-cells = <&tsens_calib>, <&tsens_backup>;
+			nvmem-cell-names = "calib", "calib_backup";
+			#qcom,sensors = <11>;
+>>>>>>> b7ba80a49124 (Commit)
 			#thermal-sensor-cells = <1>;
 		};
 		timer@f9020000 {
@@ -654,25 +675,41 @@
 			regulator;
 		};
 
+<<<<<<< HEAD
 		acc0: power-manager@f9088000 {
+=======
+		acc0: clock-controller@f9088000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "qcom,kpss-acc-v2";
 			reg = <0xf9088000 0x1000>,
 			      <0xf9008000 0x1000>;
 		};
 
+<<<<<<< HEAD
 		acc1: power-manager@f9098000 {
+=======
+		acc1: clock-controller@f9098000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "qcom,kpss-acc-v2";
 			reg = <0xf9098000 0x1000>,
 			      <0xf9008000 0x1000>;
 		};
 
+<<<<<<< HEAD
 		acc2: power-manager@f90a8000 {
+=======
+		acc2: clock-controller@f90a8000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "qcom,kpss-acc-v2";
 			reg = <0xf90a8000 0x1000>,
 			      <0xf9008000 0x1000>;
 		};
 
+<<<<<<< HEAD
 		acc3: power-manager@f90b8000 {
+=======
+		acc3: clock-controller@f90b8000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "qcom,kpss-acc-v2";
 			reg = <0xf90b8000 0x1000>,
 			      <0xf9008000 0x1000>;
@@ -689,6 +726,7 @@
 			#reset-cells = <1>;
 			#power-domain-cells = <1>;
 			reg = <0xfc400000 0x4000>;
+<<<<<<< HEAD
 			clocks = <&xo_board>,
 				 <&sleep_clk>,
 				 <0>, /* ufs */
@@ -707,6 +745,8 @@
 				      "sata_asic0_clk",
 				      "sata_rx_clk",
 				      "pcie_pipe";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		tcsr_mutex: hwlock@fd484000 {
@@ -715,7 +755,11 @@
 			#hwlock-cells = <1>;
 		};
 
+<<<<<<< HEAD
 		rpm_msg_ram: sram@fc428000 {
+=======
+		rpm_msg_ram: memory@fc428000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "qcom,rpm-msg-ram";
 			reg = <0xfc428000 0x4000>;
 		};
@@ -740,7 +784,11 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		sdhc_1: mmc@f9824900 {
+=======
+		mmc@f9824900 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "qcom,apq8084-sdhci", "qcom,sdhci-msm-v4";
 			reg = <0xf9824900 0x11c>, <0xf9824000 0x800>;
 			reg-names = "hc", "core";
@@ -753,7 +801,11 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		sdhc_2: mmc@f98a4900 {
+=======
+		mmc@f98a4900 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "qcom,apq8084-sdhci", "qcom,sdhci-msm-v4";
 			reg = <0xf98a4900 0x11c>, <0xf98a4000 0x800>;
 			reg-names = "hc", "core";
@@ -795,7 +847,11 @@
 				compatible = "qcom,rpm-apq8084";
 				qcom,smd-channels = "rpm_requests";
 
+<<<<<<< HEAD
 				regulators-0 {
+=======
+				pma8084-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 					compatible = "qcom,rpm-pma8084-regulators";
 
 					pma8084_s1: s1 {};

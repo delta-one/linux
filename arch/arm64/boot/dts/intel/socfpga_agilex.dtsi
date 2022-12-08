@@ -139,8 +139,13 @@
 		ranges = <0 0 0 0xffffffff>;
 
 		base_fpga_region {
+<<<<<<< HEAD
 			#address-cells = <0x2>;
 			#size-cells = <0x2>;
+=======
+			#address-cells = <0x1>;
+			#size-cells = <0x1>;
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "fpga-region";
 			fpga-mgr = <&fpga_mgr>;
 		};
@@ -313,7 +318,10 @@
 				 <&clkmgr AGILEX_SDMMC_CLK>;
 			clock-names = "biu", "ciu";
 			iommus = <&smmu 5>;
+<<<<<<< HEAD
 			altr,sysmgr-syscon = <&sysmgr 0x28 4>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			status = "disabled";
 		};
 
@@ -357,6 +365,7 @@
 			clock-names = "apb_pclk";
 		};
 
+<<<<<<< HEAD
 		pinctrl0: pinctrl@ffd13000 {
 			compatible = "pinctrl-single";
 			#pinctrl-cells = <1>;
@@ -372,6 +381,8 @@
 			pinctrl-single,register-width = <32>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		rst: rstmgr@ffd11000 {
 			#reset-cells = <1>;
 			compatible = "altr,stratix10-rst-mgr";

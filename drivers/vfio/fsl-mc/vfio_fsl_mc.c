@@ -28,7 +28,11 @@ static int vfio_fsl_mc_open_device(struct vfio_device *core_vdev)
 	int i;
 
 	vdev->regions = kcalloc(count, sizeof(struct vfio_fsl_mc_region),
+<<<<<<< HEAD
 				GFP_KERNEL_ACCOUNT);
+=======
+				GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!vdev->regions)
 		return -ENOMEM;
 
@@ -568,6 +572,10 @@ static void vfio_fsl_mc_release_dev(struct vfio_device *core_vdev)
 
 	vfio_fsl_uninit_device(vdev);
 	mutex_destroy(&vdev->igate);
+<<<<<<< HEAD
+=======
+	vfio_free_device(core_vdev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int vfio_fsl_mc_remove(struct fsl_mc_device *mc_dev)
@@ -591,9 +599,12 @@ static const struct vfio_device_ops vfio_fsl_mc_ops = {
 	.read		= vfio_fsl_mc_read,
 	.write		= vfio_fsl_mc_write,
 	.mmap		= vfio_fsl_mc_mmap,
+<<<<<<< HEAD
 	.bind_iommufd	= vfio_iommufd_physical_bind,
 	.unbind_iommufd	= vfio_iommufd_physical_unbind,
 	.attach_ioas	= vfio_iommufd_physical_attach_ioas,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct fsl_mc_driver vfio_fsl_mc_driver = {

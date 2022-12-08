@@ -1,1 +1,5 @@
 - Validate that register contents are saved and restored as expected.
+<<<<<<< HEAD
+=======
+- Support and validate extra_context.
+>>>>>>> b7ba80a49124 (Commit)

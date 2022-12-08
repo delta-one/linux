@@ -29,7 +29,22 @@
 	}
 
 #define JSL_COMMUNITY(b, s, e, g)			\
+<<<<<<< HEAD
 	INTEL_COMMUNITY_GPPS(b, s, e, g, JSL)
+=======
+	{						\
+		.barno = (b),				\
+		.padown_offset = JSL_PAD_OWN,		\
+		.padcfglock_offset = JSL_PADCFGLOCK,	\
+		.hostown_offset = JSL_HOSTSW_OWN,	\
+		.is_offset = JSL_GPI_IS,		\
+		.ie_offset = JSL_GPI_IE,		\
+		.pin_base = (s),			\
+		.npins = ((e) - (s) + 1),		\
+		.gpps = (g),				\
+		.ngpps = ARRAY_SIZE(g),			\
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Jasper Lake */
 static const struct pinctrl_pin_desc jsl_pins[] = {

@@ -24,7 +24,10 @@
 #include <asm/fpsimd.h>
 #include <asm/kvm.h>
 #include <asm/kvm_emulate.h>
+<<<<<<< HEAD
 #include <asm/kvm_nested.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/sigcontext.h>
 
 #include "trace.h"
@@ -254,11 +257,14 @@ static int set_core_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
 			if (!vcpu_el1_is_32bit(vcpu))
 				return -EINVAL;
 			break;
+<<<<<<< HEAD
 		case PSR_MODE_EL2h:
 		case PSR_MODE_EL2t:
 			if (!vcpu_has_nv(vcpu))
 				return -EINVAL;
 			fallthrough;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		case PSR_MODE_EL0t:
 		case PSR_MODE_EL1t:
 		case PSR_MODE_EL1h:
@@ -1019,8 +1025,13 @@ int kvm_arm_vcpu_arch_has_attr(struct kvm_vcpu *vcpu,
 	return ret;
 }
 
+<<<<<<< HEAD
 int kvm_vm_ioctl_mte_copy_tags(struct kvm *kvm,
 			       struct kvm_arm_copy_mte_tags *copy_tags)
+=======
+long kvm_vm_ioctl_mte_copy_tags(struct kvm *kvm,
+				struct kvm_arm_copy_mte_tags *copy_tags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	gpa_t guest_ipa = copy_tags->guest_ipa;
 	size_t length = copy_tags->length;
@@ -1041,10 +1052,13 @@ int kvm_vm_ioctl_mte_copy_tags(struct kvm *kvm,
 	if (length & ~PAGE_MASK || guest_ipa & ~PAGE_MASK)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	/* Lengths above INT_MAX cannot be represented in the return value */
 	if (length > INT_MAX)
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	gfn = gpa_to_gfn(guest_ipa);
 
 	mutex_lock(&kvm->slots_lock);
@@ -1069,7 +1083,11 @@ int kvm_vm_ioctl_mte_copy_tags(struct kvm *kvm,
 		maddr = page_address(page);
 
 		if (!write) {
+<<<<<<< HEAD
 			if (page_mte_tagged(page))
+=======
+			if (test_bit(PG_mte_tagged, &page->flags))
+>>>>>>> b7ba80a49124 (Commit)
 				num_tags = mte_copy_tags_to_user(tags, maddr,
 							MTE_GRANULES_PER_PAGE);
 			else
@@ -1078,6 +1096,7 @@ int kvm_vm_ioctl_mte_copy_tags(struct kvm *kvm,
 					clear_user(tags, MTE_GRANULES_PER_PAGE);
 			kvm_release_pfn_clean(pfn);
 		} else {
+<<<<<<< HEAD
 			/*
 			 * Only locking to serialise with a concurrent
 			 * set_pte_at() in the VMM but still overriding the
@@ -1091,6 +1110,17 @@ int kvm_vm_ioctl_mte_copy_tags(struct kvm *kvm,
 			if (num_tags != MTE_GRANULES_PER_PAGE)
 				mte_clear_page_tags(maddr);
 			set_page_mte_tagged(page);
+=======
+			num_tags = mte_copy_tags_from_user(maddr, tags,
+							MTE_GRANULES_PER_PAGE);
+
+			/*
+			 * Set the flag after checking the write
+			 * completed fully
+			 */
+			if (num_tags == MTE_GRANULES_PER_PAGE)
+				set_bit(PG_mte_tagged, &page->flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 			kvm_release_pfn_dirty(pfn);
 		}

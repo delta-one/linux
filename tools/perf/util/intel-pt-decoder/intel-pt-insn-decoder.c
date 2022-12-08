@@ -18,7 +18,10 @@
 
 #include "intel-pt-insn-decoder.h"
 #include "dump-insn.h"
+<<<<<<< HEAD
 #include "util/sample.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #if INTEL_PT_INSN_BUF_SZ < MAX_INSN_SIZE || INTEL_PT_INSN_BUF_SZ > MAX_INSN
 #error Instruction buffer size too small

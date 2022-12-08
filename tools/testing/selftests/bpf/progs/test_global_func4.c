@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /* Copyright (c) 2020 Facebook */
+<<<<<<< HEAD
 #include <stddef.h>
 #include <linux/bpf.h>
 #include <bpf/bpf_helpers.h>
@@ -53,3 +54,7 @@ int global_func4(struct __sk_buff *skb)
 {
 	return f7(skb);
 }
+=======
+#define NO_FN8
+#include "test_global_func3.c"
+>>>>>>> b7ba80a49124 (Commit)

@@ -136,7 +136,11 @@ static void __dvb_frontend_free(struct dvb_frontend *fe)
 	struct dvb_frontend_private *fepriv = fe->frontend_priv;
 
 	if (fepriv)
+<<<<<<< HEAD
 		dvb_device_put(fepriv->dvbdev);
+=======
+		dvb_free_device(fepriv->dvbdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dvb_frontend_invoke_release(fe, fe->ops.release);
 
@@ -918,7 +922,10 @@ static void dvb_frontend_get_frequency_limits(struct dvb_frontend *fe,
 
 	/* If the standard is for satellite, convert frequencies to kHz */
 	switch (c->delivery_system) {
+<<<<<<< HEAD
 	case SYS_DSS:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case SYS_DVBS:
 	case SYS_DVBS2:
 	case SYS_TURBO:
@@ -944,7 +951,10 @@ static u32 dvb_frontend_get_stepsize(struct dvb_frontend *fe)
 	u32 step = max(fe_step, tuner_step);
 
 	switch (c->delivery_system) {
+<<<<<<< HEAD
 	case SYS_DSS:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case SYS_DVBS:
 	case SYS_DVBS2:
 	case SYS_TURBO:
@@ -976,7 +986,10 @@ static int dvb_frontend_check_parameters(struct dvb_frontend *fe)
 
 	/* range check: symbol rate */
 	switch (c->delivery_system) {
+<<<<<<< HEAD
 	case SYS_DSS:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case SYS_DVBS:
 	case SYS_DVBS2:
 	case SYS_TURBO:
@@ -1043,10 +1056,13 @@ static int dvb_frontend_clear_cache(struct dvb_frontend *fe)
 	c->scrambling_sequence_index = 0;/* default sequence */
 
 	switch (c->delivery_system) {
+<<<<<<< HEAD
 	case SYS_DSS:
 		c->modulation = QPSK;
 		c->rolloff = ROLLOFF_20;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case SYS_DVBS:
 	case SYS_DVBS2:
 	case SYS_TURBO:
@@ -1828,7 +1844,10 @@ static void prepare_tuning_algo_parameters(struct dvb_frontend *fe)
 	} else {
 		/* default values */
 		switch (c->delivery_system) {
+<<<<<<< HEAD
 		case SYS_DSS:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		case SYS_DVBS:
 		case SYS_DVBS2:
 		case SYS_ISDBS:
@@ -2296,9 +2315,12 @@ static int dtv_set_frontend(struct dvb_frontend *fe)
 	case SYS_DVBC_ANNEX_C:
 		rolloff = 113;
 		break;
+<<<<<<< HEAD
 	case SYS_DSS:
 		rolloff = 120;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case SYS_DVBS:
 	case SYS_TURBO:
 	case SYS_ISDBS:
@@ -2765,6 +2787,7 @@ static int dvb_frontend_open(struct inode *inode, struct file *file)
 	if (fe->exit == DVB_FE_DEVICE_REMOVED)
 		return -ENODEV;
 
+<<<<<<< HEAD
 	if (adapter->mfe_shared == 2) {
 		mutex_lock(&adapter->mfe_lock);
 		if ((file->f_flags & O_ACCMODE) != O_RDONLY) {
@@ -2776,6 +2799,9 @@ static int dvb_frontend_open(struct inode *inode, struct file *file)
 			adapter->mfe_dvbdev = dvbdev;
 		}
 	} else if (adapter->mfe_shared) {
+=======
+	if (adapter->mfe_shared) {
+>>>>>>> b7ba80a49124 (Commit)
 		mutex_lock(&adapter->mfe_lock);
 
 		if (!adapter->mfe_dvbdev)
@@ -3007,7 +3033,10 @@ int dvb_register_frontend(struct dvb_adapter *dvb,
 		.name = fe->ops.info.name,
 #endif
 	};
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_dbg(dvb->device, "%s:\n", __func__);
 
@@ -3041,6 +3070,7 @@ int dvb_register_frontend(struct dvb_adapter *dvb,
 		 "DVB: registering adapter %i frontend %i (%s)...\n",
 		 fe->dvb->num, fe->id, fe->ops.info.name);
 
+<<<<<<< HEAD
 	ret = dvb_register_device(fe->dvb, &fepriv->dvbdev, &dvbdev_template,
 			    fe, DVB_DEVICE_FRONTEND, 0);
 	if (ret) {
@@ -3048,6 +3078,10 @@ int dvb_register_frontend(struct dvb_adapter *dvb,
 		mutex_unlock(&frontend_mutex);
 		return ret;
 	}
+=======
+	dvb_register_device(fe->dvb, &fepriv->dvbdev, &dvbdev_template,
+			    fe, DVB_DEVICE_FRONTEND, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Initialize the cache to the proper values according with the

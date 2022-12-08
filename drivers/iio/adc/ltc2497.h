@@ -12,8 +12,11 @@ struct ltc2497_chip_info {
 struct ltc2497core_driverdata {
 	struct regulator *ref;
 	ktime_t	time_prev;
+<<<<<<< HEAD
 	/* lock to protect against multiple access to the device */
 	struct mutex lock;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const struct ltc2497_chip_info	*chip_info;
 	u8 addr_prev;
 	int (*result_and_measure)(struct ltc2497core_driverdata *ddata,

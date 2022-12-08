@@ -14,8 +14,12 @@ struct microcode_header_intel {
 	unsigned int            pf;
 	unsigned int            datasize;
 	unsigned int            totalsize;
+<<<<<<< HEAD
 	unsigned int            metasize;
 	unsigned int            reserved[2];
+=======
+	unsigned int            reserved[3];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct microcode_intel {
@@ -42,8 +46,11 @@ struct extended_sigtable {
 #define DEFAULT_UCODE_TOTALSIZE (DEFAULT_UCODE_DATASIZE + MC_HEADER_SIZE)
 #define EXT_HEADER_SIZE		(sizeof(struct extended_sigtable))
 #define EXT_SIGNATURE_SIZE	(sizeof(struct extended_signature))
+<<<<<<< HEAD
 #define MC_HEADER_TYPE_MICROCODE	1
 #define MC_HEADER_TYPE_IFS		2
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define get_totalsize(mc) \
 	(((struct microcode_intel *)mc)->hdr.datasize ? \

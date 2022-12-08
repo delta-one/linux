@@ -53,8 +53,11 @@ static int acpi_processor_get_platform_limit(struct acpi_processor *pr)
 {
 	acpi_status status = 0;
 	unsigned long long ppc = 0;
+<<<<<<< HEAD
 	s32 qos_value;
 	int index;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	if (!pr)
@@ -74,6 +77,7 @@ static int acpi_processor_get_platform_limit(struct acpi_processor *pr)
 		}
 	}
 
+<<<<<<< HEAD
 	index = ppc;
 
 	if (pr->performance_platform_limit == index ||
@@ -98,6 +102,19 @@ static int acpi_processor_get_platform_limit(struct acpi_processor *pr)
 		qos_value = pr->performance->states[index].core_frequency * 1000;
 
 	ret = freq_qos_update_request(&pr->perflib_req, qos_value);
+=======
+	pr_debug("CPU %d: _PPC is %d - frequency %s limited\n", pr->id,
+		       (int)ppc, ppc ? "" : "not");
+
+	pr->performance_platform_limit = (int)ppc;
+
+	if (ppc >= pr->performance->state_count ||
+	    unlikely(!freq_qos_request_active(&pr->perflib_req)))
+		return 0;
+
+	ret = freq_qos_update_request(&pr->perflib_req,
+			pr->performance->states[ppc].core_frequency * 1000);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0) {
 		pr_warn("Failed to update perflib freq constraint: CPU%d (%d)\n",
 			pr->id, ret);
@@ -157,7 +174,10 @@ int acpi_processor_get_bios_limit(int cpu, unsigned int *limit)
 	pr = per_cpu(processors, cpu);
 	if (!pr || !pr->performance || !pr->performance->state_count)
 		return -ENODEV;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	*limit = pr->performance->states[pr->performance_platform_limit].
 		core_frequency * 1000;
 	return 0;
@@ -181,6 +201,7 @@ void acpi_processor_ppc_init(struct cpufreq_policy *policy)
 		if (!pr)
 			continue;
 
+<<<<<<< HEAD
 		/*
 		 * Reset performance_platform_limit in case there is a stale
 		 * value in it, so as to make it match the "no limit" QoS value
@@ -191,6 +212,11 @@ void acpi_processor_ppc_init(struct cpufreq_policy *policy)
 		ret = freq_qos_add_request(&policy->constraints,
 					   &pr->perflib_req, FREQ_QOS_MAX,
 					   FREQ_QOS_MAX_DEFAULT_VALUE);
+=======
+		ret = freq_qos_add_request(&policy->constraints,
+					   &pr->perflib_req,
+					   FREQ_QOS_MAX, INT_MAX);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret < 0)
 			pr_err("Failed to add freq constraint for CPU%d (%d)\n",
 			       cpu, ret);
@@ -224,7 +250,12 @@ static int acpi_processor_get_performance_control(struct acpi_processor *pr)
 	}
 
 	pct = (union acpi_object *)buffer.pointer;
+<<<<<<< HEAD
 	if (!pct || pct->type != ACPI_TYPE_PACKAGE || pct->package.count != 2) {
+=======
+	if (!pct || (pct->type != ACPI_TYPE_PACKAGE)
+	    || (pct->package.count != 2)) {
+>>>>>>> b7ba80a49124 (Commit)
 		pr_err("Invalid _PCT data\n");
 		result = -EFAULT;
 		goto end;
@@ -236,8 +267,14 @@ static int acpi_processor_get_performance_control(struct acpi_processor *pr)
 
 	obj = pct->package.elements[0];
 
+<<<<<<< HEAD
 	if (!obj.buffer.pointer || obj.type != ACPI_TYPE_BUFFER ||
 	    obj.buffer.length < sizeof(struct acpi_pct_register)) {
+=======
+	if ((obj.type != ACPI_TYPE_BUFFER)
+	    || (obj.buffer.length < sizeof(struct acpi_pct_register))
+	    || (obj.buffer.pointer == NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 		pr_err("Invalid _PCT data (control_register)\n");
 		result = -EFAULT;
 		goto end;
@@ -251,8 +288,14 @@ static int acpi_processor_get_performance_control(struct acpi_processor *pr)
 
 	obj = pct->package.elements[1];
 
+<<<<<<< HEAD
 	if (!obj.buffer.pointer || obj.type != ACPI_TYPE_BUFFER ||
 	    obj.buffer.length < sizeof(struct acpi_pct_register)) {
+=======
+	if ((obj.type != ACPI_TYPE_BUFFER)
+	    || (obj.buffer.length < sizeof(struct acpi_pct_register))
+	    || (obj.buffer.pointer == NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 		pr_err("Invalid _PCT data (status_register)\n");
 		result = -EFAULT;
 		goto end;
@@ -280,8 +323,13 @@ static void amd_fixup_frequency(struct acpi_processor_px *px, int i)
 	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD)
 		return;
 
+<<<<<<< HEAD
 	if ((boot_cpu_data.x86 == 0x10 && boot_cpu_data.x86_model < 10) ||
 	    boot_cpu_data.x86 == 0x11) {
+=======
+	if ((boot_cpu_data.x86 == 0x10 && boot_cpu_data.x86_model < 10)
+	    || boot_cpu_data.x86 == 0x11) {
+>>>>>>> b7ba80a49124 (Commit)
 		rdmsr(MSR_AMD_PSTATE_DEF_BASE + index, lo, hi);
 		/*
 		 * MSR C001_0064+:
@@ -320,7 +368,11 @@ static int acpi_processor_get_performance_states(struct acpi_processor *pr)
 	}
 
 	pss = buffer.pointer;
+<<<<<<< HEAD
 	if (!pss || pss->type != ACPI_TYPE_PACKAGE) {
+=======
+	if (!pss || (pss->type != ACPI_TYPE_PACKAGE)) {
+>>>>>>> b7ba80a49124 (Commit)
 		pr_err("Invalid _PSS data\n");
 		result = -EFAULT;
 		goto end;
@@ -373,7 +425,12 @@ static int acpi_processor_get_performance_states(struct acpi_processor *pr)
 		 * Check that ACPI's u64 MHz will be valid as u32 KHz in cpufreq
 		 */
 		if (!px->core_frequency ||
+<<<<<<< HEAD
 		    (u32)(px->core_frequency * 1000) != px->core_frequency * 1000) {
+=======
+		    ((u32)(px->core_frequency * 1000) !=
+		     (px->core_frequency * 1000))) {
+>>>>>>> b7ba80a49124 (Commit)
 			pr_err(FW_BUG
 			       "Invalid BIOS _PSS frequency found for processor %d: 0x%llx MHz\n",
 			       pr->id, px->core_frequency);
@@ -475,7 +532,11 @@ int acpi_processor_pstate_control(void)
 int acpi_processor_notify_smm(struct module *calling_module)
 {
 	static int is_done;
+<<<<<<< HEAD
 	int result = 0;
+=======
+	int result;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!acpi_processor_cpufreq_init)
 		return -EBUSY;
@@ -483,6 +544,7 @@ int acpi_processor_notify_smm(struct module *calling_module)
 	if (!try_module_get(calling_module))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	/*
 	 * is_done is set to negative if an error occurs and to 1 if no error
 	 * occurrs, but SMM has been notified already. This avoids repeated
@@ -518,6 +580,44 @@ out_put:
 	module_put(calling_module);
 	return result;
 }
+=======
+	/* is_done is set to negative if an error occurred,
+	 * and to postitive if _no_ error occurred, but SMM
+	 * was already notified. This avoids double notification
+	 * which might lead to unexpected results...
+	 */
+	if (is_done > 0) {
+		module_put(calling_module);
+		return 0;
+	} else if (is_done < 0) {
+		module_put(calling_module);
+		return is_done;
+	}
+
+	is_done = -EIO;
+
+	result = acpi_processor_pstate_control();
+	if (!result) {
+		pr_debug("No SMI port or pstate_control\n");
+		module_put(calling_module);
+		return 0;
+	}
+	if (result < 0) {
+		module_put(calling_module);
+		return result;
+	}
+
+	/* Success. If there's no _PPC, we need to fear nothing, so
+	 * we can allow the cpufreq driver to be rmmod'ed. */
+	is_done = 1;
+
+	if (!acpi_processor_ppc_in_use)
+		module_put(calling_module);
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 EXPORT_SYMBOL(acpi_processor_notify_smm);
 
 int acpi_processor_get_psd(acpi_handle handle, struct acpi_psd_package *pdomain)
@@ -535,7 +635,11 @@ int acpi_processor_get_psd(acpi_handle handle, struct acpi_psd_package *pdomain)
 	}
 
 	psd = buffer.pointer;
+<<<<<<< HEAD
 	if (!psd || psd->type != ACPI_TYPE_PACKAGE) {
+=======
+	if (!psd || (psd->type != ACPI_TYPE_PACKAGE)) {
+>>>>>>> b7ba80a49124 (Commit)
 		pr_err("Invalid _PSD data\n");
 		result = -EFAULT;
 		goto end;
@@ -550,7 +654,12 @@ int acpi_processor_get_psd(acpi_handle handle, struct acpi_psd_package *pdomain)
 	state.length = sizeof(struct acpi_psd_package);
 	state.pointer = pdomain;
 
+<<<<<<< HEAD
 	status = acpi_extract_package(&(psd->package.elements[0]), &format, &state);
+=======
+	status = acpi_extract_package(&(psd->package.elements[0]),
+		&format, &state);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ACPI_FAILURE(status)) {
 		pr_err("Invalid _PSD data\n");
 		result = -EFAULT;
@@ -733,8 +842,14 @@ err_out:
 }
 EXPORT_SYMBOL(acpi_processor_preregister_performance);
 
+<<<<<<< HEAD
 int acpi_processor_register_performance(struct acpi_processor_performance
 					*performance, unsigned int cpu)
+=======
+int
+acpi_processor_register_performance(struct acpi_processor_performance
+				    *performance, unsigned int cpu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct acpi_processor *pr;
 
@@ -767,6 +882,10 @@ int acpi_processor_register_performance(struct acpi_processor_performance
 	mutex_unlock(&performance_mutex);
 	return 0;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 EXPORT_SYMBOL(acpi_processor_register_performance);
 
 void acpi_processor_unregister_performance(unsigned int cpu)
@@ -776,6 +895,7 @@ void acpi_processor_unregister_performance(unsigned int cpu)
 	mutex_lock(&performance_mutex);
 
 	pr = per_cpu(processors, cpu);
+<<<<<<< HEAD
 	if (!pr)
 		goto unlock;
 
@@ -787,4 +907,20 @@ void acpi_processor_unregister_performance(unsigned int cpu)
 unlock:
 	mutex_unlock(&performance_mutex);
 }
+=======
+	if (!pr) {
+		mutex_unlock(&performance_mutex);
+		return;
+	}
+
+	if (pr->performance)
+		kfree(pr->performance->states);
+	pr->performance = NULL;
+
+	mutex_unlock(&performance_mutex);
+
+	return;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 EXPORT_SYMBOL(acpi_processor_unregister_performance);

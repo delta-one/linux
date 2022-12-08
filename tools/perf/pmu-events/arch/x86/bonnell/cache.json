@@ -1,6 +1,10 @@
 [
     {
         "BriefDescription": "L1 Data Cacheable reads and writes",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x40",
         "EventName": "L1D_CACHE.ALL_CACHE_REF",
         "SampleAfterValue": "2000000",
@@ -8,6 +12,10 @@
     },
     {
         "BriefDescription": "L1 Data reads and writes",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x40",
         "EventName": "L1D_CACHE.ALL_REF",
         "SampleAfterValue": "2000000",
@@ -15,6 +23,10 @@
     },
     {
         "BriefDescription": "Modified cache lines evicted from the L1 data cache",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x40",
         "EventName": "L1D_CACHE.EVICT",
         "SampleAfterValue": "200000",
@@ -22,6 +34,10 @@
     },
     {
         "BriefDescription": "L1 Cacheable Data Reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x40",
         "EventName": "L1D_CACHE.LD",
         "SampleAfterValue": "2000000",
@@ -29,6 +45,10 @@
     },
     {
         "BriefDescription": "L1 Data line replacements",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x40",
         "EventName": "L1D_CACHE.REPL",
         "SampleAfterValue": "200000",
@@ -36,6 +56,10 @@
     },
     {
         "BriefDescription": "Modified cache lines allocated in the L1 data cache",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x40",
         "EventName": "L1D_CACHE.REPLM",
         "SampleAfterValue": "200000",
@@ -43,6 +67,10 @@
     },
     {
         "BriefDescription": "L1 Cacheable Data Writes",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x40",
         "EventName": "L1D_CACHE.ST",
         "SampleAfterValue": "2000000",
@@ -50,6 +78,10 @@
     },
     {
         "BriefDescription": "Cycles L2 address bus is in use.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x21",
         "EventName": "L2_ADS.SELF",
         "SampleAfterValue": "200000",
@@ -57,6 +89,10 @@
     },
     {
         "BriefDescription": "All data requests from the L1 data cache",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2C",
         "EventName": "L2_DATA_RQSTS.SELF.E_STATE",
         "SampleAfterValue": "200000",
@@ -64,6 +100,10 @@
     },
     {
         "BriefDescription": "All data requests from the L1 data cache",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2C",
         "EventName": "L2_DATA_RQSTS.SELF.I_STATE",
         "SampleAfterValue": "200000",
@@ -71,6 +111,10 @@
     },
     {
         "BriefDescription": "All data requests from the L1 data cache",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2C",
         "EventName": "L2_DATA_RQSTS.SELF.MESI",
         "SampleAfterValue": "200000",
@@ -78,6 +122,10 @@
     },
     {
         "BriefDescription": "All data requests from the L1 data cache",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2C",
         "EventName": "L2_DATA_RQSTS.SELF.M_STATE",
         "SampleAfterValue": "200000",
@@ -85,6 +133,10 @@
     },
     {
         "BriefDescription": "All data requests from the L1 data cache",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2C",
         "EventName": "L2_DATA_RQSTS.SELF.S_STATE",
         "SampleAfterValue": "200000",
@@ -92,6 +144,10 @@
     },
     {
         "BriefDescription": "Cycles the L2 cache data bus is busy.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x22",
         "EventName": "L2_DBUS_BUSY.SELF",
         "SampleAfterValue": "200000",
@@ -99,6 +155,10 @@
     },
     {
         "BriefDescription": "Cycles the L2 transfers data to the core.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x23",
         "EventName": "L2_DBUS_BUSY_RD.SELF",
         "SampleAfterValue": "200000",
@@ -106,6 +166,10 @@
     },
     {
         "BriefDescription": "L2 cacheable instruction fetch requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x28",
         "EventName": "L2_IFETCH.SELF.E_STATE",
         "SampleAfterValue": "200000",
@@ -113,6 +177,10 @@
     },
     {
         "BriefDescription": "L2 cacheable instruction fetch requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x28",
         "EventName": "L2_IFETCH.SELF.I_STATE",
         "SampleAfterValue": "200000",
@@ -120,6 +188,10 @@
     },
     {
         "BriefDescription": "L2 cacheable instruction fetch requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x28",
         "EventName": "L2_IFETCH.SELF.MESI",
         "SampleAfterValue": "200000",
@@ -127,6 +199,10 @@
     },
     {
         "BriefDescription": "L2 cacheable instruction fetch requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x28",
         "EventName": "L2_IFETCH.SELF.M_STATE",
         "SampleAfterValue": "200000",
@@ -134,6 +210,10 @@
     },
     {
         "BriefDescription": "L2 cacheable instruction fetch requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x28",
         "EventName": "L2_IFETCH.SELF.S_STATE",
         "SampleAfterValue": "200000",
@@ -141,6 +221,10 @@
     },
     {
         "BriefDescription": "L2 cache reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x29",
         "EventName": "L2_LD.SELF.ANY.E_STATE",
         "SampleAfterValue": "200000",
@@ -148,6 +232,10 @@
     },
     {
         "BriefDescription": "L2 cache reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x29",
         "EventName": "L2_LD.SELF.ANY.I_STATE",
         "SampleAfterValue": "200000",
@@ -155,6 +243,10 @@
     },
     {
         "BriefDescription": "L2 cache reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x29",
         "EventName": "L2_LD.SELF.ANY.MESI",
         "SampleAfterValue": "200000",
@@ -162,6 +254,10 @@
     },
     {
         "BriefDescription": "L2 cache reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x29",
         "EventName": "L2_LD.SELF.ANY.M_STATE",
         "SampleAfterValue": "200000",
@@ -169,6 +265,10 @@
     },
     {
         "BriefDescription": "L2 cache reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x29",
         "EventName": "L2_LD.SELF.ANY.S_STATE",
         "SampleAfterValue": "200000",
@@ -176,6 +276,10 @@
     },
     {
         "BriefDescription": "L2 cache reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x29",
         "EventName": "L2_LD.SELF.DEMAND.E_STATE",
         "SampleAfterValue": "200000",
@@ -183,6 +287,10 @@
     },
     {
         "BriefDescription": "L2 cache reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x29",
         "EventName": "L2_LD.SELF.DEMAND.I_STATE",
         "SampleAfterValue": "200000",
@@ -190,6 +298,10 @@
     },
     {
         "BriefDescription": "L2 cache reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x29",
         "EventName": "L2_LD.SELF.DEMAND.MESI",
         "SampleAfterValue": "200000",
@@ -197,6 +309,10 @@
     },
     {
         "BriefDescription": "L2 cache reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x29",
         "EventName": "L2_LD.SELF.DEMAND.M_STATE",
         "SampleAfterValue": "200000",
@@ -204,6 +320,10 @@
     },
     {
         "BriefDescription": "L2 cache reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x29",
         "EventName": "L2_LD.SELF.DEMAND.S_STATE",
         "SampleAfterValue": "200000",
@@ -211,6 +331,10 @@
     },
     {
         "BriefDescription": "L2 cache reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x29",
         "EventName": "L2_LD.SELF.PREFETCH.E_STATE",
         "SampleAfterValue": "200000",
@@ -218,6 +342,10 @@
     },
     {
         "BriefDescription": "L2 cache reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x29",
         "EventName": "L2_LD.SELF.PREFETCH.I_STATE",
         "SampleAfterValue": "200000",
@@ -225,6 +353,10 @@
     },
     {
         "BriefDescription": "L2 cache reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x29",
         "EventName": "L2_LD.SELF.PREFETCH.MESI",
         "SampleAfterValue": "200000",
@@ -232,6 +364,10 @@
     },
     {
         "BriefDescription": "L2 cache reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x29",
         "EventName": "L2_LD.SELF.PREFETCH.M_STATE",
         "SampleAfterValue": "200000",
@@ -239,6 +375,10 @@
     },
     {
         "BriefDescription": "L2 cache reads",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x29",
         "EventName": "L2_LD.SELF.PREFETCH.S_STATE",
         "SampleAfterValue": "200000",
@@ -246,6 +386,10 @@
     },
     {
         "BriefDescription": "All read requests from L1 instruction and data caches",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2D",
         "EventName": "L2_LD_IFETCH.SELF.E_STATE",
         "SampleAfterValue": "200000",
@@ -253,6 +397,10 @@
     },
     {
         "BriefDescription": "All read requests from L1 instruction and data caches",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2D",
         "EventName": "L2_LD_IFETCH.SELF.I_STATE",
         "SampleAfterValue": "200000",
@@ -260,6 +408,10 @@
     },
     {
         "BriefDescription": "All read requests from L1 instruction and data caches",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2D",
         "EventName": "L2_LD_IFETCH.SELF.MESI",
         "SampleAfterValue": "200000",
@@ -267,6 +419,10 @@
     },
     {
         "BriefDescription": "All read requests from L1 instruction and data caches",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2D",
         "EventName": "L2_LD_IFETCH.SELF.M_STATE",
         "SampleAfterValue": "200000",
@@ -274,6 +430,10 @@
     },
     {
         "BriefDescription": "All read requests from L1 instruction and data caches",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2D",
         "EventName": "L2_LD_IFETCH.SELF.S_STATE",
         "SampleAfterValue": "200000",
@@ -281,6 +441,10 @@
     },
     {
         "BriefDescription": "L2 cache misses.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x24",
         "EventName": "L2_LINES_IN.SELF.ANY",
         "SampleAfterValue": "200000",
@@ -288,6 +452,10 @@
     },
     {
         "BriefDescription": "L2 cache misses.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x24",
         "EventName": "L2_LINES_IN.SELF.DEMAND",
         "SampleAfterValue": "200000",
@@ -295,6 +463,10 @@
     },
     {
         "BriefDescription": "L2 cache misses.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x24",
         "EventName": "L2_LINES_IN.SELF.PREFETCH",
         "SampleAfterValue": "200000",
@@ -302,6 +474,10 @@
     },
     {
         "BriefDescription": "L2 cache lines evicted.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x26",
         "EventName": "L2_LINES_OUT.SELF.ANY",
         "SampleAfterValue": "200000",
@@ -309,6 +485,10 @@
     },
     {
         "BriefDescription": "L2 cache lines evicted.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x26",
         "EventName": "L2_LINES_OUT.SELF.DEMAND",
         "SampleAfterValue": "200000",
@@ -316,6 +496,10 @@
     },
     {
         "BriefDescription": "L2 cache lines evicted.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x26",
         "EventName": "L2_LINES_OUT.SELF.PREFETCH",
         "SampleAfterValue": "200000",
@@ -323,6 +507,10 @@
     },
     {
         "BriefDescription": "L2 locked accesses",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2B",
         "EventName": "L2_LOCK.SELF.E_STATE",
         "SampleAfterValue": "200000",
@@ -330,6 +518,10 @@
     },
     {
         "BriefDescription": "L2 locked accesses",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2B",
         "EventName": "L2_LOCK.SELF.I_STATE",
         "SampleAfterValue": "200000",
@@ -337,6 +529,10 @@
     },
     {
         "BriefDescription": "L2 locked accesses",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2B",
         "EventName": "L2_LOCK.SELF.MESI",
         "SampleAfterValue": "200000",
@@ -344,6 +540,10 @@
     },
     {
         "BriefDescription": "L2 locked accesses",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2B",
         "EventName": "L2_LOCK.SELF.M_STATE",
         "SampleAfterValue": "200000",
@@ -351,6 +551,10 @@
     },
     {
         "BriefDescription": "L2 locked accesses",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2B",
         "EventName": "L2_LOCK.SELF.S_STATE",
         "SampleAfterValue": "200000",
@@ -358,6 +562,10 @@
     },
     {
         "BriefDescription": "L2 cache line modifications.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x25",
         "EventName": "L2_M_LINES_IN.SELF",
         "SampleAfterValue": "200000",
@@ -365,6 +573,10 @@
     },
     {
         "BriefDescription": "Modified lines evicted from the L2 cache",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x27",
         "EventName": "L2_M_LINES_OUT.SELF.ANY",
         "SampleAfterValue": "200000",
@@ -372,6 +584,10 @@
     },
     {
         "BriefDescription": "Modified lines evicted from the L2 cache",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x27",
         "EventName": "L2_M_LINES_OUT.SELF.DEMAND",
         "SampleAfterValue": "200000",
@@ -379,6 +595,10 @@
     },
     {
         "BriefDescription": "Modified lines evicted from the L2 cache",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x27",
         "EventName": "L2_M_LINES_OUT.SELF.PREFETCH",
         "SampleAfterValue": "200000",
@@ -386,6 +606,10 @@
     },
     {
         "BriefDescription": "Cycles no L2 cache requests are pending",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x32",
         "EventName": "L2_NO_REQ.SELF",
         "SampleAfterValue": "200000",
@@ -393,6 +617,10 @@
     },
     {
         "BriefDescription": "Rejected L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x30",
         "EventName": "L2_REJECT_BUSQ.SELF.ANY.E_STATE",
         "SampleAfterValue": "200000",
@@ -400,6 +628,10 @@
     },
     {
         "BriefDescription": "Rejected L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x30",
         "EventName": "L2_REJECT_BUSQ.SELF.ANY.I_STATE",
         "SampleAfterValue": "200000",
@@ -407,6 +639,10 @@
     },
     {
         "BriefDescription": "Rejected L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x30",
         "EventName": "L2_REJECT_BUSQ.SELF.ANY.MESI",
         "SampleAfterValue": "200000",
@@ -414,6 +650,10 @@
     },
     {
         "BriefDescription": "Rejected L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x30",
         "EventName": "L2_REJECT_BUSQ.SELF.ANY.M_STATE",
         "SampleAfterValue": "200000",
@@ -421,6 +661,10 @@
     },
     {
         "BriefDescription": "Rejected L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x30",
         "EventName": "L2_REJECT_BUSQ.SELF.ANY.S_STATE",
         "SampleAfterValue": "200000",
@@ -428,6 +672,10 @@
     },
     {
         "BriefDescription": "Rejected L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x30",
         "EventName": "L2_REJECT_BUSQ.SELF.DEMAND.E_STATE",
         "SampleAfterValue": "200000",
@@ -435,6 +683,10 @@
     },
     {
         "BriefDescription": "Rejected L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x30",
         "EventName": "L2_REJECT_BUSQ.SELF.DEMAND.I_STATE",
         "SampleAfterValue": "200000",
@@ -442,6 +694,10 @@
     },
     {
         "BriefDescription": "Rejected L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x30",
         "EventName": "L2_REJECT_BUSQ.SELF.DEMAND.MESI",
         "SampleAfterValue": "200000",
@@ -449,6 +705,10 @@
     },
     {
         "BriefDescription": "Rejected L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x30",
         "EventName": "L2_REJECT_BUSQ.SELF.DEMAND.M_STATE",
         "SampleAfterValue": "200000",
@@ -456,6 +716,10 @@
     },
     {
         "BriefDescription": "Rejected L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x30",
         "EventName": "L2_REJECT_BUSQ.SELF.DEMAND.S_STATE",
         "SampleAfterValue": "200000",
@@ -463,6 +727,10 @@
     },
     {
         "BriefDescription": "Rejected L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x30",
         "EventName": "L2_REJECT_BUSQ.SELF.PREFETCH.E_STATE",
         "SampleAfterValue": "200000",
@@ -470,6 +738,10 @@
     },
     {
         "BriefDescription": "Rejected L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x30",
         "EventName": "L2_REJECT_BUSQ.SELF.PREFETCH.I_STATE",
         "SampleAfterValue": "200000",
@@ -477,6 +749,10 @@
     },
     {
         "BriefDescription": "Rejected L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x30",
         "EventName": "L2_REJECT_BUSQ.SELF.PREFETCH.MESI",
         "SampleAfterValue": "200000",
@@ -484,6 +760,10 @@
     },
     {
         "BriefDescription": "Rejected L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x30",
         "EventName": "L2_REJECT_BUSQ.SELF.PREFETCH.M_STATE",
         "SampleAfterValue": "200000",
@@ -491,6 +771,10 @@
     },
     {
         "BriefDescription": "Rejected L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x30",
         "EventName": "L2_REJECT_BUSQ.SELF.PREFETCH.S_STATE",
         "SampleAfterValue": "200000",
@@ -498,6 +782,10 @@
     },
     {
         "BriefDescription": "L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2E",
         "EventName": "L2_RQSTS.SELF.ANY.E_STATE",
         "SampleAfterValue": "200000",
@@ -505,6 +793,10 @@
     },
     {
         "BriefDescription": "L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2E",
         "EventName": "L2_RQSTS.SELF.ANY.I_STATE",
         "SampleAfterValue": "200000",
@@ -512,6 +804,10 @@
     },
     {
         "BriefDescription": "L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2E",
         "EventName": "L2_RQSTS.SELF.ANY.MESI",
         "SampleAfterValue": "200000",
@@ -519,6 +815,10 @@
     },
     {
         "BriefDescription": "L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2E",
         "EventName": "L2_RQSTS.SELF.ANY.M_STATE",
         "SampleAfterValue": "200000",
@@ -526,6 +826,10 @@
     },
     {
         "BriefDescription": "L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2E",
         "EventName": "L2_RQSTS.SELF.ANY.S_STATE",
         "SampleAfterValue": "200000",
@@ -533,6 +837,10 @@
     },
     {
         "BriefDescription": "L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2E",
         "EventName": "L2_RQSTS.SELF.DEMAND.E_STATE",
         "SampleAfterValue": "200000",
@@ -540,6 +848,10 @@
     },
     {
         "BriefDescription": "L2 cache demand requests from this core that missed the L2",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2E",
         "EventName": "L2_RQSTS.SELF.DEMAND.I_STATE",
         "SampleAfterValue": "200000",
@@ -547,6 +859,10 @@
     },
     {
         "BriefDescription": "L2 cache demand requests from this core",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2E",
         "EventName": "L2_RQSTS.SELF.DEMAND.MESI",
         "SampleAfterValue": "200000",
@@ -554,6 +870,10 @@
     },
     {
         "BriefDescription": "L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2E",
         "EventName": "L2_RQSTS.SELF.DEMAND.M_STATE",
         "SampleAfterValue": "200000",
@@ -561,6 +881,10 @@
     },
     {
         "BriefDescription": "L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2E",
         "EventName": "L2_RQSTS.SELF.DEMAND.S_STATE",
         "SampleAfterValue": "200000",
@@ -568,6 +892,10 @@
     },
     {
         "BriefDescription": "L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2E",
         "EventName": "L2_RQSTS.SELF.PREFETCH.E_STATE",
         "SampleAfterValue": "200000",
@@ -575,6 +903,10 @@
     },
     {
         "BriefDescription": "L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2E",
         "EventName": "L2_RQSTS.SELF.PREFETCH.I_STATE",
         "SampleAfterValue": "200000",
@@ -582,6 +914,10 @@
     },
     {
         "BriefDescription": "L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2E",
         "EventName": "L2_RQSTS.SELF.PREFETCH.MESI",
         "SampleAfterValue": "200000",
@@ -589,6 +925,10 @@
     },
     {
         "BriefDescription": "L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2E",
         "EventName": "L2_RQSTS.SELF.PREFETCH.M_STATE",
         "SampleAfterValue": "200000",
@@ -596,6 +936,10 @@
     },
     {
         "BriefDescription": "L2 cache requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2E",
         "EventName": "L2_RQSTS.SELF.PREFETCH.S_STATE",
         "SampleAfterValue": "200000",
@@ -603,6 +947,10 @@
     },
     {
         "BriefDescription": "L2 store requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2A",
         "EventName": "L2_ST.SELF.E_STATE",
         "SampleAfterValue": "200000",
@@ -610,6 +958,10 @@
     },
     {
         "BriefDescription": "L2 store requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2A",
         "EventName": "L2_ST.SELF.I_STATE",
         "SampleAfterValue": "200000",
@@ -617,6 +969,10 @@
     },
     {
         "BriefDescription": "L2 store requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2A",
         "EventName": "L2_ST.SELF.MESI",
         "SampleAfterValue": "200000",
@@ -624,6 +980,10 @@
     },
     {
         "BriefDescription": "L2 store requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2A",
         "EventName": "L2_ST.SELF.M_STATE",
         "SampleAfterValue": "200000",
@@ -631,6 +991,10 @@
     },
     {
         "BriefDescription": "L2 store requests",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x2A",
         "EventName": "L2_ST.SELF.S_STATE",
         "SampleAfterValue": "200000",
@@ -638,6 +1002,10 @@
     },
     {
         "BriefDescription": "Retired loads that hit the L2 cache (precise event).",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xCB",
         "EventName": "MEM_LOAD_RETIRED.L2_HIT",
         "SampleAfterValue": "200000",
@@ -645,6 +1013,10 @@
     },
     {
         "BriefDescription": "Retired loads that miss the L2 cache",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xCB",
         "EventName": "MEM_LOAD_RETIRED.L2_MISS",
         "SampleAfterValue": "10000",

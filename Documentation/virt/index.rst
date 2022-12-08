@@ -1,8 +1,14 @@
 .. SPDX-License-Identifier: GPL-2.0
 
+<<<<<<< HEAD
 ======================
 Virtualization Support
 ======================
+=======
+============================
+Linux Virtualization Support
+============================
+>>>>>>> b7ba80a49124 (Commit)
 
 .. toctree::
    :maxdepth: 2
@@ -14,7 +20,10 @@ Virtualization Support
    ne_overview
    acrn/index
    coco/sev-guest
+<<<<<<< HEAD
    coco/tdx-guest
+=======
+>>>>>>> b7ba80a49124 (Commit)
    hyperv/index
 
 .. only:: html and subproject

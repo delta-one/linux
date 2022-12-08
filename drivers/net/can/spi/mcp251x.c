@@ -789,7 +789,11 @@ static netdev_tx_t mcp251x_hard_start_xmit(struct sk_buff *skb,
 		return NETDEV_TX_BUSY;
 	}
 
+<<<<<<< HEAD
 	if (can_dev_dropped_skb(net, skb))
+=======
+	if (can_dropped_invalid_skb(net, skb))
+>>>>>>> b7ba80a49124 (Commit)
 		return NETDEV_TX_OK;
 
 	netif_stop_queue(net);
@@ -1415,14 +1419,21 @@ static int mcp251x_can_probe(struct spi_device *spi)
 
 	ret = mcp251x_gpio_setup(priv);
 	if (ret)
+<<<<<<< HEAD
 		goto out_unregister_candev;
+=======
+		goto error_probe;
+>>>>>>> b7ba80a49124 (Commit)
 
 	netdev_info(net, "MCP%x successfully initialized.\n", priv->model);
 	return 0;
 
+<<<<<<< HEAD
 out_unregister_candev:
 	unregister_candev(net);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 error_probe:
 	destroy_workqueue(priv->wq);
 	priv->wq = NULL;

@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
 /*
+<<<<<<< HEAD
  * Copyright (C) 2012-2014, 2018-2022 Intel Corporation
+=======
+ * Copyright (C) 2012-2014, 2018-2021 Intel Corporation
+>>>>>>> b7ba80a49124 (Commit)
  * Copyright (C) 2013-2015 Intel Mobile Communications GmbH
  * Copyright (C) 2016-2017 Intel Deutschland GmbH
  */
@@ -14,7 +18,10 @@
 #include "iwl-eeprom-parse.h"
 #include "mvm.h"
 #include "sta.h"
+<<<<<<< HEAD
 #include "time-sync.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static void
 iwl_mvm_bar_check_trigger(struct iwl_mvm *mvm, const u8 *addr,
@@ -184,10 +191,14 @@ static u32 iwl_mvm_tx_csum(struct iwl_mvm *mvm, struct sk_buff *skb,
 			   struct ieee80211_tx_info *info,
 			   bool amsdu)
 {
+<<<<<<< HEAD
 	if (mvm->trans->trans_cfg->device_family < IWL_DEVICE_FAMILY_BZ ||
 	    (mvm->trans->trans_cfg->device_family == IWL_DEVICE_FAMILY_BZ &&
 	     CSR_HW_REV_TYPE(mvm->trans->hw_rev) == IWL_CFG_MAC_TYPE_GL &&
 	     mvm->trans->hw_rev_step == SILICON_A_STEP))
+=======
+	if (mvm->trans->trans_cfg->device_family < IWL_DEVICE_FAMILY_BZ)
+>>>>>>> b7ba80a49124 (Commit)
 		return iwl_mvm_tx_csum_pre_bz(mvm, skb, info, amsdu);
 	return iwl_mvm_tx_csum_bz(mvm, skb, amsdu);
 }
@@ -1108,8 +1119,13 @@ static int iwl_mvm_tx_mpdu(struct iwl_mvm *mvm, struct sk_buff *skb,
 	spin_lock(&mvmsta->lock);
 
 	/* nullfunc frames should go to the MGMT queue regardless of QOS,
+<<<<<<< HEAD
 	 * the conditions of !ieee80211_is_qos_nullfunc(fc) and
 	 * !ieee80211_is_data_qos(fc) keep the default assignment of MGMT TID
+=======
+	 * the condition of !ieee80211_is_qos_nullfunc(fc) keeps the default
+	 * assignment of MGMT TID
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	if (ieee80211_is_data_qos(fc) && !ieee80211_is_qos_nullfunc(fc)) {
 		tid = ieee80211_get_tid(hdr);
@@ -1134,8 +1150,12 @@ static int iwl_mvm_tx_mpdu(struct iwl_mvm *mvm, struct sk_buff *skb,
 			/* update the tx_cmd hdr as it was already copied */
 			tx_cmd->hdr->seq_ctrl = hdr->seq_ctrl;
 		}
+<<<<<<< HEAD
 	} else if (ieee80211_is_data(fc) && !ieee80211_is_data_qos(fc) &&
 		   !ieee80211_is_nullfunc(fc)) {
+=======
+	} else if (ieee80211_is_data(fc) && !ieee80211_is_data_qos(fc)) {
+>>>>>>> b7ba80a49124 (Commit)
 		tid = IWL_TID_NON_QOS;
 	}
 
@@ -1176,6 +1196,7 @@ static int iwl_mvm_tx_mpdu(struct iwl_mvm *mvm, struct sk_buff *skb,
 	/* From now on, we cannot access info->control */
 	iwl_mvm_skb_prepare_status(skb, dev_cmd);
 
+<<<<<<< HEAD
 	/*
 	 * The IV is introduced by the HW for new tx api, and it is not present
 	 * in the skb, hence, don't tell iwl_mvm_mei_tx_copy_to_csme about the
@@ -1185,6 +1206,11 @@ static int iwl_mvm_tx_mpdu(struct iwl_mvm *mvm, struct sk_buff *skb,
 		iwl_mvm_mei_tx_copy_to_csme(mvm, skb,
 					    info->control.hw_key &&
 					    !iwl_mvm_has_new_tx_api(mvm) ?
+=======
+	if (ieee80211_is_data(fc))
+		iwl_mvm_mei_tx_copy_to_csme(mvm, skb,
+					    info->control.hw_key ?
+>>>>>>> b7ba80a49124 (Commit)
 					    info->control.hw_key->iv_len : 0);
 
 	if (iwl_trans_tx(mvm->trans, skb, dev_cmd, txq_id))
@@ -1217,7 +1243,10 @@ int iwl_mvm_tx_skb_sta(struct iwl_mvm *mvm, struct sk_buff *skb,
 	struct sk_buff_head mpdus_skbs;
 	unsigned int payload_len;
 	int ret;
+<<<<<<< HEAD
 	struct sk_buff *orig_skb = skb;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (WARN_ON_ONCE(!mvmsta))
 		return -1;
@@ -1250,6 +1279,7 @@ int iwl_mvm_tx_skb_sta(struct iwl_mvm *mvm, struct sk_buff *skb,
 
 		ret = iwl_mvm_tx_mpdu(mvm, skb, &info, sta);
 		if (ret) {
+<<<<<<< HEAD
 			/* Free skbs created as part of TSO logic that have not yet been dequeued */
 			__skb_queue_purge(&mpdus_skbs);
 			/* skb here is not necessarily same as skb that entered this method,
@@ -1261,6 +1291,10 @@ int iwl_mvm_tx_skb_sta(struct iwl_mvm *mvm, struct sk_buff *skb,
 				kfree_skb(skb);
 			/* there was error, but we consumed skb one way or another, so return 0 */
 			return 0;
+=======
+			__skb_queue_purge(&mpdus_skbs);
+			return ret;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -1397,8 +1431,13 @@ void iwl_mvm_hwrate_to_tx_rate(u32 rate_n_flags,
 		r->idx = rate;
 	} else if (format ==  RATE_MCS_VHT_MSK) {
 		ieee80211_rate_set_vht(r, rate,
+<<<<<<< HEAD
 				       FIELD_GET(RATE_MCS_NSS_MSK,
 						 rate_n_flags) + 1);
+=======
+				       ((rate_n_flags & RATE_MCS_NSS_MSK) >>
+					RATE_MCS_NSS_POS) + 1);
+>>>>>>> b7ba80a49124 (Commit)
 		r->flags |= IEEE80211_TX_RC_VHT_MCS;
 	} else if (format == RATE_MCS_HE_MSK) {
 		/* mac80211 cannot do this without ieee80211_tx_status_ext()
@@ -1429,7 +1468,12 @@ void iwl_mvm_hwrate_to_tx_rate_v1(u32 rate_n_flags,
 	} else if (rate_n_flags & RATE_MCS_VHT_MSK_V1) {
 		ieee80211_rate_set_vht(
 			r, rate_n_flags & RATE_VHT_MCS_RATE_CODE_MSK,
+<<<<<<< HEAD
 			FIELD_GET(RATE_MCS_NSS_MSK, rate_n_flags) + 1);
+=======
+			((rate_n_flags & RATE_VHT_MCS_NSS_MSK) >>
+						RATE_VHT_MCS_NSS_POS) + 1);
+>>>>>>> b7ba80a49124 (Commit)
 		r->flags |= IEEE80211_TX_RC_VHT_MCS;
 	} else {
 		r->idx = iwl_mvm_legacy_rate_to_mac80211_idx(rate_n_flags,
@@ -1644,8 +1688,12 @@ static void iwl_mvm_rx_tx_cmd_single(struct iwl_mvm *mvm,
 		info->status.status_driver_data[0] =
 			RS_DRV_DATA_PACK(lq_color, tx_resp->reduced_tpc);
 
+<<<<<<< HEAD
 		if (likely(!iwl_mvm_time_sync_frame(mvm, skb, hdr->addr1)))
 			ieee80211_tx_status(mvm->hw, skb);
+=======
+		ieee80211_tx_status(mvm->hw, skb);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* This is an aggregation queue or might become one, so we use

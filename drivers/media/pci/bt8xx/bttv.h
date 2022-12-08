@@ -289,6 +289,10 @@ extern void bttv_init_card2(struct bttv *btv);
 extern void bttv_init_tuner(struct bttv *btv);
 
 /* card-specific functions */
+<<<<<<< HEAD
+=======
+extern void tea5757_set_freq(struct bttv *btv, unsigned short freq);
+>>>>>>> b7ba80a49124 (Commit)
 extern u32 bttv_tda9880_setnorm(struct bttv *btv, u32 gpiobits);
 
 /* extra tweaks for some chipsets */

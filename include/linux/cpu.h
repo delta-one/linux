@@ -176,13 +176,23 @@ void __noreturn cpu_startup_entry(enum cpuhp_state state);
 
 void cpu_idle_poll_ctrl(bool enable);
 
+<<<<<<< HEAD
+=======
+/* Attach to any functions which should be considered cpuidle. */
+#define __cpuidle	__section(".cpuidle.text")
+
+>>>>>>> b7ba80a49124 (Commit)
 bool cpu_in_idle(unsigned long pc);
 
 void arch_cpu_idle(void);
 void arch_cpu_idle_prepare(void);
 void arch_cpu_idle_enter(void);
 void arch_cpu_idle_exit(void);
+<<<<<<< HEAD
 void __noreturn arch_cpu_idle_dead(void);
+=======
+void arch_cpu_idle_dead(void);
+>>>>>>> b7ba80a49124 (Commit)
 
 int cpu_report_state(int cpu);
 int cpu_check_up_prepare(int cpu);

@@ -8,7 +8,10 @@
 #include <asm/fpu/api.h>
 #include <asm/fpu/signal.h>
 #include <asm/fpu/regset.h>
+<<<<<<< HEAD
 #include <asm/prctl.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "context.h"
 #include "internal.h"
@@ -168,13 +171,18 @@ int xstateregs_set(struct task_struct *target, const struct user_regset *regset,
 	}
 
 	fpu_force_restore(fpu);
+<<<<<<< HEAD
 	ret = copy_uabi_from_kernel_to_xstate(fpu->fpstate, kbuf ?: tmpbuf, &target->thread.pkru);
+=======
+	ret = copy_uabi_from_kernel_to_xstate(fpu->fpstate, kbuf ?: tmpbuf);
+>>>>>>> b7ba80a49124 (Commit)
 
 out:
 	vfree(tmpbuf);
 	return ret;
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_X86_USER_SHADOW_STACK
 int ssp_active(struct task_struct *target, const struct user_regset *regset)
 {
@@ -252,6 +260,8 @@ int ssp_set(struct task_struct *target, const struct user_regset *regset,
 }
 #endif /* CONFIG_X86_USER_SHADOW_STACK */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #if defined CONFIG_X86_32 || defined CONFIG_IA32_EMULATION
 
 /*

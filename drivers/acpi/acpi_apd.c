@@ -83,8 +83,11 @@ static int fch_misc_setup(struct apd_private_data *pdata)
 	if (!acpi_dev_get_property(adev, "clk-name", ACPI_TYPE_STRING, &obj)) {
 		clk_data->name = devm_kzalloc(&adev->dev, obj->string.length,
 					      GFP_KERNEL);
+<<<<<<< HEAD
 		if (!clk_data->name)
 			return -ENOMEM;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		strcpy(clk_data->name, obj->string.pointer);
 	} else {

@@ -98,6 +98,7 @@
  */
 #define REG_FIELD_GET64(__mask, __val)	((u64)FIELD_GET(__mask, __val))
 
+<<<<<<< HEAD
 #define __MASKED_FIELD(mask, value) ((mask) << 16 | (value))
 #define _MASKED_FIELD(mask, value) ({					   \
 	if (__builtin_constant_p(mask))					   \
@@ -155,12 +156,15 @@
  */
 #define _PICK(__index, ...) (((const u32 []){ __VA_ARGS__ })[__index])
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 typedef struct {
 	u32 reg;
 } i915_reg_t;
 
 #define _MMIO(r) ((const i915_reg_t){ .reg = (r) })
 
+<<<<<<< HEAD
 typedef struct {
 	u32 reg;
 } i915_mcr_reg_t;
@@ -178,5 +182,25 @@ typedef struct {
 	_Generic((r), i915_reg_t: (r).reg, i915_mcr_reg_t: (r).reg)
 #define i915_mmio_reg_equal(a, b) (i915_mmio_reg_offset(a) == i915_mmio_reg_offset(b))
 #define i915_mmio_reg_valid(r) (!i915_mmio_reg_equal(r, INVALID_MMIO_REG))
+=======
+#define INVALID_MMIO_REG _MMIO(0)
+
+static __always_inline u32 i915_mmio_reg_offset(i915_reg_t reg)
+{
+	return reg.reg;
+}
+
+static inline bool i915_mmio_reg_equal(i915_reg_t a, i915_reg_t b)
+{
+	return i915_mmio_reg_offset(a) == i915_mmio_reg_offset(b);
+}
+
+static inline bool i915_mmio_reg_valid(i915_reg_t reg)
+{
+	return !i915_mmio_reg_equal(reg, INVALID_MMIO_REG);
+}
+
+#define VLV_DISPLAY_BASE		0x180000
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* __I915_REG_DEFS__ */

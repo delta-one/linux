@@ -4,22 +4,34 @@
 
 #include <linux/sched.h>
 #include <linux/xarray.h>
+<<<<<<< HEAD
 #include <uapi/linux/io_uring.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 enum io_uring_cmd_flags {
 	IO_URING_F_COMPLETE_DEFER	= 1,
 	IO_URING_F_UNLOCKED		= 2,
+<<<<<<< HEAD
 	/* the request is executed from poll, it should not be freed */
 	IO_URING_F_MULTISHOT		= 4,
 	/* executed by io-wq */
 	IO_URING_F_IOWQ			= 8,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* int's last bit, sign checks are usually faster than a bit test */
 	IO_URING_F_NONBLOCK		= INT_MIN,
 
 	/* ctx state flags, for URING_CMD */
+<<<<<<< HEAD
 	IO_URING_F_SQE128		= (1 << 8),
 	IO_URING_F_CQE32		= (1 << 9),
 	IO_URING_F_IOPOLL		= (1 << 10),
+=======
+	IO_URING_F_SQE128		= 4,
+	IO_URING_F_CQE32		= 8,
+	IO_URING_F_IOPOLL		= 16,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct io_uring_cmd {
@@ -32,13 +44,20 @@ struct io_uring_cmd {
 		void *cookie;
 	};
 	u32		cmd_op;
+<<<<<<< HEAD
 	u32		flags;
+=======
+	u32		pad;
+>>>>>>> b7ba80a49124 (Commit)
 	u8		pdu[32]; /* available inline for free use */
 };
 
 #if defined(CONFIG_IO_URING)
+<<<<<<< HEAD
 int io_uring_cmd_import_fixed(u64 ubuf, unsigned long len, int rw,
 			      struct iov_iter *iter, void *ioucmd);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void io_uring_cmd_done(struct io_uring_cmd *cmd, ssize_t ret, ssize_t res2);
 void io_uring_cmd_complete_in_task(struct io_uring_cmd *ioucmd,
 			void (*task_work_cb)(struct io_uring_cmd *));
@@ -66,11 +85,14 @@ static inline void io_uring_free(struct task_struct *tsk)
 		__io_uring_free(tsk);
 }
 #else
+<<<<<<< HEAD
 static inline int io_uring_cmd_import_fixed(u64 ubuf, unsigned long len, int rw,
 			      struct iov_iter *iter, void *ioucmd)
 {
 	return -EOPNOTSUPP;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void io_uring_cmd_done(struct io_uring_cmd *cmd, ssize_t ret,
 		ssize_t ret2)
 {

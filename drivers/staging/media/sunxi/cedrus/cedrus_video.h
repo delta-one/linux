@@ -27,7 +27,10 @@ extern const struct v4l2_ioctl_ops cedrus_ioctl_ops;
 int cedrus_queue_init(void *priv, struct vb2_queue *src_vq,
 		      struct vb2_queue *dst_vq);
 void cedrus_prepare_format(struct v4l2_pix_format *pix_fmt);
+<<<<<<< HEAD
 void cedrus_reset_cap_format(struct cedrus_ctx *ctx);
 void cedrus_reset_out_format(struct cedrus_ctx *ctx);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

@@ -56,6 +56,11 @@ int siw_reap_cqe(struct siw_cq *cq, struct ib_wc *wc)
 	if (READ_ONCE(cqe->flags) & SIW_WQE_VALID) {
 		memset(wc, 0, sizeof(*wc));
 		wc->wr_id = cqe->id;
+<<<<<<< HEAD
+=======
+		wc->status = map_cqe_status[cqe->status].ib;
+		wc->opcode = map_wc_opcode[cqe->opcode];
+>>>>>>> b7ba80a49124 (Commit)
 		wc->byte_len = cqe->bytes;
 
 		/*
@@ -69,12 +74,16 @@ int siw_reap_cqe(struct siw_cq *cq, struct ib_wc *wc)
 				wc->wc_flags = IB_WC_WITH_INVALIDATE;
 			}
 			wc->qp = cqe->base_qp;
+<<<<<<< HEAD
 			wc->opcode = map_wc_opcode[cqe->opcode];
 			wc->status = map_cqe_status[cqe->status].ib;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			siw_dbg_cq(cq,
 				   "idx %u, type %d, flags %2x, id 0x%pK\n",
 				   cq->cq_get % cq->num_cqe, cqe->opcode,
 				   cqe->flags, (void *)(uintptr_t)cqe->id);
+<<<<<<< HEAD
 		} else {
 			/*
 			 * A malicious user may set invalid opcode or
@@ -95,6 +104,8 @@ int siw_reap_cqe(struct siw_cq *cq, struct ib_wc *wc)
 			wc->opcode = map_wc_opcode[opcode];
 			wc->status = map_cqe_status[status].ib;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		WRITE_ONCE(cqe->flags, 0);
 		cq->cq_get++;

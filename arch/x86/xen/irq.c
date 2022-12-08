@@ -24,7 +24,11 @@ noinstr void xen_force_evtchn_callback(void)
 	(void)HYPERVISOR_xen_version(0, NULL);
 }
 
+<<<<<<< HEAD
 static noinstr void xen_safe_halt(void)
+=======
+static void xen_safe_halt(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/* Blocking includes an implicit local_irq_enable(). */
 	if (HYPERVISOR_sched_op(SCHEDOP_block, NULL) != 0)

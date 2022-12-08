@@ -14,7 +14,11 @@
 #include <linux/spinlock.h>
 #include <linux/io.h>
 #include <linux/of.h>
+<<<<<<< HEAD
 #include <linux/gpio/legacy-of-mm-gpiochip.h>
+=======
+#include <linux/of_gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/gpio/driver.h>
 #include <linux/types.h>
 #include <linux/slab.h>

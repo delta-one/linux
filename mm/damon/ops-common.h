@@ -7,7 +7,11 @@
 
 #include <linux/damon.h>
 
+<<<<<<< HEAD
 struct folio *damon_get_folio(unsigned long pfn);
+=======
+struct page *damon_get_page(unsigned long pfn);
+>>>>>>> b7ba80a49124 (Commit)
 
 void damon_ptep_mkold(pte_t *pte, struct mm_struct *mm, unsigned long addr);
 void damon_pmdp_mkold(pmd_t *pmd, struct mm_struct *mm, unsigned long addr);

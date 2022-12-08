@@ -155,7 +155,13 @@ static void __revise_pending(struct inode *inode, ext4_lblk_t lblk,
 
 int __init ext4_init_es(void)
 {
+<<<<<<< HEAD
 	ext4_es_cachep = KMEM_CACHE(extent_status, SLAB_RECLAIM_ACCOUNT);
+=======
+	ext4_es_cachep = kmem_cache_create("ext4_extent_status",
+					   sizeof(struct extent_status),
+					   0, (SLAB_RECLAIM_ACCOUNT), NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ext4_es_cachep == NULL)
 		return -ENOMEM;
 	return 0;
@@ -665,7 +671,12 @@ static void ext4_es_insert_extent_ext_check(struct inode *inode,
 		}
 	}
 out:
+<<<<<<< HEAD
 	ext4_free_ext_path(path);
+=======
+	ext4_ext_drop_refs(path);
+	kfree(path);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ext4_es_insert_extent_ind_check(struct inode *inode,
@@ -1369,7 +1380,11 @@ retry:
 		if (count_reserved)
 			count_rsvd(inode, lblk, orig_es.es_len - len1 - len2,
 				   &orig_es, &rc);
+<<<<<<< HEAD
 		goto out_get_reserved;
+=======
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (len1 > 0) {
@@ -1411,7 +1426,10 @@ retry:
 		}
 	}
 
+<<<<<<< HEAD
 out_get_reserved:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (count_reserved)
 		*reserved = get_rsvd(inode, end, es, &rc);
 out:
@@ -1806,7 +1824,13 @@ static void ext4_print_pending_tree(struct inode *inode)
 
 int __init ext4_init_pending(void)
 {
+<<<<<<< HEAD
 	ext4_pending_cachep = KMEM_CACHE(pending_reservation, SLAB_RECLAIM_ACCOUNT);
+=======
+	ext4_pending_cachep = kmem_cache_create("ext4_pending_reservation",
+					   sizeof(struct pending_reservation),
+					   0, (SLAB_RECLAIM_ACCOUNT), NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ext4_pending_cachep == NULL)
 		return -ENOMEM;
 	return 0;

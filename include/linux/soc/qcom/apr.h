@@ -153,7 +153,11 @@ typedef struct apr_device gpr_device_t;
 
 struct apr_driver {
 	int	(*probe)(struct apr_device *sl);
+<<<<<<< HEAD
 	void	(*remove)(struct apr_device *sl);
+=======
+	int	(*remove)(struct apr_device *sl);
+>>>>>>> b7ba80a49124 (Commit)
 	int	(*callback)(struct apr_device *a,
 			    struct apr_resp_pkt *d);
 	int	(*gpr_callback)(struct gpr_resp_pkt *d, void *data, int op);

@@ -409,10 +409,13 @@ void vmbus_disconnect(void)
  */
 struct vmbus_channel *relid2channel(u32 relid)
 {
+<<<<<<< HEAD
 	if (vmbus_connection.channels == NULL) {
 		pr_warn_once("relid2channel: relid=%d: No channels mapped!\n", relid);
 		return NULL;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (WARN_ON(relid >= MAX_CHANNEL_RELIDS))
 		return NULL;
 	return READ_ONCE(vmbus_connection.channels[relid]);
@@ -435,11 +438,16 @@ struct vmbus_channel *relid2channel(u32 relid)
 void vmbus_on_event(unsigned long data)
 {
 	struct vmbus_channel *channel = (void *) data;
+<<<<<<< HEAD
 	void (*callback_fn)(void *context);
+=======
+	unsigned long time_limit = jiffies + 2;
+>>>>>>> b7ba80a49124 (Commit)
 
 	trace_vmbus_on_event(channel);
 
 	hv_debug_delay_test(channel, INTERRUPT_DELAY);
+<<<<<<< HEAD
 
 	/* A channel once created is persistent even when
 	 * there is no driver handling the device. An
@@ -458,6 +466,31 @@ void vmbus_on_event(unsigned long data)
 		return;
 
 	hv_begin_read(&channel->inbound);
+=======
+	do {
+		void (*callback_fn)(void *);
+
+		/* A channel once created is persistent even when
+		 * there is no driver handling the device. An
+		 * unloading driver sets the onchannel_callback to NULL.
+		 */
+		callback_fn = READ_ONCE(channel->onchannel_callback);
+		if (unlikely(callback_fn == NULL))
+			return;
+
+		(*callback_fn)(channel->channel_callback_context);
+
+		if (channel->callback_mode != HV_CALL_BATCHED)
+			return;
+
+		if (likely(hv_end_read(&channel->inbound) == 0))
+			return;
+
+		hv_begin_read(&channel->inbound);
+	} while (likely(time_before(jiffies, time_limit)));
+
+	/* The time limit (2 jiffies) has been reached */
+>>>>>>> b7ba80a49124 (Commit)
 	tasklet_schedule(&channel->callback_event);
 }
 

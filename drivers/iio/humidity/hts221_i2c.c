@@ -25,7 +25,12 @@ static const struct regmap_config hts221_i2c_regmap_config = {
 	.read_flag_mask = HTS221_I2C_AUTO_INCREMENT,
 };
 
+<<<<<<< HEAD
 static int hts221_i2c_probe(struct i2c_client *client)
+=======
+static int hts221_i2c_probe(struct i2c_client *client,
+			    const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct regmap *regmap;
 
@@ -65,7 +70,11 @@ static struct i2c_driver hts221_driver = {
 		.of_match_table = hts221_i2c_of_match,
 		.acpi_match_table = ACPI_PTR(hts221_acpi_match),
 	},
+<<<<<<< HEAD
 	.probe_new = hts221_i2c_probe,
+=======
+	.probe = hts221_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = hts221_i2c_id_table,
 };
 module_i2c_driver(hts221_driver);

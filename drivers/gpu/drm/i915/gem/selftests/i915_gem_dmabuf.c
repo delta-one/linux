@@ -6,12 +6,17 @@
 
 #include "i915_drv.h"
 #include "i915_selftest.h"
+<<<<<<< HEAD
 #include "gem/i915_gem_context.h"
 
 #include "mock_context.h"
 #include "mock_dmabuf.h"
 #include "igt_gem_utils.h"
 #include "selftests/mock_drm.h"
+=======
+
+#include "mock_dmabuf.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "selftests/mock_gem_device.h"
 
 static int igt_dmabuf_export(void *arg)
@@ -144,6 +149,7 @@ out_ret:
 	return err;
 }
 
+<<<<<<< HEAD
 static int verify_access(struct drm_i915_private *i915,
 			 struct drm_i915_gem_object *native_obj,
 			 struct drm_i915_gem_object *import_obj)
@@ -213,6 +219,8 @@ out_file:
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int igt_dmabuf_import_same_driver(struct drm_i915_private *i915,
 					 struct intel_memory_region **regions,
 					 unsigned int num_regions)
@@ -227,7 +235,11 @@ static int igt_dmabuf_import_same_driver(struct drm_i915_private *i915,
 
 	force_different_devices = true;
 
+<<<<<<< HEAD
 	obj = __i915_gem_object_create_user(i915, SZ_8M,
+=======
+	obj = __i915_gem_object_create_user(i915, PAGE_SIZE,
+>>>>>>> b7ba80a49124 (Commit)
 					    regions, num_regions);
 	if (IS_ERR(obj)) {
 		pr_err("__i915_gem_object_create_user failed with err=%ld\n",
@@ -279,10 +291,13 @@ static int igt_dmabuf_import_same_driver(struct drm_i915_private *i915,
 
 	i915_gem_object_unlock(import_obj);
 
+<<<<<<< HEAD
 	err = verify_access(i915, obj, import_obj);
 	if (err)
 		goto out_import;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Now try a fake an importer */
 	import_attach = dma_buf_attach(dmabuf, obj->base.dev->dev);
 	if (IS_ERR(import_attach)) {
@@ -290,7 +305,11 @@ static int igt_dmabuf_import_same_driver(struct drm_i915_private *i915,
 		goto out_import;
 	}
 
+<<<<<<< HEAD
 	st = dma_buf_map_attachment_unlocked(import_attach, DMA_BIDIRECTIONAL);
+=======
+	st = dma_buf_map_attachment(import_attach, DMA_BIDIRECTIONAL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(st)) {
 		err = PTR_ERR(st);
 		goto out_detach;
@@ -303,7 +322,11 @@ static int igt_dmabuf_import_same_driver(struct drm_i915_private *i915,
 		timeout = -ETIME;
 	}
 	err = timeout > 0 ? 0 : timeout;
+<<<<<<< HEAD
 	dma_buf_unmap_attachment_unlocked(import_attach, st, DMA_BIDIRECTIONAL);
+=======
+	dma_buf_unmap_attachment(import_attach, st, DMA_BIDIRECTIONAL);
+>>>>>>> b7ba80a49124 (Commit)
 out_detach:
 	dma_buf_detach(dmabuf, import_attach);
 out_import:
@@ -373,7 +396,11 @@ static int igt_dmabuf_import(void *arg)
 		goto out_obj;
 	}
 
+<<<<<<< HEAD
 	err = dma_buf_vmap_unlocked(dmabuf, &map);
+=======
+	err = dma_buf_vmap(dmabuf, &map);
+>>>>>>> b7ba80a49124 (Commit)
 	dma_map = err ? NULL : map.vaddr;
 	if (!dma_map) {
 		pr_err("dma_buf_vmap failed\n");
@@ -414,7 +441,11 @@ static int igt_dmabuf_import(void *arg)
 
 	err = 0;
 out_dma_map:
+<<<<<<< HEAD
 	dma_buf_vunmap_unlocked(dmabuf, &map);
+=======
+	dma_buf_vunmap(dmabuf, &map);
+>>>>>>> b7ba80a49124 (Commit)
 out_obj:
 	i915_gem_object_put(obj);
 out_dmabuf:
@@ -435,7 +466,11 @@ static int igt_dmabuf_import_ownership(void *arg)
 	if (IS_ERR(dmabuf))
 		return PTR_ERR(dmabuf);
 
+<<<<<<< HEAD
 	err = dma_buf_vmap_unlocked(dmabuf, &map);
+=======
+	err = dma_buf_vmap(dmabuf, &map);
+>>>>>>> b7ba80a49124 (Commit)
 	ptr = err ? NULL : map.vaddr;
 	if (!ptr) {
 		pr_err("dma_buf_vmap failed\n");
@@ -444,7 +479,11 @@ static int igt_dmabuf_import_ownership(void *arg)
 	}
 
 	memset(ptr, 0xc5, PAGE_SIZE);
+<<<<<<< HEAD
 	dma_buf_vunmap_unlocked(dmabuf, &map);
+=======
+	dma_buf_vunmap(dmabuf, &map);
+>>>>>>> b7ba80a49124 (Commit)
 
 	obj = to_intel_bo(i915_gem_prime_import(&i915->drm, dmabuf));
 	if (IS_ERR(obj)) {
@@ -495,7 +534,11 @@ static int igt_dmabuf_export_vmap(void *arg)
 	}
 	i915_gem_object_put(obj);
 
+<<<<<<< HEAD
 	err = dma_buf_vmap_unlocked(dmabuf, &map);
+=======
+	err = dma_buf_vmap(dmabuf, &map);
+>>>>>>> b7ba80a49124 (Commit)
 	ptr = err ? NULL : map.vaddr;
 	if (!ptr) {
 		pr_err("dma_buf_vmap failed\n");
@@ -512,7 +555,11 @@ static int igt_dmabuf_export_vmap(void *arg)
 	memset(ptr, 0xc5, dmabuf->size);
 
 	err = 0;
+<<<<<<< HEAD
 	dma_buf_vunmap_unlocked(dmabuf, &map);
+=======
+	dma_buf_vunmap(dmabuf, &map);
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	dma_buf_put(dmabuf);
 	return err;

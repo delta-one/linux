@@ -7,6 +7,21 @@
 #ifndef _NOLIBC_ARCH_RISCV_H
 #define _NOLIBC_ARCH_RISCV_H
 
+<<<<<<< HEAD
+=======
+/* O_* macros for fcntl/open are architecture-specific */
+#define O_RDONLY            0
+#define O_WRONLY            1
+#define O_RDWR              2
+#define O_CREAT         0x100
+#define O_EXCL          0x200
+#define O_NOCTTY        0x400
+#define O_TRUNC        0x1000
+#define O_APPEND       0x2000
+#define O_NONBLOCK     0x4000
+#define O_DIRECTORY  0x200000
+
+>>>>>>> b7ba80a49124 (Commit)
 struct sys_stat_struct {
 	unsigned long	st_dev;		/* Device.  */
 	unsigned long	st_ino;		/* File serial number.  */
@@ -170,6 +185,7 @@ struct sys_stat_struct {
 	_arg1;                                                                \
 })
 
+<<<<<<< HEAD
 char **environ __attribute__((weak));
 const unsigned long *_auxv __attribute__((weak));
 
@@ -204,5 +220,25 @@ void __attribute__((weak,noreturn,optimize("omit-frame-pointer"))) _start(void)
 	);
 	__builtin_unreachable();
 }
+=======
+/* startup code */
+__asm__ (".section .text\n"
+    ".weak _start\n"
+    "_start:\n"
+    ".option push\n"
+    ".option norelax\n"
+    "lla   gp, __global_pointer$\n"
+    ".option pop\n"
+    "lw    a0, 0(sp)\n"          // argc (a0) was in the stack
+    "add   a1, sp, "SZREG"\n"    // argv (a1) = sp
+    "slli  a2, a0, "PTRLOG"\n"   // envp (a2) = SZREG*argc ...
+    "add   a2, a2, "SZREG"\n"    //             + SZREG (skip null)
+    "add   a2,a2,a1\n"           //             + argv
+    "andi  sp,a1,-16\n"          // sp must be 16-byte aligned
+    "call  main\n"               // main() returns the status code, we'll exit with it.
+    "li a7, 93\n"                // NR_exit == 93
+    "ecall\n"
+    "");
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif // _NOLIBC_ARCH_RISCV_H

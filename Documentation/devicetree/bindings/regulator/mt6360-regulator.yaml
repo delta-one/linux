@@ -26,12 +26,19 @@ properties:
 
 patternProperties:
   "^buck[12]$":
+<<<<<<< HEAD
     $ref: regulator.yaml#
     unevaluatedProperties: false
 
   "^ldo[123567]$":
     $ref: regulator.yaml#
     unevaluatedProperties: false
+=======
+    $ref: "regulator.yaml#"
+
+  "^ldo[123567]$":
+    $ref: "regulator.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 required:
   - compatible
@@ -46,6 +53,10 @@ examples:
       compatible = "mediatek,mt6360-regulator";
       LDO_VIN3-supply = <&BUCK2>;
       buck1 {
+<<<<<<< HEAD
+=======
+        regulator-compatible = "BUCK1";
+>>>>>>> b7ba80a49124 (Commit)
         regulator-name = "mt6360,buck1";
         regulator-min-microvolt = <300000>;
         regulator-max-microvolt = <1300000>;
@@ -54,6 +65,10 @@ examples:
              MT6360_OPMODE_ULP>;
       };
       BUCK2: buck2 {
+<<<<<<< HEAD
+=======
+        regulator-compatible = "BUCK2";
+>>>>>>> b7ba80a49124 (Commit)
         regulator-name = "mt6360,buck2";
         regulator-min-microvolt = <300000>;
         regulator-max-microvolt = <1300000>;
@@ -62,6 +77,10 @@ examples:
              MT6360_OPMODE_ULP>;
       };
       ldo6 {
+<<<<<<< HEAD
+=======
+        regulator-compatible = "LDO6";
+>>>>>>> b7ba80a49124 (Commit)
         regulator-name = "mt6360,ldo6";
         regulator-min-microvolt = <500000>;
         regulator-max-microvolt = <2100000>;
@@ -69,6 +88,10 @@ examples:
              MT6360_OPMODE_LP>;
       };
       ldo7 {
+<<<<<<< HEAD
+=======
+        regulator-compatible = "LDO7";
+>>>>>>> b7ba80a49124 (Commit)
         regulator-name = "mt6360,ldo7";
         regulator-min-microvolt = <500000>;
         regulator-max-microvolt = <2100000>;
@@ -76,13 +99,22 @@ examples:
              MT6360_OPMODE_LP>;
       };
       ldo1 {
+<<<<<<< HEAD
+=======
+        regulator-compatible = "LDO1";
+>>>>>>> b7ba80a49124 (Commit)
         regulator-name = "mt6360,ldo1";
         regulator-min-microvolt = <1200000>;
         regulator-max-microvolt = <3600000>;
         regulator-allowed-modes = <MT6360_OPMODE_NORMAL
              MT6360_OPMODE_LP>;
       };
+<<<<<<< HEAD
       ldo2 {
+=======
+        ldo2 {
+        regulator-compatible = "LDO2";
+>>>>>>> b7ba80a49124 (Commit)
         regulator-name = "mt6360,ldo2";
         regulator-min-microvolt = <1200000>;
         regulator-max-microvolt = <3600000>;
@@ -90,6 +122,10 @@ examples:
              MT6360_OPMODE_LP>;
       };
       ldo3 {
+<<<<<<< HEAD
+=======
+        regulator-compatible = "LDO3";
+>>>>>>> b7ba80a49124 (Commit)
         regulator-name = "mt6360,ldo3";
         regulator-min-microvolt = <1200000>;
         regulator-max-microvolt = <3600000>;
@@ -97,6 +133,10 @@ examples:
              MT6360_OPMODE_LP>;
       };
       ldo5 {
+<<<<<<< HEAD
+=======
+        regulator-compatible = "LDO5";
+>>>>>>> b7ba80a49124 (Commit)
         regulator-name = "mt6360,ldo5";
         regulator-min-microvolt = <2700000>;
         regulator-max-microvolt = <3600000>;

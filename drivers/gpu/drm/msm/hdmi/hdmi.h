@@ -86,6 +86,12 @@ struct hdmi {
 
 /* platform config data (ie. from DT, or pdata) */
 struct hdmi_platform_config {
+<<<<<<< HEAD
+=======
+	const char *mmio_name;
+	const char *qfprom_mmio_name;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* regulators that need to be on for hpd: */
 	const char **hpd_reg_names;
 	int hpd_reg_cnt;

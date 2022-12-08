@@ -8,6 +8,10 @@
 #include <linux/types.h>
 #include <linux/module.h>
 #include <linux/pci.h>
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/netdevice.h>
 #include <linux/etherdevice.h>
 #include <linux/rtnetlink.h>
@@ -22,7 +26,10 @@ struct workqueue_struct *octep_wq;
 /* Supported Devices */
 static const struct pci_device_id octep_pci_id_tbl[] = {
 	{PCI_DEVICE(PCI_VENDOR_ID_CAVIUM, OCTEP_PCI_DEVICE_ID_CN93_PF)},
+<<<<<<< HEAD
 	{PCI_DEVICE(PCI_VENDOR_ID_CAVIUM, OCTEP_PCI_DEVICE_ID_CNF95N_PF)},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{0, },
 };
 MODULE_DEVICE_TABLE(pci, octep_pci_id_tbl);
@@ -410,7 +417,11 @@ static void octep_napi_add(struct octep_device *oct)
 	for (i = 0; i < oct->num_oqs; i++) {
 		netdev_dbg(oct->netdev, "Adding NAPI on Q-%d\n", i);
 		netif_napi_add(oct->netdev, &oct->ioq_vector[i]->napi,
+<<<<<<< HEAD
 			       octep_napi_poll);
+=======
+			       octep_napi_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 		oct->oq[i]->napi = &oct->ioq_vector[i]->napi;
 	}
 }
@@ -521,12 +532,21 @@ static int octep_open(struct net_device *netdev)
 	octep_oq_dbell_init(oct);
 
 	ret = octep_get_link_status(oct);
+<<<<<<< HEAD
 	if (ret > 0)
+=======
+	if (ret)
+>>>>>>> b7ba80a49124 (Commit)
 		octep_link_up(netdev);
 
 	return 0;
 
 set_queues_err:
+<<<<<<< HEAD
+=======
+	octep_napi_disable(oct);
+	octep_napi_delete(oct);
+>>>>>>> b7ba80a49124 (Commit)
 	octep_clean_irqs(oct);
 setup_irq_err:
 	octep_free_oqs(oct);
@@ -905,6 +925,7 @@ static void octep_ctrl_mbox_task(struct work_struct *work)
 	}
 }
 
+<<<<<<< HEAD
 static const char *octep_devid_to_str(struct octep_device *oct)
 {
 	switch (oct->chip_id) {
@@ -917,6 +938,8 @@ static const char *octep_devid_to_str(struct octep_device *oct)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * octep_device_setup() - Setup Octeon Device.
  *
@@ -949,10 +972,16 @@ int octep_device_setup(struct octep_device *oct)
 
 	switch (oct->chip_id) {
 	case OCTEP_PCI_DEVICE_ID_CN93_PF:
+<<<<<<< HEAD
 	case OCTEP_PCI_DEVICE_ID_CNF95N_PF:
 		dev_info(&pdev->dev, "Setting up OCTEON %s PF PASS%d.%d\n",
 			 octep_devid_to_str(oct), OCTEP_MAJOR_REV(oct),
 			 OCTEP_MINOR_REV(oct));
+=======
+		dev_info(&pdev->dev,
+			 "Setting up OCTEON CN93XX PF PASS%d.%d\n",
+			 OCTEP_MAJOR_REV(oct), OCTEP_MINOR_REV(oct));
+>>>>>>> b7ba80a49124 (Commit)
 		octep_device_setup_cn93_pf(oct);
 		break;
 	default:
@@ -969,7 +998,11 @@ int octep_device_setup(struct octep_device *oct)
 	ret = octep_ctrl_mbox_init(ctrl_mbox);
 	if (ret) {
 		dev_err(&pdev->dev, "Failed to initialize control mbox\n");
+<<<<<<< HEAD
 		goto unsupported_dev;
+=======
+		return -1;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	oct->ctrl_mbox_ifstats_offset = OCTEP_CTRL_MBOX_SZ(ctrl_mbox->h2fq.elem_sz,
 							   ctrl_mbox->h2fq.elem_cnt,
@@ -979,10 +1012,13 @@ int octep_device_setup(struct octep_device *oct)
 	return 0;
 
 unsupported_dev:
+<<<<<<< HEAD
 	for (i = 0; i < OCTEP_MMIO_REGIONS; i++)
 		iounmap(oct->mmio[i].hw_addr);
 
 	kfree(oct->conf);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return -1;
 }
 
@@ -1049,6 +1085,10 @@ static int octep_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 		goto err_pci_regions;
 	}
 
+<<<<<<< HEAD
+=======
+	pci_enable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_set_master(pdev);
 
 	netdev = alloc_etherdev_mq(sizeof(struct octep_device),
@@ -1084,11 +1124,15 @@ static int octep_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 	netdev->max_mtu = OCTEP_MAX_MTU;
 	netdev->mtu = OCTEP_DEFAULT_MTU;
 
+<<<<<<< HEAD
 	err = octep_get_mac_addr(octep_dev, octep_dev->mac_addr);
 	if (err) {
 		dev_err(&pdev->dev, "Failed to get mac address\n");
 		goto register_dev_err;
 	}
+=======
+	octep_get_mac_addr(octep_dev, octep_dev->mac_addr);
+>>>>>>> b7ba80a49124 (Commit)
 	eth_hw_addr_set(netdev, octep_dev->mac_addr);
 
 	err = register_netdev(netdev);
@@ -1104,6 +1148,10 @@ register_dev_err:
 err_octep_config:
 	free_netdev(netdev);
 err_alloc_netdev:
+<<<<<<< HEAD
+=======
+	pci_disable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_release_mem_regions(pdev);
 err_pci_regions:
 err_dma_mask:
@@ -1136,6 +1184,10 @@ static void octep_remove(struct pci_dev *pdev)
 	octep_device_cleanup(oct);
 	pci_release_mem_regions(pdev);
 	free_netdev(netdev);
+<<<<<<< HEAD
+=======
+	pci_disable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_disable_device(pdev);
 }
 

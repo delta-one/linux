@@ -18,6 +18,7 @@
 #include <linux/mmu_notifier.h>
 #include "kvm-s390.h"
 
+<<<<<<< HEAD
 /**
  * struct pv_vm_to_be_destroyed - Represents a protected VM that needs to
  * be destroyed
@@ -41,6 +42,8 @@ struct pv_vm_to_be_destroyed {
 	unsigned long stor_base;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void kvm_s390_clear_pv_state(struct kvm *kvm)
 {
 	kvm->arch.pv.handle = 0;
@@ -67,7 +70,11 @@ int kvm_s390_pv_destroy_cpu(struct kvm_vcpu *vcpu, u16 *rc, u16 *rrc)
 		free_pages(vcpu->arch.pv.stor_base,
 			   get_order(uv_info.guest_cpu_stor_len));
 
+<<<<<<< HEAD
 	free_page((unsigned long)sida_addr(vcpu->arch.sie_block));
+=======
+	free_page(sida_origin(vcpu->arch.sie_block));
+>>>>>>> b7ba80a49124 (Commit)
 	vcpu->arch.sie_block->pv_handle_cpu = 0;
 	vcpu->arch.sie_block->pv_handle_config = 0;
 	memset(&vcpu->arch.pv, 0, sizeof(vcpu->arch.pv));
@@ -89,7 +96,10 @@ int kvm_s390_pv_create_cpu(struct kvm_vcpu *vcpu, u16 *rc, u16 *rrc)
 		.header.cmd = UVC_CMD_CREATE_SEC_CPU,
 		.header.len = sizeof(uvcb),
 	};
+<<<<<<< HEAD
 	void *sida_addr;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int cc;
 
 	if (kvm_s390_pv_cpu_get_handle(vcpu))
@@ -103,17 +113,29 @@ int kvm_s390_pv_create_cpu(struct kvm_vcpu *vcpu, u16 *rc, u16 *rrc)
 	/* Input */
 	uvcb.guest_handle = kvm_s390_pv_get_handle(vcpu->kvm);
 	uvcb.num = vcpu->arch.sie_block->icpua;
+<<<<<<< HEAD
 	uvcb.state_origin = virt_to_phys(vcpu->arch.sie_block);
 	uvcb.stor_origin = virt_to_phys((void *)vcpu->arch.pv.stor_base);
 
 	/* Alloc Secure Instruction Data Area Designation */
 	sida_addr = (void *)__get_free_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
 	if (!sida_addr) {
+=======
+	uvcb.state_origin = (u64)vcpu->arch.sie_block;
+	uvcb.stor_origin = (u64)vcpu->arch.pv.stor_base;
+
+	/* Alloc Secure Instruction Data Area Designation */
+	vcpu->arch.sie_block->sidad = __get_free_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
+	if (!vcpu->arch.sie_block->sidad) {
+>>>>>>> b7ba80a49124 (Commit)
 		free_pages(vcpu->arch.pv.stor_base,
 			   get_order(uv_info.guest_cpu_stor_len));
 		return -ENOMEM;
 	}
+<<<<<<< HEAD
 	vcpu->arch.sie_block->sidad = virt_to_phys(sida_addr);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	cc = uv_call(0, (u64)&uvcb);
 	*rc = uvcb.header.rc;
@@ -184,6 +206,7 @@ out_err:
 	return -ENOMEM;
 }
 
+<<<<<<< HEAD
 /**
  * kvm_s390_pv_dispose_one_leftover - Clean up one leftover protected VM.
  * @kvm: the KVM that was associated with this leftover protected VM
@@ -363,6 +386,9 @@ int kvm_s390_pv_set_aside(struct kvm *kvm, u16 *rc, u16 *rrc)
  *
  * Return: 0 in case of success, otherwise -EIO
  */
+=======
+/* this should not fail, but if it does, we must not free the donated memory */
+>>>>>>> b7ba80a49124 (Commit)
 int kvm_s390_pv_deinit_vm(struct kvm *kvm, u16 *rc, u16 *rrc)
 {
 	int cc;
@@ -370,6 +396,18 @@ int kvm_s390_pv_deinit_vm(struct kvm *kvm, u16 *rc, u16 *rrc)
 	cc = uv_cmd_nodata(kvm_s390_pv_get_handle(kvm),
 			   UVC_CMD_DESTROY_SEC_CONF, rc, rrc);
 	WRITE_ONCE(kvm->arch.gmap->guest_handle, 0);
+<<<<<<< HEAD
+=======
+	/*
+	 * if the mm still has a mapping, make all its pages accessible
+	 * before destroying the guest
+	 */
+	if (mmget_not_zero(kvm->mm)) {
+		s390_uv_destroy_range(kvm->mm, 0, TASK_SIZE);
+		mmput(kvm->mm);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!cc) {
 		atomic_dec(&kvm->mm->context.protected_count);
 		kvm_s390_pv_dealloc_vm(kvm);
@@ -383,6 +421,7 @@ int kvm_s390_pv_deinit_vm(struct kvm *kvm, u16 *rc, u16 *rrc)
 	return cc ? -EIO : 0;
 }
 
+<<<<<<< HEAD
 /**
  * kvm_s390_pv_deinit_cleanup_all - Clean up all protected VMs associated
  * with a specific KVM.
@@ -508,12 +547,17 @@ done:
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void kvm_s390_pv_mmu_notifier_release(struct mmu_notifier *subscription,
 					     struct mm_struct *mm)
 {
 	struct kvm *kvm = container_of(subscription, struct kvm, arch.pv.mmu_notifier);
 	u16 dummy;
+<<<<<<< HEAD
 	int r;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * No locking is needed since this is the last thread of the last user of this
@@ -522,9 +566,13 @@ static void kvm_s390_pv_mmu_notifier_release(struct mmu_notifier *subscription,
 	 * unregistered. This means that if this notifier runs, then the
 	 * struct kvm is still valid.
 	 */
+<<<<<<< HEAD
 	r = kvm_s390_cpus_from_pv(kvm, &dummy, &dummy);
 	if (!r && is_destroy_fast_available() && kvm_s390_pv_get_handle(kvm))
 		kvm_s390_pv_deinit_vm_fast(kvm, &dummy, &dummy);
+=======
+	kvm_s390_cpus_from_pv(kvm, &dummy, &dummy);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct mmu_notifier_ops kvm_s390_pv_mmu_notifier_ops = {
@@ -548,9 +596,14 @@ int kvm_s390_pv_init_vm(struct kvm *kvm, u16 *rc, u16 *rrc)
 	uvcb.guest_stor_origin = 0; /* MSO is 0 for KVM */
 	uvcb.guest_stor_len = kvm->arch.pv.guest_len;
 	uvcb.guest_asce = kvm->arch.gmap->asce;
+<<<<<<< HEAD
 	uvcb.guest_sca = virt_to_phys(kvm->arch.sca);
 	uvcb.conf_base_stor_origin =
 		virt_to_phys((void *)kvm->arch.pv.stor_base);
+=======
+	uvcb.guest_sca = (unsigned long)kvm->arch.sca;
+	uvcb.conf_base_stor_origin = (u64)kvm->arch.pv.stor_base;
+>>>>>>> b7ba80a49124 (Commit)
 	uvcb.conf_virt_stor_origin = (u64)kvm->arch.pv.stor_var;
 
 	cc = uv_call_sched(0, (u64)&uvcb);

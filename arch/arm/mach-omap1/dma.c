@@ -261,6 +261,25 @@ static const struct platform_device_info omap_dma_dev_info = {
 	.num_res = 1,
 };
 
+<<<<<<< HEAD
+=======
+/* OMAP730, OMAP850 */
+static const struct dma_slave_map omap7xx_sdma_map[] = {
+	{ "omap-mcbsp.1", "tx", SDMA_FILTER_PARAM(8) },
+	{ "omap-mcbsp.1", "rx", SDMA_FILTER_PARAM(9) },
+	{ "omap-mcbsp.2", "tx", SDMA_FILTER_PARAM(10) },
+	{ "omap-mcbsp.2", "rx", SDMA_FILTER_PARAM(11) },
+	{ "mmci-omap.0", "tx", SDMA_FILTER_PARAM(21) },
+	{ "mmci-omap.0", "rx", SDMA_FILTER_PARAM(22) },
+	{ "omap_udc", "rx0", SDMA_FILTER_PARAM(26) },
+	{ "omap_udc", "rx1", SDMA_FILTER_PARAM(27) },
+	{ "omap_udc", "rx2", SDMA_FILTER_PARAM(28) },
+	{ "omap_udc", "tx0", SDMA_FILTER_PARAM(29) },
+	{ "omap_udc", "tx1", SDMA_FILTER_PARAM(30) },
+	{ "omap_udc", "tx2", SDMA_FILTER_PARAM(31) },
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /* OMAP1510, OMAP1610*/
 static const struct dma_slave_map omap1xxx_sdma_map[] = {
 	{ "omap-mcbsp.1", "tx", SDMA_FILTER_PARAM(8) },
@@ -355,8 +374,18 @@ static int __init omap1_system_dma_init(void)
 	p.dma_attr = d;
 	p.errata = configure_dma_errata();
 
+<<<<<<< HEAD
 	p.slave_map = omap1xxx_sdma_map;
 	p.slavecnt = ARRAY_SIZE(omap1xxx_sdma_map);
+=======
+	if (cpu_is_omap7xx()) {
+		p.slave_map = omap7xx_sdma_map;
+		p.slavecnt = ARRAY_SIZE(omap7xx_sdma_map);
+	} else {
+		p.slave_map = omap1xxx_sdma_map;
+		p.slavecnt = ARRAY_SIZE(omap1xxx_sdma_map);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = platform_device_add_data(pdev, &p, sizeof(p));
 	if (ret) {

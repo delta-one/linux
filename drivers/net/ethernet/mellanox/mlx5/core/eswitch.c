@@ -161,6 +161,7 @@ static int modify_esw_vport_cvlan(struct mlx5_core_dev *dev, u16 vport,
 			 esw_vport_context.vport_cvlan_strip, 1);
 
 	if (set_flags & SET_VLAN_INSERT) {
+<<<<<<< HEAD
 		if (MLX5_CAP_ESW(dev, vport_cvlan_insert_always)) {
 			/* insert either if vlan exist in packet or not */
 			MLX5_SET(modify_esw_vport_context_in, in,
@@ -172,6 +173,12 @@ static int modify_esw_vport_cvlan(struct mlx5_core_dev *dev, u16 vport,
 				 esw_vport_context.vport_cvlan_insert,
 				 MLX5_VPORT_CVLAN_INSERT_WHEN_NO_CVLAN);
 		}
+=======
+		/* insert only if no vlan in packet */
+		MLX5_SET(modify_esw_vport_context_in, in,
+			 esw_vport_context.vport_cvlan_insert, 1);
+
+>>>>>>> b7ba80a49124 (Commit)
 		MLX5_SET(modify_esw_vport_context_in, in,
 			 esw_vport_context.cvlan_pcp, qos);
 		MLX5_SET(modify_esw_vport_context_in, in,
@@ -779,6 +786,7 @@ static void esw_vport_cleanup_acl(struct mlx5_eswitch *esw,
 		esw_vport_destroy_offloads_acl_tables(esw, vport);
 }
 
+<<<<<<< HEAD
 static int mlx5_esw_vport_caps_get(struct mlx5_eswitch *esw, struct mlx5_vport *vport)
 {
 	int query_out_sz = MLX5_ST_SZ_BYTES(query_hca_cap_out);
@@ -817,6 +825,10 @@ out_free:
 static int esw_vport_setup(struct mlx5_eswitch *esw, struct mlx5_vport *vport)
 {
 	bool vst_mode_steering = esw_vst_mode_is_steering(esw);
+=======
+static int esw_vport_setup(struct mlx5_eswitch *esw, struct mlx5_vport *vport)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	u16 vport_num = vport->vport;
 	int flags;
 	int err;
@@ -828,10 +840,13 @@ static int esw_vport_setup(struct mlx5_eswitch *esw, struct mlx5_vport *vport)
 	if (mlx5_esw_is_manager_vport(esw, vport_num))
 		return 0;
 
+<<<<<<< HEAD
 	err = mlx5_esw_vport_caps_get(esw, vport);
 	if (err)
 		goto err_caps;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mlx5_modify_vport_admin_state(esw->dev,
 				      MLX5_VPORT_STATE_OP_MOD_ESW_VPORT,
 				      vport_num, 1,
@@ -847,6 +862,7 @@ static int esw_vport_setup(struct mlx5_eswitch *esw, struct mlx5_vport *vport)
 
 	flags = (vport->info.vlan || vport->info.qos) ?
 		SET_VLAN_STRIP | SET_VLAN_INSERT : 0;
+<<<<<<< HEAD
 	if (esw->mode == MLX5_ESWITCH_OFFLOADS || !vst_mode_steering)
 		modify_esw_vport_cvlan(esw->dev, vport_num, vport->info.vlan,
 				       vport->info.qos, flags);
@@ -856,6 +872,12 @@ static int esw_vport_setup(struct mlx5_eswitch *esw, struct mlx5_vport *vport)
 err_caps:
 	esw_vport_cleanup_acl(esw, vport);
 	return err;
+=======
+	modify_esw_vport_cvlan(esw->dev, vport_num, vport->info.vlan,
+			       vport->info.qos, flags);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Don't cleanup vport->info, it's needed to restore vport configuration */
@@ -959,7 +981,10 @@ void mlx5_esw_vport_disable(struct mlx5_eswitch *esw, u16 vport_num)
 	 */
 	esw_vport_change_handle_locked(vport);
 	vport->enabled_events = 0;
+<<<<<<< HEAD
 	esw_apply_vport_rx_mode(esw, vport, false, false);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	esw_vport_cleanup(esw, vport);
 	esw->enabled_vports--;
 
@@ -1191,9 +1216,15 @@ static void mlx5_eswitch_get_devlink_param(struct mlx5_eswitch *esw)
 	union devlink_param_value val;
 	int err;
 
+<<<<<<< HEAD
 	err = devl_param_driverinit_value_get(devlink,
 					      MLX5_DEVLINK_PARAM_ID_ESW_LARGE_GROUP_NUM,
 					      &val);
+=======
+	err = devlink_param_driverinit_value_get(devlink,
+						 MLX5_DEVLINK_PARAM_ID_ESW_LARGE_GROUP_NUM,
+						 &val);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!err) {
 		esw->params.large_group_num = val.vu32;
 	} else {
@@ -1251,7 +1282,11 @@ static int mlx5_esw_acls_ns_init(struct mlx5_eswitch *esw)
 		if (err)
 			return err;
 	} else {
+<<<<<<< HEAD
 		esw_warn(dev, "egress ACL is not supported by FW\n");
+=======
+		esw_warn(dev, "engress ACL is not supported by FW\n");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (MLX5_CAP_ESW_INGRESS_ACL(dev, ft_support)) {
@@ -1407,15 +1442,24 @@ void mlx5_eswitch_disable_sriov(struct mlx5_eswitch *esw, bool clear_vf)
 	mlx5_eswitch_unload_vf_vports(esw, esw->esw_funcs.num_vfs);
 	if (clear_vf)
 		mlx5_eswitch_clear_vf_vports_info(esw);
+<<<<<<< HEAD
 
+=======
+	/* If disabling sriov in switchdev mode, free meta rules here
+	 * because it depends on num_vfs.
+	 */
+>>>>>>> b7ba80a49124 (Commit)
 	if (esw->mode == MLX5_ESWITCH_OFFLOADS) {
 		struct devlink *devlink = priv_to_devlink(esw->dev);
 
 		devl_rate_nodes_destroy(devlink);
 	}
+<<<<<<< HEAD
 	/* Destroy legacy fdb when disabling sriov in legacy mode. */
 	if (esw->mode == MLX5_ESWITCH_LEGACY)
 		mlx5_eswitch_disable_locked(esw);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	esw->esw_funcs.num_vfs = 0;
 
@@ -1441,6 +1485,7 @@ void mlx5_eswitch_disable_locked(struct mlx5_eswitch *esw)
 		 esw->mode == MLX5_ESWITCH_LEGACY ? "LEGACY" : "OFFLOADS",
 		 esw->esw_funcs.num_vfs, esw->enabled_vports);
 
+<<<<<<< HEAD
 	if (esw->fdb_table.flags & MLX5_ESW_FDB_CREATED) {
 		esw->fdb_table.flags &= ~MLX5_ESW_FDB_CREATED;
 		if (esw->mode == MLX5_ESWITCH_OFFLOADS)
@@ -1449,6 +1494,14 @@ void mlx5_eswitch_disable_locked(struct mlx5_eswitch *esw)
 			esw_legacy_disable(esw);
 		mlx5_esw_acls_ns_cleanup(esw);
 	}
+=======
+	esw->fdb_table.flags &= ~MLX5_ESW_FDB_CREATED;
+	if (esw->mode == MLX5_ESWITCH_OFFLOADS)
+		esw_offloads_disable(esw);
+	else if (esw->mode == MLX5_ESWITCH_LEGACY)
+		esw_legacy_disable(esw);
+	mlx5_esw_acls_ns_cleanup(esw);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (esw->mode == MLX5_ESWITCH_OFFLOADS)
 		devl_rate_nodes_destroy(devlink);
@@ -1463,7 +1516,10 @@ void mlx5_eswitch_disable(struct mlx5_eswitch *esw)
 	mlx5_lag_disable_change(esw->dev);
 	down_write(&esw->mode_lock);
 	mlx5_eswitch_disable_locked(esw);
+<<<<<<< HEAD
 	esw->mode = MLX5_ESWITCH_LEGACY;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	up_write(&esw->mode_lock);
 	mlx5_lag_enable_change(esw->dev);
 }
@@ -1488,7 +1544,11 @@ int mlx5_esw_sf_max_hpf_functions(struct mlx5_core_dev *dev, u16 *max_sfs, u16 *
 	void *hca_caps;
 	int err;
 
+<<<<<<< HEAD
 	if (!mlx5_core_is_ecpf(dev) || mlx5_core_is_management_pf(dev)) {
+=======
+	if (!mlx5_core_is_ecpf(dev)) {
+>>>>>>> b7ba80a49124 (Commit)
 		*max_sfs = 0;
 		return 0;
 	}
@@ -1641,7 +1701,11 @@ int mlx5_eswitch_init(struct mlx5_core_dev *dev)
 	if (err)
 		goto abort;
 
+<<<<<<< HEAD
 	err = esw_offloads_init(esw);
+=======
+	err = esw_offloads_init_reps(esw);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto reps_err;
 
@@ -1707,7 +1771,11 @@ void mlx5_eswitch_cleanup(struct mlx5_eswitch *esw)
 	mlx5e_mod_hdr_tbl_destroy(&esw->offloads.mod_hdr);
 	mutex_destroy(&esw->offloads.encap_tbl_lock);
 	mutex_destroy(&esw->offloads.decap_tbl_lock);
+<<<<<<< HEAD
 	esw_offloads_cleanup(esw);
+=======
+	esw_offloads_cleanup_reps(esw);
+>>>>>>> b7ba80a49124 (Commit)
 	mlx5_esw_vports_cleanup(esw);
 	kfree(esw);
 }
@@ -1857,7 +1925,10 @@ int __mlx5_eswitch_set_vport_vlan(struct mlx5_eswitch *esw,
 				  u16 vport, u16 vlan, u8 qos, u8 set_flags)
 {
 	struct mlx5_vport *evport = mlx5_eswitch_get_vport(esw, vport);
+<<<<<<< HEAD
 	bool vst_mode_steering = esw_vst_mode_is_steering(esw);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int err = 0;
 
 	if (IS_ERR(evport))
@@ -1865,11 +1936,17 @@ int __mlx5_eswitch_set_vport_vlan(struct mlx5_eswitch *esw,
 	if (vlan > 4095 || qos > 7)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (esw->mode == MLX5_ESWITCH_OFFLOADS || !vst_mode_steering) {
 		err = modify_esw_vport_cvlan(esw->dev, vport, vlan, qos, set_flags);
 		if (err)
 			return err;
 	}
+=======
+	err = modify_esw_vport_cvlan(esw->dev, vport, vlan, qos, set_flags);
+	if (err)
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	evport->info.vlan = vlan;
 	evport->info.qos = qos;

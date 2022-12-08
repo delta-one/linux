@@ -79,7 +79,10 @@
 
 	panel {
 		compatible = "innolux,at070tn92";
+<<<<<<< HEAD
 		power-supply = <&vddq_lcd>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		port {
 			panel_input: endpoint {
@@ -87,6 +90,7 @@
 			};
 		};
 	};
+<<<<<<< HEAD
 
 	vddq_lcd: regulator-vddq-lcd {
 		compatible = "regulator-fixed";
@@ -94,6 +98,8 @@
 		regulator-min-microvolt = <1800000>;
 		regulator-max-microvolt = <1800000>;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &cpu_thermal {

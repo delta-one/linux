@@ -122,7 +122,11 @@
 		};
 
 		pci@c0000000 {
+<<<<<<< HEAD
 			status = "okay";
+=======
+			status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 
 			/*
 			 * Taken from DSM-G600 PCI boardfile (dsmg600-pci.c)

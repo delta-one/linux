@@ -7,18 +7,27 @@
 
 #include <time.h>
 #include <fcntl.h>
+<<<<<<< HEAD
 #include <signal.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <stdio.h>
 #include <unistd.h>
 
 #include <linux/time64.h>
 
 #include "util/debug.h"
+<<<<<<< HEAD
 #include "util/evsel.h"
 #include "util/kwork.h"
 
 #include <bpf/bpf.h>
 #include <perf/cpumap.h>
+=======
+#include "util/kwork.h"
+
+#include <bpf/bpf.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "util/bpf_skel/kwork_trace.skel.h"
 

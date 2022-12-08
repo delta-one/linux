@@ -3,7 +3,10 @@
 #include <linux/bpf.h>
 #include <linux/version.h>
 #include <bpf/bpf_helpers.h>
+<<<<<<< HEAD
 #include "bpf_misc.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct hmap_elem {
 	volatile int cnt;
@@ -46,8 +49,13 @@ struct {
 
 #define CREDIT_PER_NS(delta, rate) (((delta) * rate) >> 20)
 
+<<<<<<< HEAD
 SEC("cgroup_skb/ingress")
 int bpf_spin_lock_test(struct __sk_buff *skb)
+=======
+SEC("tc")
+int bpf_sping_lock_test(struct __sk_buff *skb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	volatile int credit = 0, max_credit = 100, pkt_len = 64;
 	struct hmap_elem zero = {}, *val;
@@ -90,8 +98,11 @@ int bpf_spin_lock_test(struct __sk_buff *skb)
 	credit = q->credit;
 	bpf_spin_unlock(&q->lock);
 
+<<<<<<< HEAD
 	__sink(credit);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* spin_lock in cgroup local storage */
 	cls = bpf_get_local_storage(&cls_map, 0);
 	bpf_spin_lock(&cls->lock);

@@ -69,7 +69,11 @@
 #define EOF_REACHED			'E'
 #define CHECK_CRC			'K'
 #define POLLING_MODE			'P'
+<<<<<<< HEAD
 #define AUTO_READ_MODE			'R'
+=======
+#define CONFIG_AUTO_READ_MODE		'R'
+>>>>>>> b7ba80a49124 (Commit)
 #define JUMP_TO_ZERO_PC			'J'
 #define FW_LOADING_SUCCESSFUL		'S'
 #define LOADING_INITIATED		'1'

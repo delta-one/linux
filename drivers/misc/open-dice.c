@@ -90,6 +90,7 @@ static int open_dice_mmap(struct file *filp, struct vm_area_struct *vma)
 {
 	struct open_dice_drvdata *drvdata = to_open_dice_drvdata(filp);
 
+<<<<<<< HEAD
 	if (vma->vm_flags & VM_MAYSHARE) {
 		/* Do not allow userspace to modify the underlying data. */
 		if (vma->vm_flags & VM_WRITE)
@@ -101,6 +102,21 @@ static int open_dice_mmap(struct file *filp, struct vm_area_struct *vma)
 	/* Create write-combine mapping so all clients observe a wipe. */
 	vma->vm_page_prot = pgprot_writecombine(vma->vm_page_prot);
 	vm_flags_set(vma, VM_DONTCOPY | VM_DONTDUMP);
+=======
+	/* Do not allow userspace to modify the underlying data. */
+	if ((vma->vm_flags & VM_WRITE) && (vma->vm_flags & VM_SHARED))
+		return -EPERM;
+
+	/* Ensure userspace cannot acquire VM_WRITE + VM_SHARED later. */
+	if (vma->vm_flags & VM_WRITE)
+		vma->vm_flags &= ~VM_MAYSHARE;
+	else if (vma->vm_flags & VM_SHARED)
+		vma->vm_flags &= ~VM_MAYWRITE;
+
+	/* Create write-combine mapping so all clients observe a wipe. */
+	vma->vm_page_prot = pgprot_writecombine(vma->vm_page_prot);
+	vma->vm_flags |= VM_DONTCOPY | VM_DONTDUMP;
+>>>>>>> b7ba80a49124 (Commit)
 	return vm_iomap_memory(vma, drvdata->rmem->base, drvdata->rmem->size);
 }
 

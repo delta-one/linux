@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+// SPDX-License-Identifier: GPL-2.0-or-later
+>>>>>>> b7ba80a49124 (Commit)
 /*
    drbd.c
 
@@ -1259,7 +1263,11 @@ static int _drbd_send_bitmap(struct drbd_device *device)
 	struct bm_xfer_ctx c;
 	int err;
 
+<<<<<<< HEAD
 	if (!expect(device, device->bitmap))
+=======
+	if (!expect(device->bitmap))
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 
 	if (get_ldev(device)) {
@@ -1816,7 +1824,11 @@ int drbd_send(struct drbd_connection *connection, struct socket *sock,
 
 	/* THINK  if (signal_pending) return ... ? */
 
+<<<<<<< HEAD
 	iov_iter_kvec(&msg.msg_iter, ITER_SOURCE, &iov, 1, size);
+=======
+	iov_iter_kvec(&msg.msg_iter, WRITE, &iov, 1, size);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (sock == connection->data.socket) {
 		rcu_read_lock();
@@ -2184,7 +2196,11 @@ void drbd_destroy_device(struct kref *kref)
 	struct drbd_resource *resource = device->resource;
 	struct drbd_peer_device *peer_device, *tmp_peer_device;
 
+<<<<<<< HEAD
 	timer_shutdown_sync(&device->request_timer);
+=======
+	del_timer_sync(&device->request_timer);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* paranoia asserts */
 	D_ASSERT(device, device->open_cnt == 0);
@@ -2217,8 +2233,12 @@ void drbd_destroy_device(struct kref *kref)
 		kref_put(&peer_device->connection->kref, drbd_destroy_connection);
 		kfree(peer_device);
 	}
+<<<<<<< HEAD
 	if (device->submit.wq)
 		destroy_workqueue(device->submit.wq);
+=======
+	memset(device, 0xfd, sizeof(*device));
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(device);
 	kref_put(&resource->kref, drbd_destroy_resource);
 }
@@ -2250,9 +2270,15 @@ static void do_retry(struct work_struct *ws)
 		bool expected;
 
 		expected =
+<<<<<<< HEAD
 			expect(device, atomic_read(&req->completion_ref) == 0) &&
 			expect(device, req->rq_state & RQ_POSTPONED) &&
 			expect(device, (req->rq_state & RQ_LOCAL_PENDING) == 0 ||
+=======
+			expect(atomic_read(&req->completion_ref) == 0) &&
+			expect(req->rq_state & RQ_POSTPONED) &&
+			expect((req->rq_state & RQ_LOCAL_PENDING) == 0 ||
+>>>>>>> b7ba80a49124 (Commit)
 				(req->rq_state & RQ_LOCAL_ABORTED) != 0);
 
 		if (!expected)
@@ -2310,6 +2336,10 @@ void drbd_destroy_resource(struct kref *kref)
 	idr_destroy(&resource->devices);
 	free_cpumask_var(resource->cpu_mask);
 	kfree(resource->name);
+<<<<<<< HEAD
+=======
+	memset(resource, 0xf2, sizeof(*resource));
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(resource);
 }
 
@@ -2650,6 +2680,10 @@ void drbd_destroy_connection(struct kref *kref)
 	drbd_free_socket(&connection->data);
 	kfree(connection->int_dig_in);
 	kfree(connection->int_dig_vv);
+<<<<<<< HEAD
+=======
+	memset(connection, 0xfc, sizeof(*connection));
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(connection);
 	kref_put(&resource->kref, drbd_destroy_resource);
 }
@@ -2671,7 +2705,11 @@ static int init_submitter(struct drbd_device *device)
 enum drbd_ret_code drbd_create_device(struct drbd_config_context *adm_ctx, unsigned int minor)
 {
 	struct drbd_resource *resource = adm_ctx->resource;
+<<<<<<< HEAD
 	struct drbd_connection *connection, *n;
+=======
+	struct drbd_connection *connection;
+>>>>>>> b7ba80a49124 (Commit)
 	struct drbd_device *device;
 	struct drbd_peer_device *peer_device, *tmp_peer_device;
 	struct gendisk *disk;
@@ -2773,7 +2811,11 @@ enum drbd_ret_code drbd_create_device(struct drbd_config_context *adm_ctx, unsig
 
 	err = add_disk(disk);
 	if (err)
+<<<<<<< HEAD
 		goto out_destroy_workqueue;
+=======
+		goto out_idr_remove_from_resource;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* inherit the connection state */
 	device->state.conn = first_connection(resource)->cstate;
@@ -2787,10 +2829,15 @@ enum drbd_ret_code drbd_create_device(struct drbd_config_context *adm_ctx, unsig
 	drbd_debugfs_device_add(device);
 	return NO_ERROR;
 
+<<<<<<< HEAD
 out_destroy_workqueue:
 	destroy_workqueue(device->submit.wq);
 out_idr_remove_from_resource:
 	for_each_connection_safe(connection, n, resource) {
+=======
+out_idr_remove_from_resource:
+	for_each_connection(connection, resource) {
+>>>>>>> b7ba80a49124 (Commit)
 		peer_device = idr_remove(&connection->peer_devices, vnr);
 		if (peer_device)
 			kref_put(&connection->kref, drbd_destroy_connection);
@@ -2899,7 +2946,11 @@ static int __init drbd_init(void)
 
 	pr_info("initialized. "
 	       "Version: " REL_VERSION " (api:%d/proto:%d-%d)\n",
+<<<<<<< HEAD
 	       GENL_MAGIC_VERSION, PRO_VERSION_MIN, PRO_VERSION_MAX);
+=======
+	       API_VERSION, PRO_VERSION_MIN, PRO_VERSION_MAX);
+>>>>>>> b7ba80a49124 (Commit)
 	pr_info("%s\n", drbd_buildtag());
 	pr_info("registered as block device major %d\n", DRBD_MAJOR);
 	return 0; /* Success! */
@@ -3767,7 +3818,11 @@ _drbd_insert_fault(struct drbd_device *device, unsigned int type)
 	if (ret) {
 		drbd_fault_count++;
 
+<<<<<<< HEAD
 		if (drbd_ratelimit())
+=======
+		if (__ratelimit(&drbd_ratelimit_state))
+>>>>>>> b7ba80a49124 (Commit)
 			drbd_warn(device, "***Simulating %s failure\n",
 				_drbd_fault_str(type));
 	}
@@ -3776,6 +3831,27 @@ _drbd_insert_fault(struct drbd_device *device, unsigned int type)
 }
 #endif
 
+<<<<<<< HEAD
+=======
+const char *drbd_buildtag(void)
+{
+	/* DRBD built from external sources has here a reference to the
+	   git hash of the source code. */
+
+	static char buildtag[38] = "\0uilt-in";
+
+	if (buildtag[0] == 0) {
+#ifdef MODULE
+		sprintf(buildtag, "srcversion: %-24s", THIS_MODULE->srcversion);
+#else
+		buildtag[0] = 'b';
+#endif
+	}
+
+	return buildtag;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 module_init(drbd_init)
 module_exit(drbd_cleanup)
 

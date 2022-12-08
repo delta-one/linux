@@ -120,6 +120,7 @@ static int __init parse_options(struct earlycon_device *device, char *options)
 	}
 
 	if (options) {
+<<<<<<< HEAD
 		char *uartclk;
 
 		device->baud = simple_strtoul(options, NULL, 0);
@@ -127,6 +128,9 @@ static int __init parse_options(struct earlycon_device *device, char *options)
 		if (uartclk && kstrtouint(uartclk + 1, 0, &port->uartclk) < 0)
 			pr_warn("[%s] unsupported earlycon uart clkrate option\n",
 				options);
+=======
+		device->baud = simple_strtoul(options, NULL, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		length = min(strcspn(options, " ") + 1,
 			     (size_t)(sizeof(device->options)));
 		strscpy(device->options, options, length);
@@ -145,8 +149,12 @@ static int __init register_earlycon(char *buf, const struct earlycon_id *match)
 		buf = NULL;
 
 	spin_lock_init(&port->lock);
+<<<<<<< HEAD
 	if (!port->uartclk)
 		port->uartclk = BASE_BAUD * 16;
+=======
+	port->uartclk = BASE_BAUD * 16;
+>>>>>>> b7ba80a49124 (Commit)
 	if (port->mapbase)
 		port->membase = earlycon_map(port->mapbase, 64);
 
@@ -188,7 +196,11 @@ int __init setup_earlycon(char *buf)
 	if (!buf || !buf[0])
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (console_is_registered(&early_con))
+=======
+	if (early_con.flags & CON_ENABLED)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EALREADY;
 
 again:
@@ -260,7 +272,11 @@ int __init of_setup_earlycon(const struct earlycon_id *match,
 	bool big_endian;
 	u64 addr;
 
+<<<<<<< HEAD
 	if (console_is_registered(&early_con))
+=======
+	if (early_con.flags & CON_ENABLED)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EALREADY;
 
 	spin_lock_init(&port->lock);

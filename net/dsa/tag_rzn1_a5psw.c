@@ -10,7 +10,11 @@
 #include <linux/if_ether.h>
 #include <net/dsa.h>
 
+<<<<<<< HEAD
 #include "tag.h"
+=======
+#include "dsa_priv.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 /* To define the outgoing port and to discover the incoming port a TAG is
  * inserted after Src MAC :
@@ -22,8 +26,11 @@
  * See struct a5psw_tag for layout
  */
 
+<<<<<<< HEAD
 #define A5PSW_NAME			"a5psw"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define ETH_P_DSA_A5PSW			0xE001
 #define A5PSW_TAG_LEN			8
 #define A5PSW_CTRL_DATA_FORCE_FORWARD	BIT(0)
@@ -103,7 +110,11 @@ static struct sk_buff *a5psw_tag_rcv(struct sk_buff *skb,
 }
 
 static const struct dsa_device_ops a5psw_netdev_ops = {
+<<<<<<< HEAD
 	.name	= A5PSW_NAME,
+=======
+	.name	= "a5psw",
+>>>>>>> b7ba80a49124 (Commit)
 	.proto	= DSA_TAG_PROTO_RZN1_A5PSW,
 	.xmit	= a5psw_tag_xmit,
 	.rcv	= a5psw_tag_rcv,
@@ -111,5 +122,9 @@ static const struct dsa_device_ops a5psw_netdev_ops = {
 };
 
 MODULE_LICENSE("GPL v2");
+<<<<<<< HEAD
 MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_A5PSW, A5PSW_NAME);
+=======
+MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_A5PSW);
+>>>>>>> b7ba80a49124 (Commit)
 module_dsa_tag_driver(a5psw_netdev_ops);

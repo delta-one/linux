@@ -123,6 +123,10 @@ void afmt3_se_audio_setup(
 {
 	struct dcn30_afmt *afmt3 = DCN30_AFMT_FROM_AFMT(afmt);
 
+<<<<<<< HEAD
+=======
+	uint32_t speakers = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	uint32_t channels = 0;
 
 	ASSERT(audio_info);
@@ -130,6 +134,10 @@ void afmt3_se_audio_setup(
 	if (audio_info == NULL)
 		return;
 
+<<<<<<< HEAD
+=======
+	speakers = audio_info->flags.info.ALLSPEAKERS;
+>>>>>>> b7ba80a49124 (Commit)
 	channels = speakers_to_channels(audio_info->flags.speaker_flags).all;
 
 	/* setup the audio stream source select (audio -> dig mapping) */

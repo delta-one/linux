@@ -46,6 +46,14 @@ static inline bool is_large_pte(u64 pte)
 	return (pte & IOMMU_PAGE_PSE);
 }
 
+<<<<<<< HEAD
+=======
+static inline void *alloc_pgtable_page(void)
+{
+	return (void *)get_zeroed_page(GFP_KERNEL);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline u64 set_pgtable_attr(u64 *page)
 {
 	u64 prot;
@@ -133,8 +141,13 @@ static void free_pgtable(u64 *pt, int level)
 }
 
 /* Allocate page table */
+<<<<<<< HEAD
 static u64 *v2_alloc_pte(int nid, u64 *pgd, unsigned long iova,
 			 unsigned long pg_size, gfp_t gfp, bool *updated)
+=======
+static u64 *v2_alloc_pte(u64 *pgd, unsigned long iova,
+			 unsigned long pg_size, bool *updated)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u64 *pte, *page;
 	int level, end_level;
@@ -157,7 +170,11 @@ static u64 *v2_alloc_pte(int nid, u64 *pgd, unsigned long iova,
 		}
 
 		if (!IOMMU_PTE_PRESENT(__pte)) {
+<<<<<<< HEAD
 			page = alloc_pgtable_page(nid, gfp);
+=======
+			page = alloc_pgtable_page();
+>>>>>>> b7ba80a49124 (Commit)
 			if (!page)
 				return NULL;
 
@@ -257,8 +274,12 @@ static int iommu_v2_map_pages(struct io_pgtable_ops *ops, unsigned long iova,
 
 	while (mapped_size < size) {
 		map_size = get_alloc_page_size(pgsize);
+<<<<<<< HEAD
 		pte = v2_alloc_pte(pdom->nid, pdom->iop.pgd,
 				   iova, map_size, gfp, &updated);
+=======
+		pte = v2_alloc_pte(pdom->iop.pgd, iova, map_size, &updated);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!pte) {
 			ret = -EINVAL;
 			goto out;
@@ -380,7 +401,11 @@ static struct io_pgtable *v2_alloc_pgtable(struct io_pgtable_cfg *cfg, void *coo
 	struct protection_domain *pdom = (struct protection_domain *)cookie;
 	int ret;
 
+<<<<<<< HEAD
 	pgtable->pgd = alloc_pgtable_page(pdom->nid, GFP_ATOMIC);
+=======
+	pgtable->pgd = alloc_pgtable_page();
+>>>>>>> b7ba80a49124 (Commit)
 	if (!pgtable->pgd)
 		return NULL;
 

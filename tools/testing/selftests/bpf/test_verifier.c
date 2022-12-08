@@ -68,6 +68,10 @@
 #define SKIP_INSNS()	BPF_RAW_INSN(0xde, 0xa, 0xd, 0xbeef, 0xdeadbeef)
 
 #define DEFAULT_LIBBPF_LOG_LEVEL	4
+<<<<<<< HEAD
+=======
+#define VERBOSE_LIBBPF_LOG_LEVEL	1
+>>>>>>> b7ba80a49124 (Commit)
 
 #define F_NEEDS_EFFICIENT_UNALIGNED_ACCESS	(1 << 0)
 #define F_LOAD_WITH_STRICT_ALIGNMENT		(1 << 1)
@@ -80,7 +84,10 @@
 static bool unpriv_disabled = false;
 static int skips;
 static bool verbose = false;
+<<<<<<< HEAD
 static int verif_log_level = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct kfunc_btf_id_pair {
 	const char *kfunc;
@@ -209,7 +216,11 @@ loop:
 		insn[i++] = BPF_MOV64_IMM(BPF_REG_2, 1);
 		insn[i++] = BPF_MOV64_IMM(BPF_REG_3, 2);
 		insn[i++] = BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, 0, 0,
+<<<<<<< HEAD
 					 BPF_FUNC_skb_vlan_push);
+=======
+					 BPF_FUNC_skb_vlan_push),
+>>>>>>> b7ba80a49124 (Commit)
 		insn[i] = BPF_JMP_IMM(BPF_JNE, BPF_REG_0, 0, len - i - 3);
 		i++;
 	}
@@ -220,7 +231,11 @@ loop:
 		i++;
 		insn[i++] = BPF_MOV64_REG(BPF_REG_1, BPF_REG_6);
 		insn[i++] = BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, 0, 0,
+<<<<<<< HEAD
 					 BPF_FUNC_skb_vlan_pop);
+=======
+					 BPF_FUNC_skb_vlan_pop),
+>>>>>>> b7ba80a49124 (Commit)
 		insn[i] = BPF_JMP_IMM(BPF_JNE, BPF_REG_0, 0, len - i - 3);
 		i++;
 	}
@@ -699,6 +714,7 @@ static int create_cgroup_storage(bool percpu)
  *   struct bpf_timer t;
  * };
  * struct btf_ptr {
+<<<<<<< HEAD
  *   struct prog_test_ref_kfunc __kptr_untrusted *ptr;
  *   struct prog_test_ref_kfunc __kptr *ptr;
  *   struct prog_test_member __kptr *ptr;
@@ -706,6 +722,15 @@ static int create_cgroup_storage(bool percpu)
  */
 static const char btf_str_sec[] = "\0bpf_spin_lock\0val\0cnt\0l\0bpf_timer\0timer\0t"
 				  "\0btf_ptr\0prog_test_ref_kfunc\0ptr\0kptr\0kptr_untrusted"
+=======
+ *   struct prog_test_ref_kfunc __kptr *ptr;
+ *   struct prog_test_ref_kfunc __kptr_ref *ptr;
+ *   struct prog_test_member __kptr_ref *ptr;
+ * }
+ */
+static const char btf_str_sec[] = "\0bpf_spin_lock\0val\0cnt\0l\0bpf_timer\0timer\0t"
+				  "\0btf_ptr\0prog_test_ref_kfunc\0ptr\0kptr\0kptr_ref"
+>>>>>>> b7ba80a49124 (Commit)
 				  "\0prog_test_member";
 static __u32 btf_raw_types[] = {
 	/* int */
@@ -724,20 +749,35 @@ static __u32 btf_raw_types[] = {
 	BTF_MEMBER_ENC(41, 4, 0), /* struct bpf_timer t; */
 	/* struct prog_test_ref_kfunc */		/* [6] */
 	BTF_STRUCT_ENC(51, 0, 0),
+<<<<<<< HEAD
 	BTF_STRUCT_ENC(95, 0, 0),			/* [7] */
 	/* type tag "kptr_untrusted" */
 	BTF_TYPE_TAG_ENC(80, 6),			/* [8] */
 	/* type tag "kptr" */
 	BTF_TYPE_TAG_ENC(75, 6),			/* [9] */
 	BTF_TYPE_TAG_ENC(75, 7),			/* [10] */
+=======
+	BTF_STRUCT_ENC(89, 0, 0),			/* [7] */
+	/* type tag "kptr" */
+	BTF_TYPE_TAG_ENC(75, 6),			/* [8] */
+	/* type tag "kptr_ref" */
+	BTF_TYPE_TAG_ENC(80, 6),			/* [9] */
+	BTF_TYPE_TAG_ENC(80, 7),			/* [10] */
+>>>>>>> b7ba80a49124 (Commit)
 	BTF_PTR_ENC(8),					/* [11] */
 	BTF_PTR_ENC(9),					/* [12] */
 	BTF_PTR_ENC(10),				/* [13] */
 	/* struct btf_ptr */				/* [14] */
 	BTF_STRUCT_ENC(43, 3, 24),
+<<<<<<< HEAD
 	BTF_MEMBER_ENC(71, 11, 0), /* struct prog_test_ref_kfunc __kptr_untrusted *ptr; */
 	BTF_MEMBER_ENC(71, 12, 64), /* struct prog_test_ref_kfunc __kptr *ptr; */
 	BTF_MEMBER_ENC(71, 13, 128), /* struct prog_test_member __kptr *ptr; */
+=======
+	BTF_MEMBER_ENC(71, 11, 0), /* struct prog_test_ref_kfunc __kptr *ptr; */
+	BTF_MEMBER_ENC(71, 12, 64), /* struct prog_test_ref_kfunc __kptr_ref *ptr; */
+	BTF_MEMBER_ENC(71, 13, 128), /* struct prog_test_member __kptr_ref *ptr; */
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static char bpf_vlog[UINT_MAX >> 8];
@@ -759,7 +799,11 @@ static int load_btf_spec(__u32 *types, int types_len,
 		    .log_buf = bpf_vlog,
 		    .log_size = sizeof(bpf_vlog),
 		    .log_level = (verbose
+<<<<<<< HEAD
 				  ? verif_log_level
+=======
+				  ? VERBOSE_LIBBPF_LOG_LEVEL
+>>>>>>> b7ba80a49124 (Commit)
 				  : DEFAULT_LIBBPF_LOG_LEVEL),
 	);
 
@@ -1239,8 +1283,13 @@ static int get_xlated_program(int fd_prog, struct bpf_insn **buf, int *cnt)
 	__u32 xlated_prog_len;
 	__u32 buf_element_size = sizeof(struct bpf_insn);
 
+<<<<<<< HEAD
 	if (bpf_prog_get_info_by_fd(fd_prog, &info, &info_len)) {
 		perror("bpf_prog_get_info_by_fd failed");
+=======
+	if (bpf_obj_get_info_by_fd(fd_prog, &info, &info_len)) {
+		perror("bpf_obj_get_info_by_fd failed");
+>>>>>>> b7ba80a49124 (Commit)
 		return -1;
 	}
 
@@ -1260,9 +1309,15 @@ static int get_xlated_program(int fd_prog, struct bpf_insn **buf, int *cnt)
 
 	bzero(&info, sizeof(info));
 	info.xlated_prog_len = xlated_prog_len;
+<<<<<<< HEAD
 	info.xlated_prog_insns = (__u64)(unsigned long)*buf;
 	if (bpf_prog_get_info_by_fd(fd_prog, &info, &info_len)) {
 		perror("second bpf_prog_get_info_by_fd failed");
+=======
+	info.xlated_prog_insns = (__u64)*buf;
+	if (bpf_obj_get_info_by_fd(fd_prog, &info, &info_len)) {
+		perror("second bpf_obj_get_info_by_fd failed");
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_free_buf;
 	}
 
@@ -1491,7 +1546,11 @@ static void do_test_single(struct bpf_test *test, bool unpriv,
 
 	opts.expected_attach_type = test->expected_attach_type;
 	if (verbose)
+<<<<<<< HEAD
 		opts.log_level = verif_log_level | 4; /* force stats */
+=======
+		opts.log_level = VERBOSE_LIBBPF_LOG_LEVEL;
+>>>>>>> b7ba80a49124 (Commit)
 	else if (expected_ret == VERBOSE_ACCEPT)
 		opts.log_level = 2;
 	else
@@ -1746,6 +1805,7 @@ int main(int argc, char **argv)
 	if (argc > 1 && strcmp(argv[1], "-v") == 0) {
 		arg++;
 		verbose = true;
+<<<<<<< HEAD
 		verif_log_level = 1;
 		argc--;
 	}
@@ -1753,6 +1813,8 @@ int main(int argc, char **argv)
 		arg++;
 		verbose = true;
 		verif_log_level = 2;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		argc--;
 	}
 

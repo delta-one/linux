@@ -15,7 +15,11 @@ struct pcap_init {
 	char *filter;
 };
 
+<<<<<<< HEAD
 void pcap_init_kern(struct net_device *dev, void *data)
+=======
+void pcap_init(struct net_device *dev, void *data)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct uml_net_private *pri;
 	struct pcap_data *ppri;
@@ -44,7 +48,11 @@ static int pcap_write(int fd, struct sk_buff *skb, struct uml_net_private *lp)
 }
 
 static const struct net_kern_info pcap_kern_info = {
+<<<<<<< HEAD
 	.init			= pcap_init_kern,
+=======
+	.init			= pcap_init,
+>>>>>>> b7ba80a49124 (Commit)
 	.protocol		= eth_protocol,
 	.read			= pcap_read,
 	.write			= pcap_write,

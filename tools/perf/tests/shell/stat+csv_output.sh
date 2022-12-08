@@ -6,9 +6,12 @@
 
 set -e
 
+<<<<<<< HEAD
 skip_test=0
 csv_sep=@
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 function commachecker()
 {
 	local -i cnt=0
@@ -35,7 +38,11 @@ function commachecker()
 		[ "$x" = "Failed" ] && continue
 
 		# Count the number of commas
+<<<<<<< HEAD
 		x=$(echo $line | tr -d -c $csv_sep)
+=======
+		x=$(echo $line | tr -d -c ',')
+>>>>>>> b7ba80a49124 (Commit)
 		cnt="${#x}"
 		# echo $line $cnt
 		[[ ! "$cnt" =~ $exp ]] && {
@@ -55,7 +62,11 @@ function ParanoidAndNotRoot()
 check_no_args()
 {
 	echo -n "Checking CSV output: no args "
+<<<<<<< HEAD
 	perf stat -x$csv_sep true 2>&1 | commachecker --no-args
+=======
+	perf stat -x, true 2>&1 | commachecker --no-args
+>>>>>>> b7ba80a49124 (Commit)
 	echo "[Success]"
 }
 
@@ -67,7 +78,11 @@ check_system_wide()
 		echo "[Skip] paranoid and not root"
 		return
 	fi
+<<<<<<< HEAD
 	perf stat -x$csv_sep -a true 2>&1 | commachecker --system-wide
+=======
+	perf stat -x, -a true 2>&1 | commachecker --system-wide
+>>>>>>> b7ba80a49124 (Commit)
 	echo "[Success]"
 }
 
@@ -80,14 +95,22 @@ check_system_wide_no_aggr()
 		return
 	fi
 	echo -n "Checking CSV output: system wide no aggregation "
+<<<<<<< HEAD
 	perf stat -x$csv_sep -A -a --no-merge true 2>&1 | commachecker --system-wide-no-aggr
+=======
+	perf stat -x, -A -a --no-merge true 2>&1 | commachecker --system-wide-no-aggr
+>>>>>>> b7ba80a49124 (Commit)
 	echo "[Success]"
 }
 
 check_interval()
 {
 	echo -n "Checking CSV output: interval "
+<<<<<<< HEAD
 	perf stat -x$csv_sep -I 1000 true 2>&1 | commachecker --interval
+=======
+	perf stat -x, -I 1000 true 2>&1 | commachecker --interval
+>>>>>>> b7ba80a49124 (Commit)
 	echo "[Success]"
 }
 
@@ -95,7 +118,11 @@ check_interval()
 check_event()
 {
 	echo -n "Checking CSV output: event "
+<<<<<<< HEAD
 	perf stat -x$csv_sep -e cpu-clock true 2>&1 | commachecker --event
+=======
+	perf stat -x, -e cpu-clock true 2>&1 | commachecker --event
+>>>>>>> b7ba80a49124 (Commit)
 	echo "[Success]"
 }
 
@@ -107,7 +134,11 @@ check_per_core()
 		echo "[Skip] paranoid and not root"
 		return
 	fi
+<<<<<<< HEAD
 	perf stat -x$csv_sep --per-core -a true 2>&1 | commachecker --per-core
+=======
+	perf stat -x, --per-core -a true 2>&1 | commachecker --per-core
+>>>>>>> b7ba80a49124 (Commit)
 	echo "[Success]"
 }
 
@@ -119,7 +150,11 @@ check_per_thread()
 		echo "[Skip] paranoid and not root"
 		return
 	fi
+<<<<<<< HEAD
 	perf stat -x$csv_sep --per-thread -a true 2>&1 | commachecker --per-thread
+=======
+	perf stat -x, --per-thread -a true 2>&1 | commachecker --per-thread
+>>>>>>> b7ba80a49124 (Commit)
 	echo "[Success]"
 }
 
@@ -131,7 +166,11 @@ check_per_die()
 		echo "[Skip] paranoid and not root"
 		return
 	fi
+<<<<<<< HEAD
 	perf stat -x$csv_sep --per-die -a true 2>&1 | commachecker --per-die
+=======
+	perf stat -x, --per-die -a true 2>&1 | commachecker --per-die
+>>>>>>> b7ba80a49124 (Commit)
 	echo "[Success]"
 }
 
@@ -143,7 +182,11 @@ check_per_node()
 		echo "[Skip] paranoid and not root"
 		return
 	fi
+<<<<<<< HEAD
 	perf stat -x$csv_sep --per-node -a true 2>&1 | commachecker --per-node
+=======
+	perf stat -x, --per-node -a true 2>&1 | commachecker --per-node
+>>>>>>> b7ba80a49124 (Commit)
 	echo "[Success]"
 }
 
@@ -155,6 +198,7 @@ check_per_socket()
 		echo "[Skip] paranoid and not root"
 		return
 	fi
+<<<<<<< HEAD
 	perf stat -x$csv_sep --per-socket -a true 2>&1 | commachecker --per-socket
 	echo "[Success]"
 }
@@ -202,4 +246,20 @@ then
 else
 	echo "[Skip] Skipping tests for system_wide_no_aggr, per_core, per_die and per_socket since socket id exposed via topology is invalid"
 fi
+=======
+	perf stat -x, --per-socket -a true 2>&1 | commachecker --per-socket
+	echo "[Success]"
+}
+
+check_no_args
+check_system_wide
+check_system_wide_no_aggr
+check_interval
+check_event
+check_per_core
+check_per_thread
+check_per_die
+check_per_node
+check_per_socket
+>>>>>>> b7ba80a49124 (Commit)
 exit 0

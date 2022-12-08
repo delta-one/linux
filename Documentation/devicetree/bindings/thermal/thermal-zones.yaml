@@ -5,7 +5,11 @@
 $id: http://devicetree.org/schemas/thermal/thermal-zones.yaml#
 $schema: http://devicetree.org/meta-schemas/base.yaml#
 
+<<<<<<< HEAD
 title: Thermal zone
+=======
+title: Thermal zone binding
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Amit Kucheria <amitk@kernel.org>

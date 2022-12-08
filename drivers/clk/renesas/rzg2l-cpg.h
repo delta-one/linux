@@ -256,10 +256,13 @@ struct rzg2l_cpg_info {
 	unsigned int num_mod_clks;
 	unsigned int num_hw_mod_clks;
 
+<<<<<<< HEAD
 	/* No PM Module Clocks */
 	const unsigned int *no_pm_mod_clks;
 	unsigned int num_no_pm_mod_clks;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Resets */
 	const struct rzg2l_reset *resets;
 	unsigned int num_resets;

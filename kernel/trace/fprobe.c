@@ -141,8 +141,11 @@ static int fprobe_init_rethook(struct fprobe *fp, int num)
 		return -E2BIG;
 
 	fp->rethook = rethook_alloc((void *)fp, fprobe_exit_handler);
+<<<<<<< HEAD
 	if (!fp->rethook)
 		return -ENOMEM;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < size; i++) {
 		struct fprobe_rethook_node *node;
 
@@ -303,8 +306,12 @@ int unregister_fprobe(struct fprobe *fp)
 {
 	int ret;
 
+<<<<<<< HEAD
 	if (!fp || (fp->ops.saved_func != fprobe_handler &&
 		    fp->ops.saved_func != fprobe_kprobe_handler))
+=======
+	if (!fp || fp->ops.func != fprobe_handler)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	/*

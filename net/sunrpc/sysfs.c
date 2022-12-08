@@ -31,12 +31,20 @@ static void rpc_sysfs_object_release(struct kobject *kobj)
 }
 
 static const struct kobj_ns_type_operations *
+<<<<<<< HEAD
 rpc_sysfs_object_child_ns_type(const struct kobject *kobj)
+=======
+rpc_sysfs_object_child_ns_type(struct kobject *kobj)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return &net_ns_type_operations;
 }
 
+<<<<<<< HEAD
 static const struct kobj_type rpc_sysfs_object_type = {
+=======
+static struct kobj_type rpc_sysfs_object_type = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release = rpc_sysfs_object_release,
 	.sysfs_ops = &kobj_sysfs_ops,
 	.child_ns_type = rpc_sysfs_object_child_ns_type,
@@ -381,17 +389,29 @@ static void rpc_sysfs_xprt_release(struct kobject *kobj)
 	kfree(xprt);
 }
 
+<<<<<<< HEAD
 static const void *rpc_sysfs_client_namespace(const struct kobject *kobj)
+=======
+static const void *rpc_sysfs_client_namespace(struct kobject *kobj)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return container_of(kobj, struct rpc_sysfs_client, kobject)->net;
 }
 
+<<<<<<< HEAD
 static const void *rpc_sysfs_xprt_switch_namespace(const struct kobject *kobj)
+=======
+static const void *rpc_sysfs_xprt_switch_namespace(struct kobject *kobj)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return container_of(kobj, struct rpc_sysfs_xprt_switch, kobject)->net;
 }
 
+<<<<<<< HEAD
 static const void *rpc_sysfs_xprt_namespace(const struct kobject *kobj)
+=======
+static const void *rpc_sysfs_xprt_namespace(struct kobject *kobj)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return container_of(kobj, struct rpc_sysfs_xprt,
 			    kobject)->xprt->xprt_net;
@@ -427,20 +447,32 @@ static struct attribute *rpc_sysfs_xprt_switch_attrs[] = {
 };
 ATTRIBUTE_GROUPS(rpc_sysfs_xprt_switch);
 
+<<<<<<< HEAD
 static const struct kobj_type rpc_sysfs_client_type = {
+=======
+static struct kobj_type rpc_sysfs_client_type = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release = rpc_sysfs_client_release,
 	.sysfs_ops = &kobj_sysfs_ops,
 	.namespace = rpc_sysfs_client_namespace,
 };
 
+<<<<<<< HEAD
 static const struct kobj_type rpc_sysfs_xprt_switch_type = {
+=======
+static struct kobj_type rpc_sysfs_xprt_switch_type = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release = rpc_sysfs_xprt_switch_release,
 	.default_groups = rpc_sysfs_xprt_switch_groups,
 	.sysfs_ops = &kobj_sysfs_ops,
 	.namespace = rpc_sysfs_xprt_switch_namespace,
 };
 
+<<<<<<< HEAD
 static const struct kobj_type rpc_sysfs_xprt_type = {
+=======
+static struct kobj_type rpc_sysfs_xprt_type = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release = rpc_sysfs_xprt_release,
 	.default_groups = rpc_sysfs_xprt_groups,
 	.sysfs_ops = &kobj_sysfs_ops,
@@ -518,16 +550,24 @@ void rpc_sysfs_client_setup(struct rpc_clnt *clnt,
 			    struct net *net)
 {
 	struct rpc_sysfs_client *rpc_client;
+<<<<<<< HEAD
 	struct rpc_sysfs_xprt_switch *xswitch =
 		(struct rpc_sysfs_xprt_switch *)xprt_switch->xps_sysfs;
 
 	if (!xswitch)
 		return;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	rpc_client = rpc_sysfs_client_alloc(rpc_sunrpc_client_kobj,
 					    net, clnt->cl_clid);
 	if (rpc_client) {
 		char name[] = "switch";
+<<<<<<< HEAD
+=======
+		struct rpc_sysfs_xprt_switch *xswitch =
+			(struct rpc_sysfs_xprt_switch *)xprt_switch->xps_sysfs;
+>>>>>>> b7ba80a49124 (Commit)
 		int ret;
 
 		clnt->cl_sysfs = rpc_client;
@@ -561,8 +601,11 @@ void rpc_sysfs_xprt_switch_setup(struct rpc_xprt_switch *xprt_switch,
 		rpc_xprt_switch->xprt_switch = xprt_switch;
 		rpc_xprt_switch->xprt = xprt;
 		kobject_uevent(&rpc_xprt_switch->kobject, KOBJ_ADD);
+<<<<<<< HEAD
 	} else {
 		xprt_switch->xps_sysfs = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -574,9 +617,12 @@ void rpc_sysfs_xprt_setup(struct rpc_xprt_switch *xprt_switch,
 	struct rpc_sysfs_xprt_switch *switch_obj =
 		(struct rpc_sysfs_xprt_switch *)xprt_switch->xps_sysfs;
 
+<<<<<<< HEAD
 	if (!switch_obj)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rpc_xprt = rpc_sysfs_xprt_alloc(&switch_obj->kobject, xprt, gfp_flags);
 	if (rpc_xprt) {
 		xprt->xprt_sysfs = rpc_xprt;

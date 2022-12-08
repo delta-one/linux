@@ -3157,7 +3157,11 @@ static int rt5645_jack_detect(struct snd_soc_component *component, int jack_inse
 		snd_soc_dapm_force_enable_pin(dapm, "LDO2");
 		snd_soc_dapm_force_enable_pin(dapm, "Mic Det Power");
 		snd_soc_dapm_sync(dapm);
+<<<<<<< HEAD
 		if (!snd_soc_card_is_instantiated(dapm->card)) {
+=======
+		if (!dapm->card->instantiated) {
+>>>>>>> b7ba80a49124 (Commit)
 			/* Power up necessary bits for JD if dapm is
 			   not ready yet */
 			regmap_update_bits(rt5645->regmap, RT5645_PWR_ANLG1,

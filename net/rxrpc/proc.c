@@ -12,13 +12,21 @@
 
 static const char *const rxrpc_conn_states[RXRPC_CONN__NR_STATES] = {
 	[RXRPC_CONN_UNUSED]			= "Unused  ",
+<<<<<<< HEAD
 	[RXRPC_CONN_CLIENT_UNSECURED]		= "ClUnsec ",
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	[RXRPC_CONN_CLIENT]			= "Client  ",
 	[RXRPC_CONN_SERVICE_PREALLOC]		= "SvPrealc",
 	[RXRPC_CONN_SERVICE_UNSECURED]		= "SvUnsec ",
 	[RXRPC_CONN_SERVICE_CHALLENGING]	= "SvChall ",
 	[RXRPC_CONN_SERVICE]			= "SvSecure",
+<<<<<<< HEAD
 	[RXRPC_CONN_ABORTED]			= "Aborted ",
+=======
+	[RXRPC_CONN_REMOTELY_ABORTED]		= "RmtAbort",
+	[RXRPC_CONN_LOCALLY_ABORTED]		= "LocAbort",
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -49,11 +57,20 @@ static void rxrpc_call_seq_stop(struct seq_file *seq, void *v)
 static int rxrpc_call_seq_show(struct seq_file *seq, void *v)
 {
 	struct rxrpc_local *local;
+<<<<<<< HEAD
 	struct rxrpc_call *call;
 	struct rxrpc_net *rxnet = rxrpc_net(seq_file_net(seq));
 	enum rxrpc_call_state state;
 	unsigned long timeout = 0;
 	rxrpc_seq_t acks_hard_ack;
+=======
+	struct rxrpc_sock *rx;
+	struct rxrpc_peer *peer;
+	struct rxrpc_call *call;
+	struct rxrpc_net *rxnet = rxrpc_net(seq_file_net(seq));
+	unsigned long timeout = 0;
+	rxrpc_seq_t tx_hard_ack, rx_hard_ack;
+>>>>>>> b7ba80a49124 (Commit)
 	char lbuff[50], rbuff[50];
 
 	if (v == &rxnet->calls) {
@@ -61,12 +78,17 @@ static int rxrpc_call_seq_show(struct seq_file *seq, void *v)
 			 "Proto Local                                          "
 			 " Remote                                         "
 			 " SvID ConnID   CallID   End Use State    Abort   "
+<<<<<<< HEAD
 			 " DebugId  TxSeq    TW RxSeq    RW RxSerial CW RxTimo\n");
+=======
+			 " DebugId  TxSeq    TW RxSeq    RW RxSerial RxTimo\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 
 	call = list_entry(v, struct rxrpc_call, link);
 
+<<<<<<< HEAD
 	local = call->local;
 	if (local)
 		sprintf(lbuff, "%pISpc", &local->srx.transport);
@@ -77,10 +99,31 @@ static int rxrpc_call_seq_show(struct seq_file *seq, void *v)
 
 	state = rxrpc_call_state(call);
 	if (state != RXRPC_CALL_SERVER_PREALLOC) {
+=======
+	rx = rcu_dereference(call->socket);
+	if (rx) {
+		local = READ_ONCE(rx->local);
+		if (local)
+			sprintf(lbuff, "%pISpc", &local->srx.transport);
+		else
+			strcpy(lbuff, "no_local");
+	} else {
+		strcpy(lbuff, "no_socket");
+	}
+
+	peer = call->peer;
+	if (peer)
+		sprintf(rbuff, "%pISpc", &peer->srx.transport);
+	else
+		strcpy(rbuff, "no_connection");
+
+	if (call->state != RXRPC_CALL_SERVER_PREALLOC) {
+>>>>>>> b7ba80a49124 (Commit)
 		timeout = READ_ONCE(call->expect_rx_by);
 		timeout -= jiffies;
 	}
 
+<<<<<<< HEAD
 	acks_hard_ack = READ_ONCE(call->acks_hard_ack);
 	seq_printf(seq,
 		   "UDP   %-47.47s %-47.47s %4x %08x %08x %s %3u"
@@ -88,10 +131,21 @@ static int rxrpc_call_seq_show(struct seq_file *seq, void *v)
 		   lbuff,
 		   rbuff,
 		   call->dest_srx.srx_service,
+=======
+	tx_hard_ack = READ_ONCE(call->tx_hard_ack);
+	rx_hard_ack = READ_ONCE(call->rx_hard_ack);
+	seq_printf(seq,
+		   "UDP   %-47.47s %-47.47s %4x %08x %08x %s %3u"
+		   " %-8.8s %08x %08x %08x %02x %08x %02x %08x %06lx\n",
+		   lbuff,
+		   rbuff,
+		   call->service_id,
+>>>>>>> b7ba80a49124 (Commit)
 		   call->cid,
 		   call->call_id,
 		   rxrpc_is_service_call(call) ? "Svc" : "Clt",
 		   refcount_read(&call->ref),
+<<<<<<< HEAD
 		   rxrpc_call_states[state],
 		   call->abort_code,
 		   call->debug_id,
@@ -99,6 +153,14 @@ static int rxrpc_call_seq_show(struct seq_file *seq, void *v)
 		   call->ackr_window, call->ackr_wtop - call->ackr_window,
 		   call->rx_serial,
 		   call->cong_cwnd,
+=======
+		   rxrpc_call_states[call->state],
+		   call->abort_code,
+		   call->debug_id,
+		   tx_hard_ack, READ_ONCE(call->tx_top) - tx_hard_ack,
+		   rx_hard_ack, READ_ONCE(call->rx_top) - rx_hard_ack,
+		   call->rx_serial,
+>>>>>>> b7ba80a49124 (Commit)
 		   timeout);
 
 	return 0;
@@ -143,14 +205,21 @@ static int rxrpc_connection_seq_show(struct seq_file *seq, void *v)
 {
 	struct rxrpc_connection *conn;
 	struct rxrpc_net *rxnet = rxrpc_net(seq_file_net(seq));
+<<<<<<< HEAD
 	const char *state;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	char lbuff[50], rbuff[50];
 
 	if (v == &rxnet->conn_proc_list) {
 		seq_puts(seq,
 			 "Proto Local                                          "
 			 " Remote                                         "
+<<<<<<< HEAD
 			 " SvID ConnID   End Ref Act State    Key     "
+=======
+			 " SvID ConnID   End Use State    Key     "
+>>>>>>> b7ba80a49124 (Commit)
 			 " Serial   ISerial  CallId0  CallId1  CallId2  CallId3\n"
 			 );
 		return 0;
@@ -163,6 +232,7 @@ static int rxrpc_connection_seq_show(struct seq_file *seq, void *v)
 		goto print;
 	}
 
+<<<<<<< HEAD
 	sprintf(lbuff, "%pISpc", &conn->local->srx.transport);
 	sprintf(rbuff, "%pISpc", &conn->peer->srx.transport);
 print:
@@ -171,6 +241,14 @@ print:
 		rxrpc_conn_states[conn->state];
 	seq_printf(seq,
 		   "UDP   %-47.47s %-47.47s %4x %08x %s %3u %3d"
+=======
+	sprintf(lbuff, "%pISpc", &conn->params.local->srx.transport);
+
+	sprintf(rbuff, "%pISpc", &conn->params.peer->srx.transport);
+print:
+	seq_printf(seq,
+		   "UDP   %-47.47s %-47.47s %4x %08x %s %3u"
+>>>>>>> b7ba80a49124 (Commit)
 		   " %s %08x %08x %08x %08x %08x %08x %08x\n",
 		   lbuff,
 		   rbuff,
@@ -178,9 +256,14 @@ print:
 		   conn->proto.cid,
 		   rxrpc_conn_is_service(conn) ? "Svc" : "Clt",
 		   refcount_read(&conn->ref),
+<<<<<<< HEAD
 		   atomic_read(&conn->active),
 		   state,
 		   key_serial(conn->key),
+=======
+		   rxrpc_conn_states[conn->state],
+		   key_serial(conn->params.key),
+>>>>>>> b7ba80a49124 (Commit)
 		   atomic_read(&conn->serial),
 		   conn->hi_serial,
 		   conn->channels[0].call_id,
@@ -211,7 +294,11 @@ static int rxrpc_peer_seq_show(struct seq_file *seq, void *v)
 		seq_puts(seq,
 			 "Proto Local                                          "
 			 " Remote                                         "
+<<<<<<< HEAD
 			 " Use SST   MTU LastUse      RTT      RTO\n"
+=======
+			 " Use  CW   MTU LastUse      RTT      RTO\n"
+>>>>>>> b7ba80a49124 (Commit)
 			 );
 		return 0;
 	}
@@ -229,7 +316,11 @@ static int rxrpc_peer_seq_show(struct seq_file *seq, void *v)
 		   lbuff,
 		   rbuff,
 		   refcount_read(&peer->ref),
+<<<<<<< HEAD
 		   peer->cong_ssthresh,
+=======
+		   peer->cong_cwnd,
+>>>>>>> b7ba80a49124 (Commit)
 		   peer->mtu,
 		   now - peer->last_tx_at,
 		   peer->srtt_us >> 3,
@@ -335,7 +426,11 @@ static int rxrpc_local_seq_show(struct seq_file *seq, void *v)
 	if (v == SEQ_START_TOKEN) {
 		seq_puts(seq,
 			 "Proto Local                                          "
+<<<<<<< HEAD
 			 " Use Act RxQ\n");
+=======
+			 " Use Act\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 
@@ -344,11 +439,18 @@ static int rxrpc_local_seq_show(struct seq_file *seq, void *v)
 	sprintf(lbuff, "%pISpc", &local->srx.transport);
 
 	seq_printf(seq,
+<<<<<<< HEAD
 		   "UDP   %-47.47s %3u %3u %3u\n",
 		   lbuff,
 		   refcount_read(&local->ref),
 		   atomic_read(&local->active_users),
 		   local->rx_queue.qlen);
+=======
+		   "UDP   %-47.47s %3u %3u\n",
+		   lbuff,
+		   refcount_read(&local->ref),
+		   atomic_read(&local->active_users));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -393,6 +495,7 @@ const struct seq_operations rxrpc_local_seq_ops = {
 	.stop   = rxrpc_local_seq_stop,
 	.show   = rxrpc_local_seq_show,
 };
+<<<<<<< HEAD
 
 /*
  * Display stats in /proc/net/rxrpc/stats
@@ -499,3 +602,5 @@ int rxrpc_stats_clear(struct file *file, char *buf, size_t size)
 	atomic_set(&rxnet->stat_io_loop, 0);
 	return size;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

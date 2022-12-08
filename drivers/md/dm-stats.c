@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+// SPDX-License-Identifier: GPL-2.0
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/errno.h>
 #include <linux/numa.h>
 #include <linux/slab.h>
@@ -42,12 +46,20 @@ struct dm_stat_shared {
 struct dm_stat {
 	struct list_head list_entry;
 	int id;
+<<<<<<< HEAD
 	unsigned int stat_flags;
+=======
+	unsigned stat_flags;
+>>>>>>> b7ba80a49124 (Commit)
 	size_t n_entries;
 	sector_t start;
 	sector_t end;
 	sector_t step;
+<<<<<<< HEAD
 	unsigned int n_histogram_entries;
+=======
+	unsigned n_histogram_entries;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long long *histogram_boundaries;
 	const char *program_id;
 	const char *aux_data;
@@ -63,7 +75,11 @@ struct dm_stat {
 
 struct dm_stats_last_position {
 	sector_t last_sector;
+<<<<<<< HEAD
 	unsigned int last_rw;
+=======
+	unsigned last_rw;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -188,7 +204,11 @@ static int dm_stat_in_flight(struct dm_stat_shared *shared)
 	       atomic_read(&shared->in_flight[WRITE]);
 }
 
+<<<<<<< HEAD
 int dm_stats_init(struct dm_stats *stats)
+=======
+void dm_stats_init(struct dm_stats *stats)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int cpu;
 	struct dm_stats_last_position *last;
@@ -197,16 +217,22 @@ int dm_stats_init(struct dm_stats *stats)
 	INIT_LIST_HEAD(&stats->list);
 	stats->precise_timestamps = false;
 	stats->last = alloc_percpu(struct dm_stats_last_position);
+<<<<<<< HEAD
 	if (!stats->last)
 		return -ENOMEM;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for_each_possible_cpu(cpu) {
 		last = per_cpu_ptr(stats->last, cpu);
 		last->last_sector = (sector_t)ULLONG_MAX;
 		last->last_rw = UINT_MAX;
 	}
+<<<<<<< HEAD
 
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void dm_stats_cleanup(struct dm_stats *stats)
@@ -255,8 +281,13 @@ static void dm_stats_recalc_precise_timestamps(struct dm_stats *stats)
 }
 
 static int dm_stats_create(struct dm_stats *stats, sector_t start, sector_t end,
+<<<<<<< HEAD
 			   sector_t step, unsigned int stat_flags,
 			   unsigned int n_histogram_entries,
+=======
+			   sector_t step, unsigned stat_flags,
+			   unsigned n_histogram_entries,
+>>>>>>> b7ba80a49124 (Commit)
 			   unsigned long long *histogram_boundaries,
 			   const char *program_id, const char *aux_data,
 			   void (*suspend_callback)(struct mapped_device *),
@@ -341,7 +372,10 @@ static int dm_stats_create(struct dm_stats *stats, sector_t start, sector_t end,
 
 	if (s->n_histogram_entries) {
 		unsigned long long *hi;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		hi = dm_kvzalloc(s->histogram_alloc_size, NUMA_NO_NODE);
 		if (!hi) {
 			r = -ENOMEM;
@@ -363,7 +397,10 @@ static int dm_stats_create(struct dm_stats *stats, sector_t start, sector_t end,
 		s->stat_percpu[cpu] = p;
 		if (s->n_histogram_entries) {
 			unsigned long long *hi;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			hi = dm_kvzalloc(s->histogram_alloc_size, cpu_to_node(cpu));
 			if (!hi) {
 				r = -ENOMEM;
@@ -477,11 +514,19 @@ do_sync_free:
 }
 
 static int dm_stats_list(struct dm_stats *stats, const char *program,
+<<<<<<< HEAD
 			 char *result, unsigned int maxlen)
 {
 	struct dm_stat *s;
 	sector_t len;
 	unsigned int sz = 0;
+=======
+			 char *result, unsigned maxlen)
+{
+	struct dm_stat *s;
+	sector_t len;
+	unsigned sz = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Output format:
@@ -501,8 +546,12 @@ static int dm_stats_list(struct dm_stats *stats, const char *program,
 			if (s->stat_flags & STAT_PRECISE_TIMESTAMPS)
 				DMEMIT(" precise_timestamps");
 			if (s->n_histogram_entries) {
+<<<<<<< HEAD
 				unsigned int i;
 
+=======
+				unsigned i;
+>>>>>>> b7ba80a49124 (Commit)
 				DMEMIT(" histogram:");
 				for (i = 0; i < s->n_histogram_entries; i++) {
 					if (i)
@@ -526,7 +575,11 @@ static void dm_stat_round(struct dm_stat *s, struct dm_stat_shared *shared,
 	 * This is racy, but so is part_round_stats_single.
 	 */
 	unsigned long long now, difference;
+<<<<<<< HEAD
 	unsigned int in_flight_read, in_flight_write;
+=======
+	unsigned in_flight_read, in_flight_write;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (likely(!(s->stat_flags & STAT_PRECISE_TIMESTAMPS)))
 		now = jiffies;
@@ -537,8 +590,13 @@ static void dm_stat_round(struct dm_stat *s, struct dm_stat_shared *shared,
 	if (!difference)
 		return;
 
+<<<<<<< HEAD
 	in_flight_read = (unsigned int)atomic_read(&shared->in_flight[READ]);
 	in_flight_write = (unsigned int)atomic_read(&shared->in_flight[WRITE]);
+=======
+	in_flight_read = (unsigned)atomic_read(&shared->in_flight[READ]);
+	in_flight_write = (unsigned)atomic_read(&shared->in_flight[WRITE]);
+>>>>>>> b7ba80a49124 (Commit)
 	if (in_flight_read)
 		p->io_ticks[READ] += difference;
 	if (in_flight_write)
@@ -575,7 +633,10 @@ static void dm_stat_for_entry(struct dm_stat *s, size_t entry,
 	 */
 #if BITS_PER_LONG == 32
 	unsigned long flags;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	local_irq_save(flags);
 #else
 	preempt_disable();
@@ -587,7 +648,10 @@ static void dm_stat_for_entry(struct dm_stat *s, size_t entry,
 		atomic_inc(&shared->in_flight[idx]);
 	} else {
 		unsigned long long duration;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		dm_stat_round(s, shared, p);
 		atomic_dec(&shared->in_flight[idx]);
 		p->sectors[idx] += len;
@@ -601,6 +665,7 @@ static void dm_stat_for_entry(struct dm_stat *s, size_t entry,
 			duration = stats_aux->duration_ns;
 		}
 		if (s->n_histogram_entries) {
+<<<<<<< HEAD
 			unsigned int lo = 0, hi = s->n_histogram_entries + 1;
 
 			while (lo + 1 < hi) {
@@ -610,6 +675,17 @@ static void dm_stat_for_entry(struct dm_stat *s, size_t entry,
 					hi = mid;
 				else
 					lo = mid;
+=======
+			unsigned lo = 0, hi = s->n_histogram_entries + 1;
+			while (lo + 1 < hi) {
+				unsigned mid = (lo + hi) / 2;
+				if (s->histogram_boundaries[mid - 1] > duration) {
+					hi = mid;
+				} else {
+					lo = mid;
+				}
+
+>>>>>>> b7ba80a49124 (Commit)
 			}
 			p->histogram[lo]++;
 		}
@@ -661,7 +737,11 @@ static void __dm_stat_bio(struct dm_stat *s, int bi_rw,
 }
 
 void dm_stats_account_io(struct dm_stats *stats, unsigned long bi_rw,
+<<<<<<< HEAD
 			 sector_t bi_sector, unsigned int bi_sectors, bool end,
+=======
+			 sector_t bi_sector, unsigned bi_sectors, bool end,
+>>>>>>> b7ba80a49124 (Commit)
 			 unsigned long start_time,
 			 struct dm_stats_aux *stats_aux)
 {
@@ -750,8 +830,12 @@ static void __dm_stat_init_temporary_percpu_totals(struct dm_stat_shared *shared
 		shared->tmp.io_ticks_total += READ_ONCE(p->io_ticks_total);
 		shared->tmp.time_in_queue += READ_ONCE(p->time_in_queue);
 		if (s->n_histogram_entries) {
+<<<<<<< HEAD
 			unsigned int i;
 
+=======
+			unsigned i;
+>>>>>>> b7ba80a49124 (Commit)
 			for (i = 0; i < s->n_histogram_entries + 1; i++)
 				shared->tmp.histogram[i] += READ_ONCE(p->histogram[i]);
 		}
@@ -785,8 +869,12 @@ static void __dm_stat_clear(struct dm_stat *s, size_t idx_start, size_t idx_end,
 		p->time_in_queue -= shared->tmp.time_in_queue;
 		local_irq_enable();
 		if (s->n_histogram_entries) {
+<<<<<<< HEAD
 			unsigned int i;
 
+=======
+			unsigned i;
+>>>>>>> b7ba80a49124 (Commit)
 			for (i = 0; i < s->n_histogram_entries + 1; i++) {
 				local_irq_disable();
 				p = &s->stat_percpu[smp_processor_id()][x];
@@ -823,7 +911,11 @@ static int dm_stats_clear(struct dm_stats *stats, int id)
 static unsigned long long dm_jiffies_to_msec64(struct dm_stat *s, unsigned long long j)
 {
 	unsigned long long result;
+<<<<<<< HEAD
 	unsigned int mult;
+=======
+	unsigned mult;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (s->stat_flags & STAT_PRECISE_TIMESTAMPS)
 		return j;
@@ -843,9 +935,15 @@ static unsigned long long dm_jiffies_to_msec64(struct dm_stat *s, unsigned long 
 
 static int dm_stats_print(struct dm_stats *stats, int id,
 			  size_t idx_start, size_t idx_len,
+<<<<<<< HEAD
 			  bool clear, char *result, unsigned int maxlen)
 {
 	unsigned int sz = 0;
+=======
+			  bool clear, char *result, unsigned maxlen)
+{
+	unsigned sz = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dm_stat *s;
 	size_t x;
 	sector_t start, end, step;
@@ -901,10 +999,17 @@ static int dm_stats_print(struct dm_stats *stats, int id,
 		       dm_jiffies_to_msec64(s, shared->tmp.io_ticks[READ]),
 		       dm_jiffies_to_msec64(s, shared->tmp.io_ticks[WRITE]));
 		if (s->n_histogram_entries) {
+<<<<<<< HEAD
 			unsigned int i;
 
 			for (i = 0; i < s->n_histogram_entries + 1; i++)
 				DMEMIT("%s%llu", !i ? " " : ":", shared->tmp.histogram[i]);
+=======
+			unsigned i;
+			for (i = 0; i < s->n_histogram_entries + 1; i++) {
+				DMEMIT("%s%llu", !i ? " " : ":", shared->tmp.histogram[i]);
+			}
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		DMEMIT("\n");
 
@@ -950,11 +1055,19 @@ static int dm_stats_set_aux(struct dm_stats *stats, int id, const char *aux_data
 	return 0;
 }
 
+<<<<<<< HEAD
 static int parse_histogram(const char *h, unsigned int *n_histogram_entries,
 			   unsigned long long **histogram_boundaries)
 {
 	const char *q;
 	unsigned int n;
+=======
+static int parse_histogram(const char *h, unsigned *n_histogram_entries,
+			   unsigned long long **histogram_boundaries)
+{
+	const char *q;
+	unsigned n;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long long last;
 
 	*n_histogram_entries = 1;
@@ -974,7 +1087,10 @@ static int parse_histogram(const char *h, unsigned int *n_histogram_entries,
 		unsigned long long hi;
 		int s;
 		char ch;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		s = sscanf(h, "%llu%c", &hi, &ch);
 		if (!s || (s == 2 && ch != ','))
 			return -EINVAL;
@@ -990,13 +1106,19 @@ static int parse_histogram(const char *h, unsigned int *n_histogram_entries,
 }
 
 static int message_stats_create(struct mapped_device *md,
+<<<<<<< HEAD
 				unsigned int argc, char **argv,
 				char *result, unsigned int maxlen)
+=======
+				unsigned argc, char **argv,
+				char *result, unsigned maxlen)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int r;
 	int id;
 	char dummy;
 	unsigned long long start, end, len, step;
+<<<<<<< HEAD
 	unsigned int divisor;
 	const char *program_id, *aux_data;
 	unsigned int stat_flags = 0;
@@ -1005,6 +1127,18 @@ static int message_stats_create(struct mapped_device *md,
 	struct dm_arg_set as, as_backup;
 	const char *a;
 	unsigned int feature_args;
+=======
+	unsigned divisor;
+	const char *program_id, *aux_data;
+	unsigned stat_flags = 0;
+
+	unsigned n_histogram_entries = 0;
+	unsigned long long *histogram_boundaries = NULL;
+
+	struct dm_arg_set as, as_backup;
+	const char *a;
+	unsigned feature_args;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Input format:
@@ -1057,8 +1191,12 @@ static int message_stats_create(struct mapped_device *md,
 			else if (!strncasecmp(a, "histogram:", 10)) {
 				if (n_histogram_entries)
 					goto ret_einval;
+<<<<<<< HEAD
 				r = parse_histogram(a + 10, &n_histogram_entries, &histogram_boundaries);
 				if (r)
+=======
+				if ((r = parse_histogram(a + 10, &n_histogram_entries, &histogram_boundaries)))
+>>>>>>> b7ba80a49124 (Commit)
 					goto ret;
 			} else
 				goto ret_einval;
@@ -1114,7 +1252,11 @@ ret:
 }
 
 static int message_stats_delete(struct mapped_device *md,
+<<<<<<< HEAD
 				unsigned int argc, char **argv)
+=======
+				unsigned argc, char **argv)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int id;
 	char dummy;
@@ -1129,7 +1271,11 @@ static int message_stats_delete(struct mapped_device *md,
 }
 
 static int message_stats_clear(struct mapped_device *md,
+<<<<<<< HEAD
 			       unsigned int argc, char **argv)
+=======
+			       unsigned argc, char **argv)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int id;
 	char dummy;
@@ -1144,8 +1290,13 @@ static int message_stats_clear(struct mapped_device *md,
 }
 
 static int message_stats_list(struct mapped_device *md,
+<<<<<<< HEAD
 			      unsigned int argc, char **argv,
 			      char *result, unsigned int maxlen)
+=======
+			      unsigned argc, char **argv,
+			      char *result, unsigned maxlen)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int r;
 	const char *program = NULL;
@@ -1167,8 +1318,13 @@ static int message_stats_list(struct mapped_device *md,
 }
 
 static int message_stats_print(struct mapped_device *md,
+<<<<<<< HEAD
 			       unsigned int argc, char **argv, bool clear,
 			       char *result, unsigned int maxlen)
+=======
+			       unsigned argc, char **argv, bool clear,
+			       char *result, unsigned maxlen)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int id;
 	char dummy;
@@ -1194,7 +1350,11 @@ static int message_stats_print(struct mapped_device *md,
 }
 
 static int message_stats_set_aux(struct mapped_device *md,
+<<<<<<< HEAD
 				 unsigned int argc, char **argv)
+=======
+				 unsigned argc, char **argv)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int id;
 	char dummy;
@@ -1208,8 +1368,13 @@ static int message_stats_set_aux(struct mapped_device *md,
 	return dm_stats_set_aux(dm_get_stats(md), id, argv[2]);
 }
 
+<<<<<<< HEAD
 int dm_stats_message(struct mapped_device *md, unsigned int argc, char **argv,
 		     char *result, unsigned int maxlen)
+=======
+int dm_stats_message(struct mapped_device *md, unsigned argc, char **argv,
+		     char *result, unsigned maxlen)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int r;
 
@@ -1252,5 +1417,9 @@ void dm_statistics_exit(void)
 		DMCRIT("shared_memory_amount leaked: %lu", shared_memory_amount);
 }
 
+<<<<<<< HEAD
 module_param_named(stats_current_allocated_bytes, shared_memory_amount, ulong, 0444);
+=======
+module_param_named(stats_current_allocated_bytes, shared_memory_amount, ulong, S_IRUGO);
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_PARM_DESC(stats_current_allocated_bytes, "Memory currently used by statistics");

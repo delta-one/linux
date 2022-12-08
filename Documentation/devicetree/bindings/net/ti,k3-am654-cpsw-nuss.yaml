@@ -54,12 +54,19 @@ properties:
 
   compatible:
     enum:
+<<<<<<< HEAD
       - ti,am642-cpsw-nuss
       - ti,am654-cpsw-nuss
       - ti,j7200-cpswxg-nuss
       - ti,j721e-cpsw-nuss
       - ti,j721e-cpswxg-nuss
       - ti,j784s4-cpswxg-nuss
+=======
+      - ti,am654-cpsw-nuss
+      - ti,j7200-cpswxg-nuss
+      - ti,j721e-cpsw-nuss
+      - ti,am642-cpsw-nuss
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1
@@ -113,7 +120,11 @@ properties:
         const: 0
 
     patternProperties:
+<<<<<<< HEAD
       "^port@[1-8]$":
+=======
+      "^port@[1-4]$":
+>>>>>>> b7ba80a49124 (Commit)
         type: object
         description: CPSWxG NUSS external ports
 
@@ -123,6 +134,7 @@ properties:
         properties:
           reg:
             minimum: 1
+<<<<<<< HEAD
             maximum: 8
             description: CPSW port number
 
@@ -139,6 +151,14 @@ properties:
             items:
               - const: mac
               - const: serdes
+=======
+            maximum: 4
+            description: CPSW port number
+
+          phys:
+            maxItems: 1
+            description: phandle on phy-gmii-sel PHY
+>>>>>>> b7ba80a49124 (Commit)
 
           label:
             description: label associated with this port
@@ -198,13 +218,18 @@ allOf:
         properties:
           compatible:
             contains:
+<<<<<<< HEAD
               enum:
                 - ti,j721e-cpswxg-nuss
                 - ti,j784s4-cpswxg-nuss
+=======
+              const: ti,j7200-cpswxg-nuss
+>>>>>>> b7ba80a49124 (Commit)
     then:
       properties:
         ethernet-ports:
           patternProperties:
+<<<<<<< HEAD
             "^port@[5-8]$": false
             "^port@[1-4]$":
               properties:
@@ -231,11 +256,18 @@ allOf:
                 reg:
                   minimum: 1
                   maximum: 2
+=======
+            "^port@[3-4]$": false
+>>>>>>> b7ba80a49124 (Commit)
 
 additionalProperties: false
 
 examples:
   - |
+<<<<<<< HEAD
+=======
+    #include <dt-bindings/pinctrl/k3.h>
+>>>>>>> b7ba80a49124 (Commit)
     #include <dt-bindings/soc/ti,sci_pm_domain.h>
     #include <dt-bindings/net/ti-dp83867.h>
     #include <dt-bindings/interrupt-controller/irq.h>

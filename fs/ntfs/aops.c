@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * aops.c - NTFS kernel address space operations and page cache handling.
  *
  * Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc.
@@ -1646,7 +1650,11 @@ hole:
 	return block;
 }
 
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * ntfs_normal_aops - address space operations for normal inodes and attributes
  *
  * Note these are not used for compressed or mst protected inodes and
@@ -1664,7 +1672,11 @@ const struct address_space_operations ntfs_normal_aops = {
 	.error_remove_page = generic_error_remove_page,
 };
 
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * ntfs_compressed_aops - address space operations for compressed inodes
  */
 const struct address_space_operations ntfs_compressed_aops = {
@@ -1678,9 +1690,15 @@ const struct address_space_operations ntfs_compressed_aops = {
 	.error_remove_page = generic_error_remove_page,
 };
 
+<<<<<<< HEAD
 /*
  * ntfs_mst_aops - general address space operations for mst protecteed inodes
  *			  and attributes
+=======
+/**
+ * ntfs_mst_aops - general address space operations for mst protecteed inodes
+ *		   and attributes
+>>>>>>> b7ba80a49124 (Commit)
  */
 const struct address_space_operations ntfs_mst_aops = {
 	.read_folio	= ntfs_read_folio,	/* Fill page with data. */

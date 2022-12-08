@@ -1,6 +1,11 @@
 [
     {
         "BriefDescription": "Cycles while L3 cache miss demand load is outstanding.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "CounterMask": "2",
         "EventCode": "0xA3",
         "EventName": "CYCLE_ACTIVITY.CYCLES_L3_MISS",
@@ -9,6 +14,11 @@
     },
     {
         "BriefDescription": "Execution stalls while L3 cache miss demand load is outstanding.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "CounterMask": "6",
         "EventCode": "0xA3",
         "EventName": "CYCLE_ACTIVITY.STALLS_L3_MISS",
@@ -17,6 +27,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE execution aborted due to any reasons (multiple categories may count as one).",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC8",
         "EventName": "HLE_RETIRED.ABORTED",
         "PEBS": "1",
@@ -26,6 +41,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE execution aborted due to unfriendly events (such as interrupts).",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC8",
         "EventName": "HLE_RETIRED.ABORTED_EVENTS",
         "SampleAfterValue": "2000003",
@@ -33,6 +53,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE execution aborted due to various memory events (e.g., read/write capacity and conflicts).",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC8",
         "EventName": "HLE_RETIRED.ABORTED_MEM",
         "SampleAfterValue": "2000003",
@@ -40,6 +65,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE execution aborted due to incompatible memory type",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC8",
         "EventName": "HLE_RETIRED.ABORTED_MEMTYPE",
         "PublicDescription": "Number of times an HLE execution aborted due to incompatible memory type.",
@@ -48,6 +78,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE execution aborted due to hardware timer expiration.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC8",
         "EventName": "HLE_RETIRED.ABORTED_TIMER",
         "SampleAfterValue": "2000003",
@@ -55,6 +90,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE execution aborted due to HLE-unfriendly instructions and certain unfriendly events (such as AD assists etc.).",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC8",
         "EventName": "HLE_RETIRED.ABORTED_UNFRIENDLY",
         "SampleAfterValue": "2000003",
@@ -62,6 +102,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE execution successfully committed",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC8",
         "EventName": "HLE_RETIRED.COMMIT",
         "PublicDescription": "Number of times HLE commit succeeded.",
@@ -70,6 +115,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE execution started.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC8",
         "EventName": "HLE_RETIRED.START",
         "PublicDescription": "Number of times we entered an HLE region. Does not count nested transactions.",
@@ -78,6 +128,11 @@
     },
     {
         "BriefDescription": "Counts the number of machine clears due to memory order conflicts.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "Errata": "SKL089",
         "EventCode": "0xC3",
         "EventName": "MACHINE_CLEARS.MEMORY_ORDERING",
@@ -87,6 +142,11 @@
     },
     {
         "BriefDescription": "Counts randomly selected loads when the latency from first dispatch to completion is greater than 128 cycles.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "Data_LA": "1",
         "EventCode": "0xcd",
         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_128",
@@ -95,10 +155,19 @@
         "PEBS": "2",
         "PublicDescription": "Counts randomly selected loads when the latency from first dispatch to completion is greater than 128 cycles.  Reported latency may be longer than just the memory latency.",
         "SampleAfterValue": "1009",
+<<<<<<< HEAD
+=======
+        "TakenAlone": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts randomly selected loads when the latency from first dispatch to completion is greater than 16 cycles.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "Data_LA": "1",
         "EventCode": "0xcd",
         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_16",
@@ -107,10 +176,19 @@
         "PEBS": "2",
         "PublicDescription": "Counts randomly selected loads when the latency from first dispatch to completion is greater than 16 cycles.  Reported latency may be longer than just the memory latency.",
         "SampleAfterValue": "20011",
+<<<<<<< HEAD
+=======
+        "TakenAlone": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts randomly selected loads when the latency from first dispatch to completion is greater than 256 cycles.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "Data_LA": "1",
         "EventCode": "0xcd",
         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_256",
@@ -119,10 +197,19 @@
         "PEBS": "2",
         "PublicDescription": "Counts randomly selected loads when the latency from first dispatch to completion is greater than 256 cycles.  Reported latency may be longer than just the memory latency.",
         "SampleAfterValue": "503",
+<<<<<<< HEAD
+=======
+        "TakenAlone": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts randomly selected loads when the latency from first dispatch to completion is greater than 32 cycles.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "Data_LA": "1",
         "EventCode": "0xcd",
         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_32",
@@ -131,10 +218,19 @@
         "PEBS": "2",
         "PublicDescription": "Counts randomly selected loads when the latency from first dispatch to completion is greater than 32 cycles.  Reported latency may be longer than just the memory latency.",
         "SampleAfterValue": "100007",
+<<<<<<< HEAD
+=======
+        "TakenAlone": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts randomly selected loads when the latency from first dispatch to completion is greater than 4 cycles.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "Data_LA": "1",
         "EventCode": "0xcd",
         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_4",
@@ -143,10 +239,19 @@
         "PEBS": "2",
         "PublicDescription": "Counts randomly selected loads when the latency from first dispatch to completion is greater than 4 cycles.  Reported latency may be longer than just the memory latency.",
         "SampleAfterValue": "100003",
+<<<<<<< HEAD
+=======
+        "TakenAlone": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts randomly selected loads when the latency from first dispatch to completion is greater than 512 cycles.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "Data_LA": "1",
         "EventCode": "0xcd",
         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_512",
@@ -155,10 +260,19 @@
         "PEBS": "2",
         "PublicDescription": "Counts randomly selected loads when the latency from first dispatch to completion is greater than 512 cycles.  Reported latency may be longer than just the memory latency.",
         "SampleAfterValue": "101",
+<<<<<<< HEAD
+=======
+        "TakenAlone": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts randomly selected loads when the latency from first dispatch to completion is greater than 64 cycles.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "Data_LA": "1",
         "EventCode": "0xcd",
         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_64",
@@ -167,10 +281,19 @@
         "PEBS": "2",
         "PublicDescription": "Counts randomly selected loads when the latency from first dispatch to completion is greater than 64 cycles.  Reported latency may be longer than just the memory latency.",
         "SampleAfterValue": "2003",
+<<<<<<< HEAD
+=======
+        "TakenAlone": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts randomly selected loads when the latency from first dispatch to completion is greater than 8 cycles.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "Data_LA": "1",
         "EventCode": "0xcd",
         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_8",
@@ -179,10 +302,19 @@
         "PEBS": "2",
         "PublicDescription": "Counts randomly selected loads when the latency from first dispatch to completion is greater than 8 cycles.  Reported latency may be longer than just the memory latency.",
         "SampleAfterValue": "50021",
+<<<<<<< HEAD
+=======
+        "TakenAlone": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Demand Data Read requests who miss L3 cache",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB0",
         "EventName": "OFFCORE_REQUESTS.L3_MISS_DEMAND_DATA_RD",
         "PublicDescription": "Demand Data Read requests who miss L3 cache.",
@@ -191,6 +323,11 @@
     },
     {
         "BriefDescription": "Cycles with at least 1 Demand Data Read requests who miss L3 cache in the superQ.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "CounterMask": "1",
         "EventCode": "0x60",
         "EventName": "OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_L3_MISS_DEMAND_DATA_RD",
@@ -199,6 +336,11 @@
     },
     {
         "BriefDescription": "Counts number of Offcore outstanding Demand Data Read requests that miss L3 cache in the superQ every cycle.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x60",
         "EventName": "OFFCORE_REQUESTS_OUTSTANDING.L3_MISS_DEMAND_DATA_RD",
         "SampleAfterValue": "2000003",
@@ -206,6 +348,11 @@
     },
     {
         "BriefDescription": "Cycles with at least 6 Demand Data Read requests that miss L3 cache in the superQ.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "CounterMask": "6",
         "EventCode": "0x60",
         "EventName": "OFFCORE_REQUESTS_OUTSTANDING.L3_MISS_DEMAND_DATA_RD_GE_6",
@@ -214,654 +361,1307 @@
     },
     {
         "BriefDescription": "Counts all demand & prefetch data reads that miss in the L3.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FBC000491",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch data reads that miss the L3 and the modified data is transferred from remote cache.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS.REMOTE_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x103FC00491",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch data reads that miss the L3 and clean or shared data is transferred from remote cache.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS.REMOTE_HIT_FORWARD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x83FC00491",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch data reads that miss the L3 and the data is returned from local or remote dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x63FC00491",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch data reads that miss the L3 and the data is returned from local dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x604000491",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch data reads that miss the L3 and the data is returned from remote dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS_REMOTE_DRAM.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x63B800491",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch data reads that miss in the L3.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FBC000490",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch data reads that miss the L3 and the modified data is transferred from remote cache.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS.REMOTE_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x103FC00490",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch data reads that miss the L3 and clean or shared data is transferred from remote cache.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS.REMOTE_HIT_FORWARD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x83FC00490",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch data reads that miss the L3 and the data is returned from local or remote dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x63FC00490",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch data reads that miss the L3 and the data is returned from local dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x604000490",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch data reads that miss the L3 and the data is returned from remote dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS_REMOTE_DRAM.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x63B800490",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch RFOs that miss in the L3.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FBC000120",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch RFOs that miss the L3 and the modified data is transferred from remote cache.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS.REMOTE_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x103FC00120",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch RFOs that miss the L3 and clean or shared data is transferred from remote cache.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS.REMOTE_HIT_FORWARD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x83FC00120",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch RFOs that miss the L3 and the data is returned from local or remote dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x63FC00120",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch RFOs that miss the L3 and the data is returned from local dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS_LOCAL_DRAM.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x604000120",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch RFOs that miss the L3 and the data is returned from remote dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS_REMOTE_DRAM.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x63B800120",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch RFOs that miss in the L3.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FBC000122",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch RFOs that miss the L3 and the modified data is transferred from remote cache.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS.REMOTE_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x103FC00122",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch RFOs that miss the L3 and clean or shared data is transferred from remote cache.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS.REMOTE_HIT_FORWARD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x83FC00122",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch RFOs that miss the L3 and the data is returned from local or remote dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x63FC00122",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch RFOs that miss the L3 and the data is returned from local dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS_LOCAL_DRAM.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x604000122",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand & prefetch RFOs that miss the L3 and the data is returned from remote dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS_REMOTE_DRAM.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x63B800122",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand code reads that miss in the L3.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FBC000004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand code reads that miss the L3 and the modified data is transferred from remote cache.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS.REMOTE_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x103FC00004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand code reads that miss the L3 and clean or shared data is transferred from remote cache.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS.REMOTE_HIT_FORWARD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x83FC00004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand code reads that miss the L3 and the data is returned from local or remote dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x63FC00004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand code reads that miss the L3 and the data is returned from local dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS_LOCAL_DRAM.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x604000004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand code reads that miss the L3 and the data is returned from remote dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS_REMOTE_DRAM.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x63B800004",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts demand data reads that miss in the L3.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FBC000001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts demand data reads that miss the L3 and the modified data is transferred from remote cache.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS.REMOTE_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x103FC00001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts demand data reads that miss the L3 and clean or shared data is transferred from remote cache.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS.REMOTE_HIT_FORWARD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x83FC00001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts demand data reads that miss the L3 and the data is returned from local or remote dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x63FC00001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts demand data reads that miss the L3 and the data is returned from local dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x604000001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts demand data reads that miss the L3 and the data is returned from remote dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS_REMOTE_DRAM.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x63B800001",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand data writes (RFOs) that miss in the L3.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FBC000002",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand data writes (RFOs) that miss the L3 and the modified data is transferred from remote cache.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS.REMOTE_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x103FC00002",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand data writes (RFOs) that miss the L3 and clean or shared data is transferred from remote cache.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS.REMOTE_HIT_FORWARD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x83FC00002",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand data writes (RFOs) that miss the L3 and the data is returned from local or remote dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x63FC00002",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand data writes (RFOs) that miss the L3 and the data is returned from local dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS_LOCAL_DRAM.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x604000002",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all demand data writes (RFOs) that miss the L3 and the data is returned from remote dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS_REMOTE_DRAM.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x63B800002",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts L1 data cache hardware prefetch requests and software prefetch requests that miss in the L3.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L1D_AND_SW.L3_MISS.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FBC000400",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts L1 data cache hardware prefetch requests and software prefetch requests that miss the L3 and the modified data is transferred from remote cache.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L1D_AND_SW.L3_MISS.REMOTE_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x103FC00400",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts L1 data cache hardware prefetch requests and software prefetch requests that miss the L3 and clean or shared data is transferred from remote cache.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L1D_AND_SW.L3_MISS.REMOTE_HIT_FORWARD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x83FC00400",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts L1 data cache hardware prefetch requests and software prefetch requests that miss the L3 and the data is returned from local or remote dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L1D_AND_SW.L3_MISS.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x63FC00400",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts L1 data cache hardware prefetch requests and software prefetch requests that miss the L3 and the data is returned from local dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L1D_AND_SW.L3_MISS_LOCAL_DRAM.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x604000400",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts L1 data cache hardware prefetch requests and software prefetch requests that miss the L3 and the data is returned from remote dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L1D_AND_SW.L3_MISS_REMOTE_DRAM.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x63B800400",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to L2) data reads that miss in the L3.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FBC000010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to L2) data reads that miss the L3 and the modified data is transferred from remote cache.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS.REMOTE_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x103FC00010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to L2) data reads that miss the L3 and clean or shared data is transferred from remote cache.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS.REMOTE_HIT_FORWARD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x83FC00010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to L2) data reads that miss the L3 and the data is returned from local or remote dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x63FC00010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to L2) data reads that miss the L3 and the data is returned from local dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x604000010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts prefetch (that bring data to L2) data reads that miss the L3 and the data is returned from remote dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS_REMOTE_DRAM.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x63B800010",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to L2) RFOs that miss in the L3.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FBC000020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to L2) RFOs that miss the L3 and the modified data is transferred from remote cache.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS.REMOTE_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x103FC00020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to L2) RFOs that miss the L3 and clean or shared data is transferred from remote cache.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS.REMOTE_HIT_FORWARD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x83FC00020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to L2) RFOs that miss the L3 and the data is returned from local or remote dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x63FC00020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to L2) RFOs that miss the L3 and the data is returned from local dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS_LOCAL_DRAM.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x604000020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to L2) RFOs that miss the L3 and the data is returned from remote dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS_REMOTE_DRAM.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x63B800020",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) data reads that miss in the L3.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FBC000080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) data reads that miss the L3 and the modified data is transferred from remote cache.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS.REMOTE_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x103FC00080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) data reads that miss the L3 and clean or shared data is transferred from remote cache.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS.REMOTE_HIT_FORWARD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x83FC00080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) data reads that miss the L3 and the data is returned from local or remote dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x63FC00080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) data reads that miss the L3 and the data is returned from local dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS_LOCAL_DRAM.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x604000080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) data reads that miss the L3 and the data is returned from remote dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS_REMOTE_DRAM.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x63B800080",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) RFOs that miss in the L3.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS.ANY_SNOOP",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x3FBC000100",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) RFOs that miss the L3 and the modified data is transferred from remote cache.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS.REMOTE_HITM",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x103FC00100",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) RFOs that miss the L3 and clean or shared data is transferred from remote cache.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS.REMOTE_HIT_FORWARD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x83FC00100",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) RFOs that miss the L3 and the data is returned from local or remote dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x63FC00100",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) RFOs that miss the L3 and the data is returned from local dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS_LOCAL_DRAM.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x604000100",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Counts all prefetch (that bring data to LLC only) RFOs that miss the L3 and the data is returned from remote dram.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xB7, 0xBB",
         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS_REMOTE_DRAM.SNOOP_MISS_OR_NO_FWD",
         "MSRIndex": "0x1a6,0x1a7",
         "MSRValue": "0x63B800100",
+<<<<<<< HEAD
+=======
+        "Offcore": "1",
+>>>>>>> b7ba80a49124 (Commit)
         "SampleAfterValue": "100003",
         "UMask": "0x1"
     },
     {
         "BriefDescription": "Number of times an RTM execution aborted due to any reasons (multiple categories may count as one).",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC9",
         "EventName": "RTM_RETIRED.ABORTED",
         "PEBS": "1",
@@ -871,6 +1671,11 @@
     },
     {
         "BriefDescription": "Number of times an RTM execution aborted due to none of the previous 4 categories (e.g. interrupt)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC9",
         "EventName": "RTM_RETIRED.ABORTED_EVENTS",
         "PublicDescription": "Number of times an RTM execution aborted due to none of the previous 4 categories (e.g. interrupt).",
@@ -879,6 +1684,11 @@
     },
     {
         "BriefDescription": "Number of times an RTM execution aborted due to various memory events (e.g. read/write capacity and conflicts)",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC9",
         "EventName": "RTM_RETIRED.ABORTED_MEM",
         "PublicDescription": "Number of times an RTM execution aborted due to various memory events (e.g. read/write capacity and conflicts).",
@@ -887,6 +1697,11 @@
     },
     {
         "BriefDescription": "Number of times an RTM execution aborted due to incompatible memory type",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC9",
         "EventName": "RTM_RETIRED.ABORTED_MEMTYPE",
         "PublicDescription": "Number of times an RTM execution aborted due to incompatible memory type.",
@@ -895,6 +1710,11 @@
     },
     {
         "BriefDescription": "Number of times an RTM execution aborted due to uncommon conditions.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC9",
         "EventName": "RTM_RETIRED.ABORTED_TIMER",
         "SampleAfterValue": "2000003",
@@ -902,6 +1722,11 @@
     },
     {
         "BriefDescription": "Number of times an RTM execution aborted due to HLE-unfriendly instructions",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC9",
         "EventName": "RTM_RETIRED.ABORTED_UNFRIENDLY",
         "PublicDescription": "Number of times an RTM execution aborted due to HLE-unfriendly instructions.",
@@ -910,6 +1735,11 @@
     },
     {
         "BriefDescription": "Number of times an RTM execution successfully committed",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC9",
         "EventName": "RTM_RETIRED.COMMIT",
         "PublicDescription": "Number of times RTM commit succeeded.",
@@ -918,6 +1748,11 @@
     },
     {
         "BriefDescription": "Number of times an RTM execution started.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0xC9",
         "EventName": "RTM_RETIRED.START",
         "PublicDescription": "Number of times we entered an RTM region. Does not count nested transactions.",
@@ -926,6 +1761,11 @@
     },
     {
         "BriefDescription": "Counts the number of times a class of instructions that may cause a transactional abort was executed. Since this is the count of execution, it may not always cause a transactional abort.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x5d",
         "EventName": "TX_EXEC.MISC1",
         "SampleAfterValue": "2000003",
@@ -933,6 +1773,11 @@
     },
     {
         "BriefDescription": "Counts the number of times a class of instructions (e.g., vzeroupper) that may cause a transactional abort was executed inside a transactional region",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x5d",
         "EventName": "TX_EXEC.MISC2",
         "PublicDescription": "Unfriendly TSX abort triggered by a vzeroupper instruction.",
@@ -941,6 +1786,11 @@
     },
     {
         "BriefDescription": "Counts the number of times an instruction execution caused the transactional nest count supported to be exceeded",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x5d",
         "EventName": "TX_EXEC.MISC3",
         "PublicDescription": "Unfriendly TSX abort triggered by a nest count that is too deep.",
@@ -949,6 +1799,11 @@
     },
     {
         "BriefDescription": "Counts the number of times a XBEGIN instruction was executed inside an HLE transactional region.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x5d",
         "EventName": "TX_EXEC.MISC4",
         "PublicDescription": "RTM region detected inside HLE.",
@@ -957,6 +1812,11 @@
     },
     {
         "BriefDescription": "Counts the number of times an HLE XACQUIRE instruction was executed inside an RTM transactional region",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x5d",
         "EventName": "TX_EXEC.MISC5",
         "PublicDescription": "Counts the number of times an HLE XACQUIRE instruction was executed inside an RTM transactional region.",
@@ -965,6 +1825,11 @@
     },
     {
         "BriefDescription": "Number of times a transactional abort was signaled due to a data capacity limitation for transactional reads or writes.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x54",
         "EventName": "TX_MEM.ABORT_CAPACITY",
         "SampleAfterValue": "2000003",
@@ -972,6 +1837,11 @@
     },
     {
         "BriefDescription": "Number of times a transactional abort was signaled due to a data conflict on a transactionally accessed address",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x54",
         "EventName": "TX_MEM.ABORT_CONFLICT",
         "PublicDescription": "Number of times a TSX line had a cache conflict.",
@@ -980,6 +1850,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE transactional execution aborted due to XRELEASE lock not satisfying the address and value requirements in the elision buffer",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x54",
         "EventName": "TX_MEM.ABORT_HLE_ELISION_BUFFER_MISMATCH",
         "PublicDescription": "Number of times a TSX Abort was triggered due to release/commit but data and address mismatch.",
@@ -988,6 +1863,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE transactional execution aborted due to NoAllocatedElisionBuffer being non-zero.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x54",
         "EventName": "TX_MEM.ABORT_HLE_ELISION_BUFFER_NOT_EMPTY",
         "PublicDescription": "Number of times a TSX Abort was triggered due to commit but Lock Buffer not empty.",
@@ -996,6 +1876,11 @@
     },
     {
         "BriefDescription": "Number of times an HLE transactional execution aborted due to an unsupported read alignment from the elision buffer.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x54",
         "EventName": "TX_MEM.ABORT_HLE_ELISION_BUFFER_UNSUPPORTED_ALIGNMENT",
         "PublicDescription": "Number of times a TSX Abort was triggered due to attempting an unsupported alignment from Lock Buffer.",
@@ -1004,6 +1889,11 @@
     },
     {
         "BriefDescription": "Number of times a HLE transactional region aborted due to a non XRELEASE prefixed instruction writing to an elided lock in the elision buffer",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x54",
         "EventName": "TX_MEM.ABORT_HLE_STORE_TO_ELIDED_LOCK",
         "PublicDescription": "Number of times a TSX Abort was triggered due to a non-release/commit store to lock.",
@@ -1012,6 +1902,11 @@
     },
     {
         "BriefDescription": "Number of times HLE lock could not be elided due to ElisionBufferAvailable being zero.",
+<<<<<<< HEAD
+=======
+        "Counter": "0,1,2,3",
+        "CounterHTOff": "0,1,2,3,4,5,6,7",
+>>>>>>> b7ba80a49124 (Commit)
         "EventCode": "0x54",
         "EventName": "TX_MEM.HLE_ELISION_BUFFER_FULL",
         "PublicDescription": "Number of times we could not allocate Lock Buffer.",

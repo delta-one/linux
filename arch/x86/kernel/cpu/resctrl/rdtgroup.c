@@ -78,6 +78,7 @@ void rdt_last_cmd_printf(const char *fmt, ...)
 	va_end(ap);
 }
 
+<<<<<<< HEAD
 void rdt_staged_configs_clear(void)
 {
 	struct rdt_resource *r;
@@ -91,6 +92,8 @@ void rdt_staged_configs_clear(void)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Trivial allocator for CLOSIDs. Since h/w only supports a small number,
  * we can keep a bitmap of free CLOSIDs in a single integer.
@@ -327,7 +330,11 @@ static void update_cpu_closid_rmid(void *info)
 	 * executing task might have its own closid selected. Just reuse
 	 * the context switch code.
 	 */
+<<<<<<< HEAD
 	resctrl_sched_in(current);
+=======
+	resctrl_sched_in();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -338,7 +345,16 @@ static void update_cpu_closid_rmid(void *info)
 static void
 update_closid_rmid(const struct cpumask *cpu_mask, struct rdtgroup *r)
 {
+<<<<<<< HEAD
 	on_each_cpu_mask(cpu_mask, update_cpu_closid_rmid, r, 1);
+=======
+	int cpu = get_cpu();
+
+	if (cpumask_test_cpu(cpu, cpu_mask))
+		update_cpu_closid_rmid(r);
+	smp_call_function_many(cpu_mask, update_cpu_closid_rmid, r, 1);
+	put_cpu();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int cpus_mon_write(struct rdtgroup *rdtgrp, cpumask_var_t newmask,
@@ -543,7 +559,11 @@ static void _update_task_closid_rmid(void *task)
 	 * Otherwise, the MSR is updated when the task is scheduled in.
 	 */
 	if (task == current)
+<<<<<<< HEAD
 		resctrl_sched_in(task);
+=======
+		resctrl_sched_in();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void update_task_closid_rmid(struct task_struct *t)
@@ -588,10 +608,15 @@ static int __rdtgroup_move_task(struct task_struct *tsk,
 	/*
 	 * Ensure the task's closid and rmid are written before determining if
 	 * the task is current that will decide if it will be interrupted.
+<<<<<<< HEAD
 	 * This pairs with the full barrier between the rq->curr update and
 	 * resctrl_sched_in() during context switch.
 	 */
 	smp_mb();
+=======
+	 */
+	barrier();
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * By now, the task's closid and rmid are set. If the task is current
@@ -1011,11 +1036,16 @@ static int rdt_mon_features_show(struct kernfs_open_file *of,
 	struct rdt_resource *r = of->kn->parent->priv;
 	struct mon_evt *mevt;
 
+<<<<<<< HEAD
 	list_for_each_entry(mevt, &r->evt_list, list) {
 		seq_printf(seq, "%s\n", mevt->name);
 		if (mevt->configurable)
 			seq_printf(seq, "%s_config\n", mevt->name);
 	}
+=======
+	list_for_each_entry(mevt, &r->evt_list, list)
+		seq_printf(seq, "%s\n", mevt->name);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1043,7 +1073,14 @@ static int rdt_delay_linear_show(struct kernfs_open_file *of,
 static int max_threshold_occ_show(struct kernfs_open_file *of,
 				  struct seq_file *seq, void *v)
 {
+<<<<<<< HEAD
 	seq_printf(seq, "%u\n", resctrl_rmid_realloc_threshold);
+=======
+	struct rdt_resource *r = of->kn->parent->priv;
+	struct rdt_hw_resource *hw_res = resctrl_to_arch_res(r);
+
+	seq_printf(seq, "%u\n", resctrl_cqm_threshold * hw_res->mon_scale);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1065,6 +1102,10 @@ static int rdt_thread_throttle_mode_show(struct kernfs_open_file *of,
 static ssize_t max_threshold_occ_write(struct kernfs_open_file *of,
 				       char *buf, size_t nbytes, loff_t off)
 {
+<<<<<<< HEAD
+=======
+	struct rdt_hw_resource *hw_res;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int bytes;
 	int ret;
 
@@ -1072,10 +1113,18 @@ static ssize_t max_threshold_occ_write(struct kernfs_open_file *of,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (bytes > resctrl_rmid_realloc_limit)
 		return -EINVAL;
 
 	resctrl_rmid_realloc_threshold = resctrl_arch_round_mon_val(bytes);
+=======
+	if (bytes > (boot_cpu_data.x86_cache_size * 1024))
+		return -EINVAL;
+
+	hw_res = resctrl_to_arch_res(of->kn->parent->priv);
+	resctrl_cqm_threshold = bytes / hw_res->mon_scale;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return nbytes;
 }
@@ -1226,7 +1275,11 @@ static bool rdtgroup_mode_test_exclusive(struct rdtgroup *rdtgrp)
 
 	list_for_each_entry(s, &resctrl_schema_all, list) {
 		r = s->res;
+<<<<<<< HEAD
 		if (r->rid == RDT_RESOURCE_MBA || r->rid == RDT_RESOURCE_SMBA)
+=======
+		if (r->rid == RDT_RESOURCE_MBA)
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		has_cache = true;
 		list_for_each_entry(d, &r->domains, list) {
@@ -1364,13 +1417,19 @@ static int rdtgroup_size_show(struct kernfs_open_file *of,
 			      struct seq_file *s, void *v)
 {
 	struct resctrl_schema *schema;
+<<<<<<< HEAD
 	enum resctrl_conf_type type;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct rdtgroup *rdtgrp;
 	struct rdt_resource *r;
 	struct rdt_domain *d;
 	unsigned int size;
 	int ret = 0;
+<<<<<<< HEAD
 	u32 closid;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool sep;
 	u32 ctrl;
 
@@ -1396,11 +1455,16 @@ static int rdtgroup_size_show(struct kernfs_open_file *of,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	closid = rdtgrp->closid;
 
 	list_for_each_entry(schema, &resctrl_schema_all, list) {
 		r = schema->res;
 		type = schema->conf_type;
+=======
+	list_for_each_entry(schema, &resctrl_schema_all, list) {
+		r = schema->res;
+>>>>>>> b7ba80a49124 (Commit)
 		sep = false;
 		seq_printf(s, "%*s:", max_name_width, schema->name);
 		list_for_each_entry(d, &r->domains, list) {
@@ -1409,6 +1473,7 @@ static int rdtgroup_size_show(struct kernfs_open_file *of,
 			if (rdtgrp->mode == RDT_MODE_PSEUDO_LOCKSETUP) {
 				size = 0;
 			} else {
+<<<<<<< HEAD
 				if (is_mba_sc(r))
 					ctrl = d->mbps_val[closid];
 				else
@@ -1417,6 +1482,12 @@ static int rdtgroup_size_show(struct kernfs_open_file *of,
 								       type);
 				if (r->rid == RDT_RESOURCE_MBA ||
 				    r->rid == RDT_RESOURCE_SMBA)
+=======
+				ctrl = resctrl_arch_get_config(r, d,
+							       rdtgrp->closid,
+							       schema->conf_type);
+				if (r->rid == RDT_RESOURCE_MBA)
+>>>>>>> b7ba80a49124 (Commit)
 					size = ctrl;
 				else
 					size = rdtgroup_cbm_to_size(r, d, ctrl);
@@ -1433,6 +1504,7 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 struct mon_config_info {
 	u32 evtid;
 	u32 mon_config;
@@ -1675,6 +1747,8 @@ static ssize_t mbm_local_bytes_config_write(struct kernfs_open_file *of,
 	return ret ?: nbytes;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* rdtgroup information files for one cache resource. */
 static struct rftype res_common_files[] = {
 	{
@@ -1774,6 +1848,7 @@ static struct rftype res_common_files[] = {
 		.fflags		= RF_MON_INFO | RFTYPE_RES_CACHE,
 	},
 	{
+<<<<<<< HEAD
 		.name		= "mbm_total_bytes_config",
 		.mode		= 0644,
 		.kf_ops		= &rdtgroup_kf_single_ops,
@@ -1788,6 +1863,8 @@ static struct rftype res_common_files[] = {
 		.write		= mbm_local_bytes_config_write,
 	},
 	{
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.name		= "cpus",
 		.mode		= 0644,
 		.kf_ops		= &rdtgroup_kf_single_ops,
@@ -1893,6 +1970,7 @@ void __init thread_throttle_mode_init(void)
 	rft->fflags = RF_CTRL_INFO | RFTYPE_RES_MB;
 }
 
+<<<<<<< HEAD
 void __init mbm_config_rftype_init(const char *config)
 {
 	struct rftype *rft;
@@ -1902,6 +1980,8 @@ void __init mbm_config_rftype_init(const char *config)
 		rft->fflags = RF_MON_INFO | RFTYPE_RES_CACHE;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * rdtgroup_kn_mode_restrict - Restrict user access to named resctrl file
  * @r: The resource group with which the file is associated.
@@ -2038,7 +2118,11 @@ static int rdtgroup_create_info_dir(struct kernfs_node *parent_kn)
 	if (ret)
 		goto out_destroy;
 
+<<<<<<< HEAD
 	/* loop over enabled controls, these are all alloc_capable */
+=======
+	/* loop over enabled controls, these are all alloc_enabled */
+>>>>>>> b7ba80a49124 (Commit)
 	list_for_each_entry(s, &resctrl_schema_all, list) {
 		r = s->res;
 		fflags =  r->fflags | RF_CTRL_INFO;
@@ -2047,7 +2131,11 @@ static int rdtgroup_create_info_dir(struct kernfs_node *parent_kn)
 			goto out_destroy;
 	}
 
+<<<<<<< HEAD
 	for_each_mon_capable_rdt_resource(r) {
+=======
+	for_each_mon_enabled_rdt_resource(r) {
+>>>>>>> b7ba80a49124 (Commit)
 		fflags =  r->fflags | RF_MON_INFO;
 		sprintf(name, "%s_MON", r->name);
 		ret = rdtgroup_mkdir_info_resdir(r, name, fflags);
@@ -2143,9 +2231,19 @@ static int set_cache_qos_cfg(int level, bool enable)
 			/* Pick one CPU from each domain instance to update MSR */
 			cpumask_set_cpu(cpumask_any(&d->cpu_mask), cpu_mask);
 	}
+<<<<<<< HEAD
 
 	/* Update QOS_CFG MSR on all the CPUs in cpu_mask */
 	on_each_cpu_mask(cpu_mask, update, &enable, 1);
+=======
+	cpu = get_cpu();
+	/* Update QOS_CFG MSR on this cpu if it's in cpu_mask. */
+	if (cpumask_test_cpu(cpu, cpu_mask))
+		update(&enable);
+	/* Update QOS_CFG MSR on all other cpus in cpu_mask. */
+	smp_call_function_many(cpu_mask, update, &enable, 1);
+	put_cpu();
+>>>>>>> b7ba80a49124 (Commit)
 
 	free_cpumask_var(cpu_mask);
 
@@ -2167,6 +2265,7 @@ void rdt_domain_reconfigure_cdp(struct rdt_resource *r)
 		l3_qos_cfg_update(&hw_res->cdp_enabled);
 }
 
+<<<<<<< HEAD
 static int mba_sc_domain_allocate(struct rdt_resource *r, struct rdt_domain *d)
 {
 	u32 num_closid = resctrl_arch_get_num_closid(r);
@@ -2206,10 +2305,18 @@ static bool supports_mba_mbps(void)
 /*
  * Enable or disable the MBA software controller
  * which helps user specify bandwidth in MBps.
+=======
+/*
+ * Enable or disable the MBA software controller
+ * which helps user specify bandwidth in MBps.
+ * MBA software controller is supported only if
+ * MBM is supported and MBA is in linear scale.
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int set_mba_sc(bool mba_sc)
 {
 	struct rdt_resource *r = &rdt_resources_all[RDT_RESOURCE_MBA].r_resctrl;
+<<<<<<< HEAD
 	u32 num_closid = resctrl_arch_get_num_closid(r);
 	struct rdt_domain *d;
 	int i;
@@ -2222,6 +2329,19 @@ static int set_mba_sc(bool mba_sc)
 	list_for_each_entry(d, &r->domains, list) {
 		for (i = 0; i < num_closid; i++)
 			d->mbps_val[i] = MBA_MAX_MBPS;
+=======
+	struct rdt_hw_domain *hw_dom;
+	struct rdt_domain *d;
+
+	if (!is_mbm_enabled() || !is_mba_linear() ||
+	    mba_sc == is_mba_sc(r))
+		return -EINVAL;
+
+	r->membw.mba_sc = mba_sc;
+	list_for_each_entry(d, &r->domains, list) {
+		hw_dom = resctrl_to_arch_dom(d);
+		setup_default_ctrlval(r, hw_dom->ctrl_val, hw_dom->mbps_val);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -2419,7 +2539,11 @@ static int schemata_list_create(void)
 	struct rdt_resource *r;
 	int ret = 0;
 
+<<<<<<< HEAD
 	for_each_alloc_capable_rdt_resource(r) {
+=======
+	for_each_alloc_enabled_rdt_resource(r) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (resctrl_arch_get_cdp_enabled(r->rid)) {
 			ret = schemata_list_add(r, CDP_CODE);
 			if (ret)
@@ -2574,7 +2698,11 @@ static int rdt_parse_param(struct fs_context *fc, struct fs_parameter *param)
 		ctx->enable_cdpl2 = true;
 		return 0;
 	case Opt_mba_mbps:
+<<<<<<< HEAD
 		if (!supports_mba_mbps())
+=======
+		if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
+>>>>>>> b7ba80a49124 (Commit)
 			return -EINVAL;
 		ctx->enable_mba_mbps = true;
 		return 0;
@@ -2622,7 +2750,11 @@ static int reset_all_ctrls(struct rdt_resource *r)
 	struct msr_param msr_param;
 	cpumask_var_t cpu_mask;
 	struct rdt_domain *d;
+<<<<<<< HEAD
 	int i;
+=======
+	int i, cpu;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!zalloc_cpumask_var(&cpu_mask, GFP_KERNEL))
 		return -ENOMEM;
@@ -2643,9 +2775,19 @@ static int reset_all_ctrls(struct rdt_resource *r)
 		for (i = 0; i < hw_res->num_closid; i++)
 			hw_dom->ctrl_val[i] = r->default_ctrl;
 	}
+<<<<<<< HEAD
 
 	/* Update CBM on all the CPUs in cpu_mask */
 	on_each_cpu_mask(cpu_mask, rdt_ctrl_update, &msr_param, 1);
+=======
+	cpu = get_cpu();
+	/* Update CBM on this cpu if it's in cpu_mask. */
+	if (cpumask_test_cpu(cpu, cpu_mask))
+		rdt_ctrl_update(&msr_param);
+	/* Update CBM on all other cpus in cpu_mask. */
+	smp_call_function_many(cpu_mask, rdt_ctrl_update, &msr_param, 1);
+	put_cpu();
+>>>>>>> b7ba80a49124 (Commit)
 
 	free_cpumask_var(cpu_mask);
 
@@ -2673,6 +2815,7 @@ static void rdt_move_group_tasks(struct rdtgroup *from, struct rdtgroup *to,
 			WRITE_ONCE(t->rmid, to->mon.rmid);
 
 			/*
+<<<<<<< HEAD
 			 * Order the closid/rmid stores above before the loads
 			 * in task_curr(). This pairs with the full barrier
 			 * between the rq->curr update and resctrl_sched_in()
@@ -2681,6 +2824,8 @@ static void rdt_move_group_tasks(struct rdtgroup *from, struct rdtgroup *to,
 			smp_mb();
 
 			/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			 * If the task is on a CPU, set the CPU in the mask.
 			 * The detection is inaccurate as tasks might move or
 			 * schedule before the smp function call takes place.
@@ -2769,7 +2914,11 @@ static void rdt_kill_sb(struct super_block *sb)
 	set_mba_sc(false);
 
 	/*Put everything back to default values. */
+<<<<<<< HEAD
 	for_each_alloc_capable_rdt_resource(r)
+=======
+	for_each_alloc_enabled_rdt_resource(r)
+>>>>>>> b7ba80a49124 (Commit)
 		reset_all_ctrls(r);
 	cdp_disable_all();
 	rmdir_all_sub();
@@ -2816,12 +2965,22 @@ static int mon_addfile(struct kernfs_node *parent_kn, const char *name,
  * Remove all subdirectories of mon_data of ctrl_mon groups
  * and monitor groups with given domain id.
  */
+<<<<<<< HEAD
 static void rmdir_mondata_subdir_allrdtgrp(struct rdt_resource *r,
 					   unsigned int dom_id)
+=======
+void rmdir_mondata_subdir_allrdtgrp(struct rdt_resource *r, unsigned int dom_id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rdtgroup *prgrp, *crgrp;
 	char name[32];
 
+<<<<<<< HEAD
+=======
+	if (!r->mon_enabled)
+		return;
+
+>>>>>>> b7ba80a49124 (Commit)
 	list_for_each_entry(prgrp, &rdt_all_groups, rdtgroup_list) {
 		sprintf(name, "mon_%s_%02d", r->name, dom_id);
 		kernfs_remove_by_name(prgrp->mon.mon_data_kn, name);
@@ -2880,13 +3039,24 @@ out_destroy:
  * Add all subdirectories of mon_data for "ctrl_mon" groups
  * and "monitor" groups with given domain id.
  */
+<<<<<<< HEAD
 static void mkdir_mondata_subdir_allrdtgrp(struct rdt_resource *r,
 					   struct rdt_domain *d)
+=======
+void mkdir_mondata_subdir_allrdtgrp(struct rdt_resource *r,
+				    struct rdt_domain *d)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct kernfs_node *parent_kn;
 	struct rdtgroup *prgrp, *crgrp;
 	struct list_head *head;
 
+<<<<<<< HEAD
+=======
+	if (!r->mon_enabled)
+		return;
+
+>>>>>>> b7ba80a49124 (Commit)
 	list_for_each_entry(prgrp, &rdt_all_groups, rdtgroup_list) {
 		parent_kn = prgrp->mon.mon_data_kn;
 		mkdir_mondata_subdir(parent_kn, d, r, prgrp);
@@ -2954,7 +3124,11 @@ static int mkdir_mondata_all(struct kernfs_node *parent_kn,
 	 * Create the subdirectories for each domain. Note that all events
 	 * in a domain like L3 are grouped into a resource whose domain is L3
 	 */
+<<<<<<< HEAD
 	for_each_mon_capable_rdt_resource(r) {
+=======
+	for_each_mon_enabled_rdt_resource(r) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = mkdir_mondata_subdir_alldom(kn, r, prgrp);
 		if (ret)
 			goto out_destroy;
@@ -3098,12 +3272,17 @@ static int rdtgroup_init_cat(struct resctrl_schema *s, u32 closid)
 }
 
 /* Initialize MBA resource with default values. */
+<<<<<<< HEAD
 static void rdtgroup_init_mba(struct rdt_resource *r, u32 closid)
+=======
+static void rdtgroup_init_mba(struct rdt_resource *r)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct resctrl_staged_config *cfg;
 	struct rdt_domain *d;
 
 	list_for_each_entry(d, &r->domains, list) {
+<<<<<<< HEAD
 		if (is_mba_sc(r)) {
 			d->mbps_val[closid] = MBA_MAX_MBPS;
 			continue;
@@ -3111,6 +3290,10 @@ static void rdtgroup_init_mba(struct rdt_resource *r, u32 closid)
 
 		cfg = &d->staged_config[CDP_NONE];
 		cfg->new_ctrl = r->default_ctrl;
+=======
+		cfg = &d->staged_config[CDP_NONE];
+		cfg->new_ctrl = is_mba_sc(r) ? MBA_MAX_MBPS : r->default_ctrl;
+>>>>>>> b7ba80a49124 (Commit)
 		cfg->have_new_ctrl = true;
 	}
 }
@@ -3120,6 +3303,7 @@ static int rdtgroup_init_alloc(struct rdtgroup *rdtgrp)
 {
 	struct resctrl_schema *s;
 	struct rdt_resource *r;
+<<<<<<< HEAD
 	int ret = 0;
 
 	rdt_staged_configs_clear();
@@ -3135,21 +3319,41 @@ static int rdtgroup_init_alloc(struct rdtgroup *rdtgrp)
 			ret = rdtgroup_init_cat(s, rdtgrp->closid);
 			if (ret < 0)
 				goto out;
+=======
+	int ret;
+
+	list_for_each_entry(s, &resctrl_schema_all, list) {
+		r = s->res;
+		if (r->rid == RDT_RESOURCE_MBA) {
+			rdtgroup_init_mba(r);
+		} else {
+			ret = rdtgroup_init_cat(s, rdtgrp->closid);
+			if (ret < 0)
+				return ret;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		ret = resctrl_arch_update_domains(r, rdtgrp->closid);
 		if (ret < 0) {
 			rdt_last_cmd_puts("Failed to initialize allocations\n");
+<<<<<<< HEAD
 			goto out;
+=======
+			return ret;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 	}
 
 	rdtgrp->mode = RDT_MODE_SHAREABLE;
 
+<<<<<<< HEAD
 out:
 	rdt_staged_configs_clear();
 	return ret;
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int mkdir_rdt_prepare(struct kernfs_node *parent_kn,
@@ -3560,6 +3764,7 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void domain_destroy_mon_state(struct rdt_domain *d)
 {
 	bitmap_free(d->rmid_busy_llc);
@@ -3664,6 +3869,8 @@ int resctrl_online_domain(struct rdt_resource *r, struct rdt_domain *d)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * rdtgroup_init - rdtgroup initialization
  *

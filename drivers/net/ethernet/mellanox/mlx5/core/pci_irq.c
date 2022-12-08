@@ -4,7 +4,10 @@
 #include <linux/interrupt.h>
 #include <linux/notifier.h>
 #include <linux/mlx5/driver.h>
+<<<<<<< HEAD
 #include <linux/mlx5/vport.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "mlx5_core.h"
 #include "mlx5_irq.h"
 #include "pci_irq.h"
@@ -102,7 +105,11 @@ int mlx5_set_msix_vec_count(struct mlx5_core_dev *dev, int function_id,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	ret = mlx5_vport_get_other_func_general_cap(dev, function_id, query_cap);
+=======
+	ret = mlx5_vport_get_other_func_cap(dev, function_id, query_cap);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto out;
 

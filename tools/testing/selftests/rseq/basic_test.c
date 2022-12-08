@@ -22,8 +22,11 @@ void test_cpu_pointer(void)
 	CPU_ZERO(&test_affinity);
 	for (i = 0; i < CPU_SETSIZE; i++) {
 		if (CPU_ISSET(i, &affinity)) {
+<<<<<<< HEAD
 			int node;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			CPU_SET(i, &test_affinity);
 			sched_setaffinity(0, sizeof(test_affinity),
 					&test_affinity);
@@ -31,8 +34,11 @@ void test_cpu_pointer(void)
 			assert(rseq_current_cpu() == i);
 			assert(rseq_current_cpu_raw() == i);
 			assert(rseq_cpu_start() == i);
+<<<<<<< HEAD
 			node = rseq_fallback_current_node();
 			assert(rseq_current_node_id() == node);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			CPU_CLR(i, &test_affinity);
 		}
 	}

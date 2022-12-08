@@ -1,7 +1,11 @@
 # SPDX-License-Identifier: GPL-2.0
 menuconfig FSL_SOC_BOOKE
 	bool "Freescale Book-E Machine Type"
+<<<<<<< HEAD
 	depends on PPC_E500
+=======
+	depends on PPC_85xx || PPC_BOOK3E
+>>>>>>> b7ba80a49124 (Commit)
 	select FSL_SOC
 	select PPC_UDBG_16550
 	select MPIC
@@ -241,6 +245,11 @@ endif # PPC32
 config PPC_QEMU_E500
 	bool "QEMU generic e500 platform"
 	select DEFAULT_UIMAGE
+<<<<<<< HEAD
+=======
+	select E500
+	select PPC_E500MC if PPC64
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  This option enables support for running as a QEMU guest using
 	  QEMU's generic e500 machine.  This is not required if you're
@@ -256,6 +265,10 @@ config PPC_QEMU_E500
 config CORENET_GENERIC
 	bool "Freescale CoreNet Generic"
 	select DEFAULT_UIMAGE
+<<<<<<< HEAD
+=======
+	select E500
+>>>>>>> b7ba80a49124 (Commit)
 	select PPC_E500MC
 	select PHYS_64BIT
 	select SWIOTLB

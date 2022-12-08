@@ -16,7 +16,11 @@
 /*
  * Class of mediation types in the AppArmor policy db
  */
+<<<<<<< HEAD
 #define AA_CLASS_NONE		0
+=======
+#define AA_CLASS_ENTRY		0
+>>>>>>> b7ba80a49124 (Commit)
 #define AA_CLASS_UNKNOWN	1
 #define AA_CLASS_FILE		2
 #define AA_CLASS_CAP		3
@@ -26,6 +30,7 @@
 #define AA_CLASS_MOUNT		7
 #define AA_CLASS_PTRACE		9
 #define AA_CLASS_SIGNAL		10
+<<<<<<< HEAD
 #define AA_CLASS_XMATCH		11
 #define AA_CLASS_NET		14
 #define AA_CLASS_LABEL		16
@@ -38,6 +43,12 @@
 #define AA_CLASS_DBUS		32
 
 #define AA_CLASS_LAST		AA_CLASS_DBUS
+=======
+#define AA_CLASS_NET		14
+#define AA_CLASS_LABEL		16
+
+#define AA_CLASS_LAST		AA_CLASS_LABEL
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Control parameters settable through module/boot flags */
 extern enum audit_mode aa_g_audit;
@@ -51,6 +62,7 @@ extern bool aa_g_logsyscall;
 extern bool aa_g_paranoid_load;
 extern unsigned int aa_g_path_max;
 
+<<<<<<< HEAD
 #ifdef CONFIG_SECURITY_APPARMOR_EXPORT_BINARY
 #define AA_MIN_CLEVEL zstd_min_clevel()
 #define AA_MAX_CLEVEL zstd_max_clevel()
@@ -62,4 +74,6 @@ extern unsigned int aa_g_path_max;
 #endif /* CONFIG_SECURITY_APPARMOR_EXPORT_BINARY */
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __APPARMOR_H */

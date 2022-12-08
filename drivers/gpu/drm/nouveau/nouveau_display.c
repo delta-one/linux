@@ -35,14 +35,23 @@
 #include <drm/drm_probe_helper.h>
 #include <drm/drm_vblank.h>
 
+<<<<<<< HEAD
+=======
+#include "nouveau_fbcon.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "nouveau_crtc.h"
 #include "nouveau_gem.h"
 #include "nouveau_connector.h"
 #include "nv50_display.h"
 
 #include <nvif/class.h>
+<<<<<<< HEAD
 #include <nvif/if0011.h>
 #include <nvif/if0013.h>
+=======
+#include <nvif/cl0046.h>
+#include <nvif/event.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <dispnv50/crc.h>
 
 int
@@ -51,7 +60,11 @@ nouveau_display_vblank_enable(struct drm_crtc *crtc)
 	struct nouveau_crtc *nv_crtc;
 
 	nv_crtc = nouveau_crtc(crtc);
+<<<<<<< HEAD
 	nvif_event_allow(&nv_crtc->vblank);
+=======
+	nvif_notify_get(&nv_crtc->vblank);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -62,7 +75,11 @@ nouveau_display_vblank_disable(struct drm_crtc *crtc)
 	struct nouveau_crtc *nv_crtc;
 
 	nv_crtc = nouveau_crtc(crtc);
+<<<<<<< HEAD
 	nvif_event_block(&nv_crtc->vblank);
+=======
+	nvif_notify_put(&nv_crtc->vblank);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline int
@@ -83,6 +100,7 @@ static bool
 nouveau_display_scanoutpos_head(struct drm_crtc *crtc, int *vpos, int *hpos,
 				ktime_t *stime, ktime_t *etime)
 {
+<<<<<<< HEAD
 	struct drm_vblank_crtc *vblank = &crtc->dev->vblank[drm_crtc_index(crtc)];
 	struct nvif_head *head = &nouveau_crtc(crtc)->head;
 	struct nvif_head_scanoutpos_v0 args;
@@ -97,6 +115,26 @@ nouveau_display_scanoutpos_head(struct drm_crtc *crtc, int *vpos, int *hpos,
 			return false;
 
 		if (args.vline) {
+=======
+	struct {
+		struct nv04_disp_mthd_v0 base;
+		struct nv04_disp_scanoutpos_v0 scan;
+	} args = {
+		.base.method = NV04_DISP_SCANOUTPOS,
+		.base.head = nouveau_crtc(crtc)->index,
+	};
+	struct nouveau_display *disp = nouveau_display(crtc->dev);
+	struct drm_vblank_crtc *vblank = &crtc->dev->vblank[drm_crtc_index(crtc)];
+	int retry = 20;
+	bool ret = false;
+
+	do {
+		ret = nvif_mthd(&disp->disp.object, 0, &args, sizeof(args));
+		if (ret != 0)
+			return false;
+
+		if (args.scan.vline) {
+>>>>>>> b7ba80a49124 (Commit)
 			ret = true;
 			break;
 		}
@@ -104,10 +142,18 @@ nouveau_display_scanoutpos_head(struct drm_crtc *crtc, int *vpos, int *hpos,
 		if (retry) ndelay(vblank->linedur_ns);
 	} while (retry--);
 
+<<<<<<< HEAD
 	*hpos = args.hline;
 	*vpos = calc(args.vblanks, args.vblanke, args.vtotal, args.vline);
 	if (stime) *stime = ns_to_ktime(args.time[0]);
 	if (etime) *etime = ns_to_ktime(args.time[1]);
+=======
+	*hpos = args.scan.hline;
+	*vpos = calc(args.scan.vblanks, args.scan.vblanke,
+		     args.scan.vtotal, args.scan.vline);
+	if (stime) *stime = ns_to_ktime(args.scan.time[0]);
+	if (etime) *etime = ns_to_ktime(args.scan.time[1]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -391,7 +437,11 @@ nouveau_user_framebuffer_create(struct drm_device *dev,
 
 static const struct drm_mode_config_funcs nouveau_mode_config_funcs = {
 	.fb_create = nouveau_user_framebuffer_create,
+<<<<<<< HEAD
 	.output_poll_changed = drm_fb_helper_output_poll_changed,
+=======
+	.output_poll_changed = nouveau_fbcon_output_poll_changed,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 
@@ -450,9 +500,15 @@ nouveau_display_hpd_resume(struct drm_device *dev)
 {
 	struct nouveau_drm *drm = nouveau_drm(dev);
 
+<<<<<<< HEAD
 	spin_lock_irq(&drm->hpd_lock);
 	drm->hpd_pending = ~0;
 	spin_unlock_irq(&drm->hpd_lock);
+=======
+	mutex_lock(&drm->hpd_lock);
+	drm->hpd_pending = ~0;
+	mutex_unlock(&drm->hpd_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	schedule_work(&drm->hpd_work);
 }
@@ -469,10 +525,17 @@ nouveau_display_hpd_work(struct work_struct *work)
 
 	pm_runtime_get_sync(dev->dev);
 
+<<<<<<< HEAD
 	spin_lock_irq(&drm->hpd_lock);
 	pending = drm->hpd_pending;
 	drm->hpd_pending = 0;
 	spin_unlock_irq(&drm->hpd_lock);
+=======
+	mutex_lock(&drm->hpd_lock);
+	pending = drm->hpd_pending;
+	drm->hpd_pending = 0;
+	mutex_unlock(&drm->hpd_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Nothing to do, exit early without updating the last busy counter */
 	if (!pending)
@@ -482,13 +545,19 @@ nouveau_display_hpd_work(struct work_struct *work)
 	drm_connector_list_iter_begin(dev, &conn_iter);
 
 	nouveau_for_each_non_mst_connector_iter(connector, &conn_iter) {
+<<<<<<< HEAD
 		struct nouveau_connector *nv_connector = nouveau_connector(connector);
 		enum drm_connector_status old_status = connector->status;
 		u64 bits, old_epoch_counter = connector->epoch_counter;
+=======
+		enum drm_connector_status old_status = connector->status;
+		u64 old_epoch_counter = connector->epoch_counter;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (!(pending & drm_connector_mask(connector)))
 			continue;
 
+<<<<<<< HEAD
 		spin_lock_irq(&drm->hpd_lock);
 		bits = nv_connector->hpd_pending;
 		nv_connector->hpd_pending = 0;
@@ -506,6 +575,10 @@ nouveau_display_hpd_work(struct work_struct *work)
 		}
 
 		connector->status = drm_helper_probe_detect(connector, NULL, false);
+=======
+		connector->status = drm_helper_probe_detect(connector, NULL,
+							    false);
+>>>>>>> b7ba80a49124 (Commit)
 		if (old_epoch_counter == connector->epoch_counter)
 			continue;
 
@@ -583,8 +656,12 @@ nouveau_display_init(struct drm_device *dev, bool resume, bool runtime)
 	drm_connector_list_iter_begin(dev, &conn_iter);
 	nouveau_for_each_non_mst_connector_iter(connector, &conn_iter) {
 		struct nouveau_connector *conn = nouveau_connector(connector);
+<<<<<<< HEAD
 		nvif_event_allow(&conn->hpd);
 		nvif_event_allow(&conn->irq);
+=======
+		nvif_notify_get(&conn->hpd);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	drm_connector_list_iter_end(&conn_iter);
 
@@ -619,8 +696,12 @@ nouveau_display_fini(struct drm_device *dev, bool suspend, bool runtime)
 	drm_connector_list_iter_begin(dev, &conn_iter);
 	nouveau_for_each_non_mst_connector_iter(connector, &conn_iter) {
 		struct nouveau_connector *conn = nouveau_connector(connector);
+<<<<<<< HEAD
 		nvif_event_block(&conn->irq);
 		nvif_event_block(&conn->hpd);
+=======
+		nvif_notify_put(&conn->hpd);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	drm_connector_list_iter_end(&conn_iter);
 
@@ -671,6 +752,10 @@ int
 nouveau_display_create(struct drm_device *dev)
 {
 	struct nouveau_drm *drm = nouveau_drm(dev);
+<<<<<<< HEAD
+=======
+	struct nvkm_device *device = nvxx_device(&drm->client.device);
+>>>>>>> b7ba80a49124 (Commit)
 	struct nouveau_display *disp;
 	int ret;
 
@@ -683,6 +768,10 @@ nouveau_display_create(struct drm_device *dev)
 	drm_mode_create_dvi_i_properties(dev);
 
 	dev->mode_config.funcs = &nouveau_mode_config_funcs;
+<<<<<<< HEAD
+=======
+	dev->mode_config.fb_base = device->func->resource_addr(device, 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev->mode_config.min_width = 0;
 	dev->mode_config.min_height = 0;
@@ -744,7 +833,11 @@ nouveau_display_create(struct drm_device *dev)
 	}
 
 	INIT_WORK(&drm->hpd_work, nouveau_display_hpd_work);
+<<<<<<< HEAD
 	spin_lock_init(&drm->hpd_lock);
+=======
+	mutex_init(&drm->hpd_lock);
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_ACPI
 	drm->acpi_nb.notifier_call = nouveau_display_acpi_ntfy;
 	register_acpi_notifier(&drm->acpi_nb);
@@ -778,7 +871,12 @@ nouveau_display_destroy(struct drm_device *dev)
 
 	nvif_disp_dtor(&disp->disp);
 
+<<<<<<< HEAD
 	drm->display = NULL;
+=======
+	nouveau_drm(dev)->display = NULL;
+	mutex_destroy(&drm->hpd_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(disp);
 }
 
@@ -787,9 +885,12 @@ nouveau_display_suspend(struct drm_device *dev, bool runtime)
 {
 	struct nouveau_display *disp = nouveau_display(dev);
 
+<<<<<<< HEAD
 	/* Disable console. */
 	drm_fb_helper_set_suspend_unlocked(dev->fb_helper, true);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (drm_drv_uses_atomic_modeset(dev)) {
 		if (!runtime) {
 			disp->suspend = drm_atomic_helper_suspend(dev);
@@ -817,10 +918,15 @@ nouveau_display_resume(struct drm_device *dev, bool runtime)
 			drm_atomic_helper_resume(dev, disp->suspend);
 			disp->suspend = NULL;
 		}
+<<<<<<< HEAD
 	}
 
 	/* Enable console. */
 	drm_fb_helper_set_suspend_unlocked(dev->fb_helper, false);
+=======
+		return;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int

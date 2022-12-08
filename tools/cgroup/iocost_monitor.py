@@ -61,11 +61,14 @@ autop_names = {
 }
 
 class BlkgIterator:
+<<<<<<< HEAD
     def __init__(self, root_blkcg, q_id, include_dying=False):
         self.include_dying = include_dying
         self.blkgs = []
         self.walk(root_blkcg, q_id, '')
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
     def blkcg_name(blkcg):
         return blkcg.css.cgroup.kn.name.string_().decode('utf-8')
 
@@ -87,6 +90,14 @@ class BlkgIterator:
                                      blkcg.css.children.address_of_(), 'css.sibling'):
             self.walk(c, q_id, path)
 
+<<<<<<< HEAD
+=======
+    def __init__(self, root_blkcg, q_id, include_dying=False):
+        self.include_dying = include_dying
+        self.blkgs = []
+        self.walk(root_blkcg, q_id, '')
+
+>>>>>>> b7ba80a49124 (Commit)
     def __iter__(self):
         return iter(self.blkgs)
 

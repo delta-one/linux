@@ -924,6 +924,7 @@ err1:
 
 static void gfx_v8_0_free_microcode(struct amdgpu_device *adev)
 {
+<<<<<<< HEAD
 	amdgpu_ucode_release(&adev->gfx.pfp_fw);
 	amdgpu_ucode_release(&adev->gfx.me_fw);
 	amdgpu_ucode_release(&adev->gfx.ce_fw);
@@ -932,6 +933,22 @@ static void gfx_v8_0_free_microcode(struct amdgpu_device *adev)
 	if ((adev->asic_type != CHIP_STONEY) &&
 	    (adev->asic_type != CHIP_TOPAZ))
 		amdgpu_ucode_release(&adev->gfx.mec2_fw);
+=======
+	release_firmware(adev->gfx.pfp_fw);
+	adev->gfx.pfp_fw = NULL;
+	release_firmware(adev->gfx.me_fw);
+	adev->gfx.me_fw = NULL;
+	release_firmware(adev->gfx.ce_fw);
+	adev->gfx.ce_fw = NULL;
+	release_firmware(adev->gfx.rlc_fw);
+	adev->gfx.rlc_fw = NULL;
+	release_firmware(adev->gfx.mec_fw);
+	adev->gfx.mec_fw = NULL;
+	if ((adev->asic_type != CHIP_STONEY) &&
+	    (adev->asic_type != CHIP_TOPAZ))
+		release_firmware(adev->gfx.mec2_fw);
+	adev->gfx.mec2_fw = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	kfree(adev->gfx.rlc.register_list_format);
 }
@@ -983,6 +1000,7 @@ static int gfx_v8_0_init_microcode(struct amdgpu_device *adev)
 
 	if (adev->asic_type >= CHIP_POLARIS10 && adev->asic_type <= CHIP_POLARIS12) {
 		snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_pfp_2.bin", chip_name);
+<<<<<<< HEAD
 		err = amdgpu_ucode_request(adev, &adev->gfx.pfp_fw, fw_name);
 		if (err == -ENODEV) {
 			snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_pfp.bin", chip_name);
@@ -994,12 +1012,29 @@ static int gfx_v8_0_init_microcode(struct amdgpu_device *adev)
 	}
 	if (err)
 		goto out;
+=======
+		err = request_firmware(&adev->gfx.pfp_fw, fw_name, adev->dev);
+		if (err == -ENOENT) {
+			snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_pfp.bin", chip_name);
+			err = request_firmware(&adev->gfx.pfp_fw, fw_name, adev->dev);
+		}
+	} else {
+		snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_pfp.bin", chip_name);
+		err = request_firmware(&adev->gfx.pfp_fw, fw_name, adev->dev);
+	}
+	if (err)
+		goto out;
+	err = amdgpu_ucode_validate(adev->gfx.pfp_fw);
+	if (err)
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	cp_hdr = (const struct gfx_firmware_header_v1_0 *)adev->gfx.pfp_fw->data;
 	adev->gfx.pfp_fw_version = le32_to_cpu(cp_hdr->header.ucode_version);
 	adev->gfx.pfp_feature_version = le32_to_cpu(cp_hdr->ucode_feature_version);
 
 	if (adev->asic_type >= CHIP_POLARIS10 && adev->asic_type <= CHIP_POLARIS12) {
 		snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_me_2.bin", chip_name);
+<<<<<<< HEAD
 		err = amdgpu_ucode_request(adev, &adev->gfx.me_fw, fw_name);
 		if (err == -ENODEV) {
 			snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_me.bin", chip_name);
@@ -1011,6 +1046,22 @@ static int gfx_v8_0_init_microcode(struct amdgpu_device *adev)
 	}
 	if (err)
 		goto out;
+=======
+		err = request_firmware(&adev->gfx.me_fw, fw_name, adev->dev);
+		if (err == -ENOENT) {
+			snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_me.bin", chip_name);
+			err = request_firmware(&adev->gfx.me_fw, fw_name, adev->dev);
+		}
+	} else {
+		snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_me.bin", chip_name);
+		err = request_firmware(&adev->gfx.me_fw, fw_name, adev->dev);
+	}
+	if (err)
+		goto out;
+	err = amdgpu_ucode_validate(adev->gfx.me_fw);
+	if (err)
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	cp_hdr = (const struct gfx_firmware_header_v1_0 *)adev->gfx.me_fw->data;
 	adev->gfx.me_fw_version = le32_to_cpu(cp_hdr->header.ucode_version);
 
@@ -1018,6 +1069,7 @@ static int gfx_v8_0_init_microcode(struct amdgpu_device *adev)
 
 	if (adev->asic_type >= CHIP_POLARIS10 && adev->asic_type <= CHIP_POLARIS12) {
 		snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_ce_2.bin", chip_name);
+<<<<<<< HEAD
 		err = amdgpu_ucode_request(adev, &adev->gfx.ce_fw, fw_name);
 		if (err == -ENODEV) {
 			snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_ce.bin", chip_name);
@@ -1029,6 +1081,22 @@ static int gfx_v8_0_init_microcode(struct amdgpu_device *adev)
 	}
 	if (err)
 		goto out;
+=======
+		err = request_firmware(&adev->gfx.ce_fw, fw_name, adev->dev);
+		if (err == -ENOENT) {
+			snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_ce.bin", chip_name);
+			err = request_firmware(&adev->gfx.ce_fw, fw_name, adev->dev);
+		}
+	} else {
+		snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_ce.bin", chip_name);
+		err = request_firmware(&adev->gfx.ce_fw, fw_name, adev->dev);
+	}
+	if (err)
+		goto out;
+	err = amdgpu_ucode_validate(adev->gfx.ce_fw);
+	if (err)
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	cp_hdr = (const struct gfx_firmware_header_v1_0 *)adev->gfx.ce_fw->data;
 	adev->gfx.ce_fw_version = le32_to_cpu(cp_hdr->header.ucode_version);
 	adev->gfx.ce_feature_version = le32_to_cpu(cp_hdr->ucode_feature_version);
@@ -1045,9 +1113,16 @@ static int gfx_v8_0_init_microcode(struct amdgpu_device *adev)
 		adev->virt.chained_ib_support = false;
 
 	snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_rlc.bin", chip_name);
+<<<<<<< HEAD
 	err = amdgpu_ucode_request(adev, &adev->gfx.rlc_fw, fw_name);
 	if (err)
 		goto out;
+=======
+	err = request_firmware(&adev->gfx.rlc_fw, fw_name, adev->dev);
+	if (err)
+		goto out;
+	err = amdgpu_ucode_validate(adev->gfx.rlc_fw);
+>>>>>>> b7ba80a49124 (Commit)
 	rlc_hdr = (const struct rlc_firmware_header_v2_0 *)adev->gfx.rlc_fw->data;
 	adev->gfx.rlc_fw_version = le32_to_cpu(rlc_hdr->header.ucode_version);
 	adev->gfx.rlc_feature_version = le32_to_cpu(rlc_hdr->ucode_feature_version);
@@ -1094,6 +1169,7 @@ static int gfx_v8_0_init_microcode(struct amdgpu_device *adev)
 
 	if (adev->asic_type >= CHIP_POLARIS10 && adev->asic_type <= CHIP_POLARIS12) {
 		snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_mec_2.bin", chip_name);
+<<<<<<< HEAD
 		err = amdgpu_ucode_request(adev, &adev->gfx.mec_fw, fw_name);
 		if (err == -ENODEV) {
 			snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_mec.bin", chip_name);
@@ -1105,6 +1181,22 @@ static int gfx_v8_0_init_microcode(struct amdgpu_device *adev)
 	}
 	if (err)
 		goto out;
+=======
+		err = request_firmware(&adev->gfx.mec_fw, fw_name, adev->dev);
+		if (err == -ENOENT) {
+			snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_mec.bin", chip_name);
+			err = request_firmware(&adev->gfx.mec_fw, fw_name, adev->dev);
+		}
+	} else {
+		snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_mec.bin", chip_name);
+		err = request_firmware(&adev->gfx.mec_fw, fw_name, adev->dev);
+	}
+	if (err)
+		goto out;
+	err = amdgpu_ucode_validate(adev->gfx.mec_fw);
+	if (err)
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	cp_hdr = (const struct gfx_firmware_header_v1_0 *)adev->gfx.mec_fw->data;
 	adev->gfx.mec_fw_version = le32_to_cpu(cp_hdr->header.ucode_version);
 	adev->gfx.mec_feature_version = le32_to_cpu(cp_hdr->ucode_feature_version);
@@ -1113,6 +1205,7 @@ static int gfx_v8_0_init_microcode(struct amdgpu_device *adev)
 	    (adev->asic_type != CHIP_TOPAZ)) {
 		if (adev->asic_type >= CHIP_POLARIS10 && adev->asic_type <= CHIP_POLARIS12) {
 			snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_mec2_2.bin", chip_name);
+<<<<<<< HEAD
 			err = amdgpu_ucode_request(adev, &adev->gfx.mec2_fw, fw_name);
 			if (err == -ENODEV) {
 				snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_mec2.bin", chip_name);
@@ -1123,6 +1216,21 @@ static int gfx_v8_0_init_microcode(struct amdgpu_device *adev)
 			err = amdgpu_ucode_request(adev, &adev->gfx.mec2_fw, fw_name);
 		}
 		if (!err) {
+=======
+			err = request_firmware(&adev->gfx.mec2_fw, fw_name, adev->dev);
+			if (err == -ENOENT) {
+				snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_mec2.bin", chip_name);
+				err = request_firmware(&adev->gfx.mec2_fw, fw_name, adev->dev);
+			}
+		} else {
+			snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_mec2.bin", chip_name);
+			err = request_firmware(&adev->gfx.mec2_fw, fw_name, adev->dev);
+		}
+		if (!err) {
+			err = amdgpu_ucode_validate(adev->gfx.mec2_fw);
+			if (err)
+				goto out;
+>>>>>>> b7ba80a49124 (Commit)
 			cp_hdr = (const struct gfx_firmware_header_v1_0 *)
 				adev->gfx.mec2_fw->data;
 			adev->gfx.mec2_fw_version =
@@ -1197,12 +1305,27 @@ out:
 		dev_err(adev->dev,
 			"gfx8: Failed to load firmware \"%s\"\n",
 			fw_name);
+<<<<<<< HEAD
 		amdgpu_ucode_release(&adev->gfx.pfp_fw);
 		amdgpu_ucode_release(&adev->gfx.me_fw);
 		amdgpu_ucode_release(&adev->gfx.ce_fw);
 		amdgpu_ucode_release(&adev->gfx.rlc_fw);
 		amdgpu_ucode_release(&adev->gfx.mec_fw);
 		amdgpu_ucode_release(&adev->gfx.mec2_fw);
+=======
+		release_firmware(adev->gfx.pfp_fw);
+		adev->gfx.pfp_fw = NULL;
+		release_firmware(adev->gfx.me_fw);
+		adev->gfx.me_fw = NULL;
+		release_firmware(adev->gfx.ce_fw);
+		adev->gfx.ce_fw = NULL;
+		release_firmware(adev->gfx.rlc_fw);
+		adev->gfx.rlc_fw = NULL;
+		release_firmware(adev->gfx.mec_fw);
+		adev->gfx.mec_fw = NULL;
+		release_firmware(adev->gfx.mec2_fw);
+		adev->gfx.mec2_fw = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return err;
 }
@@ -1312,8 +1435,12 @@ static int gfx_v8_0_mec_init(struct amdgpu_device *adev)
 	mec_hpd_size = adev->gfx.num_compute_rings * GFX8_MEC_HPD_SIZE;
 	if (mec_hpd_size) {
 		r = amdgpu_bo_create_reserved(adev, mec_hpd_size, PAGE_SIZE,
+<<<<<<< HEAD
 					      AMDGPU_GEM_DOMAIN_VRAM |
 					      AMDGPU_GEM_DOMAIN_GTT,
+=======
+					      AMDGPU_GEM_DOMAIN_VRAM,
+>>>>>>> b7ba80a49124 (Commit)
 					      &adev->gfx.mec.hpd_eop_obj,
 					      &adev->gfx.mec.hpd_eop_gpu_addr,
 					      (void **)&hpd);
@@ -4616,8 +4743,11 @@ static int gfx_v8_0_kiq_init_queue(struct amdgpu_ring *ring)
 		memset((void *)mqd, 0, sizeof(struct vi_mqd_allocation));
 		((struct vi_mqd_allocation *)mqd)->dynamic_cu_mask = 0xFFFFFFFF;
 		((struct vi_mqd_allocation *)mqd)->dynamic_rb_mask = 0xFFFFFFFF;
+<<<<<<< HEAD
 		if (amdgpu_sriov_vf(adev) && adev->in_suspend)
 			amdgpu_ring_clear_ring(ring);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		mutex_lock(&adev->srbm_mutex);
 		vi_srbm_select(adev, ring->me, ring->pipe, ring->queue, 0);
 		gfx_v8_0_mqd_init(ring);

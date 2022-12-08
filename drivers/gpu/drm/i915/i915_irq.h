@@ -66,12 +66,24 @@ bool intel_irqs_enabled(struct drm_i915_private *dev_priv);
 void intel_synchronize_irq(struct drm_i915_private *i915);
 void intel_synchronize_hardirq(struct drm_i915_private *i915);
 
+<<<<<<< HEAD
+=======
+int intel_get_crtc_scanline(struct intel_crtc *crtc);
+>>>>>>> b7ba80a49124 (Commit)
 void gen8_irq_power_well_post_enable(struct drm_i915_private *dev_priv,
 				     u8 pipe_mask);
 void gen8_irq_power_well_pre_disable(struct drm_i915_private *dev_priv,
 				     u8 pipe_mask);
 u32 gen8_de_pipe_underrun_mask(struct drm_i915_private *dev_priv);
 
+<<<<<<< HEAD
+=======
+bool intel_crtc_get_vblank_timestamp(struct drm_crtc *crtc, int *max_error,
+				     ktime_t *vblank_time, bool in_vblank_irq);
+
+u32 i915_get_vblank_counter(struct drm_crtc *crtc);
+u32 g4x_get_vblank_counter(struct drm_crtc *crtc);
+>>>>>>> b7ba80a49124 (Commit)
 
 int i8xx_enable_vblank(struct drm_crtc *crtc);
 int i915gm_enable_vblank(struct drm_crtc *crtc);
@@ -84,9 +96,18 @@ void i965_disable_vblank(struct drm_crtc *crtc);
 void ilk_disable_vblank(struct drm_crtc *crtc);
 void bdw_disable_vblank(struct drm_crtc *crtc);
 
+<<<<<<< HEAD
 void gen3_irq_reset(struct intel_uncore *uncore, i915_reg_t imr,
 		    i915_reg_t iir, i915_reg_t ier);
 
+=======
+void gen2_irq_reset(struct intel_uncore *uncore);
+void gen3_irq_reset(struct intel_uncore *uncore, i915_reg_t imr,
+		    i915_reg_t iir, i915_reg_t ier);
+
+void gen2_irq_init(struct intel_uncore *uncore,
+		   u32 imr_val, u32 ier_val);
+>>>>>>> b7ba80a49124 (Commit)
 void gen3_irq_init(struct intel_uncore *uncore,
 		   i915_reg_t imr, u32 imr_val,
 		   i915_reg_t ier, u32 ier_val,
@@ -102,6 +123,12 @@ void gen3_irq_init(struct intel_uncore *uncore,
 #define GEN3_IRQ_RESET(uncore, type) \
 	gen3_irq_reset((uncore), type##IMR, type##IIR, type##IER)
 
+<<<<<<< HEAD
+=======
+#define GEN2_IRQ_RESET(uncore) \
+	gen2_irq_reset(uncore)
+
+>>>>>>> b7ba80a49124 (Commit)
 #define GEN8_IRQ_INIT_NDX(uncore, type, which, imr_val, ier_val) \
 ({ \
 	unsigned int which_ = which; \
@@ -117,4 +144,10 @@ void gen3_irq_init(struct intel_uncore *uncore,
 		      type##IER, ier_val, \
 		      type##IIR)
 
+<<<<<<< HEAD
+=======
+#define GEN2_IRQ_INIT(uncore, imr_val, ier_val) \
+	gen2_irq_init((uncore), imr_val, ier_val)
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __I915_IRQ_H__ */

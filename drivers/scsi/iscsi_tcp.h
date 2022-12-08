@@ -28,9 +28,12 @@ struct iscsi_sw_tcp_send {
 
 struct iscsi_sw_tcp_conn {
 	struct socket		*sock;
+<<<<<<< HEAD
 	/* Taken when accessing the sock from the netlink/sysfs interface */
 	struct mutex		sock_lock;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct work_struct	recvwork;
 	bool			queue_recv;
 

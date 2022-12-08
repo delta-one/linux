@@ -3441,7 +3441,12 @@ static int adv7842_register_clients(struct v4l2_subdev *sd)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int adv7842_probe(struct i2c_client *client)
+=======
+static int adv7842_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct adv7842_state *state;
 	static const struct v4l2_dv_timings cea640x480 =
@@ -3619,7 +3624,11 @@ static struct i2c_driver adv7842_driver = {
 	.driver = {
 		.name = "adv7842",
 	},
+<<<<<<< HEAD
 	.probe_new = adv7842_probe,
+=======
+	.probe = adv7842_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = adv7842_remove,
 	.id_table = adv7842_id,
 };

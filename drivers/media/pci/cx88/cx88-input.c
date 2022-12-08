@@ -586,7 +586,11 @@ void cx88_i2c_init_ir(struct cx88_core *core)
 {
 	struct i2c_board_info info;
 	static const unsigned short default_addr_list[] = {
+<<<<<<< HEAD
 		0x18, 0x33, 0x6b, 0x71,
+=======
+		0x18, 0x6b, 0x71,
+>>>>>>> b7ba80a49124 (Commit)
 		I2C_CLIENT_END
 	};
 	static const unsigned short pvr2000_addr_list[] = {

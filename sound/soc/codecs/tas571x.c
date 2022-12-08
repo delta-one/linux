@@ -718,6 +718,7 @@ static const struct regmap_config tas5721_regmap_config = {
 	.volatile_table			= &tas571x_volatile_regs,
 };
 
+<<<<<<< HEAD
 static const char *const tas5733_supply_names[] = {
 	"AVDD",
 	"DVDD",
@@ -775,6 +776,8 @@ static const struct tas571x_chip tas5733_chip = {
 	.regmap_config                  = &tas5733_regmap_config,
 	.vol_reg_size                   = 2,
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct tas571x_chip tas5721_chip = {
 	.supply_names			= tas5721_supply_names,
@@ -954,7 +957,10 @@ static const struct of_device_id tas571x_of_match[] __maybe_unused = {
 	{ .compatible = "ti,tas5717", .data = &tas5717_chip, },
 	{ .compatible = "ti,tas5719", .data = &tas5717_chip, },
 	{ .compatible = "ti,tas5721", .data = &tas5721_chip, },
+<<<<<<< HEAD
 	{ .compatible = "ti,tas5733", .data = &tas5733_chip, },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 MODULE_DEVICE_TABLE(of, tas571x_of_match);
@@ -965,7 +971,10 @@ static const struct i2c_device_id tas571x_i2c_id[] = {
 	{ "tas5717", (kernel_ulong_t) &tas5717_chip },
 	{ "tas5719", (kernel_ulong_t) &tas5717_chip },
 	{ "tas5721", (kernel_ulong_t) &tas5721_chip },
+<<<<<<< HEAD
 	{ "tas5733", (kernel_ulong_t) &tas5733_chip },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 MODULE_DEVICE_TABLE(i2c, tas571x_i2c_id);

@@ -65,10 +65,13 @@ static DEFINE_IDA(vhost_vdpa_ida);
 
 static dev_t vhost_vdpa_major;
 
+<<<<<<< HEAD
 static void vhost_vdpa_iotlb_unmap(struct vhost_vdpa *v,
 				   struct vhost_iotlb *iotlb, u64 start,
 				   u64 last, u32 asid);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline u32 iotlb_to_asid(struct vhost_iotlb *iotlb)
 {
 	struct vhost_vdpa_as *as = container_of(iotlb, struct
@@ -139,7 +142,11 @@ static int vhost_vdpa_remove_as(struct vhost_vdpa *v, u32 asid)
 		return -EINVAL;
 
 	hlist_del(&as->hash_link);
+<<<<<<< HEAD
 	vhost_vdpa_iotlb_unmap(v, &as->iotlb, 0ULL, 0ULL - 1, asid);
+=======
+	vhost_iotlb_reset(&as->iotlb);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(as);
 
 	return 0;
@@ -219,6 +226,7 @@ static int vhost_vdpa_reset(struct vhost_vdpa *v)
 	return vdpa_reset(vdpa);
 }
 
+<<<<<<< HEAD
 static long vhost_vdpa_bind_mm(struct vhost_vdpa *v)
 {
 	struct vdpa_device *vdpa = v->vdpa;
@@ -241,6 +249,8 @@ static void vhost_vdpa_unbind_mm(struct vhost_vdpa *v)
 	ops->unbind_mm(vdpa);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static long vhost_vdpa_get_device_id(struct vhost_vdpa *v, u8 __user *argp)
 {
 	struct vdpa_device *vdpa = v->vdpa;
@@ -381,6 +391,7 @@ static bool vhost_vdpa_can_suspend(const struct vhost_vdpa *v)
 	return ops->suspend;
 }
 
+<<<<<<< HEAD
 static bool vhost_vdpa_can_resume(const struct vhost_vdpa *v)
 {
 	struct vdpa_device *vdpa = v->vdpa;
@@ -389,6 +400,8 @@ static bool vhost_vdpa_can_resume(const struct vhost_vdpa *v)
 	return ops->resume;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static long vhost_vdpa_get_features(struct vhost_vdpa *v, u64 __user *featurep)
 {
 	struct vdpa_device *vdpa = v->vdpa;
@@ -528,6 +541,7 @@ static long vhost_vdpa_suspend(struct vhost_vdpa *v)
 	return ops->suspend(vdpa);
 }
 
+<<<<<<< HEAD
 /* After a successful return of this ioctl the device resumes processing
  * virtqueue descriptors. The device becomes fully operational the same way it
  * was before it was suspended.
@@ -543,6 +557,8 @@ static long vhost_vdpa_resume(struct vhost_vdpa *v)
 	return ops->resume(vdpa);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static long vhost_vdpa_vring_ioctl(struct vhost_vdpa *v, unsigned int cmd,
 				   void __user *argp)
 {
@@ -651,15 +667,22 @@ static long vhost_vdpa_unlocked_ioctl(struct file *filep,
 		if (copy_from_user(&features, featurep, sizeof(features)))
 			return -EFAULT;
 		if (features & ~(VHOST_VDPA_BACKEND_FEATURES |
+<<<<<<< HEAD
 				 BIT_ULL(VHOST_BACKEND_F_SUSPEND) |
 				 BIT_ULL(VHOST_BACKEND_F_RESUME)))
+=======
+				 BIT_ULL(VHOST_BACKEND_F_SUSPEND)))
+>>>>>>> b7ba80a49124 (Commit)
 			return -EOPNOTSUPP;
 		if ((features & BIT_ULL(VHOST_BACKEND_F_SUSPEND)) &&
 		     !vhost_vdpa_can_suspend(v))
 			return -EOPNOTSUPP;
+<<<<<<< HEAD
 		if ((features & BIT_ULL(VHOST_BACKEND_F_RESUME)) &&
 		     !vhost_vdpa_can_resume(v))
 			return -EOPNOTSUPP;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		vhost_set_backend_features(&v->vdev, features);
 		return 0;
 	}
@@ -711,8 +734,11 @@ static long vhost_vdpa_unlocked_ioctl(struct file *filep,
 		features = VHOST_VDPA_BACKEND_FEATURES;
 		if (vhost_vdpa_can_suspend(v))
 			features |= BIT_ULL(VHOST_BACKEND_F_SUSPEND);
+<<<<<<< HEAD
 		if (vhost_vdpa_can_resume(v))
 			features |= BIT_ULL(VHOST_BACKEND_F_RESUME);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (copy_to_user(featurep, &features, sizeof(features)))
 			r = -EFAULT;
 		break;
@@ -728,6 +754,7 @@ static long vhost_vdpa_unlocked_ioctl(struct file *filep,
 	case VHOST_VDPA_SUSPEND:
 		r = vhost_vdpa_suspend(v);
 		break;
+<<<<<<< HEAD
 	case VHOST_VDPA_RESUME:
 		r = vhost_vdpa_resume(v);
 		break;
@@ -739,6 +766,8 @@ static long vhost_vdpa_unlocked_ioctl(struct file *filep,
 		if (r)
 			vhost_dev_reset_owner(d, NULL);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		r = vhost_dev_ioctl(&v->vdev, cmd, argp);
 		if (r == -ENOIOCTLCMD)
@@ -749,6 +778,7 @@ static long vhost_vdpa_unlocked_ioctl(struct file *filep,
 	mutex_unlock(&d->mutex);
 	return r;
 }
+<<<<<<< HEAD
 static void vhost_vdpa_general_unmap(struct vhost_vdpa *v,
 				     struct vhost_iotlb_map *map, u32 asid)
 {
@@ -763,6 +793,12 @@ static void vhost_vdpa_general_unmap(struct vhost_vdpa *v,
 
 static void vhost_vdpa_pa_unmap(struct vhost_vdpa *v, struct vhost_iotlb *iotlb,
 				u64 start, u64 last, u32 asid)
+=======
+
+static void vhost_vdpa_pa_unmap(struct vhost_vdpa *v,
+				struct vhost_iotlb *iotlb,
+				u64 start, u64 last)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct vhost_dev *dev = &v->vdev;
 	struct vhost_iotlb_map *map;
@@ -779,13 +815,22 @@ static void vhost_vdpa_pa_unmap(struct vhost_vdpa *v, struct vhost_iotlb *iotlb,
 			unpin_user_page(page);
 		}
 		atomic64_sub(PFN_DOWN(map->size), &dev->mm->pinned_vm);
+<<<<<<< HEAD
 		vhost_vdpa_general_unmap(v, map, asid);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		vhost_iotlb_map_free(iotlb, map);
 	}
 }
 
+<<<<<<< HEAD
 static void vhost_vdpa_va_unmap(struct vhost_vdpa *v, struct vhost_iotlb *iotlb,
 				u64 start, u64 last, u32 asid)
+=======
+static void vhost_vdpa_va_unmap(struct vhost_vdpa *v,
+				struct vhost_iotlb *iotlb,
+				u64 start, u64 last)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct vhost_iotlb_map *map;
 	struct vdpa_map_file *map_file;
@@ -794,21 +839,35 @@ static void vhost_vdpa_va_unmap(struct vhost_vdpa *v, struct vhost_iotlb *iotlb,
 		map_file = (struct vdpa_map_file *)map->opaque;
 		fput(map_file->file);
 		kfree(map_file);
+<<<<<<< HEAD
 		vhost_vdpa_general_unmap(v, map, asid);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		vhost_iotlb_map_free(iotlb, map);
 	}
 }
 
 static void vhost_vdpa_iotlb_unmap(struct vhost_vdpa *v,
+<<<<<<< HEAD
 				   struct vhost_iotlb *iotlb, u64 start,
 				   u64 last, u32 asid)
+=======
+				   struct vhost_iotlb *iotlb,
+				   u64 start, u64 last)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct vdpa_device *vdpa = v->vdpa;
 
 	if (vdpa->use_va)
+<<<<<<< HEAD
 		return vhost_vdpa_va_unmap(v, iotlb, start, last, asid);
 
 	return vhost_vdpa_pa_unmap(v, iotlb, start, last, asid);
+=======
+		return vhost_vdpa_va_unmap(v, iotlb, start, last);
+
+	return vhost_vdpa_pa_unmap(v, iotlb, start, last);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int perm_to_iommu_flags(u32 perm)
@@ -854,7 +913,11 @@ static int vhost_vdpa_map(struct vhost_vdpa *v, struct vhost_iotlb *iotlb,
 			r = ops->set_map(vdpa, asid, iotlb);
 	} else {
 		r = iommu_map(v->domain, iova, pa, size,
+<<<<<<< HEAD
 			      perm_to_iommu_flags(perm), GFP_KERNEL);
+=======
+			      perm_to_iommu_flags(perm));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (r) {
 		vhost_iotlb_del_range(iotlb, iova, iova + size - 1);
@@ -875,12 +938,26 @@ static void vhost_vdpa_unmap(struct vhost_vdpa *v,
 	const struct vdpa_config_ops *ops = vdpa->config;
 	u32 asid = iotlb_to_asid(iotlb);
 
+<<<<<<< HEAD
 	vhost_vdpa_iotlb_unmap(v, iotlb, iova, iova + size - 1, asid);
 
 	if (ops->set_map) {
 		if (!v->in_batch)
 			ops->set_map(vdpa, asid, iotlb);
 	}
+=======
+	vhost_vdpa_iotlb_unmap(v, iotlb, iova, iova + size - 1);
+
+	if (ops->dma_map) {
+		ops->dma_unmap(vdpa, asid, iova, size);
+	} else if (ops->set_map) {
+		if (!v->in_batch)
+			ops->set_map(vdpa, asid, iotlb);
+	} else {
+		iommu_unmap(v->domain, iova, size);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* If we are in the middle of batch processing, delay the free
 	 * of AS until BATCH_END.
 	 */
@@ -1181,11 +1258,16 @@ static int vhost_vdpa_alloc_domain(struct vhost_vdpa *v)
 	if (!bus)
 		return -EFAULT;
 
+<<<<<<< HEAD
 	if (!device_iommu_capable(dma_dev, IOMMU_CAP_CACHE_COHERENCY)) {
 		dev_warn_once(&v->dev,
 			      "Failed to allocate domain, device is not IOMMU cache coherent capable\n");
 		return -ENOTSUPP;
 	}
+=======
+	if (!device_iommu_capable(dma_dev, IOMMU_CAP_CACHE_COHERENCY))
+		return -ENOTSUPP;
+>>>>>>> b7ba80a49124 (Commit)
 
 	v->domain = iommu_domain_alloc(bus);
 	if (!v->domain)
@@ -1199,7 +1281,10 @@ static int vhost_vdpa_alloc_domain(struct vhost_vdpa *v)
 
 err_attach:
 	iommu_domain_free(v->domain);
+<<<<<<< HEAD
 	v->domain = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -1238,15 +1323,24 @@ static void vhost_vdpa_cleanup(struct vhost_vdpa *v)
 	struct vhost_vdpa_as *as;
 	u32 asid;
 
+<<<<<<< HEAD
+=======
+	vhost_dev_cleanup(&v->vdev);
+	kfree(v->vdev.vqs);
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (asid = 0; asid < v->vdpa->nas; asid++) {
 		as = asid_to_as(v, asid);
 		if (as)
 			vhost_vdpa_remove_as(v, asid);
 	}
+<<<<<<< HEAD
 
 	vhost_vdpa_free_domain(v);
 	vhost_dev_cleanup(&v->vdev);
 	kfree(v->vdev.vqs);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int vhost_vdpa_open(struct inode *inode, struct file *filep)
@@ -1317,7 +1411,11 @@ static int vhost_vdpa_release(struct inode *inode, struct file *filep)
 	vhost_vdpa_clean_irq(v);
 	vhost_vdpa_reset(v);
 	vhost_dev_stop(&v->vdev);
+<<<<<<< HEAD
 	vhost_vdpa_unbind_mm(v);
+=======
+	vhost_vdpa_free_domain(v);
+>>>>>>> b7ba80a49124 (Commit)
 	vhost_vdpa_config_put(v);
 	vhost_vdpa_cleanup(v);
 	mutex_unlock(&d->mutex);
@@ -1382,7 +1480,11 @@ static int vhost_vdpa_mmap(struct file *file, struct vm_area_struct *vma)
 	if (vma->vm_end - vma->vm_start != notify.size)
 		return -ENOTSUPP;
 
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP);
+=======
+	vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
+>>>>>>> b7ba80a49124 (Commit)
 	vma->vm_ops = &vhost_vdpa_vm_ops;
 	return 0;
 }

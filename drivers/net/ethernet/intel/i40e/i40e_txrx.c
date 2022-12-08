@@ -171,10 +171,17 @@ static char *i40e_create_dummy_packet(u8 *dummy_packet, bool ipv4, u8 l4proto,
 				      struct i40e_fdir_filter *data)
 {
 	bool is_vlan = !!data->vlan_tag;
+<<<<<<< HEAD
 	struct vlan_hdr vlan = {};
 	struct ipv6hdr ipv6 = {};
 	struct ethhdr eth = {};
 	struct iphdr ip = {};
+=======
+	struct vlan_hdr vlan;
+	struct ipv6hdr ipv6;
+	struct ethhdr eth;
+	struct iphdr ip;
+>>>>>>> b7ba80a49124 (Commit)
 	u8 *tmp;
 
 	if (ipv4) {
@@ -923,13 +930,20 @@ void i40e_detect_recover_hung(struct i40e_vsi *vsi)
  * @vsi: the VSI we care about
  * @tx_ring: Tx ring to clean
  * @napi_budget: Used to determine if we are in netpoll
+<<<<<<< HEAD
  * @tx_cleaned: Out parameter set to the number of TXes cleaned
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Returns true if there's any budget left (e.g. the clean is finished)
  **/
 static bool i40e_clean_tx_irq(struct i40e_vsi *vsi,
+<<<<<<< HEAD
 			      struct i40e_ring *tx_ring, int napi_budget,
 			      unsigned int *tx_cleaned)
+=======
+			      struct i40e_ring *tx_ring, int napi_budget)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i = tx_ring->next_to_clean;
 	struct i40e_tx_buffer *tx_buf;
@@ -1050,7 +1064,10 @@ static bool i40e_clean_tx_irq(struct i40e_vsi *vsi,
 		}
 	}
 
+<<<<<<< HEAD
 	*tx_cleaned = total_packets;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return !!budget;
 }
 
@@ -1460,6 +1477,17 @@ err:
 	return -ENOMEM;
 }
 
+<<<<<<< HEAD
+=======
+int i40e_alloc_rx_bi(struct i40e_ring *rx_ring)
+{
+	unsigned long sz = sizeof(*rx_ring->rx_bi) * rx_ring->count;
+
+	rx_ring->rx_bi = kzalloc(sz, GFP_KERNEL);
+	return rx_ring->rx_bi ? 0 : -ENOMEM;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void i40e_clear_rx_bi(struct i40e_ring *rx_ring)
 {
 	memset(rx_ring->rx_bi, 0, sizeof(*rx_ring->rx_bi) * rx_ring->count);
@@ -1477,6 +1505,12 @@ void i40e_clean_rx_ring(struct i40e_ring *rx_ring)
 	if (!rx_ring->rx_bi)
 		return;
 
+<<<<<<< HEAD
+=======
+	dev_kfree_skb(rx_ring->skb);
+	rx_ring->skb = NULL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (rx_ring->xsk_pool) {
 		i40e_xsk_clean_rx_ring(rx_ring);
 		goto skip_free;
@@ -1521,7 +1555,10 @@ skip_free:
 
 	rx_ring->next_to_alloc = 0;
 	rx_ring->next_to_clean = 0;
+<<<<<<< HEAD
 	rx_ring->next_to_process = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rx_ring->next_to_use = 0;
 }
 
@@ -1574,7 +1611,10 @@ int i40e_setup_rx_descriptors(struct i40e_ring *rx_ring)
 
 	rx_ring->next_to_alloc = 0;
 	rx_ring->next_to_clean = 0;
+<<<<<<< HEAD
 	rx_ring->next_to_process = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rx_ring->next_to_use = 0;
 
 	/* XDP RX-queue info only needed for RX rings exposed to XDP */
@@ -1587,11 +1627,14 @@ int i40e_setup_rx_descriptors(struct i40e_ring *rx_ring)
 
 	rx_ring->xdp_prog = rx_ring->vsi->xdp_prog;
 
+<<<<<<< HEAD
 	rx_ring->rx_bi =
 		kcalloc(rx_ring->count, sizeof(*rx_ring->rx_bi), GFP_KERNEL);
 	if (!rx_ring->rx_bi)
 		return -ENOMEM;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1616,19 +1659,34 @@ void i40e_release_rx_desc(struct i40e_ring *rx_ring, u32 val)
 	writel(val, rx_ring->tail);
 }
 
+<<<<<<< HEAD
 #if (PAGE_SIZE >= 8192)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static unsigned int i40e_rx_frame_truesize(struct i40e_ring *rx_ring,
 					   unsigned int size)
 {
 	unsigned int truesize;
 
+<<<<<<< HEAD
+=======
+#if (PAGE_SIZE < 8192)
+	truesize = i40e_rx_pg_size(rx_ring) / 2; /* Must be power-of-2 */
+#else
+>>>>>>> b7ba80a49124 (Commit)
 	truesize = rx_ring->rx_offset ?
 		SKB_DATA_ALIGN(size + rx_ring->rx_offset) +
 		SKB_DATA_ALIGN(sizeof(struct skb_shared_info)) :
 		SKB_DATA_ALIGN(size);
+<<<<<<< HEAD
 	return truesize;
 }
 #endif
+=======
+#endif
+	return truesize;
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * i40e_alloc_mapped_page - recycle or make a new page
@@ -1967,6 +2025,10 @@ static bool i40e_cleanup_headers(struct i40e_ring *rx_ring, struct sk_buff *skb,
  * i40e_can_reuse_rx_page - Determine if page can be reused for another Rx
  * @rx_buffer: buffer containing the page
  * @rx_stats: rx stats structure for the rx ring
+<<<<<<< HEAD
+=======
+ * @rx_buffer_pgcnt: buffer page refcount pre xdp_do_redirect() call
+>>>>>>> b7ba80a49124 (Commit)
  *
  * If page is reusable, we have a green light for calling i40e_reuse_rx_page,
  * which will assign the current buffer to the buffer that next_to_alloc is
@@ -1977,7 +2039,12 @@ static bool i40e_cleanup_headers(struct i40e_ring *rx_ring, struct sk_buff *skb,
  * or busy if it could not be reused.
  */
 static bool i40e_can_reuse_rx_page(struct i40e_rx_buffer *rx_buffer,
+<<<<<<< HEAD
 				   struct i40e_rx_queue_stats *rx_stats)
+=======
+				   struct i40e_rx_queue_stats *rx_stats,
+				   int rx_buffer_pgcnt)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int pagecnt_bias = rx_buffer->pagecnt_bias;
 	struct page *page = rx_buffer->page;
@@ -1990,7 +2057,11 @@ static bool i40e_can_reuse_rx_page(struct i40e_rx_buffer *rx_buffer,
 
 #if (PAGE_SIZE < 8192)
 	/* if we are only owner of page we can reuse it */
+<<<<<<< HEAD
 	if (unlikely((rx_buffer->page_count - pagecnt_bias) > 1)) {
+=======
+	if (unlikely((rx_buffer_pgcnt - pagecnt_bias) > 1)) {
+>>>>>>> b7ba80a49124 (Commit)
 		rx_stats->page_busy_count++;
 		return false;
 	}
@@ -2016,6 +2087,7 @@ static bool i40e_can_reuse_rx_page(struct i40e_rx_buffer *rx_buffer,
 }
 
 /**
+<<<<<<< HEAD
  * i40e_rx_buffer_flip - adjusted rx_buffer to point to an unused region
  * @rx_buffer: Rx buffer to adjust
  * @truesize: Size of adjustment
@@ -2024,6 +2096,35 @@ static void i40e_rx_buffer_flip(struct i40e_rx_buffer *rx_buffer,
 				unsigned int truesize)
 {
 #if (PAGE_SIZE < 8192)
+=======
+ * i40e_add_rx_frag - Add contents of Rx buffer to sk_buff
+ * @rx_ring: rx descriptor ring to transact packets on
+ * @rx_buffer: buffer containing page to add
+ * @skb: sk_buff to place the data into
+ * @size: packet length from rx_desc
+ *
+ * This function will add the data contained in rx_buffer->page to the skb.
+ * It will just attach the page as a frag to the skb.
+ *
+ * The function will then update the page offset.
+ **/
+static void i40e_add_rx_frag(struct i40e_ring *rx_ring,
+			     struct i40e_rx_buffer *rx_buffer,
+			     struct sk_buff *skb,
+			     unsigned int size)
+{
+#if (PAGE_SIZE < 8192)
+	unsigned int truesize = i40e_rx_pg_size(rx_ring) / 2;
+#else
+	unsigned int truesize = SKB_DATA_ALIGN(size + rx_ring->rx_offset);
+#endif
+
+	skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags, rx_buffer->page,
+			rx_buffer->page_offset, size, truesize);
+
+	/* page is being used so we must update the page offset */
+#if (PAGE_SIZE < 8192)
+>>>>>>> b7ba80a49124 (Commit)
 	rx_buffer->page_offset ^= truesize;
 #else
 	rx_buffer->page_offset += truesize;
@@ -2034,17 +2135,31 @@ static void i40e_rx_buffer_flip(struct i40e_rx_buffer *rx_buffer,
  * i40e_get_rx_buffer - Fetch Rx buffer and synchronize data for use
  * @rx_ring: rx descriptor ring to transact packets on
  * @size: size of buffer to add to skb
+<<<<<<< HEAD
+=======
+ * @rx_buffer_pgcnt: buffer page refcount
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This function will pull an Rx buffer from the ring and synchronize it
  * for use by the CPU.
  */
 static struct i40e_rx_buffer *i40e_get_rx_buffer(struct i40e_ring *rx_ring,
+<<<<<<< HEAD
 						 const unsigned int size)
 {
 	struct i40e_rx_buffer *rx_buffer;
 
 	rx_buffer = i40e_rx_bi(rx_ring, rx_ring->next_to_process);
 	rx_buffer->page_count =
+=======
+						 const unsigned int size,
+						 int *rx_buffer_pgcnt)
+{
+	struct i40e_rx_buffer *rx_buffer;
+
+	rx_buffer = i40e_rx_bi(rx_ring, rx_ring->next_to_clean);
+	*rx_buffer_pgcnt =
+>>>>>>> b7ba80a49124 (Commit)
 #if (PAGE_SIZE < 8192)
 		page_count(rx_buffer->page);
 #else
@@ -2066,6 +2181,7 @@ static struct i40e_rx_buffer *i40e_get_rx_buffer(struct i40e_ring *rx_ring,
 }
 
 /**
+<<<<<<< HEAD
  * i40e_put_rx_buffer - Clean up used buffer and either recycle or free
  * @rx_ring: rx descriptor ring to transact packets on
  * @rx_buffer: rx buffer to pull data from
@@ -2131,17 +2247,35 @@ static void i40e_process_rx_buffs(struct i40e_ring *rx_ring, int xdp_res,
  * @rx_ring: rx descriptor ring to transact packets on
  * @xdp: xdp_buff pointing to the data
  * @nr_frags: number of buffers for the packet
+=======
+ * i40e_construct_skb - Allocate skb and populate it
+ * @rx_ring: rx descriptor ring to transact packets on
+ * @rx_buffer: rx buffer to pull data from
+ * @xdp: xdp_buff pointing to the data
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This function allocates an skb.  It then populates it with the page
  * data from the current receive descriptor, taking care to set up the
  * skb correctly.
  */
 static struct sk_buff *i40e_construct_skb(struct i40e_ring *rx_ring,
+<<<<<<< HEAD
 					  struct xdp_buff *xdp,
 					  u32 nr_frags)
 {
 	unsigned int size = xdp->data_end - xdp->data;
 	struct i40e_rx_buffer *rx_buffer;
+=======
+					  struct i40e_rx_buffer *rx_buffer,
+					  struct xdp_buff *xdp)
+{
+	unsigned int size = xdp->data_end - xdp->data;
+#if (PAGE_SIZE < 8192)
+	unsigned int truesize = i40e_rx_pg_size(rx_ring) / 2;
+#else
+	unsigned int truesize = SKB_DATA_ALIGN(size);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int headlen;
 	struct sk_buff *skb;
 
@@ -2181,6 +2315,7 @@ static struct sk_buff *i40e_construct_skb(struct i40e_ring *rx_ring,
 	memcpy(__skb_put(skb, headlen), xdp->data,
 	       ALIGN(headlen, sizeof(long)));
 
+<<<<<<< HEAD
 	rx_buffer = i40e_rx_bi(rx_ring, rx_ring->next_to_clean);
 	/* update all of the pointers */
 	size -= headlen;
@@ -2194,11 +2329,27 @@ static struct sk_buff *i40e_construct_skb(struct i40e_ring *rx_ring,
 				size, xdp->frame_sz);
 		/* buffer is used by skb, update page_offset */
 		i40e_rx_buffer_flip(rx_buffer, xdp->frame_sz);
+=======
+	/* update all of the pointers */
+	size -= headlen;
+	if (size) {
+		skb_add_rx_frag(skb, 0, rx_buffer->page,
+				rx_buffer->page_offset + headlen,
+				size, truesize);
+
+		/* buffer is used by skb, update page_offset */
+#if (PAGE_SIZE < 8192)
+		rx_buffer->page_offset ^= truesize;
+#else
+		rx_buffer->page_offset += truesize;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		/* buffer is unused, reset bias back to rx_buffer */
 		rx_buffer->pagecnt_bias++;
 	}
 
+<<<<<<< HEAD
 	if (unlikely(xdp_buff_has_frags(xdp))) {
 		struct skb_shared_info *sinfo, *skinfo = skb_shinfo(skb);
 
@@ -2218,23 +2369,44 @@ static struct sk_buff *i40e_construct_skb(struct i40e_ring *rx_ring,
 		i40e_process_rx_buffs(rx_ring, I40E_XDP_PASS, xdp);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return skb;
 }
 
 /**
  * i40e_build_skb - Build skb around an existing buffer
  * @rx_ring: Rx descriptor ring to transact packets on
+<<<<<<< HEAD
  * @xdp: xdp_buff pointing to the data
  * @nr_frags: number of buffers for the packet
+=======
+ * @rx_buffer: Rx buffer to pull data from
+ * @xdp: xdp_buff pointing to the data
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This function builds an skb around an existing Rx buffer, taking care
  * to set up the skb correctly and avoid any memcpy overhead.
  */
 static struct sk_buff *i40e_build_skb(struct i40e_ring *rx_ring,
+<<<<<<< HEAD
 				      struct xdp_buff *xdp,
 				      u32 nr_frags)
 {
 	unsigned int metasize = xdp->data - xdp->data_meta;
+=======
+				      struct i40e_rx_buffer *rx_buffer,
+				      struct xdp_buff *xdp)
+{
+	unsigned int metasize = xdp->data - xdp->data_meta;
+#if (PAGE_SIZE < 8192)
+	unsigned int truesize = i40e_rx_pg_size(rx_ring) / 2;
+#else
+	unsigned int truesize = SKB_DATA_ALIGN(sizeof(struct skb_shared_info)) +
+				SKB_DATA_ALIGN(xdp->data_end -
+					       xdp->data_hard_start);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	struct sk_buff *skb;
 
 	/* Prefetch first cache line of first page. If xdp->data_meta
@@ -2245,7 +2417,11 @@ static struct sk_buff *i40e_build_skb(struct i40e_ring *rx_ring,
 	net_prefetch(xdp->data_meta);
 
 	/* build an skb around the page buffer */
+<<<<<<< HEAD
 	skb = napi_build_skb(xdp->data_hard_start, xdp->frame_sz);
+=======
+	skb = napi_build_skb(xdp->data_hard_start, truesize);
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(!skb))
 		return NULL;
 
@@ -2255,6 +2431,7 @@ static struct sk_buff *i40e_build_skb(struct i40e_ring *rx_ring,
 	if (metasize)
 		skb_metadata_set(skb, metasize);
 
+<<<<<<< HEAD
 	if (unlikely(xdp_buff_has_frags(xdp))) {
 		struct skb_shared_info *sinfo;
 
@@ -2272,11 +2449,50 @@ static struct sk_buff *i40e_build_skb(struct i40e_ring *rx_ring,
 		/* buffer is used by skb, update page_offset */
 		i40e_rx_buffer_flip(rx_buffer, xdp->frame_sz);
 	}
+=======
+	/* buffer is used by skb, update page_offset */
+#if (PAGE_SIZE < 8192)
+	rx_buffer->page_offset ^= truesize;
+#else
+	rx_buffer->page_offset += truesize;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 	return skb;
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * i40e_put_rx_buffer - Clean up used buffer and either recycle or free
+ * @rx_ring: rx descriptor ring to transact packets on
+ * @rx_buffer: rx buffer to pull data from
+ * @rx_buffer_pgcnt: rx buffer page refcount pre xdp_do_redirect() call
+ *
+ * This function will clean up the contents of the rx_buffer.  It will
+ * either recycle the buffer or unmap it and free the associated resources.
+ */
+static void i40e_put_rx_buffer(struct i40e_ring *rx_ring,
+			       struct i40e_rx_buffer *rx_buffer,
+			       int rx_buffer_pgcnt)
+{
+	if (i40e_can_reuse_rx_page(rx_buffer, &rx_ring->rx_stats, rx_buffer_pgcnt)) {
+		/* hand second half of page back to the ring */
+		i40e_reuse_rx_page(rx_ring, rx_buffer);
+	} else {
+		/* we are not reusing the buffer so unmap it */
+		dma_unmap_page_attrs(rx_ring->dev, rx_buffer->dma,
+				     i40e_rx_pg_size(rx_ring),
+				     DMA_FROM_DEVICE, I40E_RX_DMA_ATTR);
+		__page_frag_cache_drain(rx_buffer->page,
+					rx_buffer->pagecnt_bias);
+		/* clear contents of buffer_info */
+		rx_buffer->page = NULL;
+	}
+}
+
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * i40e_is_non_eop - process handling of non-EOP buffers
  * @rx_ring: Rx ring being processed
  * @rx_desc: Rx descriptor for current buffer
@@ -2359,6 +2575,28 @@ xdp_out:
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * i40e_rx_buffer_flip - adjusted rx_buffer to point to an unused region
+ * @rx_ring: Rx ring
+ * @rx_buffer: Rx buffer to adjust
+ * @size: Size of adjustment
+ **/
+static void i40e_rx_buffer_flip(struct i40e_ring *rx_ring,
+				struct i40e_rx_buffer *rx_buffer,
+				unsigned int size)
+{
+	unsigned int truesize = i40e_rx_frame_truesize(rx_ring, size);
+
+#if (PAGE_SIZE < 8192)
+	rx_buffer->page_offset ^= truesize;
+#else
+	rx_buffer->page_offset += truesize;
+#endif
+}
+
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * i40e_xdp_ring_update_tail - Updates the XDP Tx ring tail register
  * @xdp_ring: XDP Tx ring
  *
@@ -2416,6 +2654,7 @@ void i40e_finalize_xdp_rx(struct i40e_ring *rx_ring, unsigned int xdp_res)
 }
 
 /**
+<<<<<<< HEAD
  * i40e_inc_ntp: Advance the next_to_process index
  * @rx_ring: Rx ring
  **/
@@ -2475,13 +2714,28 @@ static void i40e_consume_xdp_buff(struct i40e_ring *rx_ring,
 	i40e_put_rx_buffer(rx_ring, rx_buffer);
 	rx_ring->next_to_clean = rx_ring->next_to_process;
 	xdp->data = NULL;
+=======
+ * i40e_inc_ntc: Advance the next_to_clean index
+ * @rx_ring: Rx ring
+ **/
+static void i40e_inc_ntc(struct i40e_ring *rx_ring)
+{
+	u32 ntc = rx_ring->next_to_clean + 1;
+
+	ntc = (ntc < rx_ring->count) ? ntc : 0;
+	rx_ring->next_to_clean = ntc;
+	prefetch(I40E_RX_DESC(rx_ring, ntc));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
  * i40e_clean_rx_irq - Clean completed descriptors from Rx ring - bounce buf
  * @rx_ring: rx descriptor ring to transact packets on
  * @budget: Total limit on number of packets to process
+<<<<<<< HEAD
  * @rx_cleaned: Out parameter of the number of packets processed
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This function provides a "bounce buffer" approach to Rx interrupt
  * processing.  The advantage to this is that on systems that have
@@ -2490,6 +2744,7 @@ static void i40e_consume_xdp_buff(struct i40e_ring *rx_ring,
  *
  * Returns amount of work completed
  **/
+<<<<<<< HEAD
 static int i40e_clean_rx_irq(struct i40e_ring *rx_ring, int budget,
 			     unsigned int *rx_cleaned)
 {
@@ -2517,12 +2772,46 @@ static int i40e_clean_rx_irq(struct i40e_ring *rx_ring, int budget,
 
 		/* return some buffers to hardware, one at a time is too slow */
 		if (cleaned_count >= clean_threshold) {
+=======
+static int i40e_clean_rx_irq(struct i40e_ring *rx_ring, int budget)
+{
+	unsigned int total_rx_bytes = 0, total_rx_packets = 0, frame_sz = 0;
+	u16 cleaned_count = I40E_DESC_UNUSED(rx_ring);
+	unsigned int offset = rx_ring->rx_offset;
+	struct sk_buff *skb = rx_ring->skb;
+	unsigned int xdp_xmit = 0;
+	struct bpf_prog *xdp_prog;
+	bool failure = false;
+	struct xdp_buff xdp;
+	int xdp_res = 0;
+
+#if (PAGE_SIZE < 8192)
+	frame_sz = i40e_rx_frame_truesize(rx_ring, 0);
+#endif
+	xdp_init_buff(&xdp, frame_sz, &rx_ring->xdp_rxq);
+
+	xdp_prog = READ_ONCE(rx_ring->xdp_prog);
+
+	while (likely(total_rx_packets < (unsigned int)budget)) {
+		struct i40e_rx_buffer *rx_buffer;
+		union i40e_rx_desc *rx_desc;
+		int rx_buffer_pgcnt;
+		unsigned int size;
+		u64 qword;
+
+		/* return some buffers to hardware, one at a time is too slow */
+		if (cleaned_count >= I40E_RX_BUFFER_WRITE) {
+>>>>>>> b7ba80a49124 (Commit)
 			failure = failure ||
 				  i40e_alloc_rx_buffers(rx_ring, cleaned_count);
 			cleaned_count = 0;
 		}
 
+<<<<<<< HEAD
 		rx_desc = I40E_RX_DESC(rx_ring, ntp);
+=======
+		rx_desc = I40E_RX_DESC(rx_ring, rx_ring->next_to_clean);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* status_error_len will always be zero for unused descriptors
 		 * because it's cleared in cleanup, and overlaps with hdr_addr
@@ -2541,8 +2830,13 @@ static int i40e_clean_rx_irq(struct i40e_ring *rx_ring, int budget,
 			i40e_clean_programming_status(rx_ring,
 						      rx_desc->raw.qword[0],
 						      qword);
+<<<<<<< HEAD
 			rx_buffer = i40e_rx_bi(rx_ring, ntp);
 			i40e_inc_ntp(rx_ring);
+=======
+			rx_buffer = i40e_rx_bi(rx_ring, rx_ring->next_to_clean);
+			i40e_inc_ntc(rx_ring);
+>>>>>>> b7ba80a49124 (Commit)
 			i40e_reuse_rx_page(rx_ring, rx_buffer);
 			cleaned_count++;
 			continue;
@@ -2553,6 +2847,7 @@ static int i40e_clean_rx_irq(struct i40e_ring *rx_ring, int budget,
 		if (!size)
 			break;
 
+<<<<<<< HEAD
 		i40e_trace(clean_rx_irq, rx_ring, rx_desc, xdp);
 		/* retrieve a buffer from the ring */
 		rx_buffer = i40e_get_rx_buffer(rx_ring, size);
@@ -2561,10 +2856,18 @@ static int i40e_clean_rx_irq(struct i40e_ring *rx_ring, int budget,
 		i40e_inc_ntp(rx_ring);
 
 		if (!xdp->data) {
+=======
+		i40e_trace(clean_rx_irq, rx_ring, rx_desc, skb);
+		rx_buffer = i40e_get_rx_buffer(rx_ring, size, &rx_buffer_pgcnt);
+
+		/* retrieve a buffer from the ring */
+		if (!skb) {
+>>>>>>> b7ba80a49124 (Commit)
 			unsigned char *hard_start;
 
 			hard_start = page_address(rx_buffer->page) +
 				     rx_buffer->page_offset - offset;
+<<<<<<< HEAD
 			xdp_prepare_buff(xdp, hard_start, offset, size, true);
 #if (PAGE_SIZE > 4096)
 			/* At larger PAGE_SIZE, frame_sz depend on len size */
@@ -2590,10 +2893,26 @@ static int i40e_clean_rx_irq(struct i40e_ring *rx_ring, int budget,
 				size = xdp_get_buff_len(xdp);
 			} else if (xdp_res & (I40E_XDP_TX | I40E_XDP_REDIR)) {
 				i40e_rx_buffer_flip(rx_buffer, xdp->frame_sz);
+=======
+			xdp_prepare_buff(&xdp, hard_start, offset, size, true);
+			xdp_buff_clear_frags_flag(&xdp);
+#if (PAGE_SIZE > 4096)
+			/* At larger PAGE_SIZE, frame_sz depend on len size */
+			xdp.frame_sz = i40e_rx_frame_truesize(rx_ring, size);
+#endif
+			xdp_res = i40e_run_xdp(rx_ring, &xdp, xdp_prog);
+		}
+
+		if (xdp_res) {
+			if (xdp_res & (I40E_XDP_TX | I40E_XDP_REDIR)) {
+				xdp_xmit |= xdp_res;
+				i40e_rx_buffer_flip(rx_ring, rx_buffer, size);
+>>>>>>> b7ba80a49124 (Commit)
 			} else {
 				rx_buffer->pagecnt_bias++;
 			}
 			total_rx_bytes += size;
+<<<<<<< HEAD
 		} else {
 			if (ring_uses_build_skb(rx_ring))
 				skb = i40e_build_skb(rx_ring, xdp, nfrags);
@@ -2636,6 +2955,55 @@ process_next:
 
 	*rx_cleaned = total_rx_packets;
 
+=======
+			total_rx_packets++;
+		} else if (skb) {
+			i40e_add_rx_frag(rx_ring, rx_buffer, skb, size);
+		} else if (ring_uses_build_skb(rx_ring)) {
+			skb = i40e_build_skb(rx_ring, rx_buffer, &xdp);
+		} else {
+			skb = i40e_construct_skb(rx_ring, rx_buffer, &xdp);
+		}
+
+		/* exit if we failed to retrieve a buffer */
+		if (!xdp_res && !skb) {
+			rx_ring->rx_stats.alloc_buff_failed++;
+			rx_buffer->pagecnt_bias++;
+			break;
+		}
+
+		i40e_put_rx_buffer(rx_ring, rx_buffer, rx_buffer_pgcnt);
+		cleaned_count++;
+
+		i40e_inc_ntc(rx_ring);
+		if (i40e_is_non_eop(rx_ring, rx_desc))
+			continue;
+
+		if (xdp_res || i40e_cleanup_headers(rx_ring, skb, rx_desc)) {
+			skb = NULL;
+			continue;
+		}
+
+		/* probably a little skewed due to removing CRC */
+		total_rx_bytes += skb->len;
+
+		/* populate checksum, VLAN, and protocol */
+		i40e_process_skb_fields(rx_ring, rx_desc, skb);
+
+		i40e_trace(clean_rx_irq_rx, rx_ring, rx_desc, skb);
+		napi_gro_receive(&rx_ring->q_vector->napi, skb);
+		skb = NULL;
+
+		/* update budget accounting */
+		total_rx_packets++;
+	}
+
+	i40e_finalize_xdp_rx(rx_ring, xdp_xmit);
+	rx_ring->skb = skb;
+
+	i40e_update_rx_stats(rx_ring, total_rx_bytes, total_rx_packets);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* guarantee a trip back through this routine if there was a failure */
 	return failure ? budget : (int)total_rx_packets;
 }
@@ -2758,10 +3126,13 @@ int i40e_napi_poll(struct napi_struct *napi, int budget)
 			       container_of(napi, struct i40e_q_vector, napi);
 	struct i40e_vsi *vsi = q_vector->vsi;
 	struct i40e_ring *ring;
+<<<<<<< HEAD
 	bool tx_clean_complete = true;
 	bool rx_clean_complete = true;
 	unsigned int tx_cleaned = 0;
 	unsigned int rx_cleaned = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool clean_complete = true;
 	bool arm_wb = false;
 	int budget_per_ring;
@@ -2778,10 +3149,17 @@ int i40e_napi_poll(struct napi_struct *napi, int budget)
 	i40e_for_each_ring(ring, q_vector->tx) {
 		bool wd = ring->xsk_pool ?
 			  i40e_clean_xdp_tx_irq(vsi, ring) :
+<<<<<<< HEAD
 			  i40e_clean_tx_irq(vsi, ring, budget, &tx_cleaned);
 
 		if (!wd) {
 			clean_complete = tx_clean_complete = false;
+=======
+			  i40e_clean_tx_irq(vsi, ring, budget);
+
+		if (!wd) {
+			clean_complete = false;
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		}
 		arm_wb |= ring->arm_wb;
@@ -2806,11 +3184,16 @@ int i40e_napi_poll(struct napi_struct *napi, int budget)
 	i40e_for_each_ring(ring, q_vector->rx) {
 		int cleaned = ring->xsk_pool ?
 			      i40e_clean_rx_irq_zc(ring, budget_per_ring) :
+<<<<<<< HEAD
 			      i40e_clean_rx_irq(ring, budget_per_ring, &rx_cleaned);
+=======
+			      i40e_clean_rx_irq(ring, budget_per_ring);
+>>>>>>> b7ba80a49124 (Commit)
 
 		work_done += cleaned;
 		/* if we clean as many as budgeted, we must not be done */
 		if (cleaned >= budget_per_ring)
+<<<<<<< HEAD
 			clean_complete = rx_clean_complete = false;
 	}
 
@@ -2818,6 +3201,11 @@ int i40e_napi_poll(struct napi_struct *napi, int budget)
 		trace_i40e_napi_poll(napi, q_vector, budget, budget_per_ring, rx_cleaned,
 				     tx_cleaned, rx_clean_complete, tx_clean_complete);
 
+=======
+			clean_complete = false;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* If work not completed, return budget and polling will return */
 	if (!clean_complete) {
 		int cpu_id = smp_processor_id();

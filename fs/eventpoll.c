@@ -57,7 +57,17 @@
  * we need a lock that will allow us to sleep. This lock is a
  * mutex (ep->mtx). It is acquired during the event transfer loop,
  * during epoll_ctl(EPOLL_CTL_DEL) and during eventpoll_release_file().
+<<<<<<< HEAD
  * The epmutex is acquired when inserting an epoll fd onto another epoll
+=======
+ * Then we also need a global mutex to serialize eventpoll_release_file()
+ * and ep_free().
+ * This mutex is acquired by ep_free() during the epoll file
+ * cleanup path and it is also acquired by eventpoll_release_file()
+ * if a file has been pushed inside an epoll set and it is then
+ * close()d without a previous call to epoll_ctl(EPOLL_CTL_DEL).
+ * It is also acquired when inserting an epoll fd onto another epoll
+>>>>>>> b7ba80a49124 (Commit)
  * fd. We do this so that we walk the epoll tree and ensure that this
  * insertion does not create a cycle of epoll file descriptors, which
  * could lead to deadlock. We need a global mutex to prevent two
@@ -147,6 +157,7 @@ struct epitem {
 	/* The file descriptor information this item refers to */
 	struct epoll_filefd ffd;
 
+<<<<<<< HEAD
 	/*
 	 * Protected by file->f_lock, true for to-be-released epitem already
 	 * removed from the "struct file" items list; together with
@@ -154,6 +165,8 @@ struct epitem {
 	 */
 	bool dying;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* List containing poll wait queues */
 	struct eppoll_entry *pwqlist;
 
@@ -218,12 +231,15 @@ struct eventpoll {
 	u64 gen;
 	struct hlist_head refs;
 
+<<<<<<< HEAD
 	/*
 	 * usage count, used together with epitem->dying to
 	 * orchestrate the disposal of this struct
 	 */
 	refcount_t refcount;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_NET_RX_BUSY_POLL
 	/* used to track busy poll napi_id */
 	unsigned int napi_id;
@@ -247,7 +263,13 @@ struct ep_pqueue {
 /* Maximum number of epoll watched descriptors, per user */
 static long max_user_watches __read_mostly;
 
+<<<<<<< HEAD
 /* Used for cycles detection */
+=======
+/*
+ * This mutex is used to serialize ep_free() and eventpoll_release_file().
+ */
+>>>>>>> b7ba80a49124 (Commit)
 static DEFINE_MUTEX(epmutex);
 
 static u64 loop_check_gen = 0;
@@ -488,16 +510,25 @@ static inline void ep_set_busy_poll_napi_id(struct epitem *epi)
  * (efd1) notices that it may have some event ready, so it needs to wake up
  * the waiters on its poll wait list (efd2). So it calls ep_poll_safewake()
  * that ends up in another wake_up(), after having checked about the
+<<<<<<< HEAD
  * recursion constraints. That are, no more than EP_MAX_NESTS, to avoid
  * stack blasting.
+=======
+ * recursion constraints. That are, no more than EP_MAX_POLLWAKE_NESTS, to
+ * avoid stack blasting.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * When CONFIG_DEBUG_LOCK_ALLOC is enabled, make sure lockdep can handle
  * this special case of epoll.
  */
 #ifdef CONFIG_DEBUG_LOCK_ALLOC
 
+<<<<<<< HEAD
 static void ep_poll_safewake(struct eventpoll *ep, struct epitem *epi,
 			     unsigned pollflags)
+=======
+static void ep_poll_safewake(struct eventpoll *ep, struct epitem *epi)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct eventpoll *ep_src;
 	unsigned long flags;
@@ -528,17 +559,27 @@ static void ep_poll_safewake(struct eventpoll *ep, struct epitem *epi,
 	}
 	spin_lock_irqsave_nested(&ep->poll_wait.lock, flags, nests);
 	ep->nests = nests + 1;
+<<<<<<< HEAD
 	wake_up_locked_poll(&ep->poll_wait, EPOLLIN | pollflags);
+=======
+	wake_up_locked_poll(&ep->poll_wait, EPOLLIN);
+>>>>>>> b7ba80a49124 (Commit)
 	ep->nests = 0;
 	spin_unlock_irqrestore(&ep->poll_wait.lock, flags);
 }
 
 #else
 
+<<<<<<< HEAD
 static void ep_poll_safewake(struct eventpoll *ep, struct epitem *epi,
 			     unsigned pollflags)
 {
 	wake_up_poll(&ep->poll_wait, EPOLLIN | pollflags);
+=======
+static void ep_poll_safewake(struct eventpoll *ep, struct epitem *epi)
+{
+	wake_up_poll(&ep->poll_wait, EPOLLIN);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #endif
@@ -562,7 +603,12 @@ static void ep_remove_wait_queue(struct eppoll_entry *pwq)
 
 /*
  * This function unregisters poll callbacks from the associated file
+<<<<<<< HEAD
  * descriptor.  Must be called with "mtx" held.
+=======
+ * descriptor.  Must be called with "mtx" held (or "epmutex" if called from
+ * ep_free).
+>>>>>>> b7ba80a49124 (Commit)
  */
 static void ep_unregister_pollwait(struct eventpoll *ep, struct epitem *epi)
 {
@@ -685,6 +731,7 @@ static void epi_rcu_free(struct rcu_head *head)
 	kmem_cache_free(epi_cache, epi);
 }
 
+<<<<<<< HEAD
 static void ep_get(struct eventpoll *ep)
 {
 	refcount_inc(&ep->refcount);
@@ -719,6 +766,13 @@ static void ep_free(struct eventpoll *ep)
  * Returns true if the eventpoll can be disposed.
  */
 static bool __ep_remove(struct eventpoll *ep, struct epitem *epi, bool force)
+=======
+/*
+ * Removes a "struct epitem" from the eventpoll RB tree and deallocates
+ * all the associated resources. Must be called with "mtx" held.
+ */
+static int ep_remove(struct eventpoll *ep, struct epitem *epi)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct file *file = epi->ffd.file;
 	struct epitems_head *to_free;
@@ -733,11 +787,14 @@ static bool __ep_remove(struct eventpoll *ep, struct epitem *epi, bool force)
 
 	/* Remove the current item from the list of epoll hooks */
 	spin_lock(&file->f_lock);
+<<<<<<< HEAD
 	if (epi->dying && !force) {
 		spin_unlock(&file->f_lock);
 		return false;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	to_free = NULL;
 	head = file->f_ep;
 	if (head->first == &epi->fllink && !epi->fllink.next) {
@@ -771,6 +828,7 @@ static bool __ep_remove(struct eventpoll *ep, struct epitem *epi, bool force)
 	call_rcu(&epi->rcu, epi_rcu_free);
 
 	percpu_counter_dec(&ep->user->epoll_watches);
+<<<<<<< HEAD
 	return ep_refcount_dec_and_test(ep);
 }
 
@@ -793,6 +851,30 @@ static void ep_clear_and_put(struct eventpoll *ep)
 		ep_poll_safewake(ep, NULL, 0);
 
 	mutex_lock(&ep->mtx);
+=======
+
+	return 0;
+}
+
+static void ep_free(struct eventpoll *ep)
+{
+	struct rb_node *rbp;
+	struct epitem *epi;
+
+	/* We need to release all tasks waiting for these file */
+	if (waitqueue_active(&ep->poll_wait))
+		ep_poll_safewake(ep, NULL);
+
+	/*
+	 * We need to lock this because we could be hit by
+	 * eventpoll_release_file() while we're freeing the "struct eventpoll".
+	 * We do not need to hold "ep->mtx" here because the epoll file
+	 * is on the way to be removed and no one has references to it
+	 * anymore. The only hit might come from eventpoll_release_file() but
+	 * holding "epmutex" is sufficient here.
+	 */
+	mutex_lock(&epmutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Walks through the whole tree by unregistering poll callbacks.
@@ -805,6 +887,7 @@ static void ep_clear_and_put(struct eventpoll *ep)
 	}
 
 	/*
+<<<<<<< HEAD
 	 * Walks through the whole tree and try to free each "struct epitem".
 	 * Note that ep_remove_safe() will not remove the epitem in case of a
 	 * racing eventpoll_release_file(); the latter will do the removal.
@@ -824,6 +907,28 @@ static void ep_clear_and_put(struct eventpoll *ep)
 
 	if (dispose)
 		ep_free(ep);
+=======
+	 * Walks through the whole tree by freeing each "struct epitem". At this
+	 * point we are sure no poll callbacks will be lingering around, and also by
+	 * holding "epmutex" we can be sure that no file cleanup code will hit
+	 * us during this operation. So we can avoid the lock on "ep->lock".
+	 * We do not need to lock ep->mtx, either, we only do it to prevent
+	 * a lockdep warning.
+	 */
+	mutex_lock(&ep->mtx);
+	while ((rbp = rb_first_cached(&ep->rbr)) != NULL) {
+		epi = rb_entry(rbp, struct epitem, rbn);
+		ep_remove(ep, epi);
+		cond_resched();
+	}
+	mutex_unlock(&ep->mtx);
+
+	mutex_unlock(&epmutex);
+	mutex_destroy(&ep->mtx);
+	free_uid(ep->user);
+	wakeup_source_unregister(ep->ws);
+	kfree(ep);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int ep_eventpoll_release(struct inode *inode, struct file *file)
@@ -831,7 +936,11 @@ static int ep_eventpoll_release(struct inode *inode, struct file *file)
 	struct eventpoll *ep = file->private_data;
 
 	if (ep)
+<<<<<<< HEAD
 		ep_clear_and_put(ep);
+=======
+		ep_free(ep);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -943,6 +1052,7 @@ void eventpoll_release_file(struct file *file)
 {
 	struct eventpoll *ep;
 	struct epitem *epi;
+<<<<<<< HEAD
 	bool dispose;
 
 	/*
@@ -971,6 +1081,35 @@ again:
 		goto again;
 	}
 	spin_unlock(&file->f_lock);
+=======
+	struct hlist_node *next;
+
+	/*
+	 * We don't want to get "file->f_lock" because it is not
+	 * necessary. It is not necessary because we're in the "struct file"
+	 * cleanup path, and this means that no one is using this file anymore.
+	 * So, for example, epoll_ctl() cannot hit here since if we reach this
+	 * point, the file counter already went to zero and fget() would fail.
+	 * The only hit might come from ep_free() but by holding the mutex
+	 * will correctly serialize the operation. We do need to acquire
+	 * "ep->mtx" after "epmutex" because ep_remove() requires it when called
+	 * from anywhere but ep_free().
+	 *
+	 * Besides, ep_remove() acquires the lock, so we can't hold it here.
+	 */
+	mutex_lock(&epmutex);
+	if (unlikely(!file->f_ep)) {
+		mutex_unlock(&epmutex);
+		return;
+	}
+	hlist_for_each_entry_safe(epi, next, file->f_ep, fllink) {
+		ep = epi->ep;
+		mutex_lock_nested(&ep->mtx, 0);
+		ep_remove(ep, epi);
+		mutex_unlock(&ep->mtx);
+	}
+	mutex_unlock(&epmutex);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int ep_alloc(struct eventpoll **pep)
@@ -993,7 +1132,10 @@ static int ep_alloc(struct eventpoll **pep)
 	ep->rbr = RB_ROOT_CACHED;
 	ep->ovflist = EP_UNACTIVE_PTR;
 	ep->user = user;
+<<<<<<< HEAD
 	refcount_set(&ep->refcount, 1);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	*pep = ep;
 
@@ -1249,7 +1391,11 @@ out_unlock:
 
 	/* We have to call this outside the lock */
 	if (pwake)
+<<<<<<< HEAD
 		ep_poll_safewake(ep, epi, pollflags & EPOLL_URING_WAKE);
+=======
+		ep_poll_safewake(ep, epi);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!(epi->event.events & EPOLLEXCLUSIVE))
 		ewake = 1;
@@ -1262,10 +1408,17 @@ out_unlock:
 		 */
 		list_del_init(&wait->entry);
 		/*
+<<<<<<< HEAD
 		 * ->whead != NULL protects us from the race with
 		 * ep_clear_and_put() or ep_remove(), ep_remove_wait_queue()
 		 * takes whead->lock held by the caller. Once we nullify it,
 		 * nothing protects ep/epi or even wait.
+=======
+		 * ->whead != NULL protects us from the race with ep_free()
+		 * or ep_remove(), ep_remove_wait_queue() takes whead->lock
+		 * held by the caller. Once we nullify it, nothing protects
+		 * ep/epi or even wait.
+>>>>>>> b7ba80a49124 (Commit)
 		 */
 		smp_store_release(&ep_pwq_from_wait(wait)->whead, NULL);
 	}
@@ -1535,6 +1688,7 @@ static int ep_insert(struct eventpoll *ep, const struct epoll_event *event,
 	if (tep)
 		mutex_unlock(&tep->mtx);
 
+<<<<<<< HEAD
 	/*
 	 * ep_remove_safe() calls in the later error paths can't lead to
 	 * ep_free() as the ep file itself still holds an ep reference.
@@ -1544,13 +1698,22 @@ static int ep_insert(struct eventpoll *ep, const struct epoll_event *event,
 	/* now check if we've created too many backpaths */
 	if (unlikely(full_check && reverse_path_check())) {
 		ep_remove_safe(ep, epi);
+=======
+	/* now check if we've created too many backpaths */
+	if (unlikely(full_check && reverse_path_check())) {
+		ep_remove(ep, epi);
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
 	if (epi->event.events & EPOLLWAKEUP) {
 		error = ep_create_wakeup_source(epi);
 		if (error) {
+<<<<<<< HEAD
 			ep_remove_safe(ep, epi);
+=======
+			ep_remove(ep, epi);
+>>>>>>> b7ba80a49124 (Commit)
 			return error;
 		}
 	}
@@ -1574,7 +1737,11 @@ static int ep_insert(struct eventpoll *ep, const struct epoll_event *event,
 	 * high memory pressure.
 	 */
 	if (unlikely(!epq.epi)) {
+<<<<<<< HEAD
 		ep_remove_safe(ep, epi);
+=======
+		ep_remove(ep, epi);
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENOMEM;
 	}
 
@@ -1600,7 +1767,11 @@ static int ep_insert(struct eventpoll *ep, const struct epoll_event *event,
 
 	/* We have to call this outside the lock */
 	if (pwake)
+<<<<<<< HEAD
 		ep_poll_safewake(ep, NULL, 0);
+=======
+		ep_poll_safewake(ep, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1676,7 +1847,11 @@ static int ep_modify(struct eventpoll *ep, struct epitem *epi,
 
 	/* We have to call this outside the lock */
 	if (pwake)
+<<<<<<< HEAD
 		ep_poll_safewake(ep, NULL, 0);
+=======
+		ep_poll_safewake(ep, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -2070,7 +2245,11 @@ static int do_epoll_create(int flags)
 out_free_fd:
 	put_unused_fd(fd);
 out_free_ep:
+<<<<<<< HEAD
 	ep_clear_and_put(ep);
+=======
+	ep_free(ep);
+>>>>>>> b7ba80a49124 (Commit)
 	return error;
 }
 
@@ -2212,6 +2391,7 @@ int do_epoll_ctl(int epfd, int op, int fd, struct epoll_event *epds,
 			error = -EEXIST;
 		break;
 	case EPOLL_CTL_DEL:
+<<<<<<< HEAD
 		if (epi) {
 			/*
 			 * The eventpoll itself is still alive: the refcount
@@ -2222,6 +2402,12 @@ int do_epoll_ctl(int epfd, int op, int fd, struct epoll_event *epds,
 		} else {
 			error = -ENOENT;
 		}
+=======
+		if (epi)
+			error = ep_remove(ep, epi);
+		else
+			error = -ENOENT;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case EPOLL_CTL_MOD:
 		if (epi) {

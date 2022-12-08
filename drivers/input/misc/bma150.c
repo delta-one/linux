@@ -414,7 +414,12 @@ static int bma150_initialize(struct bma150_data *bma150,
 	return bma150_set_mode(bma150, BMA150_MODE_SLEEP);
 }
 
+<<<<<<< HEAD
 static int bma150_probe(struct i2c_client *client)
+=======
+static int bma150_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct bma150_platform_data *pdata =
 			dev_get_platdata(&client->dev);
@@ -551,7 +556,11 @@ static struct i2c_driver bma150_driver = {
 	},
 	.class		= I2C_CLASS_HWMON,
 	.id_table	= bma150_id,
+<<<<<<< HEAD
 	.probe_new	= bma150_probe,
+=======
+	.probe		= bma150_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= bma150_remove,
 };
 

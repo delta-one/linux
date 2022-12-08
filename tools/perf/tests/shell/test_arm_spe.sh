@@ -9,7 +9,11 @@
 # German Gomez <german.gomez@arm.com>, 2021
 
 skip_if_no_arm_spe_event() {
+<<<<<<< HEAD
 	perf list | grep -E -q 'arm_spe_[0-9]+//' && return 0
+=======
+	perf list | egrep -q 'arm_spe_[0-9]+//' && return 0
+>>>>>>> b7ba80a49124 (Commit)
 
 	# arm_spe event doesn't exist
 	return 2
@@ -51,7 +55,11 @@ perf_script_samples() {
 	#	dd  3048 [002]          1    tlb-access:      ffffaa64999c __GI___libc_write+0x3c (/lib/aarch64-linux-gnu/libc-2.27.so)
 	#	dd  3048 [002]          1        memory:      ffffaa64999c __GI___libc_write+0x3c (/lib/aarch64-linux-gnu/libc-2.27.so)
 	perf script -F,-time -i ${perfdata} 2>&1 | \
+<<<<<<< HEAD
 		grep -E " +$1 +[0-9]+ .* +${events}:(.*:)? +" > /dev/null 2>&1
+=======
+		egrep " +$1 +[0-9]+ .* +${events}:(.*:)? +" > /dev/null 2>&1
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 perf_report_samples() {
@@ -62,7 +70,11 @@ perf_report_samples() {
 	#    7.71%     7.71%  dd    libc-2.27.so      [.] getenv
 	#    2.59%     2.59%  dd    ld-2.27.so        [.] strcmp
 	perf report --stdio -i ${perfdata} 2>&1 | \
+<<<<<<< HEAD
 		grep -E " +[0-9]+\.[0-9]+% +[0-9]+\.[0-9]+% +$1 " > /dev/null 2>&1
+=======
+		egrep " +[0-9]+\.[0-9]+% +[0-9]+\.[0-9]+% +$1 " > /dev/null 2>&1
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 arm_spe_snapshot_test() {

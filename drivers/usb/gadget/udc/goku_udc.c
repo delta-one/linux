@@ -1375,6 +1375,10 @@ static int goku_udc_start(struct usb_gadget *g,
 	struct goku_udc	*dev = to_goku_udc(g);
 
 	/* hook up the driver */
+<<<<<<< HEAD
+=======
+	driver->driver.bus = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	dev->driver = driver;
 
 	/*

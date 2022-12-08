@@ -370,7 +370,11 @@ static void chx_rx(fsm_instance *fi, int event, void *arg)
 					CTCM_FUNTAIL, dev->name, len);
 		priv->stats.rx_dropped++;
 		priv->stats.rx_length_errors++;
+<<<<<<< HEAD
 		goto again;
+=======
+						goto again;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (len > ch->max_bufsize) {
 		CTCM_DBF_TEXT_(TRACE, CTC_DBF_NOTICE,
@@ -378,7 +382,11 @@ static void chx_rx(fsm_instance *fi, int event, void *arg)
 				CTCM_FUNTAIL, dev->name, len, ch->max_bufsize);
 		priv->stats.rx_dropped++;
 		priv->stats.rx_length_errors++;
+<<<<<<< HEAD
 		goto again;
+=======
+						goto again;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
@@ -403,7 +411,11 @@ static void chx_rx(fsm_instance *fi, int event, void *arg)
 		*((__u16 *)skb->data) = len;
 		priv->stats.rx_dropped++;
 		priv->stats.rx_length_errors++;
+<<<<<<< HEAD
 		goto again;
+=======
+						goto again;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (block_len > 2) {
 		*((__u16 *)skb->data) = block_len - 2;
@@ -1006,7 +1018,11 @@ static void ctcm_chx_txretry(fsm_instance *fi, int event, void *arg)
 			use gptr as mpc indicator */
 		if (!(gptr && (fsm_getstate(gptr->fsm) != MPCG_STATE_READY)))
 			ctcm_chx_restart(fi, event, arg);
+<<<<<<< HEAD
 		goto done;
+=======
+				goto done;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	CTCM_DBF_TEXT_(TRACE, CTC_DBF_DEBUG,
@@ -1024,7 +1040,11 @@ static void ctcm_chx_txretry(fsm_instance *fi, int event, void *arg)
 						CTCM_FUNTAIL, ch->id);
 			fsm_event(priv->fsm, DEV_EVENT_TXDOWN, dev);
 			ctcm_chx_restart(fi, event, arg);
+<<<<<<< HEAD
 			goto done;
+=======
+				goto done;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		fsm_addtimer(&ch->timer, 1000, CTC_EVENT_TIMER, ch);
 		if (event == CTC_EVENT_TIMER) /* for TIMER not yet locked */
@@ -1251,12 +1271,20 @@ static void ctcmpc_chx_txdone(fsm_instance *fi, int event, void *arg)
 	if ((ch->collect_len <= 0) || (grp->in_sweep != 0)) {
 		spin_unlock(&ch->collect_lock);
 		fsm_newstate(fi, CTC_STATE_TXIDLE);
+<<<<<<< HEAD
 		goto done;
+=======
+				goto done;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (ctcm_checkalloc_buffer(ch)) {
 		spin_unlock(&ch->collect_lock);
+<<<<<<< HEAD
 		goto done;
+=======
+				goto done;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	ch->trans_skb->data = ch->trans_skb_data;
 	skb_reset_tail_pointer(ch->trans_skb);
@@ -1389,7 +1417,11 @@ static void ctcmpc_chx_rx(fsm_instance *fi, int event, void *arg)
 		CTCM_DBF_TEXT_(MPC_ERROR, CTC_DBF_ERROR,
 			"%s(%s): TRANS_SKB = NULL",
 				CTCM_FUNTAIL, dev->name);
+<<<<<<< HEAD
 		goto again;
+=======
+			goto again;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (len < TH_HEADER_LENGTH) {
@@ -1409,7 +1441,11 @@ static void ctcmpc_chx_rx(fsm_instance *fi, int event, void *arg)
 				"%s(%s): skb allocation failed",
 						CTCM_FUNTAIL, dev->name);
 			fsm_event(priv->mpcg->fsm, MPCG_EVENT_INOP, dev);
+<<<<<<< HEAD
 			goto again;
+=======
+					goto again;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		switch (fsm_getstate(grp->fsm)) {
 		case MPCG_STATE_RESET:
@@ -1441,9 +1477,15 @@ again:
 		skb_reset_tail_pointer(ch->trans_skb);
 		ch->trans_skb->len = 0;
 		ch->ccw[1].count = ch->max_bufsize;
+<<<<<<< HEAD
 		if (do_debug_ccw)
 			ctcmpc_dumpit((char *)&ch->ccw[0],
 				      sizeof(struct ccw1) * 3);
+=======
+			if (do_debug_ccw)
+			ctcmpc_dumpit((char *)&ch->ccw[0],
+					sizeof(struct ccw1) * 3);
+>>>>>>> b7ba80a49124 (Commit)
 		dolock = !in_hardirq();
 		if (dolock)
 			spin_lock_irqsave(
@@ -1562,7 +1604,11 @@ void ctcmpc_chx_rxidle(fsm_instance *fi, int event, void *arg)
 		if (rc != 0) {
 			fsm_newstate(fi, CTC_STATE_RXINIT);
 			ctcm_ccw_check_rc(ch, rc, "initial RX");
+<<<<<<< HEAD
 			goto done;
+=======
+				goto done;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		break;
 	default:
@@ -1677,10 +1723,17 @@ static void ctcmpc_chx_attnbusy(fsm_instance *fsm, int event, void *arg)
 		if (fsm_getstate(ch->fsm) == CH_XID0_INPROGRESS) {
 			fsm_newstate(ch->fsm, CH_XID0_PENDING) ;
 			fsm_deltimer(&grp->timer);
+<<<<<<< HEAD
 			goto done;
 		}
 		fsm_event(grp->fsm, MPCG_EVENT_INOP, dev);
 		goto done;
+=======
+				goto done;
+		}
+		fsm_event(grp->fsm, MPCG_EVENT_INOP, dev);
+				goto done;
+>>>>>>> b7ba80a49124 (Commit)
 	case MPCG_STATE_XID2INITX:
 		/* XID2 was received before ATTN Busy for second
 		   channel.Send yside xid for second channel.
@@ -1768,7 +1821,11 @@ static void ctcmpc_chx_send_sweep(fsm_instance *fsm, int event, void *arg)
 		/* give the previous IO time to complete */
 		fsm_addtimer(&wch->sweep_timer,
 			200, CTC_EVENT_RSWEEP_TIMER, wch);
+<<<<<<< HEAD
 		goto done;
+=======
+				goto done;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	skb = skb_dequeue(&wch->sweep_queue);
@@ -1780,7 +1837,11 @@ static void ctcmpc_chx_send_sweep(fsm_instance *fsm, int event, void *arg)
 		ctcm_clear_busy_do(dev);
 		dev_kfree_skb_any(skb);
 		fsm_event(grp->fsm, MPCG_EVENT_INOP, dev);
+<<<<<<< HEAD
 		goto done;
+=======
+				goto done;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		refcount_inc(&skb->users);
 		skb_queue_tail(&wch->io_queue, skb);

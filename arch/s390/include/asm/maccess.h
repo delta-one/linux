@@ -7,7 +7,11 @@
 struct iov_iter;
 
 extern unsigned long __memcpy_real_area;
+<<<<<<< HEAD
 extern pte_t *memcpy_real_ptep;
+=======
+void memcpy_real_init(void);
+>>>>>>> b7ba80a49124 (Commit)
 size_t memcpy_real_iter(struct iov_iter *iter, unsigned long src, size_t count);
 int memcpy_real(void *dest, unsigned long src, size_t count);
 #ifdef CONFIG_CRASH_DUMP

@@ -40,7 +40,11 @@
 	gpio-keys {
 		compatible = "gpio-keys";
 
+<<<<<<< HEAD
 		button-user {
+=======
+		user-pa13 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "User-PA13";
 			linux,code = <BTN_1>;
 			gpios = <&gpioa 13 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
@@ -59,6 +63,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	v3v3_sw: v3v3-sw {
 		compatible = "regulator-fixed";
 		regulator-name = "v3v3_sw";
@@ -75,6 +80,8 @@
 		regulator-always-on;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vdd_sd: vdd-sd {
 		compatible = "regulator-fixed";
 		regulator-name = "vdd_sd";
@@ -82,6 +89,7 @@
 		regulator-max-microvolt = <2900000>;
 		regulator-always-on;
 	};
+<<<<<<< HEAD
 
 	vdd_usb: vdd-usb {
 		compatible = "regulator-fixed";
@@ -115,6 +123,8 @@
 			st,min-sample-time-ns = <5000>;
 		};
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &i2c1 {
@@ -128,6 +138,7 @@
 	/* spare dmas for other usage */
 	/delete-property/dmas;
 	/delete-property/dma-names;
+<<<<<<< HEAD
 
 	mcp23017: pinctrl@21 {
 		compatible = "microchip,mcp23017";
@@ -164,6 +175,8 @@
 			};
 		};
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &i2c5 {
@@ -193,7 +206,11 @@
 	pinctrl-0 = <&sdmmc1_b4_pins_a &sdmmc1_clk_pins_a>;
 	pinctrl-1 = <&sdmmc1_b4_od_pins_a &sdmmc1_clk_pins_a>;
 	pinctrl-2 = <&sdmmc1_b4_sleep_pins_a>;
+<<<<<<< HEAD
 	cd-gpios = <&gpioh 4 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+=======
+	broken-cd;
+>>>>>>> b7ba80a49124 (Commit)
 	disable-wp;
 	st,neg-edge;
 	bus-width = <4>;
@@ -208,6 +225,7 @@
 	status = "disabled";
 };
 
+<<<<<<< HEAD
 &timers3 {
 	/delete-property/dmas;
 	/delete-property/dma-names;
@@ -266,11 +284,14 @@
 	};
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &uart4 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&uart4_pins_a>;
 	status = "okay";
 };
+<<<<<<< HEAD
 
 &usbh_ehci {
 	phys = <&usbphyc_port0>;
@@ -328,3 +349,5 @@
 	st,no-hs-ftime-ctrl;
 	st,no-lsfs-sc;
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

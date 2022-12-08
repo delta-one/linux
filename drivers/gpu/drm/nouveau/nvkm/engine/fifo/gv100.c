@@ -19,6 +19,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  */
+<<<<<<< HEAD
 #include "priv.h"
 #include "chan.h"
 #include "chid.h"
@@ -188,11 +189,38 @@ gv100_runl_insert_chan(struct nvkm_chan *chan, struct nvkm_memory *memory, u64 o
 	nvkm_wo32(memory, offset + 0x0, lower_32_bits(user) | chan->runq << 1);
 	nvkm_wo32(memory, offset + 0x4, upper_32_bits(user));
 	nvkm_wo32(memory, offset + 0x8, lower_32_bits(inst) | chan->id);
+=======
+#include "gk104.h"
+#include "cgrp.h"
+#include "changk104.h"
+#include "user.h"
+
+#include <core/gpuobj.h>
+
+#include <nvif/class.h>
+
+void
+gv100_fifo_runlist_chan(struct gk104_fifo_chan *chan,
+			struct nvkm_memory *memory, u32 offset)
+{
+	struct nvkm_memory *usermem = chan->fifo->user.mem;
+	const u64 user = nvkm_memory_addr(usermem) + (chan->base.chid * 0x200);
+	const u64 inst = chan->base.inst->addr;
+
+	nvkm_wo32(memory, offset + 0x0, lower_32_bits(user));
+	nvkm_wo32(memory, offset + 0x4, upper_32_bits(user));
+	nvkm_wo32(memory, offset + 0x8, lower_32_bits(inst) | chan->base.chid);
+>>>>>>> b7ba80a49124 (Commit)
 	nvkm_wo32(memory, offset + 0xc, upper_32_bits(inst));
 }
 
 void
+<<<<<<< HEAD
 gv100_runl_insert_cgrp(struct nvkm_cgrp *cgrp, struct nvkm_memory *memory, u64 offset)
+=======
+gv100_fifo_runlist_cgrp(struct nvkm_fifo_cgrp *cgrp,
+			struct nvkm_memory *memory, u32 offset)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	nvkm_wo32(memory, offset + 0x0, (128 << 24) | (3 << 16) | 0x00000001);
 	nvkm_wo32(memory, offset + 0x4, cgrp->chan_nr);
@@ -200,6 +228,7 @@ gv100_runl_insert_cgrp(struct nvkm_cgrp *cgrp, struct nvkm_memory *memory, u64 o
 	nvkm_wo32(memory, offset + 0xc, 0x00000000);
 }
 
+<<<<<<< HEAD
 static const struct nvkm_runl_func
 gv100_runl = {
 	.runqs = 2,
@@ -218,6 +247,18 @@ gv100_runl = {
 
 const struct nvkm_enum
 gv100_fifo_mmu_fault_gpcclient[] = {
+=======
+static const struct gk104_fifo_runlist_func
+gv100_fifo_runlist = {
+	.size = 16,
+	.cgrp = gv100_fifo_runlist_cgrp,
+	.chan = gv100_fifo_runlist_chan,
+	.commit = gk104_fifo_runlist_commit,
+};
+
+const struct nvkm_enum
+gv100_fifo_fault_gpcclient[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ 0x00, "T1_0" },
 	{ 0x01, "T1_1" },
 	{ 0x02, "T1_2" },
@@ -319,7 +360,11 @@ gv100_fifo_mmu_fault_gpcclient[] = {
 };
 
 const struct nvkm_enum
+<<<<<<< HEAD
 gv100_fifo_mmu_fault_hubclient[] = {
+=======
+gv100_fifo_fault_hubclient[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ 0x00, "VIP" },
 	{ 0x01, "CE0" },
 	{ 0x02, "CE1" },
@@ -381,7 +426,11 @@ gv100_fifo_mmu_fault_hubclient[] = {
 };
 
 const struct nvkm_enum
+<<<<<<< HEAD
 gv100_fifo_mmu_fault_reason[] = {
+=======
+gv100_fifo_fault_reason[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ 0x00, "PDE" },
 	{ 0x01, "PDE_SIZE" },
 	{ 0x02, "PTE" },
@@ -402,7 +451,11 @@ gv100_fifo_mmu_fault_reason[] = {
 };
 
 static const struct nvkm_enum
+<<<<<<< HEAD
 gv100_fifo_mmu_fault_engine[] = {
+=======
+gv100_fifo_fault_engine[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ 0x01, "DISPLAY" },
 	{ 0x03, "PTP" },
 	{ 0x04, "BAR1", NULL, NVKM_SUBDEV_BAR },
@@ -429,7 +482,11 @@ gv100_fifo_mmu_fault_engine[] = {
 };
 
 const struct nvkm_enum
+<<<<<<< HEAD
 gv100_fifo_mmu_fault_access[] = {
+=======
+gv100_fifo_fault_access[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ 0x0, "VIRT_READ" },
 	{ 0x1, "VIRT_WRITE" },
 	{ 0x2, "VIRT_ATOMIC" },
@@ -442,6 +499,7 @@ gv100_fifo_mmu_fault_access[] = {
 	{}
 };
 
+<<<<<<< HEAD
 static const struct nvkm_fifo_func_mmu_fault
 gv100_fifo_mmu_fault = {
 	.recover = gf100_fifo_mmu_fault_recover,
@@ -482,11 +540,29 @@ gv100_fifo = {
 	.engn_ce = &gv100_engn_ce,
 	.cgrp = {{ 0, 0, KEPLER_CHANNEL_GROUP_A  }, &gk110_cgrp, .force = true },
 	.chan = {{ 0, 0,  VOLTA_CHANNEL_GPFIFO_A }, &gv100_chan },
+=======
+static const struct gk104_fifo_func
+gv100_fifo = {
+	.pbdma = &gm200_fifo_pbdma,
+	.fault.access = gv100_fifo_fault_access,
+	.fault.engine = gv100_fifo_fault_engine,
+	.fault.reason = gv100_fifo_fault_reason,
+	.fault.hubclient = gv100_fifo_fault_hubclient,
+	.fault.gpcclient = gv100_fifo_fault_gpcclient,
+	.runlist = &gv100_fifo_runlist,
+	.user = {{-1,-1,VOLTA_USERMODE_A      }, gv100_fifo_user_new   },
+	.chan = {{ 0, 0,VOLTA_CHANNEL_GPFIFO_A}, gv100_fifo_gpfifo_new },
+	.cgrp_force = true,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int
 gv100_fifo_new(struct nvkm_device *device, enum nvkm_subdev_type type, int inst,
 	       struct nvkm_fifo **pfifo)
 {
+<<<<<<< HEAD
 	return nvkm_fifo_new_(&gv100_fifo, device, type, inst, pfifo);
+=======
+	return gk104_fifo_new_(&gv100_fifo, device, type, inst, 4096, pfifo);
+>>>>>>> b7ba80a49124 (Commit)
 }

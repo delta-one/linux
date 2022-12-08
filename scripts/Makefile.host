@@ -80,6 +80,7 @@ host-rust	:= $(addprefix $(obj)/,$(host-rust))
 #####
 # Handle options to gcc. Support building with separate output directory
 
+<<<<<<< HEAD
 hostc_flags    = -Wp,-MMD,$(depfile) \
                  $(KBUILD_HOSTCFLAGS) $(HOST_EXTRACFLAGS) \
                  $(HOSTCFLAGS_$(target-stem).o)
@@ -89,15 +90,35 @@ hostcxx_flags  = -Wp,-MMD,$(depfile) \
 hostrust_flags = --emit=dep-info=$(depfile) \
                  $(KBUILD_HOSTRUSTFLAGS) $(HOST_EXTRARUSTFLAGS) \
                  $(HOSTRUSTFLAGS_$(target-stem))
+=======
+_hostc_flags   = $(KBUILD_HOSTCFLAGS)   $(HOST_EXTRACFLAGS)   \
+                 $(HOSTCFLAGS_$(target-stem).o)
+_hostcxx_flags = $(KBUILD_HOSTCXXFLAGS) $(HOST_EXTRACXXFLAGS) \
+                 $(HOSTCXXFLAGS_$(target-stem).o)
+_hostrust_flags = $(KBUILD_HOSTRUSTFLAGS) $(HOST_EXTRARUSTFLAGS) \
+                  $(HOSTRUSTFLAGS_$(target-stem))
+>>>>>>> b7ba80a49124 (Commit)
 
 # $(objtree)/$(obj) for including generated headers from checkin source files
 ifeq ($(KBUILD_EXTMOD),)
 ifdef building_out_of_srctree
+<<<<<<< HEAD
 hostc_flags   += -I $(objtree)/$(obj)
 hostcxx_flags += -I $(objtree)/$(obj)
 endif
 endif
 
+=======
+_hostc_flags   += -I $(objtree)/$(obj)
+_hostcxx_flags += -I $(objtree)/$(obj)
+endif
+endif
+
+hostc_flags    = -Wp,-MMD,$(depfile) $(_hostc_flags)
+hostcxx_flags  = -Wp,-MMD,$(depfile) $(_hostcxx_flags)
+hostrust_flags = $(_hostrust_flags)
+
+>>>>>>> b7ba80a49124 (Commit)
 #####
 # Compile programs on the host
 
@@ -148,7 +169,14 @@ $(host-cxxobjs): $(obj)/%.o: $(src)/%.cc FORCE
 # host-rust -> Executable
 quiet_cmd_host-rust	= HOSTRUSTC $@
       cmd_host-rust	= \
+<<<<<<< HEAD
 	$(HOSTRUSTC) $(hostrust_flags) --emit=link=$@ $<
+=======
+	$(HOSTRUSTC) $(hostrust_flags) --emit=dep-info,link \
+		--out-dir=$(obj)/ $<; \
+	mv $(obj)/$(target-stem).d $(depfile); \
+	sed -i '/^\#/d' $(depfile)
+>>>>>>> b7ba80a49124 (Commit)
 $(host-rust): $(obj)/%: $(src)/%.rs FORCE
 	$(call if_changed_dep,host-rust)
 

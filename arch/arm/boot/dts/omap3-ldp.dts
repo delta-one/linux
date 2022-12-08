@@ -301,5 +301,9 @@
 
 &vaux1 {
 	/* Needed for ads7846 */
+<<<<<<< HEAD
 	regulator-name = "vcc";
+=======
+        regulator-name = "vcc";
+>>>>>>> b7ba80a49124 (Commit)
 };

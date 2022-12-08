@@ -19,7 +19,11 @@
    contributing
    maintainer-profile
 
+<<<<<<< HEAD
 .. only::  subproject and html
+=======
+.. only::  子项目与HTML
+>>>>>>> b7ba80a49124 (Commit)
 
    目录
    ====

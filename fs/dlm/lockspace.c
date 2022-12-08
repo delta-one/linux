@@ -17,6 +17,10 @@
 #include "recoverd.h"
 #include "dir.h"
 #include "midcomms.h"
+<<<<<<< HEAD
+=======
+#include "lowcomms.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "config.h"
 #include "memory.h"
 #include "lock.h"
@@ -215,9 +219,15 @@ static int do_uevent(struct dlm_ls *ls, int in)
 	return ls->ls_uevent_result;
 }
 
+<<<<<<< HEAD
 static int dlm_uevent(const struct kobject *kobj, struct kobj_uevent_env *env)
 {
 	const struct dlm_ls *ls = container_of(kobj, struct dlm_ls, ls_kobj);
+=======
+static int dlm_uevent(struct kobject *kobj, struct kobj_uevent_env *env)
+{
+	struct dlm_ls *ls = container_of(kobj, struct dlm_ls, ls_kobj);
+>>>>>>> b7ba80a49124 (Commit)
 
 	add_uevent_var(env, "LOCKSPACE=%s", ls->ls_name);
 	return 0;
@@ -273,6 +283,10 @@ static int dlm_scand(void *data)
 			if (dlm_lock_recovery_try(ls)) {
 				ls->ls_scan_time = jiffies;
 				dlm_scan_rsbs(ls);
+<<<<<<< HEAD
+=======
+				dlm_scan_timeout(ls);
+>>>>>>> b7ba80a49124 (Commit)
 				dlm_unlock_recovery(ls);
 			} else {
 				ls->ls_scan_time += HZ;
@@ -380,6 +394,7 @@ static int threads_start(void)
 {
 	int error;
 
+<<<<<<< HEAD
 	/* Thread for sending/receiving messages for all lockspace's */
 	error = dlm_midcomms_start();
 	if (error) {
@@ -391,12 +406,30 @@ static int threads_start(void)
 	if (error) {
 		log_print("cannot start dlm_scand thread %d", error);
 		goto midcomms_fail;
+=======
+	error = dlm_scand_start();
+	if (error) {
+		log_print("cannot start dlm_scand thread %d", error);
+		goto fail;
+	}
+
+	/* Thread for sending/receiving messages for all lockspace's */
+	error = dlm_midcomms_start();
+	if (error) {
+		log_print("cannot start dlm lowcomms %d", error);
+		goto scand_fail;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
 
+<<<<<<< HEAD
  midcomms_fail:
 	dlm_midcomms_stop();
+=======
+ scand_fail:
+	dlm_scand_stop();
+>>>>>>> b7ba80a49124 (Commit)
  fail:
 	return error;
 }
@@ -471,7 +504,11 @@ static int new_lockspace(const char *name, const char *cluster,
 
 	error = -ENOMEM;
 
+<<<<<<< HEAD
 	ls = kzalloc(sizeof(*ls), GFP_NOFS);
+=======
+	ls = kzalloc(sizeof(struct dlm_ls) + namelen, GFP_NOFS);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ls)
 		goto out;
 	memcpy(ls->ls_name, name, namelen);
@@ -487,10 +524,34 @@ static int new_lockspace(const char *name, const char *cluster,
 		ls->ls_ops_arg = ops_arg;
 	}
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_DLM_DEPRECATED_API
+	if (flags & DLM_LSFL_TIMEWARN) {
+		pr_warn_once("===============================================================\n"
+			     "WARNING: the dlm DLM_LSFL_TIMEWARN flag is being deprecated and\n"
+			     "         will be removed in v6.2!\n"
+			     "         Inclusive DLM_LSFL_TIMEWARN define in UAPI header!\n"
+			     "===============================================================\n");
+
+		set_bit(LSFL_TIMEWARN, &ls->ls_flags);
+	}
+
+	/* ls_exflags are forced to match among nodes, and we don't
+	 * need to require all nodes to have some flags set
+	 */
+	ls->ls_exflags = (flags & ~(DLM_LSFL_TIMEWARN | DLM_LSFL_FS |
+				    DLM_LSFL_NEWEXCL));
+#else
+>>>>>>> b7ba80a49124 (Commit)
 	/* ls_exflags are forced to match among nodes, and we don't
 	 * need to require all nodes to have some flags set
 	 */
 	ls->ls_exflags = (flags & ~(DLM_LSFL_FS | DLM_LSFL_NEWEXCL));
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 	size = READ_ONCE(dlm_config.ci_rsbtbl_size);
 	ls->ls_rsbtbl_size = size;
@@ -504,6 +565,12 @@ static int new_lockspace(const char *name, const char *cluster,
 		spin_lock_init(&ls->ls_rsbtbl[i].lock);
 	}
 
+<<<<<<< HEAD
+=======
+	spin_lock_init(&ls->ls_remove_spin);
+	init_waitqueue_head(&ls->ls_remove_wait);
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < DLM_REMOVE_NAMES_MAX; i++) {
 		ls->ls_remove_names[i] = kzalloc(DLM_RESNAME_MAXLEN+1,
 						 GFP_KERNEL);
@@ -518,6 +585,13 @@ static int new_lockspace(const char *name, const char *cluster,
 	mutex_init(&ls->ls_waiters_mutex);
 	INIT_LIST_HEAD(&ls->ls_orphans);
 	mutex_init(&ls->ls_orphans_mutex);
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_DLM_DEPRECATED_API
+	INIT_LIST_HEAD(&ls->ls_timeout);
+	mutex_init(&ls->ls_timeout_mutex);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 	INIT_LIST_HEAD(&ls->ls_new_rsb);
 	spin_lock_init(&ls->ls_new_rsb_spin);
@@ -529,8 +603,13 @@ static int new_lockspace(const char *name, const char *cluster,
 	ls->ls_total_weight = 0;
 	ls->ls_node_array = NULL;
 
+<<<<<<< HEAD
 	memset(&ls->ls_local_rsb, 0, sizeof(struct dlm_rsb));
 	ls->ls_local_rsb.res_ls = ls;
+=======
+	memset(&ls->ls_stub_rsb, 0, sizeof(struct dlm_rsb));
+	ls->ls_stub_rsb.res_ls = ls;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ls->ls_debug_rsb_dentry = NULL;
 	ls->ls_debug_waiters_dentry = NULL;
@@ -540,7 +619,11 @@ static int new_lockspace(const char *name, const char *cluster,
 	init_completion(&ls->ls_recovery_done);
 	ls->ls_recovery_result = -1;
 
+<<<<<<< HEAD
 	spin_lock_init(&ls->ls_cb_lock);
+=======
+	mutex_init(&ls->ls_cb_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	INIT_LIST_HEAD(&ls->ls_cb_delay);
 
 	ls->ls_recoverd_task = NULL;
@@ -549,7 +632,11 @@ static int new_lockspace(const char *name, const char *cluster,
 	spin_lock_init(&ls->ls_rcom_spin);
 	get_random_bytes(&ls->ls_rcom_seq, sizeof(uint64_t));
 	ls->ls_recover_status = 0;
+<<<<<<< HEAD
 	ls->ls_recover_seq = get_random_u64();
+=======
+	ls->ls_recover_seq = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	ls->ls_recover_args = NULL;
 	init_rwsem(&ls->ls_in_recovery);
 	init_rwsem(&ls->ls_recv_active);
@@ -699,7 +786,11 @@ static int __dlm_new_lockspace(const char *name, const char *cluster,
 	if (!ls_count) {
 		dlm_scand_stop();
 		dlm_midcomms_shutdown();
+<<<<<<< HEAD
 		dlm_midcomms_stop();
+=======
+		dlm_lowcomms_stop();
+>>>>>>> b7ba80a49124 (Commit)
 	}
  out:
 	mutex_unlock(&ls_lock);
@@ -741,7 +832,11 @@ static int lkb_idr_free(int id, void *p, void *data)
 {
 	struct dlm_lkb *lkb = p;
 
+<<<<<<< HEAD
 	if (lkb->lkb_lvbptr && test_bit(DLM_IFL_MSTCPY_BIT, &lkb->lkb_iflags))
+=======
+	if (lkb->lkb_lvbptr && lkb->lkb_flags & DLM_IFL_MSTCPY)
+>>>>>>> b7ba80a49124 (Commit)
 		dlm_free_lvb(lkb->lkb_lvbptr);
 
 	dlm_free_lkb(lkb);
@@ -797,9 +892,12 @@ static int release_lockspace(struct dlm_ls *ls, int force)
 		return rv;
 	}
 
+<<<<<<< HEAD
 	if (ls_count == 1)
 		dlm_midcomms_version_wait();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dlm_device_deregister(ls);
 
 	if (force < 3 && dlm_user_daemon_available())
@@ -905,7 +1003,11 @@ int dlm_release_lockspace(void *lockspace, int force)
 	if (!error)
 		ls_count--;
 	if (!ls_count)
+<<<<<<< HEAD
 		dlm_midcomms_stop();
+=======
+		dlm_lowcomms_stop();
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&ls_lock);
 
 	return error;

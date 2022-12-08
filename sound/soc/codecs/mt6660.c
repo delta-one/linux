@@ -509,11 +509,15 @@ static int mt6660_i2c_probe(struct i2c_client *client)
 	ret = devm_snd_soc_register_component(chip->dev,
 					       &mt6660_component_driver,
 					       &mt6660_codec_dai, 1);
+<<<<<<< HEAD
 	if (ret)
 		pm_runtime_disable(chip->dev);
 
 	return ret;
 
+=======
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 probe_fail:
 	_mt6660_chip_power_on(chip, 0);
 	mutex_destroy(&chip->io_lock);

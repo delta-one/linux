@@ -18,6 +18,9 @@ mtk_t7xx-y:=	t7xx_pci.o \
 		t7xx_hif_dpmaif_rx.o  \
 		t7xx_dpmaif.o \
 		t7xx_netdev.o
+<<<<<<< HEAD
 
 mtk_t7xx-$(CONFIG_WWAN_DEBUGFS) += \
 		t7xx_port_trace.o \
+=======
+>>>>>>> b7ba80a49124 (Commit)

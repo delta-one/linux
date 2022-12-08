@@ -82,7 +82,11 @@ static void guess_vmlinux_btf_id(__u32 attach_btf_obj_id)
 	if (fd < 0)
 		return;
 
+<<<<<<< HEAD
 	err = bpf_btf_get_info_by_fd(fd, &btf_info, &btf_len);
+=======
+	err = bpf_obj_get_info_by_fd(fd, &btf_info, &btf_len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto out;
 
@@ -108,7 +112,11 @@ static int show_bpf_prog(int id, enum bpf_attach_type attach_type,
 	if (prog_fd < 0)
 		return -1;
 
+<<<<<<< HEAD
 	if (bpf_prog_get_info_by_fd(prog_fd, &info, &info_len)) {
+=======
+	if (bpf_obj_get_info_by_fd(prog_fd, &info, &info_len)) {
+>>>>>>> b7ba80a49124 (Commit)
 		close(prog_fd);
 		return -1;
 	}

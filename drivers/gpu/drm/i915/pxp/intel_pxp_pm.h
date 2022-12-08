@@ -11,7 +11,11 @@ struct intel_pxp;
 #ifdef CONFIG_DRM_I915_PXP
 void intel_pxp_suspend_prepare(struct intel_pxp *pxp);
 void intel_pxp_suspend(struct intel_pxp *pxp);
+<<<<<<< HEAD
 void intel_pxp_resume_complete(struct intel_pxp *pxp);
+=======
+void intel_pxp_resume(struct intel_pxp *pxp);
+>>>>>>> b7ba80a49124 (Commit)
 void intel_pxp_runtime_suspend(struct intel_pxp *pxp);
 #else
 static inline void intel_pxp_suspend_prepare(struct intel_pxp *pxp)
@@ -22,7 +26,11 @@ static inline void intel_pxp_suspend(struct intel_pxp *pxp)
 {
 }
 
+<<<<<<< HEAD
 static inline void intel_pxp_resume_complete(struct intel_pxp *pxp)
+=======
+static inline void intel_pxp_resume(struct intel_pxp *pxp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 }
 
@@ -32,6 +40,10 @@ static inline void intel_pxp_runtime_suspend(struct intel_pxp *pxp)
 #endif
 static inline void intel_pxp_runtime_resume(struct intel_pxp *pxp)
 {
+<<<<<<< HEAD
 	intel_pxp_resume_complete(pxp);
+=======
+	intel_pxp_resume(pxp);
+>>>>>>> b7ba80a49124 (Commit)
 }
 #endif /* __INTEL_PXP_PM_H__ */

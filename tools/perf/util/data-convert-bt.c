@@ -19,6 +19,10 @@
 #include <babeltrace/ctf-writer/event-fields.h>
 #include <babeltrace/ctf-ir/utils.h>
 #include <babeltrace/ctf/events.h>
+<<<<<<< HEAD
+=======
+#include <traceevent/event-parse.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include "asm/bug.h"
 #include "data-convert.h"
 #include "session.h"
@@ -33,11 +37,14 @@
 #include <linux/time64.h>
 #include "util.h"
 #include "clockid.h"
+<<<<<<< HEAD
 #include "util/sample.h"
 
 #ifdef HAVE_LIBTRACEEVENT
 #include <traceevent/event-parse.h>
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define pr_N(n, fmt, ...) \
 	eprintf(n, debug_data_convert, fmt, ##__VA_ARGS__)
@@ -322,7 +329,11 @@ static int add_tracepoint_field_value(struct ctf_writer *cw,
 		offset = tmp_val;
 		len = offset >> 16;
 		offset &= 0xffff;
+<<<<<<< HEAD
 		if (tep_field_is_relative(flags))
+=======
+		if (flags & TEP_FIELD_IS_RELATIVE)
+>>>>>>> b7ba80a49124 (Commit)
 			offset += fmtf->offset + fmtf->size;
 	}
 

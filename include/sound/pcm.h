@@ -106,6 +106,7 @@ struct snd_pcm_ops {
 #define SNDRV_PCM_POS_XRUN		((snd_pcm_uframes_t)-1)
 
 /* If you change this don't forget to change rates[] table in pcm_native.c */
+<<<<<<< HEAD
 #define SNDRV_PCM_RATE_5512		(1U<<0)		/* 5512Hz */
 #define SNDRV_PCM_RATE_8000		(1U<<1)		/* 8000Hz */
 #define SNDRV_PCM_RATE_11025		(1U<<2)		/* 11025Hz */
@@ -124,6 +125,26 @@ struct snd_pcm_ops {
 
 #define SNDRV_PCM_RATE_CONTINUOUS	(1U<<30)	/* continuous range */
 #define SNDRV_PCM_RATE_KNOT		(1U<<31)	/* supports more non-continuos rates */
+=======
+#define SNDRV_PCM_RATE_5512		(1<<0)		/* 5512Hz */
+#define SNDRV_PCM_RATE_8000		(1<<1)		/* 8000Hz */
+#define SNDRV_PCM_RATE_11025		(1<<2)		/* 11025Hz */
+#define SNDRV_PCM_RATE_16000		(1<<3)		/* 16000Hz */
+#define SNDRV_PCM_RATE_22050		(1<<4)		/* 22050Hz */
+#define SNDRV_PCM_RATE_32000		(1<<5)		/* 32000Hz */
+#define SNDRV_PCM_RATE_44100		(1<<6)		/* 44100Hz */
+#define SNDRV_PCM_RATE_48000		(1<<7)		/* 48000Hz */
+#define SNDRV_PCM_RATE_64000		(1<<8)		/* 64000Hz */
+#define SNDRV_PCM_RATE_88200		(1<<9)		/* 88200Hz */
+#define SNDRV_PCM_RATE_96000		(1<<10)		/* 96000Hz */
+#define SNDRV_PCM_RATE_176400		(1<<11)		/* 176400Hz */
+#define SNDRV_PCM_RATE_192000		(1<<12)		/* 192000Hz */
+#define SNDRV_PCM_RATE_352800		(1<<13)		/* 352800Hz */
+#define SNDRV_PCM_RATE_384000		(1<<14)		/* 384000Hz */
+
+#define SNDRV_PCM_RATE_CONTINUOUS	(1<<30)		/* continuous range */
+#define SNDRV_PCM_RATE_KNOT		(1<<31)		/* supports more non-continuos rates */
+>>>>>>> b7ba80a49124 (Commit)
 
 #define SNDRV_PCM_RATE_8000_44100	(SNDRV_PCM_RATE_8000|SNDRV_PCM_RATE_11025|\
 					 SNDRV_PCM_RATE_16000|SNDRV_PCM_RATE_22050|\
@@ -346,8 +367,11 @@ static inline void snd_pcm_pack_audio_tstamp_report(__u32 *data, __u32 *accuracy
 
 struct snd_pcm_runtime {
 	/* -- Status -- */
+<<<<<<< HEAD
 	snd_pcm_state_t state;		/* stream state */
 	snd_pcm_state_t suspended_state; /* suspended stream state */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct snd_pcm_substream *trigger_master;
 	struct timespec64 trigger_tstamp;	/* trigger timestamp */
 	bool trigger_tstamp_latched;     /* trigger timestamp latched in low-level driver/hardware */
@@ -680,12 +704,18 @@ void snd_pcm_stream_unlock_irqrestore(struct snd_pcm_substream *substream,
  */
 static inline int snd_pcm_running(struct snd_pcm_substream *substream)
 {
+<<<<<<< HEAD
 	return (substream->runtime->state == SNDRV_PCM_STATE_RUNNING ||
 		(substream->runtime->state == SNDRV_PCM_STATE_DRAINING &&
+=======
+	return (substream->runtime->status->state == SNDRV_PCM_STATE_RUNNING ||
+		(substream->runtime->status->state == SNDRV_PCM_STATE_DRAINING &&
+>>>>>>> b7ba80a49124 (Commit)
 		 substream->stream == SNDRV_PCM_STREAM_PLAYBACK));
 }
 
 /**
+<<<<<<< HEAD
  * __snd_pcm_set_state - Change the current PCM state
  * @runtime: PCM runtime to set
  * @state: the current state to set
@@ -700,6 +730,8 @@ static inline void __snd_pcm_set_state(struct snd_pcm_runtime *runtime,
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * bytes_to_samples - Unit conversion of the size from bytes to samples
  * @runtime: PCM runtime instance
  * @size: size in bytes

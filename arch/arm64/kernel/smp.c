@@ -361,7 +361,11 @@ void __cpu_die(unsigned int cpu)
  * Called from the idle thread for the CPU which has been shutdown.
  *
  */
+<<<<<<< HEAD
 void __noreturn cpu_die(void)
+=======
+void cpu_die(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int cpu = smp_processor_id();
 	const struct cpu_operations *ops = get_cpu_ops(cpu);
@@ -865,7 +869,11 @@ static void do_handle_IPI(int ipinr)
 	unsigned int cpu = smp_processor_id();
 
 	if ((unsigned)ipinr < NR_IPI)
+<<<<<<< HEAD
 		trace_ipi_entry(ipi_types[ipinr]);
+=======
+		trace_ipi_entry_rcuidle(ipi_types[ipinr]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (ipinr) {
 	case IPI_RESCHEDULE:
@@ -914,7 +922,11 @@ static void do_handle_IPI(int ipinr)
 	}
 
 	if ((unsigned)ipinr < NR_IPI)
+<<<<<<< HEAD
 		trace_ipi_exit(ipi_types[ipinr]);
+=======
+		trace_ipi_exit_rcuidle(ipi_types[ipinr]);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static irqreturn_t ipi_handler(int irq, void *data)

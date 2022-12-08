@@ -15,6 +15,12 @@ description: |
 maintainers:
   - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 
+<<<<<<< HEAD
+=======
+allOf:
+  - $ref: /schemas/pci/snps,dw-pcie-ep.yaml#
+
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   compatible:
     enum:
@@ -26,6 +32,7 @@ properties:
     maxItems: 5
 
   reg-names:
+<<<<<<< HEAD
     minItems: 4
     items:
       - const: dbi
@@ -33,18 +40,50 @@ properties:
       - const: link
       - const: addr_space
       - const: atu
+=======
+    oneOf:
+      - items:
+          - const: dbi
+          - const: dbi2
+          - const: link
+          - const: addr_space
+      - items:
+          - const: dbi
+          - const: dbi2
+          - const: link
+          - const: addr_space
+          - const: atu
+>>>>>>> b7ba80a49124 (Commit)
 
   clocks:
     minItems: 1
     maxItems: 2
 
+<<<<<<< HEAD
   clock-names: true
+=======
+  clock-names:
+    oneOf:
+      - items:              # for Pro5
+          - const: gio
+          - const: link
+      - const: link         # for NX1
+>>>>>>> b7ba80a49124 (Commit)
 
   resets:
     minItems: 1
     maxItems: 2
 
+<<<<<<< HEAD
   reset-names: true
+=======
+  reset-names:
+    oneOf:
+      - items:              # for Pro5
+          - const: gio
+          - const: link
+      - const: link         # for NX1
+>>>>>>> b7ba80a49124 (Commit)
 
   num-ib-windows:
     const: 16
@@ -60,6 +99,7 @@ properties:
   phy-names:
     const: pcie-phy
 
+<<<<<<< HEAD
 allOf:
   - $ref: /schemas/pci/snps,dw-pcie-ep.yaml#
   - if:
@@ -100,6 +140,8 @@ allOf:
         reset-names:
           const: link
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg

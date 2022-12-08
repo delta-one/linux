@@ -478,17 +478,26 @@ static int fq_codel_init(struct Qdisc *sch, struct nlattr *opt,
 	if (opt) {
 		err = fq_codel_change(sch, opt, extack);
 		if (err)
+<<<<<<< HEAD
 			goto init_failure;
+=======
+			return err;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	err = tcf_block_get(&q->block, &q->filter_list, sch, extack);
 	if (err)
+<<<<<<< HEAD
 		goto init_failure;
+=======
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!q->flows) {
 		q->flows = kvcalloc(q->flows_cnt,
 				    sizeof(struct fq_codel_flow),
 				    GFP_KERNEL);
+<<<<<<< HEAD
 		if (!q->flows) {
 			err = -ENOMEM;
 			goto init_failure;
@@ -498,6 +507,15 @@ static int fq_codel_init(struct Qdisc *sch, struct nlattr *opt,
 			err = -ENOMEM;
 			goto alloc_failure;
 		}
+=======
+		if (!q->flows)
+			return -ENOMEM;
+
+		q->backlogs = kvcalloc(q->flows_cnt, sizeof(u32), GFP_KERNEL);
+		if (!q->backlogs)
+			return -ENOMEM;
+
+>>>>>>> b7ba80a49124 (Commit)
 		for (i = 0; i < q->flows_cnt; i++) {
 			struct fq_codel_flow *flow = q->flows + i;
 
@@ -510,6 +528,7 @@ static int fq_codel_init(struct Qdisc *sch, struct nlattr *opt,
 	else
 		sch->flags &= ~TCQ_F_CAN_BYPASS;
 	return 0;
+<<<<<<< HEAD
 
 alloc_failure:
 	kvfree(q->flows);
@@ -517,6 +536,8 @@ alloc_failure:
 init_failure:
 	q->flows_cnt = 0;
 	return err;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int fq_codel_dump(struct Qdisc *sch, struct sk_buff *skb)
@@ -682,12 +703,25 @@ static void fq_codel_walk(struct Qdisc *sch, struct qdisc_walker *arg)
 		return;
 
 	for (i = 0; i < q->flows_cnt; i++) {
+<<<<<<< HEAD
 		if (list_empty(&q->flows[i].flowchain)) {
 			arg->count++;
 			continue;
 		}
 		if (!tc_qdisc_stats_dump(sch, i + 1, arg))
 			break;
+=======
+		if (list_empty(&q->flows[i].flowchain) ||
+		    arg->count < arg->skip) {
+			arg->count++;
+			continue;
+		}
+		if (arg->fn(sch, i + 1, arg) < 0) {
+			arg->stop = 1;
+			break;
+		}
+		arg->count++;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 

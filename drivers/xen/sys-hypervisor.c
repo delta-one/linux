@@ -31,10 +31,14 @@ struct hyp_sysfs_attr {
 	struct attribute attr;
 	ssize_t (*show)(struct hyp_sysfs_attr *, char *);
 	ssize_t (*store)(struct hyp_sysfs_attr *, const char *, size_t);
+<<<<<<< HEAD
 	union {
 		void *hyp_attr_data;
 		unsigned long hyp_attr_value;
 	};
+=======
+	void *hyp_attr_data;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static ssize_t type_show(struct hyp_sysfs_attr *attr, char *buffer)
@@ -402,6 +406,7 @@ static int __init xen_sysfs_properties_init(void)
 	return sysfs_create_group(hypervisor_kobj, &xen_properties_group);
 }
 
+<<<<<<< HEAD
 #define FLAG_UNAME "unknown"
 #define FLAG_UNAME_FMT FLAG_UNAME "%02u"
 #define FLAG_UNAME_MAX sizeof(FLAG_UNAME "XX")
@@ -456,6 +461,8 @@ static int __init xen_sysfs_flags_init(void)
 	return sysfs_create_group(hypervisor_kobj, &xen_flags_group);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_XEN_HAVE_VPMU
 struct pmu_mode {
 	const char *name;
@@ -596,22 +603,34 @@ static int __init hyper_sysfs_init(void)
 	ret = xen_sysfs_properties_init();
 	if (ret)
 		goto prop_out;
+<<<<<<< HEAD
 	ret = xen_sysfs_flags_init();
 	if (ret)
 		goto flags_out;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_XEN_HAVE_VPMU
 	if (xen_initial_domain()) {
 		ret = xen_sysfs_pmu_init();
 		if (ret) {
+<<<<<<< HEAD
 			sysfs_remove_group(hypervisor_kobj, &xen_flags_group);
 			goto flags_out;
+=======
+			sysfs_remove_group(hypervisor_kobj,
+					   &xen_properties_group);
+			goto prop_out;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 #endif
 	goto out;
 
+<<<<<<< HEAD
 flags_out:
 	sysfs_remove_group(hypervisor_kobj, &xen_properties_group);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 prop_out:
 	sysfs_remove_file(hypervisor_kobj, &uuid_attr.attr);
 uuid_out:
@@ -655,7 +674,11 @@ static const struct sysfs_ops hyp_sysfs_ops = {
 	.store = hyp_sysfs_store,
 };
 
+<<<<<<< HEAD
 static const struct kobj_type hyp_sysfs_kobj_type = {
+=======
+static struct kobj_type hyp_sysfs_kobj_type = {
+>>>>>>> b7ba80a49124 (Commit)
 	.sysfs_ops = &hyp_sysfs_ops,
 };
 

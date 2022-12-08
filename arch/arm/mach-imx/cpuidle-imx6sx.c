@@ -30,8 +30,13 @@ static int imx6sx_idle_finish(unsigned long val)
 	return 0;
 }
 
+<<<<<<< HEAD
 static __cpuidle int imx6sx_enter_wait(struct cpuidle_device *dev,
 				       struct cpuidle_driver *drv, int index)
+=======
+static int imx6sx_enter_wait(struct cpuidle_device *dev,
+			    struct cpuidle_driver *drv, int index)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	imx6_set_lpm(WAIT_UNCLOCKED);
 
@@ -47,9 +52,13 @@ static __cpuidle int imx6sx_enter_wait(struct cpuidle_device *dev,
 		cpu_pm_enter();
 		cpu_cluster_pm_enter();
 
+<<<<<<< HEAD
 		ct_cpuidle_enter();
 		cpu_suspend(0, imx6sx_idle_finish);
 		ct_cpuidle_exit();
+=======
+		cpu_suspend(0, imx6sx_idle_finish);
+>>>>>>> b7ba80a49124 (Commit)
 
 		cpu_cluster_pm_exit();
 		cpu_pm_exit();
@@ -89,8 +98,12 @@ static struct cpuidle_driver imx6sx_cpuidle_driver = {
 			 */
 			.exit_latency = 300,
 			.target_residency = 500,
+<<<<<<< HEAD
 			.flags = CPUIDLE_FLAG_TIMER_STOP |
 				 CPUIDLE_FLAG_RCU_IDLE,
+=======
+			.flags = CPUIDLE_FLAG_TIMER_STOP,
+>>>>>>> b7ba80a49124 (Commit)
 			.enter = imx6sx_enter_wait,
 			.name = "LOW-POWER-IDLE",
 			.desc = "ARM power off",

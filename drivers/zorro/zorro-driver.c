@@ -130,9 +130,15 @@ static int zorro_bus_match(struct device *dev, struct device_driver *drv)
 	return !!zorro_match_device(ids, z);
 }
 
+<<<<<<< HEAD
 static int zorro_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct zorro_dev *z;
+=======
+static int zorro_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct zorro_dev *z;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!dev)
 		return -ENODEV;

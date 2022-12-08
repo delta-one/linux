@@ -474,9 +474,17 @@ err_put_ctlr:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void mtk_spi_slave_remove(struct platform_device *pdev)
 {
 	pm_runtime_disable(&pdev->dev);
+=======
+static int mtk_spi_slave_remove(struct platform_device *pdev)
+{
+	pm_runtime_disable(&pdev->dev);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -558,7 +566,11 @@ static struct platform_driver mtk_spi_slave_driver = {
 		.of_match_table = mtk_spi_slave_of_match,
 	},
 	.probe = mtk_spi_slave_probe,
+<<<<<<< HEAD
 	.remove_new = mtk_spi_slave_remove,
+=======
+	.remove = mtk_spi_slave_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(mtk_spi_slave_driver);

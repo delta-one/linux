@@ -128,23 +128,42 @@ static ssize_t show_trans_table(struct cpufreq_policy *policy, char *buf)
 	ssize_t len = 0;
 	int i, j, count;
 
+<<<<<<< HEAD
 	len += sysfs_emit_at(buf, len, "   From  :    To\n");
 	len += sysfs_emit_at(buf, len, "         : ");
 	for (i = 0; i < stats->state_num; i++) {
 		if (len >= PAGE_SIZE)
 			break;
 		len += sysfs_emit_at(buf, len, "%9u ", stats->freq_table[i]);
+=======
+	len += scnprintf(buf + len, PAGE_SIZE - len, "   From  :    To\n");
+	len += scnprintf(buf + len, PAGE_SIZE - len, "         : ");
+	for (i = 0; i < stats->state_num; i++) {
+		if (len >= PAGE_SIZE)
+			break;
+		len += scnprintf(buf + len, PAGE_SIZE - len, "%9u ",
+				stats->freq_table[i]);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (len >= PAGE_SIZE)
 		return PAGE_SIZE;
 
+<<<<<<< HEAD
 	len += sysfs_emit_at(buf, len, "\n");
+=======
+	len += scnprintf(buf + len, PAGE_SIZE - len, "\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < stats->state_num; i++) {
 		if (len >= PAGE_SIZE)
 			break;
 
+<<<<<<< HEAD
 		len += sysfs_emit_at(buf, len, "%9u: ", stats->freq_table[i]);
+=======
+		len += scnprintf(buf + len, PAGE_SIZE - len, "%9u: ",
+				stats->freq_table[i]);
+>>>>>>> b7ba80a49124 (Commit)
 
 		for (j = 0; j < stats->state_num; j++) {
 			if (len >= PAGE_SIZE)
@@ -155,11 +174,19 @@ static ssize_t show_trans_table(struct cpufreq_policy *policy, char *buf)
 			else
 				count = stats->trans_table[i * stats->max_state + j];
 
+<<<<<<< HEAD
 			len += sysfs_emit_at(buf, len, "%9u ", count);
 		}
 		if (len >= PAGE_SIZE)
 			break;
 		len += sysfs_emit_at(buf, len, "\n");
+=======
+			len += scnprintf(buf + len, PAGE_SIZE - len, "%9u ", count);
+		}
+		if (len >= PAGE_SIZE)
+			break;
+		len += scnprintf(buf + len, PAGE_SIZE - len, "\n");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (len >= PAGE_SIZE) {

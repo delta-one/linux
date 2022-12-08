@@ -171,18 +171,25 @@ const char *dccp_packet_name(const int type)
 
 EXPORT_SYMBOL_GPL(dccp_packet_name);
 
+<<<<<<< HEAD
 void dccp_destruct_common(struct sock *sk)
+=======
+static void dccp_sk_destruct(struct sock *sk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct dccp_sock *dp = dccp_sk(sk);
 
 	ccid_hc_tx_delete(dp->dccps_hc_tx_ccid, sk);
 	dp->dccps_hc_tx_ccid = NULL;
+<<<<<<< HEAD
 }
 EXPORT_SYMBOL_GPL(dccp_destruct_common);
 
 static void dccp_sk_destruct(struct sock *sk)
 {
 	dccp_destruct_common(sk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	inet_sock_destruct(sk);
 }
 
@@ -285,7 +292,12 @@ int dccp_disconnect(struct sock *sk, int flags)
 
 	inet->inet_dport = 0;
 
+<<<<<<< HEAD
 	inet_bhash2_reset_saddr(sk);
+=======
+	if (!(sk->sk_userlocks & SOCK_BINDADDR_LOCK))
+		inet_reset_saddr(sk);
+>>>>>>> b7ba80a49124 (Commit)
 
 	sk->sk_shutdown = 0;
 	sock_reset_flag(sk, SOCK_DONE);

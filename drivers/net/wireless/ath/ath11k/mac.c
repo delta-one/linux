@@ -96,7 +96,10 @@ static const struct ieee80211_channel ath11k_5ghz_channels[] = {
 	CHAN5G(165, 5825, 0),
 	CHAN5G(169, 5845, 0),
 	CHAN5G(173, 5865, 0),
+<<<<<<< HEAD
 	CHAN5G(177, 5885, 0),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct ieee80211_channel ath11k_6ghz_channels[] = {
@@ -242,10 +245,14 @@ const struct htt_rx_ring_tlv_filter ath11k_mac_mon_status_filter_default = {
 #define ath11k_a_rates (ath11k_legacy_rates + 4)
 #define ath11k_a_rates_size (ARRAY_SIZE(ath11k_legacy_rates) - 4)
 
+<<<<<<< HEAD
 #define ATH11K_MAC_SCAN_CMD_EVT_OVERHEAD		200 /* in msecs */
 
 /* Overhead due to the processing of channel switch events from FW */
 #define ATH11K_SCAN_CHANNEL_SWITCH_WMI_EVT_OVERHEAD	10 /* in msecs */
+=======
+#define ATH11K_MAC_SCAN_TIMEOUT_MSECS 200 /* in msecs */
+>>>>>>> b7ba80a49124 (Commit)
 
 static const u32 ath11k_smps_map[] = {
 	[WLAN_HT_CAP_SM_PS_STATIC] = WMI_PEER_SMPS_STATIC,
@@ -2085,7 +2092,11 @@ static void ath11k_peer_assoc_h_he(struct ath11k *ar,
 	struct cfg80211_chan_def def;
 	const struct ieee80211_sta_he_cap *he_cap = &sta->deflink.he_cap;
 	enum nl80211_band band;
+<<<<<<< HEAD
 	u16 he_mcs_mask[NL80211_HE_NSS_MAX];
+=======
+	u16 *he_mcs_mask;
+>>>>>>> b7ba80a49124 (Commit)
 	u8 max_nss, he_mcs;
 	u16 he_tx_mcs = 0, v = 0;
 	int i, he_nss, nss_idx;
@@ -2102,8 +2113,12 @@ static void ath11k_peer_assoc_h_he(struct ath11k *ar,
 		return;
 
 	band = def.chan->band;
+<<<<<<< HEAD
 	memcpy(he_mcs_mask, arvif->bitrate_mask.control[band].he_mcs,
 	       sizeof(he_mcs_mask));
+=======
+	he_mcs_mask = arvif->bitrate_mask.control[band].he_mcs;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ath11k_peer_assoc_h_he_masked(he_mcs_mask))
 		return;
@@ -2699,6 +2714,7 @@ static int ath11k_setup_peer_smps(struct ath11k *ar, struct ath11k_vif *arvif,
 					 ath11k_smps_map[smps]);
 }
 
+<<<<<<< HEAD
 static bool ath11k_mac_set_he_txbf_conf(struct ath11k_vif *arvif)
 {
 	struct ath11k *ar = arvif->ar;
@@ -2810,6 +2826,8 @@ static bool ath11k_mac_vif_recalc_sta_he_txbf(struct ath11k *ar,
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void ath11k_bss_assoc(struct ieee80211_hw *hw,
 			     struct ieee80211_vif *vif,
 			     struct ieee80211_bss_conf *bss_conf)
@@ -2820,7 +2838,10 @@ static void ath11k_bss_assoc(struct ieee80211_hw *hw,
 	struct ieee80211_sta *ap_sta;
 	struct ath11k_peer *peer;
 	bool is_auth = false;
+<<<<<<< HEAD
 	struct ieee80211_sta_he_cap  he_cap;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	lockdep_assert_held(&ar->conf_mutex);
@@ -2838,9 +2859,12 @@ static void ath11k_bss_assoc(struct ieee80211_hw *hw,
 		return;
 	}
 
+<<<<<<< HEAD
 	/* he_cap here is updated at assoc success for sta mode only */
 	he_cap  = ap_sta->deflink.he_cap;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ath11k_peer_assoc_prepare(ar, vif, ap_sta, &peer_arg, false);
 
 	rcu_read_unlock();
@@ -2868,12 +2892,15 @@ static void ath11k_bss_assoc(struct ieee80211_hw *hw,
 		return;
 	}
 
+<<<<<<< HEAD
 	if (!ath11k_mac_vif_recalc_sta_he_txbf(ar, vif, &he_cap)) {
 		ath11k_warn(ar->ab, "failed to recalc he txbf for vdev %i on bss %pM\n",
 			    arvif->vdev_id, bss_conf->bssid);
 		return;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	WARN_ON(arvif->is_up);
 
 	arvif->aid = vif->cfg.aid;
@@ -3185,7 +3212,11 @@ static int ath11k_mac_config_obss_pd(struct ath11k *ar,
 		return ret;
 	}
 
+<<<<<<< HEAD
 	/* Enable all partial BSSID mask for SRG */
+=======
+	/* Enable all patial BSSID mask for SRG */
+>>>>>>> b7ba80a49124 (Commit)
 	ret = ath11k_wmi_pdev_srg_obss_bssid_enable_bitmap(ar, bitmap);
 	if (ret) {
 		ath11k_warn(ar->ab,
@@ -3203,7 +3234,11 @@ static int ath11k_mac_config_obss_pd(struct ath11k *ar,
 		return ret;
 	}
 
+<<<<<<< HEAD
 	/* Enable all partial BSSID mask for non-SRG */
+=======
+	/* Enable all patial BSSID mask for non-SRG */
+>>>>>>> b7ba80a49124 (Commit)
 	ret = ath11k_wmi_pdev_non_srg_obss_bssid_enable_bitmap(ar, bitmap);
 	if (ret) {
 		ath11k_warn(ar->ab,
@@ -3232,7 +3267,11 @@ static void ath11k_mac_op_bss_info_changed(struct ieee80211_hw *hw,
 	u16 bitrate;
 	int ret = 0;
 	u8 rateidx;
+<<<<<<< HEAD
 	u32 rate, param;
+=======
+	u32 rate;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 ipv4_cnt;
 
 	mutex_lock(&ar->conf_mutex);
@@ -3323,8 +3362,11 @@ static void ath11k_mac_op_bss_info_changed(struct ieee80211_hw *hw,
 		ether_addr_copy(arvif->bssid, info->bssid);
 
 	if (changed & BSS_CHANGED_BEACON_ENABLED) {
+<<<<<<< HEAD
 		if (info->enable_beacon)
 			ath11k_mac_set_he_txbf_conf(arvif);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ath11k_control_beaconing(arvif, info);
 
 		if (arvif->is_up && vif->bss_conf.he_support &&
@@ -3478,6 +3520,7 @@ static void ath11k_mac_op_bss_info_changed(struct ieee80211_hw *hw,
 		ath11k_recalculate_mgmt_rate(ar, vif, &def);
 
 	if (changed & BSS_CHANGED_TWT) {
+<<<<<<< HEAD
 		struct wmi_twt_enable_params twt_params = {0};
 
 		if (info->twt_requester || info->twt_responder) {
@@ -3487,6 +3530,12 @@ static void ath11k_mac_op_bss_info_changed(struct ieee80211_hw *hw,
 		} else {
 			ath11k_wmi_send_twt_disable_cmd(ar, ar->pdev->pdev_id);
 		}
+=======
+		if (info->twt_requester || info->twt_responder)
+			ath11k_wmi_send_twt_enable_cmd(ar, ar->pdev->pdev_id);
+		else
+			ath11k_wmi_send_twt_disable_cmd(ar, ar->pdev->pdev_id);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (changed & BSS_CHANGED_HE_OBSS_PD)
@@ -3536,6 +3585,7 @@ static void ath11k_mac_op_bss_info_changed(struct ieee80211_hw *hw,
 		}
 	}
 
+<<<<<<< HEAD
 	if (changed & BSS_CHANGED_FTM_RESPONDER &&
 	    arvif->ftm_responder != info->ftm_responder &&
 	    ar->ab->hw_params.ftm_responder &&
@@ -3550,6 +3600,8 @@ static void ath11k_mac_op_bss_info_changed(struct ieee80211_hw *hw,
 				    arvif->vdev_id, ret);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (changed & BSS_CHANGED_FILS_DISCOVERY ||
 	    changed & BSS_CHANGED_UNSOL_BCAST_PROBE_RESP)
 		ath11k_mac_fils_discovery(arvif, info);
@@ -3598,7 +3650,11 @@ void __ath11k_mac_scan_finish(struct ath11k *ar)
 		ar->scan_channel = NULL;
 		ar->scan.roc_freq = 0;
 		cancel_delayed_work(&ar->scan.timeout);
+<<<<<<< HEAD
 		complete_all(&ar->scan.completed);
+=======
+		complete(&ar->scan.completed);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 }
@@ -3750,10 +3806,16 @@ static int ath11k_mac_op_hw_scan(struct ieee80211_hw *hw,
 	struct ath11k *ar = hw->priv;
 	struct ath11k_vif *arvif = ath11k_vif_to_arvif(vif);
 	struct cfg80211_scan_request *req = &hw_req->req;
+<<<<<<< HEAD
 	struct scan_req_params *arg = NULL;
 	int ret = 0;
 	int i;
 	u32 scan_timeout;
+=======
+	struct scan_req_params arg;
+	int ret = 0;
+	int i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&ar->conf_mutex);
 
@@ -3778,6 +3840,7 @@ static int ath11k_mac_op_hw_scan(struct ieee80211_hw *hw,
 	if (ret)
 		goto exit;
 
+<<<<<<< HEAD
 	arg = kzalloc(sizeof(*arg), GFP_KERNEL);
 
 	if (!arg) {
@@ -3815,10 +3878,44 @@ static int ath11k_mac_op_hw_scan(struct ieee80211_hw *hw,
 					 GFP_KERNEL);
 
 		if (!arg->chan_list) {
+=======
+	memset(&arg, 0, sizeof(arg));
+	ath11k_wmi_start_scan_init(ar, &arg);
+	arg.vdev_id = arvif->vdev_id;
+	arg.scan_id = ATH11K_SCAN_ID;
+
+	if (req->ie_len) {
+		arg.extraie.ptr = kmemdup(req->ie, req->ie_len, GFP_KERNEL);
+		if (!arg.extraie.ptr) {
+			ret = -ENOMEM;
+			goto exit;
+		}
+		arg.extraie.len = req->ie_len;
+	}
+
+	if (req->n_ssids) {
+		arg.num_ssids = req->n_ssids;
+		for (i = 0; i < arg.num_ssids; i++) {
+			arg.ssid[i].length  = req->ssids[i].ssid_len;
+			memcpy(&arg.ssid[i].ssid, req->ssids[i].ssid,
+			       req->ssids[i].ssid_len);
+		}
+	} else {
+		arg.scan_flags |= WMI_SCAN_FLAG_PASSIVE;
+	}
+
+	if (req->n_channels) {
+		arg.num_chan = req->n_channels;
+		arg.chan_list = kcalloc(arg.num_chan, sizeof(*arg.chan_list),
+					GFP_KERNEL);
+
+		if (!arg.chan_list) {
+>>>>>>> b7ba80a49124 (Commit)
 			ret = -ENOMEM;
 			goto exit;
 		}
 
+<<<<<<< HEAD
 		for (i = 0; i < arg->num_chan; i++)
 			arg->chan_list[i] = req->channels[i]->center_freq;
 	}
@@ -3850,6 +3947,19 @@ static int ath11k_mac_op_hw_scan(struct ieee80211_hw *hw,
 	scan_timeout += ATH11K_MAC_SCAN_CMD_EVT_OVERHEAD;
 
 	ret = ath11k_start_scan(ar, arg);
+=======
+		for (i = 0; i < arg.num_chan; i++)
+			arg.chan_list[i] = req->channels[i]->center_freq;
+	}
+
+	if (req->flags & NL80211_SCAN_FLAG_RANDOM_ADDR) {
+		arg.scan_f_add_spoofed_mac_in_probe = 1;
+		ether_addr_copy(arg.mac_addr.addr, req->mac_addr);
+		ether_addr_copy(arg.mac_mask.addr, req->mac_addr_mask);
+	}
+
+	ret = ath11k_start_scan(ar, &arg);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		ath11k_warn(ar->ab, "failed to start hw scan: %d\n", ret);
 		spin_lock_bh(&ar->data_lock);
@@ -3857,6 +3967,7 @@ static int ath11k_mac_op_hw_scan(struct ieee80211_hw *hw,
 		spin_unlock_bh(&ar->data_lock);
 	}
 
+<<<<<<< HEAD
 	ieee80211_queue_delayed_work(ar->hw, &ar->scan.timeout,
 				     msecs_to_jiffies(scan_timeout));
 
@@ -3866,6 +3977,18 @@ exit:
 		kfree(arg->extraie.ptr);
 		kfree(arg);
 	}
+=======
+	/* Add a 200ms margin to account for event/command processing */
+	ieee80211_queue_delayed_work(ar->hw, &ar->scan.timeout,
+				     msecs_to_jiffies(arg.max_scan_time +
+						      ATH11K_MAC_SCAN_TIMEOUT_MSECS));
+
+exit:
+	kfree(arg.chan_list);
+
+	if (req->ie_len)
+		kfree(arg.extraie.ptr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_unlock(&ar->conf_mutex);
 
@@ -4382,11 +4505,18 @@ static void ath11k_sta_rc_update_wk(struct work_struct *wk)
 	const u8 *ht_mcs_mask;
 	const u16 *vht_mcs_mask;
 	const u16 *he_mcs_mask;
+<<<<<<< HEAD
 	u32 changed, bw, nss, smps, bw_prev;
 	int err, num_vht_rates, num_he_rates;
 	const struct cfg80211_bitrate_mask *mask;
 	struct peer_assoc_params peer_arg;
 	enum wmi_phy_mode peer_phymode;
+=======
+	u32 changed, bw, nss, smps;
+	int err, num_vht_rates, num_he_rates;
+	const struct cfg80211_bitrate_mask *mask;
+	struct peer_assoc_params peer_arg;
+>>>>>>> b7ba80a49124 (Commit)
 
 	arsta = container_of(wk, struct ath11k_sta, update_wk);
 	sta = container_of((void *)arsta, struct ieee80211_sta, drv_priv);
@@ -4407,7 +4537,10 @@ static void ath11k_sta_rc_update_wk(struct work_struct *wk)
 	arsta->changed = 0;
 
 	bw = arsta->bw;
+<<<<<<< HEAD
 	bw_prev = arsta->bw_prev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	nss = arsta->nss;
 	smps = arsta->smps;
 
@@ -4421,6 +4554,7 @@ static void ath11k_sta_rc_update_wk(struct work_struct *wk)
 			   ath11k_mac_max_he_nss(he_mcs_mask)));
 
 	if (changed & IEEE80211_RC_BW_CHANGED) {
+<<<<<<< HEAD
 		/* Get the peer phymode */
 		ath11k_peer_assoc_h_phymode(ar, arvif->vif, sta, &peer_arg);
 		peer_phymode = peer_arg.peer_phymode;
@@ -4447,10 +4581,27 @@ static void ath11k_sta_rc_update_wk(struct work_struct *wk)
 			err = ath11k_wmi_set_peer_param(ar, sta->addr, arvif->vdev_id,
 							WMI_PEER_CHWIDTH, bw);
 
+=======
+		/* Send peer assoc command before set peer bandwidth param to
+		 * avoid the mismatch between the peer phymode and the peer
+		 * bandwidth.
+		 */
+		ath11k_peer_assoc_prepare(ar, arvif->vif, sta, &peer_arg, true);
+
+		peer_arg.is_assoc = false;
+		err = ath11k_wmi_send_peer_assoc_cmd(ar, &peer_arg);
+		if (err) {
+			ath11k_warn(ar->ab, "failed to send peer assoc for STA %pM vdev %i: %d\n",
+				    sta->addr, arvif->vdev_id, err);
+		} else if (wait_for_completion_timeout(&ar->peer_assoc_done, 1 * HZ)) {
+			err = ath11k_wmi_set_peer_param(ar, sta->addr, arvif->vdev_id,
+							WMI_PEER_CHWIDTH, bw);
+>>>>>>> b7ba80a49124 (Commit)
 			if (err)
 				ath11k_warn(ar->ab, "failed to update STA %pM peer bw %d: %d\n",
 					    sta->addr, bw, err);
 		} else {
+<<<<<<< HEAD
 			/* BW is downgraded. In this case we send WMI_PEER_CHWIDTH
 			 * followed by WMI_PEER_PHYMODE
 			 */
@@ -4472,6 +4623,10 @@ static void ath11k_sta_rc_update_wk(struct work_struct *wk)
 			if (err)
 				ath11k_warn(ar->ab, "failed to update STA %pM peer phymode %d: %d\n",
 					    sta->addr, peer_phymode, err);
+=======
+			ath11k_warn(ar->ab, "failed to get peer assoc conf event for %pM vdev %i\n",
+				    sta->addr, arvif->vdev_id);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -4552,7 +4707,10 @@ static void ath11k_sta_rc_update_wk(struct work_struct *wk)
 		}
 	}
 
+<<<<<<< HEAD
 err_rc_bw_changed:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&ar->conf_mutex);
 }
 
@@ -4706,6 +4864,7 @@ exit:
 	return ret;
 }
 
+<<<<<<< HEAD
 static u32 ath11k_mac_ieee80211_sta_bw_to_wmi(struct ath11k *ar,
 					      struct ieee80211_sta *sta)
 {
@@ -4734,6 +4893,8 @@ static u32 ath11k_mac_ieee80211_sta_bw_to_wmi(struct ath11k *ar,
 	return bw;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int ath11k_mac_op_sta_state(struct ieee80211_hw *hw,
 				   struct ieee80211_vif *vif,
 				   struct ieee80211_sta *sta,
@@ -4759,7 +4920,10 @@ static int ath11k_mac_op_sta_state(struct ieee80211_hw *hw,
 	    new_state == IEEE80211_STA_NONE) {
 		memset(arsta, 0, sizeof(*arsta));
 		arsta->arvif = arvif;
+<<<<<<< HEAD
 		arsta->peer_ps_state = WMI_PEER_PS_STATE_DISABLED;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		INIT_WORK(&arsta->update_wk, ath11k_sta_rc_update_wk);
 		INIT_WORK(&arsta->set_4addr_wk, ath11k_sta_set_4addr_wk);
 
@@ -4819,12 +4983,15 @@ static int ath11k_mac_op_sta_state(struct ieee80211_hw *hw,
 		if (ret)
 			ath11k_warn(ar->ab, "Failed to associate station: %pM\n",
 				    sta->addr);
+<<<<<<< HEAD
 
 		spin_lock_bh(&ar->data_lock);
 		/* Set arsta bw and prev bw */
 		arsta->bw = ath11k_mac_ieee80211_sta_bw_to_wmi(ar, sta);
 		arsta->bw_prev = arsta->bw;
 		spin_unlock_bh(&ar->data_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (old_state == IEEE80211_STA_ASSOC &&
 		   new_state == IEEE80211_STA_AUTHORIZED) {
 		spin_lock_bh(&ar->ab->base_lock);
@@ -4948,8 +5115,33 @@ static void ath11k_mac_op_sta_rc_update(struct ieee80211_hw *hw,
 	spin_lock_bh(&ar->data_lock);
 
 	if (changed & IEEE80211_RC_BW_CHANGED) {
+<<<<<<< HEAD
 		bw = ath11k_mac_ieee80211_sta_bw_to_wmi(ar, sta);
 		arsta->bw_prev = arsta->bw;
+=======
+		bw = WMI_PEER_CHWIDTH_20MHZ;
+
+		switch (sta->deflink.bandwidth) {
+		case IEEE80211_STA_RX_BW_20:
+			bw = WMI_PEER_CHWIDTH_20MHZ;
+			break;
+		case IEEE80211_STA_RX_BW_40:
+			bw = WMI_PEER_CHWIDTH_40MHZ;
+			break;
+		case IEEE80211_STA_RX_BW_80:
+			bw = WMI_PEER_CHWIDTH_80MHZ;
+			break;
+		case IEEE80211_STA_RX_BW_160:
+			bw = WMI_PEER_CHWIDTH_160MHZ;
+			break;
+		default:
+			ath11k_warn(ar->ab, "Invalid bandwidth %d in rc update for %pM\n",
+				    sta->deflink.bandwidth, sta->addr);
+			bw = WMI_PEER_CHWIDTH_20MHZ;
+			break;
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 		arsta->bw = bw;
 	}
 
@@ -5176,8 +5368,11 @@ static int ath11k_mac_set_txbf_conf(struct ath11k_vif *arvif)
 	if (vht_cap & (IEEE80211_VHT_CAP_SU_BEAMFORMEE_CAPABLE)) {
 		nsts = vht_cap & IEEE80211_VHT_CAP_BEAMFORMEE_STS_MASK;
 		nsts >>= IEEE80211_VHT_CAP_BEAMFORMEE_STS_SHIFT;
+<<<<<<< HEAD
 		if (nsts > (ar->num_rx_chains - 1))
 			nsts = ar->num_rx_chains - 1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		value |= SM(nsts, WMI_TXBF_STS_CAP_OFFSET);
 	}
 
@@ -5218,7 +5413,11 @@ static int ath11k_mac_set_txbf_conf(struct ath11k_vif *arvif)
 static void ath11k_set_vht_txbf_cap(struct ath11k *ar, u32 *vht_cap)
 {
 	bool subfer, subfee;
+<<<<<<< HEAD
 	int sound_dim = 0, nsts = 0;
+=======
+	int sound_dim = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	subfer = !!(*vht_cap & (IEEE80211_VHT_CAP_SU_BEAMFORMER_CAPABLE));
 	subfee = !!(*vht_cap & (IEEE80211_VHT_CAP_SU_BEAMFORMEE_CAPABLE));
@@ -5228,11 +5427,14 @@ static void ath11k_set_vht_txbf_cap(struct ath11k *ar, u32 *vht_cap)
 		subfer = false;
 	}
 
+<<<<<<< HEAD
 	if (ar->num_rx_chains < 2) {
 		*vht_cap &= ~(IEEE80211_VHT_CAP_SU_BEAMFORMEE_CAPABLE);
 		subfee = false;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* If SU Beaformer is not set, then disable MU Beamformer Capability */
 	if (!subfer)
 		*vht_cap &= ~(IEEE80211_VHT_CAP_MU_BEAMFORMER_CAPABLE);
@@ -5245,9 +5447,13 @@ static void ath11k_set_vht_txbf_cap(struct ath11k *ar, u32 *vht_cap)
 	sound_dim >>= IEEE80211_VHT_CAP_SOUNDING_DIMENSIONS_SHIFT;
 	*vht_cap &= ~IEEE80211_VHT_CAP_SOUNDING_DIMENSIONS_MASK;
 
+<<<<<<< HEAD
 	nsts = (*vht_cap & IEEE80211_VHT_CAP_BEAMFORMEE_STS_MASK);
 	nsts >>= IEEE80211_VHT_CAP_BEAMFORMEE_STS_SHIFT;
 	*vht_cap &= ~IEEE80211_VHT_CAP_BEAMFORMEE_STS_MASK;
+=======
+	/* TODO: Need to check invalid STS and Sound_dim values set by FW? */
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Enable Sounding Dimension Field only if SU BF is enabled */
 	if (subfer) {
@@ -5259,6 +5465,7 @@ static void ath11k_set_vht_txbf_cap(struct ath11k *ar, u32 *vht_cap)
 		*vht_cap |= sound_dim;
 	}
 
+<<<<<<< HEAD
 	/* Enable Beamformee STS Field only if SU BF is enabled */
 	if (subfee) {
 		if (nsts > (ar->num_rx_chains - 1))
@@ -5268,6 +5475,11 @@ static void ath11k_set_vht_txbf_cap(struct ath11k *ar, u32 *vht_cap)
 		nsts &=  IEEE80211_VHT_CAP_BEAMFORMEE_STS_MASK;
 		*vht_cap |= nsts;
 	}
+=======
+	/* Use the STS advertised by FW unless SU Beamformee is not supported*/
+	if (!subfee)
+		*vht_cap &= ~(IEEE80211_VHT_CAP_BEAMFORMEE_STS_MASK);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct ieee80211_sta_vht_cap
@@ -5483,6 +5695,7 @@ static __le16 ath11k_mac_setup_he_6ghz_cap(struct ath11k_pdev_cap *pcap,
 	return cpu_to_le16(bcap->he_6ghz_capa);
 }
 
+<<<<<<< HEAD
 static void ath11k_mac_set_hemcsmap(struct ath11k *ar,
 				    struct ath11k_pdev_cap *cap,
 				    struct ieee80211_sta_he_cap *he_cap,
@@ -5520,6 +5733,8 @@ static void ath11k_mac_set_hemcsmap(struct ath11k *ar,
 		cpu_to_le16(txmcs_map & 0xffff);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int ath11k_mac_copy_he_cap(struct ath11k *ar,
 				  struct ath11k_pdev_cap *cap,
 				  struct ieee80211_sband_iftype_data *data,
@@ -5552,10 +5767,13 @@ static int ath11k_mac_copy_he_cap(struct ath11k *ar,
 
 		he_cap_elem->mac_cap_info[1] &=
 			IEEE80211_HE_MAC_CAP1_TF_MAC_PAD_DUR_MASK;
+<<<<<<< HEAD
 		he_cap_elem->phy_cap_info[0] &=
 			~IEEE80211_HE_PHY_CAP0_CHANNEL_WIDTH_SET_160MHZ_IN_5G;
 		he_cap_elem->phy_cap_info[0] &=
 			~IEEE80211_HE_PHY_CAP0_CHANNEL_WIDTH_SET_80PLUS80_MHZ_IN_5G;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		he_cap_elem->phy_cap_info[5] &=
 			~IEEE80211_HE_PHY_CAP5_BEAMFORMEE_NUM_SND_DIM_UNDER_80MHZ_MASK;
@@ -5581,7 +5799,22 @@ static int ath11k_mac_copy_he_cap(struct ath11k *ar,
 			break;
 		}
 
+<<<<<<< HEAD
 		ath11k_mac_set_hemcsmap(ar, cap, he_cap, band);
+=======
+		he_cap->he_mcs_nss_supp.rx_mcs_80 =
+			cpu_to_le16(band_cap->he_mcs & 0xffff);
+		he_cap->he_mcs_nss_supp.tx_mcs_80 =
+			cpu_to_le16(band_cap->he_mcs & 0xffff);
+		he_cap->he_mcs_nss_supp.rx_mcs_160 =
+			cpu_to_le16((band_cap->he_mcs >> 16) & 0xffff);
+		he_cap->he_mcs_nss_supp.tx_mcs_160 =
+			cpu_to_le16((band_cap->he_mcs >> 16) & 0xffff);
+		he_cap->he_mcs_nss_supp.rx_mcs_80p80 =
+			cpu_to_le16((band_cap->he_mcs >> 16) & 0xffff);
+		he_cap->he_mcs_nss_supp.tx_mcs_80p80 =
+			cpu_to_le16((band_cap->he_mcs >> 16) & 0xffff);
+>>>>>>> b7ba80a49124 (Commit)
 
 		memset(he_cap->ppe_thres, 0, sizeof(he_cap->ppe_thres));
 		if (he_cap_elem->phy_cap_info[6] &
@@ -6179,6 +6412,72 @@ ath11k_mac_setup_vdev_create_params(struct ath11k_vif *arvif,
 	}
 }
 
+<<<<<<< HEAD
+=======
+static u32
+ath11k_mac_prepare_he_mode(struct ath11k_pdev *pdev, u32 viftype)
+{
+	struct ath11k_pdev_cap *pdev_cap = &pdev->cap;
+	struct ath11k_band_cap *cap_band = NULL;
+	u32 *hecap_phy_ptr = NULL;
+	u32 hemode = 0;
+
+	if (pdev->cap.supported_bands & WMI_HOST_WLAN_2G_CAP)
+		cap_band = &pdev_cap->band[NL80211_BAND_2GHZ];
+	else
+		cap_band = &pdev_cap->band[NL80211_BAND_5GHZ];
+
+	hecap_phy_ptr = &cap_band->he_cap_phy_info[0];
+
+	hemode = FIELD_PREP(HE_MODE_SU_TX_BFEE, HE_SU_BFEE_ENABLE) |
+		 FIELD_PREP(HE_MODE_SU_TX_BFER, HECAP_PHY_SUBFMR_GET(hecap_phy_ptr)) |
+		 FIELD_PREP(HE_MODE_UL_MUMIMO, HECAP_PHY_ULMUMIMO_GET(hecap_phy_ptr));
+
+	/* TODO WDS and other modes */
+	if (viftype == NL80211_IFTYPE_AP) {
+		hemode |= FIELD_PREP(HE_MODE_MU_TX_BFER,
+			  HECAP_PHY_MUBFMR_GET(hecap_phy_ptr)) |
+			  FIELD_PREP(HE_MODE_DL_OFDMA, HE_DL_MUOFDMA_ENABLE) |
+			  FIELD_PREP(HE_MODE_UL_OFDMA, HE_UL_MUOFDMA_ENABLE);
+	} else {
+		hemode |= FIELD_PREP(HE_MODE_MU_TX_BFEE, HE_MU_BFEE_ENABLE);
+	}
+
+	return hemode;
+}
+
+static int ath11k_set_he_mu_sounding_mode(struct ath11k *ar,
+					  struct ath11k_vif *arvif)
+{
+	u32 param_id, param_value;
+	struct ath11k_base *ab = ar->ab;
+	int ret = 0;
+
+	param_id = WMI_VDEV_PARAM_SET_HEMU_MODE;
+	param_value = ath11k_mac_prepare_he_mode(ar->pdev, arvif->vif->type);
+	ret = ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id,
+					    param_id, param_value);
+	if (ret) {
+		ath11k_warn(ab, "failed to set vdev %d HE MU mode: %d param_value %x\n",
+			    arvif->vdev_id, ret, param_value);
+		return ret;
+	}
+	param_id = WMI_VDEV_PARAM_SET_HE_SOUNDING_MODE;
+	param_value =
+		FIELD_PREP(HE_VHT_SOUNDING_MODE, HE_VHT_SOUNDING_MODE_ENABLE) |
+		FIELD_PREP(HE_TRIG_NONTRIG_SOUNDING_MODE,
+			   HE_TRIG_NONTRIG_SOUNDING_MODE_ENABLE);
+	ret = ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id,
+					    param_id, param_value);
+	if (ret) {
+		ath11k_warn(ab, "failed to set vdev %d HE MU mode: %d\n",
+			    arvif->vdev_id, ret);
+		return ret;
+	}
+	return ret;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void ath11k_mac_op_update_vif_offload(struct ieee80211_hw *hw,
 					     struct ieee80211_vif *vif)
 {
@@ -6345,6 +6644,7 @@ void ath11k_mac_11d_scan_stop_all(struct ath11k_base *ab)
 	}
 }
 
+<<<<<<< HEAD
 static int ath11k_mac_vdev_delete(struct ath11k *ar, struct ath11k_vif *arvif)
 {
 	unsigned long time_left;
@@ -6379,6 +6679,8 @@ static int ath11k_mac_vdev_delete(struct ath11k *ar, struct ath11k_vif *arvif)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int ath11k_mac_op_add_interface(struct ieee80211_hw *hw,
 				       struct ieee80211_vif *vif)
 {
@@ -6411,6 +6713,7 @@ static int ath11k_mac_op_add_interface(struct ieee80211_hw *hw,
 		goto err;
 	}
 
+<<<<<<< HEAD
 	/* In the case of hardware recovery, debugfs files are
 	 * not deleted since ieee80211_ops.remove_interface() is
 	 * not invoked. In such cases, try to delete the files.
@@ -6418,6 +6721,8 @@ static int ath11k_mac_op_add_interface(struct ieee80211_hw *hw,
 	 */
 	ath11k_debugfs_remove_interface(arvif);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	memset(arvif, 0, sizeof(*arvif));
 
 	arvif->ar = ar;
@@ -6589,6 +6894,7 @@ static int ath11k_mac_op_add_interface(struct ieee80211_hw *hw,
 
 	ath11k_dp_vdev_tx_attach(ar, arvif);
 
+<<<<<<< HEAD
 	ath11k_debugfs_add_interface(arvif);
 
 	if (vif->type != NL80211_IFTYPE_MONITOR &&
@@ -6599,6 +6905,22 @@ static int ath11k_mac_op_add_interface(struct ieee80211_hw *hw,
 				    ret);
 	}
 
+=======
+	if (vif->type != NL80211_IFTYPE_MONITOR &&
+	    test_bit(ATH11K_FLAG_MONITOR_CONF_ENABLED, &ar->monitor_flags)) {
+		ret = ath11k_mac_monitor_vdev_create(ar);
+		if (ret) {
+			ath11k_warn(ar->ab, "failed to create monitor vdev during add interface: %d",
+				    ret);
+			goto err_peer_del;
+		}
+	}
+
+	ret = ath11k_debugfs_add_interface(arvif);
+	if (ret)
+		goto err_peer_del;
+
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&ar->conf_mutex);
 
 	return 0;
@@ -6614,12 +6936,23 @@ err_peer_del:
 	}
 
 err_vdev_del:
+<<<<<<< HEAD
 	ath11k_mac_vdev_delete(ar, arvif);
+=======
+	ath11k_wmi_vdev_delete(ar, arvif->vdev_id);
+	ar->num_created_vdevs--;
+	ar->allocated_vdev_map &= ~(1LL << arvif->vdev_id);
+	ab->free_vdev_map |= 1LL << arvif->vdev_id;
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_bh(&ar->data_lock);
 	list_del(&arvif->list);
 	spin_unlock_bh(&ar->data_lock);
 
 err:
+<<<<<<< HEAD
+=======
+	ath11k_debugfs_remove_interface(arvif);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&ar->conf_mutex);
 
 	return ret;
@@ -6642,6 +6975,10 @@ static void ath11k_mac_op_remove_interface(struct ieee80211_hw *hw,
 	struct ath11k *ar = hw->priv;
 	struct ath11k_vif *arvif = ath11k_vif_to_arvif(vif);
 	struct ath11k_base *ab = ar->ab;
+<<<<<<< HEAD
+=======
+	unsigned long time_left;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 	int i;
 
@@ -6662,13 +6999,38 @@ static void ath11k_mac_op_remove_interface(struct ieee80211_hw *hw,
 				    arvif->vdev_id, ret);
 	}
 
+<<<<<<< HEAD
 	ret = ath11k_mac_vdev_delete(ar, arvif);
 	if (ret) {
 		ath11k_warn(ab, "failed to delete vdev %d: %d\n",
+=======
+	reinit_completion(&ar->vdev_delete_done);
+
+	ret = ath11k_wmi_vdev_delete(ar, arvif->vdev_id);
+	if (ret) {
+		ath11k_warn(ab, "failed to delete WMI vdev %d: %d\n",
+>>>>>>> b7ba80a49124 (Commit)
 			    arvif->vdev_id, ret);
 		goto err_vdev_del;
 	}
 
+<<<<<<< HEAD
+=======
+	time_left = wait_for_completion_timeout(&ar->vdev_delete_done,
+						ATH11K_VDEV_DELETE_TIMEOUT_HZ);
+	if (time_left == 0) {
+		ath11k_warn(ab, "Timeout in receiving vdev delete response\n");
+		goto err_vdev_del;
+	}
+
+	ab->free_vdev_map |= 1LL << (arvif->vdev_id);
+	ar->allocated_vdev_map &= ~(1LL << arvif->vdev_id);
+	ar->num_created_vdevs--;
+
+	ath11k_dbg(ab, ATH11K_DBG_MAC, "vdev %pM deleted, vdev_id %d\n",
+		   vif->addr, arvif->vdev_id);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (arvif->vdev_type == WMI_VDEV_TYPE_MONITOR) {
 		clear_bit(ATH11K_FLAG_MONITOR_VDEV_CREATED, &ar->monitor_flags);
 		ar->monitor_vdev_id = -1;
@@ -6847,6 +7209,10 @@ ath11k_mac_vdev_start_restart(struct ath11k_vif *arvif,
 	struct ath11k_base *ab = ar->ab;
 	struct wmi_vdev_start_req_arg arg = {};
 	const struct cfg80211_chan_def *chandef = &ctx->def;
+<<<<<<< HEAD
+=======
+	int he_support = arvif->vif->bss_conf.he_support;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = 0;
 
 	lockdep_assert_held(&ar->conf_mutex);
@@ -6887,6 +7253,18 @@ ath11k_mac_vdev_start_restart(struct ath11k_vif *arvif,
 		spin_lock_bh(&ab->base_lock);
 		arg.regdomain = ar->ab->dfs_region;
 		spin_unlock_bh(&ab->base_lock);
+<<<<<<< HEAD
+=======
+
+		if (he_support) {
+			ret = ath11k_set_he_mu_sounding_mode(ar, arvif);
+			if (ret) {
+				ath11k_warn(ar->ab, "failed to set he mode vdev %i\n",
+					    arg.vdev_id);
+				return ret;
+			}
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	arg.channel.passive |= !!(chandef->chan->flags & IEEE80211_CHAN_NO_IR);
@@ -8112,7 +8490,10 @@ ath11k_mac_op_reconfig_complete(struct ieee80211_hw *hw,
 	struct ath11k *ar = hw->priv;
 	struct ath11k_base *ab = ar->ab;
 	int recovery_count;
+<<<<<<< HEAD
 	struct ath11k_vif *arvif;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (reconfig_type != IEEE80211_RECONFIG_TYPE_RESTART)
 		return;
@@ -8148,12 +8529,15 @@ ath11k_mac_op_reconfig_complete(struct ieee80211_hw *hw,
 				ath11k_dbg(ab, ATH11K_DBG_BOOT, "reset success\n");
 			}
 		}
+<<<<<<< HEAD
 		if (ar->ab->hw_params.support_fw_mac_sequence) {
 			list_for_each_entry(arvif, &ar->arvifs, list) {
 				if (arvif->is_up && arvif->vdev_type == WMI_VDEV_TYPE_STA)
 					ieee80211_hw_restart_disconnect(arvif->vif);
 			}
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	mutex_unlock(&ar->conf_mutex);
@@ -8638,6 +9022,7 @@ exit:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int ath11k_fw_stats_request(struct ath11k *ar,
 				   struct stats_request_params *req_param)
 {
@@ -8730,6 +9115,10 @@ err_fallback:
 static const struct ieee80211_ops ath11k_ops = {
 	.tx				= ath11k_mac_op_tx,
 	.wake_tx_queue			= ieee80211_handle_wake_tx_queue,
+=======
+static const struct ieee80211_ops ath11k_ops = {
+	.tx				= ath11k_mac_op_tx,
+>>>>>>> b7ba80a49124 (Commit)
 	.start                          = ath11k_mac_op_start,
 	.stop                           = ath11k_mac_op_stop,
 	.reconfig_complete              = ath11k_mac_op_reconfig_complete,
@@ -8778,7 +9167,10 @@ static const struct ieee80211_ops ath11k_ops = {
 #if IS_ENABLED(CONFIG_IPV6)
 	.ipv6_addr_change = ath11k_mac_op_ipv6_changed,
 #endif
+<<<<<<< HEAD
 	.get_txpower                    = ath11k_mac_op_get_txpower,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	.set_sar_specs			= ath11k_mac_op_set_bios_sar_specs,
 	.remain_on_channel		= ath11k_mac_op_remain_on_channel,
@@ -9085,11 +9477,14 @@ static int __ath11k_mac_register(struct ath11k *ar)
 	if (ab->hw_params.single_pdev_only && ar->supports_6ghz)
 		ieee80211_hw_set(ar->hw, SINGLE_SCAN_ON_ALL_BANDS);
 
+<<<<<<< HEAD
 	if (ab->hw_params.supports_multi_bssid) {
 		ieee80211_hw_set(ar->hw, SUPPORTS_MULTI_BSSID);
 		ieee80211_hw_set(ar->hw, SUPPORTS_ONLY_HE_MULTI_BSSID);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ieee80211_hw_set(ar->hw, SIGNAL_DBM);
 	ieee80211_hw_set(ar->hw, SUPPORTS_PS);
 	ieee80211_hw_set(ar->hw, SUPPORTS_DYNAMIC_PS);
@@ -9174,11 +9569,14 @@ static int __ath11k_mac_register(struct ath11k *ar)
 		goto err_free_if_combs;
 	}
 
+<<<<<<< HEAD
 	if (test_bit(WMI_TLV_SERVICE_TX_DATA_MGMT_ACK_RSSI,
 		     ar->ab->wmi_ab.svc_map))
 		wiphy_ext_feature_set(ar->hw->wiphy,
 				      NL80211_EXT_FEATURE_ACK_SIGNAL_SUPPORT);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ar->hw->queues = ATH11K_HW_MAX_QUEUES;
 	ar->hw->wiphy->tx_queue_len = ATH11K_QUEUE_LEN;
 	ar->hw->offchannel_tx_hw_queue = ATH11K_HW_MAX_QUEUES - 1;
@@ -9210,6 +9608,7 @@ static int __ath11k_mac_register(struct ath11k *ar)
 				      NL80211_EXT_FEATURE_UNSOL_BCAST_PROBE_RESP);
 	}
 
+<<<<<<< HEAD
 	wiphy_ext_feature_set(ar->hw->wiphy,
 			      NL80211_EXT_FEATURE_SET_SCAN_DWELL);
 
@@ -9217,6 +9616,8 @@ static int __ath11k_mac_register(struct ath11k *ar)
 		wiphy_ext_feature_set(ar->hw->wiphy,
 				      NL80211_EXT_FEATURE_ENABLE_FTM_RESPONDER);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ath11k_reg_init(ar);
 
 	if (!test_bit(ATH11K_FLAG_RAW_MODE, &ab->dev_flags)) {
@@ -9292,7 +9693,10 @@ int ath11k_mac_register(struct ath11k_base *ab)
 	struct ath11k_pdev *pdev;
 	int i;
 	int ret;
+<<<<<<< HEAD
 	u8 mac_addr[ETH_ALEN] = {0};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (test_bit(ATH11K_FLAG_REGISTERED, &ab->dev_flags))
 		return 0;
@@ -9305,18 +9709,25 @@ int ath11k_mac_register(struct ath11k_base *ab)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	device_get_mac_address(ab->dev, mac_addr);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < ab->num_radios; i++) {
 		pdev = &ab->pdevs[i];
 		ar = pdev->ar;
 		if (ab->pdevs_macaddr_valid) {
 			ether_addr_copy(ar->mac_addr, pdev->mac_addr);
 		} else {
+<<<<<<< HEAD
 			if (is_zero_ether_addr(mac_addr))
 				ether_addr_copy(ar->mac_addr, ab->mac_addr);
 			else
 				ether_addr_copy(ar->mac_addr, mac_addr);
+=======
+			ether_addr_copy(ar->mac_addr, ab->mac_addr);
+>>>>>>> b7ba80a49124 (Commit)
 			ar->mac_addr[4] += i;
 		}
 
@@ -9410,8 +9821,11 @@ int ath11k_mac_allocate(struct ath11k_base *ab)
 		clear_bit(ATH11K_FLAG_MONITOR_VDEV_CREATED, &ar->monitor_flags);
 		ar->vdev_id_11d_scan = ATH11K_11D_INVALID_VDEV_ID;
 		init_completion(&ar->completed_11d_scan);
+<<<<<<< HEAD
 
 		ath11k_fw_stats_init(ar);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;

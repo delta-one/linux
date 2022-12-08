@@ -19,7 +19,11 @@ description: |
   https://www.ti.com/lit/gpn/tps62360
 
 allOf:
+<<<<<<< HEAD
   - $ref: regulator.yaml#
+=======
+  - $ref: "regulator.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:

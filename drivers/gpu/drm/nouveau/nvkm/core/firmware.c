@@ -22,9 +22,12 @@
 #include <core/device.h>
 #include <core/firmware.h>
 
+<<<<<<< HEAD
 #include <subdev/fb.h>
 #include <subdev/mmu.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int
 nvkm_firmware_load_name(const struct nvkm_subdev *subdev, const char *base,
 			const char *name, int ver, const struct firmware **pfw)
@@ -110,6 +113,7 @@ nvkm_firmware_put(const struct firmware *fw)
 {
 	release_firmware(fw);
 }
+<<<<<<< HEAD
 
 #define nvkm_firmware_mem(p) container_of((p), struct nvkm_firmware, mem.memory)
 
@@ -237,3 +241,5 @@ nvkm_firmware_ctor(const struct nvkm_firmware_func *func, const char *name,
 	nvkm_memory_ctor(&nvkm_firmware_mem, &fw->mem.memory);
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

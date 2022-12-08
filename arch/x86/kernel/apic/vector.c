@@ -539,6 +539,13 @@ static int x86_vector_alloc_irqs(struct irq_domain *domain, unsigned int virq,
 	if (disable_apic)
 		return -ENXIO;
 
+<<<<<<< HEAD
+=======
+	/* Currently vector allocator can't guarantee contiguous allocations */
+	if ((info->flags & X86_IRQ_ALLOC_CONTIGUOUS_VECTORS) && nr_irqs > 1)
+		return -ENOSYS;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Catch any attempt to touch the cascade interrupt on a PIC
 	 * equipped system.

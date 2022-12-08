@@ -36,22 +36,33 @@ properties:
       - const: pmu3
 
   clocks:
+<<<<<<< HEAD
     minItems: 4
+=======
+>>>>>>> b7ba80a49124 (Commit)
     items:
       - description: USB OTG PHY bus clock
       - description: USB Host 0 PHY bus clock
       - description: USB Host 1 PHY bus clock
       - description: USB Host 2 PHY bus clock
+<<<<<<< HEAD
       - description: PMU clock for host port 2
 
   clock-names:
     minItems: 4
+=======
+
+  clock-names:
+>>>>>>> b7ba80a49124 (Commit)
     items:
       - const: usb0_phy
       - const: usb1_phy
       - const: usb2_phy
       - const: usb3_phy
+<<<<<<< HEAD
       - const: pmu2_clk
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
   resets:
     items:
@@ -100,6 +111,7 @@ required:
   - resets
   - reset-names
 
+<<<<<<< HEAD
 allOf:
   - if:
       properties:
@@ -122,6 +134,8 @@ allOf:
         clock-names:
           maxItems: 4
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 additionalProperties: false
 
 examples:

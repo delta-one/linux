@@ -474,7 +474,10 @@ static int lbtf_op_get_survey(struct ieee80211_hw *hw, int idx,
 
 static const struct ieee80211_ops lbtf_ops = {
 	.tx			= lbtf_op_tx,
+<<<<<<< HEAD
 	.wake_tx_queue		= ieee80211_handle_wake_tx_queue,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.start			= lbtf_op_start,
 	.stop			= lbtf_op_stop,
 	.add_interface		= lbtf_op_add_interface,

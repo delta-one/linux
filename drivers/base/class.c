@@ -53,8 +53,11 @@ static void class_release(struct kobject *kobj)
 
 	pr_debug("class '%s': release.\n", class->name);
 
+<<<<<<< HEAD
 	class->p = NULL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (class->class_release)
 		class->class_release(class);
 	else
@@ -64,9 +67,15 @@ static void class_release(struct kobject *kobj)
 	kfree(cp);
 }
 
+<<<<<<< HEAD
 static const struct kobj_ns_type_operations *class_child_ns_type(const struct kobject *kobj)
 {
 	const struct subsys_private *cp = to_subsys_private(kobj);
+=======
+static const struct kobj_ns_type_operations *class_child_ns_type(struct kobject *kobj)
+{
+	struct subsys_private *cp = to_subsys_private(kobj);
+>>>>>>> b7ba80a49124 (Commit)
 	struct class *class = cp->class;
 
 	return class->ns_type;
@@ -77,7 +86,11 @@ static const struct sysfs_ops class_sysfs_ops = {
 	.store	   = class_attr_store,
 };
 
+<<<<<<< HEAD
 static const struct kobj_type class_ktype = {
+=======
+static struct kobj_type class_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.sysfs_ops	= &class_sysfs_ops,
 	.release	= class_release,
 	.child_ns_type	= class_child_ns_type,
@@ -87,7 +100,11 @@ static const struct kobj_type class_ktype = {
 static struct kset *class_kset;
 
 
+<<<<<<< HEAD
 int class_create_file_ns(const struct class *cls, const struct class_attribute *attr,
+=======
+int class_create_file_ns(struct class *cls, const struct class_attribute *attr,
+>>>>>>> b7ba80a49124 (Commit)
 			 const void *ns)
 {
 	int error;
@@ -99,15 +116,23 @@ int class_create_file_ns(const struct class *cls, const struct class_attribute *
 		error = -EINVAL;
 	return error;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(class_create_file_ns);
 
 void class_remove_file_ns(const struct class *cls, const struct class_attribute *attr,
+=======
+
+void class_remove_file_ns(struct class *cls, const struct class_attribute *attr,
+>>>>>>> b7ba80a49124 (Commit)
 			  const void *ns)
 {
 	if (cls)
 		sysfs_remove_file_ns(&cls->p->subsys.kobj, &attr->attr, ns);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(class_remove_file_ns);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct class *class_get(struct class *cls)
 {
@@ -178,12 +203,23 @@ int __class_register(struct class *cls, struct lock_class_key *key)
 	if (!cls->dev_kobj)
 		cls->dev_kobj = sysfs_dev_char_kobj;
 
+<<<<<<< HEAD
 	cp->subsys.kobj.kset = class_kset;
+=======
+#if defined(CONFIG_BLOCK)
+	/* let the block class directory show up in the root of sysfs */
+	if (!sysfs_deprecated || cls != &block_class)
+		cp->subsys.kobj.kset = class_kset;
+#else
+	cp->subsys.kobj.kset = class_kset;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	cp->subsys.kobj.ktype = &class_ktype;
 	cp->class = cls;
 	cls->p = cp;
 
 	error = kset_register(&cp->subsys);
+<<<<<<< HEAD
 	if (error)
 		goto err_out;
 
@@ -199,6 +235,14 @@ int __class_register(struct class *cls, struct lock_class_key *key)
 err_out:
 	kfree(cp);
 	cls->p = NULL;
+=======
+	if (error) {
+		kfree(cp);
+		return error;
+	}
+	error = class_add_groups(class_get(cls), cls->class_groups);
+	class_put(cls);
+>>>>>>> b7ba80a49124 (Commit)
 	return error;
 }
 EXPORT_SYMBOL_GPL(__class_register);
@@ -209,7 +253,10 @@ void class_unregister(struct class *cls)
 	class_remove_groups(cls, cls->class_groups);
 	kset_unregister(&cls->p->subsys);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(class_unregister);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static void class_create_release(struct class *cls)
 {
@@ -219,6 +266,10 @@ static void class_create_release(struct class *cls)
 
 /**
  * __class_create - create a struct class structure
+<<<<<<< HEAD
+=======
+ * @owner: pointer to the module that is to "own" this struct class
+>>>>>>> b7ba80a49124 (Commit)
  * @name: pointer to a string for the name of this class.
  * @key: the lock_class_key for this class; used by mutex lock debugging
  *
@@ -230,7 +281,12 @@ static void class_create_release(struct class *cls)
  * Note, the pointer created here is to be destroyed when finished by
  * making a call to class_destroy().
  */
+<<<<<<< HEAD
 struct class *__class_create(const char *name, struct lock_class_key *key)
+=======
+struct class *__class_create(struct module *owner, const char *name,
+			     struct lock_class_key *key)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct class *cls;
 	int retval;
@@ -242,6 +298,10 @@ struct class *__class_create(const char *name, struct lock_class_key *key)
 	}
 
 	cls->name = name;
+<<<<<<< HEAD
+=======
+	cls->owner = owner;
+>>>>>>> b7ba80a49124 (Commit)
 	cls->class_release = class_create_release;
 
 	retval = __class_register(cls, key);
@@ -270,7 +330,10 @@ void class_destroy(struct class *cls)
 
 	class_unregister(cls);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(class_destroy);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * class_dev_iter_init - initialize class device iterator
@@ -284,8 +347,13 @@ EXPORT_SYMBOL_GPL(class_destroy);
  * otherwise if it is NULL, the iteration starts at the beginning of
  * the list.
  */
+<<<<<<< HEAD
 void class_dev_iter_init(struct class_dev_iter *iter, const struct class *class,
 			 const struct device *start, const struct device_type *type)
+=======
+void class_dev_iter_init(struct class_dev_iter *iter, struct class *class,
+			 struct device *start, const struct device_type *type)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct klist_node *start_knode = NULL;
 
@@ -355,7 +423,11 @@ EXPORT_SYMBOL_GPL(class_dev_iter_exit);
  * @fn is allowed to do anything including calling back into class
  * code.  There's no locking restriction.
  */
+<<<<<<< HEAD
 int class_for_each_device(const struct class *class, const struct device *start,
+=======
+int class_for_each_device(struct class *class, struct device *start,
+>>>>>>> b7ba80a49124 (Commit)
 			  void *data, int (*fn)(struct device *, void *))
 {
 	struct class_dev_iter iter;
@@ -402,7 +474,11 @@ EXPORT_SYMBOL_GPL(class_for_each_device);
  * @match is allowed to do anything including calling back into class
  * code.  There's no locking restriction.
  */
+<<<<<<< HEAD
 struct device *class_find_device(const struct class *class, const struct device *start,
+=======
+struct device *class_find_device(struct class *class, struct device *start,
+>>>>>>> b7ba80a49124 (Commit)
 				 const void *data,
 				 int (*match)(struct device *, const void *))
 {
@@ -455,7 +531,10 @@ int class_interface_register(struct class_interface *class_intf)
 
 	return 0;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(class_interface_register);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 void class_interface_unregister(struct class_interface *class_intf)
 {
@@ -478,7 +557,10 @@ void class_interface_unregister(struct class_interface *class_intf)
 
 	class_put(parent);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(class_interface_unregister);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 ssize_t show_class_attr_string(struct class *class,
 			       struct class_attribute *attr, char *buf)
@@ -585,3 +667,14 @@ int __init classes_init(void)
 		return -ENOMEM;
 	return 0;
 }
+<<<<<<< HEAD
+=======
+
+EXPORT_SYMBOL_GPL(class_create_file_ns);
+EXPORT_SYMBOL_GPL(class_remove_file_ns);
+EXPORT_SYMBOL_GPL(class_unregister);
+EXPORT_SYMBOL_GPL(class_destroy);
+
+EXPORT_SYMBOL_GPL(class_interface_register);
+EXPORT_SYMBOL_GPL(class_interface_unregister);
+>>>>>>> b7ba80a49124 (Commit)

@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2017 Red Hat. All rights reserved.
  *
@@ -18,7 +21,11 @@ struct bt_work {
 };
 
 struct background_tracker {
+<<<<<<< HEAD
 	unsigned int max_work;
+=======
+	unsigned max_work;
+>>>>>>> b7ba80a49124 (Commit)
 	atomic_t pending_promotes;
 	atomic_t pending_writebacks;
 	atomic_t pending_demotes;
@@ -30,7 +37,11 @@ struct background_tracker {
 	struct kmem_cache *work_cache;
 };
 
+<<<<<<< HEAD
 struct background_tracker *btracker_create(unsigned int max_work)
+=======
+struct background_tracker *btracker_create(unsigned max_work)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct background_tracker *b = kmalloc(sizeof(*b), GFP_KERNEL);
 
@@ -61,6 +72,7 @@ EXPORT_SYMBOL_GPL(btracker_create);
 
 void btracker_destroy(struct background_tracker *b)
 {
+<<<<<<< HEAD
 	struct bt_work *w, *tmp;
 
 	BUG_ON(!list_empty(&b->issued));
@@ -69,6 +81,8 @@ void btracker_destroy(struct background_tracker *b)
 		kmem_cache_free(b->work_cache, w);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kmem_cache_destroy(b->work_cache);
 	kfree(b);
 }
@@ -156,13 +170,21 @@ static void update_stats(struct background_tracker *b, struct policy_work *w, in
 	}
 }
 
+<<<<<<< HEAD
 unsigned int btracker_nr_writebacks_queued(struct background_tracker *b)
+=======
+unsigned btracker_nr_writebacks_queued(struct background_tracker *b)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return atomic_read(&b->pending_writebacks);
 }
 EXPORT_SYMBOL_GPL(btracker_nr_writebacks_queued);
 
+<<<<<<< HEAD
 unsigned int btracker_nr_demotions_queued(struct background_tracker *b)
+=======
+unsigned btracker_nr_demotions_queued(struct background_tracker *b)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return atomic_read(&b->pending_demotes);
 }

@@ -137,7 +137,11 @@ The ``LIRC user interface`` option adds enhanced functionality when using the
 from remote controllers.
 
 The ``Support for eBPF programs attached to lirc devices`` option allows
+<<<<<<< HEAD
 the usage of special programs (called eBPF) that would allow applications
+=======
+the usage of special programs (called eBPF) that would allow aplications
+>>>>>>> b7ba80a49124 (Commit)
 to add extra remote controller decoding functionality to the Linux Kernel.
 
 The ``Remote controller decoders`` option allows selecting the

@@ -17,6 +17,10 @@
 #include <linux/module.h>
 #include <linux/platform_device.h>
 #include <linux/regmap.h>
+<<<<<<< HEAD
+=======
+#include <linux/wmi.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "nct6775.h"
 
@@ -106,12 +110,17 @@ struct nct6775_sio_data {
 	void (*sio_exit)(struct nct6775_sio_data *sio_data);
 };
 
+<<<<<<< HEAD
 #define ASUSWMI_METHOD			"WMBD"
+=======
+#define ASUSWMI_MONITORING_GUID		"466747A0-70EC-11DE-8A39-0800200C9A66"
+>>>>>>> b7ba80a49124 (Commit)
 #define ASUSWMI_METHODID_RSIO		0x5253494F
 #define ASUSWMI_METHODID_WSIO		0x5753494F
 #define ASUSWMI_METHODID_RHWM		0x5248574D
 #define ASUSWMI_METHODID_WHWM		0x5748574D
 #define ASUSWMI_UNSUPPORTED_METHOD	0xFFFFFFFE
+<<<<<<< HEAD
 #define ASUSWMI_DEVICE_HID		"PNP0C14"
 #define ASUSWMI_DEVICE_UID		"ASUSWMI"
 #define ASUSMSI_DEVICE_UID		"AsusMbSwInterface"
@@ -151,6 +160,36 @@ static int nct6775_asuswmi_evaluate_method(u32 method_id, u8 bank, u8 reg, u8 va
 	if (retval)
 		*retval = result;
 
+=======
+
+static int nct6775_asuswmi_evaluate_method(u32 method_id, u8 bank, u8 reg, u8 val, u32 *retval)
+{
+#if IS_ENABLED(CONFIG_ACPI_WMI)
+	u32 args = bank | (reg << 8) | (val << 16);
+	struct acpi_buffer input = { (acpi_size) sizeof(args), &args };
+	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+	acpi_status status;
+	union acpi_object *obj;
+	u32 tmp = ASUSWMI_UNSUPPORTED_METHOD;
+
+	status = wmi_evaluate_method(ASUSWMI_MONITORING_GUID, 0,
+				     method_id, &input, &output);
+
+	if (ACPI_FAILURE(status))
+		return -EIO;
+
+	obj = output.pointer;
+	if (obj && obj->type == ACPI_TYPE_INTEGER)
+		tmp = obj->integer.value;
+
+	if (retval)
+		*retval = tmp;
+
+	kfree(obj);
+
+	if (tmp == ASUSWMI_UNSUPPORTED_METHOD)
+		return -ENODEV;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 #else
 	return -EOPNOTSUPP;
@@ -365,7 +404,11 @@ static void nct6791_enable_io_mapping(struct nct6775_sio_data *sio_data)
 	}
 }
 
+<<<<<<< HEAD
 static int nct6775_suspend(struct device *dev)
+=======
+static int __maybe_unused nct6775_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int err;
 	u16 tmp;
@@ -396,7 +439,11 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 static int nct6775_resume(struct device *dev)
+=======
+static int __maybe_unused nct6775_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nct6775_data *data = dev_get_drvdata(dev);
 	struct nct6775_sio_data *sio_data = dev_get_platdata(dev);
@@ -477,7 +524,11 @@ abort:
 	return err;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(nct6775_dev_pm_ops, nct6775_suspend, nct6775_resume);
+=======
+static SIMPLE_DEV_PM_OPS(nct6775_dev_pm_ops, nct6775_suspend, nct6775_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static void
 nct6775_check_fan_inputs(struct nct6775_data *data, struct nct6775_sio_data *sio_data)
@@ -944,7 +995,11 @@ static int nct6775_platform_probe(struct platform_device *pdev)
 static struct platform_driver nct6775_driver = {
 	.driver = {
 		.name	= DRVNAME,
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&nct6775_dev_pm_ops),
+=======
+		.pm	= &nct6775_dev_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe		= nct6775_platform_probe,
 };
@@ -1052,6 +1107,7 @@ static int __init nct6775_find(int sioaddr, struct nct6775_sio_data *sio_data)
 static struct platform_device *pdev[2];
 
 static const char * const asus_wmi_boards[] = {
+<<<<<<< HEAD
 	"Pro A520M-C",
 	"Pro A520M-C II",
 	"PRO H410T",
@@ -1075,14 +1131,30 @@ static const char * const asus_wmi_boards[] = {
 	"PRIME B550M-A AC",
 	"PRIME B550M-A WIFI II",
 	"PRIME B550M-K",
+=======
+	"PRO H410T",
+	"ProArt X570-CREATOR WIFI",
+	"Pro B550M-C",
+	"Pro WS X570-ACE",
+	"PRIME B360-PLUS",
+	"PRIME B460-PLUS",
+	"PRIME B550-PLUS",
+	"PRIME B550M-A",
+	"PRIME B550M-A (WI-FI)",
+>>>>>>> b7ba80a49124 (Commit)
 	"PRIME H410M-R",
 	"PRIME X570-P",
 	"PRIME X570-PRO",
 	"ROG CROSSHAIR VIII DARK HERO",
+<<<<<<< HEAD
 	"ROG CROSSHAIR VIII EXTREME",
 	"ROG CROSSHAIR VIII FORMULA",
 	"ROG CROSSHAIR VIII HERO",
 	"ROG CROSSHAIR VIII HERO (WI-FI)",
+=======
+	"ROG CROSSHAIR VIII FORMULA",
+	"ROG CROSSHAIR VIII HERO",
+>>>>>>> b7ba80a49124 (Commit)
 	"ROG CROSSHAIR VIII IMPACT",
 	"ROG STRIX B550-A GAMING",
 	"ROG STRIX B550-E GAMING",
@@ -1106,6 +1178,7 @@ static const char * const asus_wmi_boards[] = {
 	"ROG STRIX Z490-G GAMING (WI-FI)",
 	"ROG STRIX Z490-H GAMING",
 	"ROG STRIX Z490-I GAMING",
+<<<<<<< HEAD
 	"TUF GAMING A520M-PLUS",
 	"TUF GAMING A520M-PLUS II",
 	"TUF GAMING A520M-PLUS WIFI",
@@ -1114,11 +1187,16 @@ static const char * const asus_wmi_boards[] = {
 	"TUF GAMING B550M-PLUS",
 	"TUF GAMING B550M-PLUS (WI-FI)",
 	"TUF GAMING B550M-PLUS WIFI II",
+=======
+	"TUF GAMING B550M-PLUS",
+	"TUF GAMING B550M-PLUS (WI-FI)",
+>>>>>>> b7ba80a49124 (Commit)
 	"TUF GAMING B550-PLUS",
 	"TUF GAMING B550-PLUS WIFI II",
 	"TUF GAMING B550-PRO",
 	"TUF GAMING X570-PLUS",
 	"TUF GAMING X570-PLUS (WI-FI)",
+<<<<<<< HEAD
 	"TUF GAMING X570-PLUS_BR",
 	"TUF GAMING X570-PRO (WI-FI)",
 	"TUF GAMING Z490-PLUS",
@@ -1237,6 +1315,13 @@ static enum sensor_access nct6775_determine_access(const char *device_uid)
 	return access_direct;
 }
 
+=======
+	"TUF GAMING X570-PRO (WI-FI)",
+	"TUF GAMING Z490-PLUS",
+	"TUF GAMING Z490-PLUS (WI-FI)",
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static int __init sensors_nct6775_platform_init(void)
 {
 	int i, err;
@@ -1247,6 +1332,10 @@ static int __init sensors_nct6775_platform_init(void)
 	int sioaddr[2] = { 0x2e, 0x4e };
 	enum sensor_access access = access_direct;
 	const char *board_vendor, *board_name;
+<<<<<<< HEAD
+=======
+	u8 tmp;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = platform_driver_register(&nct6775_driver);
 	if (err)
@@ -1259,6 +1348,7 @@ static int __init sensors_nct6775_platform_init(void)
 	    !strcmp(board_vendor, "ASUSTeK COMPUTER INC.")) {
 		err = match_string(asus_wmi_boards, ARRAY_SIZE(asus_wmi_boards),
 				   board_name);
+<<<<<<< HEAD
 		if (err >= 0)
 			access = nct6775_determine_access(ASUSWMI_DEVICE_UID);
 
@@ -1266,6 +1356,17 @@ static int __init sensors_nct6775_platform_init(void)
 				   board_name);
 		if (err >= 0)
 			access = nct6775_determine_access(ASUSMSI_DEVICE_UID);
+=======
+		if (err >= 0) {
+			/* if reading chip id via WMI succeeds, use WMI */
+			if (!nct6775_asuswmi_read(0, NCT6775_PORT_CHIPID, &tmp) && tmp) {
+				pr_info("Using Asus WMI to access %#x chip.\n", tmp);
+				access = access_asuswmi;
+			} else {
+				pr_err("Can't read ChipID by Asus WMI.\n");
+			}
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*

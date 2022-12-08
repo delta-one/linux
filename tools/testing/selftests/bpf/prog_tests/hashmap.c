@@ -7,6 +7,7 @@
  */
 #include "test_progs.h"
 #include "bpf/hashmap.h"
+<<<<<<< HEAD
 #include <stddef.h>
 
 static int duration = 0;
@@ -19,6 +20,19 @@ static size_t hash_fn(long k, void *ctx)
 static bool equal_fn(long a, long b, void *ctx)
 {
 	return a == b;
+=======
+
+static int duration = 0;
+
+static size_t hash_fn(const void *k, void *ctx)
+{
+	return (long)k;
+}
+
+static bool equal_fn(const void *a, const void *b, void *ctx)
+{
+	return (long)a == (long)b;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline size_t next_pow_2(size_t n)
@@ -53,8 +67,13 @@ static void test_hashmap_generic(void)
 		return;
 
 	for (i = 0; i < ELEM_CNT; i++) {
+<<<<<<< HEAD
 		long oldk, k = i;
 		long oldv, v = 1024 + i;
+=======
+		const void *oldk, *k = (const void *)(long)i;
+		void *oldv, *v = (void *)(long)(1024 + i);
+>>>>>>> b7ba80a49124 (Commit)
 
 		err = hashmap__update(map, k, v, &oldk, &oldv);
 		if (CHECK(err != -ENOENT, "hashmap__update",
@@ -65,6 +84,7 @@ static void test_hashmap_generic(void)
 			err = hashmap__add(map, k, v);
 		} else {
 			err = hashmap__set(map, k, v, &oldk, &oldv);
+<<<<<<< HEAD
 			if (CHECK(oldk != 0 || oldv != 0, "check_kv",
 				  "unexpected k/v: %ld=%ld\n", oldk, oldv))
 				goto cleanup;
@@ -77,6 +97,22 @@ static void test_hashmap_generic(void)
 			  "failed to find key %ld\n", k))
 			goto cleanup;
 		if (CHECK(oldv != v, "elem_val", "found value is wrong: %ld\n", oldv))
+=======
+			if (CHECK(oldk != NULL || oldv != NULL, "check_kv",
+				  "unexpected k/v: %p=%p\n", oldk, oldv))
+				goto cleanup;
+		}
+
+		if (CHECK(err, "elem_add", "failed to add k/v %ld = %ld: %d\n",
+			       (long)k, (long)v, err))
+			goto cleanup;
+
+		if (CHECK(!hashmap__find(map, k, &oldv), "elem_find",
+			  "failed to find key %ld\n", (long)k))
+			goto cleanup;
+		if (CHECK(oldv != v, "elem_val",
+			  "found value is wrong: %ld\n", (long)oldv))
+>>>>>>> b7ba80a49124 (Commit)
 			goto cleanup;
 	}
 
@@ -90,8 +126,13 @@ static void test_hashmap_generic(void)
 
 	found_msk = 0;
 	hashmap__for_each_entry(map, entry, bkt) {
+<<<<<<< HEAD
 		long k = entry->key;
 		long v = entry->value;
+=======
+		long k = (long)entry->key;
+		long v = (long)entry->value;
+>>>>>>> b7ba80a49124 (Commit)
 
 		found_msk |= 1ULL << k;
 		if (CHECK(v - k != 1024, "check_kv",
@@ -103,8 +144,13 @@ static void test_hashmap_generic(void)
 		goto cleanup;
 
 	for (i = 0; i < ELEM_CNT; i++) {
+<<<<<<< HEAD
 		long oldk, k = i;
 		long oldv, v = 256 + i;
+=======
+		const void *oldk, *k = (const void *)(long)i;
+		void *oldv, *v = (void *)(long)(256 + i);
+>>>>>>> b7ba80a49124 (Commit)
 
 		err = hashmap__add(map, k, v);
 		if (CHECK(err != -EEXIST, "hashmap__add",
@@ -118,6 +164,7 @@ static void test_hashmap_generic(void)
 
 		if (CHECK(err, "elem_upd",
 			  "failed to update k/v %ld = %ld: %d\n",
+<<<<<<< HEAD
 			  k, v, err))
 			goto cleanup;
 		if (CHECK(!hashmap__find(map, k, &oldv), "elem_find",
@@ -125,6 +172,15 @@ static void test_hashmap_generic(void)
 			goto cleanup;
 		if (CHECK(oldv != v, "elem_val",
 			  "found value is wrong: %ld\n", oldv))
+=======
+			  (long)k, (long)v, err))
+			goto cleanup;
+		if (CHECK(!hashmap__find(map, k, &oldv), "elem_find",
+			  "failed to find key %ld\n", (long)k))
+			goto cleanup;
+		if (CHECK(oldv != v, "elem_val",
+			  "found value is wrong: %ld\n", (long)oldv))
+>>>>>>> b7ba80a49124 (Commit)
 			goto cleanup;
 	}
 
@@ -138,8 +194,13 @@ static void test_hashmap_generic(void)
 
 	found_msk = 0;
 	hashmap__for_each_entry_safe(map, entry, tmp, bkt) {
+<<<<<<< HEAD
 		long k = entry->key;
 		long v = entry->value;
+=======
+		long k = (long)entry->key;
+		long v = (long)entry->value;
+>>>>>>> b7ba80a49124 (Commit)
 
 		found_msk |= 1ULL << k;
 		if (CHECK(v - k != 256, "elem_check",
@@ -151,7 +212,11 @@ static void test_hashmap_generic(void)
 		goto cleanup;
 
 	found_cnt = 0;
+<<<<<<< HEAD
 	hashmap__for_each_key_entry(map, entry, 0) {
+=======
+	hashmap__for_each_key_entry(map, entry, (void *)0) {
+>>>>>>> b7ba80a49124 (Commit)
 		found_cnt++;
 	}
 	if (CHECK(!found_cnt, "found_cnt",
@@ -160,14 +225,21 @@ static void test_hashmap_generic(void)
 
 	found_msk = 0;
 	found_cnt = 0;
+<<<<<<< HEAD
 	hashmap__for_each_key_entry_safe(map, entry, tmp, 0) {
 		long oldk, k;
 		long oldv, v;
+=======
+	hashmap__for_each_key_entry_safe(map, entry, tmp, (void *)0) {
+		const void *oldk, *k;
+		void *oldv, *v;
+>>>>>>> b7ba80a49124 (Commit)
 
 		k = entry->key;
 		v = entry->value;
 
 		found_cnt++;
+<<<<<<< HEAD
 		found_msk |= 1ULL << k;
 
 		if (CHECK(!hashmap__delete(map, k, &oldk, &oldv), "elem_del",
@@ -179,6 +251,21 @@ static void test_hashmap_generic(void)
 			goto cleanup;
 		if (CHECK(hashmap__delete(map, k, &oldk, &oldv), "elem_del",
 			  "unexpectedly deleted k/v %ld = %ld\n", oldk, oldv))
+=======
+		found_msk |= 1ULL << (long)k;
+
+		if (CHECK(!hashmap__delete(map, k, &oldk, &oldv), "elem_del",
+			  "failed to delete k/v %ld = %ld\n",
+			  (long)k, (long)v))
+			goto cleanup;
+		if (CHECK(oldk != k || oldv != v, "check_old",
+			  "invalid deleted k/v: expected %ld = %ld, got %ld = %ld\n",
+			  (long)k, (long)v, (long)oldk, (long)oldv))
+			goto cleanup;
+		if (CHECK(hashmap__delete(map, k, &oldk, &oldv), "elem_del",
+			  "unexpectedly deleted k/v %ld = %ld\n",
+			  (long)oldk, (long)oldv))
+>>>>>>> b7ba80a49124 (Commit)
 			goto cleanup;
 	}
 
@@ -195,13 +282,19 @@ static void test_hashmap_generic(void)
 		goto cleanup;
 
 	hashmap__for_each_entry_safe(map, entry, tmp, bkt) {
+<<<<<<< HEAD
 		long oldk, k;
 		long oldv, v;
+=======
+		const void *oldk, *k;
+		void *oldv, *v;
+>>>>>>> b7ba80a49124 (Commit)
 
 		k = entry->key;
 		v = entry->value;
 
 		found_cnt++;
+<<<<<<< HEAD
 		found_msk |= 1ULL << k;
 
 		if (CHECK(!hashmap__delete(map, k, &oldk, &oldv), "elem_del",
@@ -213,6 +306,21 @@ static void test_hashmap_generic(void)
 			goto cleanup;
 		if (CHECK(hashmap__delete(map, k, &oldk, &oldv), "elem_del",
 			  "unexpectedly deleted k/v %ld = %ld\n", k, v))
+=======
+		found_msk |= 1ULL << (long)k;
+
+		if (CHECK(!hashmap__delete(map, k, &oldk, &oldv), "elem_del",
+			  "failed to delete k/v %ld = %ld\n",
+			  (long)k, (long)v))
+			goto cleanup;
+		if (CHECK(oldk != k || oldv != v, "elem_check",
+			  "invalid old k/v: expect %ld = %ld, got %ld = %ld\n",
+			  (long)k, (long)v, (long)oldk, (long)oldv))
+			goto cleanup;
+		if (CHECK(hashmap__delete(map, k, &oldk, &oldv), "elem_del",
+			  "unexpectedly deleted k/v %ld = %ld\n",
+			  (long)k, (long)v))
+>>>>>>> b7ba80a49124 (Commit)
 			goto cleanup;
 	}
 
@@ -230,7 +338,11 @@ static void test_hashmap_generic(void)
 	hashmap__for_each_entry(map, entry, bkt) {
 		CHECK(false, "elem_exists",
 		      "unexpected map entries left: %ld = %ld\n",
+<<<<<<< HEAD
 		      entry->key, entry->value);
+=======
+		      (long)entry->key, (long)entry->value);
+>>>>>>> b7ba80a49124 (Commit)
 		goto cleanup;
 	}
 
@@ -238,7 +350,11 @@ static void test_hashmap_generic(void)
 	hashmap__for_each_entry(map, entry, bkt) {
 		CHECK(false, "elem_exists",
 		      "unexpected map entries left: %ld = %ld\n",
+<<<<<<< HEAD
 		      entry->key, entry->value);
+=======
+		      (long)entry->key, (long)entry->value);
+>>>>>>> b7ba80a49124 (Commit)
 		goto cleanup;
 	}
 
@@ -246,6 +362,7 @@ cleanup:
 	hashmap__free(map);
 }
 
+<<<<<<< HEAD
 static size_t str_hash_fn(long a, void *ctx)
 {
 	return str_hash((char *)a);
@@ -332,13 +449,20 @@ cleanup:
 }
 
 static size_t collision_hash_fn(long k, void *ctx)
+=======
+static size_t collision_hash_fn(const void *k, void *ctx)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return 0;
 }
 
 static void test_hashmap_multimap(void)
 {
+<<<<<<< HEAD
 	long k1 = 0, k2 = 1;
+=======
+	void *k1 = (void *)0, *k2 = (void *)1;
+>>>>>>> b7ba80a49124 (Commit)
 	struct hashmap_entry *entry;
 	struct hashmap *map;
 	long found_msk;
@@ -353,6 +477,7 @@ static void test_hashmap_multimap(void)
 	 * [0] -> 1, 2, 4;
 	 * [1] -> 8, 16, 32;
 	 */
+<<<<<<< HEAD
 	err = hashmap__append(map, k1, 1);
 	if (CHECK(err, "elem_add", "failed to add k/v: %d\n", err))
 		goto cleanup;
@@ -370,6 +495,25 @@ static void test_hashmap_multimap(void)
 	if (CHECK(err, "elem_add", "failed to add k/v: %d\n", err))
 		goto cleanup;
 	err = hashmap__append(map, k2, 32);
+=======
+	err = hashmap__append(map, k1, (void *)1);
+	if (CHECK(err, "elem_add", "failed to add k/v: %d\n", err))
+		goto cleanup;
+	err = hashmap__append(map, k1, (void *)2);
+	if (CHECK(err, "elem_add", "failed to add k/v: %d\n", err))
+		goto cleanup;
+	err = hashmap__append(map, k1, (void *)4);
+	if (CHECK(err, "elem_add", "failed to add k/v: %d\n", err))
+		goto cleanup;
+
+	err = hashmap__append(map, k2, (void *)8);
+	if (CHECK(err, "elem_add", "failed to add k/v: %d\n", err))
+		goto cleanup;
+	err = hashmap__append(map, k2, (void *)16);
+	if (CHECK(err, "elem_add", "failed to add k/v: %d\n", err))
+		goto cleanup;
+	err = hashmap__append(map, k2, (void *)32);
+>>>>>>> b7ba80a49124 (Commit)
 	if (CHECK(err, "elem_add", "failed to add k/v: %d\n", err))
 		goto cleanup;
 
@@ -380,7 +524,11 @@ static void test_hashmap_multimap(void)
 	/* verify global iteration still works and sees all values */
 	found_msk = 0;
 	hashmap__for_each_entry(map, entry, bkt) {
+<<<<<<< HEAD
 		found_msk |= entry->value;
+=======
+		found_msk |= (long)entry->value;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (CHECK(found_msk != (1 << 6) - 1, "found_msk",
 		  "not all keys iterated: %lx\n", found_msk))
@@ -389,7 +537,11 @@ static void test_hashmap_multimap(void)
 	/* iterate values for key 1 */
 	found_msk = 0;
 	hashmap__for_each_key_entry(map, entry, k1) {
+<<<<<<< HEAD
 		found_msk |= entry->value;
+=======
+		found_msk |= (long)entry->value;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (CHECK(found_msk != (1 | 2 | 4), "found_msk",
 		  "invalid k1 values: %lx\n", found_msk))
@@ -398,7 +550,11 @@ static void test_hashmap_multimap(void)
 	/* iterate values for key 2 */
 	found_msk = 0;
 	hashmap__for_each_key_entry(map, entry, k2) {
+<<<<<<< HEAD
 		found_msk |= entry->value;
+=======
+		found_msk |= (long)entry->value;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (CHECK(found_msk != (8 | 16 | 32), "found_msk",
 		  "invalid k2 values: %lx\n", found_msk))
@@ -413,7 +569,11 @@ static void test_hashmap_empty()
 	struct hashmap_entry *entry;
 	int bkt;
 	struct hashmap *map;
+<<<<<<< HEAD
 	long k = 0;
+=======
+	void *k = (void *)0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* force collisions */
 	map = hashmap__new(hash_fn, equal_fn, NULL);
@@ -454,6 +614,9 @@ void test_hashmap()
 		test_hashmap_multimap();
 	if (test__start_subtest("empty"))
 		test_hashmap_empty();
+<<<<<<< HEAD
 	if (test__start_subtest("ptr_iface"))
 		test_hashmap_ptr_iface();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }

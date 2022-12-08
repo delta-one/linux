@@ -112,18 +112,31 @@ extern struct kobject * __must_check kobject_get_unless_zero(
 						struct kobject *kobj);
 extern void kobject_put(struct kobject *kobj);
 
+<<<<<<< HEAD
 extern const void *kobject_namespace(const struct kobject *kobj);
 extern void kobject_get_ownership(const struct kobject *kobj,
 				  kuid_t *uid, kgid_t *gid);
 extern char *kobject_get_path(const struct kobject *kobj, gfp_t flag);
+=======
+extern const void *kobject_namespace(struct kobject *kobj);
+extern void kobject_get_ownership(struct kobject *kobj,
+				  kuid_t *uid, kgid_t *gid);
+extern char *kobject_get_path(struct kobject *kobj, gfp_t flag);
+>>>>>>> b7ba80a49124 (Commit)
 
 struct kobj_type {
 	void (*release)(struct kobject *kobj);
 	const struct sysfs_ops *sysfs_ops;
 	const struct attribute_group **default_groups;
+<<<<<<< HEAD
 	const struct kobj_ns_type_operations *(*child_ns_type)(const struct kobject *kobj);
 	const void *(*namespace)(const struct kobject *kobj);
 	void (*get_ownership)(const struct kobject *kobj, kuid_t *uid, kgid_t *gid);
+=======
+	const struct kobj_ns_type_operations *(*child_ns_type)(struct kobject *kobj);
+	const void *(*namespace)(struct kobject *kobj);
+	void (*get_ownership)(struct kobject *kobj, kuid_t *uid, kgid_t *gid);
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct kobj_uevent_env {
@@ -135,9 +148,15 @@ struct kobj_uevent_env {
 };
 
 struct kset_uevent_ops {
+<<<<<<< HEAD
 	int (* const filter)(const struct kobject *kobj);
 	const char *(* const name)(const struct kobject *kobj);
 	int (* const uevent)(const struct kobject *kobj, struct kobj_uevent_env *env);
+=======
+	int (* const filter)(struct kobject *kobj);
+	const char *(* const name)(struct kobject *kobj);
+	int (* const uevent)(struct kobject *kobj, struct kobj_uevent_env *env);
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct kobj_attribute {
@@ -198,7 +217,11 @@ static inline void kset_put(struct kset *k)
 	kobject_put(&k->kobj);
 }
 
+<<<<<<< HEAD
 static inline const struct kobj_type *get_ktype(const struct kobject *kobj)
+=======
+static inline const struct kobj_type *get_ktype(struct kobject *kobj)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return kobj->ktype;
 }

@@ -340,6 +340,10 @@ static int rotator_remove(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM
+>>>>>>> b7ba80a49124 (Commit)
 static int rotator_runtime_suspend(struct device *dev)
 {
 	struct rot_context *rot = dev_get_drvdata(dev);
@@ -354,6 +358,10 @@ static int rotator_runtime_resume(struct device *dev)
 
 	return clk_prepare_enable(rot->clock);
 }
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct drm_exynos_ipp_limit rotator_s5pv210_rbg888_limits[] = {
 	{ IPP_SIZE_LIMIT(BUFFER, .h = { 8, SZ_16K }, .v = { 8, SZ_16K }) },
@@ -448,8 +456,17 @@ static const struct of_device_id exynos_rotator_match[] = {
 };
 MODULE_DEVICE_TABLE(of, exynos_rotator_match);
 
+<<<<<<< HEAD
 static DEFINE_RUNTIME_DEV_PM_OPS(rotator_pm_ops, rotator_runtime_suspend,
 				 rotator_runtime_resume, NULL);
+=======
+static const struct dev_pm_ops rotator_pm_ops = {
+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+				pm_runtime_force_resume)
+	SET_RUNTIME_PM_OPS(rotator_runtime_suspend, rotator_runtime_resume,
+									NULL)
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 struct platform_driver rotator_driver = {
 	.probe		= rotator_probe,
@@ -457,7 +474,11 @@ struct platform_driver rotator_driver = {
 	.driver		= {
 		.name	= "exynos-rotator",
 		.owner	= THIS_MODULE,
+<<<<<<< HEAD
 		.pm	= pm_ptr(&rotator_pm_ops),
+=======
+		.pm	= &rotator_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = exynos_rotator_match,
 	},
 };

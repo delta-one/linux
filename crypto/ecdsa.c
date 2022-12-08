@@ -332,7 +332,11 @@ static struct akcipher_alg ecdsa_nist_p192 = {
 };
 static bool ecdsa_nist_p192_registered;
 
+<<<<<<< HEAD
 static int __init ecdsa_init(void)
+=======
+static int ecdsa_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 
@@ -359,7 +363,11 @@ nist_p256_error:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void __exit ecdsa_exit(void)
+=======
+static void ecdsa_exit(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (ecdsa_nist_p192_registered)
 		crypto_unregister_akcipher(&ecdsa_nist_p192);

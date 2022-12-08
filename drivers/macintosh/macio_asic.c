@@ -128,17 +128,24 @@ static int macio_device_resume(struct device * dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int macio_device_modalias(const struct device *dev, struct kobj_uevent_env *env)
 {
 	return of_device_uevent_modalias(dev, env);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern const struct attribute_group *macio_dev_groups[];
 
 struct bus_type macio_bus_type = {
        .name	= "macio",
        .match	= macio_bus_match,
+<<<<<<< HEAD
        .uevent	= macio_device_modalias,
+=======
+       .uevent = of_device_uevent_modalias,
+>>>>>>> b7ba80a49124 (Commit)
        .probe	= macio_device_probe,
        .remove	= macio_device_remove,
        .shutdown = macio_device_shutdown,
@@ -429,7 +436,11 @@ static struct macio_dev * macio_add_one_device(struct macio_chip *chip,
 	if (of_device_register(&dev->ofdev) != 0) {
 		printk(KERN_DEBUG"macio: device registration error for %s!\n",
 		       dev_name(&dev->ofdev.dev));
+<<<<<<< HEAD
 		put_device(&dev->ofdev.dev);
+=======
+		kfree(dev);
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 	}
 

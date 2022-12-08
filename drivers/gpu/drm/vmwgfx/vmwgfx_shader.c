@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0 OR MIT
 /**************************************************************************
  *
+<<<<<<< HEAD
  * Copyright 2009-2023 VMware, Inc., Palo Alto, CA., USA
+=======
+ * Copyright 2009-2015 VMware, Inc., Palo Alto, CA., USA
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the
@@ -27,10 +31,16 @@
 
 #include <drm/ttm/ttm_placement.h>
 
+<<<<<<< HEAD
 #include "vmwgfx_binding.h"
 #include "vmwgfx_bo.h"
 #include "vmwgfx_drv.h"
 #include "vmwgfx_resource_priv.h"
+=======
+#include "vmwgfx_drv.h"
+#include "vmwgfx_resource_priv.h"
+#include "vmwgfx_binding.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 struct vmw_shader {
 	struct vmw_resource res;
@@ -89,13 +99,21 @@ const struct vmw_user_resource_conv *user_shader_converter =
 
 static const struct vmw_res_func vmw_gb_shader_func = {
 	.res_type = vmw_res_shader,
+<<<<<<< HEAD
 	.needs_guest_memory = true,
+=======
+	.needs_backup = true,
+>>>>>>> b7ba80a49124 (Commit)
 	.may_evict = true,
 	.prio = 3,
 	.dirty_prio = 3,
 	.type_name = "guest backed shaders",
+<<<<<<< HEAD
 	.domain = VMW_BO_DOMAIN_MOB,
 	.busy_domain = VMW_BO_DOMAIN_MOB,
+=======
+	.backup_placement = &vmw_mob_placement,
+>>>>>>> b7ba80a49124 (Commit)
 	.create = vmw_gb_shader_create,
 	.destroy = vmw_gb_shader_destroy,
 	.bind = vmw_gb_shader_bind,
@@ -104,13 +122,21 @@ static const struct vmw_res_func vmw_gb_shader_func = {
 
 static const struct vmw_res_func vmw_dx_shader_func = {
 	.res_type = vmw_res_shader,
+<<<<<<< HEAD
 	.needs_guest_memory = true,
+=======
+	.needs_backup = true,
+>>>>>>> b7ba80a49124 (Commit)
 	.may_evict = true,
 	.prio = 3,
 	.dirty_prio = 3,
 	.type_name = "dx shaders",
+<<<<<<< HEAD
 	.domain = VMW_BO_DOMAIN_MOB,
 	.busy_domain = VMW_BO_DOMAIN_MOB,
+=======
+	.backup_placement = &vmw_mob_placement,
+>>>>>>> b7ba80a49124 (Commit)
 	.create = vmw_dx_shader_create,
 	/*
 	 * The destroy callback is only called with a committed resource on
@@ -161,7 +187,11 @@ static int vmw_gb_shader_init(struct vmw_private *dev_priv,
 			      SVGA3dShaderType type,
 			      uint8_t num_input_sig,
 			      uint8_t num_output_sig,
+<<<<<<< HEAD
 			      struct vmw_bo *byte_code,
+=======
+			      struct vmw_buffer_object *byte_code,
+>>>>>>> b7ba80a49124 (Commit)
 			      void (*res_free) (struct vmw_resource *res))
 {
 	struct vmw_shader *shader = vmw_res_to_shader(res);
@@ -178,10 +208,17 @@ static int vmw_gb_shader_init(struct vmw_private *dev_priv,
 		return ret;
 	}
 
+<<<<<<< HEAD
 	res->guest_memory_size = size;
 	if (byte_code) {
 		res->guest_memory_bo = vmw_bo_reference(byte_code);
 		res->guest_memory_offset = offset;
+=======
+	res->backup_size = size;
+	if (byte_code) {
+		res->backup = vmw_bo_reference(byte_code);
+		res->backup_offset = offset;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	shader->size = size;
 	shader->type = type;
@@ -262,8 +299,13 @@ static int vmw_gb_shader_bind(struct vmw_resource *res,
 	cmd->header.size = sizeof(cmd->body);
 	cmd->body.shid = res->id;
 	cmd->body.mobid = bo->resource->start;
+<<<<<<< HEAD
 	cmd->body.offsetInBytes = res->guest_memory_offset;
 	res->guest_memory_dirty = false;
+=======
+	cmd->body.offsetInBytes = res->backup_offset;
+	res->backup_dirty = false;
+>>>>>>> b7ba80a49124 (Commit)
 	vmw_cmd_commit(dev_priv, sizeof(*cmd));
 
 	return 0;
@@ -280,7 +322,11 @@ static int vmw_gb_shader_unbind(struct vmw_resource *res,
 	} *cmd;
 	struct vmw_fence_obj *fence;
 
+<<<<<<< HEAD
 	BUG_ON(res->guest_memory_bo->tbo.resource->mem_type != VMW_PL_MOB);
+=======
+	BUG_ON(res->backup->base.resource->mem_type != VMW_PL_MOB);
+>>>>>>> b7ba80a49124 (Commit)
 
 	cmd = VMW_CMD_RESERVE(dev_priv, sizeof(*cmd));
 	if (unlikely(cmd == NULL))
@@ -400,8 +446,13 @@ static int vmw_dx_shader_unscrub(struct vmw_resource *res)
 	cmd->header.size = sizeof(cmd->body);
 	cmd->body.cid = shader->ctx->id;
 	cmd->body.shid = shader->id;
+<<<<<<< HEAD
 	cmd->body.mobid = res->guest_memory_bo->tbo.resource->start;
 	cmd->body.offsetInBytes = res->guest_memory_offset;
+=======
+	cmd->body.mobid = res->backup->base.resource->start;
+	cmd->body.offsetInBytes = res->backup_offset;
+>>>>>>> b7ba80a49124 (Commit)
 	vmw_cmd_commit(dev_priv, sizeof(*cmd));
 
 	vmw_cotable_add_resource(shader->cotable, &shader->cotable_head);
@@ -511,7 +562,11 @@ static int vmw_dx_shader_unbind(struct vmw_resource *res,
 	struct vmw_fence_obj *fence;
 	int ret;
 
+<<<<<<< HEAD
 	BUG_ON(res->guest_memory_bo->tbo.resource->mem_type != VMW_PL_MOB);
+=======
+	BUG_ON(res->backup->base.resource->mem_type != VMW_PL_MOB);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&dev_priv->binding_mutex);
 	ret = vmw_dx_shader_scrub(res);
@@ -683,7 +738,11 @@ int vmw_shader_destroy_ioctl(struct drm_device *dev, void *data,
 }
 
 static int vmw_user_shader_alloc(struct vmw_private *dev_priv,
+<<<<<<< HEAD
 				 struct vmw_bo *buffer,
+=======
+				 struct vmw_buffer_object *buffer,
+>>>>>>> b7ba80a49124 (Commit)
 				 size_t shader_size,
 				 size_t offset,
 				 SVGA3dShaderType shader_type,
@@ -737,7 +796,11 @@ out:
 
 
 static struct vmw_resource *vmw_shader_alloc(struct vmw_private *dev_priv,
+<<<<<<< HEAD
 					     struct vmw_bo *buffer,
+=======
+					     struct vmw_buffer_object *buffer,
+>>>>>>> b7ba80a49124 (Commit)
 					     size_t shader_size,
 					     size_t offset,
 					     SVGA3dShaderType shader_type)
@@ -774,7 +837,11 @@ static int vmw_shader_define(struct drm_device *dev, struct drm_file *file_priv,
 {
 	struct vmw_private *dev_priv = vmw_priv(dev);
 	struct ttm_object_file *tfile = vmw_fpriv(file_priv)->tfile;
+<<<<<<< HEAD
 	struct vmw_bo *buffer = NULL;
+=======
+	struct vmw_buffer_object *buffer = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	SVGA3dShaderType shader_type;
 	int ret;
 
@@ -785,7 +852,11 @@ static int vmw_shader_define(struct drm_device *dev, struct drm_file *file_priv,
 			return ret;
 		}
 
+<<<<<<< HEAD
 		if ((u64)buffer->tbo.base.size < (u64)size + (u64)offset) {
+=======
+		if ((u64)buffer->base.base.size < (u64)size + (u64)offset) {
+>>>>>>> b7ba80a49124 (Commit)
 			VMW_DEBUG_USER("Illegal buffer- or shader size.\n");
 			ret = -EINVAL;
 			goto out_bad_arg;
@@ -810,7 +881,10 @@ static int vmw_shader_define(struct drm_device *dev, struct drm_file *file_priv,
 				    num_output_sig, tfile, shader_handle);
 out_bad_arg:
 	vmw_bo_unreference(&buffer);
+<<<<<<< HEAD
 	drm_gem_object_put(&buffer->tbo.base);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -887,11 +961,16 @@ int vmw_compat_shader_add(struct vmw_private *dev_priv,
 			  struct list_head *list)
 {
 	struct ttm_operation_ctx ctx = { false, true };
+<<<<<<< HEAD
 	struct vmw_bo *buf;
+=======
+	struct vmw_buffer_object *buf;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ttm_bo_kmap_obj map;
 	bool is_iomem;
 	int ret;
 	struct vmw_resource *res;
+<<<<<<< HEAD
 	struct vmw_bo_params bo_params = {
 		.domain = VMW_BO_DOMAIN_SYS,
 		.busy_domain = VMW_BO_DOMAIN_SYS,
@@ -899,22 +978,39 @@ int vmw_compat_shader_add(struct vmw_private *dev_priv,
 		.size = size,
 		.pin = true
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!vmw_shader_id_ok(user_key, shader_type))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	ret = vmw_bo_create(dev_priv, &bo_params, &buf);
 	if (unlikely(ret != 0))
 		goto out;
 
 	ret = ttm_bo_reserve(&buf->tbo, false, true, NULL);
+=======
+	ret = vmw_bo_create(dev_priv, size, &vmw_sys_placement,
+			    true, true, vmw_bo_bo_free, &buf);
+	if (unlikely(ret != 0))
+		goto out;
+
+	ret = ttm_bo_reserve(&buf->base, false, true, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(ret != 0))
 		goto no_reserve;
 
 	/* Map and copy shader bytecode. */
+<<<<<<< HEAD
 	ret = ttm_bo_kmap(&buf->tbo, 0, PFN_UP(size), &map);
 	if (unlikely(ret != 0)) {
 		ttm_bo_unreserve(&buf->tbo);
+=======
+	ret = ttm_bo_kmap(&buf->base, 0, PFN_UP(size), &map);
+	if (unlikely(ret != 0)) {
+		ttm_bo_unreserve(&buf->base);
+>>>>>>> b7ba80a49124 (Commit)
 		goto no_reserve;
 	}
 
@@ -922,9 +1018,15 @@ int vmw_compat_shader_add(struct vmw_private *dev_priv,
 	WARN_ON(is_iomem);
 
 	ttm_bo_kunmap(&map);
+<<<<<<< HEAD
 	ret = ttm_bo_validate(&buf->tbo, &buf->placement, &ctx);
 	WARN_ON(ret != 0);
 	ttm_bo_unreserve(&buf->tbo);
+=======
+	ret = ttm_bo_validate(&buf->base, &vmw_sys_placement, &ctx);
+	WARN_ON(ret != 0);
+	ttm_bo_unreserve(&buf->base);
+>>>>>>> b7ba80a49124 (Commit)
 
 	res = vmw_shader_alloc(dev_priv, buf, size, 0, shader_type);
 	if (unlikely(ret != 0))

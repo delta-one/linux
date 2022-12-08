@@ -19,11 +19,21 @@
 #define _DVB_NET_H_
 
 #include <linux/module.h>
+<<<<<<< HEAD
 
 #include <media/dvbdev.h>
 
 struct net_device;
 
+=======
+#include <linux/netdevice.h>
+#include <linux/inetdevice.h>
+#include <linux/etherdevice.h>
+#include <linux/skbuff.h>
+
+#include <media/dvbdev.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 #define DVB_NET_DEVICES_MAX 10
 
 #ifdef CONFIG_DVB_NET

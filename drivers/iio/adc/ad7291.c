@@ -179,7 +179,11 @@ static unsigned int ad7291_threshold_reg(const struct iio_chan_spec *chan,
 		offset = AD7291_VOLTAGE_OFFSET;
 		break;
 	default:
+<<<<<<< HEAD
 		return 0;
+=======
+	    return 0;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	switch (info) {
@@ -465,9 +469,15 @@ static void ad7291_reg_disable(void *reg)
 	regulator_disable(reg);
 }
 
+<<<<<<< HEAD
 static int ad7291_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int ad7291_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct ad7291_chip_info *chip;
 	struct iio_dev *indio_dev;
 	int ret;
@@ -553,7 +563,11 @@ static struct i2c_driver ad7291_driver = {
 		.name = KBUILD_MODNAME,
 		.of_match_table = ad7291_of_match,
 	},
+<<<<<<< HEAD
 	.probe_new = ad7291_probe,
+=======
+	.probe = ad7291_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = ad7291_id,
 };
 module_i2c_driver(ad7291_driver);

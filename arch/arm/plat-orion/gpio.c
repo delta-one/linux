@@ -18,8 +18,12 @@
 #include <linux/spinlock.h>
 #include <linux/bitops.h>
 #include <linux/io.h>
+<<<<<<< HEAD
 #include <linux/gpio/driver.h>
 #include <linux/gpio/consumer.h>
+=======
+#include <linux/gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/leds.h>
 #include <linux/of.h>
 #include <linux/of_irq.h>
@@ -313,7 +317,11 @@ int orion_gpio_led_blink_set(struct gpio_desc *desc, int state,
 	case GPIO_LED_NO_BLINK_LOW:
 	case GPIO_LED_NO_BLINK_HIGH:
 		orion_gpio_set_blink(gpio, 0);
+<<<<<<< HEAD
 		gpiod_set_raw_value(desc, state);
+=======
+		gpio_set_value(gpio, state);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case GPIO_LED_BLINK:
 		orion_gpio_set_blink(gpio, 1);

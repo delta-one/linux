@@ -19,7 +19,10 @@
 #include "lmac_common.h"
 #include "npc.h"
 #include "rvu_npc_hash.h"
+<<<<<<< HEAD
 #include "mcs.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define DEBUGFS_DIR_NAME "octeontx2"
 
@@ -198,6 +201,12 @@ enum cpt_eng_type {
 	CPT_IE_TYPE = 3,
 };
 
+<<<<<<< HEAD
+=======
+#define NDC_MAX_BANK(rvu, blk_addr) (rvu_read64(rvu, \
+						blk_addr, NDC_AF_CONST) & 0xFF)
+
+>>>>>>> b7ba80a49124 (Commit)
 #define rvu_dbg_NULL NULL
 #define rvu_dbg_open_NULL NULL
 
@@ -225,6 +234,7 @@ static const struct file_operations rvu_dbg_##name##_fops = { \
 
 static void print_nix_qsize(struct seq_file *filp, struct rvu_pfvf *pfvf);
 
+<<<<<<< HEAD
 static int rvu_dbg_mcs_port_stats_display(struct seq_file *filp, void *unused, int dir)
 {
 	struct mcs *mcs = filp->private;
@@ -569,6 +579,8 @@ static void rvu_dbg_mcs_init(struct rvu *rvu)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define LMT_MAPTBL_ENTRY_SIZE 16
 /* Dump LMTST map table */
 static ssize_t rvu_dbg_lmtst_map_table_display(struct file *filp,
@@ -877,8 +889,11 @@ static int rvu_dbg_rvu_pf_cgx_map_display(struct seq_file *filp, void *unused)
 		sprintf(lmac, "LMAC%d", lmac_id);
 		seq_printf(filp, "%s\t0x%x\t\tNIX%d\t\t%s\t%s\n",
 			   dev_name(&pdev->dev), pcifunc, blkid, cgx, lmac);
+<<<<<<< HEAD
 
 		pci_dev_put(pdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return 0;
 }
@@ -1445,7 +1460,10 @@ static int ndc_blk_hits_miss_stats(struct seq_file *s, int idx, int blk_addr)
 	struct nix_hw *nix_hw;
 	struct rvu *rvu;
 	int bank, max_bank;
+<<<<<<< HEAD
 	u64 ndc_af_const;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (blk_addr == BLKADDR_NDC_NPA0) {
 		rvu = s->private;
@@ -1454,8 +1472,12 @@ static int ndc_blk_hits_miss_stats(struct seq_file *s, int idx, int blk_addr)
 		rvu = nix_hw->rvu;
 	}
 
+<<<<<<< HEAD
 	ndc_af_const = rvu_read64(rvu, blk_addr, NDC_AF_CONST);
 	max_bank = FIELD_GET(NDC_AF_BANK_MASK, ndc_af_const);
+=======
+	max_bank = NDC_MAX_BANK(rvu, blk_addr);
+>>>>>>> b7ba80a49124 (Commit)
 	for (bank = 0; bank < max_bank; bank++) {
 		seq_printf(s, "BANK:%d\n", bank);
 		seq_printf(s, "\tHits:\t%lld\n",
@@ -2567,7 +2589,10 @@ static int cgx_print_dmac_flt(struct seq_file *s, int lmac_id)
 		}
 	}
 
+<<<<<<< HEAD
 	pci_dev_put(pdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -2612,7 +2637,11 @@ static void rvu_dbg_cgx_init(struct rvu *rvu)
 		rvu->rvu_dbg.cgx = debugfs_create_dir(dname,
 						      rvu->rvu_dbg.cgx_root);
 
+<<<<<<< HEAD
 		for_each_set_bit(lmac_id, &lmac_bmap, rvu->hw->lmac_per_cgx) {
+=======
+		for_each_set_bit(lmac_id, &lmac_bmap, MAX_LMAC_PER_CGX) {
+>>>>>>> b7ba80a49124 (Commit)
 			/* lmac debugfs dir */
 			sprintf(dname, "lmac%d", lmac_id);
 			rvu->rvu_dbg.lmac =
@@ -2758,12 +2787,15 @@ static void rvu_dbg_npc_mcam_show_flows(struct seq_file *s,
 	for_each_set_bit(bit, (unsigned long *)&rule->features, 64) {
 		seq_printf(s, "\t%s  ", npc_get_field_name(bit));
 		switch (bit) {
+<<<<<<< HEAD
 		case NPC_LXMB:
 			if (rule->lxmb == 1)
 				seq_puts(s, "\tL2M nibble is set\n");
 			else
 				seq_puts(s, "\tL2B nibble is set\n");
 			break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		case NPC_DMAC:
 			seq_printf(s, "%pM ", rule->packet.dmac);
 			seq_printf(s, "mask %pM\n", rule->mask.dmac);
@@ -2801,6 +2833,7 @@ static void rvu_dbg_npc_mcam_show_flows(struct seq_file *s,
 			seq_printf(s, "%pI6 ", rule->packet.ip6dst);
 			seq_printf(s, "mask %pI6\n", rule->mask.ip6dst);
 			break;
+<<<<<<< HEAD
 		case NPC_IPFRAG_IPV6:
 			seq_printf(s, "0x%x ", rule->packet.next_header);
 			seq_printf(s, "mask 0x%x\n", rule->mask.next_header);
@@ -2809,6 +2842,8 @@ static void rvu_dbg_npc_mcam_show_flows(struct seq_file *s,
 			seq_printf(s, "0x%x ", rule->packet.ip_flag);
 			seq_printf(s, "mask 0x%x\n", rule->mask.ip_flag);
 			break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		case NPC_SPORT_TCP:
 		case NPC_SPORT_UDP:
 		case NPC_SPORT_SCTP:
@@ -3414,7 +3449,10 @@ create:
 	rvu_dbg_npc_init(rvu);
 	rvu_dbg_cpt_init(rvu, BLKADDR_CPT0);
 	rvu_dbg_cpt_init(rvu, BLKADDR_CPT1);
+<<<<<<< HEAD
 	rvu_dbg_mcs_init(rvu);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void rvu_dbg_exit(struct rvu *rvu)

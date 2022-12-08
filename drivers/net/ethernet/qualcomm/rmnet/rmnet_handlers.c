@@ -164,6 +164,7 @@ static int rmnet_map_egress_handler(struct sk_buff *skb,
 
 	map_header->mux_id = mux_id;
 
+<<<<<<< HEAD
 	if (READ_ONCE(port->egress_agg_params.count) > 1) {
 		unsigned int len;
 
@@ -176,6 +177,10 @@ static int rmnet_map_egress_handler(struct sk_buff *skb,
 	}
 
 	skb->protocol = htons(ETH_P_MAP);
+=======
+	skb->protocol = htons(ETH_P_MAP);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -245,7 +250,10 @@ void rmnet_egress_handler(struct sk_buff *skb)
 	struct rmnet_port *port;
 	struct rmnet_priv *priv;
 	u8 mux_id;
+<<<<<<< HEAD
 	int err;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	sk_pacing_shift_update(skb->sk, 8);
 
@@ -258,11 +266,16 @@ void rmnet_egress_handler(struct sk_buff *skb)
 	if (!port)
 		goto drop;
 
+<<<<<<< HEAD
 	err = rmnet_map_egress_handler(skb, port, mux_id, orig_dev);
 	if (err == -ENOMEM)
 		goto drop;
 	else if (err == -EINPROGRESS)
 		return;
+=======
+	if (rmnet_map_egress_handler(skb, port, mux_id, orig_dev))
+		goto drop;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rmnet_vnd_tx_fixup(skb, orig_dev);
 

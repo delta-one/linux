@@ -93,8 +93,12 @@
 
 		rtc@6000 {
 			compatible = "qcom,pm8941-rtc";
+<<<<<<< HEAD
 			reg = <0x6000>, <0x6100>;
 			reg-names = "rtc", "alarm";
+=======
+			reg = <0x6000>;
+>>>>>>> b7ba80a49124 (Commit)
 			interrupts = <0x0 0x61 0x1 IRQ_TYPE_EDGE_RISING>;
 		};
 
@@ -108,7 +112,11 @@
 			#interrupt-cells = <2>;
 		};
 
+<<<<<<< HEAD
 		pm8916_gpios: gpio@c000 {
+=======
+		pm8916_gpios: gpios@c000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "qcom,pm8916-gpio", "qcom,spmi-gpio";
 			reg = <0xc000>;
 			gpio-controller;

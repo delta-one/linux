@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB
 /* Copyright (c) 2018 Mellanox Technologies. */
 
+<<<<<<< HEAD
 #include <net/ip_tunnels.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <net/vxlan.h>
 #include "lib/vxlan.h"
 #include "en/tc_tun.h"
@@ -87,18 +90,24 @@ static int mlx5e_gen_ip_tunnel_header_vxlan(char buf[],
 	const struct ip_tunnel_key *tun_key = &e->tun_info->key;
 	__be32 tun_id = tunnel_id_to_key32(tun_key->tun_id);
 	struct udphdr *udp = (struct udphdr *)(buf);
+<<<<<<< HEAD
 	const struct vxlan_metadata *md;
 	struct vxlanhdr *vxh;
 
 	if ((tun_key->tun_flags & TUNNEL_VXLAN_OPT) &&
 	    e->tun_info->options_len != sizeof(*md))
 		return -EOPNOTSUPP;
+=======
+	struct vxlanhdr *vxh;
+
+>>>>>>> b7ba80a49124 (Commit)
 	vxh = (struct vxlanhdr *)((char *)udp + sizeof(struct udphdr));
 	*ip_proto = IPPROTO_UDP;
 
 	udp->dest = tun_key->tp_dst;
 	vxh->vx_flags = VXLAN_HF_VNI;
 	vxh->vx_vni = vxlan_vni_field(tun_id);
+<<<<<<< HEAD
 	if (tun_key->tun_flags & TUNNEL_VXLAN_OPT) {
 		md = ip_tunnel_info_opts(e->tun_info);
 		vxlan_build_gbp_hdr(vxh, md);
@@ -150,6 +159,8 @@ static int mlx5e_tc_tun_parse_vxlan_gbp_option(struct mlx5e_priv *priv,
 	MLX5_SET(fte_match_set_misc5, misc5_v, tunnel_header_0, *gbp);
 
 	spec->match_criteria_enable |= MLX5_MATCH_MISC_PARAMETERS_5;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -176,6 +187,7 @@ static int mlx5e_tc_tun_parse_vxlan(struct mlx5e_priv *priv,
 	if (!enc_keyid.mask->keyid)
 		return 0;
 
+<<<<<<< HEAD
 	if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_ENC_OPTS)) {
 		int err;
 
@@ -184,6 +196,8 @@ static int mlx5e_tc_tun_parse_vxlan(struct mlx5e_priv *priv,
 			return err;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* match on VNI is required */
 
 	if (!MLX5_CAP_ESW_FLOWTABLE_FDB(priv->mdev,
@@ -205,12 +219,15 @@ static int mlx5e_tc_tun_parse_vxlan(struct mlx5e_priv *priv,
 	return 0;
 }
 
+<<<<<<< HEAD
 static bool mlx5e_tc_tun_encap_info_equal_vxlan(struct mlx5e_encap_key *a,
 						struct mlx5e_encap_key *b)
 {
 	return mlx5e_tc_tun_encap_info_equal_options(a, b, TUNNEL_VXLAN_OPT);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mlx5e_tc_tun_get_remote_ifindex(struct net_device *mirred_dev)
 {
 	const struct vxlan_dev *vxlan = netdev_priv(mirred_dev);
@@ -228,6 +245,10 @@ struct mlx5e_tc_tunnel vxlan_tunnel = {
 	.generate_ip_tun_hdr  = mlx5e_gen_ip_tunnel_header_vxlan,
 	.parse_udp_ports      = mlx5e_tc_tun_parse_udp_ports_vxlan,
 	.parse_tunnel         = mlx5e_tc_tun_parse_vxlan,
+<<<<<<< HEAD
 	.encap_info_equal     = mlx5e_tc_tun_encap_info_equal_vxlan,
+=======
+	.encap_info_equal     = mlx5e_tc_tun_encap_info_equal_generic,
+>>>>>>> b7ba80a49124 (Commit)
 	.get_remote_ifindex   = mlx5e_tc_tun_get_remote_ifindex,
 };

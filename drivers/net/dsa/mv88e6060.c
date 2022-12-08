@@ -297,6 +297,11 @@ static void mv88e6060_remove(struct mdio_device *mdiodev)
 		return;
 
 	dsa_unregister_switch(ds);
+<<<<<<< HEAD
+=======
+
+	dev_set_drvdata(&mdiodev->dev, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mv88e6060_shutdown(struct mdio_device *mdiodev)

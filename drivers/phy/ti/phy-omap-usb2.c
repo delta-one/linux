@@ -506,17 +506,30 @@ static int omap_usb2_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void omap_usb2_remove(struct platform_device *pdev)
+=======
+static int omap_usb2_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct omap_usb	*phy = platform_get_drvdata(pdev);
 
 	usb_remove_phy(&phy->phy);
 	pm_runtime_disable(phy->dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver omap_usb2_driver = {
 	.probe		= omap_usb2_probe,
+<<<<<<< HEAD
 	.remove_new	= omap_usb2_remove,
+=======
+	.remove		= omap_usb2_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= "omap-usb2",
 		.of_match_table = omap_usb2_id_table,

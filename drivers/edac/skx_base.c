@@ -510,7 +510,11 @@ rir_found:
 }
 
 static u8 skx_close_row[] = {
+<<<<<<< HEAD
 	15, 16, 17, 18, 20, 21, 22, 28, 10, 11, 12, 13, 29, 30, 31, 32, 33, 34
+=======
+	15, 16, 17, 18, 20, 21, 22, 28, 10, 11, 12, 13, 29, 30, 31, 32, 33
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static u8 skx_close_column[] = {
@@ -518,7 +522,11 @@ static u8 skx_close_column[] = {
 };
 
 static u8 skx_open_row[] = {
+<<<<<<< HEAD
 	14, 15, 16, 20, 28, 21, 22, 23, 24, 25, 26, 27, 29, 30, 31, 32, 33, 34
+=======
+	14, 15, 16, 20, 28, 21, 22, 23, 24, 25, 26, 27, 29, 30, 31, 32, 33
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static u8 skx_open_column[] = {
@@ -653,9 +661,12 @@ static int __init skx_init(void)
 
 	edac_dbg(2, "\n");
 
+<<<<<<< HEAD
 	if (ghes_get_devices())
 		return -EBUSY;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	owner = edac_get_owner();
 	if (owner && strncmp(owner, EDAC_MOD_STR, sizeof(EDAC_MOD_STR)))
 		return -EBUSY;

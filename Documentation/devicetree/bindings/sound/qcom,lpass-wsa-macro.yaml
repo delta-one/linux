@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/sound/qcom,lpass-wsa-macro.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: LPASS(Low Power Audio Subsystem) VA Macro audio codec
+=======
+title: LPASS(Low Power Audio Subsystem) VA Macro audio codec DT bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
@@ -14,8 +18,11 @@ properties:
     enum:
       - qcom,sc7280-lpass-wsa-macro
       - qcom,sm8250-lpass-wsa-macro
+<<<<<<< HEAD
       - qcom,sm8450-lpass-wsa-macro
       - qcom,sc8280xp-lpass-wsa-macro
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1
@@ -27,6 +34,7 @@ properties:
     const: 0
 
   clocks:
+<<<<<<< HEAD
     minItems: 5
     maxItems: 6
 
@@ -36,6 +44,21 @@ properties:
 
   clock-output-names:
     maxItems: 1
+=======
+    maxItems: 5
+
+  clock-names:
+    items:
+      - const: mclk
+      - const: npl
+      - const: macro
+      - const: dcodec
+      - const: fsgen
+
+  clock-output-names:
+    items:
+      - const: mclk
+>>>>>>> b7ba80a49124 (Commit)
 
   qcom,dmic-sample-rate:
     description: dmic sample rate
@@ -49,6 +72,7 @@ required:
   - reg
   - "#sound-dai-cells"
 
+<<<<<<< HEAD
 allOf:
   - $ref: dai-common.yaml#
 
@@ -94,6 +118,12 @@ unevaluatedProperties: false
 examples:
   - |
     #include <dt-bindings/clock/qcom,sm8250-lpass-aoncc.h>
+=======
+additionalProperties: false
+
+examples:
+  - |
+>>>>>>> b7ba80a49124 (Commit)
     #include <dt-bindings/sound/qcom,q6afe.h>
     codec@3240000 {
       compatible = "qcom,sm8250-lpass-wsa-macro";
@@ -104,8 +134,13 @@ examples:
                <&audiocc 0>,
                <&q6afecc LPASS_HW_MACRO_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
                <&q6afecc LPASS_HW_DCODEC_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
+<<<<<<< HEAD
                <&aoncc LPASS_CDC_VA_MCLK>,
                <&vamacro>;
       clock-names = "mclk", "npl", "macro", "dcodec", "va", "fsgen";
+=======
+               <&vamacro>;
+      clock-names = "mclk", "npl", "macro", "dcodec", "fsgen";
+>>>>>>> b7ba80a49124 (Commit)
       clock-output-names = "mclk";
     };

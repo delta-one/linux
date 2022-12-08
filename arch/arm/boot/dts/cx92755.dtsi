@@ -107,7 +107,11 @@
 		reg = <0xf00003a0 0x10>;
 	};
 
+<<<<<<< HEAD
 	uart0: serial@f0000740 {
+=======
+	uart0: uart@f0000740 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "cnxt,cx92755-usart";
 		reg = <0xf0000740 0x20>;
 		clocks = <&main_clk>;
@@ -115,7 +119,11 @@
 		status = "disabled";
 	};
 
+<<<<<<< HEAD
 	uart1: serial@f0000760 {
+=======
+	uart1: uart@f0000760 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "cnxt,cx92755-usart";
 		reg = <0xf0000760 0x20>;
 		clocks = <&main_clk>;
@@ -123,7 +131,11 @@
 		status = "disabled";
 	};
 
+<<<<<<< HEAD
 	uart2: serial@f0000780 {
+=======
+	uart2: uart@f0000780 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "cnxt,cx92755-usart";
 		reg = <0xf0000780 0x20>;
 		clocks = <&main_clk>;

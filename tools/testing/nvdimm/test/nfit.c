@@ -3282,7 +3282,11 @@ static __init int nfit_test_init(void)
 	if (!nfit_wq)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	nfit_test_dimm = class_create("nfit_test_dimm");
+=======
+	nfit_test_dimm = class_create(THIS_MODULE, "nfit_test_dimm");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(nfit_test_dimm)) {
 		rc = PTR_ERR(nfit_test_dimm);
 		goto err_register;

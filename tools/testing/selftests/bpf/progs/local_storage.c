@@ -77,6 +77,10 @@ int BPF_PROG(inode_rename, struct inode *old_dir, struct dentry *old_dentry,
 	     struct inode *new_dir, struct dentry *new_dentry,
 	     unsigned int flags)
 {
+<<<<<<< HEAD
+=======
+	__u32 pid = bpf_get_current_pid_tgid() >> 32;
+>>>>>>> b7ba80a49124 (Commit)
 	struct local_storage *storage;
 	int err;
 
@@ -108,10 +112,15 @@ int BPF_PROG(socket_bind, struct socket *sock, struct sockaddr *address,
 {
 	__u32 pid = bpf_get_current_pid_tgid() >> 32;
 	struct local_storage *storage;
+<<<<<<< HEAD
+=======
+	int err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (pid != monitored_pid)
 		return 0;
 
+<<<<<<< HEAD
 	storage = bpf_sk_storage_get(&sk_storage_map, sock->sk, 0, 0);
 	if (!storage)
 		return 0;
@@ -119,6 +128,15 @@ int BPF_PROG(socket_bind, struct socket *sock, struct sockaddr *address,
 	sk_storage_result = -1;
 	if (storage->value != DUMMY_STORAGE_VALUE)
 		return 0;
+=======
+	storage = bpf_sk_storage_get(&sk_storage_map, sock->sk, 0,
+				     BPF_LOCAL_STORAGE_GET_F_CREATE);
+	if (!storage)
+		return 0;
+
+	if (storage->value != DUMMY_STORAGE_VALUE)
+		sk_storage_result = -1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* This tests that we can associate multiple elements
 	 * with the local storage.
@@ -128,6 +146,7 @@ int BPF_PROG(socket_bind, struct socket *sock, struct sockaddr *address,
 	if (!storage)
 		return 0;
 
+<<<<<<< HEAD
 	if (bpf_sk_storage_delete(&sk_storage_map2, sock->sk))
 		return 0;
 
@@ -148,6 +167,16 @@ int BPF_PROG(socket_bind, struct socket *sock, struct sockaddr *address,
 		return 0;
 
 	sk_storage_result = 0;
+=======
+	err = bpf_sk_storage_delete(&sk_storage_map, sock->sk);
+	if (err)
+		return 0;
+
+	err = bpf_sk_storage_delete(&sk_storage_map2, sock->sk);
+	if (!err)
+		sk_storage_result = err;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

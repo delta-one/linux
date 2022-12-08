@@ -482,7 +482,11 @@ static int epic_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 	dev->netdev_ops = &epic_netdev_ops;
 	dev->ethtool_ops = &netdev_ethtool_ops;
 	dev->watchdog_timeo = TX_TIMEOUT;
+<<<<<<< HEAD
 	netif_napi_add(dev, &ep->napi, epic_poll);
+=======
+	netif_napi_add(dev, &ep->napi, epic_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = register_netdev(dev);
 	if (ret < 0)

@@ -225,9 +225,17 @@ static inline srb_t *
 qla2x00_get_sp(scsi_qla_host_t *vha, fc_port_t *fcport, gfp_t flag)
 {
 	srb_t *sp = NULL;
+<<<<<<< HEAD
 	struct qla_qpair *qpair;
 
 	if (unlikely(qla_vha_mark_busy(vha)))
+=======
+	uint8_t bail;
+	struct qla_qpair *qpair;
+
+	QLA_VHA_MARK_BUSY(vha, bail);
+	if (unlikely(bail))
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 
 	qpair = vha->hw->base_qpair;
@@ -380,6 +388,7 @@ qla2xxx_get_fc4_priority(struct scsi_qla_host *vha)
 
 enum {
 	RESOURCE_NONE,
+<<<<<<< HEAD
 	RESOURCE_IOCB = BIT_0,
 	RESOURCE_EXCH = BIT_1,  /* exchange */
 	RESOURCE_FORCE = BIT_2,
@@ -390,16 +399,33 @@ qla_get_fw_resources(struct qla_qpair *qp, struct iocb_resource *iores)
 {
 	u16 iocbs_used, i;
 	u16 exch_used;
+=======
+	RESOURCE_INI,
+};
+
+static inline int
+qla_get_iocbs(struct qla_qpair *qp, struct iocb_resource *iores)
+{
+	u16 iocbs_used, i;
+>>>>>>> b7ba80a49124 (Commit)
 	struct qla_hw_data *ha = qp->vha->hw;
 
 	if (!ql2xenforce_iocb_limit) {
 		iores->res_type = RESOURCE_NONE;
 		return 0;
 	}
+<<<<<<< HEAD
 	if (iores->res_type & RESOURCE_FORCE)
 		goto force;
 
 	if ((iores->iocb_cnt + qp->fwres.iocbs_used) >= qp->fwres.iocbs_qp_limit) {
+=======
+
+	if ((iores->iocb_cnt + qp->fwres.iocbs_used) < qp->fwres.iocbs_qp_limit) {
+		qp->fwres.iocbs_used += iores->iocb_cnt;
+		return 0;
+	} else {
+>>>>>>> b7ba80a49124 (Commit)
 		/* no need to acquire qpair lock. It's just rough calculation */
 		iocbs_used = ha->base_qpair->fwres.iocbs_used;
 		for (i = 0; i < ha->max_qpairs; i++) {
@@ -407,11 +433,19 @@ qla_get_fw_resources(struct qla_qpair *qp, struct iocb_resource *iores)
 				iocbs_used += ha->queue_pair_map[i]->fwres.iocbs_used;
 		}
 
+<<<<<<< HEAD
 		if ((iores->iocb_cnt + iocbs_used) >= qp->fwres.iocbs_limit) {
+=======
+		if ((iores->iocb_cnt + iocbs_used) < qp->fwres.iocbs_limit) {
+			qp->fwres.iocbs_used += iores->iocb_cnt;
+			return 0;
+		} else {
+>>>>>>> b7ba80a49124 (Commit)
 			iores->res_type = RESOURCE_NONE;
 			return -ENOSPC;
 		}
 	}
+<<<<<<< HEAD
 
 	if (iores->res_type & RESOURCE_EXCH) {
 		exch_used = ha->base_qpair->fwres.exch_used;
@@ -450,6 +484,24 @@ qla_put_fw_resources(struct qla_qpair *qp, struct iocb_resource *iores)
 			/* should not happen */
 			qp->fwres.exch_used = 0;
 		}
+=======
+}
+
+static inline void
+qla_put_iocbs(struct qla_qpair *qp, struct iocb_resource *iores)
+{
+	switch (iores->res_type) {
+	case RESOURCE_NONE:
+		break;
+	default:
+		if (qp->fwres.iocbs_used >= iores->iocb_cnt) {
+			qp->fwres.iocbs_used -= iores->iocb_cnt;
+		} else {
+			// should not happen
+			qp->fwres.iocbs_used = 0;
+		}
+		break;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	iores->res_type = RESOURCE_NONE;
 }
@@ -515,6 +567,7 @@ fcport_is_bigger(fc_port_t *fcport)
 {
 	return !fcport_is_smaller(fcport);
 }
+<<<<<<< HEAD
 
 static inline struct qla_qpair *
 qla_mapq_nvme_select_qpair(struct qla_hw_data *ha, struct qla_qpair *qpair)
@@ -570,3 +623,5 @@ static inline int qla_mapq_alloc_qp_cpu_map(struct qla_hw_data *ha)
 	}
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

@@ -21,7 +21,11 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_gpio_leds>;
 
+<<<<<<< HEAD
 		led-user {
+=======
+		user {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "debug";
 			gpios = <&gpio5 15 GPIO_ACTIVE_HIGH>;
 		};
@@ -452,8 +456,13 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_egalax_int>;
 		interrupt-parent = <&gpio2>;
+<<<<<<< HEAD
 		interrupts = <28 IRQ_TYPE_LEVEL_LOW>;
 		wakeup-gpios = <&gpio2 28 GPIO_ACTIVE_LOW>;
+=======
+		interrupts = <28 IRQ_TYPE_EDGE_FALLING>;
+		wakeup-gpios = <&gpio2 28 GPIO_ACTIVE_HIGH>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 

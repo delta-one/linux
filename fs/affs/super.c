@@ -276,7 +276,11 @@ parse_options(char *options, kuid_t *uid, kgid_t *gid, int *mode, int *reserved,
 			char *vol = match_strdup(&args[0]);
 			if (!vol)
 				return 0;
+<<<<<<< HEAD
 			strscpy(volume, vol, 32);
+=======
+			strlcpy(volume, vol, 32);
+>>>>>>> b7ba80a49124 (Commit)
 			kfree(vol);
 			break;
 		}

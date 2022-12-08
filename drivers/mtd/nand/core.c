@@ -126,7 +126,11 @@ EXPORT_SYMBOL_GPL(nanddev_isreserved);
  *
  * Return: 0 in case of success, a negative error code otherwise.
  */
+<<<<<<< HEAD
 static int nanddev_erase(struct nand_device *nand, const struct nand_pos *pos)
+=======
+int nanddev_erase(struct nand_device *nand, const struct nand_pos *pos)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (nanddev_isbad(nand, pos) || nanddev_isreserved(nand, pos)) {
 		pr_warn("attempt to erase a bad/reserved block @%llx\n",
@@ -136,6 +140,10 @@ static int nanddev_erase(struct nand_device *nand, const struct nand_pos *pos)
 
 	return nand->ops->erase(nand, pos);
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(nanddev_erase);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * nanddev_mtd_erase() - Generic mtd->_erase() implementation for NAND devices

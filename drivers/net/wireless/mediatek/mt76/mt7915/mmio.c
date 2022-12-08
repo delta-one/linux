@@ -4,11 +4,15 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/platform_device.h>
+<<<<<<< HEAD
 #include <linux/rtnetlink.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/pci.h>
 
 #include "mt7915.h"
 #include "mac.h"
+<<<<<<< HEAD
 #include "mcu.h"
 #include "../trace.h"
 #include "../dma.h"
@@ -117,6 +121,56 @@ static const u32 mt7986_reg[] = {
 	[TXQ_WED_RING_BASE]		= 0x24420,
 	[RXQ_WED_RING_BASE]		= 0x24520,
 	[RXQ_WED_DATA_RING_BASE]	= 0x24540,
+=======
+#include "../trace.h"
+
+static const u32 mt7915_reg[] = {
+	[INT_SOURCE_CSR]	= 0xd7010,
+	[INT_MASK_CSR]		= 0xd7014,
+	[INT1_SOURCE_CSR]	= 0xd7088,
+	[INT1_MASK_CSR]		= 0xd708c,
+	[INT_MCU_CMD_SOURCE]	= 0xd51f0,
+	[INT_MCU_CMD_EVENT]	= 0x3108,
+	[WFDMA0_ADDR]		= 0xd4000,
+	[WFDMA0_PCIE1_ADDR]	= 0xd8000,
+	[WFDMA_EXT_CSR_ADDR]	= 0xd7000,
+	[CBTOP1_PHY_END]	= 0x77ffffff,
+	[INFRA_MCU_ADDR_END]	= 0x7c3fffff,
+	[FW_EXCEPTION_ADDR]	= 0x219848,
+	[SWDEF_BASE_ADDR]	= 0x41f200,
+};
+
+static const u32 mt7916_reg[] = {
+	[INT_SOURCE_CSR]	= 0xd4200,
+	[INT_MASK_CSR]		= 0xd4204,
+	[INT1_SOURCE_CSR]	= 0xd8200,
+	[INT1_MASK_CSR]		= 0xd8204,
+	[INT_MCU_CMD_SOURCE]	= 0xd41f0,
+	[INT_MCU_CMD_EVENT]	= 0x2108,
+	[WFDMA0_ADDR]		= 0xd4000,
+	[WFDMA0_PCIE1_ADDR]	= 0xd8000,
+	[WFDMA_EXT_CSR_ADDR]	= 0xd7000,
+	[CBTOP1_PHY_END]	= 0x7fffffff,
+	[INFRA_MCU_ADDR_END]	= 0x7c085fff,
+	[FW_EXCEPTION_ADDR]	= 0x022050bc,
+	[SWDEF_BASE_ADDR]	= 0x411400,
+};
+
+static const u32 mt7986_reg[] = {
+	[INT_SOURCE_CSR]	= 0x24200,
+	[INT_MASK_CSR]		= 0x24204,
+	[INT1_SOURCE_CSR]	= 0x28200,
+	[INT1_MASK_CSR]		= 0x28204,
+	[INT_MCU_CMD_SOURCE]	= 0x241f0,
+	[INT_MCU_CMD_EVENT]	= 0x54000108,
+	[WFDMA0_ADDR]		= 0x24000,
+	[WFDMA0_PCIE1_ADDR]	= 0x28000,
+	[WFDMA_EXT_CSR_ADDR]	= 0x27000,
+	[CBTOP1_PHY_END]	= 0x7fffffff,
+	[INFRA_MCU_ADDR_END]	= 0x7c085fff,
+	[FW_EXCEPTION_ADDR]	= 0x02204ffc,
+	[SWDEF_BASE_ADDR]	= 0x411400,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const u32 mt7915_offs[] = {
@@ -497,7 +551,11 @@ static u32 __mt7915_reg_addr(struct mt7915_dev *dev, u32 addr)
 
 	if (dev_is_pci(dev->mt76.dev) &&
 	    ((addr >= MT_CBTOP1_PHY_START && addr <= MT_CBTOP1_PHY_END) ||
+<<<<<<< HEAD
 	    addr >= MT_CBTOP2_PHY_START))
+=======
+	     (addr >= MT_CBTOP2_PHY_START && addr <= MT_CBTOP2_PHY_END)))
+>>>>>>> b7ba80a49124 (Commit)
 		return mt7915_reg_map_l1(dev, addr);
 
 	/* CONN_INFRA: covert to phyiscal addr and use layer 1 remap */
@@ -509,6 +567,7 @@ static u32 __mt7915_reg_addr(struct mt7915_dev *dev, u32 addr)
 	return mt7915_reg_map_l2(dev, addr);
 }
 
+<<<<<<< HEAD
 void mt7915_memcpy_fromio(struct mt7915_dev *dev, void *buf, u32 offset,
 			  size_t len)
 {
@@ -517,6 +576,8 @@ void mt7915_memcpy_fromio(struct mt7915_dev *dev, void *buf, u32 offset,
 	memcpy_fromio(buf, dev->mt76.mmio.regs + addr, len);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static u32 mt7915_rr(struct mt76_dev *mdev, u32 offset)
 {
 	struct mt7915_dev *dev = container_of(mdev, struct mt7915_dev, mt76);
@@ -541,6 +602,7 @@ static u32 mt7915_rmw(struct mt76_dev *mdev, u32 offset, u32 mask, u32 val)
 	return dev->bus_ops->rmw(mdev, addr, mask, val);
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_NET_MEDIATEK_SOC_WED
 static int mt7915_mmio_wed_offload_enable(struct mtk_wed_device *wed)
 {
@@ -830,6 +892,8 @@ int mt7915_mmio_wed_init(struct mt7915_dev *dev, void *pdev_ptr,
 #endif
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mt7915_mmio_init(struct mt76_dev *mdev,
 			    void __iomem *mem_base,
 			    u32 device_id)
@@ -894,11 +958,15 @@ void mt7915_dual_hif_set_irq_mask(struct mt7915_dev *dev,
 	mdev->mmio.irqmask |= set;
 
 	if (write_reg) {
+<<<<<<< HEAD
 		if (mtk_wed_device_active(&mdev->mmio.wed))
 			mtk_wed_device_irq_set_mask(&mdev->mmio.wed,
 						    mdev->mmio.irqmask);
 		else
 			mt76_wr(dev, MT_INT_MASK_CSR, mdev->mmio.irqmask);
+=======
+		mt76_wr(dev, MT_INT_MASK_CSR, mdev->mmio.irqmask);
+>>>>>>> b7ba80a49124 (Commit)
 		mt76_wr(dev, MT_INT1_MASK_CSR, mdev->mmio.irqmask);
 	}
 
@@ -922,8 +990,11 @@ static void mt7915_irq_tasklet(struct tasklet_struct *t)
 
 	if (mtk_wed_device_active(wed)) {
 		mtk_wed_device_irq_set_mask(wed, 0);
+<<<<<<< HEAD
 		if (dev->hif2)
 			mt76_wr(dev, MT_INT1_MASK_CSR, 0);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		intr = mtk_wed_device_irq_get(wed, dev->mt76.mmio.irqmask);
 	} else {
 		mt76_wr(dev, MT_INT_MASK_CSR, 0);
@@ -977,9 +1048,16 @@ static void mt7915_irq_tasklet(struct tasklet_struct *t)
 		u32 val = mt76_rr(dev, MT_MCU_CMD);
 
 		mt76_wr(dev, MT_MCU_CMD, val);
+<<<<<<< HEAD
 		if (val & (MT_MCU_CMD_ERROR_MASK | MT_MCU_CMD_WDT_MASK)) {
 			dev->recovery.state = val;
 			mt7915_reset(dev);
+=======
+		if (val & MT_MCU_CMD_ERROR_MASK) {
+			dev->reset_state = val;
+			queue_work(dev->mt76.wq, &dev->reset_work);
+			wake_up(&dev->reset_wait);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 }
@@ -1011,8 +1089,12 @@ struct mt7915_dev *mt7915_mmio_probe(struct device *pdev,
 	static const struct mt76_driver_ops drv_ops = {
 		/* txwi_size = txd size + txp size */
 		.txwi_size = MT_TXD_SIZE + sizeof(struct mt76_connac_fw_txp),
+<<<<<<< HEAD
 		.drv_flags = MT_DRV_TXWI_NO_FREE | MT_DRV_HW_MGMT_TXQ |
 			     MT_DRV_AMSDU_OFFLOAD,
+=======
+		.drv_flags = MT_DRV_TXWI_NO_FREE | MT_DRV_HW_MGMT_TXQ,
+>>>>>>> b7ba80a49124 (Commit)
 		.survey_flags = SURVEY_INFO_TIME_TX |
 				SURVEY_INFO_TIME_RX |
 				SURVEY_INFO_TIME_BSS_RX,

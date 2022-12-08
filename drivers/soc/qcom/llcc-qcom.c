@@ -21,8 +21,11 @@
 
 #define ACTIVATE                      BIT(0)
 #define DEACTIVATE                    BIT(1)
+<<<<<<< HEAD
 #define ACT_CLEAR                     BIT(0)
 #define ACT_COMPLETE                  BIT(4)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define ACT_CTRL_OPCODE_ACTIVATE      BIT(0)
 #define ACT_CTRL_OPCODE_DEACTIVATE    BIT(1)
 #define ACT_CTRL_ACT_TRIG             BIT(0)
@@ -43,6 +46,7 @@
 
 #define MAX_CAP_TO_BYTES(n)           (n * SZ_1K)
 #define LLCC_TRP_ACT_CTRLn(n)         (n * SZ_4K)
+<<<<<<< HEAD
 #define LLCC_TRP_ACT_CLEARn(n)        (8 + n * SZ_4K)
 #define LLCC_TRP_STATUSn(n)           (4 + n * SZ_4K)
 #define LLCC_TRP_ATTR0_CFGn(n)        (0x21000 + SZ_8 * n)
@@ -65,6 +69,21 @@
 #define LLCC_VERSION_2_0_0_0          0x02000000
 #define LLCC_VERSION_2_1_0_0          0x02010000
 #define LLCC_VERSION_4_1_0_0          0x04010000
+=======
+#define LLCC_TRP_STATUSn(n)           (4 + n * SZ_4K)
+#define LLCC_TRP_ATTR0_CFGn(n)        (0x21000 + SZ_8 * n)
+#define LLCC_TRP_ATTR1_CFGn(n)        (0x21004 + SZ_8 * n)
+
+#define LLCC_TRP_SCID_DIS_CAP_ALLOC   0x21f00
+#define LLCC_TRP_PCB_ACT              0x21f04
+#define LLCC_TRP_WRSC_EN              0x21f20
+#define LLCC_TRP_WRSC_CACHEABLE_EN    0x21f2c
+
+#define BANK_OFFSET_STRIDE	      0x80000
+
+#define LLCC_VERSION_2_0_0_0          0x02000000
+#define LLCC_VERSION_2_1_0_0          0x02010000
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct llcc_slice_config - Data associated with the llcc slice
@@ -108,6 +127,7 @@ struct llcc_slice_config {
 	bool activate_on_init;
 	bool write_scid_en;
 	bool write_scid_cacheable_en;
+<<<<<<< HEAD
 	bool stale_en;
 	bool stale_cap_en;
 	bool mru_uncap_en;
@@ -116,15 +136,24 @@ struct llcc_slice_config {
 	bool ovcap_en;
 	bool ovcap_prio;
 	bool vict_prio;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct qcom_llcc_config {
 	const struct llcc_slice_config *sct_data;
+<<<<<<< HEAD
 	const u32 *reg_offset;
 	const struct llcc_edac_reg_offset *edac_reg_offset;
 	int size;
 	bool need_llcc_cfg;
 	bool no_edac;
+=======
+	int size;
+	bool need_llcc_cfg;
+	const u32 *reg_offset;
+	const struct llcc_edac_reg_offset *edac_reg_offset;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum llcc_reg_offset {
@@ -190,9 +219,15 @@ static const struct llcc_slice_config sc8280xp_data[] = {
 	{ LLCC_CVP,      28, 512,  3, 1, 0xfff, 0x0, 0, 0, 0, 1, 0, 0 },
 	{ LLCC_APTCM,    30, 1024, 3, 1, 0x0,   0x1, 1, 0, 0, 1, 0, 0 },
 	{ LLCC_WRCACHE,  31, 1024, 1, 1, 0xfff, 0x0, 0, 0, 0, 0, 1, 0 },
+<<<<<<< HEAD
 	{ LLCC_CVPFW,    17, 512,  1, 0, 0xfff, 0x0, 0, 0, 0, 1, 0, 0 },
 	{ LLCC_CPUSS1,   3, 2048, 1, 1, 0xfff, 0x0, 0, 0, 0, 1, 0, 0 },
 	{ LLCC_CPUHWT,   5, 512,  1, 1, 0xfff, 0x0, 0, 0, 0, 0, 1, 0 },
+=======
+	{ LLCC_CVPFW,    32, 512,  1, 0, 0xfff, 0x0, 0, 0, 0, 1, 0, 0 },
+	{ LLCC_CPUSS1,   33, 2048, 1, 1, 0xfff, 0x0, 0, 0, 0, 1, 0, 0 },
+	{ LLCC_CPUHWT,   36, 512,  1, 1, 0xfff, 0x0, 0, 0, 0, 0, 1, 0 },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct llcc_slice_config sdm845_data[] =  {
@@ -226,6 +261,7 @@ static const struct llcc_slice_config sm6350_data[] =  {
 	{ LLCC_MODPE,    29,  64, 1, 1, 0xFFF, 0x0, 0, 0, 0, 0, 1, 0 },
 };
 
+<<<<<<< HEAD
 static const struct llcc_slice_config sm7150_data[] =  {
 	{ LLCC_CPUSS,    1,  512, 1, 0, 0xF, 0x0, 0, 0, 0, 1, 1 },
 	{ LLCC_MDM,      8,  128, 2, 0, 0xF, 0x0, 0, 0, 0, 1, 0 },
@@ -234,6 +270,8 @@ static const struct llcc_slice_config sm7150_data[] =  {
 	{ LLCC_NPU,      23, 512, 1, 0, 0xF, 0x0, 0, 0, 0, 1, 0 },
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct llcc_slice_config sm8150_data[] =  {
 	{  LLCC_CPUSS,    1, 3072, 1, 1, 0xFFF, 0x0,   0, 0, 0, 1, 1 },
 	{  LLCC_VIDSC0,   2, 512,  2, 1, 0xFFF, 0x0,   0, 0, 0, 1, 0 },
@@ -325,6 +363,7 @@ static const struct llcc_slice_config sm8450_data[] =  {
 	{LLCC_AENPU,     8, 2048, 1, 1, 0xFFFF, 0x0,   0, 0, 0, 0, 0, 0, 0 },
 };
 
+<<<<<<< HEAD
 static const struct llcc_slice_config sm8550_data[] =  {
 	{LLCC_CPUSS,     1, 5120, 1, 0, 0xFFFFFF, 0x0,   0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, },
 	{LLCC_VIDSC0,    2,  512, 4, 1, 0xFFFFFF, 0x0,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, },
@@ -357,6 +396,8 @@ static const struct llcc_slice_config sm8550_data[] =  {
 	{LLCC_VIDVSP,   28,  256, 4, 1, 0xFFFFFF, 0x0,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, },
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct llcc_edac_reg_offset llcc_v1_edac_reg_offset = {
 	.trp_ecc_error_status0 = 0x20344,
 	.trp_ecc_error_status1 = 0x20348,
@@ -461,7 +502,10 @@ static const struct qcom_llcc_config sdm845_cfg = {
 	.need_llcc_cfg	= false,
 	.reg_offset	= llcc_v1_reg_offset,
 	.edac_reg_offset = &llcc_v1_edac_reg_offset,
+<<<<<<< HEAD
 	.no_edac	= true,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct qcom_llcc_config sm6350_cfg = {
@@ -472,6 +516,7 @@ static const struct qcom_llcc_config sm6350_cfg = {
 	.edac_reg_offset = &llcc_v1_edac_reg_offset,
 };
 
+<<<<<<< HEAD
 static const struct qcom_llcc_config sm7150_cfg = {
 	.sct_data       = sm7150_data,
 	.size           = ARRAY_SIZE(sm7150_data),
@@ -480,6 +525,8 @@ static const struct qcom_llcc_config sm7150_cfg = {
 	.edac_reg_offset = &llcc_v1_edac_reg_offset,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct qcom_llcc_config sm8150_cfg = {
 	.sct_data       = sm8150_data,
 	.size           = ARRAY_SIZE(sm8150_data),
@@ -512,6 +559,7 @@ static const struct qcom_llcc_config sm8450_cfg = {
 	.edac_reg_offset = &llcc_v2_1_edac_reg_offset,
 };
 
+<<<<<<< HEAD
 static const struct qcom_llcc_config sm8550_cfg = {
 	.sct_data       = sm8550_data,
 	.size           = ARRAY_SIZE(sm8550_data),
@@ -520,6 +568,8 @@ static const struct qcom_llcc_config sm8550_cfg = {
 	.edac_reg_offset = &llcc_v2_1_edac_reg_offset,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct llcc_drv_data *drv_data = (void *) -EPROBE_DEFER;
 
 /**
@@ -574,7 +624,10 @@ static int llcc_update_act_ctrl(u32 sid,
 				u32 act_ctrl_reg_val, u32 status)
 {
 	u32 act_ctrl_reg;
+<<<<<<< HEAD
 	u32 act_clear_reg;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 status_reg;
 	u32 slice_status;
 	int ret;
@@ -583,7 +636,10 @@ static int llcc_update_act_ctrl(u32 sid,
 		return PTR_ERR(drv_data);
 
 	act_ctrl_reg = LLCC_TRP_ACT_CTRLn(sid);
+<<<<<<< HEAD
 	act_clear_reg = LLCC_TRP_ACT_CLEARn(sid);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	status_reg = LLCC_TRP_STATUSn(sid);
 
 	/* Set the ACTIVE trigger */
@@ -600,6 +656,7 @@ static int llcc_update_act_ctrl(u32 sid,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (drv_data->version >= LLCC_VERSION_4_1_0_0) {
 		ret = regmap_read_poll_timeout(drv_data->bcast_regmap, status_reg,
 				      slice_status, (slice_status & ACT_COMPLETE),
@@ -616,6 +673,11 @@ static int llcc_update_act_ctrl(u32 sid,
 		ret = regmap_write(drv_data->bcast_regmap, act_clear_reg,
 					ACT_CLEAR);
 
+=======
+	ret = regmap_read_poll_timeout(drv_data->bcast_regmap, status_reg,
+				      slice_status, !(slice_status & status),
+				      0, LLCC_STATUS_READ_DELAY);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -728,10 +790,15 @@ static int _qcom_llcc_cfg_program(const struct llcc_slice_config *config,
 				  const struct qcom_llcc_config *cfg)
 {
 	int ret;
+<<<<<<< HEAD
 	u32 attr2_cfg;
 	u32 attr1_cfg;
 	u32 attr0_cfg;
 	u32 attr2_val;
+=======
+	u32 attr1_cfg;
+	u32 attr0_cfg;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 attr1_val;
 	u32 attr0_val;
 	u32 max_cap_cacheline;
@@ -761,6 +828,7 @@ static int _qcom_llcc_cfg_program(const struct llcc_slice_config *config,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (drv_data->version >= LLCC_VERSION_4_1_0_0) {
 		attr2_cfg = LLCC_TRP_ATTR2_CFGn(config->slice_id);
 		attr0_val = config->res_ways;
@@ -769,6 +837,10 @@ static int _qcom_llcc_cfg_program(const struct llcc_slice_config *config,
 		attr0_val = config->res_ways & ATTR0_RES_WAYS_MASK;
 		attr0_val |= config->bonus_ways << ATTR0_BONUS_WAYS_SHIFT;
 	}
+=======
+	attr0_val = config->res_ways & ATTR0_RES_WAYS_MASK;
+	attr0_val |= config->bonus_ways << ATTR0_BONUS_WAYS_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 
 	attr0_cfg = LLCC_TRP_ATTR0_CFGn(config->slice_id);
 
@@ -776,12 +848,15 @@ static int _qcom_llcc_cfg_program(const struct llcc_slice_config *config,
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (drv_data->version >= LLCC_VERSION_4_1_0_0) {
 		ret = regmap_write(drv_data->bcast_regmap, attr2_cfg, attr2_val);
 		if (ret)
 			return ret;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (cfg->need_llcc_cfg) {
 		u32 disable_cap_alloc, retain_pc;
 
@@ -791,6 +866,7 @@ static int _qcom_llcc_cfg_program(const struct llcc_slice_config *config,
 		if (ret)
 			return ret;
 
+<<<<<<< HEAD
 		if (drv_data->version < LLCC_VERSION_4_1_0_0) {
 			retain_pc = config->retain_on_pc << config->slice_id;
 			ret = regmap_write(drv_data->bcast_regmap,
@@ -798,6 +874,13 @@ static int _qcom_llcc_cfg_program(const struct llcc_slice_config *config,
 			if (ret)
 				return ret;
 		}
+=======
+		retain_pc = config->retain_on_pc << config->slice_id;
+		ret = regmap_write(drv_data->bcast_regmap,
+				LLCC_TRP_PCB_ACT, retain_pc);
+		if (ret)
+			return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (drv_data->version >= LLCC_VERSION_2_0_0_0) {
@@ -820,6 +903,7 @@ static int _qcom_llcc_cfg_program(const struct llcc_slice_config *config,
 			return ret;
 	}
 
+<<<<<<< HEAD
 	if (drv_data->version >= LLCC_VERSION_4_1_0_0) {
 		u32 stale_en;
 		u32 stale_cap_en;
@@ -879,6 +963,8 @@ static int _qcom_llcc_cfg_program(const struct llcc_slice_config *config,
 			return ret;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (config->activate_on_init) {
 		desc.slice_id = config->slice_id;
 		ret = llcc_slice_activate(&desc);
@@ -914,8 +1000,13 @@ static int qcom_llcc_remove(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static struct regmap *qcom_llcc_init_mmio(struct platform_device *pdev, u8 index,
 					  const char *name)
+=======
+static struct regmap *qcom_llcc_init_mmio(struct platform_device *pdev,
+		const char *name)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	void __iomem *base;
 	struct regmap_config llcc_regmap_config = {
@@ -925,7 +1016,11 @@ static struct regmap *qcom_llcc_init_mmio(struct platform_device *pdev, u8 index
 		.fast_io = true,
 	};
 
+<<<<<<< HEAD
 	base = devm_platform_ioremap_resource(pdev, index);
+=======
+	base = devm_platform_ioremap_resource_byname(pdev, name);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(base))
 		return ERR_CAST(base);
 
@@ -943,7 +1038,10 @@ static int qcom_llcc_probe(struct platform_device *pdev)
 	const struct llcc_slice_config *llcc_cfg;
 	u32 sz;
 	u32 version;
+<<<<<<< HEAD
 	struct regmap *regmap;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	drv_data = devm_kzalloc(dev, sizeof(*drv_data), GFP_KERNEL);
 	if (!drv_data) {
@@ -951,6 +1049,7 @@ static int qcom_llcc_probe(struct platform_device *pdev)
 		goto err;
 	}
 
+<<<<<<< HEAD
 	/* Initialize the first LLCC bank regmap */
 	regmap = qcom_llcc_init_mmio(pdev, 0, "llcc0_base");
 	if (IS_ERR(regmap)) {
@@ -991,11 +1090,26 @@ static int qcom_llcc_probe(struct platform_device *pdev)
 	}
 
 	drv_data->bcast_regmap = qcom_llcc_init_mmio(pdev, i, "llcc_broadcast_base");
+=======
+	drv_data->regmap = qcom_llcc_init_mmio(pdev, "llcc_base");
+	if (IS_ERR(drv_data->regmap)) {
+		ret = PTR_ERR(drv_data->regmap);
+		goto err;
+	}
+
+	drv_data->bcast_regmap =
+		qcom_llcc_init_mmio(pdev, "llcc_broadcast_base");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(drv_data->bcast_regmap)) {
 		ret = PTR_ERR(drv_data->bcast_regmap);
 		goto err;
 	}
 
+<<<<<<< HEAD
+=======
+	cfg = of_device_get_match_data(&pdev->dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Extract version of the IP */
 	ret = regmap_read(drv_data->bcast_regmap, cfg->reg_offset[LLCC_COMMON_HW_INFO],
 			  &version);
@@ -1004,6 +1118,18 @@ static int qcom_llcc_probe(struct platform_device *pdev)
 
 	drv_data->version = version;
 
+<<<<<<< HEAD
+=======
+	ret = regmap_read(drv_data->regmap, cfg->reg_offset[LLCC_COMMON_STATUS0],
+			  &num_banks);
+	if (ret)
+		goto err;
+
+	num_banks &= LLCC_LB_CNT_MASK;
+	num_banks >>= LLCC_LB_CNT_SHIFT;
+	drv_data->num_banks = num_banks;
+
+>>>>>>> b7ba80a49124 (Commit)
 	llcc_cfg = cfg->sct_data;
 	sz = cfg->size;
 
@@ -1011,6 +1137,19 @@ static int qcom_llcc_probe(struct platform_device *pdev)
 		if (llcc_cfg[i].slice_id > drv_data->max_slices)
 			drv_data->max_slices = llcc_cfg[i].slice_id;
 
+<<<<<<< HEAD
+=======
+	drv_data->offsets = devm_kcalloc(dev, num_banks, sizeof(u32),
+							GFP_KERNEL);
+	if (!drv_data->offsets) {
+		ret = -ENOMEM;
+		goto err;
+	}
+
+	for (i = 0; i < num_banks; i++)
+		drv_data->offsets[i] = i * BANK_OFFSET_STRIDE;
+
+>>>>>>> b7ba80a49124 (Commit)
 	drv_data->bitmap = devm_bitmap_zalloc(dev, drv_data->max_slices,
 					      GFP_KERNEL);
 	if (!drv_data->bitmap) {
@@ -1028,6 +1167,7 @@ static int qcom_llcc_probe(struct platform_device *pdev)
 	if (ret)
 		goto err;
 
+<<<<<<< HEAD
 	drv_data->ecc_irq = platform_get_irq_optional(pdev, 0);
 
 	/*
@@ -1037,6 +1177,10 @@ static int qcom_llcc_probe(struct platform_device *pdev)
 	 * problematic platforms.
 	 */
 	if (!cfg->no_edac) {
+=======
+	drv_data->ecc_irq = platform_get_irq(pdev, 0);
+	if (drv_data->ecc_irq >= 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		llcc_edac = platform_device_register_data(&pdev->dev,
 						"qcom_llcc_edac", -1, drv_data,
 						sizeof(*drv_data));
@@ -1057,12 +1201,18 @@ static const struct of_device_id qcom_llcc_of_match[] = {
 	{ .compatible = "qcom,sc8280xp-llcc", .data = &sc8280xp_cfg },
 	{ .compatible = "qcom,sdm845-llcc", .data = &sdm845_cfg },
 	{ .compatible = "qcom,sm6350-llcc", .data = &sm6350_cfg },
+<<<<<<< HEAD
 	{ .compatible = "qcom,sm7150-llcc", .data = &sm7150_cfg },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "qcom,sm8150-llcc", .data = &sm8150_cfg },
 	{ .compatible = "qcom,sm8250-llcc", .data = &sm8250_cfg },
 	{ .compatible = "qcom,sm8350-llcc", .data = &sm8350_cfg },
 	{ .compatible = "qcom,sm8450-llcc", .data = &sm8450_cfg },
+<<<<<<< HEAD
 	{ .compatible = "qcom,sm8550-llcc", .data = &sm8550_cfg },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 MODULE_DEVICE_TABLE(of, qcom_llcc_of_match);

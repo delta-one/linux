@@ -5,13 +5,17 @@
  * Copyright (c) 2016, Intel Corporation
  * Authors: Salvatore Benedetto <salvatore.benedetto@intel.com>
  */
+<<<<<<< HEAD
 
 #include <crypto/internal/kpp.h>
 #include <linux/cryptouser.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/errno.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/seq_file.h>
+<<<<<<< HEAD
 #include <linux/string.h>
 #include <net/netlink.h>
 
@@ -19,6 +23,21 @@
 
 static int __maybe_unused crypto_kpp_report(
 	struct sk_buff *skb, struct crypto_alg *alg)
+=======
+#include <linux/slab.h>
+#include <linux/string.h>
+#include <linux/crypto.h>
+#include <crypto/algapi.h>
+#include <linux/cryptouser.h>
+#include <linux/compiler.h>
+#include <net/netlink.h>
+#include <crypto/kpp.h>
+#include <crypto/internal/kpp.h>
+#include "internal.h"
+
+#ifdef CONFIG_NET
+static int crypto_kpp_report(struct sk_buff *skb, struct crypto_alg *alg)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct crypto_report_kpp rkpp;
 
@@ -28,6 +47,15 @@ static int __maybe_unused crypto_kpp_report(
 
 	return nla_put(skb, CRYPTOCFGA_REPORT_KPP, sizeof(rkpp), &rkpp);
 }
+<<<<<<< HEAD
+=======
+#else
+static int crypto_kpp_report(struct sk_buff *skb, struct crypto_alg *alg)
+{
+	return -ENOSYS;
+}
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 static void crypto_kpp_show(struct seq_file *m, struct crypto_alg *alg)
 	__maybe_unused;
@@ -66,6 +94,7 @@ static void crypto_kpp_free_instance(struct crypto_instance *inst)
 	kpp->free(kpp);
 }
 
+<<<<<<< HEAD
 static int __maybe_unused crypto_kpp_report_stat(
 	struct sk_buff *skb, struct crypto_alg *alg)
 {
@@ -89,6 +118,8 @@ static int __maybe_unused crypto_kpp_report_stat(
 	return nla_put(skb, CRYPTOCFGA_STAT_KPP, sizeof(rkpp), &rkpp);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct crypto_type crypto_kpp_type = {
 	.extsize = crypto_alg_extsize,
 	.init_tfm = crypto_kpp_init_tfm,
@@ -96,12 +127,16 @@ static const struct crypto_type crypto_kpp_type = {
 #ifdef CONFIG_PROC_FS
 	.show = crypto_kpp_show,
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_CRYPTO_USER
 	.report = crypto_kpp_report,
 #endif
 #ifdef CONFIG_CRYPTO_STATS
 	.report_stat = crypto_kpp_report_stat,
 #endif
+=======
+	.report = crypto_kpp_report,
+>>>>>>> b7ba80a49124 (Commit)
 	.maskclear = ~CRYPTO_ALG_TYPE_MASK,
 	.maskset = CRYPTO_ALG_TYPE_MASK,
 	.type = CRYPTO_ALG_TYPE_KPP,
@@ -131,15 +166,21 @@ EXPORT_SYMBOL_GPL(crypto_has_kpp);
 
 static void kpp_prepare_alg(struct kpp_alg *alg)
 {
+<<<<<<< HEAD
 	struct crypto_istat_kpp *istat = kpp_get_stat(alg);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct crypto_alg *base = &alg->base;
 
 	base->cra_type = &crypto_kpp_type;
 	base->cra_flags &= ~CRYPTO_ALG_TYPE_MASK;
 	base->cra_flags |= CRYPTO_ALG_TYPE_KPP;
+<<<<<<< HEAD
 
 	if (IS_ENABLED(CONFIG_CRYPTO_STATS))
 		memset(istat, 0, sizeof(*istat));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int crypto_register_kpp(struct kpp_alg *alg)

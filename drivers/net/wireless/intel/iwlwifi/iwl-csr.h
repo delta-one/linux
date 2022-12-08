@@ -348,7 +348,10 @@ enum {
 #define CSR_HW_RF_ID_TYPE_HRCDB		(0x00109F00)
 #define CSR_HW_RF_ID_TYPE_GF		(0x0010D000)
 #define CSR_HW_RF_ID_TYPE_GF4		(0x0010E000)
+<<<<<<< HEAD
 #define CSR_HW_RF_ID_TYPE_MS		(0x00111000)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* HW_RF CHIP STEP  */
 #define CSR_HW_RF_STEP(_val) (((_val) >> 8) & 0xF)

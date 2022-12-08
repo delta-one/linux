@@ -64,7 +64,11 @@
 #define	PTP_TCR_TSENMACADDR	BIT(18)
 
 /* SSIR defines */
+<<<<<<< HEAD
 #define	PTP_SSIR_SSINC_MAX		0xff
+=======
+#define	PTP_SSIR_SSINC_MASK		0xff
+>>>>>>> b7ba80a49124 (Commit)
 #define	GMAC4_PTP_SSIR_SSINC_SHIFT	16
 
 /* Auxiliary Control defines */

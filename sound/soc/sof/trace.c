@@ -6,21 +6,33 @@
 
 int sof_fw_trace_init(struct snd_sof_dev *sdev)
 {
+<<<<<<< HEAD
 	const struct sof_ipc_fw_tracing_ops *fw_tracing = sof_ipc_get_ops(sdev, fw_tracing);
 
 	if (!fw_tracing) {
+=======
+	if (!sdev->ipc->ops->fw_tracing) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_info(sdev->dev, "Firmware tracing is not available\n");
 		sdev->fw_trace_is_supported = false;
 
 		return 0;
 	}
 
+<<<<<<< HEAD
 	return fw_tracing->init(sdev);
+=======
+	return sdev->ipc->ops->fw_tracing->init(sdev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void sof_fw_trace_free(struct snd_sof_dev *sdev)
 {
+<<<<<<< HEAD
 	if (!sdev->fw_trace_is_supported)
+=======
+	if (!sdev->fw_trace_is_supported || !sdev->ipc->ops->fw_tracing)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	if (sdev->ipc->ops->fw_tracing->free)

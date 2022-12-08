@@ -959,16 +959,28 @@ static void btmtkuart_remove(struct serdev_device *serdev)
 	hci_free_dev(hdev);
 }
 
+<<<<<<< HEAD
 static const struct btmtkuart_data mt7622_data __maybe_unused = {
 	.fwname = FIRMWARE_MT7622,
 };
 
 static const struct btmtkuart_data mt7663_data __maybe_unused = {
+=======
+static const struct btmtkuart_data mt7622_data = {
+	.fwname = FIRMWARE_MT7622,
+};
+
+static const struct btmtkuart_data mt7663_data = {
+>>>>>>> b7ba80a49124 (Commit)
 	.flags = BTMTKUART_FLAG_STANDALONE_HW,
 	.fwname = FIRMWARE_MT7663,
 };
 
+<<<<<<< HEAD
 static const struct btmtkuart_data mt7668_data __maybe_unused = {
+=======
+static const struct btmtkuart_data mt7668_data = {
+>>>>>>> b7ba80a49124 (Commit)
 	.flags = BTMTKUART_FLAG_STANDALONE_HW,
 	.fwname = FIRMWARE_MT7668,
 };

@@ -5,7 +5,10 @@
 
 #include <linux/util_macros.h>
 
+<<<<<<< HEAD
 #include "i915_reg.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_ddi.h"
 #include "intel_ddi_buf_trans.h"
 #include "intel_de.h"
@@ -40,22 +43,39 @@ void intel_snps_phy_wait_for_calibration(struct drm_i915_private *i915)
 		 */
 		if (intel_de_wait_for_clear(i915, DG2_PHY_MISC(phy),
 					    DG2_PHY_DP_TX_ACK_MASK, 25))
+<<<<<<< HEAD
 			i915->display.snps.phy_failed_calibration |= BIT(phy);
 	}
 }
 
 void intel_snps_phy_update_psr_power_state(struct drm_i915_private *i915,
+=======
+			i915->snps_phy_failed_calibration |= BIT(phy);
+	}
+}
+
+void intel_snps_phy_update_psr_power_state(struct drm_i915_private *dev_priv,
+>>>>>>> b7ba80a49124 (Commit)
 					   enum phy phy, bool enable)
 {
 	u32 val;
 
+<<<<<<< HEAD
 	if (!intel_phy_is_snps(i915, phy))
+=======
+	if (!intel_phy_is_snps(dev_priv, phy))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	val = REG_FIELD_PREP(SNPS_PHY_TX_REQ_LN_DIS_PWR_STATE_PSR,
 			     enable ? 2 : 3);
+<<<<<<< HEAD
 	intel_de_rmw(i915, SNPS_PHY_TX_REQ(phy),
 		     SNPS_PHY_TX_REQ_LN_DIS_PWR_STATE_PSR, val);
+=======
+	intel_uncore_rmw(&dev_priv->uncore, SNPS_PHY_TX_REQ(phy),
+			 SNPS_PHY_TX_REQ_LN_DIS_PWR_STATE_PSR, val);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void intel_snps_phy_set_signal_levels(struct intel_encoder *encoder,
@@ -1419,6 +1439,7 @@ static const struct intel_mpllb_state dg2_hdmi_262750 = {
 		REG_FIELD_PREP(SNPS_PHY_MPLLB_SSC_UP_SPREAD, 1),
 };
 
+<<<<<<< HEAD
 static const struct intel_mpllb_state dg2_hdmi_267300 = {
 	.clock = 267300,
 	.ref_control =
@@ -1449,6 +1470,8 @@ static const struct intel_mpllb_state dg2_hdmi_267300 = {
 		REG_FIELD_PREP(SNPS_PHY_MPLLB_SSC_UP_SPREAD, 1),
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct intel_mpllb_state dg2_hdmi_268500 = {
 	.clock = 268500,
 	.ref_control =
@@ -1539,6 +1562,7 @@ static const struct intel_mpllb_state dg2_hdmi_241500 = {
 		REG_FIELD_PREP(SNPS_PHY_MPLLB_SSC_UP_SPREAD, 1),
 };
 
+<<<<<<< HEAD
 static const struct intel_mpllb_state dg2_hdmi_319890 = {
 	.clock = 319890,
 	.ref_control =
@@ -1569,6 +1593,8 @@ static const struct intel_mpllb_state dg2_hdmi_319890 = {
 		REG_FIELD_PREP(SNPS_PHY_MPLLB_SSC_UP_SPREAD, 1),
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct intel_mpllb_state dg2_hdmi_497750 = {
 	.clock = 497750,
 	.ref_control =
@@ -1756,10 +1782,15 @@ static const struct intel_mpllb_state * const dg2_hdmi_tables[] = {
 	&dg2_hdmi_209800,
 	&dg2_hdmi_241500,
 	&dg2_hdmi_262750,
+<<<<<<< HEAD
 	&dg2_hdmi_267300,
 	&dg2_hdmi_268500,
 	&dg2_hdmi_296703,
 	&dg2_hdmi_319890,
+=======
+	&dg2_hdmi_268500,
+	&dg2_hdmi_296703,
+>>>>>>> b7ba80a49124 (Commit)
 	&dg2_hdmi_497750,
 	&dg2_hdmi_592000,
 	&dg2_hdmi_593407,
@@ -1847,7 +1878,11 @@ void intel_mpllb_enable(struct intel_encoder *encoder,
 	 */
 
 	/* 5. Software sets DPLL_ENABLE [PLL Enable] to "1". */
+<<<<<<< HEAD
 	intel_de_rmw(dev_priv, enable_reg, 0, PLL_ENABLE);
+=======
+	intel_uncore_rmw(&dev_priv->uncore, enable_reg, 0, PLL_ENABLE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * 9. Software sets SNPS_PHY_MPLLB_DIV dp_mpllb_force_en to "1". This
@@ -1892,13 +1927,22 @@ void intel_mpllb_disable(struct intel_encoder *encoder)
 	 */
 
 	/* 2. Software programs DPLL_ENABLE [PLL Enable] to "0" */
+<<<<<<< HEAD
 	intel_de_rmw(i915, enable_reg, PLL_ENABLE, 0);
+=======
+	intel_uncore_rmw(&i915->uncore, enable_reg, PLL_ENABLE, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * 4. Software programs SNPS_PHY_MPLLB_DIV dp_mpllb_force_en to "0".
 	 * This will allow the PLL to stop running.
 	 */
+<<<<<<< HEAD
 	intel_de_rmw(i915, SNPS_PHY_MPLLB_DIV(phy), SNPS_PHY_MPLLB_FORCE_EN, 0);
+=======
+	intel_uncore_rmw(&i915->uncore, SNPS_PHY_MPLLB_DIV(phy),
+			 SNPS_PHY_MPLLB_FORCE_EN, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * 5. Software polls DPLL_ENABLE [PLL Lock] for PHY acknowledgment

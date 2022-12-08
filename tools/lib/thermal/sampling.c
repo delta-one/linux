@@ -54,7 +54,11 @@ int thermal_sampling_fd(struct thermal_handler *th)
 thermal_error_t thermal_sampling_exit(struct thermal_handler *th)
 {
 	if (nl_unsubscribe_thermal(th->sk_sampling, th->cb_sampling,
+<<<<<<< HEAD
 				   THERMAL_GENL_SAMPLING_GROUP_NAME))
+=======
+				   THERMAL_GENL_EVENT_GROUP_NAME))
+>>>>>>> b7ba80a49124 (Commit)
 		return THERMAL_ERROR;
 
 	nl_thermal_disconnect(th->sk_sampling, th->cb_sampling);

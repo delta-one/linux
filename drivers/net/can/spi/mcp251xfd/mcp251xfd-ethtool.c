@@ -48,7 +48,10 @@ mcp251xfd_ring_set_ringparam(struct net_device *ndev,
 	priv->rx_obj_num = layout.cur_rx;
 	priv->rx_obj_num_coalesce_irq = layout.rx_coalesce;
 	priv->tx->obj_num = layout.cur_tx;
+<<<<<<< HEAD
 	priv->tx_obj_num_coalesce_irq = layout.tx_coalesce;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

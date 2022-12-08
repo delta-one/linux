@@ -258,7 +258,11 @@ static int fsl_pamu_attach_device(struct iommu_domain *domain,
 	liodn = of_get_property(dev->of_node, "fsl,liodn", &len);
 	if (!liodn) {
 		pr_debug("missing fsl,liodn property at %pOF\n", dev->of_node);
+<<<<<<< HEAD
 		return -ENODEV;
+=======
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	spin_lock_irqsave(&dma_domain->domain_lock, flags);
@@ -267,7 +271,11 @@ static int fsl_pamu_attach_device(struct iommu_domain *domain,
 		if (liodn[i] >= PAACE_NUMBER_ENTRIES) {
 			pr_debug("Invalid liodn %d, attach device failed for %pOF\n",
 				 liodn[i], dev->of_node);
+<<<<<<< HEAD
 			ret = -ENODEV;
+=======
+			ret = -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 
@@ -283,9 +291,15 @@ static int fsl_pamu_attach_device(struct iommu_domain *domain,
 	return ret;
 }
 
+<<<<<<< HEAD
 static void fsl_pamu_set_platform_dma(struct device *dev)
 {
 	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
+=======
+static void fsl_pamu_detach_device(struct iommu_domain *domain,
+				   struct device *dev)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct fsl_dma_domain *dma_domain = to_fsl_dma_domain(domain);
 	const u32 *prop;
 	int len;
@@ -452,9 +466,15 @@ static const struct iommu_ops fsl_pamu_ops = {
 	.domain_alloc	= fsl_pamu_domain_alloc,
 	.probe_device	= fsl_pamu_probe_device,
 	.device_group   = fsl_pamu_device_group,
+<<<<<<< HEAD
 	.set_platform_dma_ops = fsl_pamu_set_platform_dma,
 	.default_domain_ops = &(const struct iommu_domain_ops) {
 		.attach_dev	= fsl_pamu_attach_device,
+=======
+	.default_domain_ops = &(const struct iommu_domain_ops) {
+		.attach_dev	= fsl_pamu_attach_device,
+		.detach_dev	= fsl_pamu_detach_device,
+>>>>>>> b7ba80a49124 (Commit)
 		.iova_to_phys	= fsl_pamu_iova_to_phys,
 		.free		= fsl_pamu_domain_free,
 	}

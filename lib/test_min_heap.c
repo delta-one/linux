@@ -83,7 +83,11 @@ static __init int test_heapify_all(bool min_heap)
 	/* Test with randomly generated values. */
 	heap.nr = ARRAY_SIZE(values);
 	for (i = 0; i < heap.nr; i++)
+<<<<<<< HEAD
 		values[i] = get_random_u32();
+=======
+		values[i] = get_random_int();
+>>>>>>> b7ba80a49124 (Commit)
 
 	min_heapify_all(&heap, &funcs);
 	err += pop_verify_heap(min_heap, &heap, &funcs);
@@ -116,7 +120,11 @@ static __init int test_heap_push(bool min_heap)
 
 	/* Test with randomly generated values. */
 	while (heap.nr < heap.size) {
+<<<<<<< HEAD
 		temp = get_random_u32();
+=======
+		temp = get_random_int();
+>>>>>>> b7ba80a49124 (Commit)
 		min_heap_push(&heap, &temp, &funcs);
 	}
 	err += pop_verify_heap(min_heap, &heap, &funcs);
@@ -158,7 +166,11 @@ static __init int test_heap_pop_push(bool min_heap)
 
 	/* Test with randomly generated values. */
 	for (i = 0; i < ARRAY_SIZE(data); i++) {
+<<<<<<< HEAD
 		temp = get_random_u32();
+=======
+		temp = get_random_int();
+>>>>>>> b7ba80a49124 (Commit)
 		min_heap_pop_push(&heap, &temp, &funcs);
 	}
 	err += pop_verify_heap(min_heap, &heap, &funcs);

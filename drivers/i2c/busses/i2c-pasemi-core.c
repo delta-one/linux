@@ -21,7 +21,10 @@
 #define REG_MTXFIFO	0x00
 #define REG_MRXFIFO	0x04
 #define REG_SMSTA	0x14
+<<<<<<< HEAD
 #define REG_IMASK	0x18
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define REG_CTL		0x1c
 #define REG_REV		0x28
 
@@ -67,7 +70,10 @@ static void pasemi_reset(struct pasemi_smbus *smbus)
 		val |= CTL_EN;
 
 	reg_write(smbus, REG_CTL, val);
+<<<<<<< HEAD
 	reinit_completion(&smbus->irq_completion);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void pasemi_smb_clear(struct pasemi_smbus *smbus)
@@ -80,6 +86,7 @@ static void pasemi_smb_clear(struct pasemi_smbus *smbus)
 
 static int pasemi_smb_waitready(struct pasemi_smbus *smbus)
 {
+<<<<<<< HEAD
 	int timeout = 100;
 	unsigned int status;
 
@@ -95,6 +102,16 @@ static int pasemi_smb_waitready(struct pasemi_smbus *smbus)
 			msleep(1);
 			status = reg_read(smbus, REG_SMSTA);
 		}
+=======
+	int timeout = 10;
+	unsigned int status;
+
+	status = reg_read(smbus, REG_SMSTA);
+
+	while (!(status & SMSTA_XEN) && timeout--) {
+		msleep(1);
+		status = reg_read(smbus, REG_SMSTA);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Got NACK? */
@@ -353,14 +370,20 @@ int pasemi_i2c_common_probe(struct pasemi_smbus *smbus)
 
 	/* set up the sysfs linkage to our parent device */
 	smbus->adapter.dev.parent = smbus->dev;
+<<<<<<< HEAD
 	smbus->use_irq = 0;
 	init_completion(&smbus->irq_completion);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (smbus->hw_rev != PASEMI_HW_REV_PCI)
 		smbus->hw_rev = reg_read(smbus, REG_REV);
 
+<<<<<<< HEAD
 	reg_write(smbus, REG_IMASK, 0);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pasemi_reset(smbus);
 
 	error = devm_i2c_add_adapter(smbus->dev, &smbus->adapter);
@@ -369,6 +392,7 @@ int pasemi_i2c_common_probe(struct pasemi_smbus *smbus)
 
 	return 0;
 }
+<<<<<<< HEAD
 
 irqreturn_t pasemi_irq_handler(int irq, void *dev_id)
 {
@@ -378,3 +402,5 @@ irqreturn_t pasemi_irq_handler(int irq, void *dev_id)
 	complete(&smbus->irq_completion);
 	return IRQ_HANDLED;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

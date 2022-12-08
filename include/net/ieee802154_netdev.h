@@ -38,6 +38,7 @@
 
 #include <net/cfg802154.h>
 
+<<<<<<< HEAD
 struct ieee802154_beacon_hdr {
 #if defined(__LITTLE_ENDIAN_BITFIELD)
 	u16 beacon_order:4,
@@ -74,6 +75,8 @@ struct ieee802154_beacon_hdr {
 #endif
 } __packed;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ieee802154_sechdr {
 #if defined(__LITTLE_ENDIAN_BITFIELD)
 	u8 level:3,
@@ -121,6 +124,7 @@ struct ieee802154_hdr_fc {
 #endif
 };
 
+<<<<<<< HEAD
 enum ieee802154_frame_version {
 	IEEE802154_2003_STD,
 	IEEE802154_2006_STD,
@@ -136,6 +140,8 @@ enum ieee802154_addressing_mode {
 	IEEE802154_EXTENDED_ADDRESSING,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ieee802154_hdr {
 	struct ieee802154_hdr_fc fc;
 	u8 seq;
@@ -144,11 +150,14 @@ struct ieee802154_hdr {
 	struct ieee802154_sechdr sec;
 };
 
+<<<<<<< HEAD
 struct ieee802154_beacon_frame {
 	struct ieee802154_hdr mhr;
 	struct ieee802154_beacon_hdr mac_pl;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* pushes hdr onto the skb. fields of hdr->fc that can be calculated from
  * the contents of hdr will be, and the actual value of those bits in
  * hdr->fc will be ignored. this includes the INTRA_PAN bit and the frame
@@ -174,10 +183,13 @@ int ieee802154_hdr_peek_addrs(const struct sk_buff *skb,
  */
 int ieee802154_hdr_peek(const struct sk_buff *skb, struct ieee802154_hdr *hdr);
 
+<<<<<<< HEAD
 /* pushes a beacon frame into an skb */
 int ieee802154_beacon_push(struct sk_buff *skb,
 			   struct ieee802154_beacon_frame *beacon);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int ieee802154_max_payload(const struct ieee802154_hdr *hdr);
 
 static inline int
@@ -245,12 +257,16 @@ static inline int
 ieee802154_sockaddr_check_size(struct sockaddr_ieee802154 *daddr, int len)
 {
 	struct ieee802154_addr_sa *sa;
+<<<<<<< HEAD
 	int ret = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	sa = &daddr->addr;
 	if (len < IEEE802154_MIN_NAMELEN)
 		return -EINVAL;
 	switch (sa->addr_type) {
+<<<<<<< HEAD
 	case IEEE802154_ADDR_NONE:
 		break;
 	case IEEE802154_ADDR_SHORT:
@@ -266,6 +282,18 @@ ieee802154_sockaddr_check_size(struct sockaddr_ieee802154 *daddr, int len)
 		break;
 	}
 	return ret;
+=======
+	case IEEE802154_ADDR_SHORT:
+		if (len < IEEE802154_NAMELEN_SHORT)
+			return -EINVAL;
+		break;
+	case IEEE802154_ADDR_LONG:
+		if (len < IEEE802154_NAMELEN_LONG)
+			return -EINVAL;
+		break;
+	}
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void ieee802154_addr_from_sa(struct ieee802154_addr *a,

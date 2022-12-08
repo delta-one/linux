@@ -138,6 +138,10 @@ static const struct regmap_irq_chip max77650_irq_chip = {
 	.status_base		= MAX77650_REG_INT_GLBL,
 	.mask_base		= MAX77650_REG_INTM_GLBL,
 	.type_in_mask		= true,
+<<<<<<< HEAD
+=======
+	.type_invert		= true,
+>>>>>>> b7ba80a49124 (Commit)
 	.init_ack_masked	= true,
 	.clear_on_unmask	= true,
 };

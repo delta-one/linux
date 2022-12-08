@@ -100,7 +100,10 @@ enum nfp_nsp_cmd {
 	SPCODE_FW_LOADED	= 19, /* Is application firmware loaded */
 	SPCODE_VERSIONS		= 21, /* Report FW versions */
 	SPCODE_READ_SFF_EEPROM	= 22, /* Read module EEPROM */
+<<<<<<< HEAD
 	SPCODE_READ_MEDIA	= 23, /* Get either the supported or advertised media for a port */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct nfp_nsp_dma_buf {
@@ -1101,6 +1104,7 @@ int nfp_nsp_read_module_eeprom(struct nfp_nsp *state, int eth_index,
 	kfree(buf);
 
 	return ret;
+<<<<<<< HEAD
 };
 
 int nfp_nsp_read_media(struct nfp_nsp *state, void *buf, unsigned int size)
@@ -1117,4 +1121,6 @@ int nfp_nsp_read_media(struct nfp_nsp *state, void *buf, unsigned int size)
 	};
 
 	return nfp_nsp_command_buf(state, &media);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }

@@ -175,7 +175,11 @@ static int asus_wireless_add(struct acpi_device *adev)
 	return err;
 }
 
+<<<<<<< HEAD
 static void asus_wireless_remove(struct acpi_device *adev)
+=======
+static int asus_wireless_remove(struct acpi_device *adev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct asus_wireless_data *data = acpi_driver_data(adev);
 
@@ -183,6 +187,10 @@ static void asus_wireless_remove(struct acpi_device *adev)
 		devm_led_classdev_unregister(&adev->dev, &data->led);
 		destroy_workqueue(data->wq);
 	}
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct acpi_driver asus_wireless_driver = {

@@ -283,6 +283,7 @@ static int create_fd(struct fsnotify_group *group, const struct path *path,
 	return client_fd;
 }
 
+<<<<<<< HEAD
 static int process_access_response_info(const char __user *info,
 					size_t info_len,
 				struct fanotify_response_info_audit_rule *friar)
@@ -303,22 +304,33 @@ static int process_access_response_info(const char __user *info,
 	return info_len;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Finish processing of permission event by setting it to ANSWERED state and
  * drop group->notification_lock.
  */
 static void finish_permission_event(struct fsnotify_group *group,
+<<<<<<< HEAD
 				    struct fanotify_perm_event *event, u32 response,
 				    struct fanotify_response_info_audit_rule *friar)
+=======
+				    struct fanotify_perm_event *event,
+				    unsigned int response)
+>>>>>>> b7ba80a49124 (Commit)
 				    __releases(&group->notification_lock)
 {
 	bool destroy = false;
 
 	assert_spin_locked(&group->notification_lock);
+<<<<<<< HEAD
 	event->response = response & ~FAN_INFO;
 	if (response & FAN_INFO)
 		memcpy(&event->audit_rule, friar, sizeof(*friar));
 
+=======
+	event->response = response;
+>>>>>>> b7ba80a49124 (Commit)
 	if (event->state == FAN_EVENT_CANCELED)
 		destroy = true;
 	else
@@ -329,6 +341,7 @@ static void finish_permission_event(struct fsnotify_group *group,
 }
 
 static int process_access_response(struct fsnotify_group *group,
+<<<<<<< HEAD
 				   struct fanotify_response *response_struct,
 				   const char __user *info,
 				   size_t info_len)
@@ -341,15 +354,29 @@ static int process_access_response(struct fsnotify_group *group,
 
 	pr_debug("%s: group=%p fd=%d response=%u buf=%p size=%zu\n", __func__,
 		 group, fd, response, info, info_len);
+=======
+				   struct fanotify_response *response_struct)
+{
+	struct fanotify_perm_event *event;
+	int fd = response_struct->fd;
+	int response = response_struct->response;
+
+	pr_debug("%s: group=%p fd=%d response=%d\n", __func__, group,
+		 fd, response);
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * make sure the response is valid, if invalid we do nothing and either
 	 * userspace can send a valid response or we will clean it up after the
 	 * timeout
 	 */
+<<<<<<< HEAD
 	if (response & ~FANOTIFY_RESPONSE_VALID_MASK)
 		return -EINVAL;
 
 	switch (response & FANOTIFY_RESPONSE_ACCESS) {
+=======
+	switch (response & ~FAN_AUDIT) {
+>>>>>>> b7ba80a49124 (Commit)
 	case FAN_ALLOW:
 	case FAN_DENY:
 		break;
@@ -357,6 +384,7 @@ static int process_access_response(struct fsnotify_group *group,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	if ((response & FAN_AUDIT) && !FAN_GROUP_FLAG(group, FAN_ENABLE_AUDIT))
 		return -EINVAL;
 
@@ -371,6 +399,12 @@ static int process_access_response(struct fsnotify_group *group,
 	}
 
 	if (fd < 0)
+=======
+	if (fd < 0)
+		return -EINVAL;
+
+	if ((response & FAN_AUDIT) && !FAN_GROUP_FLAG(group, FAN_ENABLE_AUDIT))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	spin_lock(&group->notification_lock);
@@ -380,9 +414,15 @@ static int process_access_response(struct fsnotify_group *group,
 			continue;
 
 		list_del_init(&event->fae.fse.list);
+<<<<<<< HEAD
 		finish_permission_event(group, event, response, &friar);
 		wake_up(&group->fanotify_data.access_waitq);
 		return ret;
+=======
+		finish_permission_event(group, event, response);
+		wake_up(&group->fanotify_data.access_waitq);
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	spin_unlock(&group->notification_lock);
 
@@ -844,7 +884,11 @@ static ssize_t fanotify_read(struct file *file, char __user *buf,
 			if (ret <= 0) {
 				spin_lock(&group->notification_lock);
 				finish_permission_event(group,
+<<<<<<< HEAD
 					FANOTIFY_PERM(event), FAN_DENY, NULL);
+=======
+					FANOTIFY_PERM(event), FAN_DENY);
+>>>>>>> b7ba80a49124 (Commit)
 				wake_up(&group->fanotify_data.access_waitq);
 			} else {
 				spin_lock(&group->notification_lock);
@@ -867,17 +911,24 @@ static ssize_t fanotify_read(struct file *file, char __user *buf,
 
 static ssize_t fanotify_write(struct file *file, const char __user *buf, size_t count, loff_t *pos)
 {
+<<<<<<< HEAD
 	struct fanotify_response response;
 	struct fsnotify_group *group;
 	int ret;
 	const char __user *info_buf = buf + sizeof(struct fanotify_response);
 	size_t info_len;
+=======
+	struct fanotify_response response = { .fd = -1, .response = -1 };
+	struct fsnotify_group *group;
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!IS_ENABLED(CONFIG_FANOTIFY_ACCESS_PERMISSIONS))
 		return -EINVAL;
 
 	group = file->private_data;
 
+<<<<<<< HEAD
 	pr_debug("%s: group=%p count=%zu\n", __func__, group, count);
 
 	if (count < sizeof(response))
@@ -893,6 +944,21 @@ static ssize_t fanotify_write(struct file *file, const char __user *buf, size_t 
 		count = ret;
 	else
 		count = sizeof(response) + ret;
+=======
+	if (count < sizeof(response))
+		return -EINVAL;
+
+	count = sizeof(response);
+
+	pr_debug("%s: group=%p count=%zu\n", __func__, group, count);
+
+	if (copy_from_user(&response, buf, count))
+		return -EFAULT;
+
+	ret = process_access_response(group, &response);
+	if (ret < 0)
+		count = ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return count;
 }
@@ -920,7 +986,11 @@ static int fanotify_release(struct inode *ignored, struct file *file)
 		event = list_first_entry(&group->fanotify_data.access_list,
 				struct fanotify_perm_event, fae.fse.list);
 		list_del_init(&event->fae.fse.list);
+<<<<<<< HEAD
 		finish_permission_event(group, event, FAN_ALLOW, NULL);
+=======
+		finish_permission_event(group, event, FAN_ALLOW);
+>>>>>>> b7ba80a49124 (Commit)
 		spin_lock(&group->notification_lock);
 	}
 
@@ -937,7 +1007,11 @@ static int fanotify_release(struct inode *ignored, struct file *file)
 			fsnotify_destroy_event(group, fsn_event);
 		} else {
 			finish_permission_event(group, FANOTIFY_PERM(event),
+<<<<<<< HEAD
 						FAN_ALLOW, NULL);
+=======
+						FAN_ALLOW);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		spin_lock(&group->notification_lock);
 	}

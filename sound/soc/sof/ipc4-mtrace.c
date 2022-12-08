@@ -108,7 +108,10 @@ struct sof_mtrace_core_data {
 	int id;
 	u32 slot_offset;
 	void *log_buffer;
+<<<<<<< HEAD
 	struct mutex buffer_lock; /* for log_buffer alloc/free */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 host_read_ptr;
 	u32 dsp_write_ptr;
 	/* pos update IPC arrived before the slot offset is known, queried */
@@ -129,6 +132,7 @@ static int sof_ipc4_mtrace_dfs_open(struct inode *inode, struct file *file)
 	struct sof_mtrace_core_data *core_data = inode->i_private;
 	int ret;
 
+<<<<<<< HEAD
 	mutex_lock(&core_data->buffer_lock);
 
 	if (core_data->log_buffer) {
@@ -139,12 +143,21 @@ static int sof_ipc4_mtrace_dfs_open(struct inode *inode, struct file *file)
 	ret = debugfs_file_get(file->f_path.dentry);
 	if (unlikely(ret))
 		goto out;
+=======
+	ret = debugfs_file_get(file->f_path.dentry);
+	if (unlikely(ret))
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	core_data->log_buffer = kmalloc(SOF_MTRACE_SLOT_SIZE, GFP_KERNEL);
 	if (!core_data->log_buffer) {
 		debugfs_file_put(file->f_path.dentry);
+<<<<<<< HEAD
 		ret = -ENOMEM;
 		goto out;
+=======
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret = simple_open(inode, file);
@@ -153,9 +166,12 @@ static int sof_ipc4_mtrace_dfs_open(struct inode *inode, struct file *file)
 		debugfs_file_put(file->f_path.dentry);
 	}
 
+<<<<<<< HEAD
 out:
 	mutex_unlock(&core_data->buffer_lock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -292,10 +308,14 @@ static int sof_ipc4_mtrace_dfs_release(struct inode *inode, struct file *file)
 
 	debugfs_file_put(file->f_path.dentry);
 
+<<<<<<< HEAD
 	mutex_lock(&core_data->buffer_lock);
 	kfree(core_data->log_buffer);
 	core_data->log_buffer = NULL;
 	mutex_unlock(&core_data->buffer_lock);
+=======
+	kfree(core_data->log_buffer);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -344,10 +364,16 @@ static ssize_t sof_ipc4_priority_mask_dfs_write(struct file *file,
 						size_t count, loff_t *ppos)
 {
 	struct sof_mtrace_priv *priv = file->private_data;
+<<<<<<< HEAD
 	unsigned int id;
 	char *buf;
 	u32 mask;
 	int ret;
+=======
+	int id, ret;
+	char *buf;
+	u32 mask;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * To update Nth mask entry, write:
@@ -358,9 +384,15 @@ static ssize_t sof_ipc4_priority_mask_dfs_write(struct file *file,
 	if (IS_ERR(buf))
 		return PTR_ERR(buf);
 
+<<<<<<< HEAD
 	ret = sscanf(buf, "%u,0x%x", &id, &mask);
 	if (ret != 2) {
 		ret = sscanf(buf, "%u,%x", &id, &mask);
+=======
+	ret = sscanf(buf, "%d,0x%x", &id, &mask);
+	if (ret != 2) {
+		ret = sscanf(buf, "%d,%x", &id, &mask);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret != 2) {
 			ret = -EINVAL;
 			goto out;
@@ -579,7 +611,10 @@ static int ipc4_mtrace_init(struct snd_sof_dev *sdev)
 		struct sof_mtrace_core_data *core_data = &priv->cores[i];
 
 		init_waitqueue_head(&core_data->trace_sleep);
+<<<<<<< HEAD
 		mutex_init(&core_data->buffer_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		core_data->sdev = sdev;
 		core_data->id = i;
 	}
@@ -609,6 +644,7 @@ static void ipc4_mtrace_free(struct snd_sof_dev *sdev)
 	ipc4_mtrace_disable(sdev);
 }
 
+<<<<<<< HEAD
 static int sof_ipc4_mtrace_update_pos_all_cores(struct snd_sof_dev *sdev)
 {
 	int i;
@@ -619,6 +655,8 @@ static int sof_ipc4_mtrace_update_pos_all_cores(struct snd_sof_dev *sdev)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int sof_ipc4_mtrace_update_pos(struct snd_sof_dev *sdev, int core)
 {
 	struct sof_mtrace_priv *priv = sdev->fw_trace_data;
@@ -652,6 +690,7 @@ int sof_ipc4_mtrace_update_pos(struct snd_sof_dev *sdev, int core)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void ipc4_mtrace_fw_crashed(struct snd_sof_dev *sdev)
 {
 	/*
@@ -662,6 +701,8 @@ static void ipc4_mtrace_fw_crashed(struct snd_sof_dev *sdev)
 	sof_ipc4_mtrace_update_pos_all_cores(sdev);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int ipc4_mtrace_resume(struct snd_sof_dev *sdev)
 {
 	return ipc4_mtrace_enable(sdev);
@@ -675,7 +716,10 @@ static void ipc4_mtrace_suspend(struct snd_sof_dev *sdev, pm_message_t pm_state)
 const struct sof_ipc_fw_tracing_ops ipc4_mtrace_ops = {
 	.init = ipc4_mtrace_init,
 	.free = ipc4_mtrace_free,
+<<<<<<< HEAD
 	.fw_crashed = ipc4_mtrace_fw_crashed,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.suspend = ipc4_mtrace_suspend,
 	.resume = ipc4_mtrace_resume,
 };

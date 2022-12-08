@@ -51,7 +51,11 @@ int i915_user_extensions(struct i915_user_extension __user *ext,
 			return err;
 
 		if (get_user(next, &ext->next_extension) ||
+<<<<<<< HEAD
 		    overflows_type(next, uintptr_t))
+=======
+		    overflows_type(next, ext))
+>>>>>>> b7ba80a49124 (Commit)
 			return -EFAULT;
 
 		ext = u64_to_user_ptr(next);

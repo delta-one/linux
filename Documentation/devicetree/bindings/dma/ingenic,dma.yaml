@@ -4,13 +4,21 @@
 $id: http://devicetree.org/schemas/dma/ingenic,dma.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Ingenic SoCs DMA Controller
+=======
+title: Ingenic SoCs DMA Controller DT bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Paul Cercueil <paul@crapouillou.net>
 
 allOf:
+<<<<<<< HEAD
   - $ref: dma-controller.yaml#
+=======
+  - $ref: "dma-controller.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:
@@ -18,7 +26,10 @@ properties:
       - enum:
           - ingenic,jz4740-dma
           - ingenic,jz4725b-dma
+<<<<<<< HEAD
           - ingenic,jz4755-dma
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - ingenic,jz4760-dma
           - ingenic,jz4760-bdma
           - ingenic,jz4760-mdma

@@ -109,7 +109,11 @@ ia64_init_addr_space (void)
 		vma_set_anonymous(vma);
 		vma->vm_start = current->thread.rbs_bot & PAGE_MASK;
 		vma->vm_end = vma->vm_start + PAGE_SIZE;
+<<<<<<< HEAD
 		vm_flags_init(vma, VM_DATA_DEFAULT_FLAGS|VM_GROWSUP|VM_ACCOUNT);
+=======
+		vma->vm_flags = VM_DATA_DEFAULT_FLAGS|VM_GROWSUP|VM_ACCOUNT;
+>>>>>>> b7ba80a49124 (Commit)
 		vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
 		mmap_write_lock(current->mm);
 		if (insert_vm_struct(current->mm, vma)) {
@@ -127,8 +131,13 @@ ia64_init_addr_space (void)
 			vma_set_anonymous(vma);
 			vma->vm_end = PAGE_SIZE;
 			vma->vm_page_prot = __pgprot(pgprot_val(PAGE_READONLY) | _PAGE_MA_NAT);
+<<<<<<< HEAD
 			vm_flags_init(vma, VM_READ | VM_MAYREAD | VM_IO |
 				      VM_DONTEXPAND | VM_DONTDUMP);
+=======
+			vma->vm_flags = VM_READ | VM_MAYREAD | VM_IO |
+					VM_DONTEXPAND | VM_DONTDUMP;
+>>>>>>> b7ba80a49124 (Commit)
 			mmap_write_lock(current->mm);
 			if (insert_vm_struct(current->mm, vma)) {
 				mmap_write_unlock(current->mm);
@@ -272,7 +281,11 @@ static int __init gate_vma_init(void)
 	vma_init(&gate_vma, NULL);
 	gate_vma.vm_start = FIXADDR_USER_START;
 	gate_vma.vm_end = FIXADDR_USER_END;
+<<<<<<< HEAD
 	vm_flags_init(&gate_vma, VM_READ | VM_MAYREAD | VM_EXEC | VM_MAYEXEC);
+=======
+	gate_vma.vm_flags = VM_READ | VM_MAYREAD | VM_EXEC | VM_MAYEXEC;
+>>>>>>> b7ba80a49124 (Commit)
 	gate_vma.vm_page_prot = __pgprot(__ACCESS_BITS | _PAGE_PL_3 | _PAGE_AR_RX);
 
 	return 0;

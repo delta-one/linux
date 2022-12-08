@@ -312,7 +312,11 @@ static unsigned long dmatest_random(void)
 {
 	unsigned long buf;
 
+<<<<<<< HEAD
 	get_random_bytes(&buf, sizeof(buf));
+=======
+	prandom_bytes(&buf, sizeof(buf));
+>>>>>>> b7ba80a49124 (Commit)
 	return buf;
 }
 

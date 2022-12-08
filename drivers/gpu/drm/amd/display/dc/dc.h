@@ -29,7 +29,13 @@
 #include "dc_types.h"
 #include "grph_object_defs.h"
 #include "logger_types.h"
+<<<<<<< HEAD
 #include "hdcp_msg_types.h"
+=======
+#if defined(CONFIG_DRM_AMD_DC_HDCP)
+#include "hdcp_types.h"
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 #include "gpio_types.h"
 #include "link_service_types.h"
 #include "grph_object_ctrl_defs.h"
@@ -45,15 +51,29 @@ struct aux_payload;
 struct set_config_cmd_payload;
 struct dmub_notification;
 
+<<<<<<< HEAD
 #define DC_VER "3.2.228"
+=======
+#define DC_VER "3.2.204"
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MAX_SURFACES 3
 #define MAX_PLANES 6
 #define MAX_STREAMS 6
+<<<<<<< HEAD
 #define MIN_VIEWPORT_SIZE 12
 #define MAX_NUM_EDP 2
 
 /* Display Core Interfaces */
+=======
+#define MAX_SINKS_PER_LINK 4
+#define MIN_VIEWPORT_SIZE 12
+#define MAX_NUM_EDP 2
+
+/*******************************************************************************
+ * Display Core Interfaces
+ ******************************************************************************/
+>>>>>>> b7ba80a49124 (Commit)
 struct dc_versions {
 	const char *dc_ver;
 	struct dmcu_version dmcu_version;
@@ -82,6 +102,11 @@ enum det_size {
 
 struct dc_plane_cap {
 	enum dc_plane_type type;
+<<<<<<< HEAD
+=======
+	uint32_t blends_with_above : 1;
+	uint32_t blends_with_below : 1;
+>>>>>>> b7ba80a49124 (Commit)
 	uint32_t per_pixel_alpha : 1;
 	struct {
 		uint32_t argb8888 : 1;
@@ -256,13 +281,19 @@ struct dc_caps {
 	uint32_t cache_line_size;
 	uint32_t cache_num_ways;
 	uint16_t subvp_fw_processing_delay_us;
+<<<<<<< HEAD
 	uint8_t subvp_drr_max_vblank_margin_us;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	uint16_t subvp_prefetch_end_to_mall_start_us;
 	uint8_t subvp_swath_height_margin_lines; // subvp start line must be aligned to 2 x swath height
 	uint16_t subvp_pstate_allow_width_us;
 	uint16_t subvp_vertical_int_margin_us;
 	bool seamless_odm;
+<<<<<<< HEAD
 	uint8_t subvp_drr_vblank_start_margin_us;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct dc_bug_wa {
@@ -390,7 +421,10 @@ struct dc_config {
 	bool disable_dmcu;
 	bool enable_4to1MPC;
 	bool enable_windowed_mpo_odm;
+<<<<<<< HEAD
 	bool forceHBR2CP2520; // Used for switching between test patterns TPS4 and CP2520
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	uint32_t allow_edp_hotplug_detection;
 	bool clamp_min_dcfclk;
 	uint64_t vblank_alignment_dto_params;
@@ -402,10 +436,13 @@ struct dc_config {
 	bool ignore_dpref_ss;
 	bool enable_mipi_converter_optimization;
 	bool use_default_clock_table;
+<<<<<<< HEAD
 	bool force_bios_enable_lttpr;
 	uint8_t force_bios_fixed_vs;
 	int sdpif_request_limit_words_per_umc;
 	bool disable_subvp_drr;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum visual_confirm {
@@ -454,15 +491,25 @@ enum pipe_split_policy {
 	MPC_SPLIT_DYNAMIC = 0,
 
 	/**
+<<<<<<< HEAD
 	 * @MPC_SPLIT_AVOID: Avoid pipe split, which means that DC will not
+=======
+	 * @MPC_SPLIT_DYNAMIC: Avoid pipe split, which means that DC will not
+>>>>>>> b7ba80a49124 (Commit)
 	 * try any sort of split optimization.
 	 */
 	MPC_SPLIT_AVOID = 1,
 
 	/**
+<<<<<<< HEAD
 	 * @MPC_SPLIT_AVOID_MULT_DISP: With this option, DC will only try to
 	 * optimize the pipe utilization when using a single display; if the
 	 * user connects to a second display, DC will avoid pipe split.
+=======
+	 * @MPC_SPLIT_DYNAMIC: With this option, DC will only try to optimize
+	 * the pipe utilization when using a single display; if the user
+	 * connects to a second display, DC will avoid pipe split.
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	MPC_SPLIT_AVOID_MULT_DISP = 2,
 };
@@ -488,6 +535,7 @@ enum dcn_pwr_state {
 enum dcn_zstate_support_state {
 	DCN_ZSTATE_SUPPORT_UNKNOWN,
 	DCN_ZSTATE_SUPPORT_ALLOW,
+<<<<<<< HEAD
 	DCN_ZSTATE_SUPPORT_ALLOW_Z8_ONLY,
 	DCN_ZSTATE_SUPPORT_ALLOW_Z8_Z10_ONLY,
 	DCN_ZSTATE_SUPPORT_ALLOW_Z10_ONLY,
@@ -499,6 +547,14 @@ enum dcn_zstate_support_state {
  *
  * For any clocks that may differ per pipe only the max is stored in this
  * structure
+=======
+	DCN_ZSTATE_SUPPORT_ALLOW_Z10_ONLY,
+	DCN_ZSTATE_SUPPORT_DISALLOW,
+};
+/*
+ * For any clocks that may differ per pipe
+ * only the max is stored in this structure
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct dc_clocks {
 	int dispclk_khz;
@@ -525,6 +581,7 @@ struct dc_clocks {
 	bool prev_p_state_change_support;
 	bool fclk_prev_p_state_change_support;
 	int num_ways;
+<<<<<<< HEAD
 
 	/*
 	 * @fw_based_mclk_switching
@@ -535,6 +592,8 @@ struct dc_clocks {
 	 * requirements to enable this feature, and this field describes if the
 	 * system support or not such a feature.
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool fw_based_mclk_switching;
 	bool fw_based_mclk_switching_shut_down;
 	int prev_num_ways;
@@ -712,7 +771,10 @@ struct dc_bounding_box_overrides {
 struct dc_state;
 struct resource_pool;
 struct dce_hwseq;
+<<<<<<< HEAD
 struct link_service;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct dc_debug_options - DC debug struct
@@ -777,6 +839,10 @@ struct dc_debug_options {
 	bool disable_mem_low_power;
 	bool pstate_enabled;
 	bool disable_dmcu;
+<<<<<<< HEAD
+=======
+	bool disable_psr;
+>>>>>>> b7ba80a49124 (Commit)
 	bool force_abm_enable;
 	bool disable_stereo_support;
 	bool vsr_support;
@@ -792,7 +858,10 @@ struct dc_debug_options {
 	unsigned int force_odm_combine; //bit vector based on otg inst
 	unsigned int seamless_boot_odm_combine;
 	unsigned int force_odm_combine_4to1; //bit vector based on otg inst
+<<<<<<< HEAD
 	int minimum_z8_residency_time;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool disable_z9_mpc;
 	unsigned int force_fclk_khz;
 	bool enable_tri_buf;
@@ -834,6 +903,10 @@ struct dc_debug_options {
 	/* Enable dmub aux for legacy ddc */
 	bool enable_dmub_aux_for_legacy_ddc;
 	bool disable_fams;
+<<<<<<< HEAD
+=======
+	bool optimize_edp_link_rate; /* eDP ILR */
+>>>>>>> b7ba80a49124 (Commit)
 	/* FEC/PSR1 sequence enable delay in 100us */
 	uint8_t fec_enable_delay_in100us;
 	bool enable_driver_sequence_debug;
@@ -841,16 +914,23 @@ struct dc_debug_options {
 	int crb_alloc_policy_min_disp_count;
 	bool disable_z10;
 	bool enable_z9_disable_interface;
+<<<<<<< HEAD
 	bool psr_skip_crtc_disable;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	union dpia_debug_options dpia_debug;
 	bool disable_fixed_vs_aux_timeout_wa;
 	bool force_disable_subvp;
 	bool force_subvp_mclk_switch;
 	bool allow_sw_cursor_fallback;
 	unsigned int force_subvp_num_ways;
+<<<<<<< HEAD
 	unsigned int force_mall_ss_num_ways;
 	bool alloc_extra_way_for_cursor;
 	uint32_t subvp_extra_lines;
+=======
+	bool alloc_extra_way_for_cursor;
+>>>>>>> b7ba80a49124 (Commit)
 	bool force_usr_allow;
 	/* uses value at boot and disables switch */
 	bool disable_dtb_ref_clk_switch;
@@ -864,6 +944,7 @@ struct dc_debug_options {
 	bool use_legacy_soc_bb_mechanism;
 	bool exit_idle_opt_for_cursor_updates;
 	bool enable_single_display_2to1_odm_policy;
+<<<<<<< HEAD
 	bool enable_double_buffered_dsc_pg_support;
 	bool enable_dp_dig_pixel_rate_div_policy;
 	enum lttpr_mode lttpr_mode_override;
@@ -873,6 +954,10 @@ struct dc_debug_options {
 	bool dig_fifo_off_in_blank;
 	bool temp_mst_deallocation_sequence;
 	bool override_dispclk_programming;
+=======
+	bool enable_dp_dig_pixel_rate_div_policy;
+	enum lttpr_mode lttpr_mode_override;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct gpu_info_soc_bounding_box_v1_0;
@@ -889,7 +974,10 @@ struct dc {
 
 	uint8_t link_count;
 	struct dc_link *links[MAX_PIPES * 2];
+<<<<<<< HEAD
 	struct link_service *link_srv;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct dc_state *current_state;
 	struct resource_pool *res_pool;
@@ -991,7 +1079,15 @@ struct dc_init_data {
 };
 
 struct dc_callback_init {
+<<<<<<< HEAD
 	struct cp_psp cp_psp;
+=======
+#ifdef CONFIG_DRM_AMD_DC_HDCP
+	struct cp_psp cp_psp;
+#else
+	uint8_t reserved;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct dc *dc_create(const struct dc_init_data *init_params);
@@ -1006,7 +1102,13 @@ void dc_init_callbacks(struct dc *dc,
 void dc_deinit_callbacks(struct dc *dc);
 void dc_destroy(struct dc **dc);
 
+<<<<<<< HEAD
 /* Surface Interfaces */
+=======
+/*******************************************************************************
+ * Surface Interfaces
+ ******************************************************************************/
+>>>>>>> b7ba80a49124 (Commit)
 
 enum {
 	TRANSFER_FUNC_POINTS = 1025
@@ -1137,7 +1239,10 @@ union surface_update_flags {
 		uint32_t clock_change:1;
 		uint32_t stereo_format_change:1;
 		uint32_t lut_3d:1;
+<<<<<<< HEAD
 		uint32_t tmz_changed:1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		uint32_t full_update:1;
 	} bits;
 
@@ -1207,8 +1312,11 @@ struct dc_plane_state {
 	enum dc_irq_source irq_source;
 	struct kref refcount;
 	struct tg_color visual_confirm_color;
+<<<<<<< HEAD
 
 	bool is_statically_allocated;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct dc_plane_info {
@@ -1285,6 +1393,7 @@ void dc_post_update_surfaces_to_stream(
 
 #include "dc_stream.h"
 
+<<<<<<< HEAD
 /**
  * struct dc_validation_set - Struct to store surface/stream associations for validation
  */
@@ -1302,6 +1411,14 @@ struct dc_validation_set {
 	/**
 	 * @plane_count: Total of active planes
 	 */
+=======
+/*
+ * Structure to store surface/stream associations for validation
+ */
+struct dc_validation_set {
+	struct dc_stream_state *stream;
+	struct dc_plane_state *plane_states[MAX_SURFACES];
+>>>>>>> b7ba80a49124 (Commit)
 	uint8_t plane_count;
 };
 
@@ -1313,12 +1430,15 @@ enum dc_status dc_validate_plane(struct dc *dc, const struct dc_plane_state *pla
 
 void get_clock_requirements_for_state(struct dc_state *state, struct AsicStateEx *info);
 
+<<<<<<< HEAD
 enum dc_status dc_validate_with_context(struct dc *dc,
 					const struct dc_validation_set set[],
 					int set_count,
 					struct dc_state *context,
 					bool fast_validate);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 bool dc_set_generic_gpio_for_stereo(bool enable,
 		struct gpio_service *gpio_service);
 
@@ -1354,15 +1474,29 @@ void dc_resource_state_destruct(struct dc_state *context);
 
 bool dc_resource_is_dsc_encoding_supported(const struct dc *dc);
 
+<<<<<<< HEAD
 enum dc_status dc_commit_streams(struct dc *dc,
 				 struct dc_stream_state *streams[],
 				 uint8_t stream_count);
+=======
+/*
+ * TODO update to make it about validation sets
+ * Set up streams and links associated to drive sinks
+ * The streams parameter is an absolute set of all active streams.
+ *
+ * After this call:
+ *   Phy, Encoder, Timing Generator are programmed and enabled.
+ *   New streams are enabled with blank stream; no memory read.
+ */
+bool dc_commit_state(struct dc *dc, struct dc_state *context);
+>>>>>>> b7ba80a49124 (Commit)
 
 struct dc_state *dc_create_state(struct dc *dc);
 struct dc_state *dc_copy_state(struct dc_state *src_ctx);
 void dc_retain_state(struct dc_state *context);
 void dc_release_state(struct dc_state *context);
 
+<<<<<<< HEAD
 struct dc_plane_state *dc_get_surface_for_mpcc(struct dc *dc,
 		struct dc_stream_state *stream,
 		int mpcc_inst);
@@ -2042,6 +2176,115 @@ bool dc_link_validate(struct dc *dc, const struct dc_stream_state *streams,
 		const unsigned int count);
 
 /* Sink Interfaces - A sink corresponds to a display output device */
+=======
+/*******************************************************************************
+ * Link Interfaces
+ ******************************************************************************/
+
+struct dpcd_caps {
+	union dpcd_rev dpcd_rev;
+	union max_lane_count max_ln_count;
+	union max_down_spread max_down_spread;
+	union dprx_feature dprx_feature;
+
+	/* valid only for eDP v1.4 or higher*/
+	uint8_t edp_supported_link_rates_count;
+	enum dc_link_rate edp_supported_link_rates[8];
+
+	/* dongle type (DP converter, CV smart dongle) */
+	enum display_dongle_type dongle_type;
+	bool is_dongle_type_one;
+	/* branch device or sink device */
+	bool is_branch_dev;
+	/* Dongle's downstream count. */
+	union sink_count sink_count;
+	bool is_mst_capable;
+	/* If dongle_type == DISPLAY_DONGLE_DP_HDMI_CONVERTER,
+	indicates 'Frame Sequential-to-lllFrame Pack' conversion capability.*/
+	struct dc_dongle_caps dongle_caps;
+
+	uint32_t sink_dev_id;
+	int8_t sink_dev_id_str[6];
+	int8_t sink_hw_revision;
+	int8_t sink_fw_revision[2];
+
+	uint32_t branch_dev_id;
+	int8_t branch_dev_name[6];
+	int8_t branch_hw_revision;
+	int8_t branch_fw_revision[2];
+
+	bool allow_invalid_MSA_timing_param;
+	bool panel_mode_edp;
+	bool dpcd_display_control_capable;
+	bool ext_receiver_cap_field_present;
+	bool set_power_state_capable_edp;
+	bool dynamic_backlight_capable_edp;
+	union dpcd_fec_capability fec_cap;
+	struct dpcd_dsc_capabilities dsc_caps;
+	struct dc_lttpr_caps lttpr_caps;
+	struct dpcd_usb4_dp_tunneling_info usb4_dp_tun_info;
+
+	union dp_128b_132b_supported_link_rates dp_128b_132b_supported_link_rates;
+	union dp_main_line_channel_coding_cap channel_coding_cap;
+	union dp_sink_video_fallback_formats fallback_formats;
+	union dp_fec_capability1 fec_cap1;
+	union dp_cable_id cable_id;
+	uint8_t edp_rev;
+	union edp_alpm_caps alpm_caps;
+	struct edp_psr_info psr_info;
+};
+
+union dpcd_sink_ext_caps {
+	struct {
+		/* 0 - Sink supports backlight adjust via PWM during SDR/HDR mode
+		 * 1 - Sink supports backlight adjust via AUX during SDR/HDR mode.
+		 */
+		uint8_t sdr_aux_backlight_control : 1;
+		uint8_t hdr_aux_backlight_control : 1;
+		uint8_t reserved_1 : 2;
+		uint8_t oled : 1;
+		uint8_t reserved : 3;
+	} bits;
+	uint8_t raw;
+};
+
+#if defined(CONFIG_DRM_AMD_DC_HDCP)
+union hdcp_rx_caps {
+	struct {
+		uint8_t version;
+		uint8_t reserved;
+		struct {
+			uint8_t repeater	: 1;
+			uint8_t hdcp_capable	: 1;
+			uint8_t reserved	: 6;
+		} byte0;
+	} fields;
+	uint8_t raw[3];
+};
+
+union hdcp_bcaps {
+	struct {
+		uint8_t HDCP_CAPABLE:1;
+		uint8_t REPEATER:1;
+		uint8_t RESERVED:6;
+	} bits;
+	uint8_t raw;
+};
+
+struct hdcp_caps {
+	union hdcp_rx_caps rx_caps;
+	union hdcp_bcaps bcaps;
+};
+#endif
+
+#include "dc_link.h"
+
+uint32_t dc_get_opp_for_plane(struct dc *dc, struct dc_plane_state *plane);
+
+/*******************************************************************************
+ * Sink Interfaces - A sink corresponds to a display output device
+ ******************************************************************************/
+>>>>>>> b7ba80a49124 (Commit)
 
 struct dc_container_id {
 	// 128bit GUID in binary form
@@ -2059,7 +2302,11 @@ struct dc_sink_dsc_caps {
 	// 'true' if these are virtual DPCD's DSC caps (immediately upstream of sink in MST topology),
 	// 'false' if they are sink's DSC caps
 	bool is_virtual_dpcd_dsc;
+<<<<<<< HEAD
 #if defined(CONFIG_DRM_AMD_DC_FP)
+=======
+#if defined(CONFIG_DRM_AMD_DC_DCN)
+>>>>>>> b7ba80a49124 (Commit)
 	// 'true' if MST topology supports DSC passthrough for sink
 	// 'false' if MST topology does not support DSC passthrough
 	bool is_dsc_passthrough_supported;
@@ -2072,11 +2319,14 @@ struct dc_sink_fec_caps {
 	bool is_topology_fec_supported;
 };
 
+<<<<<<< HEAD
 struct scdc_caps {
 	union hdmi_scdc_manufacturer_OUI_data manufacturer_OUI;
 	union hdmi_scdc_device_id_data device_id;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * The sink structure contains EDID and other display device properties
  */
@@ -2090,7 +2340,10 @@ struct dc_sink {
 	struct stereo_3d_features features_3d[TIMING_3D_FORMAT_MAX];
 	bool converter_disable_audio;
 
+<<<<<<< HEAD
 	struct scdc_caps scdc_caps;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct dc_sink_dsc_caps dsc_caps;
 	struct dc_sink_fec_caps fec_caps;
 
@@ -2130,7 +2383,13 @@ struct dc_cursor {
 };
 
 
+<<<<<<< HEAD
 /* Interrupt interfaces */
+=======
+/*******************************************************************************
+ * Interrupt interfaces
+ ******************************************************************************/
+>>>>>>> b7ba80a49124 (Commit)
 enum dc_irq_source dc_interrupt_to_irq_source(
 		struct dc *dc,
 		uint32_t src_id,
@@ -2142,7 +2401,13 @@ enum dc_irq_source dc_get_hpd_irq_source_at_index(
 
 void dc_notify_vsync_int_state(struct dc *dc, struct dc_stream_state *stream, bool enable);
 
+<<<<<<< HEAD
 /* Power Interfaces */
+=======
+/*******************************************************************************
+ * Power Interfaces
+ ******************************************************************************/
+>>>>>>> b7ba80a49124 (Commit)
 
 void dc_set_power_state(
 		struct dc *dc,
@@ -2151,6 +2416,10 @@ void dc_resume(struct dc *dc);
 
 void dc_power_down_on_boot(struct dc *dc);
 
+<<<<<<< HEAD
+=======
+#if defined(CONFIG_DRM_AMD_DC_HDCP)
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * HDCP Interfaces
  */
@@ -2158,6 +2427,10 @@ enum hdcp_message_status dc_process_hdcp_msg(
 		enum signal_type signal,
 		struct dc_link *link,
 		struct hdcp_protection_message *message_info);
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 bool dc_is_dmcu_initialized(struct dc *dc);
 
 enum dc_status dc_set_clock(struct dc *dc, enum dc_clock_type clock_type, uint32_t clk_khz, uint32_t stepping);
@@ -2210,6 +2483,7 @@ enum dc_status dc_process_dmub_set_mst_slots(const struct dc *dc,
 				uint8_t mst_alloc_slots,
 				uint8_t *mst_slots_in_use);
 
+<<<<<<< HEAD
 void dc_process_dmub_dpia_hpd_int_enable(const struct dc *dc,
 				uint32_t hpd_int_enable);
 
@@ -2217,6 +2491,16 @@ void dc_process_dmub_dpia_hpd_int_enable(const struct dc *dc,
 #include "dc_dsc.h"
 
 /* Disable acc mode Interfaces */
+=======
+/*******************************************************************************
+ * DSC Interfaces
+ ******************************************************************************/
+#include "dc_dsc.h"
+
+/*******************************************************************************
+ * Disable acc mode Interfaces
+ ******************************************************************************/
+>>>>>>> b7ba80a49124 (Commit)
 void dc_disable_accelerated_mode(struct dc *dc);
 
 #endif /* DC_INTERFACE_H_ */

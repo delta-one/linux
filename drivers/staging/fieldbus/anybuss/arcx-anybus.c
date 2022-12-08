@@ -352,7 +352,11 @@ static int __init controller_init(void)
 {
 	int err;
 
+<<<<<<< HEAD
 	controller_class = class_create("arcx_anybus_controller");
+=======
+	controller_class = class_create(THIS_MODULE, "arcx_anybus_controller");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(controller_class))
 		return PTR_ERR(controller_class);
 	err = platform_driver_register(&controller_driver);

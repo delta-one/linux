@@ -233,7 +233,12 @@ static const struct regmap_config rc5t583_regmap_config = {
 	.cache_type = REGCACHE_RBTREE,
 };
 
+<<<<<<< HEAD
 static int rc5t583_i2c_probe(struct i2c_client *i2c)
+=======
+static int rc5t583_i2c_probe(struct i2c_client *i2c,
+			      const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rc5t583 *rc5t583;
 	struct rc5t583_platform_data *pdata = dev_get_platdata(&i2c->dev);
@@ -288,7 +293,11 @@ static struct i2c_driver rc5t583_i2c_driver = {
 	.driver = {
 		   .name = "rc5t583",
 		   },
+<<<<<<< HEAD
 	.probe_new = rc5t583_i2c_probe,
+=======
+	.probe = rc5t583_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = rc5t583_i2c_id,
 };
 

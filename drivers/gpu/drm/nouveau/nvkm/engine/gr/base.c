@@ -136,6 +136,7 @@ nvkm_gr_oneinit(struct nvkm_engine *engine)
 }
 
 static int
+<<<<<<< HEAD
 nvkm_gr_reset(struct nvkm_engine *engine)
 {
 	struct nvkm_gr *gr = nvkm_gr(engine);
@@ -147,6 +148,8 @@ nvkm_gr_reset(struct nvkm_engine *engine)
 }
 
 static int
+=======
+>>>>>>> b7ba80a49124 (Commit)
 nvkm_gr_init(struct nvkm_engine *engine)
 {
 	struct nvkm_gr *gr = nvkm_gr(engine);
@@ -177,7 +180,10 @@ nvkm_gr = {
 	.oneinit = nvkm_gr_oneinit,
 	.init = nvkm_gr_init,
 	.fini = nvkm_gr_fini,
+<<<<<<< HEAD
 	.reset = nvkm_gr_reset,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.intr = nvkm_gr_intr,
 	.tile = nvkm_gr_tile,
 	.chsw_load = nvkm_gr_chsw_load,

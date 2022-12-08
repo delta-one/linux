@@ -11,7 +11,10 @@
 #include <drm/drm_fourcc.h>
 #include <drm/drm_framebuffer.h>
 #include <drm/drm_gem_atomic_helper.h>
+<<<<<<< HEAD
 #include <linux/align.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "mtk_drm_crtc.h"
 #include "mtk_drm_ddp_comp.h"
@@ -33,6 +36,7 @@ static const u32 formats[] = {
 	DRM_FORMAT_YUYV,
 };
 
+<<<<<<< HEAD
 static const u64 modifiers[] = {
 	DRM_FORMAT_MOD_LINEAR,
 	DRM_FORMAT_MOD_ARM_AFBC(AFBC_FORMAT_MOD_BLOCK_SIZE_32x8 |
@@ -41,6 +45,8 @@ static const u64 modifiers[] = {
 	DRM_FORMAT_MOD_INVALID,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void mtk_plane_reset(struct drm_plane *plane)
 {
 	struct mtk_plane_state *state;
@@ -60,7 +66,10 @@ static void mtk_plane_reset(struct drm_plane *plane)
 
 	state->base.plane = plane;
 	state->pending.format = DRM_FORMAT_RGB565;
+<<<<<<< HEAD
 	state->pending.modifier = DRM_FORMAT_MOD_LINEAR;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct drm_plane_state *mtk_plane_duplicate_state(struct drm_plane *plane)
@@ -81,6 +90,7 @@ static struct drm_plane_state *mtk_plane_duplicate_state(struct drm_plane *plane
 	return &state->base;
 }
 
+<<<<<<< HEAD
 static bool mtk_plane_format_mod_supported(struct drm_plane *plane,
 					   uint32_t format,
 					   uint64_t modifier)
@@ -107,6 +117,8 @@ static bool mtk_plane_format_mod_supported(struct drm_plane *plane,
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void mtk_drm_plane_destroy_state(struct drm_plane *plane,
 					struct drm_plane_state *state)
 {
@@ -155,16 +167,21 @@ static void mtk_plane_update_new_state(struct drm_plane_state *new_state,
 	struct drm_gem_object *gem;
 	struct mtk_drm_gem_obj *mtk_gem;
 	unsigned int pitch, format;
+<<<<<<< HEAD
 	u64 modifier;
 	dma_addr_t addr;
 	dma_addr_t hdr_addr = 0;
 	unsigned int hdr_pitch = 0;
+=======
+	dma_addr_t addr;
+>>>>>>> b7ba80a49124 (Commit)
 
 	gem = fb->obj[0];
 	mtk_gem = to_mtk_gem_obj(gem);
 	addr = mtk_gem->dma_addr;
 	pitch = fb->pitches[0];
 	format = fb->format->format;
+<<<<<<< HEAD
 	modifier = fb->modifier;
 
 	if (modifier == DRM_FORMAT_MOD_LINEAR) {
@@ -201,6 +218,16 @@ static void mtk_plane_update_new_state(struct drm_plane_state *new_state,
 	mtk_plane_state->pending.modifier = modifier;
 	mtk_plane_state->pending.addr = addr;
 	mtk_plane_state->pending.hdr_addr = hdr_addr;
+=======
+
+	addr += (new_state->src.x1 >> 16) * fb->format->cpp[0];
+	addr += (new_state->src.y1 >> 16) * pitch;
+
+	mtk_plane_state->pending.enable = true;
+	mtk_plane_state->pending.pitch = pitch;
+	mtk_plane_state->pending.format = format;
+	mtk_plane_state->pending.addr = addr;
+>>>>>>> b7ba80a49124 (Commit)
 	mtk_plane_state->pending.x = new_state->dst.x1;
 	mtk_plane_state->pending.y = new_state->dst.y1;
 	mtk_plane_state->pending.width = drm_rect_width(&new_state->dst);
@@ -239,7 +266,10 @@ static const struct drm_plane_funcs mtk_plane_funcs = {
 	.reset = mtk_plane_reset,
 	.atomic_duplicate_state = mtk_plane_duplicate_state,
 	.atomic_destroy_state = mtk_drm_plane_destroy_state,
+<<<<<<< HEAD
 	.format_mod_supported = mtk_plane_format_mod_supported,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int mtk_plane_atomic_check(struct drm_plane *plane,
@@ -321,7 +351,11 @@ int mtk_plane_init(struct drm_device *dev, struct drm_plane *plane,
 
 	err = drm_universal_plane_init(dev, plane, possible_crtcs,
 				       &mtk_plane_funcs, formats,
+<<<<<<< HEAD
 				       ARRAY_SIZE(formats), modifiers, type, NULL);
+=======
+				       ARRAY_SIZE(formats), NULL, type, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		DRM_ERROR("failed to initialize plane\n");
 		return err;

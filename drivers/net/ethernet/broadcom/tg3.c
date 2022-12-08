@@ -6179,26 +6179,52 @@ static int tg3_get_ts_info(struct net_device *dev, struct ethtool_ts_info *info)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int tg3_ptp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
 {
 	struct tg3 *tp = container_of(ptp, struct tg3, ptp_info);
 	u64 correction;
 	bool neg_adj;
+=======
+static int tg3_ptp_adjfreq(struct ptp_clock_info *ptp, s32 ppb)
+{
+	struct tg3 *tp = container_of(ptp, struct tg3, ptp_info);
+	bool neg_adj = false;
+	u32 correction = 0;
+
+	if (ppb < 0) {
+		neg_adj = true;
+		ppb = -ppb;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Frequency adjustment is performed using hardware with a 24 bit
 	 * accumulator and a programmable correction value. On each clk, the
 	 * correction value gets added to the accumulator and when it
 	 * overflows, the time counter is incremented/decremented.
+<<<<<<< HEAD
 	 */
 	neg_adj = diff_by_scaled_ppm(1 << 24, scaled_ppm, &correction);
+=======
+	 *
+	 * So conversion from ppb to correction value is
+	 *		ppb * (1 << 24) / 1000000000
+	 */
+	correction = div_u64((u64)ppb * (1 << 24), 1000000000ULL) &
+		     TG3_EAV_REF_CLK_CORRECT_MASK;
+>>>>>>> b7ba80a49124 (Commit)
 
 	tg3_full_lock(tp, 0);
 
 	if (correction)
 		tw32(TG3_EAV_REF_CLK_CORRECT_CTL,
 		     TG3_EAV_REF_CLK_CORRECT_EN |
+<<<<<<< HEAD
 		     (neg_adj ? TG3_EAV_REF_CLK_CORRECT_NEG : 0) |
 		     ((u32)correction & TG3_EAV_REF_CLK_CORRECT_MASK));
+=======
+		     (neg_adj ? TG3_EAV_REF_CLK_CORRECT_NEG : 0) | correction);
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		tw32(TG3_EAV_REF_CLK_CORRECT_CTL, 0);
 
@@ -6322,7 +6348,11 @@ static const struct ptp_clock_info tg3_ptp_caps = {
 	.n_per_out	= 1,
 	.n_pins		= 0,
 	.pps		= 0,
+<<<<<<< HEAD
 	.adjfine	= tg3_ptp_adjfine,
+=======
+	.adjfreq	= tg3_ptp_adjfreq,
+>>>>>>> b7ba80a49124 (Commit)
 	.adjtime	= tg3_ptp_adjtime,
 	.gettimex64	= tg3_ptp_gettimex,
 	.settime64	= tg3_ptp_settime,
@@ -7372,9 +7402,15 @@ static void tg3_napi_init(struct tg3 *tp)
 {
 	int i;
 
+<<<<<<< HEAD
 	netif_napi_add(tp->dev, &tp->napi[0].napi, tg3_poll);
 	for (i = 1; i < tp->irq_cnt; i++)
 		netif_napi_add(tp->dev, &tp->napi[i].napi, tg3_poll_msix);
+=======
+	netif_napi_add(tp->dev, &tp->napi[0].napi, tg3_poll, 64);
+	for (i = 1; i < tp->irq_cnt; i++)
+		netif_napi_add(tp->dev, &tp->napi[i].napi, tg3_poll_msix, 64);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void tg3_napi_fini(struct tg3 *tp)
@@ -11166,7 +11202,11 @@ static void tg3_reset_task(struct work_struct *work)
 	rtnl_lock();
 	tg3_full_lock(tp, 0);
 
+<<<<<<< HEAD
 	if (tp->pcierr_recovery || !netif_running(tp->dev)) {
+=======
+	if (!netif_running(tp->dev)) {
+>>>>>>> b7ba80a49124 (Commit)
 		tg3_flag_clear(tp, RESET_TASK_PENDING);
 		tg3_full_unlock(tp);
 		rtnl_unlock();
@@ -18101,9 +18141,12 @@ static pci_ers_result_t tg3_io_error_detected(struct pci_dev *pdev,
 
 	netdev_info(netdev, "PCI I/O error detected\n");
 
+<<<<<<< HEAD
 	/* Want to make sure that the reset task doesn't run */
 	tg3_reset_task_cancel(tp);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rtnl_lock();
 
 	/* Could be second call or maybe we don't have netdev yet */
@@ -18120,6 +18163,12 @@ static pci_ers_result_t tg3_io_error_detected(struct pci_dev *pdev,
 
 	tg3_timer_stop(tp);
 
+<<<<<<< HEAD
+=======
+	/* Want to make sure that the reset task doesn't run */
+	tg3_reset_task_cancel(tp);
+
+>>>>>>> b7ba80a49124 (Commit)
 	netif_device_detach(netdev);
 
 	/* Clean up software state, even if MMIO is blocked */

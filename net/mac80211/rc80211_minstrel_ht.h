@@ -74,6 +74,10 @@
 
 struct minstrel_priv {
 	struct ieee80211_hw *hw;
+<<<<<<< HEAD
+=======
+	bool has_mrr;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int cw_min;
 	unsigned int cw_max;
 	unsigned int max_retry;

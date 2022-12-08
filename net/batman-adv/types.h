@@ -2335,12 +2335,15 @@ struct batadv_tvlv_handler {
 			       u8 *src, u8 *dst,
 			       void *tvlv_value, u16 tvlv_value_len);
 
+<<<<<<< HEAD
 	/**
 	 * @mcast_handler: handler callback which is given the tvlv payload to
 	 *  process on incoming mcast packet
 	 */
 	int (*mcast_handler)(struct batadv_priv *bat_priv, struct sk_buff *skb);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/** @type: tvlv type this handler feels responsible for */
 	u8 type;
 

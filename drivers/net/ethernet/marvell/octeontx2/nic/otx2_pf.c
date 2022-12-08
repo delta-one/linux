@@ -15,7 +15,10 @@
 #include <net/ip.h>
 #include <linux/bpf.h>
 #include <linux/bpf_trace.h>
+<<<<<<< HEAD
 #include <linux/bitfield.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "otx2_reg.h"
 #include "otx2_common.h"
@@ -859,6 +862,7 @@ static void otx2_handle_link_event(struct otx2_nic *pf)
 	}
 }
 
+<<<<<<< HEAD
 int otx2_mbox_up_handler_mcs_intr_notify(struct otx2_nic *pf,
 					 struct mcs_intr_info *event,
 					 struct msg_rsp *rsp)
@@ -868,6 +872,8 @@ int otx2_mbox_up_handler_mcs_intr_notify(struct otx2_nic *pf,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int otx2_mbox_up_handler_cgx_link_event(struct otx2_nic *pf,
 					struct cgx_link_info_msg *msg,
 					struct msg_rsp *rsp)
@@ -927,7 +933,10 @@ static int otx2_process_mbox_msg_up(struct otx2_nic *pf,
 		return err;						\
 	}
 MBOX_UP_CGX_MESSAGES
+<<<<<<< HEAD
 MBOX_UP_MCS_MESSAGES
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #undef M
 		break;
 	default:
@@ -1172,6 +1181,7 @@ int otx2_set_real_num_queues(struct net_device *netdev,
 }
 EXPORT_SYMBOL(otx2_set_real_num_queues);
 
+<<<<<<< HEAD
 static char *nix_sqoperr_e_str[NIX_SQOPERR_MAX] = {
 	"NIX_SQOPERR_OOR",
 	"NIX_SQOPERR_CTX_FAULT",
@@ -1225,6 +1235,8 @@ static char *nix_snd_status_e_str[NIX_SND_STATUS_MAX] =  {
 	"NIX_SND_STATUS_SEND_STATS_ERR",
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static irqreturn_t otx2_q_intr_handler(int irq, void *data)
 {
 	struct otx2_nic *pf = data;
@@ -1258,6 +1270,7 @@ static irqreturn_t otx2_q_intr_handler(int irq, void *data)
 
 	/* SQ */
 	for (qidx = 0; qidx < pf->hw.tot_tx_queues; qidx++) {
+<<<<<<< HEAD
 		u64 sq_op_err_dbg, mnq_err_dbg, snd_err_dbg;
 		u8 sq_op_err_code, mnq_err_code, snd_err_code;
 
@@ -1266,11 +1279,14 @@ static irqreturn_t otx2_q_intr_handler(int irq, void *data)
 		 * these are fatal errors.
 		 */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ptr = otx2_get_regaddr(pf, NIX_LF_SQ_OP_INT);
 		val = otx2_atomic64_add((qidx << 44), ptr);
 		otx2_write64(pf, NIX_LF_SQ_OP_INT, (qidx << 44) |
 			     (val & NIX_SQINT_BITS));
 
+<<<<<<< HEAD
 		if (val & BIT_ULL(42)) {
 			netdev_err(pf->netdev, "SQ%lld: error reading NIX_LF_SQ_OP_INT, NIX_LF_ERR_INT 0x%llx\n",
 				   qidx, otx2_read64(pf, NIX_LF_ERR_INT));
@@ -1319,6 +1335,43 @@ done:
 			netdev_err(pf->netdev, "SQ%lld: SQB allocation failed",
 				   qidx);
 
+=======
+		if (!(val & (NIX_SQINT_BITS | BIT_ULL(42))))
+			continue;
+
+		if (val & BIT_ULL(42)) {
+			netdev_err(pf->netdev, "SQ%lld: error reading NIX_LF_SQ_OP_INT, NIX_LF_ERR_INT 0x%llx\n",
+				   qidx, otx2_read64(pf, NIX_LF_ERR_INT));
+		} else {
+			if (val & BIT_ULL(NIX_SQINT_LMT_ERR)) {
+				netdev_err(pf->netdev, "SQ%lld: LMT store error NIX_LF_SQ_OP_ERR_DBG:0x%llx",
+					   qidx,
+					   otx2_read64(pf,
+						       NIX_LF_SQ_OP_ERR_DBG));
+				otx2_write64(pf, NIX_LF_SQ_OP_ERR_DBG,
+					     BIT_ULL(44));
+			}
+			if (val & BIT_ULL(NIX_SQINT_MNQ_ERR)) {
+				netdev_err(pf->netdev, "SQ%lld: Meta-descriptor enqueue error NIX_LF_MNQ_ERR_DGB:0x%llx\n",
+					   qidx,
+					   otx2_read64(pf, NIX_LF_MNQ_ERR_DBG));
+				otx2_write64(pf, NIX_LF_MNQ_ERR_DBG,
+					     BIT_ULL(44));
+			}
+			if (val & BIT_ULL(NIX_SQINT_SEND_ERR)) {
+				netdev_err(pf->netdev, "SQ%lld: Send error, NIX_LF_SEND_ERR_DBG 0x%llx",
+					   qidx,
+					   otx2_read64(pf,
+						       NIX_LF_SEND_ERR_DBG));
+				otx2_write64(pf, NIX_LF_SEND_ERR_DBG,
+					     BIT_ULL(44));
+			}
+			if (val & BIT_ULL(NIX_SQINT_SQB_ALLOC_FAIL))
+				netdev_err(pf->netdev, "SQ%lld: SQB allocation failed",
+					   qidx);
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 		schedule_work(&pf->reset_task);
 	}
 
@@ -1746,7 +1799,12 @@ int otx2_open(struct net_device *netdev)
 		cq_poll->dev = (void *)pf;
 		cq_poll->dim.mode = DIM_CQ_PERIOD_MODE_START_FROM_CQE;
 		INIT_WORK(&cq_poll->dim.work, otx2_dim_work);
+<<<<<<< HEAD
 		netif_napi_add(netdev, &cq_poll->napi, otx2_napi_handler);
+=======
+		netif_napi_add(netdev, &cq_poll->napi,
+			       otx2_napi_handler, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 		napi_enable(&cq_poll->napi);
 	}
 
@@ -1973,7 +2031,11 @@ static u16 otx2_select_queue(struct net_device *netdev, struct sk_buff *skb,
 #endif
 
 #ifdef CONFIG_DCB
+<<<<<<< HEAD
 	if (!skb_vlan_tag_present(skb))
+=======
+	if (!skb->vlan_present)
+>>>>>>> b7ba80a49124 (Commit)
 		goto pick_tx;
 
 	vlan_prio = skb->vlan_tci >> 13;
@@ -2512,6 +2574,7 @@ static int otx2_xdp_setup(struct otx2_nic *pf, struct bpf_prog *prog)
 	/* Network stack and XDP shared same rx queues.
 	 * Use separate tx queues for XDP and network stack.
 	 */
+<<<<<<< HEAD
 	if (pf->xdp_prog) {
 		pf->hw.xdp_queues = pf->hw.rx_queues;
 		xdp_features_set_redirect_target(dev, false);
@@ -2519,6 +2582,12 @@ static int otx2_xdp_setup(struct otx2_nic *pf, struct bpf_prog *prog)
 		pf->hw.xdp_queues = 0;
 		xdp_features_clear_redirect_target(dev);
 	}
+=======
+	if (pf->xdp_prog)
+		pf->hw.xdp_queues = pf->hw.rx_queues;
+	else
+		pf->hw.xdp_queues = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pf->hw.tot_tx_queues += pf->hw.xdp_queues;
 
@@ -2852,10 +2921,13 @@ static int otx2_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	if (err)
 		goto err_ptp_destroy;
 
+<<<<<<< HEAD
 	err = cn10k_mcs_init(pf);
 	if (err)
 		goto err_del_mcam_entries;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (pf->flags & OTX2_FLAG_NTUPLE_SUPPORT)
 		netdev->hw_features |= NETIF_F_NTUPLE;
 
@@ -2881,7 +2953,10 @@ static int otx2_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	netdev->watchdog_timeo = OTX2_TX_TIMEOUT;
 
 	netdev->netdev_ops = &otx2_netdev_ops;
+<<<<<<< HEAD
 	netdev->xdp_features = NETDEV_XDP_ACT_BASIC | NETDEV_XDP_ACT_REDIRECT;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	netdev->min_mtu = OTX2_MIN_MTU;
 	netdev->max_mtu = otx2_get_max_mtu(pf);
@@ -2889,7 +2964,11 @@ static int otx2_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	err = register_netdev(netdev);
 	if (err) {
 		dev_err(dev, "Failed to register netdevice\n");
+<<<<<<< HEAD
 		goto err_mcs_free;
+=======
+		goto err_del_mcam_entries;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	err = otx2_wq_init(pf);
@@ -2928,8 +3007,11 @@ err_mcam_flow_del:
 	otx2_mcam_flow_del(pf);
 err_unreg_netdev:
 	unregister_netdev(netdev);
+<<<<<<< HEAD
 err_mcs_free:
 	cn10k_mcs_free(pf);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err_del_mcam_entries:
 	otx2_mcam_flow_del(pf);
 err_ptp_destroy:
@@ -3073,8 +3155,11 @@ static void otx2_remove(struct pci_dev *pdev)
 		otx2_config_pause_frm(pf);
 	}
 
+<<<<<<< HEAD
 	cn10k_mcs_free(pf);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_DCB
 	/* Disable PFC config */
 	if (pf->pfc_en) {

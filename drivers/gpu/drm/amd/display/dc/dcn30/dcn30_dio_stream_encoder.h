@@ -292,10 +292,13 @@ void enc3_stream_encoder_update_hdmi_info_packets(
 void enc3_stream_encoder_stop_hdmi_info_packets(
 	struct stream_encoder *enc);
 
+<<<<<<< HEAD
 void enc3_stream_encoder_update_dp_info_packets_sdp_line_num(
 		struct stream_encoder *enc,
 		struct encoder_info_frame *info_frame);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void enc3_stream_encoder_update_dp_info_packets(
 	struct stream_encoder *enc,
 	const struct encoder_info_frame *info_frame);

@@ -50,10 +50,14 @@
 #include <linux/list.h>
 #include <linux/slab.h>
 
+<<<<<<< HEAD
 #include "tag.h"
 
 #define DSA_NAME	"dsa"
 #define EDSA_NAME	"edsa"
+=======
+#include "dsa_priv.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #define DSA_HLEN	4
 
@@ -342,7 +346,11 @@ static struct sk_buff *dsa_rcv(struct sk_buff *skb, struct net_device *dev)
 }
 
 static const struct dsa_device_ops dsa_netdev_ops = {
+<<<<<<< HEAD
 	.name	  = DSA_NAME,
+=======
+	.name	  = "dsa",
+>>>>>>> b7ba80a49124 (Commit)
 	.proto	  = DSA_TAG_PROTO_DSA,
 	.xmit	  = dsa_xmit,
 	.rcv	  = dsa_rcv,
@@ -350,7 +358,11 @@ static const struct dsa_device_ops dsa_netdev_ops = {
 };
 
 DSA_TAG_DRIVER(dsa_netdev_ops);
+<<<<<<< HEAD
 MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_DSA, DSA_NAME);
+=======
+MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_DSA);
+>>>>>>> b7ba80a49124 (Commit)
 #endif	/* CONFIG_NET_DSA_TAG_DSA */
 
 #if IS_ENABLED(CONFIG_NET_DSA_TAG_EDSA)
@@ -384,7 +396,11 @@ static struct sk_buff *edsa_rcv(struct sk_buff *skb, struct net_device *dev)
 }
 
 static const struct dsa_device_ops edsa_netdev_ops = {
+<<<<<<< HEAD
 	.name	  = EDSA_NAME,
+=======
+	.name	  = "edsa",
+>>>>>>> b7ba80a49124 (Commit)
 	.proto	  = DSA_TAG_PROTO_EDSA,
 	.xmit	  = edsa_xmit,
 	.rcv	  = edsa_rcv,
@@ -392,7 +408,11 @@ static const struct dsa_device_ops edsa_netdev_ops = {
 };
 
 DSA_TAG_DRIVER(edsa_netdev_ops);
+<<<<<<< HEAD
 MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_EDSA, EDSA_NAME);
+=======
+MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_EDSA);
+>>>>>>> b7ba80a49124 (Commit)
 #endif	/* CONFIG_NET_DSA_TAG_EDSA */
 
 static struct dsa_tag_driver *dsa_tag_drivers[] = {

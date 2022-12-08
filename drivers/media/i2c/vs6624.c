@@ -738,7 +738,12 @@ static const struct v4l2_subdev_ops vs6624_ops = {
 	.pad = &vs6624_pad_ops,
 };
 
+<<<<<<< HEAD
 static int vs6624_probe(struct i2c_client *client)
+=======
+static int vs6624_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct vs6624 *sensor;
 	struct v4l2_subdev *sd;
@@ -842,7 +847,11 @@ static struct i2c_driver vs6624_driver = {
 	.driver = {
 		.name   = "vs6624",
 	},
+<<<<<<< HEAD
 	.probe_new      = vs6624_probe,
+=======
+	.probe          = vs6624_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove         = vs6624_remove,
 	.id_table       = vs6624_id,
 };

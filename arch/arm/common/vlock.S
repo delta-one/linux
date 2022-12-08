@@ -12,8 +12,11 @@
 #include <linux/linkage.h>
 #include "vlock.h"
 
+<<<<<<< HEAD
 .arch armv7-a
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Select different code if voting flags  can fit in a single word. */
 #if VLOCK_VOTING_SIZE > 4
 #define FEW(x...)

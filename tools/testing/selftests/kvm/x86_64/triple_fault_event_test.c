@@ -3,7 +3,10 @@
 #include "kvm_util.h"
 #include "processor.h"
 #include "vmx.h"
+<<<<<<< HEAD
 #include "svm_util.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <string.h>
 #include <sys/ioctl.h>
@@ -21,11 +24,18 @@ static void l2_guest_code(void)
 		     : : [port] "d" (ARBITRARY_IO_PORT) : "rax");
 }
 
+<<<<<<< HEAD
 #define L2_GUEST_STACK_SIZE 64
 unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
 
 void l1_guest_code_vmx(struct vmx_pages *vmx)
 {
+=======
+void l1_guest_code(struct vmx_pages *vmx)
+{
+#define L2_GUEST_STACK_SIZE 64
+	unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
+>>>>>>> b7ba80a49124 (Commit)
 
 	GUEST_ASSERT(vmx->vmcs_gpa);
 	GUEST_ASSERT(prepare_for_vmx_operation(vmx));
@@ -40,6 +50,7 @@ void l1_guest_code_vmx(struct vmx_pages *vmx)
 	GUEST_DONE();
 }
 
+<<<<<<< HEAD
 void l1_guest_code_svm(struct svm_test_data *svm)
 {
 	struct vmcb *vmcb = svm->vmcb;
@@ -56,11 +67,14 @@ void l1_guest_code_svm(struct svm_test_data *svm)
 	GUEST_ASSERT(0);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int main(void)
 {
 	struct kvm_vcpu *vcpu;
 	struct kvm_run *run;
 	struct kvm_vcpu_events events;
+<<<<<<< HEAD
 	struct ucall uc;
 
 	bool has_vmx = kvm_cpu_has(X86_FEATURE_VMX);
@@ -90,6 +104,26 @@ int main(void)
 	vcpu_run(vcpu);
 
 	TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_IO);
+=======
+	vm_vaddr_t vmx_pages_gva;
+	struct ucall uc;
+
+	TEST_REQUIRE(kvm_cpu_has(X86_FEATURE_VMX));
+
+	TEST_REQUIRE(kvm_has_cap(KVM_CAP_X86_TRIPLE_FAULT_EVENT));
+
+	vm = vm_create_with_one_vcpu(&vcpu, l1_guest_code);
+	vm_enable_cap(vm, KVM_CAP_X86_TRIPLE_FAULT_EVENT, 1);
+
+	run = vcpu->run;
+	vcpu_alloc_vmx(vm, &vmx_pages_gva);
+	vcpu_args_set(vcpu, 1, vmx_pages_gva);
+	vcpu_run(vcpu);
+
+	TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
+		    "Expected KVM_EXIT_IO, got: %u (%s)\n",
+		    run->exit_reason, exit_reason_str(run->exit_reason));
+>>>>>>> b7ba80a49124 (Commit)
 	TEST_ASSERT(run->io.port == ARBITRARY_IO_PORT,
 		    "Expected IN from port %d from L2, got port %d",
 		    ARBITRARY_IO_PORT, run->io.port);
@@ -107,6 +141,7 @@ int main(void)
 		    "No triple fault pending");
 	vcpu_run(vcpu);
 
+<<<<<<< HEAD
 
 	if (has_svm) {
 		TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_SHUTDOWN);
@@ -121,4 +156,15 @@ int main(void)
 		}
 	}
 	return 0;
+=======
+	switch (get_ucall(vcpu, &uc)) {
+	case UCALL_DONE:
+		break;
+	case UCALL_ABORT:
+		REPORT_GUEST_ASSERT(uc);
+	default:
+		TEST_FAIL("Unexpected ucall: %lu", uc.cmd);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 }

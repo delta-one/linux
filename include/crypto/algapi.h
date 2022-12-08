@@ -8,7 +8,10 @@
 #define _CRYPTO_ALGAPI_H
 
 #include <linux/align.h>
+<<<<<<< HEAD
 #include <linux/cache.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/crypto.h>
 #include <linux/kconfig.h>
 #include <linux/list.h>
@@ -22,6 +25,7 @@
  * algs and architectures. Ciphers have a lower maximum size.
  */
 #define MAX_ALGAPI_BLOCKSIZE		160
+<<<<<<< HEAD
 #define MAX_ALGAPI_ALIGNMASK		127
 #define MAX_CIPHER_BLOCKSIZE		16
 #define MAX_CIPHER_ALIGNMASK		15
@@ -47,6 +51,12 @@
 		__MODULE_INFO(alias, alias_userspace, name);	\
 		__MODULE_INFO(alias, alias_crypto, "crypto-" name)
 
+=======
+#define MAX_ALGAPI_ALIGNMASK		63
+#define MAX_CIPHER_BLOCKSIZE		16
+#define MAX_CIPHER_ALIGNMASK		15
+
+>>>>>>> b7ba80a49124 (Commit)
 struct crypto_aead;
 struct crypto_instance;
 struct module;
@@ -63,9 +73,12 @@ struct crypto_type {
 	void (*show)(struct seq_file *m, struct crypto_alg *alg);
 	int (*report)(struct sk_buff *skb, struct crypto_alg *alg);
 	void (*free)(struct crypto_instance *inst);
+<<<<<<< HEAD
 #ifdef CONFIG_CRYPTO_STATS
 	int (*report_stat)(struct sk_buff *skb, struct crypto_alg *alg);
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	unsigned int type;
 	unsigned int maskclear;
@@ -214,6 +227,7 @@ static inline void crypto_xor_cpy(u8 *dst, const u8 *src1, const u8 *src2,
 	}
 }
 
+<<<<<<< HEAD
 static inline void *crypto_tfm_ctx(struct crypto_tfm *tfm)
 {
 	return tfm->__crt_ctx;
@@ -246,6 +260,12 @@ static inline unsigned int crypto_dma_padding(void)
 static inline void *crypto_tfm_ctx_dma(struct crypto_tfm *tfm)
 {
 	return crypto_tfm_ctx_align(tfm, crypto_dma_align());
+=======
+static inline void *crypto_tfm_ctx_aligned(struct crypto_tfm *tfm)
+{
+	return PTR_ALIGN(crypto_tfm_ctx(tfm),
+			 crypto_tfm_alg_alignmask(tfm) + 1);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline struct crypto_instance *crypto_tfm_alg_instance(
@@ -318,10 +338,13 @@ enum {
 	CRYPTO_MSG_ALG_LOADED,
 };
 
+<<<<<<< HEAD
 static inline void crypto_request_complete(struct crypto_async_request *req,
 					   int err)
 {
 	req->complete(req->data, err);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif	/* _CRYPTO_ALGAPI_H */

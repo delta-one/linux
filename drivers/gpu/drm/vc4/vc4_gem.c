@@ -199,7 +199,11 @@ vc4_save_hang_state(struct drm_device *dev)
 			continue;
 
 		for (j = 0; j < exec[i]->bo_count; j++) {
+<<<<<<< HEAD
 			bo = to_vc4_bo(exec[i]->bo[j]);
+=======
+			bo = to_vc4_bo(&exec[i]->bo[j]->base);
+>>>>>>> b7ba80a49124 (Commit)
 
 			/* Retain BOs just in case they were marked purgeable.
 			 * This prevents the BO from being purged before
@@ -207,8 +211,13 @@ vc4_save_hang_state(struct drm_device *dev)
 			 */
 			WARN_ON(!refcount_read(&bo->usecnt));
 			refcount_inc(&bo->usecnt);
+<<<<<<< HEAD
 			drm_gem_object_get(exec[i]->bo[j]);
 			kernel_state->bo[k++] = exec[i]->bo[j];
+=======
+			drm_gem_object_get(&exec[i]->bo[j]->base);
+			kernel_state->bo[k++] = &exec[i]->bo[j]->base;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		list_for_each_entry(bo, &exec[i]->unref_list, unref_head) {
@@ -558,7 +567,11 @@ vc4_update_bo_seqnos(struct vc4_exec_info *exec, uint64_t seqno)
 	unsigned i;
 
 	for (i = 0; i < exec->bo_count; i++) {
+<<<<<<< HEAD
 		bo = to_vc4_bo(exec->bo[i]);
+=======
+		bo = to_vc4_bo(&exec->bo[i]->base);
+>>>>>>> b7ba80a49124 (Commit)
 		bo->seqno = seqno;
 
 		dma_resv_add_fence(bo->base.base.resv, exec->fence,
@@ -585,8 +598,16 @@ vc4_unlock_bo_reservations(struct drm_device *dev,
 {
 	int i;
 
+<<<<<<< HEAD
 	for (i = 0; i < exec->bo_count; i++)
 		dma_resv_unlock(exec->bo[i]->resv);
+=======
+	for (i = 0; i < exec->bo_count; i++) {
+		struct drm_gem_object *bo = &exec->bo[i]->base;
+
+		dma_resv_unlock(bo->resv);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	ww_acquire_fini(acquire_ctx);
 }
@@ -611,7 +632,11 @@ vc4_lock_bo_reservations(struct drm_device *dev,
 
 retry:
 	if (contended_lock != -1) {
+<<<<<<< HEAD
 		bo = exec->bo[contended_lock];
+=======
+		bo = &exec->bo[contended_lock]->base;
+>>>>>>> b7ba80a49124 (Commit)
 		ret = dma_resv_lock_slow_interruptible(bo->resv, acquire_ctx);
 		if (ret) {
 			ww_acquire_done(acquire_ctx);
@@ -623,19 +648,31 @@ retry:
 		if (i == contended_lock)
 			continue;
 
+<<<<<<< HEAD
 		bo = exec->bo[i];
+=======
+		bo = &exec->bo[i]->base;
+>>>>>>> b7ba80a49124 (Commit)
 
 		ret = dma_resv_lock_interruptible(bo->resv, acquire_ctx);
 		if (ret) {
 			int j;
 
 			for (j = 0; j < i; j++) {
+<<<<<<< HEAD
 				bo = exec->bo[j];
+=======
+				bo = &exec->bo[j]->base;
+>>>>>>> b7ba80a49124 (Commit)
 				dma_resv_unlock(bo->resv);
 			}
 
 			if (contended_lock != -1 && contended_lock >= i) {
+<<<<<<< HEAD
 				bo = exec->bo[contended_lock];
+=======
+				bo = &exec->bo[contended_lock]->base;
+>>>>>>> b7ba80a49124 (Commit)
 
 				dma_resv_unlock(bo->resv);
 			}
@@ -656,7 +693,11 @@ retry:
 	 * before we commit the CL to the hardware.
 	 */
 	for (i = 0; i < exec->bo_count; i++) {
+<<<<<<< HEAD
 		bo = exec->bo[i];
+=======
+		bo = &exec->bo[i]->base;
+>>>>>>> b7ba80a49124 (Commit)
 
 		ret = dma_resv_reserve_fences(bo->resv, 1);
 		if (ret) {
@@ -746,6 +787,10 @@ vc4_cl_lookup_bos(struct drm_device *dev,
 		  struct vc4_exec_info *exec)
 {
 	struct drm_vc4_submit_cl *args = exec->args;
+<<<<<<< HEAD
+=======
+	uint32_t *handles;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = 0;
 	int i;
 
@@ -759,18 +804,66 @@ vc4_cl_lookup_bos(struct drm_device *dev,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	ret = drm_gem_objects_lookup(file_priv, u64_to_user_ptr(args->bo_handles),
 				     exec->bo_count, &exec->bo);
+=======
+	exec->bo = kvmalloc_array(exec->bo_count,
+				    sizeof(struct drm_gem_dma_object *),
+				    GFP_KERNEL | __GFP_ZERO);
+	if (!exec->bo) {
+		DRM_ERROR("Failed to allocate validated BO pointers\n");
+		return -ENOMEM;
+	}
+
+	handles = kvmalloc_array(exec->bo_count, sizeof(uint32_t), GFP_KERNEL);
+	if (!handles) {
+		ret = -ENOMEM;
+		DRM_ERROR("Failed to allocate incoming GEM handles\n");
+		goto fail;
+	}
+
+	if (copy_from_user(handles, u64_to_user_ptr(args->bo_handles),
+			   exec->bo_count * sizeof(uint32_t))) {
+		ret = -EFAULT;
+		DRM_ERROR("Failed to copy in GEM handles\n");
+		goto fail;
+	}
+
+	spin_lock(&file_priv->table_lock);
+	for (i = 0; i < exec->bo_count; i++) {
+		struct drm_gem_object *bo = idr_find(&file_priv->object_idr,
+						     handles[i]);
+		if (!bo) {
+			DRM_DEBUG("Failed to look up GEM BO %d: %d\n",
+				  i, handles[i]);
+			ret = -EINVAL;
+			break;
+		}
+
+		drm_gem_object_get(bo);
+		exec->bo[i] = (struct drm_gem_dma_object *)bo;
+	}
+	spin_unlock(&file_priv->table_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ret)
 		goto fail_put_bo;
 
 	for (i = 0; i < exec->bo_count; i++) {
+<<<<<<< HEAD
 		ret = vc4_bo_inc_usecnt(to_vc4_bo(exec->bo[i]));
+=======
+		ret = vc4_bo_inc_usecnt(to_vc4_bo(&exec->bo[i]->base));
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			goto fail_dec_usecnt;
 	}
 
+<<<<<<< HEAD
+=======
+	kvfree(handles);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 fail_dec_usecnt:
@@ -783,13 +876,24 @@ fail_dec_usecnt:
 	 * step.
 	 */
 	for (i-- ; i >= 0; i--)
+<<<<<<< HEAD
 		vc4_bo_dec_usecnt(to_vc4_bo(exec->bo[i]));
+=======
+		vc4_bo_dec_usecnt(to_vc4_bo(&exec->bo[i]->base));
+>>>>>>> b7ba80a49124 (Commit)
 
 fail_put_bo:
 	/* Release any reference to acquired objects. */
 	for (i = 0; i < exec->bo_count && exec->bo[i]; i++)
+<<<<<<< HEAD
 		drm_gem_object_put(exec->bo[i]);
 
+=======
+		drm_gem_object_put(&exec->bo[i]->base);
+
+fail:
+	kvfree(handles);
+>>>>>>> b7ba80a49124 (Commit)
 	kvfree(exec->bo);
 	exec->bo = NULL;
 	return ret;
@@ -932,10 +1036,17 @@ vc4_complete_exec(struct drm_device *dev, struct vc4_exec_info *exec)
 
 	if (exec->bo) {
 		for (i = 0; i < exec->bo_count; i++) {
+<<<<<<< HEAD
 			struct vc4_bo *bo = to_vc4_bo(exec->bo[i]);
 
 			vc4_bo_dec_usecnt(bo);
 			drm_gem_object_put(exec->bo[i]);
+=======
+			struct vc4_bo *bo = to_vc4_bo(&exec->bo[i]->base);
+
+			vc4_bo_dec_usecnt(bo);
+			drm_gem_object_put(&exec->bo[i]->base);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		kvfree(exec->bo);
 	}

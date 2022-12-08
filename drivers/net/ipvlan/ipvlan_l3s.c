@@ -101,7 +101,10 @@ static unsigned int ipvlan_nf_input(void *priv, struct sk_buff *skb,
 		goto out;
 
 	skb->dev = addr->master->dev;
+<<<<<<< HEAD
 	skb->skb_iif = skb->dev->ifindex;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	len = skb->len + ETH_HLEN;
 	ipvlan_count_rx(addr->master, len, true, false);
 out:

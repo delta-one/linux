@@ -22,11 +22,18 @@
 #include <linux/slab.h>
 #include <linux/vmalloc.h>
 #include <linux/kthread.h>
+<<<<<<< HEAD
+=======
+#include <linux/cgroup.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/sort.h>
 #include <linux/sched/mm.h>
 #include <linux/sched/signal.h>
+<<<<<<< HEAD
 #include <linux/sched/vhost_task.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/interval_tree_generic.h>
 #include <linux/nospec.h>
 #include <linux/kcov.h>
@@ -255,8 +262,13 @@ void vhost_work_queue(struct vhost_dev *dev, struct vhost_work *work)
 		 * sure it was not in the list.
 		 * test_and_set_bit() implies a memory barrier.
 		 */
+<<<<<<< HEAD
 		llist_add(&work->node, &dev->worker->work_list);
 		wake_up_process(dev->worker->vtsk->task);
+=======
+		llist_add(&work->node, &dev->work_list);
+		wake_up_process(dev->worker);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 EXPORT_SYMBOL_GPL(vhost_work_queue);
@@ -264,7 +276,11 @@ EXPORT_SYMBOL_GPL(vhost_work_queue);
 /* A lockless hint for busy polling code to exit the loop */
 bool vhost_has_work(struct vhost_dev *dev)
 {
+<<<<<<< HEAD
 	return dev->worker && !llist_empty(&dev->worker->work_list);
+=======
+	return !llist_empty(&dev->work_list);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(vhost_has_work);
 
@@ -335,20 +351,37 @@ static void vhost_vq_reset(struct vhost_dev *dev,
 
 static int vhost_worker(void *data)
 {
+<<<<<<< HEAD
 	struct vhost_worker *worker = data;
 	struct vhost_work *work, *work_next;
 	struct llist_node *node;
 
+=======
+	struct vhost_dev *dev = data;
+	struct vhost_work *work, *work_next;
+	struct llist_node *node;
+
+	kthread_use_mm(dev->mm);
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (;;) {
 		/* mb paired w/ kthread_stop */
 		set_current_state(TASK_INTERRUPTIBLE);
 
+<<<<<<< HEAD
 		if (vhost_task_should_stop(worker->vtsk)) {
+=======
+		if (kthread_should_stop()) {
+>>>>>>> b7ba80a49124 (Commit)
 			__set_current_state(TASK_RUNNING);
 			break;
 		}
 
+<<<<<<< HEAD
 		node = llist_del_all(&worker->work_list);
+=======
+		node = llist_del_all(&dev->work_list);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!node)
 			schedule();
 
@@ -358,6 +391,7 @@ static int vhost_worker(void *data)
 		llist_for_each_entry_safe(work, work_next, node, node) {
 			clear_bit(VHOST_WORK_QUEUED, &work->flags);
 			__set_current_state(TASK_RUNNING);
+<<<<<<< HEAD
 			kcov_remote_start_common(worker->kcov_handle);
 			work->fn(work);
 			kcov_remote_stop();
@@ -365,6 +399,16 @@ static int vhost_worker(void *data)
 		}
 	}
 
+=======
+			kcov_remote_start_common(dev->kcov_handle);
+			work->fn(work);
+			kcov_remote_stop();
+			if (need_resched())
+				schedule();
+		}
+	}
+	kthread_unuse_mm(dev->mm);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -433,7 +477,12 @@ static size_t vhost_get_avail_size(struct vhost_virtqueue *vq,
 	size_t event __maybe_unused =
 	       vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX) ? 2 : 0;
 
+<<<<<<< HEAD
 	return size_add(struct_size(vq->avail, ring, num), event);
+=======
+	return sizeof(*vq->avail) +
+	       sizeof(*vq->avail->ring) * num + event;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static size_t vhost_get_used_size(struct vhost_virtqueue *vq,
@@ -442,7 +491,12 @@ static size_t vhost_get_used_size(struct vhost_virtqueue *vq,
 	size_t event __maybe_unused =
 	       vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX) ? 2 : 0;
 
+<<<<<<< HEAD
 	return size_add(struct_size(vq->used, ring, num), event);
+=======
+	return sizeof(*vq->used) +
+	       sizeof(*vq->used->ring) * num + event;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static size_t vhost_get_desc_size(struct vhost_virtqueue *vq,
@@ -474,6 +528,10 @@ void vhost_dev_init(struct vhost_dev *dev,
 	dev->byte_weight = byte_weight;
 	dev->use_worker = use_worker;
 	dev->msg_handler = msg_handler;
+<<<<<<< HEAD
+=======
+	init_llist_head(&dev->work_list);
+>>>>>>> b7ba80a49124 (Commit)
 	init_waitqueue_head(&dev->wait);
 	INIT_LIST_HEAD(&dev->read_list);
 	INIT_LIST_HEAD(&dev->pending_list);
@@ -503,6 +561,34 @@ long vhost_dev_check_owner(struct vhost_dev *dev)
 }
 EXPORT_SYMBOL_GPL(vhost_dev_check_owner);
 
+<<<<<<< HEAD
+=======
+struct vhost_attach_cgroups_struct {
+	struct vhost_work work;
+	struct task_struct *owner;
+	int ret;
+};
+
+static void vhost_attach_cgroups_work(struct vhost_work *work)
+{
+	struct vhost_attach_cgroups_struct *s;
+
+	s = container_of(work, struct vhost_attach_cgroups_struct, work);
+	s->ret = cgroup_attach_task_all(s->owner, current);
+}
+
+static int vhost_attach_cgroups(struct vhost_dev *dev)
+{
+	struct vhost_attach_cgroups_struct attach;
+
+	attach.owner = current;
+	vhost_work_init(&attach.work, vhost_attach_cgroups_work);
+	vhost_work_queue(dev, &attach.work);
+	vhost_dev_flush(dev);
+	return attach.ret;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Caller should have device mutex */
 bool vhost_dev_has_owner(struct vhost_dev *dev)
 {
@@ -540,6 +626,7 @@ static void vhost_detach_mm(struct vhost_dev *dev)
 	dev->mm = NULL;
 }
 
+<<<<<<< HEAD
 static void vhost_worker_free(struct vhost_dev *dev)
 {
 	struct vhost_worker *worker = dev->worker;
@@ -588,6 +675,12 @@ free_worker:
 /* Caller should have device mutex */
 long vhost_dev_set_owner(struct vhost_dev *dev)
 {
+=======
+/* Caller should have device mutex */
+long vhost_dev_set_owner(struct vhost_dev *dev)
+{
+	struct task_struct *worker;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	/* Is there an owner already? */
@@ -598,14 +691,33 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
 
 	vhost_attach_mm(dev);
 
+<<<<<<< HEAD
 	if (dev->use_worker) {
 		err = vhost_worker_create(dev);
 		if (err)
 			goto err_worker;
+=======
+	dev->kcov_handle = kcov_common_handle();
+	if (dev->use_worker) {
+		worker = kthread_create(vhost_worker, dev,
+					"vhost-%d", current->pid);
+		if (IS_ERR(worker)) {
+			err = PTR_ERR(worker);
+			goto err_worker;
+		}
+
+		dev->worker = worker;
+		wake_up_process(worker); /* avoid contributing to loadavg */
+
+		err = vhost_attach_cgroups(dev);
+		if (err)
+			goto err_cgroup;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	err = vhost_dev_alloc_iovecs(dev);
 	if (err)
+<<<<<<< HEAD
 		goto err_iovecs;
 
 	return 0;
@@ -613,6 +725,19 @@ err_iovecs:
 	vhost_worker_free(dev);
 err_worker:
 	vhost_detach_mm(dev);
+=======
+		goto err_cgroup;
+
+	return 0;
+err_cgroup:
+	if (dev->worker) {
+		kthread_stop(dev->worker);
+		dev->worker = NULL;
+	}
+err_worker:
+	vhost_detach_mm(dev);
+	dev->kcov_handle = 0;
+>>>>>>> b7ba80a49124 (Commit)
 err_mm:
 	return err;
 }
@@ -659,7 +784,11 @@ void vhost_dev_stop(struct vhost_dev *dev)
 }
 EXPORT_SYMBOL_GPL(vhost_dev_stop);
 
+<<<<<<< HEAD
 void vhost_clear_msg(struct vhost_dev *dev)
+=======
+static void vhost_clear_msg(struct vhost_dev *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct vhost_msg_node *node, *n;
 
@@ -677,7 +806,10 @@ void vhost_clear_msg(struct vhost_dev *dev)
 
 	spin_unlock(&dev->iotlb_lock);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(vhost_clear_msg);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 void vhost_dev_cleanup(struct vhost_dev *dev)
 {
@@ -703,7 +835,16 @@ void vhost_dev_cleanup(struct vhost_dev *dev)
 	dev->iotlb = NULL;
 	vhost_clear_msg(dev);
 	wake_up_interruptible_poll(&dev->wait, EPOLLIN | EPOLLRDNORM);
+<<<<<<< HEAD
 	vhost_worker_free(dev);
+=======
+	WARN_ON(!llist_empty(&dev->work_list));
+	if (dev->worker) {
+		kthread_stop(dev->worker);
+		dev->worker = NULL;
+		dev->kcov_handle = 0;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	vhost_detach_mm(dev);
 }
 EXPORT_SYMBOL_GPL(vhost_dev_cleanup);
@@ -826,7 +967,11 @@ static int vhost_copy_to_user(struct vhost_virtqueue *vq, void __user *to,
 				     VHOST_ACCESS_WO);
 		if (ret < 0)
 			goto out;
+<<<<<<< HEAD
 		iov_iter_init(&t, ITER_DEST, vq->iotlb_iov, ret, size);
+=======
+		iov_iter_init(&t, WRITE, vq->iotlb_iov, ret, size);
+>>>>>>> b7ba80a49124 (Commit)
 		ret = copy_to_iter(from, size, &t);
 		if (ret == size)
 			ret = 0;
@@ -865,7 +1010,11 @@ static int vhost_copy_from_user(struct vhost_virtqueue *vq, void *to,
 			       (unsigned long long) size);
 			goto out;
 		}
+<<<<<<< HEAD
 		iov_iter_init(&f, ITER_SOURCE, vq->iotlb_iov, ret, size);
+=======
+		iov_iter_init(&f, READ, vq->iotlb_iov, ret, size);
+>>>>>>> b7ba80a49124 (Commit)
 		ret = copy_from_iter(to, size, &f);
 		if (ret == size)
 			ret = 0;
@@ -1723,7 +1872,11 @@ long vhost_vring_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *arg
 }
 EXPORT_SYMBOL_GPL(vhost_vring_ioctl);
 
+<<<<<<< HEAD
 int vhost_init_device_iotlb(struct vhost_dev *d)
+=======
+int vhost_init_device_iotlb(struct vhost_dev *d, bool enabled)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct vhost_iotlb *niotlb, *oiotlb;
 	int i;
@@ -2047,7 +2200,11 @@ static int translate_desc(struct vhost_virtqueue *vq, u64 addr, u32 len,
 	struct vhost_dev *dev = vq->dev;
 	struct vhost_iotlb *umem = dev->iotlb ? dev->iotlb : dev->umem;
 	struct iovec *_iov;
+<<<<<<< HEAD
 	u64 s = 0, last = addr + len - 1;
+=======
+	u64 s = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = 0;
 
 	while ((u64)len > s) {
@@ -2057,7 +2214,11 @@ static int translate_desc(struct vhost_virtqueue *vq, u64 addr, u32 len,
 			break;
 		}
 
+<<<<<<< HEAD
 		map = vhost_iotlb_itree_first(umem, addr, last);
+=======
+		map = vhost_iotlb_itree_first(umem, addr, addr + len - 1);
+>>>>>>> b7ba80a49124 (Commit)
 		if (map == NULL || map->start > addr) {
 			if (umem != dev->iotlb) {
 				ret = -EFAULT;
@@ -2129,7 +2290,11 @@ static int get_indirect(struct vhost_virtqueue *vq,
 			vq_err(vq, "Translation failure %d in indirect.\n", ret);
 		return ret;
 	}
+<<<<<<< HEAD
 	iov_iter_init(&from, ITER_SOURCE, vq->indirect, ret, len);
+=======
+	iov_iter_init(&from, READ, vq->indirect, ret, len);
+>>>>>>> b7ba80a49124 (Commit)
 	count = len / sizeof desc;
 	/* Buffers are chained via a 16 bit next field, so
 	 * we can have at most 2^16 of these. */

@@ -1,7 +1,11 @@
 .. SPDX-License-Identifier: GPL-2.0
 .. include:: ../disclaimer-zh_CN.rst
 
+<<<<<<< HEAD
 :Original: Documentation/devicetree/overlay-notes.rst
+=======
+:Original: Documentation/Devicetree/overlay-notes.rst
+>>>>>>> b7ba80a49124 (Commit)
 
 :翻译:
 

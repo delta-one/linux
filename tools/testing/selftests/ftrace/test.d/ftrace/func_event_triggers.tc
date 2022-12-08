@@ -38,6 +38,7 @@ cnt_trace() {
 
 test_event_enabled() {
     val=$1
+<<<<<<< HEAD
     check_times=10		# wait for 10 * SLEEP_TIME at most
 
     while [ $check_times -ne 0 ]; do
@@ -50,6 +51,13 @@ test_event_enabled() {
     done
 
     fail "Expected $val but found $e"
+=======
+
+    e=`cat $EVENT_ENABLE`
+    if [ "$e" != $val ]; then
+	fail "Expected $val but found $e"
+    fi
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 run_enable_disable() {
@@ -92,7 +100,11 @@ run_enable_disable() {
 	echo $check_disable > $EVENT_ENABLE
     done
     sleep $SLEEP_TIME
+<<<<<<< HEAD
     echo " make sure it still works"
+=======
+    echo " make sure it's still works"
+>>>>>>> b7ba80a49124 (Commit)
     test_event_enabled $check_enable_star
 
     reset_ftrace_filter

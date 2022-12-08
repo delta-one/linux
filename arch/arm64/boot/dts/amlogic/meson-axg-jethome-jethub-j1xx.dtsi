@@ -159,6 +159,10 @@
 	onewire {
 		compatible = "w1-gpio";
 		gpios = <&gpio GPIOA_14 GPIO_ACTIVE_HIGH>;
+<<<<<<< HEAD
+=======
+		#gpio-cells = <1>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
@@ -167,6 +171,7 @@
 		reg = <0x32 0x20>;
 	};
 
+<<<<<<< HEAD
 	eth_mac: eth-mac@0 {
 		reg = <0x0 0x6>;
 	};
@@ -176,6 +181,17 @@
 	};
 
 	wifi_mac: wifi-mac@c {
+=======
+	eth_mac: eth_mac@0 {
+		reg = <0x0 0x6>;
+	};
+
+	bt_mac: bt_mac@6 {
+		reg = <0x6 0x6>;
+	};
+
+	wifi_mac: wifi_mac@c {
+>>>>>>> b7ba80a49124 (Commit)
 		reg = <0xc 0x6>;
 	};
 
@@ -216,7 +232,11 @@
 	pinctrl-names = "default";
 
 	/* RTC */
+<<<<<<< HEAD
 	pcf8563: rtc@51 {
+=======
+	pcf8563: pcf8563@51 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "nxp,pcf8563";
 		reg = <0x51>;
 		status = "okay";
@@ -302,7 +322,11 @@
 
 &usb {
 	status = "okay";
+<<<<<<< HEAD
 	vbus-supply = <&usb_pwr>;
+=======
+	phy-supply = <&usb_pwr>;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &spicc1 {

@@ -44,7 +44,10 @@ required:
 
 allOf:
   - $ref: ethernet-controller.yaml#
+<<<<<<< HEAD
   - $ref: /schemas/memory-controllers/mc-peripheral-props.yaml#
+=======
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         compatible:

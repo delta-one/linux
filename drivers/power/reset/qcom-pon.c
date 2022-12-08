@@ -91,7 +91,11 @@ static struct platform_driver pm8916_pon_driver = {
 	.probe = pm8916_pon_probe,
 	.driver = {
 		.name = "pm8916-pon",
+<<<<<<< HEAD
 		.of_match_table = pm8916_pon_id_table,
+=======
+		.of_match_table = of_match_ptr(pm8916_pon_id_table),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 module_platform_driver(pm8916_pon_driver);

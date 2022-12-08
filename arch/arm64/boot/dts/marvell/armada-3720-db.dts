@@ -18,7 +18,11 @@
 
 / {
 	model = "Marvell Armada 3720 Development Board DB-88F3720-DDR3";
+<<<<<<< HEAD
 	compatible = "marvell,armada-3720-db", "marvell,armada3720", "marvell,armada3700";
+=======
+	compatible = "marvell,armada-3720-db", "marvell,armada3720", "marvell,armada3710";
+>>>>>>> b7ba80a49124 (Commit)
 
 	chosen {
 		stdout-path = "serial0:115200n8";

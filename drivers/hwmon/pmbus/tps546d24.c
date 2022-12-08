@@ -47,7 +47,11 @@ static const struct i2c_device_id tps546d24_id[] = {
 };
 MODULE_DEVICE_TABLE(i2c, tps546d24_id);
 
+<<<<<<< HEAD
 static const struct of_device_id __maybe_unused tps546d24_of_match[] = {
+=======
+static const struct of_device_id tps546d24_of_match[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{.compatible = "ti,tps546d24"},
 	{}
 };

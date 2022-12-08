@@ -132,12 +132,17 @@
 	gpio-leds {
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led-white-power {
+=======
+		white-power {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "dart:white:power";
 			gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
 			linux,default-trigger = "timer";
 
 		};
+<<<<<<< HEAD
 		led-red-power {
 			label = "dart:red:power";
 			gpios = <&gpio1 31 GPIO_ACTIVE_HIGH>;
@@ -147,6 +152,17 @@
 			gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
 		};
 		led-red-sata1 {
+=======
+		red-power {
+			label = "dart:red:power";
+			gpios = <&gpio1 31 GPIO_ACTIVE_HIGH>;
+		};
+		red-sata0 {
+			label = "dart:red:sata0";
+			gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
+		};
+		red-sata1 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "dart:red:sata1";
 			gpios = <&gpio1 21 GPIO_ACTIVE_LOW>;
 		};

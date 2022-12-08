@@ -3,9 +3,15 @@
 config SOC_K210_SYSCTL
 	bool "Canaan Kendryte K210 SoC system controller"
 	depends on RISCV && SOC_CANAAN && OF
+<<<<<<< HEAD
 	depends on COMMON_CLK_K210
 	default SOC_CANAAN
 	select PM
 	select MFD_SYSCON
+=======
+	default SOC_CANAAN
+        select PM
+        select MFD_SYSCON
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Canaan Kendryte K210 SoC system controller driver.

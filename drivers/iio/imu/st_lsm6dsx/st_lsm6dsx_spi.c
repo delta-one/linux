@@ -109,6 +109,7 @@ static const struct of_device_id st_lsm6dsx_spi_of_match[] = {
 		.compatible = "st,lsm6dstx",
 		.data = (void *)ST_LSM6DSTX_ID,
 	},
+<<<<<<< HEAD
 	{
 		.compatible = "st,lsm6dsv",
 		.data = (void *)ST_LSM6DSV_ID,
@@ -129,6 +130,8 @@ static const struct of_device_id st_lsm6dsx_spi_of_match[] = {
 		.compatible = "st,asm330lhb",
 		.data = (void *)ST_ASM330LHB_ID,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 MODULE_DEVICE_TABLE(of, st_lsm6dsx_spi_of_match);
@@ -152,11 +155,14 @@ static const struct spi_device_id st_lsm6dsx_spi_id_table[] = {
 	{ ST_LSM6DSOP_DEV_NAME, ST_LSM6DSOP_ID },
 	{ ST_ASM330LHHX_DEV_NAME, ST_ASM330LHHX_ID },
 	{ ST_LSM6DSTX_DEV_NAME, ST_LSM6DSTX_ID },
+<<<<<<< HEAD
 	{ ST_LSM6DSV_DEV_NAME, ST_LSM6DSV_ID },
 	{ ST_LSM6DSV16X_DEV_NAME, ST_LSM6DSV16X_ID },
 	{ ST_LSM6DSO16IS_DEV_NAME, ST_LSM6DSO16IS_ID },
 	{ ST_ISM330IS_DEV_NAME, ST_ISM330IS_ID },
 	{ ST_ASM330LHB_DEV_NAME, ST_ASM330LHB_ID },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 MODULE_DEVICE_TABLE(spi, st_lsm6dsx_spi_id_table);

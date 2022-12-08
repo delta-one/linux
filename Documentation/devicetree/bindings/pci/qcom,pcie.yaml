@@ -16,6 +16,7 @@ description: |
 
 properties:
   compatible:
+<<<<<<< HEAD
     oneOf:
       - enum:
           - qcom,pcie-apq8064
@@ -41,6 +42,27 @@ properties:
       - items:
           - const: qcom,pcie-msm8998
           - const: qcom,pcie-msm8996
+=======
+    enum:
+      - qcom,pcie-ipq8064
+      - qcom,pcie-ipq8064-v2
+      - qcom,pcie-apq8064
+      - qcom,pcie-apq8084
+      - qcom,pcie-msm8996
+      - qcom,pcie-ipq4019
+      - qcom,pcie-ipq8074
+      - qcom,pcie-qcs404
+      - qcom,pcie-sa8540p
+      - qcom,pcie-sc7280
+      - qcom,pcie-sc8180x
+      - qcom,pcie-sc8280xp
+      - qcom,pcie-sdm845
+      - qcom,pcie-sm8150
+      - qcom,pcie-sm8250
+      - qcom,pcie-sm8450-pcie0
+      - qcom,pcie-sm8450-pcie1
+      - qcom,pcie-ipq6018
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     minItems: 4
@@ -68,6 +90,7 @@ properties:
     minItems: 3
     maxItems: 13
 
+<<<<<<< HEAD
   dma-coherent: true
 
   interconnects:
@@ -78,6 +101,8 @@ properties:
       - const: pcie-mem
       - const: cpu-pcie
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   resets:
     minItems: 1
     maxItems: 12
@@ -159,7 +184,10 @@ allOf:
           contains:
             enum:
               - qcom,pcie-ipq6018
+<<<<<<< HEAD
               - qcom,pcie-ipq8074-gen3
+=======
+>>>>>>> b7ba80a49124 (Commit)
     then:
       properties:
         reg:
@@ -202,7 +230,10 @@ allOf:
               - qcom,pcie-sc8180x
               - qcom,pcie-sc8280xp
               - qcom,pcie-sm8250
+<<<<<<< HEAD
               - qcom,pcie-sm8350
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - qcom,pcie-sm8450-pcie0
               - qcom,pcie-sm8450-pcie1
     then:
@@ -320,10 +351,31 @@ allOf:
             enum:
               - qcom,pcie-msm8996
     then:
+<<<<<<< HEAD
+=======
+      oneOf:
+        - properties:
+            clock-names:
+              items:
+                - const: pipe # Pipe Clock driving internal logic
+                - const: aux # Auxiliary (AUX) clock
+                - const: cfg # Configuration clock
+                - const: bus_master # Master AXI clock
+                - const: bus_slave # Slave AXI clock
+        - properties:
+            clock-names:
+              items:
+                - const: pipe # Pipe Clock driving internal logic
+                - const: bus_master # Master AXI clock
+                - const: bus_slave # Slave AXI clock
+                - const: cfg # Configuration clock
+                - const: aux # Auxiliary (AUX) clock
+>>>>>>> b7ba80a49124 (Commit)
       properties:
         clocks:
           minItems: 5
           maxItems: 5
+<<<<<<< HEAD
         clock-names:
           items:
             - const: pipe # Pipe Clock driving internal logic
@@ -331,6 +383,8 @@ allOf:
             - const: cfg # Configuration clock
             - const: bus_master # Master AXI clock
             - const: bus_slave # Slave AXI clock
+=======
+>>>>>>> b7ba80a49124 (Commit)
         resets: false
         reset-names: false
 
@@ -371,7 +425,10 @@ allOf:
           contains:
             enum:
               - qcom,pcie-ipq6018
+<<<<<<< HEAD
               - qcom,pcie-ipq8074-gen3
+=======
+>>>>>>> b7ba80a49124 (Commit)
     then:
       properties:
         clocks:
@@ -554,6 +611,7 @@ allOf:
         compatible:
           contains:
             enum:
+<<<<<<< HEAD
               - qcom,pcie-sm8350
     then:
       properties:
@@ -583,6 +641,8 @@ allOf:
         compatible:
           contains:
             enum:
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - qcom,pcie-sm8450-pcie0
     then:
       properties:
@@ -670,6 +730,7 @@ allOf:
             - const: pci # PCIe core reset
 
   - if:
+<<<<<<< HEAD
       properties:
         compatible:
           contains:
@@ -682,6 +743,8 @@ allOf:
         - interconnect-names
 
   - if:
+=======
+>>>>>>> b7ba80a49124 (Commit)
       not:
         properties:
           compatible:
@@ -692,7 +755,10 @@ allOf:
                 - qcom,pcie-ipq8064
                 - qcom,pcie-ipq8064v2
                 - qcom,pcie-ipq8074
+<<<<<<< HEAD
                 - qcom,pcie-ipq8074-gen3
+=======
+>>>>>>> b7ba80a49124 (Commit)
                 - qcom,pcie-qcs404
     then:
       required:
@@ -721,7 +787,10 @@ allOf:
               - qcom,pcie-sdm845
               - qcom,pcie-sm8150
               - qcom,pcie-sm8250
+<<<<<<< HEAD
               - qcom,pcie-sm8350
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - qcom,pcie-sm8450-pcie0
               - qcom,pcie-sm8450-pcie1
     then:
@@ -776,7 +845,10 @@ allOf:
               - qcom,pcie-ipq8064
               - qcom,pcie-ipq8064-v2
               - qcom,pcie-ipq8074
+<<<<<<< HEAD
               - qcom,pcie-ipq8074-gen3
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - qcom,pcie-qcs404
               - qcom,pcie-sa8540p
     then:

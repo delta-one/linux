@@ -33,6 +33,11 @@
 		optee {
 			method = "smc";
 			compatible = "linaro,optee-tz";
+<<<<<<< HEAD
+=======
+			interrupt-parent = <&intc>;
+			interrupts = <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		scmi: scmi {
@@ -77,6 +82,7 @@
 		always-on;
 	};
 
+<<<<<<< HEAD
 	/* PWR 1v1, 1v8 and 3v3 regulators defined as fixed, waiting for SCMI */
 	reg11: reg11 {
 		compatible = "regulator-fixed";
@@ -99,6 +105,8 @@
 		regulator-max-microvolt = <3300000>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	soc {
 		compatible = "simple-bus";
 		#address-cells = <1>;
@@ -119,6 +127,7 @@
 			};
 		};
 
+<<<<<<< HEAD
 		timers2: timer@40000000 {
 			#address-cells = <1>;
 			#size-cells = <0>;
@@ -345,6 +354,8 @@
 			status = "disabled";
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		spi2: spi@4000b000 {
 			compatible = "st,stm32h7-spi";
 			reg = <0x4000b000 0x400>;
@@ -359,6 +370,7 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		i2s3: audio-controller@4000c000 {
 			compatible = "st,stm32h7-i2s";
 			reg = <0x4000c000 0x400>;
@@ -370,6 +382,8 @@
 			status = "disabled";
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		spi3: spi@4000c000 {
 			compatible = "st,stm32h7-spi";
 			reg = <0x4000c000 0x400>;
@@ -384,6 +398,7 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		spdifrx: audio-controller@4000d000 {
 			compatible = "st,stm32h7-spdifrx";
 			reg = <0x4000d000 0x400>;
@@ -397,6 +412,8 @@
 			status = "disabled";
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		uart4: serial@40010000 {
 			compatible = "st,stm32h7-uart";
 			reg = <0x40010000 0x400>;
@@ -442,6 +459,7 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		timers1: timer@44000000 {
 			#address-cells = <1>;
 			#size-cells = <0>;
@@ -535,6 +553,8 @@
 			status = "disabled";
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		spi1: spi@44004000 {
 			compatible = "st,stm32h7-spi";
 			reg = <0x44004000 0x400>;
@@ -549,6 +569,7 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		sai1: sai@4400a000 {
 			compatible = "st,stm32h7-sai";
 			reg = <0x4400a000 0x4>, <0x4400a3f0 0x10>;
@@ -641,6 +662,8 @@
 			};
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		dma1: dma-controller@48000000 {
 			compatible = "st,stm32-dma";
 			reg = <0x48000000 0x400>;
@@ -688,6 +711,7 @@
 			dma-channels = <16>;
 		};
 
+<<<<<<< HEAD
 		adc_2: adc@48004000 {
 			compatible = "st,stm32mp13-adc-core";
 			reg = <0x48004000 0x400>;
@@ -759,6 +783,8 @@
 			status = "disabled";
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		spi4: spi@4c002000 {
 			compatible = "st,stm32h7-spi";
 			reg = <0x4c002000 0x400>;
@@ -841,6 +867,7 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		timers12: timer@4c007000 {
 			#address-cells = <1>;
 			#size-cells = <0>;
@@ -996,6 +1023,8 @@
 			};
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		rcc: rcc@50000000 {
 			compatible = "st,stm32mp13-rcc", "syscon";
 			reg = <0x50000000 0x1000>;
@@ -1022,6 +1051,7 @@
 			clocks = <&rcc SYSCFG>;
 		};
 
+<<<<<<< HEAD
 		lptimer2: timer@50021000 {
 			#address-cells = <1>;
 			#size-cells = <0>;
@@ -1127,6 +1157,8 @@
 			};
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		mdma: dma-controller@58000000 {
 			compatible = "st,stm32h7-mdma";
 			reg = <0x58000000 0x1000>;
@@ -1142,6 +1174,10 @@
 			arm,primecell-periphid = <0x20253180>;
 			reg = <0x58005000 0x1000>, <0x58006000 0x1000>;
 			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
+<<<<<<< HEAD
+=======
+			interrupt-names = "cmd_irq";
+>>>>>>> b7ba80a49124 (Commit)
 			clocks = <&rcc SDMMC1_K>;
 			clock-names = "apb_pclk";
 			resets = <&rcc SDMMC1_R>;
@@ -1156,6 +1192,10 @@
 			arm,primecell-periphid = <0x20253180>;
 			reg = <0x58007000 0x1000>, <0x58008000 0x1000>;
 			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
+<<<<<<< HEAD
+=======
+			interrupt-names = "cmd_irq";
+>>>>>>> b7ba80a49124 (Commit)
 			clocks = <&rcc SDMMC2_K>;
 			clock-names = "apb_pclk";
 			resets = <&rcc SDMMC2_R>;
@@ -1165,6 +1205,7 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		usbh_ohci: usb@5800c000 {
 			compatible = "generic-ohci";
 			reg = <0x5800c000 0x1000>;
@@ -1184,6 +1225,8 @@
 			status = "disabled";
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		iwdg2: watchdog@5a002000 {
 			compatible = "st,stm32mp1-iwdg";
 			reg = <0x5a002000 0x400>;
@@ -1192,6 +1235,7 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		usbphyc: usbphyc@5a006000 {
 			#address-cells = <1>;
 			#size-cells = <0>;
@@ -1215,6 +1259,8 @@
 			};
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		rtc: rtc@5c004000 {
 			compatible = "st,stm32mp1-rtc";
 			reg = <0x5c004000 0x400>;
@@ -1226,14 +1272,21 @@
 		};
 
 		bsec: efuse@5c005000 {
+<<<<<<< HEAD
 			compatible = "st,stm32mp13-bsec";
+=======
+			compatible = "st,stm32mp15-bsec";
+>>>>>>> b7ba80a49124 (Commit)
 			reg = <0x5c005000 0x400>;
 			#address-cells = <1>;
 			#size-cells = <1>;
 
 			part_number_otp: part_number_otp@4 {
 				reg = <0x4 0x2>;
+<<<<<<< HEAD
 				bits = <0 12>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			};
 			ts_cal1: calib@5c {
 				reg = <0x5c 0x2>;
@@ -1254,6 +1307,10 @@
 			ranges = <0 0x50002000 0x8400>;
 			interrupt-parent = <&exti>;
 			st,syscfg = <&exti 0x60 0xff>;
+<<<<<<< HEAD
+=======
+			pins-are-numbered;
+>>>>>>> b7ba80a49124 (Commit)
 
 			gpioa: gpio@50002000 {
 				gpio-controller;

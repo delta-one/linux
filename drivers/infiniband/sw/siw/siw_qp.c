@@ -10,7 +10,10 @@
 #include <linux/llist.h>
 #include <asm/barrier.h>
 #include <net/tcp.h>
+<<<<<<< HEAD
 #include <trace/events/sock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "siw.h"
 #include "siw_verbs.h"
@@ -95,8 +98,11 @@ void siw_qp_llp_data_ready(struct sock *sk)
 {
 	struct siw_qp *qp;
 
+<<<<<<< HEAD
 	trace_sk_data_ready(sk);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	read_lock(&sk->sk_callback_lock);
 
 	if (unlikely(!sk->sk_user_data || !sk_to_qp(sk)))

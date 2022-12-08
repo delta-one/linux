@@ -157,8 +157,11 @@ struct aq_nic_s {
 	struct mutex fwreq_mutex;
 #if IS_ENABLED(CONFIG_MACSEC)
 	struct aq_macsec_cfg *macsec_cfg;
+<<<<<<< HEAD
 	/* mutex to protect data in macsec_cfg */
 	struct mutex macsec_mutex;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	/* PTP support */
 	struct aq_ptp_s *aq_ptp;

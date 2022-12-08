@@ -23,7 +23,11 @@ static void netfs_clear_unread(struct netfs_io_subrequest *subreq)
 {
 	struct iov_iter iter;
 
+<<<<<<< HEAD
 	iov_iter_xarray(&iter, ITER_DEST, &subreq->rreq->mapping->i_pages,
+=======
+	iov_iter_xarray(&iter, READ, &subreq->rreq->mapping->i_pages,
+>>>>>>> b7ba80a49124 (Commit)
 			subreq->start + subreq->transferred,
 			subreq->len   - subreq->transferred);
 	iov_iter_zero(iov_iter_count(&iter), &iter);
@@ -49,7 +53,11 @@ static void netfs_read_from_cache(struct netfs_io_request *rreq,
 	struct iov_iter iter;
 
 	netfs_stat(&netfs_n_rh_read);
+<<<<<<< HEAD
 	iov_iter_xarray(&iter, ITER_DEST, &rreq->mapping->i_pages,
+=======
+	iov_iter_xarray(&iter, READ, &rreq->mapping->i_pages,
+>>>>>>> b7ba80a49124 (Commit)
 			subreq->start + subreq->transferred,
 			subreq->len   - subreq->transferred);
 
@@ -121,9 +129,12 @@ static void netfs_rreq_unmark_after_write(struct netfs_io_request *rreq,
 		XA_STATE(xas, &rreq->mapping->i_pages, subreq->start / PAGE_SIZE);
 
 		xas_for_each(&xas, folio, (subreq->start + subreq->len - 1) / PAGE_SIZE) {
+<<<<<<< HEAD
 			if (xas_retry(&xas, folio))
 				continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			/* We might have multiple writes from the same huge
 			 * folio, but we mustn't unlock a folio more than once.
 			 */
@@ -208,7 +219,11 @@ static void netfs_rreq_do_write_to_cache(struct netfs_io_request *rreq)
 			continue;
 		}
 
+<<<<<<< HEAD
 		iov_iter_xarray(&iter, ITER_SOURCE, &rreq->mapping->i_pages,
+=======
+		iov_iter_xarray(&iter, WRITE, &rreq->mapping->i_pages,
+>>>>>>> b7ba80a49124 (Commit)
 				subreq->start, subreq->len);
 
 		atomic_inc(&rreq->nr_copy_ops);

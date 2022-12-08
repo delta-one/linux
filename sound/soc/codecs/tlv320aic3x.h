@@ -298,6 +298,7 @@ enum {
 #define AIC3X_BUTTON_DEBOUNCE_SHIFT 	0
 #define AIC3X_BUTTON_DEBOUNCE_MASK	3
 
+<<<<<<< HEAD
 /* GPIO API */
 enum {
 	AIC3X_GPIO1_FUNC_DISABLED		= 0,
@@ -341,4 +342,6 @@ enum aic3x_micbias_voltage {
 	AIC3X_MICBIAS_AVDDV = 3,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _AIC3X_H */

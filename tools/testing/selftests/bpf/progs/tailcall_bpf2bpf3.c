@@ -2,7 +2,10 @@
 #include <linux/bpf.h>
 #include <bpf/bpf_helpers.h>
 #include "bpf_legacy.h"
+<<<<<<< HEAD
 #include "bpf_misc.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct {
 	__uint(type, BPF_MAP_TYPE_PROG_ARRAY);
@@ -21,8 +24,11 @@ int subprog_tail2(struct __sk_buff *skb)
 	else
 		bpf_tail_call_static(skb, &jmp_table, 1);
 
+<<<<<<< HEAD
 	__sink(arr[sizeof(arr) - 1]);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return skb->len;
 }
 
@@ -33,8 +39,11 @@ int subprog_tail(struct __sk_buff *skb)
 
 	bpf_tail_call_static(skb, &jmp_table, 0);
 
+<<<<<<< HEAD
 	__sink(arr[sizeof(arr) - 1]);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return skb->len * 2;
 }
 
@@ -43,8 +52,11 @@ int classifier_0(struct __sk_buff *skb)
 {
 	volatile char arr[128] = {};
 
+<<<<<<< HEAD
 	__sink(arr[sizeof(arr) - 1]);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return subprog_tail2(skb);
 }
 
@@ -53,8 +65,11 @@ int classifier_1(struct __sk_buff *skb)
 {
 	volatile char arr[128] = {};
 
+<<<<<<< HEAD
 	__sink(arr[sizeof(arr) - 1]);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return skb->len * 3;
 }
 
@@ -63,8 +78,11 @@ int entry(struct __sk_buff *skb)
 {
 	volatile char arr[128] = {};
 
+<<<<<<< HEAD
 	__sink(arr[sizeof(arr) - 1]);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return subprog_tail(skb);
 }
 

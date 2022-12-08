@@ -112,11 +112,14 @@
 #define STM32MP1_ADC_IPDR		0x3F8
 #define STM32MP1_ADC_SIDR		0x3FC
 
+<<<<<<< HEAD
 /* STM32MP13 - Registers for each ADC instance */
 #define STM32MP13_ADC_DIFSEL		0xB0
 #define STM32MP13_ADC_CALFACT		0xB4
 #define STM32MP13_ADC2_OR		0xC8
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* STM32H7 - common registers for all ADC instances */
 #define STM32H7_ADC_CSR			(STM32_ADCX_COMN_OFFSET + 0x00)
 #define STM32H7_ADC_CCR			(STM32_ADCX_COMN_OFFSET + 0x08)
@@ -142,7 +145,10 @@
 #define STM32H7_LINCALRDYW3		BIT(24)
 #define STM32H7_LINCALRDYW2		BIT(23)
 #define STM32H7_LINCALRDYW1		BIT(22)
+<<<<<<< HEAD
 #define STM32H7_LINCALRDYW_MASK		GENMASK(27, 22)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define STM32H7_ADCALLIN		BIT(16)
 #define STM32H7_BOOST			BIT(8)
 #define STM32H7_ADSTP			BIT(4)
@@ -167,9 +173,12 @@ enum stm32h7_adc_dmngt {
 	STM32H7_DMNGT_DMA_CIRC,		/* DMA circular mode */
 };
 
+<<<<<<< HEAD
 /* STM32H7_ADC_DIFSEL - bit fields */
 #define STM32H7_DIFSEL_MASK		GENMASK(19, 0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* STM32H7_ADC_CALFACT - bit fields */
 #define STM32H7_CALFACT_D_SHIFT		16
 #define STM32H7_CALFACT_D_MASK		GENMASK(26, 16)
@@ -219,6 +228,7 @@ enum stm32h7_adc_dmngt {
 /* STM32MP1_ADC_SIDR - bit fields */
 #define STM32MP1_SIDR_MASK		GENMASK(31, 0)
 
+<<<<<<< HEAD
 /* STM32MP13_ADC_CFGR specific bit fields */
 #define STM32MP13_DMAEN			BIT(0)
 #define STM32MP13_DMACFG		BIT(1)
@@ -242,6 +252,9 @@ enum stm32h7_adc_dmngt {
 
 #define STM32MP15_IPIDR_NUMBER		0x00110005
 #define STM32MP13_IPIDR_NUMBER		0x00110006
+=======
+#define STM32MP15_IPIDR_NUMBER		0x00110005
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct stm32_adc_common - stm32 ADC driver common data (for all instances)

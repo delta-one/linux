@@ -5,15 +5,22 @@
 
 #include "mpfs.dtsi"
 #include "mpfs-icicle-kit-fabric.dtsi"
+<<<<<<< HEAD
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/leds/common.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Clock frequency (in Hz) of the rtcclk */
 #define RTCCLK_FREQ		1000000
 
 / {
 	model = "Microchip PolarFire-SoC Icicle Kit";
+<<<<<<< HEAD
 	compatible = "microchip,mpfs-icicle-reference-rtlv2210", "microchip,mpfs-icicle-kit",
+=======
+	compatible = "microchip,mpfs-icicle-reference-rtlv2209", "microchip,mpfs-icicle-kit",
+>>>>>>> b7ba80a49124 (Commit)
 		     "microchip,mpfs";
 
 	aliases {
@@ -33,6 +40,7 @@
 		timebase-frequency = <RTCCLK_FREQ>;
 	};
 
+<<<<<<< HEAD
 	leds {
 		compatible = "gpio-leds";
 
@@ -83,6 +91,19 @@
 			no-map;
 		};
 	};
+=======
+	ddrc_cache_lo: memory@80000000 {
+		device_type = "memory";
+		reg = <0x0 0x80000000 0x0 0x2e000000>;
+		status = "okay";
+	};
+
+	ddrc_cache_hi: memory@1000000000 {
+		device_type = "memory";
+		reg = <0x10 0x0 0x0 0x40000000>;
+		status = "okay";
+	};
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &core_pwm0 {
@@ -179,10 +200,13 @@
 	clock-frequency = <125000000>;
 };
 
+<<<<<<< HEAD
 &refclk_ccc {
 	clock-frequency = <50000000>;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &rtc {
 	status = "okay";
 };

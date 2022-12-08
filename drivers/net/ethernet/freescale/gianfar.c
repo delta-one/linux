@@ -787,10 +787,17 @@ static int gfar_of_init(struct platform_device *ofdev, struct net_device **pdev)
 	else
 		priv->interface = gfar_get_interface(dev);
 
+<<<<<<< HEAD
 	if (of_property_read_bool(np, "fsl,magic-packet"))
 		priv->device_flags |= FSL_GIANFAR_DEV_HAS_MAGIC_PACKET;
 
 	if (of_property_read_bool(np, "fsl,wake-on-filer"))
+=======
+	if (of_find_property(np, "fsl,magic-packet", NULL))
+		priv->device_flags |= FSL_GIANFAR_DEV_HAS_MAGIC_PACKET;
+
+	if (of_get_property(np, "fsl,wake-on-filer", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		priv->device_flags |= FSL_GIANFAR_DEV_HAS_WAKE_ON_FILER;
 
 	priv->phy_node = of_parse_phandle(np, "phy-handle", 0);
@@ -3233,7 +3240,11 @@ static int gfar_probe(struct platform_device *ofdev)
 	/* Register for napi ...We are registering NAPI for each grp */
 	for (i = 0; i < priv->num_grps; i++) {
 		netif_napi_add(dev, &priv->gfargrp[i].napi_rx,
+<<<<<<< HEAD
 			       gfar_poll_rx_sq);
+=======
+			       gfar_poll_rx_sq, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 		netif_napi_add_tx_weight(dev, &priv->gfargrp[i].napi_tx,
 					 gfar_poll_tx_sq, 2);
 	}

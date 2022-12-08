@@ -10,7 +10,10 @@
 
 /dts-v1/;
 #include "fsd.dtsi"
+<<<<<<< HEAD
 #include <dt-bindings/gpio/gpio.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 / {
 	model = "Tesla Full Self-Driving (FSD) Evaluation board";
@@ -29,6 +32,7 @@
 		device_type = "memory";
 		reg = <0x0 0x80000000 0x2 0x00000000>;
 	};
+<<<<<<< HEAD
 
 	sound {
 		compatible = "simple-audio-card";
@@ -62,12 +66,15 @@
 			};
 		};
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &fin_pll {
 	clock-frequency = <24000000>;
 };
 
+<<<<<<< HEAD
 &hsi2c_5 {
 	status = "okay";
 
@@ -103,6 +110,8 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &serial_0 {
 	status = "okay";
 };

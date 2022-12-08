@@ -740,6 +740,7 @@ void css_schedule_eval_all(void)
 	spin_unlock_irqrestore(&slow_subchannel_lock, flags);
 }
 
+<<<<<<< HEAD
 static int __unset_validpath(struct device *dev, void *data)
 {
 	struct idset *set = data;
@@ -755,6 +756,14 @@ static int __unset_validpath(struct device *dev, void *data)
 	    (sch->opm & pmcw->pam & pmcw->pom))
 		idset_sch_del(set, sch->schid);
 
+=======
+static int __unset_registered(struct device *dev, void *data)
+{
+	struct idset *set = data;
+	struct subchannel *sch = to_subchannel(dev);
+
+	idset_sch_del(set, sch->schid);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -762,9 +771,19 @@ static int __unset_online(struct device *dev, void *data)
 {
 	struct idset *set = data;
 	struct subchannel *sch = to_subchannel(dev);
+<<<<<<< HEAD
 
 	if (sch->st == SUBCHANNEL_TYPE_IO && sch->config.ena)
 		idset_sch_del(set, sch->schid);
+=======
+	struct ccw_device *cdev;
+
+	if (sch->st == SUBCHANNEL_TYPE_IO) {
+		cdev = sch_get_cdev(sch);
+		if (cdev && cdev->online)
+			idset_sch_del(set, sch->schid);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -783,8 +802,13 @@ void css_schedule_eval_cond(enum css_eval_cond cond, unsigned long delay)
 	}
 	idset_fill(set);
 	switch (cond) {
+<<<<<<< HEAD
 	case CSS_EVAL_NO_PATH:
 		bus_for_each_dev(&css_bus_type, NULL, set, __unset_validpath);
+=======
+	case CSS_EVAL_UNREG:
+		bus_for_each_dev(&css_bus_type, NULL, set, __unset_registered);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case CSS_EVAL_NOT_ONLINE:
 		bus_for_each_dev(&css_bus_type, NULL, set, __unset_online);
@@ -807,11 +831,19 @@ void css_wait_for_slow_path(void)
 	flush_workqueue(cio_work_q);
 }
 
+<<<<<<< HEAD
 /* Schedule reprobing of all subchannels with no valid operational path. */
 void css_schedule_reprobe(void)
 {
 	/* Schedule with a delay to allow merging of subsequent calls. */
 	css_schedule_eval_cond(CSS_EVAL_NO_PATH, 1 * HZ);
+=======
+/* Schedule reprobing of all unregistered subchannels. */
+void css_schedule_reprobe(void)
+{
+	/* Schedule with a delay to allow merging of subsequent calls. */
+	css_schedule_eval_cond(CSS_EVAL_UNREG, 1 * HZ);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(css_schedule_reprobe);
 
@@ -1411,9 +1443,15 @@ static void css_shutdown(struct device *dev)
 		sch->driver->shutdown(sch);
 }
 
+<<<<<<< HEAD
 static int css_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct subchannel *sch = to_subchannel(dev);
+=======
+static int css_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct subchannel *sch = to_subchannel(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	ret = add_uevent_var(env, "ST=%01X", sch->st);

@@ -18,8 +18,13 @@ struct tegra186_bpmp {
 
 	struct {
 		struct gen_pool *pool;
+<<<<<<< HEAD
 		void __iomem *virt;
 		dma_addr_t phys;
+=======
+		dma_addr_t phys;
+		void *virt;
+>>>>>>> b7ba80a49124 (Commit)
 	} tx, rx;
 
 	struct {
@@ -40,6 +45,7 @@ mbox_client_to_bpmp(struct mbox_client *client)
 
 static bool tegra186_bpmp_is_message_ready(struct tegra_bpmp_channel *channel)
 {
+<<<<<<< HEAD
 	int err;
 
 	err = tegra_ivc_read_get_next_frame(channel->ivc, &channel->ib);
@@ -48,11 +54,24 @@ static bool tegra186_bpmp_is_message_ready(struct tegra_bpmp_channel *channel)
 		return false;
 	}
 
+=======
+	void *frame;
+
+	frame = tegra_ivc_read_get_next_frame(channel->ivc);
+	if (IS_ERR(frame)) {
+		channel->ib = NULL;
+		return false;
+	}
+
+	channel->ib = frame;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 
 static bool tegra186_bpmp_is_channel_free(struct tegra_bpmp_channel *channel)
 {
+<<<<<<< HEAD
 	int err;
 
 	err = tegra_ivc_write_get_next_frame(channel->ivc, &channel->ob);
@@ -61,6 +80,18 @@ static bool tegra186_bpmp_is_channel_free(struct tegra_bpmp_channel *channel)
 		return false;
 	}
 
+=======
+	void *frame;
+
+	frame = tegra_ivc_write_get_next_frame(channel->ivc);
+	if (IS_ERR(frame)) {
+		channel->ob = NULL;
+		return false;
+	}
+
+	channel->ob = frame;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 
@@ -105,7 +136,10 @@ static int tegra186_bpmp_channel_init(struct tegra_bpmp_channel *channel,
 {
 	struct tegra186_bpmp *priv = bpmp->priv;
 	size_t message_size, queue_size;
+<<<<<<< HEAD
 	struct iosys_map rx, tx;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int offset;
 	int err;
 
@@ -118,11 +152,18 @@ static int tegra186_bpmp_channel_init(struct tegra_bpmp_channel *channel,
 	queue_size = tegra_ivc_total_queue_size(message_size);
 	offset = queue_size * index;
 
+<<<<<<< HEAD
 	iosys_map_set_vaddr_iomem(&rx, priv->rx.virt + offset);
 	iosys_map_set_vaddr_iomem(&tx, priv->tx.virt + offset);
 
 	err = tegra_ivc_init(channel->ivc, NULL, &rx, priv->rx.phys + offset, &tx,
 			     priv->tx.phys + offset, 1, message_size, tegra186_bpmp_ivc_notify,
+=======
+	err = tegra_ivc_init(channel->ivc, NULL,
+			     priv->rx.virt + offset, priv->rx.phys + offset,
+			     priv->tx.virt + offset, priv->tx.phys + offset,
+			     1, message_size, tegra186_bpmp_ivc_notify,
+>>>>>>> b7ba80a49124 (Commit)
 			     bpmp);
 	if (err < 0) {
 		dev_err(bpmp->dev, "failed to setup IVC for channel %u: %d\n",
@@ -177,7 +218,11 @@ static int tegra186_bpmp_init(struct tegra_bpmp *bpmp)
 		return -EPROBE_DEFER;
 	}
 
+<<<<<<< HEAD
 	priv->tx.virt = (void __iomem *)gen_pool_dma_alloc(priv->tx.pool, 4096, &priv->tx.phys);
+=======
+	priv->tx.virt = gen_pool_dma_alloc(priv->tx.pool, 4096, &priv->tx.phys);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!priv->tx.virt) {
 		dev_err(bpmp->dev, "failed to allocate from TX pool\n");
 		return -ENOMEM;
@@ -190,7 +235,11 @@ static int tegra186_bpmp_init(struct tegra_bpmp *bpmp)
 		goto free_tx;
 	}
 
+<<<<<<< HEAD
 	priv->rx.virt = (void __iomem *)gen_pool_dma_alloc(priv->rx.pool, 4096, &priv->rx.phys);
+=======
+	priv->rx.virt = gen_pool_dma_alloc(priv->rx.pool, 4096, &priv->rx.phys);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!priv->rx.virt) {
 		dev_err(bpmp->dev, "failed to allocate from RX pool\n");
 		err = -ENOMEM;

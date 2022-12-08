@@ -39,7 +39,10 @@
 #include <net/act_api.h>
 #include <net/pkt_cls.h>
 #include <linux/idr.h>
+<<<<<<< HEAD
 #include <net/tc_wrapper.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct tc_u_knode {
 	struct tc_u_knode __rcu	*next;
@@ -101,9 +104,14 @@ static inline unsigned int u32_hash_fold(__be32 key,
 	return h;
 }
 
+<<<<<<< HEAD
 TC_INDIRECT_SCOPE int u32_classify(struct sk_buff *skb,
 				   const struct tcf_proto *tp,
 				   struct tcf_result *res)
+=======
+static int u32_classify(struct sk_buff *skb, const struct tcf_proto *tp,
+			struct tcf_result *res)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct {
 		struct tc_u_knode *knode;
@@ -1042,11 +1050,15 @@ static int u32_change(struct net *net, struct sk_buff *in_skb,
 	}
 #endif
 
+<<<<<<< HEAD
 	unsafe_memcpy(&n->sel, s, sel_size,
 		      /* A composite flex-array structure destination,
 		       * which was correctly sized with struct_size(),
 		       * bounds-checked against nla_len(), and allocated
 		       * above. */);
+=======
+	memcpy(&n->sel, s, sel_size);
+>>>>>>> b7ba80a49124 (Commit)
 	RCU_INIT_POINTER(n->ht_up, ht);
 	n->handle = handle;
 	n->fshift = s->hmask ? ffs(ntohl(s->hmask)) - 1 : 0;
@@ -1252,7 +1264,16 @@ static void u32_bind_class(void *fh, u32 classid, unsigned long cl, void *q,
 {
 	struct tc_u_knode *n = fh;
 
+<<<<<<< HEAD
 	tc_cls_bind_class(classid, cl, q, &n->res, base);
+=======
+	if (n && n->res.classid == classid) {
+		if (cl)
+			__tcf_bind_filter(q, &n->res, base);
+		else
+			__tcf_unbind_filter(q, &n->res);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int u32_dump(struct net *net, struct tcf_proto *tp, void *fh,

@@ -1,7 +1,11 @@
 # SPDX-License-Identifier: GPL-2.0-only
 
 PHONY := __default
+<<<<<<< HEAD
 __default: vmlinux.o modules.builtin.modinfo modules.builtin
+=======
+__default: vmlinux.o
+>>>>>>> b7ba80a49124 (Commit)
 
 include include/config/auto.conf
 include $(srctree)/scripts/Kbuild.include
@@ -62,6 +66,7 @@ vmlinux.o: $(initcalls-lds) vmlinux.a $(KBUILD_VMLINUX_LIBS) FORCE
 
 targets += vmlinux.o
 
+<<<<<<< HEAD
 # module.builtin.modinfo
 # ---------------------------------------------------------------------------
 
@@ -86,6 +91,8 @@ targets += modules.builtin
 modules.builtin: modules.builtin.modinfo FORCE
 	$(call if_changed,modules_builtin)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 # Add FORCE to the prequisites of a target to force it to be always rebuilt.
 # ---------------------------------------------------------------------------
 

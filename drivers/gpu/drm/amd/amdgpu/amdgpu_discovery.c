@@ -33,7 +33,10 @@
 #include "gmc_v9_0.h"
 #include "df_v1_7.h"
 #include "df_v3_6.h"
+<<<<<<< HEAD
 #include "df_v4_3.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "nbio_v6_1.h"
 #include "nbio_v7_0.h"
 #include "nbio_v7_4.h"
@@ -41,7 +44,10 @@
 #include "vega10_ih.h"
 #include "vega20_ih.h"
 #include "sdma_v4_0.h"
+<<<<<<< HEAD
 #include "sdma_v4_4_2.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "uvd_v7_0.h"
 #include "vce_v4_0.h"
 #include "vcn_v1_0.h"
@@ -231,7 +237,11 @@ static int amdgpu_discovery_read_binary_from_file(struct amdgpu_device *adev, ui
 		return r;
 	}
 
+<<<<<<< HEAD
 	memcpy((u8 *)binary, (u8 *)fw->data, fw->size);
+=======
+	memcpy((u8 *)binary, (u8 *)fw->data, adev->mman.discovery_tmr_size);
+>>>>>>> b7ba80a49124 (Commit)
 	release_firmware(fw);
 
 	return 0;
@@ -307,6 +317,7 @@ static int amdgpu_discovery_init(struct amdgpu_device *adev)
 		goto out;
 	}
 
+<<<<<<< HEAD
 	if (!amdgpu_discovery_verify_binary_signature(adev->mman.discovery_bin) || amdgpu_discovery == 2) {
 		/* ignore the discovery binary from vram if discovery=2 in kernel module parameter */
 		if (amdgpu_discovery == 2)
@@ -314,6 +325,10 @@ static int amdgpu_discovery_init(struct amdgpu_device *adev)
 		else
 			dev_warn(adev->dev, "get invalid ip discovery binary signature from vram\n");
 
+=======
+	if (!amdgpu_discovery_verify_binary_signature(adev->mman.discovery_bin)) {
+		dev_warn(adev->dev, "get invalid ip discovery binary signature from vram\n");
+>>>>>>> b7ba80a49124 (Commit)
 		/* retry read ip discovery binary from file */
 		r = amdgpu_discovery_read_binary_from_file(adev, adev->mman.discovery_bin);
 		if (r) {
@@ -544,7 +559,10 @@ static void amdgpu_discovery_read_from_harvest_table(struct amdgpu_device *adev,
 	struct harvest_table *harvest_info;
 	u16 offset;
 	int i;
+<<<<<<< HEAD
 	uint32_t umc_harvest_config = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	bhdr = (struct binary_header *)adev->mman.discovery_bin;
 	offset = le16_to_cpu(bhdr->table_list[HARVEST_INFO].offset);
@@ -572,17 +590,23 @@ static void amdgpu_discovery_read_from_harvest_table(struct amdgpu_device *adev,
 			adev->harvest_ip_mask |= AMD_HARVEST_IP_DMU_MASK;
 			break;
 		case UMC_HWID:
+<<<<<<< HEAD
 			umc_harvest_config |=
 				1 << (le16_to_cpu(harvest_info->list[i].number_instance));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			(*umc_harvest_count)++;
 			break;
 		default:
 			break;
 		}
 	}
+<<<<<<< HEAD
 
 	adev->umc.active_mask = ((1 << adev->umc.node_inst_num) - 1) &
 				~umc_harvest_config;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* ================================================== */
@@ -712,7 +736,11 @@ static void ip_hw_instance_release(struct kobject *kobj)
 	kfree(ip_hw_instance);
 }
 
+<<<<<<< HEAD
 static const struct kobj_type ip_hw_instance_ktype = {
+=======
+static struct kobj_type ip_hw_instance_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release = ip_hw_instance_release,
 	.sysfs_ops = &ip_hw_instance_sysfs_ops,
 	.default_groups = ip_hw_instance_groups,
@@ -731,7 +759,11 @@ static void ip_hw_id_release(struct kobject *kobj)
 	kfree(ip_hw_id);
 }
 
+<<<<<<< HEAD
 static const struct kobj_type ip_hw_id_ktype = {
+=======
+static struct kobj_type ip_hw_id_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release = ip_hw_id_release,
 	.sysfs_ops = &kobj_sysfs_ops,
 };
@@ -794,18 +826,30 @@ static const struct sysfs_ops ip_die_entry_sysfs_ops = {
 	.show = ip_die_entry_attr_show,
 };
 
+<<<<<<< HEAD
 static const struct kobj_type ip_die_entry_ktype = {
+=======
+static struct kobj_type ip_die_entry_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release = ip_die_entry_release,
 	.sysfs_ops = &ip_die_entry_sysfs_ops,
 	.default_groups = ip_die_entry_groups,
 };
 
+<<<<<<< HEAD
 static const struct kobj_type die_kobj_ktype = {
+=======
+static struct kobj_type die_kobj_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release = die_kobj_release,
 	.sysfs_ops = &kobj_sysfs_ops,
 };
 
+<<<<<<< HEAD
 static const struct kobj_type ip_discovery_ktype = {
+=======
+static struct kobj_type ip_discovery_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release = ip_disc_release,
 	.sysfs_ops = &kobj_sysfs_ops,
 };
@@ -1163,10 +1207,15 @@ static int amdgpu_discovery_reg_base_init(struct amdgpu_device *adev)
 						AMDGPU_MAX_SDMA_INSTANCES);
 			}
 
+<<<<<<< HEAD
 			if (le16_to_cpu(ip->hw_id) == UMC_HWID) {
 				adev->gmc.num_umc++;
 				adev->umc.node_inst_num++;
 			}
+=======
+			if (le16_to_cpu(ip->hw_id) == UMC_HWID)
+				adev->gmc.num_umc++;
+>>>>>>> b7ba80a49124 (Commit)
 
 			for (k = 0; k < num_base_address; k++) {
 				/*
@@ -1522,7 +1571,10 @@ static int amdgpu_discovery_set_common_ip_blocks(struct amdgpu_device *adev)
 	case IP_VERSION(11, 0, 1):
 	case IP_VERSION(11, 0, 2):
 	case IP_VERSION(11, 0, 3):
+<<<<<<< HEAD
 	case IP_VERSION(11, 0, 4):
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		amdgpu_device_ip_block_add(adev, &soc21_common_ip_block);
 		break;
 	default:
@@ -1567,7 +1619,10 @@ static int amdgpu_discovery_set_gmc_ip_blocks(struct amdgpu_device *adev)
 	case IP_VERSION(11, 0, 1):
 	case IP_VERSION(11, 0, 2):
 	case IP_VERSION(11, 0, 3):
+<<<<<<< HEAD
 	case IP_VERSION(11, 0, 4):
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		amdgpu_device_ip_block_add(adev, &gmc_v11_0_ip_block);
 		break;
 	default:
@@ -1592,7 +1647,10 @@ static int amdgpu_discovery_set_ih_ip_blocks(struct amdgpu_device *adev)
 	case IP_VERSION(4, 2, 0):
 	case IP_VERSION(4, 2, 1):
 	case IP_VERSION(4, 4, 0):
+<<<<<<< HEAD
 	case IP_VERSION(4, 4, 2):
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		amdgpu_device_ip_block_add(adev, &vega20_ih_ip_block);
 		break;
 	case IP_VERSION(5, 0, 0):
@@ -1651,11 +1709,17 @@ static int amdgpu_discovery_set_psp_ip_blocks(struct amdgpu_device *adev)
 	case IP_VERSION(13, 0, 2):
 	case IP_VERSION(13, 0, 3):
 	case IP_VERSION(13, 0, 5):
+<<<<<<< HEAD
 	case IP_VERSION(13, 0, 6):
 	case IP_VERSION(13, 0, 7):
 	case IP_VERSION(13, 0, 8):
 	case IP_VERSION(13, 0, 10):
 	case IP_VERSION(13, 0, 11):
+=======
+	case IP_VERSION(13, 0, 7):
+	case IP_VERSION(13, 0, 8):
+	case IP_VERSION(13, 0, 10):
+>>>>>>> b7ba80a49124 (Commit)
 		amdgpu_device_ip_block_add(adev, &psp_v13_0_ip_block);
 		break;
 	case IP_VERSION(13, 0, 4):
@@ -1706,7 +1770,10 @@ static int amdgpu_discovery_set_smu_ip_blocks(struct amdgpu_device *adev)
 	case IP_VERSION(13, 0, 7):
 	case IP_VERSION(13, 0, 8):
 	case IP_VERSION(13, 0, 10):
+<<<<<<< HEAD
 	case IP_VERSION(13, 0, 11):
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		amdgpu_device_ip_block_add(adev, &smu_v13_0_ip_block);
 		break;
 	default:
@@ -1718,6 +1785,7 @@ static int amdgpu_discovery_set_smu_ip_blocks(struct amdgpu_device *adev)
 	return 0;
 }
 
+<<<<<<< HEAD
 #if defined(CONFIG_DRM_AMD_DC)
 static void amdgpu_discovery_set_sriov_display(struct amdgpu_device *adev)
 {
@@ -1729,6 +1797,11 @@ static void amdgpu_discovery_set_sriov_display(struct amdgpu_device *adev)
 static int amdgpu_discovery_set_display_ip_blocks(struct amdgpu_device *adev)
 {
 	if (adev->enable_virtual_display) {
+=======
+static int amdgpu_discovery_set_display_ip_blocks(struct amdgpu_device *adev)
+{
+	if (adev->enable_virtual_display || amdgpu_sriov_vf(adev)) {
+>>>>>>> b7ba80a49124 (Commit)
 		amdgpu_device_ip_block_add(adev, &amdgpu_vkms_ip_block);
 		return 0;
 	}
@@ -1756,10 +1829,14 @@ static int amdgpu_discovery_set_display_ip_blocks(struct amdgpu_device *adev)
 		case IP_VERSION(3, 1, 6):
 		case IP_VERSION(3, 2, 0):
 		case IP_VERSION(3, 2, 1):
+<<<<<<< HEAD
 			if (amdgpu_sriov_vf(adev))
 				amdgpu_discovery_set_sriov_display(adev);
 			else
 				amdgpu_device_ip_block_add(adev, &dm_ip_block);
+=======
+			amdgpu_device_ip_block_add(adev, &dm_ip_block);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		default:
 			dev_err(adev->dev,
@@ -1772,10 +1849,14 @@ static int amdgpu_discovery_set_display_ip_blocks(struct amdgpu_device *adev)
 		case IP_VERSION(12, 0, 0):
 		case IP_VERSION(12, 0, 1):
 		case IP_VERSION(12, 1, 0):
+<<<<<<< HEAD
 			if (amdgpu_sriov_vf(adev))
 				amdgpu_discovery_set_sriov_display(adev);
 			else
 				amdgpu_device_ip_block_add(adev, &dm_ip_block);
+=======
+			amdgpu_device_ip_block_add(adev, &dm_ip_block);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		default:
 			dev_err(adev->dev,
@@ -1820,7 +1901,10 @@ static int amdgpu_discovery_set_gc_ip_blocks(struct amdgpu_device *adev)
 	case IP_VERSION(11, 0, 1):
 	case IP_VERSION(11, 0, 2):
 	case IP_VERSION(11, 0, 3):
+<<<<<<< HEAD
 	case IP_VERSION(11, 0, 4):
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		amdgpu_device_ip_block_add(adev, &gfx_v11_0_ip_block);
 		break;
 	default:
@@ -1845,9 +1929,12 @@ static int amdgpu_discovery_set_sdma_ip_blocks(struct amdgpu_device *adev)
 	case IP_VERSION(4, 4, 0):
 		amdgpu_device_ip_block_add(adev, &sdma_v4_0_ip_block);
 		break;
+<<<<<<< HEAD
 	case IP_VERSION(4, 4, 2):
 		amdgpu_device_ip_block_add(adev, &sdma_v4_4_2_ip_block);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case IP_VERSION(5, 0, 0):
 	case IP_VERSION(5, 0, 1):
 	case IP_VERSION(5, 0, 2):
@@ -1948,8 +2035,14 @@ static int amdgpu_discovery_set_mm_ip_blocks(struct amdgpu_device *adev)
 		case IP_VERSION(4, 0, 2):
 		case IP_VERSION(4, 0, 4):
 			amdgpu_device_ip_block_add(adev, &vcn_v4_0_ip_block);
+<<<<<<< HEAD
 			amdgpu_device_ip_block_add(adev, &jpeg_v4_0_ip_block);
 			return 0;
+=======
+			if (!amdgpu_sriov_vf(adev))
+				amdgpu_device_ip_block_add(adev, &jpeg_v4_0_ip_block);
+			break;
+>>>>>>> b7ba80a49124 (Commit)
 		default:
 			dev_err(adev->dev,
 				"Failed to add vcn/jpeg ip block(UVD_HWIP:0x%x)\n",
@@ -1986,7 +2079,10 @@ static int amdgpu_discovery_set_mes_ip_blocks(struct amdgpu_device *adev)
 	case IP_VERSION(11, 0, 1):
 	case IP_VERSION(11, 0, 2):
 	case IP_VERSION(11, 0, 3):
+<<<<<<< HEAD
 	case IP_VERSION(11, 0, 4):
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		amdgpu_device_ip_block_add(adev, &mes_v11_0_ip_block);
 		adev->enable_mes = true;
 		adev->enable_mes_kiq = true;
@@ -2200,7 +2296,10 @@ int amdgpu_discovery_set_ip_blocks(struct amdgpu_device *adev)
 		break;
 	case IP_VERSION(10, 3, 1):
 		adev->family = AMDGPU_FAMILY_VGH;
+<<<<<<< HEAD
 		adev->apu_flags |= AMD_APU_IS_VANGOGH;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case IP_VERSION(10, 3, 3):
 		adev->family = AMDGPU_FAMILY_YC;
@@ -2217,7 +2316,10 @@ int amdgpu_discovery_set_ip_blocks(struct amdgpu_device *adev)
 		adev->family = AMDGPU_FAMILY_GC_11_0_0;
 		break;
 	case IP_VERSION(11, 0, 1):
+<<<<<<< HEAD
 	case IP_VERSION(11, 0, 4):
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		adev->family = AMDGPU_FAMILY_GC_11_0_1;
 		break;
 	default:
@@ -2235,7 +2337,10 @@ int amdgpu_discovery_set_ip_blocks(struct amdgpu_device *adev)
 	case IP_VERSION(10, 3, 6):
 	case IP_VERSION(10, 3, 7):
 	case IP_VERSION(11, 0, 1):
+<<<<<<< HEAD
 	case IP_VERSION(11, 0, 4):
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		adev->flags |= AMD_IS_APU;
 		break;
 	default:
@@ -2292,7 +2397,10 @@ int amdgpu_discovery_set_ip_blocks(struct amdgpu_device *adev)
 		adev->nbio.hdp_flush_reg = &nbio_v4_3_hdp_flush_reg;
 		break;
 	case IP_VERSION(7, 7, 0):
+<<<<<<< HEAD
 	case IP_VERSION(7, 7, 1):
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		adev->nbio.funcs = &nbio_v7_7_funcs;
 		adev->nbio.hdp_flush_reg = &nbio_v7_7_hdp_flush_reg;
 		break;
@@ -2309,7 +2417,10 @@ int amdgpu_discovery_set_ip_blocks(struct amdgpu_device *adev)
 	case IP_VERSION(4, 2, 0):
 	case IP_VERSION(4, 2, 1):
 	case IP_VERSION(4, 4, 0):
+<<<<<<< HEAD
 	case IP_VERSION(4, 4, 2):
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		adev->hdp.funcs = &hdp_v4_0_funcs;
 		break;
 	case IP_VERSION(5, 0, 0):
@@ -2344,9 +2455,12 @@ int amdgpu_discovery_set_ip_blocks(struct amdgpu_device *adev)
 	case IP_VERSION(3, 5, 2):
 		adev->df.funcs = &df_v1_7_funcs;
 		break;
+<<<<<<< HEAD
 	case IP_VERSION(4, 3, 0):
 		adev->df.funcs = &df_v4_3_funcs;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		break;
 	}

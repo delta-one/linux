@@ -17,6 +17,7 @@
 #define CS35L45_ASP_TX_HIZ_UNUSED	0x1
 #define CS35L45_ASP_TX_HIZ_DISABLED	0x2
 
+<<<<<<< HEAD
 /*
  * Optional GPIOX Sub-nodes:
  *  The cs35l45 node can have up to three "cirrus,gpio-ctrlX" ('X' = [1,2,3])
@@ -74,4 +75,6 @@
  */
 #define CS35L45_NUM_GPIOS	0x3
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* DT_CS35L45_H */

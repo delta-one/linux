@@ -4,7 +4,10 @@
  * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
  */
 
+<<<<<<< HEAD
 #include <linux/bitfield.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/coresight.h>
 #include <linux/coresight-pmu.h>
 #include <linux/cpumask.h>
@@ -23,7 +26,10 @@
 #include "coresight-etm-perf.h"
 #include "coresight-priv.h"
 #include "coresight-syscfg.h"
+<<<<<<< HEAD
 #include "coresight-trace-id.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct pmu etm_pmu;
 static bool etm_perf_up;
@@ -230,12 +236,17 @@ static void free_event_data(struct work_struct *work)
 		if (!(IS_ERR_OR_NULL(*ppath)))
 			coresight_release_path(*ppath);
 		*ppath = NULL;
+<<<<<<< HEAD
 		coresight_trace_id_put_cpu_id(cpu);
 	}
 
 	/* mark perf event as done for trace id allocator */
 	coresight_trace_id_perf_stop();
 
+=======
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	free_percpu(event_data->path);
 	kfree(event_data);
 }
@@ -306,7 +317,10 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
 {
 	u32 id, cfg_hash;
 	int cpu = event->cpu;
+<<<<<<< HEAD
 	int trace_id;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cpumask_t *mask;
 	struct coresight_device *sink = NULL;
 	struct coresight_device *user_sink = NULL, *last_sink = NULL;
@@ -323,9 +337,12 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
 		sink = user_sink = coresight_get_sink_by_id(id);
 	}
 
+<<<<<<< HEAD
 	/* tell the trace ID allocator that a perf event is starting up */
 	coresight_trace_id_perf_start();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* check if user wants a coresight configuration selected */
 	cfg_hash = (u32)((event->attr.config2 & GENMASK_ULL(63, 32)) >> 32);
 	if (cfg_hash) {
@@ -398,6 +415,7 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
 			continue;
 		}
 
+<<<<<<< HEAD
 		/* ensure we can allocate a trace ID for this CPU */
 		trace_id = coresight_trace_id_get_cpu_id(cpu);
 		if (!IS_VALID_CS_TRACE_ID(trace_id)) {
@@ -405,6 +423,8 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
 			continue;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		*etm_event_cpu_path_ptr(event_data, cpu) = path;
 	}
 
@@ -449,7 +469,10 @@ static void etm_event_start(struct perf_event *event, int flags)
 	struct perf_output_handle *handle = &ctxt->handle;
 	struct coresight_device *sink, *csdev = per_cpu(csdev_src, cpu);
 	struct list_head *path;
+<<<<<<< HEAD
 	u64 hw_id;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!csdev)
 		goto fail;
@@ -495,6 +518,7 @@ static void etm_event_start(struct perf_event *event, int flags)
 	if (source_ops(csdev)->enable(csdev, event, CS_MODE_PERF))
 		goto fail_disable_path;
 
+<<<<<<< HEAD
 	/*
 	 * output cpu / trace ID in perf record, once for the lifetime
 	 * of the event.
@@ -508,6 +532,8 @@ static void etm_event_start(struct perf_event *event, int flags)
 		perf_report_aux_output_id(event, hw_id);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	/* Tell the perf core the event is alive */
 	event->hw.state = 0;

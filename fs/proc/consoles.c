@@ -33,6 +33,7 @@ static int show_console_dev(struct seq_file *m, void *v)
 	if (con->device) {
 		const struct tty_driver *driver;
 		int index;
+<<<<<<< HEAD
 
 		/*
 		 * Take console_lock to serialize device() callback with
@@ -43,6 +44,9 @@ static int show_console_dev(struct seq_file *m, void *v)
 		driver = con->device(con, &index);
 		console_unlock();
 
+=======
+		driver = con->device(con, &index);
+>>>>>>> b7ba80a49124 (Commit)
 		if (driver) {
 			dev = MKDEV(driver->major, driver->minor_start);
 			dev += index;
@@ -72,12 +76,16 @@ static void *c_start(struct seq_file *m, loff_t *pos)
 	struct console *con;
 	loff_t off = 0;
 
+<<<<<<< HEAD
 	/*
 	 * Hold the console_list_lock to guarantee safe traversal of the
 	 * console list. SRCU cannot be used because there is no
 	 * place to store the SRCU cookie.
 	 */
 	console_list_lock();
+=======
+	console_lock();
+>>>>>>> b7ba80a49124 (Commit)
 	for_each_console(con)
 		if (off++ == *pos)
 			break;
@@ -88,14 +96,23 @@ static void *c_start(struct seq_file *m, loff_t *pos)
 static void *c_next(struct seq_file *m, void *v, loff_t *pos)
 {
 	struct console *con = v;
+<<<<<<< HEAD
 
 	++*pos;
 	return hlist_entry_safe(con->node.next, struct console, node);
+=======
+	++*pos;
+	return con->next;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void c_stop(struct seq_file *m, void *v)
 {
+<<<<<<< HEAD
 	console_list_unlock();
+=======
+	console_unlock();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct seq_operations consoles_op = {

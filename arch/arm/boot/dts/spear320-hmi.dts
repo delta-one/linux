@@ -241,7 +241,11 @@
 					irq-trigger = <0x1>;
 
 					stmpegpio: stmpe-gpio {
+<<<<<<< HEAD
 						compatible = "st,stmpe-gpio";
+=======
+						compatible = "stmpe,gpio";
+>>>>>>> b7ba80a49124 (Commit)
 						reg = <0>;
 						gpio-controller;
 						#gpio-cells = <2>;

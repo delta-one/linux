@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0
 /* Copyright 2022 Sony Group Corporation */
+<<<<<<< HEAD
 #define _GNU_SOURCE
 #include <fcntl.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <sys/prctl.h>
 #include <test_progs.h>
 #include "bpf_syscall_macro.skel.h"
@@ -15,8 +18,11 @@ void test_bpf_syscall_macro(void)
 	unsigned long exp_arg3 = 13;
 	unsigned long exp_arg4 = 14;
 	unsigned long exp_arg5 = 15;
+<<<<<<< HEAD
 	loff_t off_in, off_out;
 	ssize_t r;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* check whether it can open program */
 	skel = bpf_syscall_macro__open();
@@ -37,7 +43,10 @@ void test_bpf_syscall_macro(void)
 
 	/* check whether args of syscall are copied correctly */
 	prctl(exp_arg1, exp_arg2, exp_arg3, exp_arg4, exp_arg5);
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #if defined(__aarch64__) || defined(__s390__)
 	ASSERT_NEQ(skel->bss->arg1, exp_arg1, "syscall_arg1");
 #else
@@ -73,6 +82,7 @@ void test_bpf_syscall_macro(void)
 	ASSERT_EQ(skel->bss->arg4_syscall, exp_arg4, "BPF_KPROBE_SYSCALL_arg4");
 	ASSERT_EQ(skel->bss->arg5_syscall, exp_arg5, "BPF_KPROBE_SYSCALL_arg5");
 
+<<<<<<< HEAD
 	r = splice(-42, &off_in, 42, &off_out, 0x12340000, SPLICE_F_NONBLOCK);
 	err = -errno;
 	ASSERT_EQ(r, -1, "splice_res");
@@ -85,6 +95,8 @@ void test_bpf_syscall_macro(void)
 	ASSERT_EQ(skel->bss->splice_len, 0x12340000, "splice_arg5");
 	ASSERT_EQ(skel->bss->splice_flags, SPLICE_F_NONBLOCK, "splice_arg6");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 cleanup:
 	bpf_syscall_macro__destroy(skel);
 }

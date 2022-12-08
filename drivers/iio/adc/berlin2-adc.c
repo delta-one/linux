@@ -298,10 +298,15 @@ static int berlin2_adc_probe(struct platform_device *pdev)
 	int ret;
 
 	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*priv));
+<<<<<<< HEAD
 	if (!indio_dev) {
 		of_node_put(parent_np);
 		return -ENOMEM;
 	}
+=======
+	if (!indio_dev)
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 
 	priv = iio_priv(indio_dev);
 

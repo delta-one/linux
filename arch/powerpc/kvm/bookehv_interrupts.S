@@ -424,6 +424,18 @@ _GLOBAL(kvmppc_resume_host)
 	mtspr	SPRN_EPCR, r3
 	isync
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_64BIT
+	/*
+	 * We enter with interrupts disabled in hardware, but
+	 * we need to call RECONCILE_IRQ_STATE to ensure
+	 * that the software state is kept in sync.
+	 */
+	RECONCILE_IRQ_STATE(r3,r5)
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Switch to kernel stack and jump to handler. */
 	mr	r3, r4
 	mr	r5, r14 /* intno */

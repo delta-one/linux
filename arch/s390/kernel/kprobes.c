@@ -24,7 +24,10 @@
 #include <asm/set_memory.h>
 #include <asm/sections.h>
 #include <asm/dis.h>
+<<<<<<< HEAD
 #include "kprobes.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "entry.h"
 
 DEFINE_PER_CPU(struct kprobe *, current_kprobe);
@@ -32,6 +35,11 @@ DEFINE_PER_CPU(struct kprobe_ctlblk, kprobe_ctlblk);
 
 struct kretprobe_blackpoint kretprobe_blacklist[] = { };
 
+<<<<<<< HEAD
+=======
+DEFINE_INSN_CACHE_OPS(s390_insn);
+
+>>>>>>> b7ba80a49124 (Commit)
 static int insn_page_in_use;
 
 void *alloc_insn_page(void)
@@ -278,10 +286,26 @@ static void pop_kprobe(struct kprobe_ctlblk *kcb)
 {
 	__this_cpu_write(current_kprobe, kcb->prev_kprobe.kp);
 	kcb->kprobe_status = kcb->prev_kprobe.status;
+<<<<<<< HEAD
 	kcb->prev_kprobe.kp = NULL;
 }
 NOKPROBE_SYMBOL(pop_kprobe);
 
+=======
+}
+NOKPROBE_SYMBOL(pop_kprobe);
+
+void arch_prepare_kretprobe(struct kretprobe_instance *ri, struct pt_regs *regs)
+{
+	ri->ret_addr = (kprobe_opcode_t *)regs->gprs[14];
+	ri->fp = (void *)regs->gprs[15];
+
+	/* Replace the return addr with trampoline addr */
+	regs->gprs[14] = (unsigned long)&__kretprobe_trampoline;
+}
+NOKPROBE_SYMBOL(arch_prepare_kretprobe);
+
+>>>>>>> b7ba80a49124 (Commit)
 static void kprobe_reenter_check(struct kprobe_ctlblk *kcb, struct kprobe *p)
 {
 	switch (kcb->kprobe_status) {
@@ -362,6 +386,29 @@ static int kprobe_handler(struct pt_regs *regs)
 }
 NOKPROBE_SYMBOL(kprobe_handler);
 
+<<<<<<< HEAD
+=======
+void arch_kretprobe_fixup_return(struct pt_regs *regs,
+				 kprobe_opcode_t *correct_ret_addr)
+{
+	/* Replace fake return address with real one. */
+	regs->gprs[14] = (unsigned long)correct_ret_addr;
+}
+NOKPROBE_SYMBOL(arch_kretprobe_fixup_return);
+
+/*
+ * Called from __kretprobe_trampoline
+ */
+void trampoline_probe_handler(struct pt_regs *regs)
+{
+	kretprobe_trampoline_handler(regs, (void *)regs->gprs[15]);
+}
+NOKPROBE_SYMBOL(trampoline_probe_handler);
+
+/* assembler function that handles the kretprobes must not be probed itself */
+NOKPROBE_SYMBOL(__kretprobe_trampoline);
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Called after single-stepping.  p->addr is the address of the
  * instruction whose first byte has been replaced by the "breakpoint"
@@ -403,11 +450,19 @@ static int post_kprobe_handler(struct pt_regs *regs)
 	if (!p)
 		return 0;
 
+<<<<<<< HEAD
 	resume_execution(p, regs);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (kcb->kprobe_status != KPROBE_REENTER && p->post_handler) {
 		kcb->kprobe_status = KPROBE_HIT_SSDONE;
 		p->post_handler(p, regs, 0);
 	}
+<<<<<<< HEAD
+=======
+
+	resume_execution(p, regs);
+>>>>>>> b7ba80a49124 (Commit)
 	pop_kprobe(kcb);
 	preempt_enable_no_resched();
 

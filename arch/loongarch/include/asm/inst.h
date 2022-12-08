@@ -7,6 +7,7 @@
 
 #include <linux/types.h>
 #include <asm/asm.h>
+<<<<<<< HEAD
 #include <asm/ptrace.h>
 
 #define INSN_NOP		0x03400000
@@ -15,15 +16,24 @@
 #define ADDR_IMMMASK_LU52ID	0xFFF0000000000000
 #define ADDR_IMMMASK_LU32ID	0x000FFFFF00000000
 #define ADDR_IMMMASK_LU12IW	0x00000000FFFFF000
+=======
+
+#define ADDR_IMMMASK_LU52ID	0xFFF0000000000000
+#define ADDR_IMMMASK_LU32ID	0x000FFFFF00000000
+>>>>>>> b7ba80a49124 (Commit)
 #define ADDR_IMMMASK_ADDU16ID	0x00000000FFFF0000
 
 #define ADDR_IMMSHIFT_LU52ID	52
 #define ADDR_IMMSHIFT_LU32ID	32
+<<<<<<< HEAD
 #define ADDR_IMMSHIFT_LU12IW	12
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define ADDR_IMMSHIFT_ADDU16ID	16
 
 #define ADDR_IMM(addr, INSN)	((addr & ADDR_IMMMASK_##INSN) >> ADDR_IMMSHIFT_##INSN)
 
+<<<<<<< HEAD
 enum reg0i15_op {
 	break_op	= 0x54,
 };
@@ -40,11 +50,17 @@ enum reg1i20_op {
 	pcalau12i_op	= 0x0d,
 	pcaddu12i_op	= 0x0e,
 	pcaddu18i_op	= 0x0f,
+=======
+enum reg1i20_op {
+	lu12iw_op	= 0x0a,
+	lu32id_op	= 0x0b,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum reg1i21_op {
 	beqz_op		= 0x10,
 	bnez_op		= 0x11,
+<<<<<<< HEAD
 	bceqz_op	= 0x12, /* bits[9:8] = 0x00 */
 	bcnez_op	= 0x12, /* bits[9:8] = 0x01 */
 };
@@ -68,15 +84,20 @@ enum reg2i6_op {
 	sllid_op	= 0x41,
 	srlid_op	= 0x45,
 	sraid_op	= 0x49,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum reg2i12_op {
 	addiw_op	= 0x0a,
 	addid_op	= 0x0b,
 	lu52id_op	= 0x0c,
+<<<<<<< HEAD
 	andi_op		= 0x0d,
 	ori_op		= 0x0e,
 	xori_op		= 0x0f,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ldb_op		= 0xa0,
 	ldh_op		= 0xa1,
 	ldw_op		= 0xa2,
@@ -85,6 +106,7 @@ enum reg2i12_op {
 	sth_op		= 0xa5,
 	stw_op		= 0xa6,
 	std_op		= 0xa7,
+<<<<<<< HEAD
 	ldbu_op		= 0xa8,
 	ldhu_op		= 0xa9,
 	ldwu_op		= 0xaa,
@@ -103,6 +125,8 @@ enum reg2i14_op {
 	stptrw_op	= 0x25,
 	ldptrd_op	= 0x26,
 	stptrd_op	= 0x27,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum reg2i16_op {
@@ -115,6 +139,7 @@ enum reg2i16_op {
 	bgeu_op		= 0x1b,
 };
 
+<<<<<<< HEAD
 enum reg2bstrd_op {
 	bstrinsd_op	= 0x2,
 	bstrpickd_op	= 0x3,
@@ -189,6 +214,8 @@ struct reg0i15_format {
 	unsigned int opcode : 17;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct reg0i26_format {
 	unsigned int immediate_h : 10;
 	unsigned int immediate_l : 16;
@@ -208,6 +235,7 @@ struct reg1i21_format {
 	unsigned int opcode : 6;
 };
 
+<<<<<<< HEAD
 struct reg2_format {
 	unsigned int rd : 5;
 	unsigned int rj : 5;
@@ -228,6 +256,8 @@ struct reg2i6_format {
 	unsigned int opcode : 16;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct reg2i12_format {
 	unsigned int rd : 5;
 	unsigned int rj : 5;
@@ -235,6 +265,7 @@ struct reg2i12_format {
 	unsigned int opcode : 10;
 };
 
+<<<<<<< HEAD
 struct reg2i14_format {
 	unsigned int rd : 5;
 	unsigned int rj : 5;
@@ -242,6 +273,8 @@ struct reg2i14_format {
 	unsigned int opcode : 8;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct reg2i16_format {
 	unsigned int rd : 5;
 	unsigned int rj : 5;
@@ -249,6 +282,7 @@ struct reg2i16_format {
 	unsigned int opcode : 6;
 };
 
+<<<<<<< HEAD
 struct reg2bstrd_format {
 	unsigned int rd : 5;
 	unsigned int rj : 5;
@@ -287,6 +321,15 @@ union loongarch_instruction {
 	struct reg2bstrd_format	reg2bstrd_format;
 	struct reg3_format	reg3_format;
 	struct reg3sa2_format	reg3sa2_format;
+=======
+union loongarch_instruction {
+	unsigned int word;
+	struct reg0i26_format reg0i26_format;
+	struct reg1i20_format reg1i20_format;
+	struct reg1i21_format reg1i21_format;
+	struct reg2i12_format reg2i12_format;
+	struct reg2i16_format reg2i16_format;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define LOONGARCH_INSN_SIZE	sizeof(union loongarch_instruction)
@@ -333,6 +376,7 @@ static inline bool is_imm_negative(unsigned long val, unsigned int bit)
 	return val & (1UL << (bit - 1));
 }
 
+<<<<<<< HEAD
 static inline bool is_break_ins(union loongarch_instruction *ip)
 {
 	return ip->reg0i15_format.opcode == break_op;
@@ -344,6 +388,8 @@ static inline bool is_pc_ins(union loongarch_instruction *ip)
 			ip->reg1i20_format.opcode <= pcaddu18i_op;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool is_branch_ins(union loongarch_instruction *ip)
 {
 	return ip->reg1i21_format.opcode >= beqz_op &&
@@ -368,6 +414,7 @@ static inline bool is_stack_alloc_ins(union loongarch_instruction *ip)
 		is_imm12_negative(ip->reg2i12_format.immediate);
 }
 
+<<<<<<< HEAD
 static inline bool is_self_loop_ins(union loongarch_instruction *ip, struct pt_regs *regs)
 {
 	switch (ip->reg0i26_format.opcode) {
@@ -421,10 +468,13 @@ u32 larch_insn_gen_or(enum loongarch_gpr rd, enum loongarch_gpr rj, enum loongar
 u32 larch_insn_gen_move(enum loongarch_gpr rd, enum loongarch_gpr rj);
 
 u32 larch_insn_gen_lu12iw(enum loongarch_gpr rd, int imm);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm);
 u32 larch_insn_gen_lu52id(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
 u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, unsigned long pc, unsigned long dest);
 
+<<<<<<< HEAD
 static inline bool signed_imm_check(long val, unsigned int bit)
 {
 	return -(1L << (bit - 1)) <= val && val < (1L << (bit - 1));
@@ -663,4 +713,6 @@ void emulate_load_store_insn(struct pt_regs *regs, void __user *addr, unsigned i
 unsigned long unaligned_read(void __user *addr, void *value, unsigned long n, bool sign);
 unsigned long unaligned_write(void __user *addr, unsigned long value, unsigned long n);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _ASM_INST_H */

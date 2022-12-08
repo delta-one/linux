@@ -78,6 +78,10 @@ SECTIONS
 	__end = .;
 	PROVIDE(end = .);
 
+<<<<<<< HEAD
+=======
+	STABS_DEBUG
+>>>>>>> b7ba80a49124 (Commit)
 	DWARF_DEBUG
 	ELF_DETAILS
 

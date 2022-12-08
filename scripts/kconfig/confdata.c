@@ -1226,12 +1226,19 @@ static void (*conf_changed_callback)(void);
 
 void conf_set_changed(bool val)
 {
+<<<<<<< HEAD
 	bool changed = conf_changed != val;
 
 	conf_changed = val;
 
 	if (conf_changed_callback && changed)
 		conf_changed_callback();
+=======
+	if (conf_changed_callback && conf_changed != val)
+		conf_changed_callback();
+
+	conf_changed = val;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 bool conf_get_changed(void)

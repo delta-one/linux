@@ -9,7 +9,10 @@
 #include <linux/init.h>
 #include <linux/interrupt.h>
 #include <linux/io.h>
+<<<<<<< HEAD
 #include <linux/iopoll.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/ioport.h>
 #include <linux/irqchip/chained_irq.h>
 #include <linux/irqdomain.h>
@@ -53,8 +56,11 @@
 #define PCIE_RC_DL_MDIO_RD_DATA				0x1108
 
 #define PCIE_MISC_MISC_CTRL				0x4008
+<<<<<<< HEAD
 #define  PCIE_MISC_MISC_CTRL_PCIE_RCB_64B_MODE_MASK	0x80
 #define  PCIE_MISC_MISC_CTRL_PCIE_RCB_MPS_MODE_MASK	0x400
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define  PCIE_MISC_MISC_CTRL_SCB_ACCESS_EN_MASK		0x1000
 #define  PCIE_MISC_MISC_CTRL_CFG_READ_UR_MODE_MASK	0x2000
 #define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_MASK	0x300000
@@ -305,34 +311,66 @@ static u32 brcm_pcie_mdio_form_pkt(int port, int regad, int cmd)
 /* negative return value indicates error */
 static int brcm_pcie_mdio_read(void __iomem *base, u8 port, u8 regad, u32 *val)
 {
+<<<<<<< HEAD
 	u32 data;
 	int err;
+=======
+	int tries;
+	u32 data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	writel(brcm_pcie_mdio_form_pkt(port, regad, MDIO_CMD_READ),
 		   base + PCIE_RC_DL_MDIO_ADDR);
 	readl(base + PCIE_RC_DL_MDIO_ADDR);
+<<<<<<< HEAD
 	err = readl_poll_timeout_atomic(base + PCIE_RC_DL_MDIO_RD_DATA, data,
 					MDIO_RD_DONE(data), 10, 100);
 	*val = FIELD_GET(MDIO_DATA_MASK, data);
 
 	return err;
+=======
+
+	data = readl(base + PCIE_RC_DL_MDIO_RD_DATA);
+	for (tries = 0; !MDIO_RD_DONE(data) && tries < 10; tries++) {
+		udelay(10);
+		data = readl(base + PCIE_RC_DL_MDIO_RD_DATA);
+	}
+
+	*val = FIELD_GET(MDIO_DATA_MASK, data);
+	return MDIO_RD_DONE(data) ? 0 : -EIO;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* negative return value indicates error */
 static int brcm_pcie_mdio_write(void __iomem *base, u8 port,
 				u8 regad, u16 wrdata)
 {
+<<<<<<< HEAD
 	u32 data;
 	int err;
+=======
+	int tries;
+	u32 data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	writel(brcm_pcie_mdio_form_pkt(port, regad, MDIO_CMD_WRITE),
 		   base + PCIE_RC_DL_MDIO_ADDR);
 	readl(base + PCIE_RC_DL_MDIO_ADDR);
 	writel(MDIO_DATA_DONE_MASK | wrdata, base + PCIE_RC_DL_MDIO_WR_DATA);
 
+<<<<<<< HEAD
 	err = readw_poll_timeout_atomic(base + PCIE_RC_DL_MDIO_WR_DATA, data,
 					MDIO_WT_DONE(data), 10, 100);
 	return err;
+=======
+	data = readl(base + PCIE_RC_DL_MDIO_WR_DATA);
+	for (tries = 0; !MDIO_WT_DONE(data) && tries < 10; tries++) {
+		udelay(10);
+		data = readl(base + PCIE_RC_DL_MDIO_WR_DATA);
+	}
+
+	return MDIO_WT_DONE(data) ? 0 : -EIO;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -440,8 +478,12 @@ static struct irq_chip brcm_msi_irq_chip = {
 
 static struct msi_domain_info brcm_msi_domain_info = {
 	/* Multi MSI is supported by the controller, but not by this driver */
+<<<<<<< HEAD
 	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
 		   MSI_FLAG_MULTI_PCI_MSI),
+=======
+	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS),
+>>>>>>> b7ba80a49124 (Commit)
 	.chip	= &brcm_msi_irq_chip,
 };
 
@@ -501,23 +543,38 @@ static struct irq_chip brcm_msi_bottom_irq_chip = {
 	.irq_ack                = brcm_msi_ack_irq,
 };
 
+<<<<<<< HEAD
 static int brcm_msi_alloc(struct brcm_msi *msi, unsigned int nr_irqs)
+=======
+static int brcm_msi_alloc(struct brcm_msi *msi)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int hwirq;
 
 	mutex_lock(&msi->lock);
+<<<<<<< HEAD
 	hwirq = bitmap_find_free_region(msi->used, msi->nr,
 					order_base_2(nr_irqs));
+=======
+	hwirq = bitmap_find_free_region(msi->used, msi->nr, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&msi->lock);
 
 	return hwirq;
 }
 
+<<<<<<< HEAD
 static void brcm_msi_free(struct brcm_msi *msi, unsigned long hwirq,
 			  unsigned int nr_irqs)
 {
 	mutex_lock(&msi->lock);
 	bitmap_release_region(msi->used, hwirq, order_base_2(nr_irqs));
+=======
+static void brcm_msi_free(struct brcm_msi *msi, unsigned long hwirq)
+{
+	mutex_lock(&msi->lock);
+	bitmap_release_region(msi->used, hwirq, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&msi->lock);
 }
 
@@ -525,17 +582,29 @@ static int brcm_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
 				 unsigned int nr_irqs, void *args)
 {
 	struct brcm_msi *msi = domain->host_data;
+<<<<<<< HEAD
 	int hwirq, i;
 
 	hwirq = brcm_msi_alloc(msi, nr_irqs);
+=======
+	int hwirq;
+
+	hwirq = brcm_msi_alloc(msi);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (hwirq < 0)
 		return hwirq;
 
+<<<<<<< HEAD
 	for (i = 0; i < nr_irqs; i++)
 		irq_domain_set_info(domain, virq + i, hwirq + i,
 				    &brcm_msi_bottom_irq_chip, domain->host_data,
 				    handle_edge_irq, NULL, NULL);
+=======
+	irq_domain_set_info(domain, virq, (irq_hw_number_t)hwirq,
+			    &brcm_msi_bottom_irq_chip, domain->host_data,
+			    handle_edge_irq, NULL, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -545,7 +614,11 @@ static void brcm_irq_domain_free(struct irq_domain *domain,
 	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
 	struct brcm_msi *msi = irq_data_get_irq_chip_data(d);
 
+<<<<<<< HEAD
 	brcm_msi_free(msi, d->hwirq, nr_irqs);
+=======
+	brcm_msi_free(msi, d->hwirq);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct irq_domain_ops msi_domain_ops = {
@@ -725,7 +798,11 @@ static void __iomem *brcm7425_pcie_map_bus(struct pci_bus *bus,
 	return base + DATA_ADDR(pcie);
 }
 
+<<<<<<< HEAD
 static void brcm_pcie_bridge_sw_init_set_generic(struct brcm_pcie *pcie, u32 val)
+=======
+static inline void brcm_pcie_bridge_sw_init_set_generic(struct brcm_pcie *pcie, u32 val)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 tmp, mask =  RGR1_SW_INIT_1_INIT_GENERIC_MASK;
 	u32 shift = RGR1_SW_INIT_1_INIT_GENERIC_SHIFT;
@@ -735,7 +812,11 @@ static void brcm_pcie_bridge_sw_init_set_generic(struct brcm_pcie *pcie, u32 val
 	writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
 }
 
+<<<<<<< HEAD
 static void brcm_pcie_bridge_sw_init_set_7278(struct brcm_pcie *pcie, u32 val)
+=======
+static inline void brcm_pcie_bridge_sw_init_set_7278(struct brcm_pcie *pcie, u32 val)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 tmp, mask =  RGR1_SW_INIT_1_INIT_7278_MASK;
 	u32 shift = RGR1_SW_INIT_1_INIT_7278_SHIFT;
@@ -745,7 +826,11 @@ static void brcm_pcie_bridge_sw_init_set_7278(struct brcm_pcie *pcie, u32 val)
 	writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
 }
 
+<<<<<<< HEAD
 static void brcm_pcie_perst_set_4908(struct brcm_pcie *pcie, u32 val)
+=======
+static inline void brcm_pcie_perst_set_4908(struct brcm_pcie *pcie, u32 val)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (WARN_ONCE(!pcie->perst_reset, "missing PERST# reset controller\n"))
 		return;
@@ -756,7 +841,11 @@ static void brcm_pcie_perst_set_4908(struct brcm_pcie *pcie, u32 val)
 		reset_control_deassert(pcie->perst_reset);
 }
 
+<<<<<<< HEAD
 static void brcm_pcie_perst_set_7278(struct brcm_pcie *pcie, u32 val)
+=======
+static inline void brcm_pcie_perst_set_7278(struct brcm_pcie *pcie, u32 val)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 tmp;
 
@@ -766,7 +855,11 @@ static void brcm_pcie_perst_set_7278(struct brcm_pcie *pcie, u32 val)
 	writel(tmp, pcie->base +  PCIE_MISC_PCIE_CTRL);
 }
 
+<<<<<<< HEAD
 static void brcm_pcie_perst_set_generic(struct brcm_pcie *pcie, u32 val)
+=======
+static inline void brcm_pcie_perst_set_generic(struct brcm_pcie *pcie, u32 val)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 tmp;
 
@@ -775,7 +868,11 @@ static void brcm_pcie_perst_set_generic(struct brcm_pcie *pcie, u32 val)
 	writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
 }
 
+<<<<<<< HEAD
 static int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
+=======
+static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
+>>>>>>> b7ba80a49124 (Commit)
 							u64 *rc_bar2_size,
 							u64 *rc_bar2_offset)
 {
@@ -902,16 +999,23 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
 	else
 		burst = 0x2; /* 512 bytes */
 
+<<<<<<< HEAD
 	/*
 	 * Set SCB_MAX_BURST_SIZE, CFG_READ_UR_MODE, SCB_ACCESS_EN,
 	 * RCB_MPS_MODE, RCB_64B_MODE
 	 */
+=======
+	/* Set SCB_MAX_BURST_SIZE, CFG_READ_UR_MODE, SCB_ACCESS_EN */
+>>>>>>> b7ba80a49124 (Commit)
 	tmp = readl(base + PCIE_MISC_MISC_CTRL);
 	u32p_replace_bits(&tmp, 1, PCIE_MISC_MISC_CTRL_SCB_ACCESS_EN_MASK);
 	u32p_replace_bits(&tmp, 1, PCIE_MISC_MISC_CTRL_CFG_READ_UR_MODE_MASK);
 	u32p_replace_bits(&tmp, burst, PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_MASK);
+<<<<<<< HEAD
 	u32p_replace_bits(&tmp, 1, PCIE_MISC_MISC_CTRL_PCIE_RCB_MPS_MODE_MASK);
 	u32p_replace_bits(&tmp, 1, PCIE_MISC_MISC_CTRL_PCIE_RCB_64B_MODE_MASK);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	writel(tmp, base + PCIE_MISC_MISC_CTRL);
 
 	ret = brcm_pcie_get_rc_bar2_size_and_offset(pcie, &rc_bar2_size,
@@ -1037,6 +1141,7 @@ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
 	pcie->perst_set(pcie, 0);
 
 	/*
+<<<<<<< HEAD
 	 * Wait for 100ms after PERST# deassertion; see PCIe CEM specification
 	 * sections 2.2, PCIe r5.0, 6.6.1.
 	 */
@@ -1046,6 +1151,10 @@ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
 	 * Give the RC/EP even more time to wake up, before trying to
 	 * configure RC.  Intermittently check status for link-up, up to a
 	 * total of 100ms.
+=======
+	 * Give the RC/EP time to wake up, before trying to configure RC.
+	 * Intermittently check status for link-up, up to a total of 100ms.
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	for (i = 0; i < 100 && !brcm_pcie_link_up(pcie); i += 5)
 		msleep(5);

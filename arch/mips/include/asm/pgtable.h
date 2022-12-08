@@ -309,7 +309,11 @@ static inline pte_t pte_mkold(pte_t pte)
 	return pte;
 }
 
+<<<<<<< HEAD
 static inline pte_t pte_mkwrite(pte_t pte, struct vm_area_struct *vma)
+=======
+static inline pte_t pte_mkwrite(pte_t pte)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	pte.pte_low |= _PAGE_WRITE;
 	if (pte.pte_low & _PAGE_MODIFIED) {
@@ -364,7 +368,11 @@ static inline pte_t pte_mkold(pte_t pte)
 	return pte;
 }
 
+<<<<<<< HEAD
 static inline pte_t pte_mkwrite(pte_t pte, struct vm_area_struct *vma)
+=======
+static inline pte_t pte_mkwrite(pte_t pte)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	pte_val(pte) |= _PAGE_WRITE;
 	if (pte_val(pte) & _PAGE_MODIFIED)
@@ -469,8 +477,12 @@ static inline pgprot_t pgprot_writecombine(pgprot_t _prot)
 }
 
 static inline void flush_tlb_fix_spurious_fault(struct vm_area_struct *vma,
+<<<<<<< HEAD
 						unsigned long address,
 						pte_t *ptep)
+=======
+						unsigned long address)
+>>>>>>> b7ba80a49124 (Commit)
 {
 }
 
@@ -529,6 +541,7 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
 }
 #endif
 
+<<<<<<< HEAD
 #if defined(CONFIG_PHYS_ADDR_T_64BIT) && defined(CONFIG_CPU_MIPS32)
 static inline int pte_swp_exclusive(pte_t pte)
 {
@@ -564,6 +577,8 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
 	return pte;
 }
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 extern void __update_tlb(struct vm_area_struct *vma, unsigned long address,
 	pte_t pte);
@@ -586,6 +601,11 @@ static inline void update_mmu_cache_pmd(struct vm_area_struct *vma,
 	__update_tlb(vma, address, pte);
 }
 
+<<<<<<< HEAD
+=======
+#define kern_addr_valid(addr)	(1)
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Allow physical addresses to be fixed up to help 36-bit peripherals.
  */
@@ -627,7 +647,11 @@ static inline pmd_t pmd_wrprotect(pmd_t pmd)
 	return pmd;
 }
 
+<<<<<<< HEAD
 static inline pmd_t pmd_mkwrite(pmd_t pmd, struct vm_area_struct *vma)
+=======
+static inline pmd_t pmd_mkwrite(pmd_t pmd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	pmd_val(pmd) |= _PAGE_WRITE;
 	if (pmd_val(pmd) & _PAGE_MODIFIED)
@@ -656,7 +680,10 @@ static inline pmd_t pmd_mkdirty(pmd_t pmd)
 	return pmd;
 }
 
+<<<<<<< HEAD
 #define pmd_young pmd_young
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int pmd_young(pmd_t pmd)
 {
 	return !!(pmd_val(pmd) & _PAGE_ACCESSED);

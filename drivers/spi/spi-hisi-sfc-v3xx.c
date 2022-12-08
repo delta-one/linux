@@ -165,7 +165,11 @@ static int hisi_sfc_v3xx_adjust_op_size(struct spi_mem *mem,
 }
 
 /*
+<<<<<<< HEAD
  * The controller only supports Standard SPI mode, Dual mode and
+=======
+ * The controller only supports Standard SPI mode, Duall mode and
+>>>>>>> b7ba80a49124 (Commit)
  * Quad mode. Double sanitize the ops here to avoid OOB access.
  */
 static bool hisi_sfc_v3xx_supports_op(struct spi_mem *mem,
@@ -361,7 +365,11 @@ static int hisi_sfc_v3xx_exec_op(struct spi_mem *mem,
 {
 	struct hisi_sfc_v3xx_host *host;
 	struct spi_device *spi = mem->spi;
+<<<<<<< HEAD
 	u8 chip_select = spi_get_chipselect(spi, 0);
+=======
+	u8 chip_select = spi->chip_select;
+>>>>>>> b7ba80a49124 (Commit)
 
 	host = spi_controller_get_devdata(spi->master);
 

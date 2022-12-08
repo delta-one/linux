@@ -14,7 +14,11 @@ struct ndr {
 
 int ndr_encode_dos_attr(struct ndr *n, struct xattr_dos_attrib *da);
 int ndr_decode_dos_attr(struct ndr *n, struct xattr_dos_attrib *da);
+<<<<<<< HEAD
 int ndr_encode_posix_acl(struct ndr *n, struct mnt_idmap *idmap,
+=======
+int ndr_encode_posix_acl(struct ndr *n, struct user_namespace *user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 			 struct inode *inode, struct xattr_smb_acl *acl,
 			 struct xattr_smb_acl *def_acl);
 int ndr_encode_v4_ntacl(struct ndr *n, struct xattr_ntacl *acl);

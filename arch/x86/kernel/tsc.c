@@ -48,12 +48,19 @@ static DEFINE_STATIC_KEY_FALSE(__use_tsc);
 
 int tsc_clocksource_reliable;
 
+<<<<<<< HEAD
 static int __read_mostly tsc_force_recalibrate;
 
 static u32 art_to_tsc_numerator;
 static u32 art_to_tsc_denominator;
 static u64 art_to_tsc_offset;
 static struct clocksource *art_related_clocksource;
+=======
+static u32 art_to_tsc_numerator;
+static u32 art_to_tsc_denominator;
+static u64 art_to_tsc_offset;
+struct clocksource *art_related_clocksource;
+>>>>>>> b7ba80a49124 (Commit)
 
 struct cyc2ns {
 	struct cyc2ns_data data[2];	/*  0 + 2*16 = 32 */
@@ -217,7 +224,11 @@ static void __init cyc2ns_init_secondary_cpus(void)
 /*
  * Scheduler clock - returns current time in nanosec units.
  */
+<<<<<<< HEAD
 noinstr u64 native_sched_clock(void)
+=======
+u64 native_sched_clock(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (static_branch_likely(&__use_tsc)) {
 		u64 tsc_now = rdtsc();
@@ -250,7 +261,11 @@ u64 native_sched_clock_from_tsc(u64 tsc)
 /* We need to define a real function for sched_clock, to override the
    weak default version */
 #ifdef CONFIG_PARAVIRT
+<<<<<<< HEAD
 noinstr u64 sched_clock(void)
+=======
+unsigned long long sched_clock(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return paravirt_sched_clock();
 }
@@ -260,7 +275,12 @@ bool using_native_sched_clock(void)
 	return static_call_query(pv_sched_clock) == native_sched_clock;
 }
 #else
+<<<<<<< HEAD
 u64 sched_clock(void) __attribute__((alias("native_sched_clock")));
+=======
+unsigned long long
+sched_clock(void) __attribute__((alias("native_sched_clock")));
+>>>>>>> b7ba80a49124 (Commit)
 
 bool using_native_sched_clock(void) { return true; }
 #endif
@@ -293,7 +313,10 @@ __setup("notsc", notsc_setup);
 
 static int no_sched_irq_time;
 static int no_tsc_watchdog;
+<<<<<<< HEAD
 static int tsc_as_watchdog;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int __init tsc_setup(char *str)
 {
@@ -303,6 +326,7 @@ static int __init tsc_setup(char *str)
 		no_sched_irq_time = 1;
 	if (!strcmp(str, "unstable"))
 		mark_tsc_unstable("boot parameter");
+<<<<<<< HEAD
 	if (!strcmp(str, "nowatchdog")) {
 		no_tsc_watchdog = 1;
 		if (tsc_as_watchdog)
@@ -319,6 +343,10 @@ static int __init tsc_setup(char *str)
 		else
 			tsc_as_watchdog = 1;
 	}
+=======
+	if (!strcmp(str, "nowatchdog"))
+		no_tsc_watchdog = 1;
+>>>>>>> b7ba80a49124 (Commit)
 	return 1;
 }
 
@@ -928,7 +956,12 @@ void recalibrate_cpu_khz(void)
 						    cpu_khz_old, cpu_khz);
 #endif
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(recalibrate_cpu_khz);
+=======
+
+EXPORT_SYMBOL(recalibrate_cpu_khz);
+>>>>>>> b7ba80a49124 (Commit)
 
 
 static unsigned long long cyc2ns_suspend;
@@ -1201,12 +1234,15 @@ static void __init tsc_disable_clocksource_watchdog(void)
 	clocksource_tsc.flags &= ~CLOCK_SOURCE_MUST_VERIFY;
 }
 
+<<<<<<< HEAD
 bool tsc_clocksource_watchdog_disabled(void)
 {
 	return !(clocksource_tsc.flags & CLOCK_SOURCE_MUST_VERIFY) &&
 	       tsc_as_watchdog && !no_tsc_watchdog;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void __init check_system_tsc_reliable(void)
 {
 #if defined(CONFIG_MGEODEGX1) || defined(CONFIG_MGEODE_LX) || defined(CONFIG_X86_GENERIC)
@@ -1395,6 +1431,7 @@ restart:
 	else
 		freq = calc_pmtimer_ref(delta, ref_start, ref_stop);
 
+<<<<<<< HEAD
 	/* Will hit this only if tsc_force_recalibrate has been set */
 	if (boot_cpu_has(X86_FEATURE_TSC_KNOWN_FREQ)) {
 
@@ -1414,6 +1451,8 @@ restart:
 		return;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Make sure we're within 1% */
 	if (abs(tsc_khz - freq) > tsc_khz/100)
 		goto out;
@@ -1447,10 +1486,15 @@ static int __init init_tsc_clocksource(void)
 	if (!boot_cpu_has(X86_FEATURE_TSC) || !tsc_khz)
 		return 0;
 
+<<<<<<< HEAD
 	if (tsc_unstable) {
 		clocksource_unregister(&clocksource_tsc_early);
 		return 0;
 	}
+=======
+	if (tsc_unstable)
+		goto unreg;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (boot_cpu_has(X86_FEATURE_NONSTOP_TSC_S3))
 		clocksource_tsc.flags |= CLOCK_SOURCE_SUSPEND_NONSTOP;
@@ -1463,10 +1507,16 @@ static int __init init_tsc_clocksource(void)
 		if (boot_cpu_has(X86_FEATURE_ART))
 			art_related_clocksource = &clocksource_tsc;
 		clocksource_register_khz(&clocksource_tsc, tsc_khz);
+<<<<<<< HEAD
 		clocksource_unregister(&clocksource_tsc_early);
 
 		if (!tsc_force_recalibrate)
 			return 0;
+=======
+unreg:
+		clocksource_unregister(&clocksource_tsc_early);
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	schedule_delayed_work(&tsc_irqwork, 0);
@@ -1553,11 +1603,14 @@ void __init tsc_early_init(void)
 
 void __init tsc_init(void)
 {
+<<<<<<< HEAD
 	if (!cpu_feature_enabled(X86_FEATURE_TSC)) {
 		setup_clear_cpu_cap(X86_FEATURE_TSC_DEADLINE_TIMER);
 		return;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * native_calibrate_cpu_early can only calibrate using methods that are
 	 * available early in boot.
@@ -1565,6 +1618,14 @@ void __init tsc_init(void)
 	if (x86_platform.calibrate_cpu == native_calibrate_cpu_early)
 		x86_platform.calibrate_cpu = native_calibrate_cpu;
 
+<<<<<<< HEAD
+=======
+	if (!boot_cpu_has(X86_FEATURE_TSC)) {
+		setup_clear_cpu_cap(X86_FEATURE_TSC_DEADLINE_TIMER);
+		return;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!tsc_khz) {
 		/* We failed to determine frequencies earlier, try again */
 		if (!determine_cpu_tsc_frequencies(false)) {

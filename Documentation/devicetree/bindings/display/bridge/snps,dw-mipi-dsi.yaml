@@ -26,9 +26,25 @@ properties:
   reg:
     maxItems: 1
 
+<<<<<<< HEAD
   clocks: true
 
   clock-names: true
+=======
+  clocks:
+    items:
+      - description: Module clock
+      - description: DSI bus clock for either AHB and APB
+      - description: Pixel clock for the DPI/RGB input
+    minItems: 2
+
+  clock-names:
+    items:
+      - const: ref
+      - const: pclk
+      - const: px_clk
+    minItems: 2
+>>>>>>> b7ba80a49124 (Commit)
 
   resets:
     maxItems: 1

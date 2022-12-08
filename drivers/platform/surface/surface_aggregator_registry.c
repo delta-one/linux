@@ -46,7 +46,11 @@ static const struct software_node ssam_node_hub_kip = {
 
 /* Base device hub (devices attached to Surface Book 3 base). */
 static const struct software_node ssam_node_hub_base = {
+<<<<<<< HEAD
 	.name = "ssam:00:00:01:11:00",
+=======
+	.name = "ssam:00:00:02:11:00",
+>>>>>>> b7ba80a49124 (Commit)
 	.parent = &ssam_node_root,
 };
 
@@ -234,6 +238,7 @@ static const struct software_node *ssam_node_group_sl3[] = {
 	NULL,
 };
 
+<<<<<<< HEAD
 /* Devices for Surface Laptop 5. */
 static const struct software_node *ssam_node_group_sl5[] = {
 	&ssam_node_root,
@@ -247,6 +252,8 @@ static const struct software_node *ssam_node_group_sl5[] = {
 	NULL,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Devices for Surface Laptop Studio. */
 static const struct software_node *ssam_node_group_sls[] = {
 	&ssam_node_root,
@@ -281,7 +288,10 @@ static const struct software_node *ssam_node_group_sp7[] = {
 	NULL,
 };
 
+<<<<<<< HEAD
 /* Devices for Surface Pro 8 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct software_node *ssam_node_group_sp8[] = {
 	&ssam_node_root,
 	&ssam_node_hub_kip,
@@ -298,6 +308,7 @@ static const struct software_node *ssam_node_group_sp8[] = {
 	NULL,
 };
 
+<<<<<<< HEAD
 /* Devices for Surface Pro 9 */
 static const struct software_node *ssam_node_group_sp9[] = {
 	&ssam_node_root,
@@ -315,6 +326,8 @@ static const struct software_node *ssam_node_group_sp9[] = {
 	NULL,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* -- SSAM platform/meta-hub driver. ---------------------------------------- */
 
@@ -334,9 +347,12 @@ static const struct acpi_device_id ssam_platform_hub_match[] = {
 	/* Surface Pro 8 */
 	{ "MSHW0263", (unsigned long)ssam_node_group_sp8 },
 
+<<<<<<< HEAD
 	/* Surface Pro 9 */
 	{ "MSHW0343", (unsigned long)ssam_node_group_sp9 },
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Surface Book 2 */
 	{ "MSHW0107", (unsigned long)ssam_node_group_gen5 },
 
@@ -358,9 +374,12 @@ static const struct acpi_device_id ssam_platform_hub_match[] = {
 	/* Surface Laptop 4 (13", Intel) */
 	{ "MSHW0250", (unsigned long)ssam_node_group_sl3 },
 
+<<<<<<< HEAD
 	/* Surface Laptop 5 */
 	{ "MSHW0350", (unsigned long)ssam_node_group_sl5 },
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Surface Laptop Go 1 */
 	{ "MSHW0118", (unsigned long)ssam_node_group_slg1 },
 

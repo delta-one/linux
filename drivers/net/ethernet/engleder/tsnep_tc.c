@@ -403,6 +403,7 @@ static int tsnep_taprio(struct tsnep_adapter *adapter,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int tsnep_tc_query_caps(struct tsnep_adapter *adapter,
 			       struct tc_query_caps_base *base)
 {
@@ -422,14 +423,19 @@ static int tsnep_tc_query_caps(struct tsnep_adapter *adapter,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int tsnep_tc_setup(struct net_device *netdev, enum tc_setup_type type,
 		   void *type_data)
 {
 	struct tsnep_adapter *adapter = netdev_priv(netdev);
 
 	switch (type) {
+<<<<<<< HEAD
 	case TC_QUERY_CAPS:
 		return tsnep_tc_query_caps(adapter, type_data);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case TC_SETUP_QDISC_TAPRIO:
 		return tsnep_taprio(adapter, type_data);
 	default:

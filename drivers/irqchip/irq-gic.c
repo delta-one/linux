@@ -19,7 +19,10 @@
  */
 #include <linux/init.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/err.h>
 #include <linux/module.h>
 #include <linux/list.h>
@@ -54,7 +57,11 @@
 
 static void gic_check_cpu_features(void)
 {
+<<<<<<< HEAD
 	WARN_TAINT_ONCE(this_cpu_has_cap(ARM64_HAS_GIC_CPUIF_SYSREGS),
+=======
+	WARN_TAINT_ONCE(this_cpu_has_cap(ARM64_HAS_SYSREG_GIC_CPUIF),
+>>>>>>> b7ba80a49124 (Commit)
 			TAINT_CPU_OUT_OF_SPEC,
 			"GICv3 system registers enabled, broken firmware!\n");
 }
@@ -402,8 +409,13 @@ static void gic_irq_print_chip(struct irq_data *d, struct seq_file *p)
 {
 	struct gic_chip_data *gic = irq_data_get_irq_chip_data(d);
 
+<<<<<<< HEAD
 	if (gic->domain->pm_dev)
 		seq_printf(p, gic->domain->pm_dev->of_node->name);
+=======
+	if (gic->domain->dev)
+		seq_printf(p, gic->domain->dev->of_node->name);
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		seq_printf(p, "GIC-%d", (int)(gic - &gic_data[0]));
 }
@@ -868,7 +880,13 @@ static __init void gic_smp_init(void)
 				  "irqchip/arm/gic:starting",
 				  gic_starting_cpu, NULL);
 
+<<<<<<< HEAD
 	base_sgi = irq_domain_alloc_irqs(gic_data[0].domain, 8, NUMA_NO_NODE, &sgi_fwspec);
+=======
+	base_sgi = __irq_domain_alloc_irqs(gic_data[0].domain, -1, 8,
+					   NUMA_NO_NODE, &sgi_fwspec,
+					   false, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (WARN_ON(base_sgi <= 0))
 		return;
 
@@ -1331,7 +1349,11 @@ static bool gicv2_force_probe;
 
 static int __init gicv2_force_probe_cfg(char *buf)
 {
+<<<<<<< HEAD
 	return kstrtobool(buf, &gicv2_force_probe);
+=======
+	return strtobool(buf, &gicv2_force_probe);
+>>>>>>> b7ba80a49124 (Commit)
 }
 early_param("irqchip.gicv2_force_probe", gicv2_force_probe_cfg);
 

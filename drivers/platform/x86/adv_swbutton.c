@@ -90,12 +90,21 @@ static int adv_swbutton_probe(struct platform_device *device)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void adv_swbutton_remove(struct platform_device *device)
+=======
+static int adv_swbutton_remove(struct platform_device *device)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	acpi_handle handle = ACPI_HANDLE(&device->dev);
 
 	acpi_remove_notify_handler(handle, ACPI_DEVICE_NOTIFY,
 				   adv_swbutton_notify);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct acpi_device_id button_device_ids[] = {
@@ -110,7 +119,11 @@ static struct platform_driver adv_swbutton_driver = {
 		.acpi_match_table = button_device_ids,
 	},
 	.probe = adv_swbutton_probe,
+<<<<<<< HEAD
 	.remove_new = adv_swbutton_remove,
+=======
+	.remove = adv_swbutton_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(adv_swbutton_driver);
 

@@ -5,13 +5,23 @@
  * Copyright (c) 2022 Maíra Canal <mairacanal@riseup.net>
  */
 
+<<<<<<< HEAD
 #include <kunit/test.h>
 
+=======
+#define PREFIX_STR "[drm_dp_mst_helper]"
+
+#include <kunit/test.h>
+
+#include <linux/random.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/display/drm_dp_mst_helper.h>
 #include <drm/drm_print.h>
 
 #include "../display/drm_dp_mst_topology_internal.h"
 
+<<<<<<< HEAD
 struct drm_dp_mst_calc_pbn_mode_test {
 	const int clock;
 	const int bpp;
@@ -279,6 +289,35 @@ static const struct drm_dp_mst_sideband_msg_req_test drm_dp_mst_sideband_msg_req
 	},
 };
 
+=======
+static void drm_test_dp_mst_calc_pbn_mode(struct kunit *test)
+{
+	int pbn, i;
+	const struct {
+		int rate;
+		int bpp;
+		int expected;
+		bool dsc;
+	} test_params[] = {
+		{ 154000, 30, 689, false },
+		{ 234000, 30, 1047, false },
+		{ 297000, 24, 1063, false },
+		{ 332880, 24, 50, true },
+		{ 324540, 24, 49, true },
+	};
+
+	for (i = 0; i < ARRAY_SIZE(test_params); i++) {
+		pbn = drm_dp_calc_pbn_mode(test_params[i].rate,
+					   test_params[i].bpp,
+					   test_params[i].dsc);
+		KUNIT_EXPECT_EQ_MSG(test, pbn, test_params[i].expected,
+				    "Expected PBN %d for clock %d bpp %d, got %d\n",
+		     test_params[i].expected, test_params[i].rate,
+		     test_params[i].bpp, pbn);
+	}
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static bool
 sideband_msg_req_equal(const struct drm_dp_sideband_msg_req_body *in,
 		       const struct drm_dp_sideband_msg_req_body *out)
@@ -354,6 +393,7 @@ sideband_msg_req_equal(const struct drm_dp_sideband_msg_req_body *in,
 	return true;
 }
 
+<<<<<<< HEAD
 static void drm_test_dp_mst_msg_printf(struct drm_printer *p, struct va_format *vaf)
 {
 	struct kunit *test = p->arg;
@@ -389,6 +429,43 @@ static void drm_test_dp_mst_sideband_msg_req_decode(struct kunit *test)
 		drm_dp_dump_sideband_msg_req_body(in, 1, &p);
 		kunit_err(test, "Got:");
 		drm_dp_dump_sideband_msg_req_body(out, 1, &p);
+=======
+static bool
+sideband_msg_req_encode_decode(struct drm_dp_sideband_msg_req_body *in)
+{
+	struct drm_dp_sideband_msg_req_body *out;
+	struct drm_printer p = drm_err_printer(PREFIX_STR);
+	struct drm_dp_sideband_msg_tx *txmsg;
+	int i, ret;
+	bool result = true;
+
+	out = kzalloc(sizeof(*out), GFP_KERNEL);
+	if (!out)
+		return false;
+
+	txmsg = kzalloc(sizeof(*txmsg), GFP_KERNEL);
+	if (!txmsg) {
+		kfree(out);
+		return false;
+	}
+
+	drm_dp_encode_sideband_req(in, txmsg);
+	ret = drm_dp_decode_sideband_req(txmsg, out);
+	if (ret < 0) {
+		drm_printf(&p, "Failed to decode sideband request: %d\n",
+			   ret);
+		result = false;
+		goto out;
+	}
+
+	if (!sideband_msg_req_equal(in, out)) {
+		drm_printf(&p, "Encode/decode failed, expected:\n");
+		drm_dp_dump_sideband_msg_req_body(in, 1, &p);
+		drm_printf(&p, "Got:\n");
+		drm_dp_dump_sideband_msg_req_body(out, 1, &p);
+		result = false;
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	switch (in->req_type) {
@@ -403,6 +480,7 @@ static void drm_test_dp_mst_sideband_msg_req_decode(struct kunit *test)
 		kfree(out->u.i2c_write.bytes);
 		break;
 	}
+<<<<<<< HEAD
 }
 
 static void
@@ -418,6 +496,114 @@ static struct kunit_case drm_dp_mst_helper_tests[] = {
 	KUNIT_CASE_PARAM(drm_test_dp_mst_calc_pbn_mode, drm_dp_mst_calc_pbn_mode_gen_params),
 	KUNIT_CASE_PARAM(drm_test_dp_mst_sideband_msg_req_decode,
 			 drm_dp_mst_sideband_msg_req_gen_params),
+=======
+
+	/* Clear everything but the req_type for the input */
+	memset(&in->u, 0, sizeof(in->u));
+
+out:
+	kfree(out);
+	kfree(txmsg);
+	return result;
+}
+
+static void drm_test_dp_mst_sideband_msg_req_decode(struct kunit *test)
+{
+	struct drm_dp_sideband_msg_req_body in = { 0 };
+	u8 data[] = { 0xff, 0x0, 0xdd };
+	int i;
+
+	in.req_type = DP_ENUM_PATH_RESOURCES;
+	in.u.port_num.port_number = 5;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+
+	in.req_type = DP_POWER_UP_PHY;
+	in.u.port_num.port_number = 5;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+
+	in.req_type = DP_POWER_DOWN_PHY;
+	in.u.port_num.port_number = 5;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+
+	in.req_type = DP_ALLOCATE_PAYLOAD;
+	in.u.allocate_payload.number_sdp_streams = 3;
+	for (i = 0; i < in.u.allocate_payload.number_sdp_streams; i++)
+		in.u.allocate_payload.sdp_stream_sink[i] = i + 1;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+	in.u.allocate_payload.port_number = 0xf;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+	in.u.allocate_payload.vcpi = 0x7f;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+	in.u.allocate_payload.pbn = U16_MAX;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+
+	in.req_type = DP_QUERY_PAYLOAD;
+	in.u.query_payload.port_number = 0xf;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+	in.u.query_payload.vcpi = 0x7f;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+
+	in.req_type = DP_REMOTE_DPCD_READ;
+	in.u.dpcd_read.port_number = 0xf;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+	in.u.dpcd_read.dpcd_address = 0xfedcb;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+	in.u.dpcd_read.num_bytes = U8_MAX;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+
+	in.req_type = DP_REMOTE_DPCD_WRITE;
+	in.u.dpcd_write.port_number = 0xf;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+	in.u.dpcd_write.dpcd_address = 0xfedcb;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+	in.u.dpcd_write.num_bytes = ARRAY_SIZE(data);
+	in.u.dpcd_write.bytes = data;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+
+	in.req_type = DP_REMOTE_I2C_READ;
+	in.u.i2c_read.port_number = 0xf;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+	in.u.i2c_read.read_i2c_device_id = 0x7f;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+	in.u.i2c_read.num_transactions = 3;
+	in.u.i2c_read.num_bytes_read = ARRAY_SIZE(data) * 3;
+	for (i = 0; i < in.u.i2c_read.num_transactions; i++) {
+		in.u.i2c_read.transactions[i].bytes = data;
+		in.u.i2c_read.transactions[i].num_bytes = ARRAY_SIZE(data);
+		in.u.i2c_read.transactions[i].i2c_dev_id = 0x7f & ~i;
+		in.u.i2c_read.transactions[i].i2c_transaction_delay = 0xf & ~i;
+	}
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+
+	in.req_type = DP_REMOTE_I2C_WRITE;
+	in.u.i2c_write.port_number = 0xf;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+	in.u.i2c_write.write_i2c_device_id = 0x7f;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+	in.u.i2c_write.num_bytes = ARRAY_SIZE(data);
+	in.u.i2c_write.bytes = data;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+
+	in.req_type = DP_QUERY_STREAM_ENC_STATUS;
+	in.u.enc_status.stream_id = 1;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+	get_random_bytes(in.u.enc_status.client_id,
+			 sizeof(in.u.enc_status.client_id));
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+	in.u.enc_status.stream_event = 3;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+	in.u.enc_status.valid_stream_event = 0;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+	in.u.enc_status.stream_behavior = 3;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+	in.u.enc_status.valid_stream_behavior = 1;
+	KUNIT_EXPECT_TRUE(test, sideband_msg_req_encode_decode(&in));
+}
+
+static struct kunit_case drm_dp_mst_helper_tests[] = {
+	KUNIT_CASE(drm_test_dp_mst_calc_pbn_mode),
+	KUNIT_CASE(drm_test_dp_mst_sideband_msg_req_decode),
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 

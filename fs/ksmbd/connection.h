@@ -14,7 +14,10 @@
 #include <net/request_sock.h>
 #include <linux/kthread.h>
 #include <linux/nls.h>
+<<<<<<< HEAD
 #include <linux/unicode.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "smb_common.h"
 #include "ksmbd_work.h"
@@ -114,8 +117,12 @@ struct ksmbd_transport_ops {
 	int (*prepare)(struct ksmbd_transport *t);
 	void (*disconnect)(struct ksmbd_transport *t);
 	void (*shutdown)(struct ksmbd_transport *t);
+<<<<<<< HEAD
 	int (*read)(struct ksmbd_transport *t, char *buf,
 		    unsigned int size, int max_retries);
+=======
+	int (*read)(struct ksmbd_transport *t, char *buf, unsigned int size);
+>>>>>>> b7ba80a49124 (Commit)
 	int (*writev)(struct ksmbd_transport *t, struct kvec *iovs, int niov,
 		      int size, bool need_invalidate_rkey,
 		      unsigned int remote_key);

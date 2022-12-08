@@ -6,13 +6,19 @@ audio playback. For more product information please see the links below:
 
 https://www.ti.com/product/TAS5720L
 https://www.ti.com/product/TAS5720M
+<<<<<<< HEAD
 https://www.ti.com/product/TAS5720A-Q1
+=======
+>>>>>>> b7ba80a49124 (Commit)
 https://www.ti.com/product/TAS5722L
 
 Required properties:
 
 - compatible : "ti,tas5720",
+<<<<<<< HEAD
                "ti,tas5720a-q1",
+=======
+>>>>>>> b7ba80a49124 (Commit)
                "ti,tas5722"
 - reg : I2C slave address
 - dvdd-supply : phandle to a 3.3-V supply for the digital circuitry

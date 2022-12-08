@@ -35,8 +35,12 @@
 #endif
 #include <asm/unaligned.h>
 
+<<<<<<< HEAD
 static int verify_one_alg(struct nlattr **attrs, enum xfrm_attr_type_t type,
 			  struct netlink_ext_ack *extack)
+=======
+static int verify_one_alg(struct nlattr **attrs, enum xfrm_attr_type_t type)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nlattr *rt = attrs[type];
 	struct xfrm_algo *algp;
@@ -45,10 +49,15 @@ static int verify_one_alg(struct nlattr **attrs, enum xfrm_attr_type_t type,
 		return 0;
 
 	algp = nla_data(rt);
+<<<<<<< HEAD
 	if (nla_len(rt) < (int)xfrm_alg_len(algp)) {
 		NL_SET_ERR_MSG(extack, "Invalid AUTH/CRYPT/COMP attribute length");
 		return -EINVAL;
 	}
+=======
+	if (nla_len(rt) < (int)xfrm_alg_len(algp))
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (type) {
 	case XFRMA_ALG_AUTH:
@@ -57,7 +66,10 @@ static int verify_one_alg(struct nlattr **attrs, enum xfrm_attr_type_t type,
 		break;
 
 	default:
+<<<<<<< HEAD
 		NL_SET_ERR_MSG(extack, "Invalid algorithm attribute type");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
@@ -65,8 +77,12 @@ static int verify_one_alg(struct nlattr **attrs, enum xfrm_attr_type_t type,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int verify_auth_trunc(struct nlattr **attrs,
 			     struct netlink_ext_ack *extack)
+=======
+static int verify_auth_trunc(struct nlattr **attrs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nlattr *rt = attrs[XFRMA_ALG_AUTH_TRUNC];
 	struct xfrm_algo_auth *algp;
@@ -75,16 +91,25 @@ static int verify_auth_trunc(struct nlattr **attrs,
 		return 0;
 
 	algp = nla_data(rt);
+<<<<<<< HEAD
 	if (nla_len(rt) < (int)xfrm_alg_auth_len(algp)) {
 		NL_SET_ERR_MSG(extack, "Invalid AUTH_TRUNC attribute length");
 		return -EINVAL;
 	}
+=======
+	if (nla_len(rt) < (int)xfrm_alg_auth_len(algp))
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	algp->alg_name[sizeof(algp->alg_name) - 1] = '\0';
 	return 0;
 }
 
+<<<<<<< HEAD
 static int verify_aead(struct nlattr **attrs, struct netlink_ext_ack *extack)
+=======
+static int verify_aead(struct nlattr **attrs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nlattr *rt = attrs[XFRMA_ALG_AEAD];
 	struct xfrm_algo_aead *algp;
@@ -93,10 +118,15 @@ static int verify_aead(struct nlattr **attrs, struct netlink_ext_ack *extack)
 		return 0;
 
 	algp = nla_data(rt);
+<<<<<<< HEAD
 	if (nla_len(rt) < (int)aead_len(algp)) {
 		NL_SET_ERR_MSG(extack, "Invalid AEAD attribute length");
 		return -EINVAL;
 	}
+=======
+	if (nla_len(rt) < (int)aead_len(algp))
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	algp->alg_name[sizeof(algp->alg_name) - 1] = '\0';
 	return 0;
@@ -130,12 +160,17 @@ static inline int verify_sec_ctx_len(struct nlattr **attrs, struct netlink_ext_a
 }
 
 static inline int verify_replay(struct xfrm_usersa_info *p,
+<<<<<<< HEAD
 				struct nlattr **attrs,
 				struct netlink_ext_ack *extack)
+=======
+				struct nlattr **attrs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nlattr *rt = attrs[XFRMA_REPLAY_ESN_VAL];
 	struct xfrm_replay_state_esn *rs;
 
+<<<<<<< HEAD
 	if (!rt) {
 		if (p->flags & XFRM_STATE_ESN) {
 			NL_SET_ERR_MSG(extack, "Missing required attribute for ESN");
@@ -167,13 +202,37 @@ static inline int verify_replay(struct xfrm_usersa_info *p,
 		NL_SET_ERR_MSG(extack, "ESN not compatible with legacy replay_window");
 		return -EINVAL;
 	}
+=======
+	if (!rt)
+		return (p->flags & XFRM_STATE_ESN) ? -EINVAL : 0;
+
+	rs = nla_data(rt);
+
+	if (rs->bmp_len > XFRMA_REPLAY_ESN_MAX / sizeof(rs->bmp[0]) / 8)
+		return -EINVAL;
+
+	if (nla_len(rt) < (int)xfrm_replay_state_esn_len(rs) &&
+	    nla_len(rt) != sizeof(*rs))
+		return -EINVAL;
+
+	/* As only ESP and AH support ESN feature. */
+	if ((p->id.proto != IPPROTO_ESP) && (p->id.proto != IPPROTO_AH))
+		return -EINVAL;
+
+	if (p->replay_window != 0)
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
 static int verify_newsa_info(struct xfrm_usersa_info *p,
+<<<<<<< HEAD
 			     struct nlattr **attrs,
 			     struct netlink_ext_ack *extack)
+=======
+			     struct nlattr **attrs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int err;
 
@@ -187,12 +246,18 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
 		break;
 #else
 		err = -EAFNOSUPPORT;
+<<<<<<< HEAD
 		NL_SET_ERR_MSG(extack, "IPv6 support disabled");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 #endif
 
 	default:
+<<<<<<< HEAD
 		NL_SET_ERR_MSG(extack, "Invalid address family");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
@@ -201,15 +266,21 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
 		break;
 
 	case AF_INET:
+<<<<<<< HEAD
 		if (p->sel.prefixlen_d > 32 || p->sel.prefixlen_s > 32) {
 			NL_SET_ERR_MSG(extack, "Invalid prefix length in selector (must be <= 32 for IPv4)");
 			goto out;
 		}
+=======
+		if (p->sel.prefixlen_d > 32 || p->sel.prefixlen_s > 32)
+			goto out;
+>>>>>>> b7ba80a49124 (Commit)
 
 		break;
 
 	case AF_INET6:
 #if IS_ENABLED(CONFIG_IPV6)
+<<<<<<< HEAD
 		if (p->sel.prefixlen_d > 128 || p->sel.prefixlen_s > 128) {
 			NL_SET_ERR_MSG(extack, "Invalid prefix length in selector (must be <= 128 for IPv6)");
 			goto out;
@@ -218,18 +289,29 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
 		break;
 #else
 		NL_SET_ERR_MSG(extack, "IPv6 support disabled");
+=======
+		if (p->sel.prefixlen_d > 128 || p->sel.prefixlen_s > 128)
+			goto out;
+
+		break;
+#else
+>>>>>>> b7ba80a49124 (Commit)
 		err = -EAFNOSUPPORT;
 		goto out;
 #endif
 
 	default:
+<<<<<<< HEAD
 		NL_SET_ERR_MSG(extack, "Invalid address family in selector");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
 	err = -EINVAL;
 	switch (p->id.proto) {
 	case IPPROTO_AH:
+<<<<<<< HEAD
 		if (!attrs[XFRMA_ALG_AUTH]	&&
 		    !attrs[XFRMA_ALG_AUTH_TRUNC]) {
 			NL_SET_ERR_MSG(extack, "Missing required attribute for AH: AUTH_TRUNC or AUTH");
@@ -293,6 +375,44 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
 			NL_SET_ERR_MSG(extack, "SPI is too large for COMP (must be < 0x10000)");
 			goto out;
 		}
+=======
+		if ((!attrs[XFRMA_ALG_AUTH]	&&
+		     !attrs[XFRMA_ALG_AUTH_TRUNC]) ||
+		    attrs[XFRMA_ALG_AEAD]	||
+		    attrs[XFRMA_ALG_CRYPT]	||
+		    attrs[XFRMA_ALG_COMP]	||
+		    attrs[XFRMA_TFCPAD])
+			goto out;
+		break;
+
+	case IPPROTO_ESP:
+		if (attrs[XFRMA_ALG_COMP])
+			goto out;
+		if (!attrs[XFRMA_ALG_AUTH] &&
+		    !attrs[XFRMA_ALG_AUTH_TRUNC] &&
+		    !attrs[XFRMA_ALG_CRYPT] &&
+		    !attrs[XFRMA_ALG_AEAD])
+			goto out;
+		if ((attrs[XFRMA_ALG_AUTH] ||
+		     attrs[XFRMA_ALG_AUTH_TRUNC] ||
+		     attrs[XFRMA_ALG_CRYPT]) &&
+		    attrs[XFRMA_ALG_AEAD])
+			goto out;
+		if (attrs[XFRMA_TFCPAD] &&
+		    p->mode != XFRM_MODE_TUNNEL)
+			goto out;
+		break;
+
+	case IPPROTO_COMP:
+		if (!attrs[XFRMA_ALG_COMP]	||
+		    attrs[XFRMA_ALG_AEAD]	||
+		    attrs[XFRMA_ALG_AUTH]	||
+		    attrs[XFRMA_ALG_AUTH_TRUNC]	||
+		    attrs[XFRMA_ALG_CRYPT]	||
+		    attrs[XFRMA_TFCPAD]		||
+		    (ntohl(p->id.spi) >= 0x10000))
+			goto out;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 #if IS_ENABLED(CONFIG_IPV6)
@@ -305,6 +425,7 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
 		    attrs[XFRMA_ALG_CRYPT]	||
 		    attrs[XFRMA_ENCAP]		||
 		    attrs[XFRMA_SEC_CTX]	||
+<<<<<<< HEAD
 		    attrs[XFRMA_TFCPAD]) {
 			NL_SET_ERR_MSG(extack, "Invalid attributes for DSTOPTS/ROUTING");
 			goto out;
@@ -314,10 +435,16 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
 			NL_SET_ERR_MSG(extack, "Missing required COADDR attribute for DSTOPTS/ROUTING");
 			goto out;
 		}
+=======
+		    attrs[XFRMA_TFCPAD]		||
+		    !attrs[XFRMA_COADDR])
+			goto out;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 #endif
 
 	default:
+<<<<<<< HEAD
 		NL_SET_ERR_MSG(extack, "Unsupported protocol");
 		goto out;
 	}
@@ -335,6 +462,24 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
 	if ((err = verify_sec_ctx_len(attrs, extack)))
 		goto out;
 	if ((err = verify_replay(p, attrs, extack)))
+=======
+		goto out;
+	}
+
+	if ((err = verify_aead(attrs)))
+		goto out;
+	if ((err = verify_auth_trunc(attrs)))
+		goto out;
+	if ((err = verify_one_alg(attrs, XFRMA_ALG_AUTH)))
+		goto out;
+	if ((err = verify_one_alg(attrs, XFRMA_ALG_CRYPT)))
+		goto out;
+	if ((err = verify_one_alg(attrs, XFRMA_ALG_COMP)))
+		goto out;
+	if ((err = verify_sec_ctx_len(attrs, NULL)))
+		goto out;
+	if ((err = verify_replay(p, attrs)))
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 
 	err = -EINVAL;
@@ -346,12 +491,16 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
 		break;
 
 	default:
+<<<<<<< HEAD
 		NL_SET_ERR_MSG(extack, "Unsupported mode");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
 	err = 0;
 
+<<<<<<< HEAD
 	if (attrs[XFRMA_MTIMER_THRESH]) {
 		if (!attrs[XFRMA_ENCAP]) {
 			NL_SET_ERR_MSG(extack, "MTIMER_THRESH attribute can only be set on ENCAP states");
@@ -359,6 +508,11 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
 			goto out;
 		}
 	}
+=======
+	if (attrs[XFRMA_MTIMER_THRESH])
+		if (!attrs[XFRMA_ENCAP])
+			err = -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 out:
 	return err;
@@ -366,7 +520,11 @@ out:
 
 static int attach_one_algo(struct xfrm_algo **algpp, u8 *props,
 			   struct xfrm_algo_desc *(*get_byname)(const char *, int),
+<<<<<<< HEAD
 			   struct nlattr *rta, struct netlink_ext_ack *extack)
+=======
+			   struct nlattr *rta)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct xfrm_algo *p, *ualg;
 	struct xfrm_algo_desc *algo;
@@ -377,10 +535,15 @@ static int attach_one_algo(struct xfrm_algo **algpp, u8 *props,
 	ualg = nla_data(rta);
 
 	algo = get_byname(ualg->alg_name, 1);
+<<<<<<< HEAD
 	if (!algo) {
 		NL_SET_ERR_MSG(extack, "Requested COMP algorithm not found");
 		return -ENOSYS;
 	}
+=======
+	if (!algo)
+		return -ENOSYS;
+>>>>>>> b7ba80a49124 (Commit)
 	*props = algo->desc.sadb_alg_id;
 
 	p = kmemdup(ualg, xfrm_alg_len(ualg), GFP_KERNEL);
@@ -392,8 +555,12 @@ static int attach_one_algo(struct xfrm_algo **algpp, u8 *props,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int attach_crypt(struct xfrm_state *x, struct nlattr *rta,
 			struct netlink_ext_ack *extack)
+=======
+static int attach_crypt(struct xfrm_state *x, struct nlattr *rta)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct xfrm_algo *p, *ualg;
 	struct xfrm_algo_desc *algo;
@@ -404,10 +571,15 @@ static int attach_crypt(struct xfrm_state *x, struct nlattr *rta,
 	ualg = nla_data(rta);
 
 	algo = xfrm_ealg_get_byname(ualg->alg_name, 1);
+<<<<<<< HEAD
 	if (!algo) {
 		NL_SET_ERR_MSG(extack, "Requested CRYPT algorithm not found");
 		return -ENOSYS;
 	}
+=======
+	if (!algo)
+		return -ENOSYS;
+>>>>>>> b7ba80a49124 (Commit)
 	x->props.ealgo = algo->desc.sadb_alg_id;
 
 	p = kmemdup(ualg, xfrm_alg_len(ualg), GFP_KERNEL);
@@ -421,7 +593,11 @@ static int attach_crypt(struct xfrm_state *x, struct nlattr *rta,
 }
 
 static int attach_auth(struct xfrm_algo_auth **algpp, u8 *props,
+<<<<<<< HEAD
 		       struct nlattr *rta, struct netlink_ext_ack *extack)
+=======
+		       struct nlattr *rta)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct xfrm_algo *ualg;
 	struct xfrm_algo_auth *p;
@@ -433,10 +609,15 @@ static int attach_auth(struct xfrm_algo_auth **algpp, u8 *props,
 	ualg = nla_data(rta);
 
 	algo = xfrm_aalg_get_byname(ualg->alg_name, 1);
+<<<<<<< HEAD
 	if (!algo) {
 		NL_SET_ERR_MSG(extack, "Requested AUTH algorithm not found");
 		return -ENOSYS;
 	}
+=======
+	if (!algo)
+		return -ENOSYS;
+>>>>>>> b7ba80a49124 (Commit)
 	*props = algo->desc.sadb_alg_id;
 
 	p = kmalloc(sizeof(*p) + (ualg->alg_key_len + 7) / 8, GFP_KERNEL);
@@ -453,7 +634,11 @@ static int attach_auth(struct xfrm_algo_auth **algpp, u8 *props,
 }
 
 static int attach_auth_trunc(struct xfrm_algo_auth **algpp, u8 *props,
+<<<<<<< HEAD
 			     struct nlattr *rta, struct netlink_ext_ack *extack)
+=======
+			     struct nlattr *rta)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct xfrm_algo_auth *p, *ualg;
 	struct xfrm_algo_desc *algo;
@@ -464,6 +649,7 @@ static int attach_auth_trunc(struct xfrm_algo_auth **algpp, u8 *props,
 	ualg = nla_data(rta);
 
 	algo = xfrm_aalg_get_byname(ualg->alg_name, 1);
+<<<<<<< HEAD
 	if (!algo) {
 		NL_SET_ERR_MSG(extack, "Requested AUTH_TRUNC algorithm not found");
 		return -ENOSYS;
@@ -472,6 +658,12 @@ static int attach_auth_trunc(struct xfrm_algo_auth **algpp, u8 *props,
 		NL_SET_ERR_MSG(extack, "Invalid length requested for truncated ICV");
 		return -EINVAL;
 	}
+=======
+	if (!algo)
+		return -ENOSYS;
+	if (ualg->alg_trunc_len > algo->uinfo.auth.icv_fullbits)
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	*props = algo->desc.sadb_alg_id;
 
 	p = kmemdup(ualg, xfrm_alg_auth_len(ualg), GFP_KERNEL);
@@ -486,8 +678,12 @@ static int attach_auth_trunc(struct xfrm_algo_auth **algpp, u8 *props,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int attach_aead(struct xfrm_state *x, struct nlattr *rta,
 		       struct netlink_ext_ack *extack)
+=======
+static int attach_aead(struct xfrm_state *x, struct nlattr *rta)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct xfrm_algo_aead *p, *ualg;
 	struct xfrm_algo_desc *algo;
@@ -498,10 +694,15 @@ static int attach_aead(struct xfrm_state *x, struct nlattr *rta,
 	ualg = nla_data(rta);
 
 	algo = xfrm_aead_get_byname(ualg->alg_name, ualg->alg_icv_len, 1);
+<<<<<<< HEAD
 	if (!algo) {
 		NL_SET_ERR_MSG(extack, "Requested AEAD algorithm not found");
 		return -ENOSYS;
 	}
+=======
+	if (!algo)
+		return -ENOSYS;
+>>>>>>> b7ba80a49124 (Commit)
 	x->props.ealgo = algo->desc.sadb_alg_id;
 
 	p = kmemdup(ualg, aead_len(ualg), GFP_KERNEL);
@@ -515,8 +716,12 @@ static int attach_aead(struct xfrm_state *x, struct nlattr *rta,
 }
 
 static inline int xfrm_replay_verify_len(struct xfrm_replay_state_esn *replay_esn,
+<<<<<<< HEAD
 					 struct nlattr *rp,
 					 struct netlink_ext_ack *extack)
+=======
+					 struct nlattr *rp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct xfrm_replay_state_esn *up;
 	unsigned int ulen;
@@ -529,6 +734,7 @@ static inline int xfrm_replay_verify_len(struct xfrm_replay_state_esn *replay_es
 
 	/* Check the overall length and the internal bitmap length to avoid
 	 * potential overflow. */
+<<<<<<< HEAD
 	if (nla_len(rp) < (int)ulen) {
 		NL_SET_ERR_MSG(extack, "ESN attribute is too short");
 		return -EINVAL;
@@ -548,6 +754,15 @@ static inline int xfrm_replay_verify_len(struct xfrm_replay_state_esn *replay_es
 		NL_SET_ERR_MSG(extack, "ESN replay window is longer than the bitmap");
 		return -EINVAL;
 	}
+=======
+	if (nla_len(rp) < (int)ulen ||
+	    xfrm_replay_state_esn_len(replay_esn) != ulen ||
+	    replay_esn->bmp_len != up->bmp_len)
+		return -EINVAL;
+
+	if (up->replay_window > up->bmp_len * sizeof(__u32) * 8)
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -679,8 +894,12 @@ static void xfrm_smark_init(struct nlattr **attrs, struct xfrm_mark *m)
 static struct xfrm_state *xfrm_state_construct(struct net *net,
 					       struct xfrm_usersa_info *p,
 					       struct nlattr **attrs,
+<<<<<<< HEAD
 					       int *errp,
 					       struct netlink_ext_ack *extack)
+=======
+					       int *errp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct xfrm_state *x = xfrm_state_alloc(net);
 	int err = -ENOMEM;
@@ -707,6 +926,7 @@ static struct xfrm_state *xfrm_state_construct(struct net *net,
 	if (attrs[XFRMA_SA_EXTRA_FLAGS])
 		x->props.extra_flags = nla_get_u32(attrs[XFRMA_SA_EXTRA_FLAGS]);
 
+<<<<<<< HEAD
 	if ((err = attach_aead(x, attrs[XFRMA_ALG_AEAD], extack)))
 		goto error;
 	if ((err = attach_auth_trunc(&x->aalg, &x->props.aalgo,
@@ -722,6 +942,23 @@ static struct xfrm_state *xfrm_state_construct(struct net *net,
 	if ((err = attach_one_algo(&x->calg, &x->props.calgo,
 				   xfrm_calg_get_byname,
 				   attrs[XFRMA_ALG_COMP], extack)))
+=======
+	if ((err = attach_aead(x, attrs[XFRMA_ALG_AEAD])))
+		goto error;
+	if ((err = attach_auth_trunc(&x->aalg, &x->props.aalgo,
+				     attrs[XFRMA_ALG_AUTH_TRUNC])))
+		goto error;
+	if (!x->props.aalgo) {
+		if ((err = attach_auth(&x->aalg, &x->props.aalgo,
+				       attrs[XFRMA_ALG_AUTH])))
+			goto error;
+	}
+	if ((err = attach_crypt(x, attrs[XFRMA_ALG_CRYPT])))
+		goto error;
+	if ((err = attach_one_algo(&x->calg, &x->props.calgo,
+				   xfrm_calg_get_byname,
+				   attrs[XFRMA_ALG_COMP])))
+>>>>>>> b7ba80a49124 (Commit)
 		goto error;
 
 	if (attrs[XFRMA_TFCPAD])
@@ -734,7 +971,11 @@ static struct xfrm_state *xfrm_state_construct(struct net *net,
 	if (attrs[XFRMA_IF_ID])
 		x->if_id = nla_get_u32(attrs[XFRMA_IF_ID]);
 
+<<<<<<< HEAD
 	err = __xfrm_init_state(x, false, attrs[XFRMA_OFFLOAD_DEV], extack);
+=======
+	err = __xfrm_init_state(x, false, attrs[XFRMA_OFFLOAD_DEV]);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto error;
 
@@ -754,7 +995,11 @@ static struct xfrm_state *xfrm_state_construct(struct net *net,
 	/* sysctl_xfrm_aevent_etime is in 100ms units */
 	x->replay_maxage = (net->xfrm.sysctl_aevent_etime*HZ)/XFRM_AE_ETH_M;
 
+<<<<<<< HEAD
 	if ((err = xfrm_init_replay(x, extack)))
+=======
+	if ((err = xfrm_init_replay(x)))
+>>>>>>> b7ba80a49124 (Commit)
 		goto error;
 
 	/* override default values from above */
@@ -763,8 +1008,12 @@ static struct xfrm_state *xfrm_state_construct(struct net *net,
 	/* configure the hardware if offload is requested */
 	if (attrs[XFRMA_OFFLOAD_DEV]) {
 		err = xfrm_dev_state_add(net, x,
+<<<<<<< HEAD
 					 nla_data(attrs[XFRMA_OFFLOAD_DEV]),
 					 extack);
+=======
+					 nla_data(attrs[XFRMA_OFFLOAD_DEV]));
+>>>>>>> b7ba80a49124 (Commit)
 		if (err)
 			goto error;
 	}
@@ -788,11 +1037,19 @@ static int xfrm_add_sa(struct sk_buff *skb, struct nlmsghdr *nlh,
 	int err;
 	struct km_event c;
 
+<<<<<<< HEAD
 	err = verify_newsa_info(p, attrs, extack);
 	if (err)
 		return err;
 
 	x = xfrm_state_construct(net, p, attrs, &err, extack);
+=======
+	err = verify_newsa_info(p, attrs);
+	if (err)
+		return err;
+
+	x = xfrm_state_construct(net, p, attrs, &err);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!x)
 		return err;
 
@@ -875,12 +1132,19 @@ static int xfrm_del_sa(struct sk_buff *skb, struct nlmsghdr *nlh,
 		goto out;
 
 	if (xfrm_state_kern(x)) {
+<<<<<<< HEAD
 		NL_SET_ERR_MSG(extack, "SA is in use by tunnels");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		err = -EPERM;
 		goto out;
 	}
 
 	err = xfrm_state_delete(x);
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (err < 0)
 		goto out;
 
@@ -901,8 +1165,11 @@ static void copy_to_user_state(struct xfrm_state *x, struct xfrm_usersa_info *p)
 	memcpy(&p->id, &x->id, sizeof(p->id));
 	memcpy(&p->sel, &x->sel, sizeof(p->sel));
 	memcpy(&p->lft, &x->lft, sizeof(p->lft));
+<<<<<<< HEAD
 	if (x->xso.dev)
 		xfrm_dev_state_update_curlft(x);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(&p->curlft, &x->curlft, sizeof(p->curlft));
 	put_unaligned(x->stats.replay_window, &p->stats.replay_window);
 	put_unaligned(x->stats.replay, &p->stats.replay);
@@ -958,8 +1225,11 @@ static int copy_user_offload(struct xfrm_dev_offload *xso, struct sk_buff *skb)
 	xuo->ifindex = xso->dev->ifindex;
 	if (xso->dir == XFRM_DEV_OFFLOAD_IN)
 		xuo->flags = XFRM_OFFLOAD_INBOUND;
+<<<<<<< HEAD
 	if (xso->type == XFRM_DEV_OFFLOAD_PACKET)
 		xuo->flags |= XFRM_OFFLOAD_PACKET;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1014,9 +1284,13 @@ static int copy_to_user_aead(struct xfrm_algo_aead *aead, struct sk_buff *skb)
 		return -EMSGSIZE;
 
 	ap = nla_data(nla);
+<<<<<<< HEAD
 	strscpy_pad(ap->alg_name, aead->alg_name, sizeof(ap->alg_name));
 	ap->alg_key_len = aead->alg_key_len;
 	ap->alg_icv_len = aead->alg_icv_len;
+=======
+	memcpy(ap, aead, sizeof(*aead));
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (redact_secret && aead->alg_key_len)
 		memset(ap->alg_key, 0, (aead->alg_key_len + 7) / 8);
@@ -1036,8 +1310,12 @@ static int copy_to_user_ealg(struct xfrm_algo *ealg, struct sk_buff *skb)
 		return -EMSGSIZE;
 
 	ap = nla_data(nla);
+<<<<<<< HEAD
 	strscpy_pad(ap->alg_name, ealg->alg_name, sizeof(ap->alg_name));
 	ap->alg_key_len = ealg->alg_key_len;
+=======
+	memcpy(ap, ealg, sizeof(*ealg));
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (redact_secret && ealg->alg_key_len)
 		memset(ap->alg_key, 0, (ealg->alg_key_len + 7) / 8);
@@ -1048,6 +1326,7 @@ static int copy_to_user_ealg(struct xfrm_algo *ealg, struct sk_buff *skb)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int copy_to_user_calg(struct xfrm_algo *calg, struct sk_buff *skb)
 {
 	struct nlattr *nla = nla_reserve(skb, XFRMA_ALG_COMP, sizeof(*calg));
@@ -1082,6 +1361,8 @@ static int copy_to_user_encap(struct xfrm_encap_tmpl *ep, struct sk_buff *skb)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int xfrm_smark_put(struct sk_buff *skb, struct xfrm_mark *m)
 {
 	int ret = 0;
@@ -1137,12 +1418,20 @@ static int copy_to_user_state_extra(struct xfrm_state *x,
 			goto out;
 	}
 	if (x->calg) {
+<<<<<<< HEAD
 		ret = copy_to_user_calg(x->calg, skb);
+=======
+		ret = nla_put(skb, XFRMA_ALG_COMP, sizeof(*(x->calg)), x->calg);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			goto out;
 	}
 	if (x->encap) {
+<<<<<<< HEAD
 		ret = copy_to_user_encap(x->encap, skb);
+=======
+		ret = nla_put(skb, XFRMA_ENCAP, sizeof(*x->encap), x->encap);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			goto out;
 	}
@@ -1408,6 +1697,7 @@ static int xfrm_set_spdinfo(struct sk_buff *skb, struct nlmsghdr *nlh,
 	if (attrs[XFRMA_SPD_IPV4_HTHRESH]) {
 		struct nlattr *rta = attrs[XFRMA_SPD_IPV4_HTHRESH];
 
+<<<<<<< HEAD
 		if (nla_len(rta) < sizeof(*thresh4)) {
 			NL_SET_ERR_MSG(extack, "Invalid SPD_IPV4_HTHRESH attribute length");
 			return -EINVAL;
@@ -1417,10 +1707,18 @@ static int xfrm_set_spdinfo(struct sk_buff *skb, struct nlmsghdr *nlh,
 			NL_SET_ERR_MSG(extack, "Invalid hash threshold (must be <= 32 for IPv4)");
 			return -EINVAL;
 		}
+=======
+		if (nla_len(rta) < sizeof(*thresh4))
+			return -EINVAL;
+		thresh4 = nla_data(rta);
+		if (thresh4->lbits > 32 || thresh4->rbits > 32)
+			return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (attrs[XFRMA_SPD_IPV6_HTHRESH]) {
 		struct nlattr *rta = attrs[XFRMA_SPD_IPV6_HTHRESH];
 
+<<<<<<< HEAD
 		if (nla_len(rta) < sizeof(*thresh6)) {
 			NL_SET_ERR_MSG(extack, "Invalid SPD_IPV6_HTHRESH attribute length");
 			return -EINVAL;
@@ -1430,6 +1728,13 @@ static int xfrm_set_spdinfo(struct sk_buff *skb, struct nlmsghdr *nlh,
 			NL_SET_ERR_MSG(extack, "Invalid hash threshold (must be <= 128 for IPv6)");
 			return -EINVAL;
 		}
+=======
+		if (nla_len(rta) < sizeof(*thresh6))
+			return -EINVAL;
+		thresh6 = nla_data(rta);
+		if (thresh6->lbits > 128 || thresh6->rbits > 128)
+			return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (thresh4 || thresh6) {
@@ -1572,7 +1877,11 @@ static int xfrm_alloc_userspi(struct sk_buff *skb, struct nlmsghdr *nlh,
 	u32 if_id = 0;
 
 	p = nlmsg_data(nlh);
+<<<<<<< HEAD
 	err = verify_spi_info(p->info.id.proto, p->min, p->max, extack);
+=======
+	err = verify_spi_info(p->info.id.proto, p->min, p->max);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto out_noput;
 
@@ -1600,12 +1909,19 @@ static int xfrm_alloc_userspi(struct sk_buff *skb, struct nlmsghdr *nlh,
 				  &p->info.saddr, 1,
 				  family);
 	err = -ENOENT;
+<<<<<<< HEAD
 	if (!x) {
 		NL_SET_ERR_MSG(extack, "Target ACQUIRE not found");
 		goto out_noput;
 	}
 
 	err = xfrm_alloc_spi(x, p->min, p->max, extack);
+=======
+	if (x == NULL)
+		goto out_noput;
+
+	err = xfrm_alloc_spi(x, p->min, p->max);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto out;
 
@@ -1931,6 +2247,7 @@ static struct xfrm_policy *xfrm_policy_construct(struct net *net,
 	if (attrs[XFRMA_IF_ID])
 		xp->if_id = nla_get_u32(attrs[XFRMA_IF_ID]);
 
+<<<<<<< HEAD
 	/* configure the hardware if offload is requested */
 	if (attrs[XFRMA_OFFLOAD_DEV]) {
 		err = xfrm_dev_policy_add(net, xp,
@@ -1940,6 +2257,8 @@ static struct xfrm_policy *xfrm_policy_construct(struct net *net,
 			goto error;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return xp;
  error:
 	*errp = err;
@@ -1979,7 +2298,10 @@ static int xfrm_add_policy(struct sk_buff *skb, struct nlmsghdr *nlh,
 	xfrm_audit_policy_add(xp, err ? 0 : 1, true);
 
 	if (err) {
+<<<<<<< HEAD
 		xfrm_dev_policy_delete(xp);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		security_xfrm_policy_free(xp->security);
 		kfree(xp);
 		return err;
@@ -2092,8 +2414,11 @@ static int dump_one_policy(struct xfrm_policy *xp, int dir, int count, void *ptr
 		err = xfrm_mark_put(skb, &xp->mark);
 	if (!err)
 		err = xfrm_if_id_put(skb, xp->if_id);
+<<<<<<< HEAD
 	if (!err && xp->xdo.dev)
 		err = copy_user_offload(&xp->xdo, skb);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		nlmsg_cancel(skb, nlh);
 		return err;
@@ -2509,6 +2834,7 @@ static int xfrm_new_ae(struct sk_buff *skb, struct nlmsghdr *nlh,
 	struct nlattr *et = attrs[XFRMA_ETIMER_THRESH];
 	struct nlattr *rt = attrs[XFRMA_REPLAY_THRESH];
 
+<<<<<<< HEAD
 	if (!lt && !rp && !re && !et && !rt) {
 		NL_SET_ERR_MSG(extack, "Missing required attribute for AE");
 		return err;
@@ -2519,6 +2845,14 @@ static int xfrm_new_ae(struct sk_buff *skb, struct nlmsghdr *nlh,
 		NL_SET_ERR_MSG(extack, "NLM_F_REPLACE flag is required");
 		return err;
 	}
+=======
+	if (!lt && !rp && !re && !et && !rt)
+		return err;
+
+	/* pedantic mode - thou shalt sayeth replaceth */
+	if (!(nlh->nlmsg_flags&NLM_F_REPLACE))
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mark = xfrm_mark_get(attrs, &m);
 
@@ -2526,12 +2860,19 @@ static int xfrm_new_ae(struct sk_buff *skb, struct nlmsghdr *nlh,
 	if (x == NULL)
 		return -ESRCH;
 
+<<<<<<< HEAD
 	if (x->km.state != XFRM_STATE_VALID) {
 		NL_SET_ERR_MSG(extack, "SA must be in VALID state");
 		goto out;
 	}
 
 	err = xfrm_replay_verify_len(x->replay_esn, re, extack);
+=======
+	if (x->km.state != XFRM_STATE_VALID)
+		goto out;
+
+	err = xfrm_replay_verify_len(x->replay_esn, re);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto out;
 
@@ -2666,11 +3007,16 @@ static int xfrm_add_sa_expire(struct sk_buff *skb, struct nlmsghdr *nlh,
 
 	spin_lock_bh(&x->lock);
 	err = -EINVAL;
+<<<<<<< HEAD
 	if (x->km.state != XFRM_STATE_VALID) {
 		NL_SET_ERR_MSG(extack, "SA must be in VALID state");
 		goto out;
 	}
 
+=======
+	if (x->km.state != XFRM_STATE_VALID)
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	km_state_expired(x, ue->hard, nlh->nlmsg_pid);
 
 	if (ue->hard) {
@@ -2750,8 +3096,12 @@ nomem:
 #ifdef CONFIG_XFRM_MIGRATE
 static int copy_from_user_migrate(struct xfrm_migrate *ma,
 				  struct xfrm_kmaddress *k,
+<<<<<<< HEAD
 				  struct nlattr **attrs, int *num,
 				  struct netlink_ext_ack *extack)
+=======
+				  struct nlattr **attrs, int *num)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nlattr *rt = attrs[XFRMA_MIGRATE];
 	struct xfrm_user_migrate *um;
@@ -2770,10 +3120,15 @@ static int copy_from_user_migrate(struct xfrm_migrate *ma,
 	um = nla_data(rt);
 	num_migrate = nla_len(rt) / sizeof(*um);
 
+<<<<<<< HEAD
 	if (num_migrate <= 0 || num_migrate > XFRM_MAX_DEPTH) {
 		NL_SET_ERR_MSG(extack, "Invalid number of SAs to migrate, must be 0 < num <= XFRM_MAX_DEPTH (6)");
 		return -EINVAL;
 	}
+=======
+	if (num_migrate <= 0 || num_migrate > XFRM_MAX_DEPTH)
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < num_migrate; i++, um++, ma++) {
 		memcpy(&ma->old_daddr, &um->old_daddr, sizeof(ma->old_daddr));
@@ -2806,10 +3161,15 @@ static int xfrm_do_migrate(struct sk_buff *skb, struct nlmsghdr *nlh,
 	struct xfrm_encap_tmpl  *encap = NULL;
 	u32 if_id = 0;
 
+<<<<<<< HEAD
 	if (!attrs[XFRMA_MIGRATE]) {
 		NL_SET_ERR_MSG(extack, "Missing required MIGRATE attribute");
 		return -EINVAL;
 	}
+=======
+	if (attrs[XFRMA_MIGRATE] == NULL)
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	kmp = attrs[XFRMA_KMADDRESS] ? &km : NULL;
 
@@ -2817,7 +3177,11 @@ static int xfrm_do_migrate(struct sk_buff *skb, struct nlmsghdr *nlh,
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	err = copy_from_user_migrate(m, kmp, attrs, &n, extack);
+=======
+	err = copy_from_user_migrate((struct xfrm_migrate *)m, kmp, attrs, &n);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return err;
 
@@ -2834,8 +3198,12 @@ static int xfrm_do_migrate(struct sk_buff *skb, struct nlmsghdr *nlh,
 	if (attrs[XFRMA_IF_ID])
 		if_id = nla_get_u32(attrs[XFRMA_IF_ID]);
 
+<<<<<<< HEAD
 	err = xfrm_migrate(&pi->sel, pi->dir, type, m, n, kmp, net, encap,
 			   if_id, extack);
+=======
+	err = xfrm_migrate(&pi->sel, pi->dir, type, m, n, kmp, net, encap, if_id);
+>>>>>>> b7ba80a49124 (Commit)
 
 	kfree(encap);
 
@@ -3432,8 +3800,11 @@ static int build_acquire(struct sk_buff *skb, struct xfrm_state *x,
 		err = xfrm_mark_put(skb, &xp->mark);
 	if (!err)
 		err = xfrm_if_id_put(skb, xp->if_id);
+<<<<<<< HEAD
 	if (!err && xp->xdo.dev)
 		err = copy_user_offload(&xp->xdo, skb);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		nlmsg_cancel(skb, nlh);
 		return err;
@@ -3552,8 +3923,11 @@ static int build_polexpire(struct sk_buff *skb, struct xfrm_policy *xp,
 		err = xfrm_mark_put(skb, &xp->mark);
 	if (!err)
 		err = xfrm_if_id_put(skb, xp->if_id);
+<<<<<<< HEAD
 	if (!err && xp->xdo.dev)
 		err = copy_user_offload(&xp->xdo, skb);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		nlmsg_cancel(skb, nlh);
 		return err;
@@ -3637,8 +4011,11 @@ static int xfrm_notify_policy(struct xfrm_policy *xp, int dir, const struct km_e
 		err = xfrm_mark_put(skb, &xp->mark);
 	if (!err)
 		err = xfrm_if_id_put(skb, xp->if_id);
+<<<<<<< HEAD
 	if (!err && xp->xdo.dev)
 		err = copy_user_offload(&xp->xdo, skb);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto out_free_skb;
 

@@ -11,10 +11,13 @@
 struct drm_i915_private;
 
 struct intel_step_info {
+<<<<<<< HEAD
 	/*
 	 * It is expected to have 4 number steps per letter. Deviation from
 	 * the expectation breaks gmd_to_intel_step().
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u8 graphics_step;	/* Represents the compute tile on Xe_HPC */
 	u8 display_step;
 	u8 media_step;
@@ -27,13 +30,17 @@ struct intel_step_info {
 	func(A0)			\
 	func(A1)			\
 	func(A2)			\
+<<<<<<< HEAD
 	func(A3)			\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	func(B0)			\
 	func(B1)			\
 	func(B2)			\
 	func(B3)			\
 	func(C0)			\
 	func(C1)			\
+<<<<<<< HEAD
 	func(C2)			\
 	func(C3)			\
 	func(D0)			\
@@ -64,6 +71,17 @@ struct intel_step_info {
 	func(J1)			\
 	func(J2)			\
 	func(J3)
+=======
+	func(D0)			\
+	func(D1)			\
+	func(E0)			\
+	func(F0)			\
+	func(G0)			\
+	func(H0)			\
+	func(I0)			\
+	func(I1)			\
+	func(J0)
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Symbolic steppings that do not match the hardware. These are valid both as gt

@@ -200,13 +200,18 @@ static void __init set_real_mode_permissions(void)
 	set_memory_x((unsigned long) text_start, text_size >> PAGE_SHIFT);
 }
 
+<<<<<<< HEAD
 void __init init_real_mode(void)
+=======
+static int __init init_real_mode(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (!real_mode_header)
 		panic("Real mode trampoline was not allocated");
 
 	setup_real_mode();
 	set_real_mode_permissions();
+<<<<<<< HEAD
 }
 
 static int __init do_init_real_mode(void)
@@ -215,3 +220,9 @@ static int __init do_init_real_mode(void)
 	return 0;
 }
 early_initcall(do_init_real_mode);
+=======
+
+	return 0;
+}
+early_initcall(init_real_mode);
+>>>>>>> b7ba80a49124 (Commit)

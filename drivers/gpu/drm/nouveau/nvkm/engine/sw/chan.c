@@ -23,6 +23,10 @@
  */
 #include "chan.h"
 
+<<<<<<< HEAD
+=======
+#include <core/notify.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <engine/fifo.h>
 
 #include <nvif/event.h>
@@ -35,7 +39,11 @@ nvkm_sw_chan_mthd(struct nvkm_sw_chan *chan, int subc, u32 mthd, u32 data)
 	case 0x0000:
 		return true;
 	case 0x0500:
+<<<<<<< HEAD
 		nvkm_event_ntfy(&chan->event, 0, NVKM_SW_CHAN_EVENT_PAGE_FLIP);
+=======
+		nvkm_event_send(&chan->event, 1, 0, NULL, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 	default:
 		if (chan->func->mthd)
@@ -45,8 +53,32 @@ nvkm_sw_chan_mthd(struct nvkm_sw_chan *chan, int subc, u32 mthd, u32 data)
 	return false;
 }
 
+<<<<<<< HEAD
 static const struct nvkm_event_func
 nvkm_sw_chan_event = {
+=======
+static int
+nvkm_sw_chan_event_ctor(struct nvkm_object *object, void *data, u32 size,
+			struct nvkm_notify *notify)
+{
+	union {
+		struct nvif_notify_uevent_req none;
+	} *req = data;
+	int ret = -ENOSYS;
+
+	if (!(ret = nvif_unvers(ret, &data, &size, req->none))) {
+		notify->size  = sizeof(struct nvif_notify_uevent_rep);
+		notify->types = 1;
+		notify->index = 0;
+	}
+
+	return ret;
+}
+
+static const struct nvkm_event_func
+nvkm_sw_chan_event = {
+	.ctor = nvkm_sw_chan_event_ctor,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void *
@@ -87,5 +119,9 @@ nvkm_sw_chan_ctor(const struct nvkm_sw_chan_func *func, struct nvkm_sw *sw,
 	list_add(&chan->head, &sw->chan);
 	spin_unlock_irqrestore(&sw->engine.lock, flags);
 
+<<<<<<< HEAD
 	return nvkm_event_init(&nvkm_sw_chan_event, &sw->engine.subdev, 1, 1, &chan->event);
+=======
+	return nvkm_event_init(&nvkm_sw_chan_event, 1, 1, &chan->event);
+>>>>>>> b7ba80a49124 (Commit)
 }

@@ -304,7 +304,11 @@ __generic_remap_file_range_prep(struct file *file_in, loff_t pos_in,
 	/* Check that we don't violate system file offset limits. */
 	ret = generic_remap_checks(file_in, pos_in, file_out, pos_out, len,
 			remap_flags);
+<<<<<<< HEAD
 	if (ret || *len == 0)
+=======
+	if (ret)
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 
 	/* Wait for the completion of any pending IOs on both files */
@@ -328,6 +332,12 @@ __generic_remap_file_range_prep(struct file *file_in, loff_t pos_in,
 	if (remap_flags & REMAP_FILE_DEDUP) {
 		bool		is_same = false;
 
+<<<<<<< HEAD
+=======
+		if (*len == 0)
+			return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (!IS_DAX(inode_in))
 			ret = vfs_dedupe_file_range_compare(file_in, pos_in,
 					file_out, pos_out, *len, &is_same);
@@ -345,7 +355,11 @@ __generic_remap_file_range_prep(struct file *file_in, loff_t pos_in,
 
 	ret = generic_remap_check_len(inode_in, inode_out, pos_out, len,
 			remap_flags);
+<<<<<<< HEAD
 	if (ret || *len == 0)
+=======
+	if (ret)
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 
 	/* If can't alter the file contents, we're done. */
@@ -419,16 +433,26 @@ EXPORT_SYMBOL(vfs_clone_file_range);
 /* Check whether we are allowed to dedupe the destination file */
 static bool allow_file_dedupe(struct file *file)
 {
+<<<<<<< HEAD
 	struct mnt_idmap *idmap = file_mnt_idmap(file);
+=======
+	struct user_namespace *mnt_userns = file_mnt_user_ns(file);
+>>>>>>> b7ba80a49124 (Commit)
 	struct inode *inode = file_inode(file);
 
 	if (capable(CAP_SYS_ADMIN))
 		return true;
 	if (file->f_mode & FMODE_WRITE)
 		return true;
+<<<<<<< HEAD
 	if (vfsuid_eq_kuid(i_uid_into_vfsuid(idmap, inode), current_fsuid()))
 		return true;
 	if (!inode_permission(idmap, inode, MAY_WRITE))
+=======
+	if (uid_eq(current_fsuid(), i_uid_into_mnt(mnt_userns, inode)))
+		return true;
+	if (!inode_permission(mnt_userns, inode, MAY_WRITE))
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 	return false;
 }

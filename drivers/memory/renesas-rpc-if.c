@@ -136,8 +136,12 @@
 #define RPCIF_PHYCNT_DDRCAL	BIT(19)
 #define RPCIF_PHYCNT_HS		BIT(18)
 #define RPCIF_PHYCNT_CKSEL(v)	(((v) & 0x3) << 16) /* valid only for RZ/G2L */
+<<<<<<< HEAD
 #define RPCIF_PHYCNT_STRTIM(v)	(((v) & 0x7) << 15 | ((v) & 0x8) << 24) /* valid for R-Car and RZ/G2{E,H,M,N} */
 
+=======
+#define RPCIF_PHYCNT_STRTIM(v)	(((v) & 0x7) << 15) /* valid for R-Car and RZ/G2{E,H,M,N} */
+>>>>>>> b7ba80a49124 (Commit)
 #define RPCIF_PHYCNT_WBUF2	BIT(4)
 #define RPCIF_PHYCNT_WBUF	BIT(2)
 #define RPCIF_PHYCNT_PHYMEM(v)	(((v) & 0x3) << 0)
@@ -163,6 +167,7 @@ static const struct regmap_access_table rpcif_volatile_table = {
 	.n_yes_ranges	= ARRAY_SIZE(rpcif_volatile_ranges),
 };
 
+<<<<<<< HEAD
 struct rpcif_priv {
 	struct device *dev;
 	void __iomem *base;
@@ -193,6 +198,16 @@ struct rpcif_priv {
 static int rpcif_reg_read(void *context, unsigned int reg, unsigned int *val)
 {
 	struct rpcif_priv *rpc = context;
+=======
+
+/*
+ * Custom accessor functions to ensure SM[RW]DR[01] are always accessed with
+ * proper width.  Requires rpcif.xfer_size to be correctly set before!
+ */
+static int rpcif_reg_read(void *context, unsigned int reg, unsigned int *val)
+{
+	struct rpcif *rpc = context;
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (reg) {
 	case RPCIF_SMRDR0:
@@ -228,7 +243,11 @@ static int rpcif_reg_read(void *context, unsigned int reg, unsigned int *val)
 
 static int rpcif_reg_write(void *context, unsigned int reg, unsigned int val)
 {
+<<<<<<< HEAD
 	struct rpcif_priv *rpc = context;
+=======
+	struct rpcif *rpc = context;
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (reg) {
 	case RPCIF_SMWDR0:
@@ -275,6 +294,7 @@ static const struct regmap_config rpcif_regmap_config = {
 	.volatile_table	= &rpcif_volatile_table,
 };
 
+<<<<<<< HEAD
 int rpcif_sw_init(struct rpcif *rpcif, struct device *dev)
 {
 	struct rpcif_priv *rpc = dev_get_drvdata(dev);
@@ -287,6 +307,41 @@ int rpcif_sw_init(struct rpcif *rpcif, struct device *dev)
 EXPORT_SYMBOL(rpcif_sw_init);
 
 static void rpcif_rzg2l_timing_adjust_sdr(struct rpcif_priv *rpc)
+=======
+int rpcif_sw_init(struct rpcif *rpc, struct device *dev)
+{
+	struct platform_device *pdev = to_platform_device(dev);
+	struct resource *res;
+
+	rpc->dev = dev;
+
+	rpc->base = devm_platform_ioremap_resource_byname(pdev, "regs");
+	if (IS_ERR(rpc->base))
+		return PTR_ERR(rpc->base);
+
+	rpc->regmap = devm_regmap_init(&pdev->dev, NULL, rpc, &rpcif_regmap_config);
+	if (IS_ERR(rpc->regmap)) {
+		dev_err(&pdev->dev,
+			"failed to init regmap for rpcif, error %ld\n",
+			PTR_ERR(rpc->regmap));
+		return	PTR_ERR(rpc->regmap);
+	}
+
+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dirmap");
+	rpc->dirmap = devm_ioremap_resource(&pdev->dev, res);
+	if (IS_ERR(rpc->dirmap))
+		return PTR_ERR(rpc->dirmap);
+	rpc->size = resource_size(res);
+
+	rpc->type = (uintptr_t)of_device_get_match_data(dev);
+	rpc->rstc = devm_reset_control_get_exclusive(&pdev->dev, NULL);
+
+	return PTR_ERR_OR_ZERO(rpc->rstc);
+}
+EXPORT_SYMBOL(rpcif_sw_init);
+
+static void rpcif_rzg2l_timing_adjust_sdr(struct rpcif *rpc)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	regmap_write(rpc->regmap, RPCIF_PHYWR, 0xa5390000);
 	regmap_write(rpc->regmap, RPCIF_PHYADD, 0x80000000);
@@ -300,6 +355,7 @@ static void rpcif_rzg2l_timing_adjust_sdr(struct rpcif_priv *rpc)
 	regmap_write(rpc->regmap, RPCIF_PHYADD, 0x80000032);
 }
 
+<<<<<<< HEAD
 int rpcif_hw_init(struct device *dev, bool hyperflash)
 {
 	struct rpcif_priv *rpc = dev_get_drvdata(dev);
@@ -311,6 +367,17 @@ int rpcif_hw_init(struct device *dev, bool hyperflash)
 		return ret;
 
 	if (rpc->type == RPCIF_RZ_G2L) {
+=======
+int rpcif_hw_init(struct rpcif *rpc, bool hyperflash)
+{
+	u32 dummy;
+
+	pm_runtime_get_sync(rpc->dev);
+
+	if (rpc->type == RPCIF_RZ_G2L) {
+		int ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 		ret = reset_control_reset(rpc->rstc);
 		if (ret)
 			return ret;
@@ -321,6 +388,7 @@ int rpcif_hw_init(struct device *dev, bool hyperflash)
 	regmap_update_bits(rpc->regmap, RPCIF_PHYCNT, RPCIF_PHYCNT_PHYMEM_MASK,
 			   RPCIF_PHYCNT_PHYMEM(hyperflash ? 3 : 0));
 
+<<<<<<< HEAD
 	/* DMA Transfer is not supported */
 	regmap_update_bits(rpc->regmap, RPCIF_PHYCNT, RPCIF_PHYCNT_HS, 0);
 
@@ -330,6 +398,11 @@ int rpcif_hw_init(struct device *dev, bool hyperflash)
 	else if (rpc->type == RPCIF_RCAR_GEN4)
 		regmap_update_bits(rpc->regmap, RPCIF_PHYCNT,
 				   RPCIF_PHYCNT_STRTIM(15), RPCIF_PHYCNT_STRTIM(15));
+=======
+	if (rpc->type == RPCIF_RCAR_GEN3)
+		regmap_update_bits(rpc->regmap, RPCIF_PHYCNT,
+				   RPCIF_PHYCNT_STRTIM(7), RPCIF_PHYCNT_STRTIM(7));
+>>>>>>> b7ba80a49124 (Commit)
 
 	regmap_update_bits(rpc->regmap, RPCIF_PHYOFFSET1, RPCIF_PHYOFFSET1_DDRTMG(3),
 			   RPCIF_PHYOFFSET1_DDRTMG(3));
@@ -340,17 +413,29 @@ int rpcif_hw_init(struct device *dev, bool hyperflash)
 		regmap_update_bits(rpc->regmap, RPCIF_PHYINT,
 				   RPCIF_PHYINT_WPVAL, 0);
 
+<<<<<<< HEAD
 	if (rpc->type == RPCIF_RZ_G2L)
+=======
+	if (rpc->type == RPCIF_RCAR_GEN3)
+		regmap_update_bits(rpc->regmap, RPCIF_CMNCR,
+				   RPCIF_CMNCR_MOIIO(3) | RPCIF_CMNCR_BSZ(3),
+				   RPCIF_CMNCR_MOIIO(3) |
+				   RPCIF_CMNCR_BSZ(hyperflash ? 1 : 0));
+	else
+>>>>>>> b7ba80a49124 (Commit)
 		regmap_update_bits(rpc->regmap, RPCIF_CMNCR,
 				   RPCIF_CMNCR_MOIIO(3) | RPCIF_CMNCR_IOFV(3) |
 				   RPCIF_CMNCR_BSZ(3),
 				   RPCIF_CMNCR_MOIIO(1) | RPCIF_CMNCR_IOFV(2) |
 				   RPCIF_CMNCR_BSZ(hyperflash ? 1 : 0));
+<<<<<<< HEAD
 	else
 		regmap_update_bits(rpc->regmap, RPCIF_CMNCR,
 				   RPCIF_CMNCR_MOIIO(3) | RPCIF_CMNCR_BSZ(3),
 				   RPCIF_CMNCR_MOIIO(3) |
 				   RPCIF_CMNCR_BSZ(hyperflash ? 1 : 0));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Set RCF after BSZ update */
 	regmap_write(rpc->regmap, RPCIF_DRCR, RPCIF_DRCR_RCF);
@@ -359,7 +444,11 @@ int rpcif_hw_init(struct device *dev, bool hyperflash)
 	regmap_write(rpc->regmap, RPCIF_SSLDR, RPCIF_SSLDR_SPNDL(7) |
 		     RPCIF_SSLDR_SLNDL(7) | RPCIF_SSLDR_SCKDL(7));
 
+<<<<<<< HEAD
 	pm_runtime_put(dev);
+=======
+	pm_runtime_put(rpc->dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	rpc->bus_size = hyperflash ? 2 : 1;
 
@@ -367,7 +456,11 @@ int rpcif_hw_init(struct device *dev, bool hyperflash)
 }
 EXPORT_SYMBOL(rpcif_hw_init);
 
+<<<<<<< HEAD
 static int wait_msg_xfer_end(struct rpcif_priv *rpc)
+=======
+static int wait_msg_xfer_end(struct rpcif *rpc)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 sts;
 
@@ -376,7 +469,11 @@ static int wait_msg_xfer_end(struct rpcif_priv *rpc)
 					USEC_PER_SEC);
 }
 
+<<<<<<< HEAD
 static u8 rpcif_bits_set(struct rpcif_priv *rpc, u32 nbytes)
+=======
+static u8 rpcif_bits_set(struct rpcif *rpc, u32 nbytes)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (rpc->bus_size == 2)
 		nbytes /= 2;
@@ -389,11 +486,17 @@ static u8 rpcif_bit_size(u8 buswidth)
 	return buswidth > 4 ? 2 : ilog2(buswidth);
 }
 
+<<<<<<< HEAD
 void rpcif_prepare(struct device *dev, const struct rpcif_op *op, u64 *offs,
 		   size_t *len)
 {
 	struct rpcif_priv *rpc = dev_get_drvdata(dev);
 
+=======
+void rpcif_prepare(struct rpcif *rpc, const struct rpcif_op *op, u64 *offs,
+		   size_t *len)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	rpc->smcr = 0;
 	rpc->smadr = 0;
 	rpc->enable = 0;
@@ -435,7 +538,12 @@ void rpcif_prepare(struct device *dev, const struct rpcif_op *op, u64 *offs,
 
 	if (op->dummy.buswidth) {
 		rpc->enable |= RPCIF_SMENR_DME;
+<<<<<<< HEAD
 		rpc->dummy = RPCIF_SMDMCR_DMCYC(op->dummy.ncycles);
+=======
+		rpc->dummy = RPCIF_SMDMCR_DMCYC(op->dummy.ncycles /
+						op->dummy.buswidth);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (op->option.buswidth) {
@@ -476,6 +584,7 @@ void rpcif_prepare(struct device *dev, const struct rpcif_op *op, u64 *offs,
 }
 EXPORT_SYMBOL(rpcif_prepare);
 
+<<<<<<< HEAD
 int rpcif_manual_xfer(struct device *dev)
 {
 	struct rpcif_priv *rpc = dev_get_drvdata(dev);
@@ -485,6 +594,14 @@ int rpcif_manual_xfer(struct device *dev)
 	ret = pm_runtime_resume_and_get(dev);
 	if (ret < 0)
 		return ret;
+=======
+int rpcif_manual_xfer(struct rpcif *rpc)
+{
+	u32 smenr, smcr, pos = 0, max = rpc->bus_size == 2 ? 8 : 4;
+	int ret = 0;
+
+	pm_runtime_get_sync(rpc->dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	regmap_update_bits(rpc->regmap, RPCIF_PHYCNT,
 			   RPCIF_PHYCNT_CAL, RPCIF_PHYCNT_CAL);
@@ -594,13 +711,22 @@ int rpcif_manual_xfer(struct device *dev)
 	}
 
 exit:
+<<<<<<< HEAD
 	pm_runtime_put(dev);
+=======
+	pm_runtime_put(rpc->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 
 err_out:
 	if (reset_control_reset(rpc->rstc))
+<<<<<<< HEAD
 		dev_err(dev, "Failed to reset HW\n");
 	rpcif_hw_init(dev, rpc->bus_size == 2);
+=======
+		dev_err(rpc->dev, "Failed to reset HW\n");
+	rpcif_hw_init(rpc, rpc->bus_size == 2);
+>>>>>>> b7ba80a49124 (Commit)
 	goto exit;
 }
 EXPORT_SYMBOL(rpcif_manual_xfer);
@@ -647,19 +773,30 @@ static void memcpy_fromio_readw(void *to,
 	}
 }
 
+<<<<<<< HEAD
 ssize_t rpcif_dirmap_read(struct device *dev, u64 offs, size_t len, void *buf)
 {
 	struct rpcif_priv *rpc = dev_get_drvdata(dev);
 	loff_t from = offs & (rpc->size - 1);
 	size_t size = rpc->size - from;
 	int ret;
+=======
+ssize_t rpcif_dirmap_read(struct rpcif *rpc, u64 offs, size_t len, void *buf)
+{
+	loff_t from = offs & (rpc->size - 1);
+	size_t size = rpc->size - from;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (len > size)
 		len = size;
 
+<<<<<<< HEAD
 	ret = pm_runtime_resume_and_get(dev);
 	if (ret < 0)
 		return ret;
+=======
+	pm_runtime_get_sync(rpc->dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	regmap_update_bits(rpc->regmap, RPCIF_CMNCR, RPCIF_CMNCR_MD, 0);
 	regmap_write(rpc->regmap, RPCIF_DRCR, 0);
@@ -677,7 +814,11 @@ ssize_t rpcif_dirmap_read(struct device *dev, u64 offs, size_t len, void *buf)
 	else
 		memcpy_fromio(buf, rpc->dirmap + from, len);
 
+<<<<<<< HEAD
 	pm_runtime_put(dev);
+=======
+	pm_runtime_put(rpc->dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return len;
 }
@@ -685,6 +826,7 @@ EXPORT_SYMBOL(rpcif_dirmap_read);
 
 static int rpcif_probe(struct platform_device *pdev)
 {
+<<<<<<< HEAD
 	struct device *dev = &pdev->dev;
 	struct platform_device *vdev;
 	struct device_node *flash;
@@ -696,6 +838,16 @@ static int rpcif_probe(struct platform_device *pdev)
 	flash = of_get_next_child(dev->of_node, NULL);
 	if (!flash) {
 		dev_warn(dev, "no flash node found\n");
+=======
+	struct platform_device *vdev;
+	struct device_node *flash;
+	const char *name;
+	int ret;
+
+	flash = of_get_next_child(pdev->dev.of_node, NULL);
+	if (!flash) {
+		dev_warn(&pdev->dev, "no flash node found\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENODEV;
 	}
 
@@ -705,11 +857,16 @@ static int rpcif_probe(struct platform_device *pdev)
 		name = "rpc-if-hyperflash";
 	} else	{
 		of_node_put(flash);
+<<<<<<< HEAD
 		dev_warn(dev, "unknown flash type\n");
+=======
+		dev_warn(&pdev->dev, "unknown flash type\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENODEV;
 	}
 	of_node_put(flash);
 
+<<<<<<< HEAD
 	rpc = devm_kzalloc(dev, sizeof(*rpc), GFP_KERNEL);
 	if (!rpc)
 		return -ENOMEM;
@@ -744,6 +901,13 @@ static int rpcif_probe(struct platform_device *pdev)
 	rpc->dev = dev;
 	rpc->vdev = vdev;
 	platform_set_drvdata(pdev, rpc);
+=======
+	vdev = platform_device_alloc(name, pdev->id);
+	if (!vdev)
+		return -ENOMEM;
+	vdev->dev.parent = &pdev->dev;
+	platform_set_drvdata(pdev, vdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = platform_device_add(vdev);
 	if (ret) {
@@ -756,16 +920,25 @@ static int rpcif_probe(struct platform_device *pdev)
 
 static int rpcif_remove(struct platform_device *pdev)
 {
+<<<<<<< HEAD
 	struct rpcif_priv *rpc = platform_get_drvdata(pdev);
 
 	platform_device_unregister(rpc->vdev);
+=======
+	struct platform_device *vdev = platform_get_drvdata(pdev);
+
+	platform_device_unregister(vdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
 static const struct of_device_id rpcif_of_match[] = {
 	{ .compatible = "renesas,rcar-gen3-rpc-if", .data = (void *)RPCIF_RCAR_GEN3 },
+<<<<<<< HEAD
 	{ .compatible = "renesas,rcar-gen4-rpc-if", .data = (void *)RPCIF_RCAR_GEN4 },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "renesas,rzg2l-rpc-if", .data = (void *)RPCIF_RZ_G2L },
 	{},
 };

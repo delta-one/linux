@@ -201,7 +201,11 @@
 #define IMX8ULP_CLK_SAI7		2
 #define IMX8ULP_CLK_SPDIF		3
 #define IMX8ULP_CLK_ISI			4
+<<<<<<< HEAD
 #define IMX8ULP_CLK_CSI_REGS		5
+=======
+#define IMX8ULP_CLK_CSI_REGS 		5
+>>>>>>> b7ba80a49124 (Commit)
 #define IMX8ULP_CLK_PCTLD		6
 #define IMX8ULP_CLK_CSI			7
 #define IMX8ULP_CLK_DSI			8
@@ -212,7 +216,11 @@
 #define IMX8ULP_CLK_GPU2D		13
 #define IMX8ULP_CLK_GPU3D		14
 #define IMX8ULP_CLK_DC_NANO		15
+<<<<<<< HEAD
 #define IMX8ULP_CLK_CSI_CLK_UI		16
+=======
+#define IMX8ULP_CLK_CSI_CLK_UI 		16
+>>>>>>> b7ba80a49124 (Commit)
 #define IMX8ULP_CLK_CSI_CLK_ESC		17
 #define IMX8ULP_CLK_RGPIOD		18
 #define IMX8ULP_CLK_DMA2_MP		19

@@ -9,7 +9,10 @@
 #include <linux/types.h>
 #include <linux/slab.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/mod_devicetable.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/watchdog.h>
 #include <linux/platform_device.h>
 #include <linux/mfd/twl.h>
@@ -81,6 +84,10 @@ static int twl4030_wdt_probe(struct platform_device *pdev)
 	return devm_watchdog_register_device(dev, wdt);
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM
+>>>>>>> b7ba80a49124 (Commit)
 static int twl4030_wdt_suspend(struct platform_device *pdev, pm_message_t state)
 {
 	struct watchdog_device *wdt = platform_get_drvdata(pdev);
@@ -98,6 +105,13 @@ static int twl4030_wdt_resume(struct platform_device *pdev)
 
 	return 0;
 }
+<<<<<<< HEAD
+=======
+#else
+#define twl4030_wdt_suspend        NULL
+#define twl4030_wdt_resume         NULL
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct of_device_id twl_wdt_of_match[] = {
 	{ .compatible = "ti,twl4030-wdt", },
@@ -107,8 +121,13 @@ MODULE_DEVICE_TABLE(of, twl_wdt_of_match);
 
 static struct platform_driver twl4030_wdt_driver = {
 	.probe		= twl4030_wdt_probe,
+<<<<<<< HEAD
 	.suspend	= pm_ptr(twl4030_wdt_suspend),
 	.resume		= pm_ptr(twl4030_wdt_resume),
+=======
+	.suspend	= twl4030_wdt_suspend,
+	.resume		= twl4030_wdt_resume,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name		= "twl4030_wdt",
 		.of_match_table	= twl_wdt_of_match,

@@ -322,6 +322,7 @@ static const struct soc_enum nau8821_dac_oversampl_enum =
 	SOC_ENUM_SINGLE(NAU8821_R2C_DAC_CTRL1, NAU8821_DAC_OVERSAMPLE_SFT,
 		ARRAY_SIZE(nau8821_dac_oversampl), nau8821_dac_oversampl);
 
+<<<<<<< HEAD
 static const char * const nau8821_adc_drc_noise_gate[] = {
 	"1:1", "2:1", "4:1", "8:1" };
 
@@ -400,14 +401,19 @@ static const struct soc_enum nau8821_decay_time_enum =
 	SOC_ENUM_SINGLE(NAU8821_R39_ADC_DRC_ATKDCY, NAU8821_DRC_DCY_ADC_SFT,
 		ARRAY_SIZE(nau8821_decay_time), nau8821_decay_time);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const DECLARE_TLV_DB_MINMAX_MUTE(adc_vol_tlv, -6600, 2400);
 static const DECLARE_TLV_DB_MINMAX_MUTE(sidetone_vol_tlv, -4200, 0);
 static const DECLARE_TLV_DB_MINMAX(hp_vol_tlv, -900, 0);
 static const DECLARE_TLV_DB_SCALE(playback_vol_tlv, -6600, 50, 1);
 static const DECLARE_TLV_DB_MINMAX(fepga_gain_tlv, -100, 3600);
 static const DECLARE_TLV_DB_MINMAX_MUTE(crosstalk_vol_tlv, -7000, 2400);
+<<<<<<< HEAD
 static const DECLARE_TLV_DB_MINMAX(drc_knee4_tlv, -9800, -3500);
 static const DECLARE_TLV_DB_MINMAX(drc_knee3_tlv, -8100, -1800);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct snd_kcontrol_new nau8821_controls[] = {
 	SOC_DOUBLE_TLV("Mic Volume", NAU8821_R35_ADC_DGAIN_CTRL1,
@@ -426,6 +432,7 @@ static const struct snd_kcontrol_new nau8821_controls[] = {
 	SOC_DOUBLE_TLV("Headphone Crosstalk Volume",
 		NAU8821_R2F_DAC_DGAIN_CTRL,
 		0, 8, 0xff, 0, crosstalk_vol_tlv),
+<<<<<<< HEAD
 	SOC_SINGLE_TLV("ADC DRC KNEE4", NAU8821_R37_ADC_DRC_KNEE_IP34,
 		NAU8821_DRC_KNEE4_IP_ADC_SFT, 0x3f, 1, drc_knee4_tlv),
 	SOC_SINGLE_TLV("ADC DRC KNEE3", NAU8821_R37_ADC_DRC_KNEE_IP34,
@@ -442,6 +449,8 @@ static const struct snd_kcontrol_new nau8821_controls[] = {
 	SOC_ENUM("ADC DRC Decay Time", nau8821_decay_time_enum),
 	SOC_SINGLE("DRC Enable Switch", NAU8821_R36_ADC_DRC_KNEE_IP12,
 		NAU8821_DRC_ENA_ADC_SFT, 1, 0),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	SOC_ENUM("ADC Decimation Rate", nau8821_adc_decimation_enum),
 	SOC_ENUM("DAC Oversampling Rate", nau8821_dac_oversampl_enum),

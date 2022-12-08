@@ -38,8 +38,12 @@ SECTIONS
 	}
 }
 
+<<<<<<< HEAD
 PROVIDE(__efistub__gzdata_size =
 		ABSOLUTE(__efistub__gzdata_end - __efistub__gzdata_start));
+=======
+PROVIDE(__efistub__gzdata_size = ABSOLUTE(. - __efistub__gzdata_start));
+>>>>>>> b7ba80a49124 (Commit)
 
 PROVIDE(__data_rawsize = ABSOLUTE(_edata - _etext));
 PROVIDE(__data_size = ABSOLUTE(_end - _etext));

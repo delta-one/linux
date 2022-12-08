@@ -423,10 +423,13 @@ void dp_aux_isr(struct drm_dp_aux *dp_aux)
 
 	isr = dp_catalog_aux_get_irq(aux->catalog);
 
+<<<<<<< HEAD
 	/* no interrupts pending, return immediately */
 	if (!isr)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!aux->cmd_busy)
 		return;
 

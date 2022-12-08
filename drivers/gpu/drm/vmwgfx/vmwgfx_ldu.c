@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0 OR MIT
 /**************************************************************************
  *
+<<<<<<< HEAD
  * Copyright 2009-2023 VMware, Inc., Palo Alto, CA., USA
+=======
+ * Copyright 2009-2022 VMware, Inc., Palo Alto, CA., USA
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the
@@ -25,6 +29,7 @@
  *
  **************************************************************************/
 
+<<<<<<< HEAD
 #include "vmwgfx_bo.h"
 #include "vmwgfx_kms.h"
 
@@ -32,6 +37,14 @@
 #include <drm/drm_atomic_helper.h>
 #include <drm/drm_fourcc.h>
 
+=======
+#include <drm/drm_atomic.h>
+#include <drm/drm_atomic_helper.h>
+#include <drm/drm_fourcc.h>
+#include <drm/drm_vblank.h>
+
+#include "vmwgfx_kms.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #define vmw_crtc_to_ldu(x) \
 	container_of(x, struct vmw_legacy_display_unit, base.crtc)
@@ -136,6 +149,7 @@ static int vmw_ldu_commit_list(struct vmw_private *dev_priv)
 	return 0;
 }
 
+<<<<<<< HEAD
 /*
  * Pin the buffer in a location suitable for access by the
  * display system.
@@ -177,6 +191,8 @@ static int vmw_ldu_fb_unpin(struct vmw_framebuffer *vfb)
 	return vmw_bo_unpin(dev_priv, buf, false);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int vmw_ldu_del_active(struct vmw_private *vmw_priv,
 			      struct vmw_legacy_display_unit *ldu)
 {
@@ -188,7 +204,12 @@ static int vmw_ldu_del_active(struct vmw_private *vmw_priv,
 	list_del_init(&ldu->active);
 	if (--(ld->num_active) == 0) {
 		BUG_ON(!ld->fb);
+<<<<<<< HEAD
 		WARN_ON(vmw_ldu_fb_unpin(ld->fb));
+=======
+		if (ld->fb->unpin)
+			ld->fb->unpin(ld->fb);
+>>>>>>> b7ba80a49124 (Commit)
 		ld->fb = NULL;
 	}
 
@@ -205,10 +226,18 @@ static int vmw_ldu_add_active(struct vmw_private *vmw_priv,
 
 	BUG_ON(!ld->num_active && ld->fb);
 	if (vfb != ld->fb) {
+<<<<<<< HEAD
 		if (ld->fb)
 			WARN_ON(vmw_ldu_fb_unpin(ld->fb));
 		vmw_svga_enable(vmw_priv);
 		WARN_ON(vmw_ldu_fb_pin(vfb));
+=======
+		if (ld->fb && ld->fb->unpin)
+			ld->fb->unpin(ld->fb);
+		vmw_svga_enable(vmw_priv);
+		if (vfb->pin)
+			vfb->pin(vfb);
+>>>>>>> b7ba80a49124 (Commit)
 		ld->fb = vfb;
 	}
 
@@ -275,6 +304,12 @@ static const struct drm_crtc_funcs vmw_legacy_crtc_funcs = {
 	.atomic_duplicate_state = vmw_du_crtc_duplicate_state,
 	.atomic_destroy_state = vmw_du_crtc_destroy_state,
 	.set_config = drm_atomic_helper_set_config,
+<<<<<<< HEAD
+=======
+	.get_vblank_counter = vmw_get_vblank_counter,
+	.enable_vblank = vmw_enable_vblank,
+	.disable_vblank = vmw_disable_vblank,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 
@@ -544,6 +579,13 @@ int vmw_kms_ldu_init_display(struct vmw_private *dev_priv)
 	dev_priv->ldu_priv->last_num_active = 0;
 	dev_priv->ldu_priv->fb = NULL;
 
+<<<<<<< HEAD
+=======
+	ret = drm_vblank_init(dev, num_display_units);
+	if (ret != 0)
+		goto err_free;
+
+>>>>>>> b7ba80a49124 (Commit)
 	vmw_kms_create_implicit_placement_property(dev_priv);
 
 	for (i = 0; i < num_display_units; ++i) {

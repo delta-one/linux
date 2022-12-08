@@ -243,7 +243,10 @@ enum {
 	MTTPC,
 	MTTPC_B,
 	HID_GENERIC,
+<<<<<<< HEAD
 	BOOTLOADER,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	MAX_TYPE
 };
 
@@ -324,7 +327,10 @@ struct hid_data {
 	int ps_connected;
 	bool pad_input_event_flag;
 	unsigned short sequence_number;
+<<<<<<< HEAD
 	int time_delayed;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct wacom_remote_data {

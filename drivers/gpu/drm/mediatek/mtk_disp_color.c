@@ -14,7 +14,10 @@
 #include "mtk_disp_drv.h"
 #include "mtk_drm_crtc.h"
 #include "mtk_drm_ddp_comp.h"
+<<<<<<< HEAD
 #include "mtk_drm_drv.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define DISP_COLOR_CFG_MAIN			0x0400
 #define DISP_COLOR_START_MT2701			0x0f00

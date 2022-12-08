@@ -669,7 +669,11 @@ int nft_meta_set_init(const struct nft_ctx *ctx,
 EXPORT_SYMBOL_GPL(nft_meta_set_init);
 
 int nft_meta_get_dump(struct sk_buff *skb,
+<<<<<<< HEAD
 		      const struct nft_expr *expr, bool reset)
+=======
+		      const struct nft_expr *expr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct nft_meta *priv = nft_expr_priv(expr);
 
@@ -684,8 +688,12 @@ nla_put_failure:
 }
 EXPORT_SYMBOL_GPL(nft_meta_get_dump);
 
+<<<<<<< HEAD
 int nft_meta_set_dump(struct sk_buff *skb,
 		      const struct nft_expr *expr, bool reset)
+=======
+int nft_meta_set_dump(struct sk_buff *skb, const struct nft_expr *expr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct nft_meta *priv = nft_expr_priv(expr);
 
@@ -832,6 +840,7 @@ nft_meta_select_ops(const struct nft_ctx *ctx,
 	return ERR_PTR(-EINVAL);
 }
 
+<<<<<<< HEAD
 static int nft_meta_inner_init(const struct nft_ctx *ctx,
 			       const struct nft_expr *expr,
 			       const struct nlattr * const tb[])
@@ -897,6 +906,11 @@ struct nft_expr_type nft_meta_type __read_mostly = {
 	.name		= "meta",
 	.select_ops	= nft_meta_select_ops,
 	.inner_ops	= &nft_meta_inner_ops,
+=======
+struct nft_expr_type nft_meta_type __read_mostly = {
+	.name		= "meta",
+	.select_ops	= nft_meta_select_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	.policy		= nft_meta_policy,
 	.maxattr	= NFTA_META_MAX,
 	.owner		= THIS_MODULE,

@@ -9,7 +9,10 @@
 
 #include <drm/drm_fourcc.h>
 #include <drm/drm_framebuffer.h>
+<<<<<<< HEAD
 #include <drm/drm_modeset_helper_vtables.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "framebuffer.h"
 #include "gem.h"

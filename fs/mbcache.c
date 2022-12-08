@@ -90,6 +90,7 @@ int mb_cache_entry_create(struct mb_cache *cache, gfp_t mask, u32 key,
 		return -ENOMEM;
 
 	INIT_LIST_HEAD(&entry->e_list);
+<<<<<<< HEAD
 	/*
 	 * We create entry with two references. One reference is kept by the
 	 * hash table, the other reference is used to protect us from
@@ -103,6 +104,14 @@ int mb_cache_entry_create(struct mb_cache *cache, gfp_t mask, u32 key,
 	entry->e_flags = 0;
 	if (reusable)
 		set_bit(MBE_REUSABLE_B, &entry->e_flags);
+=======
+	/* Initial hash reference */
+	atomic_set(&entry->e_refcnt, 1);
+	entry->e_key = key;
+	entry->e_value = value;
+	entry->e_reusable = reusable;
+	entry->e_referenced = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	head = mb_cache_entry_head(cache, key);
 	hlist_bl_lock(head);
 	hlist_bl_for_each_entry(dup, dup_node, head, e_hash_list) {
@@ -113,12 +122,23 @@ int mb_cache_entry_create(struct mb_cache *cache, gfp_t mask, u32 key,
 		}
 	}
 	hlist_bl_add_head(&entry->e_hash_list, head);
+<<<<<<< HEAD
 	hlist_bl_unlock(head);
+=======
+	/*
+	 * Add entry to LRU list before it can be found by
+	 * mb_cache_entry_delete() to avoid races
+	 */
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock(&cache->c_list_lock);
 	list_add_tail(&entry->e_list, &cache->c_list);
 	cache->c_entry_count++;
 	spin_unlock(&cache->c_list_lock);
+<<<<<<< HEAD
 	mb_cache_entry_put(cache, entry);
+=======
+	hlist_bl_unlock(head);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -166,8 +186,12 @@ static struct mb_cache_entry *__entry_find(struct mb_cache *cache,
 	while (node) {
 		entry = hlist_bl_entry(node, struct mb_cache_entry,
 				       e_hash_list);
+<<<<<<< HEAD
 		if (entry->e_key == key &&
 		    test_bit(MBE_REUSABLE_B, &entry->e_flags) &&
+=======
+		if (entry->e_key == key && entry->e_reusable &&
+>>>>>>> b7ba80a49124 (Commit)
 		    atomic_inc_not_zero(&entry->e_refcnt))
 			goto out;
 		node = node->next;
@@ -286,7 +310,11 @@ EXPORT_SYMBOL(mb_cache_entry_delete_or_get);
 void mb_cache_entry_touch(struct mb_cache *cache,
 			  struct mb_cache_entry *entry)
 {
+<<<<<<< HEAD
 	set_bit(MBE_REFERENCED_B, &entry->e_flags);
+=======
+	entry->e_referenced = 1;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(mb_cache_entry_touch);
 
@@ -311,9 +339,15 @@ static unsigned long mb_cache_shrink(struct mb_cache *cache,
 		entry = list_first_entry(&cache->c_list,
 					 struct mb_cache_entry, e_list);
 		/* Drop initial hash reference if there is no user */
+<<<<<<< HEAD
 		if (test_bit(MBE_REFERENCED_B, &entry->e_flags) ||
 		    atomic_cmpxchg(&entry->e_refcnt, 1, 0) != 1) {
 			clear_bit(MBE_REFERENCED_B, &entry->e_flags);
+=======
+		if (entry->e_referenced ||
+		    atomic_cmpxchg(&entry->e_refcnt, 1, 0) != 1) {
+			entry->e_referenced = 0;
+>>>>>>> b7ba80a49124 (Commit)
 			list_move_tail(&entry->e_list, &cache->c_list);
 			continue;
 		}

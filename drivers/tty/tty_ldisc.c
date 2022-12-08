@@ -58,6 +58,10 @@ static struct tty_ldisc_ops *tty_ldiscs[NR_LDISCS];
 int tty_register_ldisc(struct tty_ldisc_ops *new_ldisc)
 {
 	unsigned long flags;
+<<<<<<< HEAD
+=======
+	int ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (new_ldisc->num < N_TTY || new_ldisc->num >= NR_LDISCS)
 		return -EINVAL;
@@ -66,7 +70,11 @@ int tty_register_ldisc(struct tty_ldisc_ops *new_ldisc)
 	tty_ldiscs[new_ldisc->num] = new_ldisc;
 	raw_spin_unlock_irqrestore(&tty_ldiscs_lock, flags);
 
+<<<<<<< HEAD
 	return 0;
+=======
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(tty_register_ldisc);
 
@@ -116,7 +124,11 @@ static void put_ldops(struct tty_ldisc_ops *ldops)
 	raw_spin_unlock_irqrestore(&tty_ldiscs_lock, flags);
 }
 
+<<<<<<< HEAD
 int tty_ldisc_autoload = IS_BUILTIN(CONFIG_LDISC_AUTOLOAD);
+=======
+static int tty_ldisc_autoload = IS_BUILTIN(CONFIG_LDISC_AUTOLOAD);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * tty_ldisc_get	-	take a reference to an ldisc
@@ -816,3 +828,42 @@ void tty_ldisc_deinit(struct tty_struct *tty)
 		tty_ldisc_put(tty->ldisc);
 	tty->ldisc = NULL;
 }
+<<<<<<< HEAD
+=======
+
+static struct ctl_table tty_table[] = {
+	{
+		.procname	= "ldisc_autoload",
+		.data		= &tty_ldisc_autoload,
+		.maxlen		= sizeof(tty_ldisc_autoload),
+		.mode		= 0644,
+		.proc_handler	= proc_dointvec,
+		.extra1		= SYSCTL_ZERO,
+		.extra2		= SYSCTL_ONE,
+	},
+	{ }
+};
+
+static struct ctl_table tty_dir_table[] = {
+	{
+		.procname	= "tty",
+		.mode		= 0555,
+		.child		= tty_table,
+	},
+	{ }
+};
+
+static struct ctl_table tty_root_table[] = {
+	{
+		.procname	= "dev",
+		.mode		= 0555,
+		.child		= tty_dir_table,
+	},
+	{ }
+};
+
+void tty_sysctl_init(void)
+{
+	register_sysctl_table(tty_root_table);
+}
+>>>>>>> b7ba80a49124 (Commit)

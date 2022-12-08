@@ -232,7 +232,10 @@ static void ipc_pcie_config_init(struct iosm_pcie *ipc_pcie)
  */
 static enum ipc_pcie_sleep_state ipc_pcie_read_bios_cfg(struct device *dev)
 {
+<<<<<<< HEAD
 	enum ipc_pcie_sleep_state sleep_state = IPC_PCIE_D0L12;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	union acpi_object *object;
 	acpi_handle handle_acpi;
 
@@ -243,6 +246,7 @@ static enum ipc_pcie_sleep_state ipc_pcie_read_bios_cfg(struct device *dev)
 	}
 
 	object = acpi_evaluate_dsm(handle_acpi, &wwan_acpi_guid, 0, 3, NULL);
+<<<<<<< HEAD
 	if (!object)
 		goto default_ret;
 
@@ -253,13 +257,24 @@ static enum ipc_pcie_sleep_state ipc_pcie_read_bios_cfg(struct device *dev)
 
 default_ret:
 	return sleep_state;
+=======
+
+	if (object && object->integer.value == 3)
+		return IPC_PCIE_D3L2;
+
+default_ret:
+	return IPC_PCIE_D0L12;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int ipc_pcie_probe(struct pci_dev *pci,
 			  const struct pci_device_id *pci_id)
 {
 	struct iosm_pcie *ipc_pcie = kzalloc(sizeof(*ipc_pcie), GFP_KERNEL);
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	pr_debug("Probing device 0x%X from the vendor 0x%X", pci_id->device,
 		 pci_id->vendor);
@@ -292,12 +307,15 @@ static int ipc_pcie_probe(struct pci_dev *pci,
 		goto pci_enable_fail;
 	}
 
+<<<<<<< HEAD
 	ret = dma_set_mask(ipc_pcie->dev, DMA_BIT_MASK(64));
 	if (ret) {
 		dev_err(ipc_pcie->dev, "Could not set PCI DMA mask: %d", ret);
 		return ret;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ipc_pcie_config_aspm(ipc_pcie);
 	dev_dbg(ipc_pcie->dev, "PCIe device enabled.");
 

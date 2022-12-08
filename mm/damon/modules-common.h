@@ -44,6 +44,9 @@
 			0400);						\
 	module_param_named(nr_##qt_exceed_name, stat.qt_exceeds, ulong,	\
 			0400);
+<<<<<<< HEAD
 
 int damon_modules_new_paddr_ctx_target(struct damon_ctx **ctxp,
 		struct damon_target **targetp);
+=======
+>>>>>>> b7ba80a49124 (Commit)

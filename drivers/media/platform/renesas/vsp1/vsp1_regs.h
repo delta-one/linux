@@ -228,6 +228,7 @@
 #define VI6_RPF_MULT_ALPHA_RATIO_MASK	(0xff << 0)
 #define VI6_RPF_MULT_ALPHA_RATIO_SHIFT	0
 
+<<<<<<< HEAD
 #define VI6_RPF_EXT_INFMT0		0x0370
 #define VI6_RPF_EXT_INFMT0_F2B		BIT(12)
 #define VI6_RPF_EXT_INFMT0_IPBD_Y_8	(0 << 8)
@@ -250,6 +251,8 @@
 #define VI6_RPF_BRDITH_CTRL_ODE		BIT(8)
 #define VI6_RPF_BRDITH_CTRL_CBRM	BIT(0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* -----------------------------------------------------------------------------
  * WPF Control Registers
  */
@@ -788,7 +791,11 @@
 #define VI6_IP_VERSION_MODEL_VSPD_V3	(0x18 << 8)
 #define VI6_IP_VERSION_MODEL_VSPDL_GEN3	(0x19 << 8)
 #define VI6_IP_VERSION_MODEL_VSPBS_GEN3	(0x1a << 8)
+<<<<<<< HEAD
 #define VI6_IP_VERSION_MODEL_VSPD_GEN4	(0x1c << 8)
+=======
+#define VI6_IP_VERSION_MODEL_VSPD_V3U	(0x1c << 8)
+>>>>>>> b7ba80a49124 (Commit)
 /* RZ/G2L SoCs have no version register, So use 0x80 as the model version */
 #define VI6_IP_VERSION_MODEL_VSPD_RZG2L	(0x80 << 8)
 
@@ -804,7 +811,10 @@
 #define VI6_IP_VERSION_SOC_M3N		(0x04 << 0)
 #define VI6_IP_VERSION_SOC_E3		(0x04 << 0)
 #define VI6_IP_VERSION_SOC_V3U		(0x05 << 0)
+<<<<<<< HEAD
 #define VI6_IP_VERSION_SOC_V4H		(0x06 << 0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* RZ/G2L SoCs have no version register, So use 0x80 for SoC Identification */
 #define VI6_IP_VERSION_SOC_RZG2L	(0x80 << 0)
 
@@ -868,7 +878,10 @@
 #define VI6_FMT_XBXGXR_262626		0x21
 #define VI6_FMT_ABGR_8888		0x22
 #define VI6_FMT_XXRGB_88565		0x23
+<<<<<<< HEAD
 #define VI6_FMT_RGB10_RGB10A2_A2RGB10	0x30
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define VI6_FMT_Y_UV_444		0x40
 #define VI6_FMT_Y_UV_422		0x41

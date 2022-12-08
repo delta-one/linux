@@ -37,8 +37,11 @@
 #define DCN3_2_MBLK_WIDTH 128
 #define DCN3_2_MBLK_HEIGHT_4BPE 128
 #define DCN3_2_MBLK_HEIGHT_8BPE 64
+<<<<<<< HEAD
 #define DCN3_2_VMIN_DISPCLK_HZ 717000000
 #define DCN3_2_DCFCLK_DS_INIT_KHZ 10000 // Choose 10Mhz for init DCFCLK DS freq
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define TO_DCN32_RES_POOL(pool)\
 	container_of(pool, struct dcn32_resource_pool, base)
@@ -71,9 +74,12 @@ bool dcn32_release_post_bldn_3dlut(
 		struct dc_transfer_func **shaper);
 
 bool dcn32_remove_phantom_pipes(struct dc *dc,
+<<<<<<< HEAD
 		struct dc_state *context, bool fast_update);
 
 void dcn32_retain_phantom_pipes(struct dc *dc,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		struct dc_state *context);
 
 void dcn32_add_phantom_pipes(struct dc *dc,
@@ -97,6 +103,7 @@ void dcn32_calculate_wm_and_dlg(
 		int pipe_cnt,
 		int vlevel);
 
+<<<<<<< HEAD
 uint32_t dcn32_helper_mall_bytes_to_ways(
 		struct dc *dc,
 		uint32_t total_size_in_mall_bytes);
@@ -108,6 +115,10 @@ uint32_t dcn32_helper_calculate_mall_bytes_for_cursor(
 
 uint32_t dcn32_helper_calculate_num_ways_for_subvp(
 		struct dc *dc,
+=======
+uint32_t dcn32_helper_calculate_num_ways_for_subvp
+		(struct dc *dc,
+>>>>>>> b7ba80a49124 (Commit)
 		struct dc_state *context);
 
 void dcn32_merge_pipes_for_subvp(struct dc *dc,
@@ -121,10 +132,13 @@ bool dcn32_subvp_in_use(struct dc *dc,
 
 bool dcn32_mpo_in_use(struct dc_state *context);
 
+<<<<<<< HEAD
 bool dcn32_any_surfaces_rotated(struct dc *dc, struct dc_state *context);
 bool dcn32_is_center_timing(struct pipe_ctx *pipe);
 bool dcn32_is_psr_capable(struct pipe_ctx *pipe);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct pipe_ctx *dcn32_acquire_idle_pipe_for_head_pipe_in_layer(
 		struct dc_state *state,
 		const struct resource_pool *pool,
@@ -137,6 +151,7 @@ void dcn32_determine_det_override(struct dc *dc,
 
 void dcn32_set_det_allocations(struct dc *dc, struct dc_state *context,
 	display_e2e_pipe_params_st *pipes);
+<<<<<<< HEAD
 
 void dcn32_save_mall_state(struct dc *dc,
 		struct dc_state *context,
@@ -152,6 +167,8 @@ unsigned int dcn32_calc_num_avail_chans_for_mall(struct dc *dc, int num_chans);
 
 double dcn32_determine_max_vratio_prefetch(struct dc *dc, struct dc_state *context);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* definitions for run time init of reg offsets */
 
 /* CLK SRC */
@@ -1254,8 +1271,12 @@ double dcn32_determine_max_vratio_prefetch(struct dc *dc, struct dc_state *conte
       SR(DCHUBBUB_ARB_FCLK_PSTATE_CHANGE_WATERMARK_C),                         \
       SR(DCHUBBUB_ARB_FCLK_PSTATE_CHANGE_WATERMARK_D),                         \
       SR(DCN_VM_FAULT_ADDR_MSB), SR(DCN_VM_FAULT_ADDR_LSB),                    \
+<<<<<<< HEAD
       SR(DCN_VM_FAULT_CNTL), SR(DCN_VM_FAULT_STATUS),                          \
       SR(SDPIF_REQUEST_RATE_LIMIT)                                             \
+=======
+      SR(DCN_VM_FAULT_CNTL), SR(DCN_VM_FAULT_STATUS)                           \
+>>>>>>> b7ba80a49124 (Commit)
   )
 
 /* DCCG */
@@ -1276,8 +1297,12 @@ double dcn32_determine_max_vratio_prefetch(struct dc *dc, struct dc_state *conte
       DCCG_SRII(PHASE, DTBCLK_DTO, 0), DCCG_SRII(PHASE, DTBCLK_DTO, 1),        \
       DCCG_SRII(PHASE, DTBCLK_DTO, 2), DCCG_SRII(PHASE, DTBCLK_DTO, 3),        \
       SR(DCCG_AUDIO_DTBCLK_DTO_MODULO), SR(DCCG_AUDIO_DTBCLK_DTO_PHASE),       \
+<<<<<<< HEAD
       SR(OTG_PIXEL_RATE_DIV), SR(DTBCLK_P_CNTL),                               \
       SR(DCCG_AUDIO_DTO_SOURCE), SR(DENTIST_DISPCLK_CNTL)                      \
+=======
+      SR(OTG_PIXEL_RATE_DIV), SR(DTBCLK_P_CNTL), SR(DCCG_AUDIO_DTO_SOURCE)     \
+>>>>>>> b7ba80a49124 (Commit)
   )
 
 /* VMID */

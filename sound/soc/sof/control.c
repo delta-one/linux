@@ -22,9 +22,15 @@ int snd_sof_volume_get(struct snd_kcontrol *kcontrol,
 	struct snd_sof_control *scontrol = sm->dobj.private;
 	struct snd_soc_component *scomp = scontrol->scomp;
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(scomp);
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
 
 	if (tplg_ops && tplg_ops->control && tplg_ops->control->volume_get)
+=======
+	const struct sof_ipc_tplg_ops *tplg_ops = sdev->ipc->ops->tplg;
+
+	if (tplg_ops->control->volume_get)
+>>>>>>> b7ba80a49124 (Commit)
 		return tplg_ops->control->volume_get(scontrol, ucontrol);
 
 	return 0;
@@ -37,9 +43,15 @@ int snd_sof_volume_put(struct snd_kcontrol *kcontrol,
 	struct snd_sof_control *scontrol = sm->dobj.private;
 	struct snd_soc_component *scomp = scontrol->scomp;
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(scomp);
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
 
 	if (tplg_ops && tplg_ops->control && tplg_ops->control->volume_put)
+=======
+	const struct sof_ipc_tplg_ops *tplg_ops = sdev->ipc->ops->tplg;
+
+	if (tplg_ops->control->volume_put)
+>>>>>>> b7ba80a49124 (Commit)
 		return tplg_ops->control->volume_put(scontrol, ucontrol);
 
 	return false;
@@ -74,9 +86,15 @@ int snd_sof_switch_get(struct snd_kcontrol *kcontrol,
 	struct snd_sof_control *scontrol = sm->dobj.private;
 	struct snd_soc_component *scomp = scontrol->scomp;
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(scomp);
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
 
 	if (tplg_ops && tplg_ops->control && tplg_ops->control->switch_get)
+=======
+	const struct sof_ipc_tplg_ops *tplg_ops = sdev->ipc->ops->tplg;
+
+	if (tplg_ops->control->switch_get)
+>>>>>>> b7ba80a49124 (Commit)
 		return tplg_ops->control->switch_get(scontrol, ucontrol);
 
 	return 0;
@@ -89,9 +107,15 @@ int snd_sof_switch_put(struct snd_kcontrol *kcontrol,
 	struct snd_sof_control *scontrol = sm->dobj.private;
 	struct snd_soc_component *scomp = scontrol->scomp;
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(scomp);
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
 
 	if (tplg_ops && tplg_ops->control && tplg_ops->control->switch_put)
+=======
+	const struct sof_ipc_tplg_ops *tplg_ops = sdev->ipc->ops->tplg;
+
+	if (tplg_ops->control->switch_put)
+>>>>>>> b7ba80a49124 (Commit)
 		return tplg_ops->control->switch_put(scontrol, ucontrol);
 
 	return false;
@@ -104,9 +128,15 @@ int snd_sof_enum_get(struct snd_kcontrol *kcontrol,
 	struct snd_sof_control *scontrol = se->dobj.private;
 	struct snd_soc_component *scomp = scontrol->scomp;
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(scomp);
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
 
 	if (tplg_ops && tplg_ops->control && tplg_ops->control->enum_get)
+=======
+	const struct sof_ipc_tplg_ops *tplg_ops = sdev->ipc->ops->tplg;
+
+	if (tplg_ops->control->enum_get)
+>>>>>>> b7ba80a49124 (Commit)
 		return tplg_ops->control->enum_get(scontrol, ucontrol);
 
 	return 0;
@@ -119,9 +149,15 @@ int snd_sof_enum_put(struct snd_kcontrol *kcontrol,
 	struct snd_sof_control *scontrol = se->dobj.private;
 	struct snd_soc_component *scomp = scontrol->scomp;
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(scomp);
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
 
 	if (tplg_ops && tplg_ops->control && tplg_ops->control->enum_put)
+=======
+	const struct sof_ipc_tplg_ops *tplg_ops = sdev->ipc->ops->tplg;
+
+	if (tplg_ops->control->enum_put)
+>>>>>>> b7ba80a49124 (Commit)
 		return tplg_ops->control->enum_put(scontrol, ucontrol);
 
 	return false;
@@ -134,9 +170,15 @@ int snd_sof_bytes_get(struct snd_kcontrol *kcontrol,
 	struct snd_sof_control *scontrol = be->dobj.private;
 	struct snd_soc_component *scomp = scontrol->scomp;
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(scomp);
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
 
 	if (tplg_ops && tplg_ops->control && tplg_ops->control->bytes_get)
+=======
+	const struct sof_ipc_tplg_ops *tplg_ops = sdev->ipc->ops->tplg;
+
+	if (tplg_ops->control->bytes_get)
+>>>>>>> b7ba80a49124 (Commit)
 		return tplg_ops->control->bytes_get(scontrol, ucontrol);
 
 	return 0;
@@ -149,9 +191,15 @@ int snd_sof_bytes_put(struct snd_kcontrol *kcontrol,
 	struct snd_sof_control *scontrol = be->dobj.private;
 	struct snd_soc_component *scomp = scontrol->scomp;
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(scomp);
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
 
 	if (tplg_ops && tplg_ops->control && tplg_ops->control->bytes_put)
+=======
+	const struct sof_ipc_tplg_ops *tplg_ops = sdev->ipc->ops->tplg;
+
+	if (tplg_ops->control->bytes_put)
+>>>>>>> b7ba80a49124 (Commit)
 		return tplg_ops->control->bytes_put(scontrol, ucontrol);
 
 	return 0;
@@ -165,13 +213,21 @@ int snd_sof_bytes_ext_put(struct snd_kcontrol *kcontrol,
 	struct snd_sof_control *scontrol = be->dobj.private;
 	struct snd_soc_component *scomp = scontrol->scomp;
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(scomp);
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
+=======
+	const struct sof_ipc_tplg_ops *tplg_ops = sdev->ipc->ops->tplg;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* make sure we have at least a header */
 	if (size < sizeof(struct snd_ctl_tlv))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (tplg_ops && tplg_ops->control && tplg_ops->control->bytes_ext_put)
+=======
+	if (tplg_ops->control->bytes_ext_put)
+>>>>>>> b7ba80a49124 (Commit)
 		return tplg_ops->control->bytes_ext_put(scontrol, binary_data, size);
 
 	return 0;
@@ -184,7 +240,11 @@ int snd_sof_bytes_ext_volatile_get(struct snd_kcontrol *kcontrol, unsigned int _
 	struct snd_sof_control *scontrol = be->dobj.private;
 	struct snd_soc_component *scomp = scontrol->scomp;
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(scomp);
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
+=======
+	const struct sof_ipc_tplg_ops *tplg_ops = sdev->ipc->ops->tplg;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret, err;
 
 	ret = pm_runtime_resume_and_get(scomp->dev);
@@ -193,7 +253,11 @@ int snd_sof_bytes_ext_volatile_get(struct snd_kcontrol *kcontrol, unsigned int _
 		return ret;
 	}
 
+<<<<<<< HEAD
 	if (tplg_ops && tplg_ops->control && tplg_ops->control->bytes_ext_volatile_get)
+=======
+	if (tplg_ops->control->bytes_ext_volatile_get)
+>>>>>>> b7ba80a49124 (Commit)
 		ret = tplg_ops->control->bytes_ext_volatile_get(scontrol, binary_data, size);
 
 	pm_runtime_mark_last_busy(scomp->dev);
@@ -212,9 +276,15 @@ int snd_sof_bytes_ext_get(struct snd_kcontrol *kcontrol,
 	struct snd_sof_control *scontrol = be->dobj.private;
 	struct snd_soc_component *scomp = scontrol->scomp;
 	struct snd_sof_dev *sdev = snd_soc_component_get_drvdata(scomp);
+<<<<<<< HEAD
 	const struct sof_ipc_tplg_ops *tplg_ops = sof_ipc_get_ops(sdev, tplg);
 
 	if (tplg_ops && tplg_ops->control && tplg_ops->control->bytes_ext_get)
+=======
+	const struct sof_ipc_tplg_ops *tplg_ops = sdev->ipc->ops->tplg;
+
+	if (tplg_ops->control->bytes_ext_get)
+>>>>>>> b7ba80a49124 (Commit)
 		return tplg_ops->control->bytes_ext_get(scontrol, binary_data, size);
 
 	return 0;

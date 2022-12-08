@@ -123,10 +123,17 @@ int dispc_runtime_resume(struct dispc_device *dispc);
 int dispc_plane_check(struct dispc_device *dispc, u32 hw_plane,
 		      const struct drm_plane_state *state,
 		      u32 hw_videoport);
+<<<<<<< HEAD
 void dispc_plane_setup(struct dispc_device *dispc, u32 hw_plane,
 		       const struct drm_plane_state *state,
 		       u32 hw_videoport);
 void dispc_plane_enable(struct dispc_device *dispc, u32 hw_plane, bool enable);
+=======
+int dispc_plane_setup(struct dispc_device *dispc, u32 hw_plane,
+		      const struct drm_plane_state *state,
+		      u32 hw_videoport);
+int dispc_plane_enable(struct dispc_device *dispc, u32 hw_plane, bool enable);
+>>>>>>> b7ba80a49124 (Commit)
 const u32 *dispc_plane_formats(struct dispc_device *dispc, unsigned int *len);
 
 int dispc_init(struct tidss_device *tidss);

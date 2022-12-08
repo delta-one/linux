@@ -116,7 +116,11 @@ static int ip6_finish_output2(struct net *net, struct sock *sk, struct sk_buff *
 			return res;
 	}
 
+<<<<<<< HEAD
 	rcu_read_lock();
+=======
+	rcu_read_lock_bh();
+>>>>>>> b7ba80a49124 (Commit)
 	nexthop = rt6_nexthop((struct rt6_info *)dst, daddr);
 	neigh = __ipv6_neigh_lookup_noref(dev, nexthop);
 
@@ -124,7 +128,11 @@ static int ip6_finish_output2(struct net *net, struct sock *sk, struct sk_buff *
 		if (unlikely(!neigh))
 			neigh = __neigh_create(&nd_tbl, nexthop, dev, false);
 		if (IS_ERR(neigh)) {
+<<<<<<< HEAD
 			rcu_read_unlock();
+=======
+			rcu_read_unlock_bh();
+>>>>>>> b7ba80a49124 (Commit)
 			IP6_INC_STATS(net, idev, IPSTATS_MIB_OUTNOROUTES);
 			kfree_skb_reason(skb, SKB_DROP_REASON_NEIGH_CREATEFAIL);
 			return -EINVAL;
@@ -132,7 +140,11 @@ static int ip6_finish_output2(struct net *net, struct sock *sk, struct sk_buff *
 	}
 	sock_confirm_neigh(skb, neigh);
 	ret = neigh_output(neigh, skb, false);
+<<<<<<< HEAD
 	rcu_read_unlock();
+=======
+	rcu_read_unlock_bh();
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -547,6 +559,7 @@ int ip6_forward(struct sk_buff *skb)
 	    pneigh_lookup(&nd_tbl, net, &hdr->daddr, skb->dev, 0)) {
 		int proxied = ip6_forward_proxy_check(skb);
 		if (proxied > 0) {
+<<<<<<< HEAD
 			/* It's tempting to decrease the hop limit
 			 * here by 1, as we do at the end of the
 			 * function too.
@@ -561,6 +574,9 @@ int ip6_forward(struct sk_buff *skb)
 			 * similar checks around RA packets, where the
 			 * user can even change the desired limit.
 			 */
+=======
+			hdr->hop_limit--;
+>>>>>>> b7ba80a49124 (Commit)
 			return ip6_input(skb);
 		} else if (proxied < 0) {
 			__IP6_INC_STATS(net, idev, IPSTATS_MIB_INDISCARDS);
@@ -933,9 +949,12 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
 		if (err < 0)
 			goto fail;
 
+<<<<<<< HEAD
 		/* We prevent @rt from being freed. */
 		rcu_read_lock();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		for (;;) {
 			/* Prepare header of the next frame,
 			 * before previous one went down. */
@@ -959,7 +978,10 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
 		if (err == 0) {
 			IP6_INC_STATS(net, ip6_dst_idev(&rt->dst),
 				      IPSTATS_MIB_FRAGOKS);
+<<<<<<< HEAD
 			rcu_read_unlock();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			return 0;
 		}
 
@@ -967,7 +989,10 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
 
 		IP6_INC_STATS(net, ip6_dst_idev(&rt->dst),
 			      IPSTATS_MIB_FRAGFAILS);
+<<<<<<< HEAD
 		rcu_read_unlock();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return err;
 
 slow_path_clean:
@@ -1150,11 +1175,19 @@ static int ip6_dst_lookup_tail(struct net *net, const struct sock *sk,
 	 * dst entry of the nexthop router
 	 */
 	rt = (struct rt6_info *) *dst;
+<<<<<<< HEAD
 	rcu_read_lock();
 	n = __ipv6_neigh_lookup_noref(rt->dst.dev,
 				      rt6_nexthop(rt, &fl6->daddr));
 	err = n && !(READ_ONCE(n->nud_state) & NUD_VALID) ? -EINVAL : 0;
 	rcu_read_unlock();
+=======
+	rcu_read_lock_bh();
+	n = __ipv6_neigh_lookup_noref(rt->dst.dev,
+				      rt6_nexthop(rt, &fl6->daddr));
+	err = n && !(n->nud_state & NUD_VALID) ? -EINVAL : 0;
+	rcu_read_unlock_bh();
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (err) {
 		struct inet6_ifaddr *ifp;
@@ -1500,7 +1533,11 @@ static int __ip6_append_data(struct sock *sk,
 	mtu = cork->gso_size ? IP6_MAX_MTU : cork->fragsize;
 	orig_mtu = mtu;
 
+<<<<<<< HEAD
 	if (cork->tx_flags & SKBTX_ANY_TSTAMP &&
+=======
+	if (cork->tx_flags & SKBTX_ANY_SW_TSTAMP &&
+>>>>>>> b7ba80a49124 (Commit)
 	    sk->sk_tsflags & SOF_TIMESTAMPING_OPT_ID)
 		tskey = atomic_inc_return(&sk->sk_tskey) - 1;
 
@@ -1585,7 +1622,11 @@ emsgsize:
 				paged = true;
 				zc = true;
 			} else {
+<<<<<<< HEAD
 				uarg_to_msgzc(uarg)->zerocopy = 0;
+=======
+				uarg->zerocopy = 0;
+>>>>>>> b7ba80a49124 (Commit)
 				skb_zcopy_set(skb, uarg, &extra_uref);
 			}
 		}

@@ -178,6 +178,10 @@
 		compatible = "mediatek,mt2701-pinctrl";
 		reg = <0 0x1000b000 0 0x1000>;
 		mediatek,pctl-regmap = <&syscfg_pctl_a>;
+<<<<<<< HEAD
+=======
+		pins-are-numbered;
+>>>>>>> b7ba80a49124 (Commit)
 		gpio-controller;
 		#gpio-cells = <2>;
 		interrupt-controller;
@@ -359,7 +363,11 @@
 		mediatek,apmixedsys = <&apmixedsys>;
 	};
 
+<<<<<<< HEAD
 	nandc: nand-controller@1100d000 {
+=======
+	nandc: nfi@1100d000 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "mediatek,mt2701-nfc";
 		reg = <0 0x1100d000 0 0x1000>;
 		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_LOW>;

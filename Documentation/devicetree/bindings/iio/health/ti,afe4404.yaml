@@ -39,7 +39,11 @@ examples:
         #address-cells = <1>;
         #size-cells = <0>;
 
+<<<<<<< HEAD
         heart-mon@58 {
+=======
+        heart_mon@58 {
+>>>>>>> b7ba80a49124 (Commit)
             compatible = "ti,afe4404";
             reg = <0x58>;
             tx-supply = <&vbat>;

@@ -131,8 +131,13 @@ static void memory_tier_device_release(struct device *dev)
 	kfree(tier);
 }
 
+<<<<<<< HEAD
 static ssize_t nodelist_show(struct device *dev,
 			     struct device_attribute *attr, char *buf)
+=======
+static ssize_t nodes_show(struct device *dev,
+			  struct device_attribute *attr, char *buf)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 	nodemask_t nmask;
@@ -143,10 +148,17 @@ static ssize_t nodelist_show(struct device *dev,
 	mutex_unlock(&memory_tier_lock);
 	return ret;
 }
+<<<<<<< HEAD
 static DEVICE_ATTR_RO(nodelist);
 
 static struct attribute *memtier_dev_attrs[] = {
 	&dev_attr_nodelist.attr,
+=======
+static DEVICE_ATTR_RO(nodes);
+
+static struct attribute *memtier_dev_attrs[] = {
+	&dev_attr_nodes.attr,
+>>>>>>> b7ba80a49124 (Commit)
 	NULL
 };
 
@@ -211,8 +223,13 @@ static struct memory_tier *find_create_memory_tier(struct memory_dev_type *memty
 
 	ret = device_register(&new_memtier->dev);
 	if (ret) {
+<<<<<<< HEAD
 		list_del(&new_memtier->list);
 		put_device(&new_memtier->dev);
+=======
+		list_del(&memtier->list);
+		put_device(&memtier->dev);
+>>>>>>> b7ba80a49124 (Commit)
 		return ERR_PTR(ret);
 	}
 	memtier = new_memtier;
@@ -625,12 +642,64 @@ static int __meminit memtier_hotplug_callback(struct notifier_block *self,
 	return notifier_from_errno(0);
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_MIGRATION
+static ssize_t toptier_nodes_show(struct device *dev,
+				     struct device_attribute *attr, char *buf)
+{
+	int ret;
+	nodemask_t nmask, top_tier_mask = NODE_MASK_NONE;
+	struct memory_tier *memtier = to_memory_tier(dev);
+
+	mutex_lock(&memory_tier_lock);
+	list_for_each_entry(memtier, &memory_tiers, list) {
+		if (memtier->adistance_start > top_tier_adistance)
+			break;
+		nmask = get_memtier_nodemask(memtier);
+		nodes_or(top_tier_mask, top_tier_mask, nmask);
+	}
+
+	ret = sysfs_emit(buf, "%*pbl\n", nodemask_pr_args(&top_tier_mask));
+	mutex_unlock(&memory_tier_lock);
+	return ret;
+}
+#else
+static ssize_t toptier_nodes_show(struct device *dev,
+				  struct device_attribute *attr, char *buf)
+{
+	nodemask_t top_tier_mask = node_states[N_MEMORY];
+
+	return sysfs_emit(buf, "%*pbl\n", nodemask_pr_args(&top_tier_mask));
+}
+#endif
+static DEVICE_ATTR_RO(toptier_nodes);
+
+static struct attribute *memtier_subsys_attrs[] = {
+	&dev_attr_toptier_nodes.attr,
+	NULL
+};
+
+static const struct attribute_group memtier_subsys_group = {
+	.attrs = memtier_subsys_attrs,
+};
+
+static const struct attribute_group *memtier_subsys_groups[] = {
+	&memtier_subsys_group,
+	NULL
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static int __init memory_tier_init(void)
 {
 	int ret, node;
 	struct memory_tier *memtier;
 
+<<<<<<< HEAD
 	ret = subsys_virtual_register(&memory_tier_subsys, NULL);
+=======
+	ret = subsys_virtual_register(&memory_tier_subsys, memtier_subsys_groups);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		panic("%s() failed to register memory tier subsystem\n", __func__);
 
@@ -645,7 +714,11 @@ static int __init memory_tier_init(void)
 	 * than default DRAM tier.
 	 */
 	default_dram_type = alloc_memory_type(MEMTIER_ADISTANCE_DRAM);
+<<<<<<< HEAD
 	if (IS_ERR(default_dram_type))
+=======
+	if (!default_dram_type)
+>>>>>>> b7ba80a49124 (Commit)
 		panic("%s() failed to allocate default DRAM tier\n", __func__);
 
 	/*
@@ -664,7 +737,11 @@ static int __init memory_tier_init(void)
 	establish_demotion_targets();
 	mutex_unlock(&memory_tier_lock);
 
+<<<<<<< HEAD
 	hotplug_memory_notifier(memtier_hotplug_callback, MEMTIER_HOTPLUG_PRI);
+=======
+	hotplug_memory_notifier(memtier_hotplug_callback, MEMTIER_HOTPLUG_PRIO);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 subsys_initcall(memory_tier_init);

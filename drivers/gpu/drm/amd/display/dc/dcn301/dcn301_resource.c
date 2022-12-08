@@ -107,6 +107,11 @@ enum dcn301_clk_src_array_id {
  */
 
 /* DCN */
+<<<<<<< HEAD
+=======
+/* TODO awful hack. fixup dcn20_dwb.h */
+#undef BASE_INNER
+>>>>>>> b7ba80a49124 (Commit)
 #define BASE_INNER(seg) DCN_BASE__INST0_SEG ## seg
 
 #define BASE(seg) BASE_INNER(seg)
@@ -144,9 +149,12 @@ enum dcn301_clk_src_array_id {
 	.reg_name[id] = BASE(mm ## block ## id ## _ ## temp_name ## _BASE_IDX) + \
 					mm ## block ## id ## _ ## temp_name
 
+<<<<<<< HEAD
 #define SF_DWB2(reg_name, block, id, field_name, post_fix)	\
 	.field_name = reg_name ## __ ## field_name ## post_fix
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define DCCG_SRII(reg_name, block, id)\
 	.block ## _ ## reg_name[id] = BASE(mm ## block ## id ## _ ## reg_name ## _BASE_IDX) + \
 					mm ## block ## id ## _ ## reg_name
@@ -651,6 +659,11 @@ static struct resource_caps res_cap_dcn301 = {
 
 static const struct dc_plane_cap plane_cap = {
 	.type = DC_PLANE_TYPE_DCN_UNIVERSAL,
+<<<<<<< HEAD
+=======
+	.blends_with_above = true,
+	.blends_with_below = true,
+>>>>>>> b7ba80a49124 (Commit)
 	.per_pixel_alpha = true,
 
 	.pixel_format_support = {
@@ -687,7 +700,11 @@ static const struct dc_debug_options debug_defaults_drv = {
 	.disable_clock_gate = true,
 	.disable_pplib_clock_request = true,
 	.disable_pplib_wm_range = true,
+<<<<<<< HEAD
 	.pipe_split_policy = MPC_SPLIT_DYNAMIC,
+=======
+	.pipe_split_policy = MPC_SPLIT_AVOID,
+>>>>>>> b7ba80a49124 (Commit)
 	.force_single_disp_pipe_split = false,
 	.disable_dcc = DCC_ENABLE,
 	.vsr_support = true,
@@ -699,7 +716,10 @@ static const struct dc_debug_options debug_defaults_drv = {
 	.dwb_fi_phase = -1, // -1 = disable
 	.dmub_command_table = true,
 	.use_max_lb = false,
+<<<<<<< HEAD
 	.exit_idle_opt_for_cursor_updates = true
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct dc_debug_options debug_defaults_diags = {
@@ -851,7 +871,11 @@ static struct hubbub *dcn301_hubbub_create(struct dc_context *ctx)
 		vmid->masks = &vmid_masks;
 	}
 
+<<<<<<< HEAD
 	hubbub3->num_vmid = res_cap_dcn301.num_vmid;
+=======
+	 hubbub3->num_vmid = res_cap_dcn301.num_vmid;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return &hubbub3->base;
 }
@@ -1287,7 +1311,10 @@ static struct clock_source *dcn301_clock_source_create(
 		return &clk_src->base;
 	}
 
+<<<<<<< HEAD
 	kfree(clk_src);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	BREAK_TO_DEBUGGER();
 	return NULL;
 }
@@ -1412,8 +1439,12 @@ static struct resource_funcs dcn301_res_pool_funcs = {
 	.find_first_free_match_stream_enc_for_link = dcn10_find_first_free_match_stream_enc_for_link,
 	.acquire_post_bldn_3dlut = dcn30_acquire_post_bldn_3dlut,
 	.release_post_bldn_3dlut = dcn30_release_post_bldn_3dlut,
+<<<<<<< HEAD
 	.update_bw_bounding_box = dcn301_update_bw_bounding_box,
 	.patch_unknown_plane_state = dcn20_patch_unknown_plane_state
+=======
+	.update_bw_bounding_box = dcn301_update_bw_bounding_box
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static bool dcn301_resource_construct(
@@ -1492,8 +1523,11 @@ static bool dcn301_resource_construct(
 	dc->caps.color.mpc.ogam_rom_caps.hlg = 0;
 	dc->caps.color.mpc.ocsc = 1;
 
+<<<<<<< HEAD
 	dc->caps.dp_hdmi21_pcon_support = true;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* read VBIOS LTTPR caps */
 	if (ctx->dc_bios->funcs->get_lttpr_caps) {
 		enum bp_result bp_query_result;

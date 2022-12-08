@@ -69,7 +69,11 @@ static struct dentry *ufs_lookup(struct inode * dir, struct dentry *dentry, unsi
  * If the create succeeds, we fill in the inode information
  * with d_instantiate(). 
  */
+<<<<<<< HEAD
 static int ufs_create (struct mnt_idmap * idmap,
+=======
+static int ufs_create (struct user_namespace * mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 		struct inode * dir, struct dentry * dentry, umode_t mode,
 		bool excl)
 {
@@ -86,7 +90,11 @@ static int ufs_create (struct mnt_idmap * idmap,
 	return ufs_add_nondir(dentry, inode);
 }
 
+<<<<<<< HEAD
 static int ufs_mknod(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int ufs_mknod(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 		     struct dentry *dentry, umode_t mode, dev_t rdev)
 {
 	struct inode *inode;
@@ -106,7 +114,11 @@ static int ufs_mknod(struct mnt_idmap *idmap, struct inode *dir,
 	return err;
 }
 
+<<<<<<< HEAD
 static int ufs_symlink (struct mnt_idmap * idmap, struct inode * dir,
+=======
+static int ufs_symlink (struct user_namespace * mnt_userns, struct inode * dir,
+>>>>>>> b7ba80a49124 (Commit)
 	struct dentry * dentry, const char * symname)
 {
 	struct super_block * sb = dir->i_sb;
@@ -166,7 +178,11 @@ static int ufs_link (struct dentry * old_dentry, struct inode * dir,
 	return error;
 }
 
+<<<<<<< HEAD
 static int ufs_mkdir(struct mnt_idmap * idmap, struct inode * dir,
+=======
+static int ufs_mkdir(struct user_namespace * mnt_userns, struct inode * dir,
+>>>>>>> b7ba80a49124 (Commit)
 	struct dentry * dentry, umode_t mode)
 {
 	struct inode * inode;
@@ -243,7 +259,11 @@ static int ufs_rmdir (struct inode * dir, struct dentry *dentry)
 	return err;
 }
 
+<<<<<<< HEAD
 static int ufs_rename(struct mnt_idmap *idmap, struct inode *old_dir,
+=======
+static int ufs_rename(struct user_namespace *mnt_userns, struct inode *old_dir,
+>>>>>>> b7ba80a49124 (Commit)
 		      struct dentry *old_dentry, struct inode *new_dir,
 		      struct dentry *new_dentry, unsigned int flags)
 {

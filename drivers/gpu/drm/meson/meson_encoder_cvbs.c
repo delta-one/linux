@@ -116,10 +116,16 @@ static int meson_encoder_cvbs_get_modes(struct drm_bridge *bridge,
 	return i;
 }
 
+<<<<<<< HEAD
 static enum drm_mode_status
 meson_encoder_cvbs_mode_valid(struct drm_bridge *bridge,
 			      const struct drm_display_info *display_info,
 			      const struct drm_display_mode *mode)
+=======
+static int meson_encoder_cvbs_mode_valid(struct drm_bridge *bridge,
+					const struct drm_display_info *display_info,
+					const struct drm_display_mode *mode)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (meson_cvbs_get_mode(mode))
 		return MODE_OK;
@@ -282,6 +288,7 @@ int meson_encoder_cvbs_init(struct meson_drm *priv)
 	}
 	drm_connector_attach_encoder(connector, &meson_encoder_cvbs->encoder);
 
+<<<<<<< HEAD
 	priv->encoders[MESON_ENC_CVBS] = meson_encoder_cvbs;
 
 	return 0;
@@ -297,3 +304,7 @@ void meson_encoder_cvbs_remove(struct meson_drm *priv)
 		drm_bridge_remove(meson_encoder_cvbs->next_bridge);
 	}
 }
+=======
+	return 0;
+}
+>>>>>>> b7ba80a49124 (Commit)

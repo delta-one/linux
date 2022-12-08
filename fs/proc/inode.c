@@ -591,7 +591,11 @@ static const struct file_operations proc_iter_file_ops = {
 	.llseek		= proc_reg_llseek,
 	.read_iter	= proc_reg_read_iter,
 	.write		= proc_reg_write,
+<<<<<<< HEAD
 	.splice_read	= direct_splice_read,
+=======
+	.splice_read	= generic_file_splice_read,
+>>>>>>> b7ba80a49124 (Commit)
 	.poll		= proc_reg_poll,
 	.unlocked_ioctl	= proc_reg_unlocked_ioctl,
 	.mmap		= proc_reg_mmap,
@@ -617,7 +621,11 @@ static const struct file_operations proc_reg_file_ops_compat = {
 static const struct file_operations proc_iter_file_ops_compat = {
 	.llseek		= proc_reg_llseek,
 	.read_iter	= proc_reg_read_iter,
+<<<<<<< HEAD
 	.splice_read	= direct_splice_read,
+=======
+	.splice_read	= generic_file_splice_read,
+>>>>>>> b7ba80a49124 (Commit)
 	.write		= proc_reg_write,
 	.poll		= proc_reg_poll,
 	.unlocked_ioctl	= proc_reg_unlocked_ioctl,

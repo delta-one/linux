@@ -28,7 +28,11 @@ Currently, it consists of:
   takes parameters at initialization that will dictate how the simulation
   behaves.
 
+<<<<<<< HEAD
 - Code responsible for encoding a valid MPEG Transport Stream, which is then
+=======
+- Code reponsible for encoding a valid MPEG Transport Stream, which is then
+>>>>>>> b7ba80a49124 (Commit)
   passed to the bridge driver. This fake stream contains some hardcoded content.
   For now, we have a single, audio-only channel containing a single MPEG
   Elementary Stream, which in turn contains a SMPTE 302m encoded sine-wave.

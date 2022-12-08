@@ -245,6 +245,11 @@ static void realtek_mdio_remove(struct mdio_device *mdiodev)
 	/* leave the device reset asserted */
 	if (priv->reset)
 		gpiod_set_value(priv->reset, 1);
+<<<<<<< HEAD
+=======
+
+	dev_set_drvdata(&mdiodev->dev, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void realtek_mdio_shutdown(struct mdio_device *mdiodev)

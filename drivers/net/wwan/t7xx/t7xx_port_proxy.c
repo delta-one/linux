@@ -70,6 +70,7 @@ static const struct t7xx_port_conf t7xx_md_port_conf[] = {
 		.name = "MBIM",
 		.port_type = WWAN_PORT_MBIM,
 	}, {
+<<<<<<< HEAD
 #ifdef CONFIG_WWAN_DEBUGFS
 		.tx_ch = PORT_CH_MD_LOG_TX,
 		.rx_ch = PORT_CH_MD_LOG_RX,
@@ -82,6 +83,8 @@ static const struct t7xx_port_conf t7xx_md_port_conf[] = {
 		.name = "mdlog",
 	}, {
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.tx_ch = PORT_CH_CONTROL_TX,
 		.rx_ch = PORT_CH_CONTROL_RX,
 		.txq_index = Q_IDX_CTRL,

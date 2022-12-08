@@ -110,6 +110,7 @@
 				label = "chg_mid";
 			};
 
+<<<<<<< HEAD
 			adc-chan@4b {
 				reg = <ADC5_BAT_ID_100K_PU>;
 				qcom,hw-settle-time = <200>;
@@ -118,6 +119,8 @@
 				label = "bat_id";
 			};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			adc-chan@83 {
 				reg = <ADC5_VPH_PWR>;
 				qcom,pre-scaling = <1 3>;

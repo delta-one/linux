@@ -54,7 +54,11 @@
 		vin-supply = <&vcc_sys>;
 	};
 
+<<<<<<< HEAD
 	rtc@51 {
+=======
+	hym8563@51 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "haoyu,hym8563";
 		reg = <0x51>;
 

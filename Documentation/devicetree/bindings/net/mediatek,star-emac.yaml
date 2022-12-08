@@ -15,7 +15,11 @@ description:
   modes with flow-control as well as CRC offloading and VLAN tags.
 
 allOf:
+<<<<<<< HEAD
   - $ref: ethernet-controller.yaml#
+=======
+  - $ref: "ethernet-controller.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:

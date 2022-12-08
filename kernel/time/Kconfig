@@ -200,6 +200,7 @@ config CLOCKSOURCE_WATCHDOG_MAX_SKEW_US
 	int "Clocksource watchdog maximum allowable skew (in μs)"
 	depends on CLOCKSOURCE_WATCHDOG
 	range 50 1000
+<<<<<<< HEAD
 	default 125
 	help
 	  Specify the maximum amount of allowable watchdog skew in
@@ -208,6 +209,12 @@ config CLOCKSOURCE_WATCHDOG_MAX_SKEW_US
 	  interval and NTP's maximum frequency drift of 500 parts
 	  per million.	If the clocksource is good enough for NTP,
 	  it is good enough for the clocksource watchdog!
+=======
+	default 100
+	help
+	  Specify the maximum amount of allowable watchdog skew in
+	  microseconds before reporting the clocksource to be unstable.
+>>>>>>> b7ba80a49124 (Commit)
 
 endmenu
 endif

@@ -4,12 +4,19 @@
 $id: http://devicetree.org/schemas/net/nxp,dwmac-imx.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: NXP i.MX8/9 DWMAC glue layer
 
 maintainers:
   - Clark Wang <xiaoning.wang@nxp.com>
   - Shawn Guo <shawnguo@kernel.org>
   - NXP Linux Team <linux-imx@nxp.com>
+=======
+title: NXP i.MX8 DWMAC glue layer
+
+maintainers:
+  - Joakim Zhang <qiangqing.zhang@nxp.com>
+>>>>>>> b7ba80a49124 (Commit)
 
 # We need a select here so we don't match all nodes with 'snps,dwmac'
 select:
@@ -19,7 +26,10 @@ select:
         enum:
           - nxp,imx8mp-dwmac-eqos
           - nxp,imx8dxl-dwmac-eqos
+<<<<<<< HEAD
           - nxp,imx93-dwmac-eqos
+=======
+>>>>>>> b7ba80a49124 (Commit)
   required:
     - compatible
 
@@ -33,7 +43,10 @@ properties:
           - enum:
               - nxp,imx8mp-dwmac-eqos
               - nxp,imx8dxl-dwmac-eqos
+<<<<<<< HEAD
               - nxp,imx93-dwmac-eqos
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - const: snps,dwmac-5.10a
 
   clocks:
@@ -96,4 +109,8 @@ examples:
                      <&clk IMX8MP_CLK_ENET_QOS>;
             clock-names = "stmmaceth", "pclk", "ptp_ref", "tx";
             phy-mode = "rgmii";
+<<<<<<< HEAD
+=======
+            status = "disabled";
+>>>>>>> b7ba80a49124 (Commit)
     };

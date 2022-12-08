@@ -49,6 +49,7 @@ enum {
 	ETHTOOL_MSG_PHC_VCLOCKS_GET,
 	ETHTOOL_MSG_MODULE_GET,
 	ETHTOOL_MSG_MODULE_SET,
+<<<<<<< HEAD
 	ETHTOOL_MSG_PSE_GET,
 	ETHTOOL_MSG_PSE_SET,
 	ETHTOOL_MSG_RSS_GET,
@@ -57,6 +58,8 @@ enum {
 	ETHTOOL_MSG_PLCA_GET_STATUS,
 	ETHTOOL_MSG_MM_GET,
 	ETHTOOL_MSG_MM_SET,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* add new constants above here */
 	__ETHTOOL_MSG_USER_CNT,
@@ -102,6 +105,7 @@ enum {
 	ETHTOOL_MSG_PHC_VCLOCKS_GET_REPLY,
 	ETHTOOL_MSG_MODULE_GET_REPLY,
 	ETHTOOL_MSG_MODULE_NTF,
+<<<<<<< HEAD
 	ETHTOOL_MSG_PSE_GET_REPLY,
 	ETHTOOL_MSG_RSS_GET_REPLY,
 	ETHTOOL_MSG_PLCA_GET_CFG_REPLY,
@@ -109,6 +113,8 @@ enum {
 	ETHTOOL_MSG_PLCA_NTF,
 	ETHTOOL_MSG_MM_GET_REPLY,
 	ETHTOOL_MSG_MM_NTF,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* add new constants above here */
 	__ETHTOOL_MSG_KERNEL_CNT,
@@ -257,7 +263,10 @@ enum {
 	ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG,	/* u8 */
 	ETHTOOL_A_LINKMODES_MASTER_SLAVE_STATE,	/* u8 */
 	ETHTOOL_A_LINKMODES_LANES,		/* u32 */
+<<<<<<< HEAD
 	ETHTOOL_A_LINKMODES_RATE_MATCHING,	/* u8 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* add new constants above here */
 	__ETHTOOL_A_LINKMODES_CNT,
@@ -274,7 +283,10 @@ enum {
 	ETHTOOL_A_LINKSTATE_SQI_MAX,		/* u32 */
 	ETHTOOL_A_LINKSTATE_EXT_STATE,		/* u8 */
 	ETHTOOL_A_LINKSTATE_EXT_SUBSTATE,	/* u8 */
+<<<<<<< HEAD
 	ETHTOOL_A_LINKSTATE_EXT_DOWN_CNT,	/* u32 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* add new constants above here */
 	__ETHTOOL_A_LINKSTATE_CNT,
@@ -356,7 +368,10 @@ enum {
 	ETHTOOL_A_RINGS_TCP_DATA_SPLIT,			/* u8 */
 	ETHTOOL_A_RINGS_CQE_SIZE,			/* u32 */
 	ETHTOOL_A_RINGS_TX_PUSH,			/* u8 */
+<<<<<<< HEAD
 	ETHTOOL_A_RINGS_RX_PUSH,			/* u8 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* add new constants above here */
 	__ETHTOOL_A_RINGS_CNT,
@@ -411,9 +426,12 @@ enum {
 	ETHTOOL_A_COALESCE_RATE_SAMPLE_INTERVAL,	/* u32 */
 	ETHTOOL_A_COALESCE_USE_CQE_MODE_TX,		/* u8 */
 	ETHTOOL_A_COALESCE_USE_CQE_MODE_RX,		/* u8 */
+<<<<<<< HEAD
 	ETHTOOL_A_COALESCE_TX_AGGR_MAX_BYTES,		/* u32 */
 	ETHTOOL_A_COALESCE_TX_AGGR_MAX_FRAMES,		/* u32 */
 	ETHTOOL_A_COALESCE_TX_AGGR_TIME_USECS,		/* u32 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* add new constants above here */
 	__ETHTOOL_A_COALESCE_CNT,
@@ -429,7 +447,10 @@ enum {
 	ETHTOOL_A_PAUSE_RX,				/* u8 */
 	ETHTOOL_A_PAUSE_TX,				/* u8 */
 	ETHTOOL_A_PAUSE_STATS,				/* nest - _PAUSE_STAT_* */
+<<<<<<< HEAD
 	ETHTOOL_A_PAUSE_STATS_SRC,			/* u32 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* add new constants above here */
 	__ETHTOOL_A_PAUSE_CNT,
@@ -746,8 +767,11 @@ enum {
 
 	ETHTOOL_A_STATS_GRP,			/* nest - _A_STATS_GRP_* */
 
+<<<<<<< HEAD
 	ETHTOOL_A_STATS_SRC,			/* u32 */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* add new constants above here */
 	__ETHTOOL_A_STATS_CNT,
 	ETHTOOL_A_STATS_MAX = (__ETHTOOL_A_STATS_CNT - 1)
@@ -886,6 +910,7 @@ enum {
 	ETHTOOL_A_MODULE_MAX = (__ETHTOOL_A_MODULE_CNT - 1)
 };
 
+<<<<<<< HEAD
 /* Power Sourcing Equipment */
 enum {
 	ETHTOOL_A_PSE_UNSPEC,
@@ -973,6 +998,8 @@ enum {
 	ETHTOOL_A_MM_MAX = (__ETHTOOL_A_MM_CNT - 1)
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* generic netlink info */
 #define ETHTOOL_GENL_NAME "ethtool"
 #define ETHTOOL_GENL_VERSION 1

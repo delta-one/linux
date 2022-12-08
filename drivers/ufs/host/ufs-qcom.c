@@ -22,11 +22,16 @@
 #include <ufs/ufshci.h>
 #include <ufs/ufs_quirks.h>
 
+<<<<<<< HEAD
 #define MCQ_QCFGPTR_MASK	GENMASK(7, 0)
 #define MCQ_QCFGPTR_UNIT	0x200
 #define MCQ_SQATTR_OFFSET(c) \
 	((((c) >> 16) & MCQ_QCFGPTR_MASK) * MCQ_QCFGPTR_UNIT)
 #define MCQ_QCFG_SIZE	0x40
+=======
+#define UFS_QCOM_DEFAULT_DBG_PRINT_EN	\
+	(UFS_QCOM_DBG_PRINT_REGS_EN | UFS_QCOM_DBG_PRINT_TEST_BUS_EN)
+>>>>>>> b7ba80a49124 (Commit)
 
 enum {
 	TSTBUS_UAWM,
@@ -55,6 +60,15 @@ static struct ufs_qcom_host *rcdev_to_ufs_host(struct reset_controller_dev *rcd)
 	return container_of(rcd, struct ufs_qcom_host, rcdev);
 }
 
+<<<<<<< HEAD
+=======
+static void ufs_qcom_dump_regs_wrapper(struct ufs_hba *hba, int offset, int len,
+				       const char *prefix, void *priv)
+{
+	ufshcd_dump_regs(hba, offset, len * 4, prefix);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int ufs_qcom_host_clk_get(struct device *dev,
 		const char *name, struct clk **clk_out, bool optional)
 {
@@ -107,7 +121,11 @@ static void ufs_qcom_disable_lane_clks(struct ufs_qcom_host *host)
 
 static int ufs_qcom_enable_lane_clks(struct ufs_qcom_host *host)
 {
+<<<<<<< HEAD
 	int err;
+=======
+	int err = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = host->hba->dev;
 
 	if (host->is_lane_clks_enabled)
@@ -116,7 +134,11 @@ static int ufs_qcom_enable_lane_clks(struct ufs_qcom_host *host)
 	err = ufs_qcom_host_clk_enable(dev, "rx_lane0_sync_clk",
 		host->rx_l0_sync_clk);
 	if (err)
+<<<<<<< HEAD
 		return err;
+=======
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = ufs_qcom_host_clk_enable(dev, "tx_lane0_sync_clk",
 		host->tx_l0_sync_clk);
@@ -134,8 +156,12 @@ static int ufs_qcom_enable_lane_clks(struct ufs_qcom_host *host)
 		goto disable_rx_l1;
 
 	host->is_lane_clks_enabled = true;
+<<<<<<< HEAD
 
 	return 0;
+=======
+	goto out;
+>>>>>>> b7ba80a49124 (Commit)
 
 disable_rx_l1:
 	clk_disable_unprepare(host->rx_l1_sync_clk);
@@ -143,7 +169,11 @@ disable_tx_l0:
 	clk_disable_unprepare(host->tx_l0_sync_clk);
 disable_rx_l0:
 	clk_disable_unprepare(host->rx_l0_sync_clk);
+<<<<<<< HEAD
 
+=======
+out:
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -158,25 +188,42 @@ static int ufs_qcom_init_lane_clks(struct ufs_qcom_host *host)
 	err = ufs_qcom_host_clk_get(dev, "rx_lane0_sync_clk",
 					&host->rx_l0_sync_clk, false);
 	if (err)
+<<<<<<< HEAD
 		return err;
+=======
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = ufs_qcom_host_clk_get(dev, "tx_lane0_sync_clk",
 					&host->tx_l0_sync_clk, false);
 	if (err)
+<<<<<<< HEAD
 		return err;
+=======
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* In case of single lane per direction, don't read lane1 clocks */
 	if (host->hba->lanes_per_direction > 1) {
 		err = ufs_qcom_host_clk_get(dev, "rx_lane1_sync_clk",
 			&host->rx_l1_sync_clk, false);
 		if (err)
+<<<<<<< HEAD
 			return err;
+=======
+			goto out;
+>>>>>>> b7ba80a49124 (Commit)
 
 		err = ufs_qcom_host_clk_get(dev, "tx_lane1_sync_clk",
 			&host->tx_l1_sync_clk, true);
 	}
+<<<<<<< HEAD
 
 	return 0;
+=======
+out:
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int ufs_qcom_check_hibern8(struct ufs_hba *hba)
@@ -224,10 +271,13 @@ static void ufs_qcom_select_unipro_mode(struct ufs_qcom_host *host)
 	ufshcd_rmwl(host->hba, QUNIPRO_SEL,
 		   ufs_qcom_cap_qunipro(host) ? QUNIPRO_SEL : 0,
 		   REG_UFS_CFG1);
+<<<<<<< HEAD
 
 	if (host->hw_ver.major == 0x05)
 		ufshcd_rmwl(host->hba, QUNIPRO_G4_SEL, 0, REG_UFS_CFG0);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* make sure above configuration is applied before we return */
 	mb();
 }
@@ -243,7 +293,11 @@ static int ufs_qcom_host_reset(struct ufs_hba *hba)
 
 	if (!host->core_reset) {
 		dev_warn(hba->dev, "%s: reset control not set\n", __func__);
+<<<<<<< HEAD
 		return 0;
+=======
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	reenable_intr = hba->is_irq_enabled;
@@ -254,7 +308,11 @@ static int ufs_qcom_host_reset(struct ufs_hba *hba)
 	if (ret) {
 		dev_err(hba->dev, "%s: core_reset assert failed, err = %d\n",
 				 __func__, ret);
+<<<<<<< HEAD
 		return ret;
+=======
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/*
@@ -276,6 +334,7 @@ static int ufs_qcom_host_reset(struct ufs_hba *hba)
 		hba->is_irq_enabled = true;
 	}
 
+<<<<<<< HEAD
 	return 0;
 }
 
@@ -298,13 +357,22 @@ static u32 ufs_qcom_get_hs_gear(struct ufs_hba *hba)
 
 	/* Default is HS-G3 */
 	return UFS_HS_G3;
+=======
+out:
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
 {
 	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
 	struct phy *phy = host->generic_phy;
+<<<<<<< HEAD
 	int ret;
+=======
+	int ret = 0;
+	bool is_rate_B = UFS_QCOM_LIMIT_HS_RATE == PA_HS_MODE_B;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Reset UFS Host Controller and PHY */
 	ret = ufs_qcom_host_reset(hba);
@@ -312,16 +380,28 @@ static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
 		dev_warn(hba->dev, "%s: host reset returned %d\n",
 				  __func__, ret);
 
+<<<<<<< HEAD
+=======
+	if (is_rate_B)
+		phy_set_mode(phy, PHY_MODE_UFS_HS_B);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* phy initialization - calibrate the phy */
 	ret = phy_init(phy);
 	if (ret) {
 		dev_err(hba->dev, "%s: phy init failed, ret = %d\n",
 			__func__, ret);
+<<<<<<< HEAD
 		return ret;
 	}
 
 	phy_set_mode_ext(phy, PHY_MODE_UFS_HS_B, host->hs_gear);
 
+=======
+		goto out;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* power on phy - start serdes and phy's power and clocks */
 	ret = phy_power_on(phy);
 	if (ret) {
@@ -336,7 +416,11 @@ static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
 
 out_disable_phy:
 	phy_exit(phy);
+<<<<<<< HEAD
 
+=======
+out:
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -394,6 +478,10 @@ static int ufs_qcom_hce_enable_notify(struct ufs_hba *hba,
 static int ufs_qcom_cfg_timers(struct ufs_hba *hba, u32 gear,
 			       u32 hs, u32 rate, bool update_link_startup_timer)
 {
+<<<<<<< HEAD
+=======
+	int ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
 	struct ufs_clk_info *clki;
 	u32 core_clk_period_in_ns;
@@ -428,11 +516,19 @@ static int ufs_qcom_cfg_timers(struct ufs_hba *hba, u32 gear,
 	 * Aggregation logic.
 	*/
 	if (ufs_qcom_cap_qunipro(host) && !ufshcd_is_intr_aggr_allowed(hba))
+<<<<<<< HEAD
 		return 0;
 
 	if (gear == 0) {
 		dev_err(hba->dev, "%s: invalid gear = %d\n", __func__, gear);
 		return -EINVAL;
+=======
+		goto out;
+
+	if (gear == 0) {
+		dev_err(hba->dev, "%s: invalid gear = %d\n", __func__, gear);
+		goto out_error;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	list_for_each_entry(clki, &hba->clk_list_head, list) {
@@ -455,7 +551,11 @@ static int ufs_qcom_cfg_timers(struct ufs_hba *hba, u32 gear,
 	}
 
 	if (ufs_qcom_cap_qunipro(host))
+<<<<<<< HEAD
 		return 0;
+=======
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 
 	core_clk_period_in_ns = NSEC_PER_SEC / core_clk_rate;
 	core_clk_period_in_ns <<= OFFSET_CLK_NS_REG;
@@ -470,7 +570,11 @@ static int ufs_qcom_cfg_timers(struct ufs_hba *hba, u32 gear,
 					"%s: index %d exceeds table size %zu\n",
 					__func__, gear,
 					ARRAY_SIZE(hs_fr_table_rA));
+<<<<<<< HEAD
 				return -EINVAL;
+=======
+				goto out_error;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 			tx_clk_cycles_per_us = hs_fr_table_rA[gear-1][1];
 		} else if (rate == PA_HS_MODE_B) {
@@ -479,13 +583,21 @@ static int ufs_qcom_cfg_timers(struct ufs_hba *hba, u32 gear,
 					"%s: index %d exceeds table size %zu\n",
 					__func__, gear,
 					ARRAY_SIZE(hs_fr_table_rB));
+<<<<<<< HEAD
 				return -EINVAL;
+=======
+				goto out_error;
+>>>>>>> b7ba80a49124 (Commit)
 			}
 			tx_clk_cycles_per_us = hs_fr_table_rB[gear-1][1];
 		} else {
 			dev_err(hba->dev, "%s: invalid rate = %d\n",
 				__func__, rate);
+<<<<<<< HEAD
 			return -EINVAL;
+=======
+			goto out_error;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		break;
 	case SLOWAUTO_MODE:
@@ -495,14 +607,22 @@ static int ufs_qcom_cfg_timers(struct ufs_hba *hba, u32 gear,
 					"%s: index %d exceeds table size %zu\n",
 					__func__, gear,
 					ARRAY_SIZE(pwm_fr_table));
+<<<<<<< HEAD
 			return -EINVAL;
+=======
+			goto out_error;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		tx_clk_cycles_per_us = pwm_fr_table[gear-1][1];
 		break;
 	case UNCHANGED:
 	default:
 		dev_err(hba->dev, "%s: invalid mode = %d\n", __func__, hs);
+<<<<<<< HEAD
 		return -EINVAL;
+=======
+		goto out_error;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (ufshcd_readl(hba, REG_UFS_TX_SYMBOL_CLK_NS_US) !=
@@ -517,17 +637,32 @@ static int ufs_qcom_cfg_timers(struct ufs_hba *hba, u32 gear,
 		mb();
 	}
 
+<<<<<<< HEAD
 	if (update_link_startup_timer && host->hw_ver.major != 0x5) {
 		ufshcd_writel(hba, ((core_clk_rate / MSEC_PER_SEC) * 100),
 			      REG_UFS_CFG0);
+=======
+	if (update_link_startup_timer) {
+		ufshcd_writel(hba, ((core_clk_rate / MSEC_PER_SEC) * 100),
+			      REG_UFS_PA_LINK_STARTUP_TIMER);
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * make sure that this configuration is applied before
 		 * we return
 		 */
 		mb();
 	}
+<<<<<<< HEAD
 
 	return 0;
+=======
+	goto out;
+
+out_error:
+	ret = -EINVAL;
+out:
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int ufs_qcom_link_startup_notify(struct ufs_hba *hba,
@@ -542,7 +677,12 @@ static int ufs_qcom_link_startup_notify(struct ufs_hba *hba,
 					0, true)) {
 			dev_err(hba->dev, "%s: ufs_qcom_cfg_timers() failed\n",
 				__func__);
+<<<<<<< HEAD
 			return -EINVAL;
+=======
+			err = -EINVAL;
+			goto out;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		if (ufs_qcom_cap_qunipro(host))
@@ -568,6 +708,10 @@ static int ufs_qcom_link_startup_notify(struct ufs_hba *hba,
 		break;
 	}
 
+<<<<<<< HEAD
+=======
+out:
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -704,7 +848,12 @@ static int ufs_qcom_pwr_change_notify(struct ufs_hba *hba,
 
 	if (!dev_req_params) {
 		pr_err("%s: incoming dev_req_params is NULL\n", __func__);
+<<<<<<< HEAD
 		return -EINVAL;
+=======
+		ret = -EINVAL;
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	switch (status) {
@@ -712,13 +861,30 @@ static int ufs_qcom_pwr_change_notify(struct ufs_hba *hba,
 		ufshcd_init_pwr_dev_param(&ufs_qcom_cap);
 		ufs_qcom_cap.hs_rate = UFS_QCOM_LIMIT_HS_RATE;
 
+<<<<<<< HEAD
 		/* This driver only supports symmetic gear setting i.e., hs_tx_gear == hs_rx_gear */
 		ufs_qcom_cap.hs_tx_gear = ufs_qcom_cap.hs_rx_gear = ufs_qcom_get_hs_gear(hba);
+=======
+		if (host->hw_ver.major == 0x1) {
+			/*
+			 * HS-G3 operations may not reliably work on legacy QCOM
+			 * UFS host controller hardware even though capability
+			 * exchange during link startup phase may end up
+			 * negotiating maximum supported gear as G3.
+			 * Hence downgrade the maximum supported gear to HS-G2.
+			 */
+			if (ufs_qcom_cap.hs_tx_gear > UFS_HS_G2)
+				ufs_qcom_cap.hs_tx_gear = UFS_HS_G2;
+			if (ufs_qcom_cap.hs_rx_gear > UFS_HS_G2)
+				ufs_qcom_cap.hs_rx_gear = UFS_HS_G2;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		ret = ufshcd_get_pwr_dev_param(&ufs_qcom_cap,
 					       dev_max_params,
 					       dev_req_params);
 		if (ret) {
+<<<<<<< HEAD
 			dev_err(hba->dev, "%s: failed to determine capabilities\n",
 					__func__);
 			return ret;
@@ -727,6 +893,13 @@ static int ufs_qcom_pwr_change_notify(struct ufs_hba *hba,
 		/* Use the agreed gear */
 		host->hs_gear = dev_req_params->gear_tx;
 
+=======
+			pr_err("%s: failed to determine capabilities\n",
+					__func__);
+			goto out;
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 		/* enable the device ref clock before changing to HS mode */
 		if (!ufshcd_is_hs_mode(&hba->pwr_info) &&
 			ufshcd_is_hs_mode(dev_req_params))
@@ -765,7 +938,11 @@ static int ufs_qcom_pwr_change_notify(struct ufs_hba *hba,
 		ret = -EINVAL;
 		break;
 	}
+<<<<<<< HEAD
 
+=======
+out:
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -777,11 +954,22 @@ static int ufs_qcom_quirk_host_pa_saveconfigtime(struct ufs_hba *hba)
 	err = ufshcd_dme_get(hba, UIC_ARG_MIB(PA_VS_CONFIG_REG1),
 			     &pa_vs_config_reg1);
 	if (err)
+<<<<<<< HEAD
 		return err;
 
 	/* Allow extension of MSB bits of PA_SaveConfigTime attribute */
 	return ufshcd_dme_set(hba, UIC_ARG_MIB(PA_VS_CONFIG_REG1),
 			    (pa_vs_config_reg1 | (1 << 12)));
+=======
+		goto out;
+
+	/* Allow extension of MSB bits of PA_SaveConfigTime attribute */
+	err = ufshcd_dme_set(hba, UIC_ARG_MIB(PA_VS_CONFIG_REG1),
+			    (pa_vs_config_reg1 | (1 << 12)));
+
+out:
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int ufs_qcom_apply_dev_quirks(struct ufs_hba *hba)
@@ -840,9 +1028,12 @@ static void ufs_qcom_advertise_quirks(struct ufs_hba *hba)
 				| UFSHCD_QUIRK_DME_PEER_ACCESS_AUTO_MODE
 				| UFSHCD_QUIRK_BROKEN_PA_RXHSUNTERMCAP);
 	}
+<<<<<<< HEAD
 
 	if (host->hw_ver.major > 0x3)
 		hba->quirks |= UFSHCD_QUIRK_REINIT_AFTER_MAX_GEAR_SWITCH;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ufs_qcom_set_caps(struct ufs_hba *hba)
@@ -910,6 +1101,11 @@ ufs_qcom_reset_assert(struct reset_controller_dev *rcdev, unsigned long id)
 {
 	struct ufs_qcom_host *host = rcdev_to_ufs_host(rcdev);
 
+<<<<<<< HEAD
+=======
+	/* Currently this code only knows about a single reset. */
+	WARN_ON(id);
+>>>>>>> b7ba80a49124 (Commit)
 	ufs_qcom_assert_reset(host->hba);
 	/* provide 1ms delay to let the reset pulse propagate. */
 	usleep_range(1000, 1100);
@@ -921,6 +1117,11 @@ ufs_qcom_reset_deassert(struct reset_controller_dev *rcdev, unsigned long id)
 {
 	struct ufs_qcom_host *host = rcdev_to_ufs_host(rcdev);
 
+<<<<<<< HEAD
+=======
+	/* Currently this code only knows about a single reset. */
+	WARN_ON(id);
+>>>>>>> b7ba80a49124 (Commit)
 	ufs_qcom_deassert_reset(host->hba);
 
 	/*
@@ -957,8 +1158,14 @@ static int ufs_qcom_init(struct ufs_hba *hba)
 
 	host = devm_kzalloc(dev, sizeof(*host), GFP_KERNEL);
 	if (!host) {
+<<<<<<< HEAD
 		dev_err(dev, "%s: no memory for qcom ufs host\n", __func__);
 		return -ENOMEM;
+=======
+		err = -ENOMEM;
+		dev_err(dev, "%s: no memory for qcom ufs host\n", __func__);
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Make a two way bind between the qcom host and the hba */
@@ -979,8 +1186,15 @@ static int ufs_qcom_init(struct ufs_hba *hba)
 	host->rcdev.owner = dev->driver->owner;
 	host->rcdev.nr_resets = 1;
 	err = devm_reset_controller_register(dev, &host->rcdev);
+<<<<<<< HEAD
 	if (err)
 		dev_warn(dev, "Failed to register reset controller\n");
+=======
+	if (err) {
+		dev_warn(dev, "Failed to register reset controller\n");
+		err = 0;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!has_acpi_companion(dev)) {
 		host->generic_phy = devm_phy_get(dev, "ufsphy");
@@ -1043,6 +1257,7 @@ static int ufs_qcom_init(struct ufs_hba *hba)
 	if (hba->dev->id < MAX_UFS_QCOM_HOSTS)
 		ufs_qcom_hosts[hba->dev->id] = host;
 
+<<<<<<< HEAD
 	ufs_qcom_get_default_testbus_cfg(host);
 	err = ufs_qcom_testbus_config(host);
 	if (err)
@@ -1061,6 +1276,22 @@ static int ufs_qcom_init(struct ufs_hba *hba)
 out_variant_clear:
 	ufshcd_set_variant(hba, NULL);
 
+=======
+	host->dbg_print_en |= UFS_QCOM_DEFAULT_DBG_PRINT_EN;
+	ufs_qcom_get_default_testbus_cfg(host);
+	err = ufs_qcom_testbus_config(host);
+	if (err) {
+		dev_warn(dev, "%s: failed to configure the testbus %d\n",
+				__func__, err);
+		err = 0;
+	}
+
+	goto out;
+
+out_variant_clear:
+	ufshcd_set_variant(hba, NULL);
+out:
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -1086,7 +1317,11 @@ static int ufs_qcom_set_dme_vs_core_clk_ctrl_clear_div(struct ufs_hba *hba,
 			    UIC_ARG_MIB(DME_VS_CORE_CLK_CTRL),
 			    &core_clk_ctrl_reg);
 	if (err)
+<<<<<<< HEAD
 		return err;
+=======
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 
 	core_clk_ctrl_reg &= ~DME_VS_CORE_CLK_CTRL_MAX_CORE_CLK_1US_CYCLES_MASK;
 	core_clk_ctrl_reg |= clk_cycles;
@@ -1094,9 +1329,17 @@ static int ufs_qcom_set_dme_vs_core_clk_ctrl_clear_div(struct ufs_hba *hba,
 	/* Clear CORE_CLK_DIV_EN */
 	core_clk_ctrl_reg &= ~DME_VS_CORE_CLK_CTRL_CORE_CLK_DIV_EN_BIT;
 
+<<<<<<< HEAD
 	return ufshcd_dme_set(hba,
 			    UIC_ARG_MIB(DME_VS_CORE_CLK_CTRL),
 			    core_clk_ctrl_reg);
+=======
+	err = ufshcd_dme_set(hba,
+			    UIC_ARG_MIB(DME_VS_CORE_CLK_CTRL),
+			    core_clk_ctrl_reg);
+out:
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int ufs_qcom_clk_scale_up_pre_change(struct ufs_hba *hba)
@@ -1177,9 +1420,15 @@ static int ufs_qcom_clk_scale_notify(struct ufs_hba *hba,
 			err = ufs_qcom_clk_scale_down_post_change(hba);
 
 
+<<<<<<< HEAD
 		if (err) {
 			ufshcd_uic_hibern8_exit(hba);
 			return err;
+=======
+		if (err || !dev_req_params) {
+			ufshcd_uic_hibern8_exit(hba);
+			goto out;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		ufs_qcom_cfg_timers(hba,
@@ -1190,14 +1439,91 @@ static int ufs_qcom_clk_scale_notify(struct ufs_hba *hba,
 		ufshcd_uic_hibern8_exit(hba);
 	}
 
+<<<<<<< HEAD
 	return 0;
+=======
+out:
+	return err;
+}
+
+static void ufs_qcom_print_hw_debug_reg_all(struct ufs_hba *hba,
+		void *priv, void (*print_fn)(struct ufs_hba *hba,
+		int offset, int num_regs, const char *str, void *priv))
+{
+	u32 reg;
+	struct ufs_qcom_host *host;
+
+	if (unlikely(!hba)) {
+		pr_err("%s: hba is NULL\n", __func__);
+		return;
+	}
+	if (unlikely(!print_fn)) {
+		dev_err(hba->dev, "%s: print_fn is NULL\n", __func__);
+		return;
+	}
+
+	host = ufshcd_get_variant(hba);
+	if (!(host->dbg_print_en & UFS_QCOM_DBG_PRINT_REGS_EN))
+		return;
+
+	reg = ufs_qcom_get_debug_reg_offset(host, UFS_UFS_DBG_RD_REG_OCSC);
+	print_fn(hba, reg, 44, "UFS_UFS_DBG_RD_REG_OCSC ", priv);
+
+	reg = ufshcd_readl(hba, REG_UFS_CFG1);
+	reg |= UTP_DBG_RAMS_EN;
+	ufshcd_writel(hba, reg, REG_UFS_CFG1);
+
+	reg = ufs_qcom_get_debug_reg_offset(host, UFS_UFS_DBG_RD_EDTL_RAM);
+	print_fn(hba, reg, 32, "UFS_UFS_DBG_RD_EDTL_RAM ", priv);
+
+	reg = ufs_qcom_get_debug_reg_offset(host, UFS_UFS_DBG_RD_DESC_RAM);
+	print_fn(hba, reg, 128, "UFS_UFS_DBG_RD_DESC_RAM ", priv);
+
+	reg = ufs_qcom_get_debug_reg_offset(host, UFS_UFS_DBG_RD_PRDT_RAM);
+	print_fn(hba, reg, 64, "UFS_UFS_DBG_RD_PRDT_RAM ", priv);
+
+	/* clear bit 17 - UTP_DBG_RAMS_EN */
+	ufshcd_rmwl(hba, UTP_DBG_RAMS_EN, 0, REG_UFS_CFG1);
+
+	reg = ufs_qcom_get_debug_reg_offset(host, UFS_DBG_RD_REG_UAWM);
+	print_fn(hba, reg, 4, "UFS_DBG_RD_REG_UAWM ", priv);
+
+	reg = ufs_qcom_get_debug_reg_offset(host, UFS_DBG_RD_REG_UARM);
+	print_fn(hba, reg, 4, "UFS_DBG_RD_REG_UARM ", priv);
+
+	reg = ufs_qcom_get_debug_reg_offset(host, UFS_DBG_RD_REG_TXUC);
+	print_fn(hba, reg, 48, "UFS_DBG_RD_REG_TXUC ", priv);
+
+	reg = ufs_qcom_get_debug_reg_offset(host, UFS_DBG_RD_REG_RXUC);
+	print_fn(hba, reg, 27, "UFS_DBG_RD_REG_RXUC ", priv);
+
+	reg = ufs_qcom_get_debug_reg_offset(host, UFS_DBG_RD_REG_DFC);
+	print_fn(hba, reg, 19, "UFS_DBG_RD_REG_DFC ", priv);
+
+	reg = ufs_qcom_get_debug_reg_offset(host, UFS_DBG_RD_REG_TRLUT);
+	print_fn(hba, reg, 34, "UFS_DBG_RD_REG_TRLUT ", priv);
+
+	reg = ufs_qcom_get_debug_reg_offset(host, UFS_DBG_RD_REG_TMRLUT);
+	print_fn(hba, reg, 9, "UFS_DBG_RD_REG_TMRLUT ", priv);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ufs_qcom_enable_test_bus(struct ufs_qcom_host *host)
 {
+<<<<<<< HEAD
 	ufshcd_rmwl(host->hba, UFS_REG_TEST_BUS_EN,
 			UFS_REG_TEST_BUS_EN, REG_UFS_CFG1);
 	ufshcd_rmwl(host->hba, TEST_BUS_EN, TEST_BUS_EN, REG_UFS_CFG1);
+=======
+	if (host->dbg_print_en & UFS_QCOM_DBG_PRINT_TEST_BUS_EN) {
+		ufshcd_rmwl(host->hba, UFS_REG_TEST_BUS_EN,
+				UFS_REG_TEST_BUS_EN, REG_UFS_CFG1);
+		ufshcd_rmwl(host->hba, TEST_BUS_EN, TEST_BUS_EN, REG_UFS_CFG1);
+	} else {
+		ufshcd_rmwl(host->hba, UFS_REG_TEST_BUS_EN, 0, REG_UFS_CFG1);
+		ufshcd_rmwl(host->hba, TEST_BUS_EN, 0, REG_UFS_CFG1);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ufs_qcom_get_default_testbus_cfg(struct ufs_qcom_host *host)
@@ -1306,6 +1632,7 @@ int ufs_qcom_testbus_config(struct ufs_qcom_host *host)
 
 static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
 {
+<<<<<<< HEAD
 	u32 reg;
 	struct ufs_qcom_host *host;
 
@@ -1353,6 +1680,12 @@ static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
 
 	reg = ufs_qcom_get_debug_reg_offset(host, UFS_DBG_RD_REG_TMRLUT);
 	ufshcd_dump_regs(hba, reg, 9 * 4, "UFS_DBG_RD_REG_TMRLUT ");
+=======
+	ufshcd_dump_regs(hba, REG_UFS_SYS1CLK_1US, 16 * 4,
+			 "HCI Vendor Specific Registers ");
+
+	ufs_qcom_print_hw_debug_reg_all(hba, NULL, ufs_qcom_dump_regs_wrapper);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -1399,6 +1732,7 @@ static void ufs_qcom_config_scaling_param(struct ufs_hba *hba,
 }
 #endif
 
+<<<<<<< HEAD
 static void ufs_qcom_reinit_notify(struct ufs_hba *hba)
 {
 	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
@@ -1627,6 +1961,8 @@ out:
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * struct ufs_hba_qcom_vops - UFS QCOM specific variant operations
  *
@@ -1650,12 +1986,15 @@ static const struct ufs_hba_variant_ops ufs_hba_qcom_vops = {
 	.device_reset		= ufs_qcom_device_reset,
 	.config_scaling_param = ufs_qcom_config_scaling_param,
 	.program_key		= ufs_qcom_ice_program_key,
+<<<<<<< HEAD
 	.reinit_notify		= ufs_qcom_reinit_notify,
 	.mcq_config_resource	= ufs_qcom_mcq_config_resource,
 	.get_hba_mac		= ufs_qcom_get_hba_mac,
 	.op_runtime_config	= ufs_qcom_op_runtime_config,
 	.get_outstanding_cqs	= ufs_qcom_get_outstanding_cqs,
 	.config_esi		= ufs_qcom_config_esi,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -1672,9 +2011,15 @@ static int ufs_qcom_probe(struct platform_device *pdev)
 	/* Perform generic probe */
 	err = ufshcd_pltfrm_init(pdev, &ufs_hba_qcom_vops);
 	if (err)
+<<<<<<< HEAD
 		return dev_err_probe(dev, err, "ufshcd_pltfrm_init() failed\n");
 
 	return 0;
+=======
+		dev_err(dev, "ufshcd_pltfrm_init() failed %d\n", err);
+
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -1689,11 +2034,18 @@ static int ufs_qcom_remove(struct platform_device *pdev)
 
 	pm_runtime_get_sync(&(pdev)->dev);
 	ufshcd_remove(hba);
+<<<<<<< HEAD
 	platform_msi_domain_free_irqs(hba->dev);
 	return 0;
 }
 
 static const struct of_device_id ufs_qcom_of_match[] __maybe_unused = {
+=======
+	return 0;
+}
+
+static const struct of_device_id ufs_qcom_of_match[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "qcom,ufshc"},
 	{},
 };
@@ -1708,6 +2060,7 @@ MODULE_DEVICE_TABLE(acpi, ufs_qcom_acpi_match);
 #endif
 
 static const struct dev_pm_ops ufs_qcom_pm_ops = {
+<<<<<<< HEAD
 	SET_RUNTIME_PM_OPS(ufshcd_runtime_suspend, ufshcd_runtime_resume, NULL)
 	.prepare	 = ufshcd_suspend_prepare,
 	.complete	 = ufshcd_resume_complete,
@@ -1718,6 +2071,12 @@ static const struct dev_pm_ops ufs_qcom_pm_ops = {
 	.restore         = ufshcd_system_restore,
 	.thaw            = ufshcd_system_thaw,
 #endif
+=======
+	SET_SYSTEM_SLEEP_PM_OPS(ufshcd_system_suspend, ufshcd_system_resume)
+	SET_RUNTIME_PM_OPS(ufshcd_runtime_suspend, ufshcd_runtime_resume, NULL)
+	.prepare	 = ufshcd_suspend_prepare,
+	.complete	 = ufshcd_resume_complete,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct platform_driver ufs_qcom_pltform = {

@@ -28,6 +28,10 @@
 
 #include <soc/tegra/fuse.h>
 
+<<<<<<< HEAD
+=======
+#include "../thermal_core.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "../thermal_hwmon.h"
 
 #define TSENSOR_SENSOR0_CONFIG0				0x0
@@ -160,7 +164,11 @@ static void devm_tegra_tsensor_hw_disable(void *data)
 
 static int tegra_tsensor_get_temp(struct thermal_zone_device *tz, int *temp)
 {
+<<<<<<< HEAD
 	const struct tegra_tsensor_channel *tsc = thermal_zone_device_priv(tz);
+=======
+	const struct tegra_tsensor_channel *tsc = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	const struct tegra_tsensor *ts = tsc->ts;
 	int err, c1, c2, c3, c4, counter;
 	u32 val;
@@ -218,7 +226,11 @@ static int tegra_tsensor_temp_to_counter(const struct tegra_tsensor *ts, int tem
 
 static int tegra_tsensor_set_trips(struct thermal_zone_device *tz, int low, int high)
 {
+<<<<<<< HEAD
 	const struct tegra_tsensor_channel *tsc = thermal_zone_device_priv(tz);
+=======
+	const struct tegra_tsensor_channel *tsc = tz->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	const struct tegra_tsensor *ts = tsc->ts;
 	u32 val;
 
@@ -359,6 +371,12 @@ static int tegra_tsensor_enable_hw_channel(const struct tegra_tsensor *ts,
 
 	tegra_tsensor_get_hw_channel_trips(tzd, &hot_trip, &crit_trip);
 
+<<<<<<< HEAD
+=======
+	/* prevent potential racing with tegra_tsensor_set_trips() */
+	mutex_lock(&tzd->lock);
+
+>>>>>>> b7ba80a49124 (Commit)
 	dev_info_once(ts->dev, "ch%u: PMC emergency shutdown trip set to %dC\n",
 		      id, DIV_ROUND_CLOSEST(crit_trip, 1000));
 
@@ -401,6 +419,11 @@ static int tegra_tsensor_enable_hw_channel(const struct tegra_tsensor *ts,
 	val |= FIELD_PREP(TSENSOR_SENSOR0_CONFIG0_INTR_THERMAL_RST_EN, 1);
 	writel_relaxed(val, tsc->regs + TSENSOR_SENSOR0_CONFIG0);
 
+<<<<<<< HEAD
+=======
+	mutex_unlock(&tzd->lock);
+
+>>>>>>> b7ba80a49124 (Commit)
 	err = thermal_zone_device_enable(tzd);
 	if (err) {
 		dev_err(ts->dev, "ch%u: failed to enable zone: %d\n", id, err);
@@ -523,7 +546,11 @@ static int tegra_tsensor_register_channel(struct tegra_tsensor *ts,
 		return 0;
 	}
 
+<<<<<<< HEAD
 	if (devm_thermal_add_hwmon_sysfs(ts->dev, tsc->tzd))
+=======
+	if (devm_thermal_add_hwmon_sysfs(tsc->tzd))
+>>>>>>> b7ba80a49124 (Commit)
 		dev_warn(ts->dev, "failed to add hwmon sysfs attributes\n");
 
 	return 0;
@@ -580,6 +607,7 @@ static int tegra_tsensor_probe(struct platform_device *pdev)
 			return err;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * Enable the channels before setting the interrupt so
 	 * set_trips() can not be called while we are setting up the
@@ -594,6 +622,8 @@ static int tegra_tsensor_probe(struct platform_device *pdev)
 			return err;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = devm_request_threaded_irq(&pdev->dev, irq, NULL,
 					tegra_tsensor_isr, IRQF_ONESHOT,
 					"tegra_tsensor", ts);
@@ -601,6 +631,15 @@ static int tegra_tsensor_probe(struct platform_device *pdev)
 		return dev_err_probe(&pdev->dev, err,
 				     "failed to request interrupt\n");
 
+<<<<<<< HEAD
+=======
+	for (i = 0; i < ARRAY_SIZE(ts->ch); i++) {
+		err = tegra_tsensor_enable_hw_channel(ts, i);
+		if (err)
+			return err;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

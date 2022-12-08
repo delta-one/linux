@@ -21,7 +21,10 @@
 #include <linux/of_device.h>
 #include <linux/pinctrl/consumer.h>
 #include <linux/platform_device.h>
+<<<<<<< HEAD
 #include <linux/regulator/consumer.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/scatterlist.h>
 
 #include <asm/cacheflush.h>
@@ -159,8 +162,11 @@ struct jz4740_mmc_host {
 	struct mmc_request *req;
 	struct mmc_command *cmd;
 
+<<<<<<< HEAD
 	bool vqmmc_enabled;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long waiting;
 
 	uint32_t cmdat;
@@ -938,8 +944,11 @@ static void jz4740_mmc_request(struct mmc_host *mmc, struct mmc_request *req)
 static void jz4740_mmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
 {
 	struct jz4740_mmc_host *host = mmc_priv(mmc);
+<<<<<<< HEAD
 	int ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (ios->clock)
 		jz4740_mmc_set_clock_rate(host, ios->clock);
 
@@ -952,6 +961,7 @@ static void jz4740_mmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
 		clk_prepare_enable(host->clk);
 		break;
 	case MMC_POWER_ON:
+<<<<<<< HEAD
 		if (!IS_ERR(mmc->supply.vqmmc) && !host->vqmmc_enabled) {
 			ret = regulator_enable(mmc->supply.vqmmc);
 			if (ret)
@@ -970,6 +980,13 @@ static void jz4740_mmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
 		clk_disable_unprepare(host->clk);
 		break;
 	default:
+=======
+		break;
+	default:
+		if (!IS_ERR(mmc->supply.vmmc))
+			mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, 0);
+		clk_disable_unprepare(host->clk);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 
@@ -996,6 +1013,7 @@ static void jz4740_mmc_enable_sdio_irq(struct mmc_host *mmc, int enable)
 	jz4740_mmc_set_irq_enabled(host, JZ_MMC_IRQ_SDIO, enable);
 }
 
+<<<<<<< HEAD
 static int jz4740_voltage_switch(struct mmc_host *mmc, struct mmc_ios *ios)
 {
 	int ret;
@@ -1013,6 +1031,8 @@ static int jz4740_voltage_switch(struct mmc_host *mmc, struct mmc_ios *ios)
 	return -EINVAL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct mmc_host_ops jz4740_mmc_ops = {
 	.request	= jz4740_mmc_request,
 	.pre_req	= jz4740_mmc_pre_request,
@@ -1021,7 +1041,10 @@ static const struct mmc_host_ops jz4740_mmc_ops = {
 	.get_ro		= mmc_gpio_get_ro,
 	.get_cd		= mmc_gpio_get_cd,
 	.enable_sdio_irq = jz4740_mmc_enable_sdio_irq,
+<<<<<<< HEAD
 	.start_signal_voltage_switch = jz4740_voltage_switch,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct of_device_id jz4740_mmc_of_match[] = {
@@ -1079,7 +1102,12 @@ static int jz4740_mmc_probe(struct platform_device* pdev)
 		goto err_free_host;
 	}
 
+<<<<<<< HEAD
 	host->base = devm_platform_get_and_ioremap_resource(pdev, 0, &host->mem_res);
+=======
+	host->mem_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	host->base = devm_ioremap_resource(&pdev->dev, host->mem_res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(host->base)) {
 		ret = PTR_ERR(host->base);
 		goto err_free_host;
@@ -1088,6 +1116,7 @@ static int jz4740_mmc_probe(struct platform_device* pdev)
 	mmc->ops = &jz4740_mmc_ops;
 	if (!mmc->f_max)
 		mmc->f_max = JZ_MMC_CLK_RATE;
+<<<<<<< HEAD
 
 	/*
 	 * There seems to be a problem with this driver on the JZ4760 and
@@ -1098,6 +1127,8 @@ static int jz4740_mmc_probe(struct platform_device* pdev)
 	if (host->version == JZ_MMC_JZ4760 && mmc->f_max > JZ_MMC_CLK_RATE)
 		mmc->f_max = JZ_MMC_CLK_RATE;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mmc->f_min = mmc->f_max / 128;
 	mmc->ocr_avail = MMC_VDD_32_33 | MMC_VDD_33_34;
 

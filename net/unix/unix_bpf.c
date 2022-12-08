@@ -54,9 +54,12 @@ static int unix_bpf_recvmsg(struct sock *sk, struct msghdr *msg,
 	struct sk_psock *psock;
 	int copied;
 
+<<<<<<< HEAD
 	if (!len)
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	psock = sk_psock_get(sk);
 	if (unlikely(!psock))
 		return __unix_recvmsg(sk, msg, len, flags);
@@ -148,12 +151,20 @@ int unix_dgram_bpf_update_proto(struct sock *sk, struct sk_psock *psock, bool re
 
 	if (restore) {
 		sk->sk_write_space = psock->saved_write_space;
+<<<<<<< HEAD
 		sock_replace_proto(sk, psock->sk_proto);
+=======
+		WRITE_ONCE(sk->sk_prot, psock->sk_proto);
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 
 	unix_dgram_bpf_check_needs_rebuild(psock->sk_proto);
+<<<<<<< HEAD
 	sock_replace_proto(sk, &unix_dgram_bpf_prot);
+=======
+	WRITE_ONCE(sk->sk_prot, &unix_dgram_bpf_prot);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -161,12 +172,20 @@ int unix_stream_bpf_update_proto(struct sock *sk, struct sk_psock *psock, bool r
 {
 	if (restore) {
 		sk->sk_write_space = psock->saved_write_space;
+<<<<<<< HEAD
 		sock_replace_proto(sk, psock->sk_proto);
+=======
+		WRITE_ONCE(sk->sk_prot, psock->sk_proto);
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 
 	unix_stream_bpf_check_needs_rebuild(psock->sk_proto);
+<<<<<<< HEAD
 	sock_replace_proto(sk, &unix_stream_bpf_prot);
+=======
+	WRITE_ONCE(sk->sk_prot, &unix_stream_bpf_prot);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

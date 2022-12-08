@@ -210,6 +210,7 @@ void acpi_table_print_madt_entry(struct acpi_subtable_header *header)
 		}
 		break;
 
+<<<<<<< HEAD
 	case ACPI_MADT_TYPE_CORE_PIC:
 		{
 			struct acpi_madt_core_pic *p = (struct acpi_madt_core_pic *)header;
@@ -220,6 +221,8 @@ void acpi_table_print_madt_entry(struct acpi_subtable_header *header)
 		}
 		break;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		pr_warn("Found unsupported MADT entry (type = 0x%x)\n",
 			header->type);
@@ -555,8 +558,12 @@ static const char table_sigs[][ACPI_NAMESEG_SIZE] __initconst = {
 	ACPI_SIG_WDDT, ACPI_SIG_WDRT, ACPI_SIG_DSDT, ACPI_SIG_FADT,
 	ACPI_SIG_PSDT, ACPI_SIG_RSDT, ACPI_SIG_XSDT, ACPI_SIG_SSDT,
 	ACPI_SIG_IORT, ACPI_SIG_NFIT, ACPI_SIG_HMAT, ACPI_SIG_PPTT,
+<<<<<<< HEAD
 	ACPI_SIG_NHLT, ACPI_SIG_AEST, ACPI_SIG_CEDT, ACPI_SIG_AGDI,
 	ACPI_SIG_NBFT };
+=======
+	ACPI_SIG_NHLT, ACPI_SIG_AEST, ACPI_SIG_CEDT, ACPI_SIG_AGDI };
+>>>>>>> b7ba80a49124 (Commit)
 
 #define ACPI_HEADER_SIZE sizeof(struct acpi_table_header)
 
@@ -849,11 +856,20 @@ acpi_status acpi_os_table_override(struct acpi_table_header *existing_table,
 /*
  * acpi_locate_initial_tables()
  *
+<<<<<<< HEAD
  * Get the RSDP, then find and checksum all the ACPI tables.
  *
  * result: initial_tables[] is initialized, and points to
  * a list of ACPI tables.
  */
+=======
+ * find RSDP, find and checksum SDT/XSDT.
+ * checksum all tables, print SDT/XSDT
+ *
+ * result: sdt_entry[] is initialized
+ */
+
+>>>>>>> b7ba80a49124 (Commit)
 int __init acpi_locate_initial_tables(void)
 {
 	acpi_status status;

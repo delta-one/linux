@@ -18,8 +18,11 @@
 #include <linux/magic.h>
 #include <linux/pgtable.h>
 #include <linux/sizes.h>
+<<<<<<< HEAD
 #include <linux/linkage.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/processor.h>
 #include <asm/page.h>
 #include <asm/mmu.h>
@@ -539,7 +542,11 @@ start_here:
 	ori	r0, r0, STACK_END_MAGIC@l
 	stw	r0, 0(r1)
 	li	r0,0
+<<<<<<< HEAD
 	stwu	r0,THREAD_SIZE-STACK_FRAME_MIN_SIZE(r1)
+=======
+	stwu	r0,THREAD_SIZE-STACK_FRAME_OVERHEAD(r1)
+>>>>>>> b7ba80a49124 (Commit)
 
 	lis	r6, swapper_pg_dir@ha
 	tophys(r6,r6)
@@ -627,7 +634,11 @@ start_here:
  * 24 Mbytes of data, and the 512k IMMR space.  Anything not covered by
  * these mappings is mapped by page tables.
  */
+<<<<<<< HEAD
 SYM_FUNC_START_LOCAL(initial_mmu)
+=======
+initial_mmu:
+>>>>>>> b7ba80a49124 (Commit)
 	li	r8, 0
 	mtspr	SPRN_MI_CTR, r8		/* remove PINNED ITLB entries */
 	lis	r10, MD_TWAM@h
@@ -688,7 +699,10 @@ SYM_FUNC_START_LOCAL(initial_mmu)
 #endif
 	mtspr	SPRN_DER, r8
 	blr
+<<<<<<< HEAD
 SYM_FUNC_END(initial_mmu)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 _GLOBAL(mmu_pin_tlb)
 	lis	r9, (1f - PAGE_OFFSET)@h

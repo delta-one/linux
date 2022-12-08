@@ -12,8 +12,11 @@
 #include <linux/crypto.h>
 #include <linux/init.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/key.h>
 #include <linux/key-type.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/list.h>
 #include <linux/module.h>
 #include <linux/net.h>
@@ -21,10 +24,13 @@
 #include <linux/sched.h>
 #include <linux/sched/signal.h>
 #include <linux/security.h>
+<<<<<<< HEAD
 #include <linux/string.h>
 #include <keys/user-type.h>
 #include <keys/trusted-type.h>
 #include <keys/encrypted-type.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct alg_type_list {
 	const struct af_alg_type *type;
@@ -228,6 +234,7 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_KEYS
 
 static const u8 *key_data_ptr_user(const struct key *key,
@@ -351,6 +358,8 @@ static inline int alg_setkey_by_key_serial(struct alg_sock *ask,
 
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int alg_setsockopt(struct socket *sock, int level, int optname,
 			  sockptr_t optval, unsigned int optlen)
 {
@@ -371,16 +380,23 @@ static int alg_setsockopt(struct socket *sock, int level, int optname,
 
 	switch (optname) {
 	case ALG_SET_KEY:
+<<<<<<< HEAD
 	case ALG_SET_KEY_BY_KEY_SERIAL:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (sock->state == SS_CONNECTED)
 			goto unlock;
 		if (!type->setkey)
 			goto unlock;
 
+<<<<<<< HEAD
 		if (optname == ALG_SET_KEY_BY_KEY_SERIAL)
 			err = alg_setkey_by_key_serial(ask, optval, optlen);
 		else
 			err = alg_setkey(sk, optval, optlen);
+=======
+		err = alg_setkey(sk, optval, optlen);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case ALG_SET_AEAD_AUTHSIZE:
 		if (sock->state == SS_CONNECTED)
@@ -1186,7 +1202,11 @@ EXPORT_SYMBOL_GPL(af_alg_free_resources);
 
 /**
  * af_alg_async_cb - AIO callback handler
+<<<<<<< HEAD
  * @data: async request completion data
+=======
+ * @_req: async request info
+>>>>>>> b7ba80a49124 (Commit)
  * @err: if non-zero, error result to be returned via ki_complete();
  *       otherwise return the AIO output length via ki_complete().
  *
@@ -1196,9 +1216,15 @@ EXPORT_SYMBOL_GPL(af_alg_free_resources);
  * The number of bytes to be generated with the AIO operation must be set
  * in areq->outlen before the AIO callback handler is invoked.
  */
+<<<<<<< HEAD
 void af_alg_async_cb(void *data, int err)
 {
 	struct af_alg_async_req *areq = data;
+=======
+void af_alg_async_cb(struct crypto_async_request *_req, int err)
+{
+	struct af_alg_async_req *areq = _req->data;
+>>>>>>> b7ba80a49124 (Commit)
 	struct sock *sk = areq->sk;
 	struct kiocb *iocb = areq->iocb;
 	unsigned int resultlen;

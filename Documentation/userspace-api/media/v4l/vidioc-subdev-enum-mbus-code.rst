@@ -31,6 +31,7 @@ Arguments
 Description
 ===========
 
+<<<<<<< HEAD
 This call is used by the application to access the enumeration
 of media bus formats for the selected pad.
 
@@ -53,6 +54,17 @@ or that there are no more codes available at this pad.
 
 The driver must not return the same value of ``code`` for different indices
 at the same pad.
+=======
+To enumerate media bus formats available at a given sub-device pad
+applications initialize the ``pad``, ``which`` and ``index`` fields of
+struct
+:c:type:`v4l2_subdev_mbus_code_enum` and
+call the :ref:`VIDIOC_SUBDEV_ENUM_MBUS_CODE` ioctl with a pointer to this
+structure. Drivers fill the rest of the structure or return an ``EINVAL``
+error code if either the ``pad`` or ``index`` are invalid. All media bus
+formats are enumerable by beginning at index zero and incrementing by
+one until ``EINVAL`` is returned.
+>>>>>>> b7ba80a49124 (Commit)
 
 Available media bus formats may depend on the current 'try' formats at
 other pads of the sub-device, as well as on the current active links.
@@ -70,6 +82,7 @@ information about the try formats.
 
     * - __u32
       - ``pad``
+<<<<<<< HEAD
       - Pad number as reported by the media controller API. Filled in by the
         application.
     * - __u32
@@ -80,6 +93,16 @@ information about the try formats.
       - ``code``
       - The media bus format code, as defined in
 	:ref:`v4l2-mbus-format`. Filled in by the driver.
+=======
+      - Pad number as reported by the media controller API.
+    * - __u32
+      - ``index``
+      - Number of the format in the enumeration, set by the application.
+    * - __u32
+      - ``code``
+      - The media bus format code, as defined in
+	:ref:`v4l2-mbus-format`.
+>>>>>>> b7ba80a49124 (Commit)
     * - __u32
       - ``which``
       - Media bus format codes to be enumerated, from enum
@@ -88,10 +111,14 @@ information about the try formats.
       - ``flags``
       - See :ref:`v4l2-subdev-mbus-code-flags`
     * - __u32
+<<<<<<< HEAD
       - ``stream``
       - Stream identifier.
     * - __u32
       - ``reserved``\ [6]
+=======
+      - ``reserved``\ [7]
+>>>>>>> b7ba80a49124 (Commit)
       - Reserved for future extensions. Applications and drivers must set
 	the array to zero.
 

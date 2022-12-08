@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/clock/imx8qxp-lpcg.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: NXP i.MX8QXP LPCG (Low-Power Clock Gating) Clock
+=======
+title: NXP i.MX8QXP LPCG (Low-Power Clock Gating) Clock bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Aisheng Dong <aisheng.dong@nxp.com>

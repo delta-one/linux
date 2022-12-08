@@ -10,14 +10,20 @@
 #include "prestera_hw.h"
 #include "prestera_acl.h"
 #include "prestera_counter.h"
+<<<<<<< HEAD
 #include "prestera_router_hw.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define PRESTERA_SWITCH_INIT_TIMEOUT_MS (30 * 1000)
 
 #define PRESTERA_MIN_MTU 64
 
+<<<<<<< HEAD
 #define PRESTERA_MSG_CHUNK_SIZE 1024
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum prestera_cmd_type_t {
 	PRESTERA_CMD_TYPE_SWITCH_INIT = 0x1,
 	PRESTERA_CMD_TYPE_SWITCH_ATTR_SET = 0x2,
@@ -60,10 +66,13 @@ enum prestera_cmd_type_t {
 	PRESTERA_CMD_TYPE_ROUTER_RIF_DELETE = 0x601,
 	PRESTERA_CMD_TYPE_ROUTER_LPM_ADD = 0x610,
 	PRESTERA_CMD_TYPE_ROUTER_LPM_DELETE = 0x611,
+<<<<<<< HEAD
 	PRESTERA_CMD_TYPE_ROUTER_NH_GRP_SET = 0x622,
 	PRESTERA_CMD_TYPE_ROUTER_NH_GRP_BLK_GET = 0x645,
 	PRESTERA_CMD_TYPE_ROUTER_NH_GRP_ADD = 0x623,
 	PRESTERA_CMD_TYPE_ROUTER_NH_GRP_DELETE = 0x624,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	PRESTERA_CMD_TYPE_ROUTER_VR_CREATE = 0x630,
 	PRESTERA_CMD_TYPE_ROUTER_VR_DELETE = 0x631,
 
@@ -549,6 +558,7 @@ struct prestera_msg_ip_addr {
 	u8 __pad[3];
 };
 
+<<<<<<< HEAD
 struct prestera_msg_nh {
 	struct prestera_msg_iface oif;
 	__le32 hw_id;
@@ -557,6 +567,8 @@ struct prestera_msg_nh {
 	u8 pad;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct prestera_msg_rif_req {
 	struct prestera_msg_cmd cmd;
 	struct prestera_msg_iface iif;
@@ -582,6 +594,7 @@ struct prestera_msg_lpm_req {
 	u8 __pad[2];
 };
 
+<<<<<<< HEAD
 struct prestera_msg_nh_req {
 	struct prestera_msg_cmd cmd;
 	struct prestera_msg_nh nh[PRESTERA_NHGR_SIZE_MAX];
@@ -610,6 +623,8 @@ struct prestera_msg_nh_grp_resp {
 	__le32 grp_id;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct prestera_msg_vr_req {
 	struct prestera_msg_cmd cmd;
 	__le16 vr_id;
@@ -772,15 +787,21 @@ static void prestera_hw_build_tests(void)
 	BUILD_BUG_ON(sizeof(struct prestera_msg_flood_domain_ports_reset_req) != 8);
 	BUILD_BUG_ON(sizeof(struct prestera_msg_mdb_create_req) != 16);
 	BUILD_BUG_ON(sizeof(struct prestera_msg_mdb_destroy_req) != 16);
+<<<<<<< HEAD
 	BUILD_BUG_ON(sizeof(struct prestera_msg_nh_req) != 124);
 	BUILD_BUG_ON(sizeof(struct prestera_msg_nh_chunk_req) != 8);
 	BUILD_BUG_ON(sizeof(struct prestera_msg_nh_grp_req) != 12);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*  structure that are part of req/resp fw messages */
 	BUILD_BUG_ON(sizeof(struct prestera_msg_iface) != 16);
 	BUILD_BUG_ON(sizeof(struct prestera_msg_ip_addr) != 20);
 	BUILD_BUG_ON(sizeof(struct prestera_msg_flood_domain_port) != 12);
+<<<<<<< HEAD
 	BUILD_BUG_ON(sizeof(struct prestera_msg_nh) != 28);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* check responses */
 	BUILD_BUG_ON(sizeof(struct prestera_msg_common_resp) != 8);
@@ -797,8 +818,11 @@ static void prestera_hw_build_tests(void)
 	BUILD_BUG_ON(sizeof(struct prestera_msg_vr_resp) != 12);
 	BUILD_BUG_ON(sizeof(struct prestera_msg_policer_resp) != 12);
 	BUILD_BUG_ON(sizeof(struct prestera_msg_flood_domain_create_resp) != 12);
+<<<<<<< HEAD
 	BUILD_BUG_ON(sizeof(struct prestera_msg_nh_chunk_resp) != 1032);
 	BUILD_BUG_ON(sizeof(struct prestera_msg_nh_grp_resp) != 12);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* check events */
 	BUILD_BUG_ON(sizeof(struct prestera_msg_event_port) != 20);
@@ -1076,8 +1100,11 @@ int prestera_hw_switch_init(struct prestera_switch *sw)
 	sw->id = resp.switch_id;
 	sw->lag_member_max = resp.lag_member_max;
 	sw->lag_max = resp.lag_max;
+<<<<<<< HEAD
 	sw->size_tbl_router_nexthop =
 		__le32_to_cpu(resp.size_tbl_router_nexthop);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -2088,6 +2115,7 @@ int prestera_hw_lpm_del(struct prestera_switch *sw, u16 vr_id,
 			    sizeof(req));
 }
 
+<<<<<<< HEAD
 int prestera_hw_nh_entries_set(struct prestera_switch *sw, int count,
 			       struct prestera_neigh_info *nhs, u32 grp_id)
 {
@@ -2167,6 +2195,8 @@ int prestera_hw_nh_group_delete(struct prestera_switch *sw, u16 nh_count,
 			    &req.cmd, sizeof(req));
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int prestera_hw_rxtx_init(struct prestera_switch *sw,
 			  struct prestera_rxtx_params *params)
 {

@@ -176,6 +176,7 @@ config SGI_XP
 	  this feature will allow for direct communication between SSIs
 	  based on a network adapter and DMA messaging.
 
+<<<<<<< HEAD
 config SMPRO_ERRMON
 	tristate "Ampere Computing SMPro error monitor driver"
 	depends on MFD_SMPRO || COMPILE_TEST
@@ -198,6 +199,8 @@ config SMPRO_MISC
 	  To compile this driver as a module, say M here. The driver will be
 	  called smpro-misc.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config CS5535_MFGPT
 	tristate "CS5535/CS5536 Geode Multi-Function General Purpose Timer (MFGPT) support"
 	depends on MFD_CS5535
@@ -518,6 +521,7 @@ config VCPU_STALL_DETECTOR
 
 	  If you do not intend to run this kernel as a guest, say N.
 
+<<<<<<< HEAD
 config TMR_MANAGER
 	tristate "Select TMR Manager"
 	depends on MICROBLAZE && MB_MANAGER
@@ -538,6 +542,8 @@ config TMR_INJECT
 
 	  Say N here unless you know what you are doing.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 source "drivers/misc/c2port/Kconfig"
 source "drivers/misc/eeprom/Kconfig"
 source "drivers/misc/cb710/Kconfig"
@@ -552,6 +558,10 @@ source "drivers/misc/cxl/Kconfig"
 source "drivers/misc/ocxl/Kconfig"
 source "drivers/misc/bcm-vk/Kconfig"
 source "drivers/misc/cardreader/Kconfig"
+<<<<<<< HEAD
+=======
+source "drivers/misc/habanalabs/Kconfig"
+>>>>>>> b7ba80a49124 (Commit)
 source "drivers/misc/uacce/Kconfig"
 source "drivers/misc/pvpanic/Kconfig"
 source "drivers/misc/mchp_pci1xxxx/Kconfig"

@@ -943,7 +943,11 @@ u64 fsl_pci_immrbar_base(struct pci_controller *hose)
 	return 0;
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_E500
+=======
+#ifdef CONFIG_E500
+>>>>>>> b7ba80a49124 (Commit)
 static int mcheck_handle_load(struct pt_regs *regs, u32 inst)
 {
 	unsigned int rd, ra, rb, d;
@@ -1139,6 +1143,7 @@ void __init fsl_pci_assign_primary(void)
 	}
 
 	/*
+<<<<<<< HEAD
 	 * If there's no PCI host bridge with ISA then check for
 	 * PCI host bridge with alias "pci0" (first PCI host bridge).
 	 */
@@ -1152,6 +1157,8 @@ void __init fsl_pci_assign_primary(void)
 		of_node_put(np);
 
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * If there's no PCI host bridge with ISA, arbitrarily
 	 * designate one as primary.  This can go away once
 	 * various bugs with primary-less systems are fixed.

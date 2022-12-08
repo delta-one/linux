@@ -280,7 +280,12 @@ static int tps65218_voltage_set_uvlo(struct tps65218 *tps)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int tps65218_probe(struct i2c_client *client)
+=======
+static int tps65218_probe(struct i2c_client *client,
+				const struct i2c_device_id *ids)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tps65218 *tps;
 	int ret;
@@ -347,7 +352,11 @@ static struct i2c_driver tps65218_driver = {
 		.name	= "tps65218",
 		.of_match_table = of_tps65218_match_table,
 	},
+<<<<<<< HEAD
 	.probe_new	= tps65218_probe,
+=======
+	.probe		= tps65218_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table       = tps65218_id_table,
 };
 

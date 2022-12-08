@@ -43,11 +43,18 @@
 #include "gt/intel_rps.h"
 
 #include "i915_active.h"
+<<<<<<< HEAD
 #include "i915_config.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "i915_deps.h"
 #include "i915_driver.h"
 #include "i915_drv.h"
 #include "i915_trace.h"
+<<<<<<< HEAD
+=======
+#include "intel_pm.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 struct execute_cb {
 	struct irq_work work;
@@ -1621,6 +1628,7 @@ i915_request_await_object(struct i915_request *to,
 	return ret;
 }
 
+<<<<<<< HEAD
 static void i915_request_await_huc(struct i915_request *rq)
 {
 	struct intel_huc *huc = &rq->context->engine->gt->uc.huc;
@@ -1635,6 +1643,8 @@ static void i915_request_await_huc(struct i915_request *rq)
 					     &rq->hucq);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct i915_request *
 __i915_request_ensure_parallel_ordering(struct i915_request *rq,
 					struct intel_timeline *timeline)
@@ -1717,6 +1727,7 @@ __i915_request_add_to_timeline(struct i915_request *rq)
 	struct i915_request *prev;
 
 	/*
+<<<<<<< HEAD
 	 * Media workloads may require HuC, so stall them until HuC loading is
 	 * complete. Note that HuC not being loaded when a user submission
 	 * arrives can only happen when HuC is loaded via GSC and in that case
@@ -1727,6 +1738,8 @@ __i915_request_add_to_timeline(struct i915_request *rq)
 		i915_request_await_huc(rq);
 
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * Dependency tracking and request ordering along the timeline
 	 * is special cased so that we can eliminate redundant ordering
 	 * operations while building the request (we know that the timeline

@@ -745,7 +745,12 @@ static ssize_t jfs_quota_read(struct super_block *sb, int type, char *data,
 		len = i_size-off;
 	toread = len;
 	while (toread > 0) {
+<<<<<<< HEAD
 		tocopy = min_t(size_t, sb->s_blocksize - offset, toread);
+=======
+		tocopy = sb->s_blocksize - offset < toread ?
+				sb->s_blocksize - offset : toread;
+>>>>>>> b7ba80a49124 (Commit)
 
 		tmp_bh.b_state = 0;
 		tmp_bh.b_size = i_blocksize(inode);
@@ -784,7 +789,12 @@ static ssize_t jfs_quota_write(struct super_block *sb, int type,
 
 	inode_lock(inode);
 	while (towrite > 0) {
+<<<<<<< HEAD
 		tocopy = min_t(size_t, sb->s_blocksize - offset, towrite);
+=======
+		tocopy = sb->s_blocksize - offset < towrite ?
+				sb->s_blocksize - offset : towrite;
+>>>>>>> b7ba80a49124 (Commit)
 
 		tmp_bh.b_state = 0;
 		tmp_bh.b_size = i_blocksize(inode);

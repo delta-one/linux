@@ -23,9 +23,15 @@
 #include <linux/slab.h>
 #include <linux/completion.h>
 #include <linux/vmalloc.h>
+<<<<<<< HEAD
 #include <media/videobuf2-vmalloc.h>
 
 #include "../include/linux/raspberrypi/vchiq.h"
+=======
+#include <linux/raspberrypi/vchiq.h>
+#include <media/videobuf2-vmalloc.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 #include "mmal-common.h"
 #include "mmal-vchiq.h"
 #include "mmal-msg.h"
@@ -245,7 +251,11 @@ static void event_to_host_cb(struct vchiq_mmal_instance *instance,
 /* workqueue scheduled callback
  *
  * we do this because it is important we do not call any other vchiq
+<<<<<<< HEAD
  * sync calls from within the message delivery thread
+=======
+ * sync calls from witin the message delivery thread
+>>>>>>> b7ba80a49124 (Commit)
  */
 static void buffer_work_cb(struct work_struct *work)
 {
@@ -548,9 +558,16 @@ static void bulk_abort_cb(struct vchiq_mmal_instance *instance,
 }
 
 /* incoming event service callback */
+<<<<<<< HEAD
 static int service_callback(struct vchiq_instance *vchiq_instance,
 			    enum vchiq_reason reason, struct vchiq_header *header,
 			    unsigned int handle, void *bulk_ctx)
+=======
+static enum vchiq_status service_callback(struct vchiq_instance *vchiq_instance,
+					  enum vchiq_reason reason,
+					  struct vchiq_header *header,
+					  unsigned int handle, void *bulk_ctx)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct vchiq_mmal_instance *instance = vchiq_get_service_userdata(vchiq_instance, handle);
 	u32 msg_len;
@@ -559,7 +576,11 @@ static int service_callback(struct vchiq_instance *vchiq_instance,
 
 	if (!instance) {
 		pr_err("Message callback passed NULL instance\n");
+<<<<<<< HEAD
 		return 0;
+=======
+		return VCHIQ_SUCCESS;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	switch (reason) {
@@ -643,7 +664,11 @@ static int service_callback(struct vchiq_instance *vchiq_instance,
 		break;
 	}
 
+<<<<<<< HEAD
 	return 0;
+=======
+	return VCHIQ_SUCCESS;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int send_synchronous_mmal_msg(struct vchiq_mmal_instance *instance,
@@ -862,9 +887,15 @@ static int port_info_get(struct vchiq_mmal_instance *instance,
 		goto release_msg;
 
 	if (rmsg->u.port_info_get_reply.port.is_enabled == 0)
+<<<<<<< HEAD
 		port->enabled = false;
 	else
 		port->enabled = true;
+=======
+		port->enabled = 0;
+	else
+		port->enabled = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* copy the values out of the message */
 	port->handle = rmsg->u.port_info_get_reply.port_handle;
@@ -1303,7 +1334,11 @@ static int port_disable(struct vchiq_mmal_instance *instance,
 	if (!port->enabled)
 		return 0;
 
+<<<<<<< HEAD
 	port->enabled = false;
+=======
+	port->enabled = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = port_action_port(instance, port,
 			       MMAL_MSG_PORT_ACTION_TYPE_DISABLE);
@@ -1358,7 +1393,11 @@ static int port_enable(struct vchiq_mmal_instance *instance,
 	if (ret)
 		goto done;
 
+<<<<<<< HEAD
 	port->enabled = true;
+=======
+	port->enabled = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (port->buffer_cb) {
 		/* send buffer headers to videocore */
@@ -1530,7 +1569,11 @@ int vchiq_mmal_port_connect_tunnel(struct vchiq_mmal_instance *instance,
 			pr_err("failed disconnecting src port\n");
 			goto release_unlock;
 		}
+<<<<<<< HEAD
 		src->connected->enabled = false;
+=======
+		src->connected->enabled = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		src->connected = NULL;
 	}
 
@@ -1647,7 +1690,11 @@ int vchiq_mmal_component_init(struct vchiq_mmal_instance *instance,
 	for (idx = 0; idx < VCHIQ_MMAL_MAX_COMPONENTS; idx++) {
 		if (!instance->component[idx].in_use) {
 			component = &instance->component[idx];
+<<<<<<< HEAD
 			component->in_use = true;
+=======
+			component->in_use = 1;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		}
 	}
@@ -1723,7 +1770,11 @@ release_component:
 	destroy_component(instance, component);
 unlock:
 	if (component)
+<<<<<<< HEAD
 		component->in_use = false;
+=======
+		component->in_use = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&instance->vchiq_mutex);
 
 	return ret;
@@ -1746,7 +1797,11 @@ int vchiq_mmal_component_finalise(struct vchiq_mmal_instance *instance,
 
 	ret = destroy_component(instance, component);
 
+<<<<<<< HEAD
 	component->in_use = false;
+=======
+	component->in_use = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_unlock(&instance->vchiq_mutex);
 
@@ -1798,7 +1853,11 @@ int vchiq_mmal_component_disable(struct vchiq_mmal_instance *instance,
 
 	ret = disable_component(instance, component);
 	if (ret == 0)
+<<<<<<< HEAD
 		component->enabled = false;
+=======
+		component->enabled = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_unlock(&instance->vchiq_mutex);
 

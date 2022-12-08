@@ -185,7 +185,11 @@ static int auxiliary_match(struct device *dev, struct device_driver *drv)
 	return !!auxiliary_match_id(auxdrv->id_table, auxdev);
 }
 
+<<<<<<< HEAD
 static int auxiliary_uevent(const struct device *dev, struct kobj_uevent_env *env)
+=======
+static int auxiliary_uevent(struct device *dev, struct kobj_uevent_env *env)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const char *name, *p;
 

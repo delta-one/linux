@@ -212,7 +212,12 @@ static int as5011_configure_chip(struct as5011_device *as5011,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int as5011_probe(struct i2c_client *client)
+=======
+static int as5011_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct as5011_platform_data *plat_data;
 	struct as5011_device *as5011;
@@ -348,7 +353,11 @@ static struct i2c_driver as5011_driver = {
 	.driver = {
 		.name = "as5011",
 	},
+<<<<<<< HEAD
 	.probe_new	= as5011_probe,
+=======
+	.probe		= as5011_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= as5011_remove,
 	.id_table	= as5011_id,
 };

@@ -692,7 +692,11 @@ out_reg_disable:
 	return error;
 }
 
+<<<<<<< HEAD
 static void cpcap_usb_phy_remove(struct platform_device *pdev)
+=======
+static int cpcap_usb_phy_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cpcap_phy_ddata *ddata = platform_get_drvdata(pdev);
 	int error;
@@ -707,11 +711,20 @@ static void cpcap_usb_phy_remove(struct platform_device *pdev)
 	usb_remove_phy(&ddata->phy);
 	cancel_delayed_work_sync(&ddata->detect_work);
 	regulator_disable(ddata->vusb);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver cpcap_usb_phy_driver = {
 	.probe		= cpcap_usb_phy_probe,
+<<<<<<< HEAD
 	.remove_new	= cpcap_usb_phy_remove,
+=======
+	.remove		= cpcap_usb_phy_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= "cpcap-usb-phy",
 		.of_match_table = of_match_ptr(cpcap_usb_phy_id_table),

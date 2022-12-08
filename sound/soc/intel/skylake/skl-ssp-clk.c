@@ -402,13 +402,22 @@ err_unreg_skl_clk:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void skl_clk_dev_remove(struct platform_device *pdev)
+=======
+static int skl_clk_dev_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct skl_clk_data *data;
 
 	data = platform_get_drvdata(pdev);
 	unregister_src_clk(data);
 	unregister_parent_src_clk(data->parent, SKL_MAX_CLK_SRC);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver skl_clk_driver = {
@@ -416,7 +425,11 @@ static struct platform_driver skl_clk_driver = {
 		.name = "skl-ssp-clk",
 	},
 	.probe = skl_clk_dev_probe,
+<<<<<<< HEAD
 	.remove_new = skl_clk_dev_remove,
+=======
+	.remove = skl_clk_dev_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(skl_clk_driver);

@@ -1,9 +1,16 @@
 # SPDX-License-Identifier: GPL-2.0-only
+<<<<<<< HEAD
 all: test vsock_perf
 test: vsock_test vsock_diag_test
 vsock_test: vsock_test.o timeout.o control.o util.o
 vsock_diag_test: vsock_diag_test.o timeout.o control.o util.o
 vsock_perf: vsock_perf.o
+=======
+all: test
+test: vsock_test vsock_diag_test
+vsock_test: vsock_test.o timeout.o control.o util.o
+vsock_diag_test: vsock_diag_test.o timeout.o control.o util.o
+>>>>>>> b7ba80a49124 (Commit)
 
 CFLAGS += -g -O2 -Werror -Wall -I. -I../../include -I../../../usr/include -Wno-pointer-sign -fno-strict-overflow -fno-strict-aliasing -fno-common -MMD -U_FORTIFY_SOURCE -D_GNU_SOURCE
 .PHONY: all test clean

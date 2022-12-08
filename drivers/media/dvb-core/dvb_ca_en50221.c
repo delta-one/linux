@@ -157,7 +157,11 @@ static void dvb_ca_private_free(struct dvb_ca_private *ca)
 {
 	unsigned int i;
 
+<<<<<<< HEAD
 	dvb_device_put(ca->dvbdev);
+=======
+	dvb_free_device(ca->dvbdev);
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < ca->slot_count; i++)
 		vfree(ca->slot_info[i].rx_buffer.data);
 

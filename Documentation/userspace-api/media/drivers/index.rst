@@ -31,12 +31,20 @@ For more details see the file COPYING in the source distribution of Linux.
 	:maxdepth: 5
 	:numbered:
 
+<<<<<<< HEAD
 	aspeed-video
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ccs
 	cx2341x-uapi
 	dw100
 	imx-uapi
 	max2175
+<<<<<<< HEAD
 	omap3isp-uapi
 	st-vgxy61
+=======
+	meye-uapi
+	omap3isp-uapi
+>>>>>>> b7ba80a49124 (Commit)
 	uvcvideo

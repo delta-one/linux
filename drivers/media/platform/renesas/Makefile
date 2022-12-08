@@ -4,7 +4,10 @@
 #
 
 obj-y += rcar-vin/
+<<<<<<< HEAD
 obj-y += rzg2l-cru/
+=======
+>>>>>>> b7ba80a49124 (Commit)
 obj-y += vsp1/
 
 obj-$(CONFIG_VIDEO_RCAR_DRIF) += rcar_drif.o

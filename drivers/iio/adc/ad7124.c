@@ -945,8 +945,11 @@ static int ad7124_probe(struct spi_device *spi)
 
 	info = of_device_get_match_data(&spi->dev);
 	if (!info)
+<<<<<<< HEAD
 		info = (void *)spi_get_device_id(spi)->driver_data;
 	if (!info)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENODEV;
 
 	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
@@ -1023,6 +1026,7 @@ static const struct of_device_id ad7124_of_match[] = {
 };
 MODULE_DEVICE_TABLE(of, ad7124_of_match);
 
+<<<<<<< HEAD
 static const struct spi_device_id ad71124_ids[] = {
 	{ "ad7124-4", (kernel_ulong_t)&ad7124_chip_info_tbl[ID_AD7124_4] },
 	{ "ad7124-8", (kernel_ulong_t)&ad7124_chip_info_tbl[ID_AD7124_8] },
@@ -1030,13 +1034,18 @@ static const struct spi_device_id ad71124_ids[] = {
 };
 MODULE_DEVICE_TABLE(spi, ad71124_ids);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct spi_driver ad71124_driver = {
 	.driver = {
 		.name = "ad7124",
 		.of_match_table = ad7124_of_match,
 	},
 	.probe = ad7124_probe,
+<<<<<<< HEAD
 	.id_table = ad71124_ids,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_spi_driver(ad71124_driver);
 

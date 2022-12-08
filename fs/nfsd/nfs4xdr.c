@@ -770,18 +770,28 @@ nfsd4_decode_cb_sec(struct nfsd4_compoundargs *argp, struct nfsd4_cb_sec *cbs)
 
 static __be32
 nfsd4_decode_access(struct nfsd4_compoundargs *argp,
+<<<<<<< HEAD
 		    union nfsd4_op_u *u)
 {
 	struct nfsd4_access *access = &u->access;
+=======
+		    struct nfsd4_access *access)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	if (xdr_stream_decode_u32(argp->xdr, &access->ac_req_access) < 0)
 		return nfserr_bad_xdr;
 	return nfs_ok;
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_close(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 {
 	struct nfsd4_close *close = &u->close;
+=======
+nfsd4_decode_close(struct nfsd4_compoundargs *argp, struct nfsd4_close *close)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	if (xdr_stream_decode_u32(argp->xdr, &close->cl_seqid) < 0)
 		return nfserr_bad_xdr;
 	return nfsd4_decode_stateid4(argp, &close->cl_stateid);
@@ -789,9 +799,14 @@ nfsd4_decode_close(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_commit(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 {
 	struct nfsd4_commit *commit = &u->commit;
+=======
+nfsd4_decode_commit(struct nfsd4_compoundargs *argp, struct nfsd4_commit *commit)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	if (xdr_stream_decode_u64(argp->xdr, &commit->co_offset) < 0)
 		return nfserr_bad_xdr;
 	if (xdr_stream_decode_u32(argp->xdr, &commit->co_count) < 0)
@@ -801,9 +816,14 @@ nfsd4_decode_commit(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_create(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 {
 	struct nfsd4_create *create = &u->create;
+=======
+nfsd4_decode_create(struct nfsd4_compoundargs *argp, struct nfsd4_create *create)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 *p, status;
 
 	memset(create, 0, sizeof(*create));
@@ -848,25 +868,40 @@ nfsd4_decode_create(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 }
 
 static inline __be32
+<<<<<<< HEAD
 nfsd4_decode_delegreturn(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 {
 	struct nfsd4_delegreturn *dr = &u->delegreturn;
+=======
+nfsd4_decode_delegreturn(struct nfsd4_compoundargs *argp, struct nfsd4_delegreturn *dr)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	return nfsd4_decode_stateid4(argp, &dr->dr_stateid);
 }
 
 static inline __be32
+<<<<<<< HEAD
 nfsd4_decode_getattr(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 {
 	struct nfsd4_getattr *getattr = &u->getattr;
+=======
+nfsd4_decode_getattr(struct nfsd4_compoundargs *argp, struct nfsd4_getattr *getattr)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	memset(getattr, 0, sizeof(*getattr));
 	return nfsd4_decode_bitmap4(argp, getattr->ga_bmval,
 				    ARRAY_SIZE(getattr->ga_bmval));
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_link(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 {
 	struct nfsd4_link *link = &u->link;
+=======
+nfsd4_decode_link(struct nfsd4_compoundargs *argp, struct nfsd4_link *link)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	memset(link, 0, sizeof(*link));
 	return nfsd4_decode_component4(argp, &link->li_name, &link->li_namelen);
 }
@@ -914,9 +949,14 @@ nfsd4_decode_locker4(struct nfsd4_compoundargs *argp, struct nfsd4_lock *lock)
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_lock(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 {
 	struct nfsd4_lock *lock = &u->lock;
+=======
+nfsd4_decode_lock(struct nfsd4_compoundargs *argp, struct nfsd4_lock *lock)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	memset(lock, 0, sizeof(*lock));
 	if (xdr_stream_decode_u32(argp->xdr, &lock->lk_type) < 0)
 		return nfserr_bad_xdr;
@@ -932,9 +972,14 @@ nfsd4_decode_lock(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_lockt(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 {
 	struct nfsd4_lockt *lockt = &u->lockt;
+=======
+nfsd4_decode_lockt(struct nfsd4_compoundargs *argp, struct nfsd4_lockt *lockt)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	memset(lockt, 0, sizeof(*lockt));
 	if (xdr_stream_decode_u32(argp->xdr, &lockt->lt_type) < 0)
 		return nfserr_bad_xdr;
@@ -949,9 +994,14 @@ nfsd4_decode_lockt(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_locku(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 {
 	struct nfsd4_locku *locku = &u->locku;
+=======
+nfsd4_decode_locku(struct nfsd4_compoundargs *argp, struct nfsd4_locku *locku)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 status;
 
 	if (xdr_stream_decode_u32(argp->xdr, &locku->lu_type) < 0)
@@ -972,9 +1022,14 @@ nfsd4_decode_locku(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_lookup(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 {
 	struct nfsd4_lookup *lookup = &u->lookup;
+=======
+nfsd4_decode_lookup(struct nfsd4_compoundargs *argp, struct nfsd4_lookup *lookup)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	return nfsd4_decode_component4(argp, &lookup->lo_name, &lookup->lo_len);
 }
 
@@ -1154,9 +1209,14 @@ nfsd4_decode_open_claim4(struct nfsd4_compoundargs *argp,
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_open(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 {
 	struct nfsd4_open *open = &u->open;
+=======
+nfsd4_decode_open(struct nfsd4_compoundargs *argp, struct nfsd4_open *open)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 status;
 	u32 dummy;
 
@@ -1183,10 +1243,15 @@ nfsd4_decode_open(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_open_confirm(struct nfsd4_compoundargs *argp,
 			  union nfsd4_op_u *u)
 {
 	struct nfsd4_open_confirm *open_conf = &u->open_confirm;
+=======
+nfsd4_decode_open_confirm(struct nfsd4_compoundargs *argp, struct nfsd4_open_confirm *open_conf)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 status;
 
 	if (argp->minorversion >= 1)
@@ -1204,10 +1269,15 @@ nfsd4_decode_open_confirm(struct nfsd4_compoundargs *argp,
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_open_downgrade(struct nfsd4_compoundargs *argp,
 			    union nfsd4_op_u *u)
 {
 	struct nfsd4_open_downgrade *open_down = &u->open_downgrade;
+=======
+nfsd4_decode_open_downgrade(struct nfsd4_compoundargs *argp, struct nfsd4_open_downgrade *open_down)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 status;
 
 	memset(open_down, 0, sizeof(*open_down));
@@ -1225,9 +1295,14 @@ nfsd4_decode_open_downgrade(struct nfsd4_compoundargs *argp,
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_putfh(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 {
 	struct nfsd4_putfh *putfh = &u->putfh;
+=======
+nfsd4_decode_putfh(struct nfsd4_compoundargs *argp, struct nfsd4_putfh *putfh)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 *p;
 
 	if (xdr_stream_decode_u32(argp->xdr, &putfh->pf_fhlen) < 0)
@@ -1246,7 +1321,11 @@ nfsd4_decode_putfh(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_putpubfh(struct nfsd4_compoundargs *argp, union nfsd4_op_u *p)
+=======
+nfsd4_decode_putpubfh(struct nfsd4_compoundargs *argp, void *p)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (argp->minorversion == 0)
 		return nfs_ok;
@@ -1254,9 +1333,14 @@ nfsd4_decode_putpubfh(struct nfsd4_compoundargs *argp, union nfsd4_op_u *p)
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_read(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 {
 	struct nfsd4_read *read = &u->read;
+=======
+nfsd4_decode_read(struct nfsd4_compoundargs *argp, struct nfsd4_read *read)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 status;
 
 	memset(read, 0, sizeof(*read));
@@ -1272,9 +1356,14 @@ nfsd4_decode_read(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_readdir(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 {
 	struct nfsd4_readdir *readdir = &u->readdir;
+=======
+nfsd4_decode_readdir(struct nfsd4_compoundargs *argp, struct nfsd4_readdir *readdir)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 status;
 
 	memset(readdir, 0, sizeof(*readdir));
@@ -1295,17 +1384,27 @@ nfsd4_decode_readdir(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_remove(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 {
 	struct nfsd4_remove *remove = &u->remove;
+=======
+nfsd4_decode_remove(struct nfsd4_compoundargs *argp, struct nfsd4_remove *remove)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	memset(&remove->rm_cinfo, 0, sizeof(remove->rm_cinfo));
 	return nfsd4_decode_component4(argp, &remove->rm_name, &remove->rm_namelen);
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_rename(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 {
 	struct nfsd4_rename *rename = &u->rename;
+=======
+nfsd4_decode_rename(struct nfsd4_compoundargs *argp, struct nfsd4_rename *rename)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 status;
 
 	memset(rename, 0, sizeof(*rename));
@@ -1316,25 +1415,40 @@ nfsd4_decode_rename(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_renew(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 {
 	clientid_t *clientid = &u->renew;
+=======
+nfsd4_decode_renew(struct nfsd4_compoundargs *argp, clientid_t *clientid)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	return nfsd4_decode_clientid4(argp, clientid);
 }
 
 static __be32
 nfsd4_decode_secinfo(struct nfsd4_compoundargs *argp,
+<<<<<<< HEAD
 		     union nfsd4_op_u *u)
 {
 	struct nfsd4_secinfo *secinfo = &u->secinfo;
+=======
+		     struct nfsd4_secinfo *secinfo)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	secinfo->si_exp = NULL;
 	return nfsd4_decode_component4(argp, &secinfo->si_name, &secinfo->si_namelen);
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_setattr(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 {
 	struct nfsd4_setattr *setattr = &u->setattr;
+=======
+nfsd4_decode_setattr(struct nfsd4_compoundargs *argp, struct nfsd4_setattr *setattr)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 status;
 
 	memset(setattr, 0, sizeof(*setattr));
@@ -1348,9 +1462,14 @@ nfsd4_decode_setattr(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_setclientid(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 {
 	struct nfsd4_setclientid *setclientid = &u->setclientid;
+=======
+nfsd4_decode_setclientid(struct nfsd4_compoundargs *argp, struct nfsd4_setclientid *setclientid)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 *p, status;
 
 	memset(setclientid, 0, sizeof(*setclientid));
@@ -1392,10 +1511,15 @@ nfsd4_decode_setclientid(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_setclientid_confirm(struct nfsd4_compoundargs *argp,
 				 union nfsd4_op_u *u)
 {
 	struct nfsd4_setclientid_confirm *scd_c = &u->setclientid_confirm;
+=======
+nfsd4_decode_setclientid_confirm(struct nfsd4_compoundargs *argp, struct nfsd4_setclientid_confirm *scd_c)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 status;
 
 	if (argp->minorversion >= 1)
@@ -1409,9 +1533,14 @@ nfsd4_decode_setclientid_confirm(struct nfsd4_compoundargs *argp,
 
 /* Also used for NVERIFY */
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_verify(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 {
 	struct nfsd4_verify *verify = &u->verify;
+=======
+nfsd4_decode_verify(struct nfsd4_compoundargs *argp, struct nfsd4_verify *verify)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 *p, status;
 
 	memset(verify, 0, sizeof(*verify));
@@ -1437,9 +1566,14 @@ nfsd4_decode_verify(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_write(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 {
 	struct nfsd4_write *write = &u->write;
+=======
+nfsd4_decode_write(struct nfsd4_compoundargs *argp, struct nfsd4_write *write)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 status;
 
 	status = nfsd4_decode_stateid4(argp, &write->wr_stateid);
@@ -1463,10 +1597,15 @@ nfsd4_decode_write(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_release_lockowner(struct nfsd4_compoundargs *argp,
 			       union nfsd4_op_u *u)
 {
 	struct nfsd4_release_lockowner *rlockowner = &u->release_lockowner;
+=======
+nfsd4_decode_release_lockowner(struct nfsd4_compoundargs *argp, struct nfsd4_release_lockowner *rlockowner)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 status;
 
 	if (argp->minorversion >= 1)
@@ -1483,20 +1622,30 @@ nfsd4_decode_release_lockowner(struct nfsd4_compoundargs *argp,
 	return nfs_ok;
 }
 
+<<<<<<< HEAD
 static __be32 nfsd4_decode_backchannel_ctl(struct nfsd4_compoundargs *argp,
 					   union nfsd4_op_u *u)
 {
 	struct nfsd4_backchannel_ctl *bc = &u->backchannel_ctl;
+=======
+static __be32 nfsd4_decode_backchannel_ctl(struct nfsd4_compoundargs *argp, struct nfsd4_backchannel_ctl *bc)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	memset(bc, 0, sizeof(*bc));
 	if (xdr_stream_decode_u32(argp->xdr, &bc->bc_cb_program) < 0)
 		return nfserr_bad_xdr;
 	return nfsd4_decode_cb_sec(argp, &bc->bc_cb_sec);
 }
 
+<<<<<<< HEAD
 static __be32 nfsd4_decode_bind_conn_to_session(struct nfsd4_compoundargs *argp,
 						union nfsd4_op_u *u)
 {
 	struct nfsd4_bind_conn_to_session *bcts = &u->bind_conn_to_session;
+=======
+static __be32 nfsd4_decode_bind_conn_to_session(struct nfsd4_compoundargs *argp, struct nfsd4_bind_conn_to_session *bcts)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	u32 use_conn_in_rdma_mode;
 	__be32 status;
 
@@ -1638,9 +1787,14 @@ nfsd4_decode_nfs_impl_id4(struct nfsd4_compoundargs *argp,
 
 static __be32
 nfsd4_decode_exchange_id(struct nfsd4_compoundargs *argp,
+<<<<<<< HEAD
 			 union nfsd4_op_u *u)
 {
 	struct nfsd4_exchange_id *exid = &u->exchange_id;
+=======
+			 struct nfsd4_exchange_id *exid)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 status;
 
 	memset(exid, 0, sizeof(*exid));
@@ -1692,9 +1846,14 @@ nfsd4_decode_channel_attrs4(struct nfsd4_compoundargs *argp,
 
 static __be32
 nfsd4_decode_create_session(struct nfsd4_compoundargs *argp,
+<<<<<<< HEAD
 			    union nfsd4_op_u *u)
 {
 	struct nfsd4_create_session *sess = &u->create_session;
+=======
+			    struct nfsd4_create_session *sess)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 status;
 
 	memset(sess, 0, sizeof(*sess));
@@ -1718,26 +1877,41 @@ nfsd4_decode_create_session(struct nfsd4_compoundargs *argp,
 
 static __be32
 nfsd4_decode_destroy_session(struct nfsd4_compoundargs *argp,
+<<<<<<< HEAD
 			     union nfsd4_op_u *u)
 {
 	struct nfsd4_destroy_session *destroy_session = &u->destroy_session;
+=======
+			     struct nfsd4_destroy_session *destroy_session)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	return nfsd4_decode_sessionid4(argp, &destroy_session->sessionid);
 }
 
 static __be32
 nfsd4_decode_free_stateid(struct nfsd4_compoundargs *argp,
+<<<<<<< HEAD
 			  union nfsd4_op_u *u)
 {
 	struct nfsd4_free_stateid *free_stateid = &u->free_stateid;
+=======
+			  struct nfsd4_free_stateid *free_stateid)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	return nfsd4_decode_stateid4(argp, &free_stateid->fr_stateid);
 }
 
 #ifdef CONFIG_NFSD_PNFS
 static __be32
 nfsd4_decode_getdeviceinfo(struct nfsd4_compoundargs *argp,
+<<<<<<< HEAD
 		union nfsd4_op_u *u)
 {
 	struct nfsd4_getdeviceinfo *gdev = &u->getdeviceinfo;
+=======
+		struct nfsd4_getdeviceinfo *gdev)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 status;
 
 	memset(gdev, 0, sizeof(*gdev));
@@ -1757,9 +1931,14 @@ nfsd4_decode_getdeviceinfo(struct nfsd4_compoundargs *argp,
 
 static __be32
 nfsd4_decode_layoutcommit(struct nfsd4_compoundargs *argp,
+<<<<<<< HEAD
 			  union nfsd4_op_u *u)
 {
 	struct nfsd4_layoutcommit *lcp = &u->layoutcommit;
+=======
+			  struct nfsd4_layoutcommit *lcp)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 *p, status;
 
 	memset(lcp, 0, sizeof(*lcp));
@@ -1794,9 +1973,14 @@ nfsd4_decode_layoutcommit(struct nfsd4_compoundargs *argp,
 
 static __be32
 nfsd4_decode_layoutget(struct nfsd4_compoundargs *argp,
+<<<<<<< HEAD
 		union nfsd4_op_u *u)
 {
 	struct nfsd4_layoutget *lgp = &u->layoutget;
+=======
+		struct nfsd4_layoutget *lgp)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 status;
 
 	memset(lgp, 0, sizeof(*lgp));
@@ -1823,9 +2007,14 @@ nfsd4_decode_layoutget(struct nfsd4_compoundargs *argp,
 
 static __be32
 nfsd4_decode_layoutreturn(struct nfsd4_compoundargs *argp,
+<<<<<<< HEAD
 		union nfsd4_op_u *u)
 {
 	struct nfsd4_layoutreturn *lrp = &u->layoutreturn;
+=======
+		struct nfsd4_layoutreturn *lrp)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	memset(lrp, 0, sizeof(*lrp));
 	if (xdr_stream_decode_bool(argp->xdr, &lrp->lr_reclaim) < 0)
 		return nfserr_bad_xdr;
@@ -1838,9 +2027,14 @@ nfsd4_decode_layoutreturn(struct nfsd4_compoundargs *argp,
 #endif /* CONFIG_NFSD_PNFS */
 
 static __be32 nfsd4_decode_secinfo_no_name(struct nfsd4_compoundargs *argp,
+<<<<<<< HEAD
 					   union nfsd4_op_u *u)
 {
 	struct nfsd4_secinfo_no_name *sin = &u->secinfo_no_name;
+=======
+					   struct nfsd4_secinfo_no_name *sin)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	if (xdr_stream_decode_u32(argp->xdr, &sin->sin_style) < 0)
 		return nfserr_bad_xdr;
 
@@ -1850,9 +2044,14 @@ static __be32 nfsd4_decode_secinfo_no_name(struct nfsd4_compoundargs *argp,
 
 static __be32
 nfsd4_decode_sequence(struct nfsd4_compoundargs *argp,
+<<<<<<< HEAD
 		      union nfsd4_op_u *u)
 {
 	struct nfsd4_sequence *seq = &u->sequence;
+=======
+		      struct nfsd4_sequence *seq)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 *p, status;
 
 	status = nfsd4_decode_sessionid4(argp, &seq->sessionid);
@@ -1871,10 +2070,15 @@ nfsd4_decode_sequence(struct nfsd4_compoundargs *argp,
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_test_stateid(struct nfsd4_compoundargs *argp,
 			  union nfsd4_op_u *u)
 {
 	struct nfsd4_test_stateid *test_stateid = &u->test_stateid;
+=======
+nfsd4_decode_test_stateid(struct nfsd4_compoundargs *argp, struct nfsd4_test_stateid *test_stateid)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct nfsd4_test_stateid_id *stateid;
 	__be32 status;
 	u32 i;
@@ -1899,16 +2103,26 @@ nfsd4_decode_test_stateid(struct nfsd4_compoundargs *argp,
 }
 
 static __be32 nfsd4_decode_destroy_clientid(struct nfsd4_compoundargs *argp,
+<<<<<<< HEAD
 					    union nfsd4_op_u *u)
 {
 	struct nfsd4_destroy_clientid *dc = &u->destroy_clientid;
+=======
+					    struct nfsd4_destroy_clientid *dc)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	return nfsd4_decode_clientid4(argp, &dc->clientid);
 }
 
 static __be32 nfsd4_decode_reclaim_complete(struct nfsd4_compoundargs *argp,
+<<<<<<< HEAD
 					    union nfsd4_op_u *u)
 {
 	struct nfsd4_reclaim_complete *rc = &u->reclaim_complete;
+=======
+					    struct nfsd4_reclaim_complete *rc)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	if (xdr_stream_decode_bool(argp->xdr, &rc->rca_one_fs) < 0)
 		return nfserr_bad_xdr;
 	return nfs_ok;
@@ -1916,9 +2130,14 @@ static __be32 nfsd4_decode_reclaim_complete(struct nfsd4_compoundargs *argp,
 
 static __be32
 nfsd4_decode_fallocate(struct nfsd4_compoundargs *argp,
+<<<<<<< HEAD
 		       union nfsd4_op_u *u)
 {
 	struct nfsd4_fallocate *fallocate = &u->allocate;
+=======
+		       struct nfsd4_fallocate *fallocate)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 status;
 
 	status = nfsd4_decode_stateid4(argp, &fallocate->falloc_stateid);
@@ -1974,9 +2193,14 @@ static __be32 nfsd4_decode_nl4_server(struct nfsd4_compoundargs *argp,
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_copy(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 {
 	struct nfsd4_copy *copy = &u->copy;
+=======
+nfsd4_decode_copy(struct nfsd4_compoundargs *argp, struct nfsd4_copy *copy)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	u32 consecutive, i, count, sync;
 	struct nl4_server *ns_dummy;
 	__be32 status;
@@ -2033,9 +2257,14 @@ nfsd4_decode_copy(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 
 static __be32
 nfsd4_decode_copy_notify(struct nfsd4_compoundargs *argp,
+<<<<<<< HEAD
 			 union nfsd4_op_u *u)
 {
 	struct nfsd4_copy_notify *cn = &u->copy_notify;
+=======
+			 struct nfsd4_copy_notify *cn)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 status;
 
 	memset(cn, 0, sizeof(*cn));
@@ -2054,18 +2283,28 @@ nfsd4_decode_copy_notify(struct nfsd4_compoundargs *argp,
 
 static __be32
 nfsd4_decode_offload_status(struct nfsd4_compoundargs *argp,
+<<<<<<< HEAD
 			    union nfsd4_op_u *u)
 {
 	struct nfsd4_offload_status *os = &u->offload_status;
+=======
+			    struct nfsd4_offload_status *os)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	os->count = 0;
 	os->status = 0;
 	return nfsd4_decode_stateid4(argp, &os->stateid);
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_seek(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 {
 	struct nfsd4_seek *seek = &u->seek;
+=======
+nfsd4_decode_seek(struct nfsd4_compoundargs *argp, struct nfsd4_seek *seek)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 status;
 
 	status = nfsd4_decode_stateid4(argp, &seek->seek_stateid);
@@ -2082,9 +2321,14 @@ nfsd4_decode_seek(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_clone(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
 {
 	struct nfsd4_clone *clone = &u->clone;
+=======
+nfsd4_decode_clone(struct nfsd4_compoundargs *argp, struct nfsd4_clone *clone)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 status;
 
 	status = nfsd4_decode_stateid4(argp, &clone->cl_src_stateid);
@@ -2209,9 +2453,14 @@ nfsd4_decode_xattr_name(struct nfsd4_compoundargs *argp, char **namep)
  */
 static __be32
 nfsd4_decode_getxattr(struct nfsd4_compoundargs *argp,
+<<<<<<< HEAD
 		      union nfsd4_op_u *u)
 {
 	struct nfsd4_getxattr *getxattr = &u->getxattr;
+=======
+		      struct nfsd4_getxattr *getxattr)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 status;
 	u32 maxcount;
 
@@ -2229,9 +2478,14 @@ nfsd4_decode_getxattr(struct nfsd4_compoundargs *argp,
 
 static __be32
 nfsd4_decode_setxattr(struct nfsd4_compoundargs *argp,
+<<<<<<< HEAD
 		      union nfsd4_op_u *u)
 {
 	struct nfsd4_setxattr *setxattr = &u->setxattr;
+=======
+		      struct nfsd4_setxattr *setxattr)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	u32 flags, maxcount, size;
 	__be32 status;
 
@@ -2271,9 +2525,14 @@ nfsd4_decode_setxattr(struct nfsd4_compoundargs *argp,
 
 static __be32
 nfsd4_decode_listxattrs(struct nfsd4_compoundargs *argp,
+<<<<<<< HEAD
 			union nfsd4_op_u *u)
 {
 	struct nfsd4_listxattrs *listxattrs = &u->listxattrs;
+=======
+			struct nfsd4_listxattrs *listxattrs)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	u32 maxcount;
 
 	memset(listxattrs, 0, sizeof(*listxattrs));
@@ -2303,25 +2562,39 @@ nfsd4_decode_listxattrs(struct nfsd4_compoundargs *argp,
 
 static __be32
 nfsd4_decode_removexattr(struct nfsd4_compoundargs *argp,
+<<<<<<< HEAD
 			 union nfsd4_op_u *u)
 {
 	struct nfsd4_removexattr *removexattr = &u->removexattr;
+=======
+			 struct nfsd4_removexattr *removexattr)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	memset(removexattr, 0, sizeof(*removexattr));
 	return nfsd4_decode_xattr_name(argp, &removexattr->rmxa_name);
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_noop(struct nfsd4_compoundargs *argp, union nfsd4_op_u *p)
+=======
+nfsd4_decode_noop(struct nfsd4_compoundargs *argp, void *p)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return nfs_ok;
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_decode_notsupp(struct nfsd4_compoundargs *argp, union nfsd4_op_u *p)
+=======
+nfsd4_decode_notsupp(struct nfsd4_compoundargs *argp, void *p)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return nfserr_notsupp;
 }
 
+<<<<<<< HEAD
 typedef __be32(*nfsd4_dec)(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u);
 
 static const nfsd4_dec nfsd4_dec_ops[] = {
@@ -2411,6 +2684,97 @@ static const nfsd4_dec nfsd4_dec_ops[] = {
 	[OP_SETXATTR]		= nfsd4_decode_setxattr,
 	[OP_LISTXATTRS]		= nfsd4_decode_listxattrs,
 	[OP_REMOVEXATTR]	= nfsd4_decode_removexattr,
+=======
+typedef __be32(*nfsd4_dec)(struct nfsd4_compoundargs *argp, void *);
+
+static const nfsd4_dec nfsd4_dec_ops[] = {
+	[OP_ACCESS]		= (nfsd4_dec)nfsd4_decode_access,
+	[OP_CLOSE]		= (nfsd4_dec)nfsd4_decode_close,
+	[OP_COMMIT]		= (nfsd4_dec)nfsd4_decode_commit,
+	[OP_CREATE]		= (nfsd4_dec)nfsd4_decode_create,
+	[OP_DELEGPURGE]		= (nfsd4_dec)nfsd4_decode_notsupp,
+	[OP_DELEGRETURN]	= (nfsd4_dec)nfsd4_decode_delegreturn,
+	[OP_GETATTR]		= (nfsd4_dec)nfsd4_decode_getattr,
+	[OP_GETFH]		= (nfsd4_dec)nfsd4_decode_noop,
+	[OP_LINK]		= (nfsd4_dec)nfsd4_decode_link,
+	[OP_LOCK]		= (nfsd4_dec)nfsd4_decode_lock,
+	[OP_LOCKT]		= (nfsd4_dec)nfsd4_decode_lockt,
+	[OP_LOCKU]		= (nfsd4_dec)nfsd4_decode_locku,
+	[OP_LOOKUP]		= (nfsd4_dec)nfsd4_decode_lookup,
+	[OP_LOOKUPP]		= (nfsd4_dec)nfsd4_decode_noop,
+	[OP_NVERIFY]		= (nfsd4_dec)nfsd4_decode_verify,
+	[OP_OPEN]		= (nfsd4_dec)nfsd4_decode_open,
+	[OP_OPENATTR]		= (nfsd4_dec)nfsd4_decode_notsupp,
+	[OP_OPEN_CONFIRM]	= (nfsd4_dec)nfsd4_decode_open_confirm,
+	[OP_OPEN_DOWNGRADE]	= (nfsd4_dec)nfsd4_decode_open_downgrade,
+	[OP_PUTFH]		= (nfsd4_dec)nfsd4_decode_putfh,
+	[OP_PUTPUBFH]		= (nfsd4_dec)nfsd4_decode_putpubfh,
+	[OP_PUTROOTFH]		= (nfsd4_dec)nfsd4_decode_noop,
+	[OP_READ]		= (nfsd4_dec)nfsd4_decode_read,
+	[OP_READDIR]		= (nfsd4_dec)nfsd4_decode_readdir,
+	[OP_READLINK]		= (nfsd4_dec)nfsd4_decode_noop,
+	[OP_REMOVE]		= (nfsd4_dec)nfsd4_decode_remove,
+	[OP_RENAME]		= (nfsd4_dec)nfsd4_decode_rename,
+	[OP_RENEW]		= (nfsd4_dec)nfsd4_decode_renew,
+	[OP_RESTOREFH]		= (nfsd4_dec)nfsd4_decode_noop,
+	[OP_SAVEFH]		= (nfsd4_dec)nfsd4_decode_noop,
+	[OP_SECINFO]		= (nfsd4_dec)nfsd4_decode_secinfo,
+	[OP_SETATTR]		= (nfsd4_dec)nfsd4_decode_setattr,
+	[OP_SETCLIENTID]	= (nfsd4_dec)nfsd4_decode_setclientid,
+	[OP_SETCLIENTID_CONFIRM] = (nfsd4_dec)nfsd4_decode_setclientid_confirm,
+	[OP_VERIFY]		= (nfsd4_dec)nfsd4_decode_verify,
+	[OP_WRITE]		= (nfsd4_dec)nfsd4_decode_write,
+	[OP_RELEASE_LOCKOWNER]	= (nfsd4_dec)nfsd4_decode_release_lockowner,
+
+	/* new operations for NFSv4.1 */
+	[OP_BACKCHANNEL_CTL]	= (nfsd4_dec)nfsd4_decode_backchannel_ctl,
+	[OP_BIND_CONN_TO_SESSION]= (nfsd4_dec)nfsd4_decode_bind_conn_to_session,
+	[OP_EXCHANGE_ID]	= (nfsd4_dec)nfsd4_decode_exchange_id,
+	[OP_CREATE_SESSION]	= (nfsd4_dec)nfsd4_decode_create_session,
+	[OP_DESTROY_SESSION]	= (nfsd4_dec)nfsd4_decode_destroy_session,
+	[OP_FREE_STATEID]	= (nfsd4_dec)nfsd4_decode_free_stateid,
+	[OP_GET_DIR_DELEGATION]	= (nfsd4_dec)nfsd4_decode_notsupp,
+#ifdef CONFIG_NFSD_PNFS
+	[OP_GETDEVICEINFO]	= (nfsd4_dec)nfsd4_decode_getdeviceinfo,
+	[OP_GETDEVICELIST]	= (nfsd4_dec)nfsd4_decode_notsupp,
+	[OP_LAYOUTCOMMIT]	= (nfsd4_dec)nfsd4_decode_layoutcommit,
+	[OP_LAYOUTGET]		= (nfsd4_dec)nfsd4_decode_layoutget,
+	[OP_LAYOUTRETURN]	= (nfsd4_dec)nfsd4_decode_layoutreturn,
+#else
+	[OP_GETDEVICEINFO]	= (nfsd4_dec)nfsd4_decode_notsupp,
+	[OP_GETDEVICELIST]	= (nfsd4_dec)nfsd4_decode_notsupp,
+	[OP_LAYOUTCOMMIT]	= (nfsd4_dec)nfsd4_decode_notsupp,
+	[OP_LAYOUTGET]		= (nfsd4_dec)nfsd4_decode_notsupp,
+	[OP_LAYOUTRETURN]	= (nfsd4_dec)nfsd4_decode_notsupp,
+#endif
+	[OP_SECINFO_NO_NAME]	= (nfsd4_dec)nfsd4_decode_secinfo_no_name,
+	[OP_SEQUENCE]		= (nfsd4_dec)nfsd4_decode_sequence,
+	[OP_SET_SSV]		= (nfsd4_dec)nfsd4_decode_notsupp,
+	[OP_TEST_STATEID]	= (nfsd4_dec)nfsd4_decode_test_stateid,
+	[OP_WANT_DELEGATION]	= (nfsd4_dec)nfsd4_decode_notsupp,
+	[OP_DESTROY_CLIENTID]	= (nfsd4_dec)nfsd4_decode_destroy_clientid,
+	[OP_RECLAIM_COMPLETE]	= (nfsd4_dec)nfsd4_decode_reclaim_complete,
+
+	/* new operations for NFSv4.2 */
+	[OP_ALLOCATE]		= (nfsd4_dec)nfsd4_decode_fallocate,
+	[OP_COPY]		= (nfsd4_dec)nfsd4_decode_copy,
+	[OP_COPY_NOTIFY]	= (nfsd4_dec)nfsd4_decode_copy_notify,
+	[OP_DEALLOCATE]		= (nfsd4_dec)nfsd4_decode_fallocate,
+	[OP_IO_ADVISE]		= (nfsd4_dec)nfsd4_decode_notsupp,
+	[OP_LAYOUTERROR]	= (nfsd4_dec)nfsd4_decode_notsupp,
+	[OP_LAYOUTSTATS]	= (nfsd4_dec)nfsd4_decode_notsupp,
+	[OP_OFFLOAD_CANCEL]	= (nfsd4_dec)nfsd4_decode_offload_status,
+	[OP_OFFLOAD_STATUS]	= (nfsd4_dec)nfsd4_decode_offload_status,
+	[OP_READ_PLUS]		= (nfsd4_dec)nfsd4_decode_read,
+	[OP_SEEK]		= (nfsd4_dec)nfsd4_decode_seek,
+	[OP_WRITE_SAME]		= (nfsd4_dec)nfsd4_decode_notsupp,
+	[OP_CLONE]		= (nfsd4_dec)nfsd4_decode_clone,
+	/* RFC 8276 extended atributes operations */
+	[OP_GETXATTR]		= (nfsd4_dec)nfsd4_decode_getxattr,
+	[OP_SETXATTR]		= (nfsd4_dec)nfsd4_decode_setxattr,
+	[OP_LISTXATTRS]		= (nfsd4_dec)nfsd4_decode_listxattrs,
+	[OP_REMOVEXATTR]	= (nfsd4_dec)nfsd4_decode_removexattr,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline bool
@@ -2523,7 +2887,11 @@ nfsd4_decode_compound(struct nfsd4_compoundargs *argp)
 	argp->rqstp->rq_cachetype = cachethis ? RC_REPLBUFF : RC_NOCACHE;
 
 	if (readcount > 1 || max_reply > PAGE_SIZE - auth_slack)
+<<<<<<< HEAD
 		clear_bit(RQ_SPLICE_OK, &argp->rqstp->rq_flags);
+=======
+		__clear_bit(RQ_SPLICE_OK, &argp->rqstp->rq_flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return true;
 }
@@ -2965,9 +3333,13 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
 			goto out;
 	}
 
+<<<<<<< HEAD
 	err = vfs_getattr(&path, &stat,
 			  STATX_BASIC_STATS | STATX_BTIME | STATX_CHANGE_COOKIE,
 			  AT_STATX_SYNC_AS_STAT);
+=======
+	err = vfs_getattr(&path, &stat, STATX_BASIC_STATS, AT_STATX_SYNC_AS_STAT);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto out_nfserr;
 	if (!(stat.result_mask & STATX_BTIME))
@@ -3444,7 +3816,12 @@ out_acl:
 		p = xdr_reserve_space(xdr, 4);
 		if (!p)
 			goto out_resource;
+<<<<<<< HEAD
 		err = xattr_supports_user_prefix(d_inode(dentry));
+=======
+		err = xattr_supported_namespace(d_inode(dentry),
+						XATTR_USER_PREFIX);
+>>>>>>> b7ba80a49124 (Commit)
 		*p++ = cpu_to_be32(err == 0);
 	}
 
@@ -3630,6 +4007,7 @@ nfsd4_encode_dirent(void *ccdv, const char *name, int namlen,
 	case nfserr_noent:
 		xdr_truncate_encode(xdr, start_offset);
 		goto skip_entry;
+<<<<<<< HEAD
 	case nfserr_jukebox:
 		/*
 		 * The pseudoroot should only display dentries that lead to
@@ -3641,6 +4019,8 @@ nfsd4_encode_dirent(void *ccdv, const char *name, int namlen,
 		if (cd->rd_fhp->fh_export->ex_flags & NFSEXP_V4ROOT)
 			goto fail;
 		fallthrough;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		/*
 		 * If the client requested the RDATTR_ERROR attribute,
@@ -3701,10 +4081,15 @@ nfsd4_encode_stateid(struct xdr_stream *xdr, stateid_t *sid)
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_encode_access(struct nfsd4_compoundres *resp, __be32 nfserr,
 		    union nfsd4_op_u *u)
 {
 	struct nfsd4_access *access = &u->access;
+=======
+nfsd4_encode_access(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_access *access)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	__be32 *p;
 
@@ -3716,10 +4101,15 @@ nfsd4_encode_access(struct nfsd4_compoundres *resp, __be32 nfserr,
 	return 0;
 }
 
+<<<<<<< HEAD
 static __be32 nfsd4_encode_bind_conn_to_session(struct nfsd4_compoundres *resp, __be32 nfserr,
 						union nfsd4_op_u *u)
 {
 	struct nfsd4_bind_conn_to_session *bcts = &u->bind_conn_to_session;
+=======
+static __be32 nfsd4_encode_bind_conn_to_session(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_bind_conn_to_session *bcts)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	__be32 *p;
 
@@ -3735,10 +4125,15 @@ static __be32 nfsd4_encode_bind_conn_to_session(struct nfsd4_compoundres *resp, 
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_encode_close(struct nfsd4_compoundres *resp, __be32 nfserr,
 		   union nfsd4_op_u *u)
 {
 	struct nfsd4_close *close = &u->close;
+=======
+nfsd4_encode_close(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_close *close)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 
 	return nfsd4_encode_stateid(xdr, &close->cl_stateid);
@@ -3746,10 +4141,15 @@ nfsd4_encode_close(struct nfsd4_compoundres *resp, __be32 nfserr,
 
 
 static __be32
+<<<<<<< HEAD
 nfsd4_encode_commit(struct nfsd4_compoundres *resp, __be32 nfserr,
 		    union nfsd4_op_u *u)
 {
 	struct nfsd4_commit *commit = &u->commit;
+=======
+nfsd4_encode_commit(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_commit *commit)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	__be32 *p;
 
@@ -3762,10 +4162,15 @@ nfsd4_encode_commit(struct nfsd4_compoundres *resp, __be32 nfserr,
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_encode_create(struct nfsd4_compoundres *resp, __be32 nfserr,
 		    union nfsd4_op_u *u)
 {
 	struct nfsd4_create *create = &u->create;
+=======
+nfsd4_encode_create(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_create *create)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	__be32 *p;
 
@@ -3778,10 +4183,15 @@ nfsd4_encode_create(struct nfsd4_compoundres *resp, __be32 nfserr,
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_encode_getattr(struct nfsd4_compoundres *resp, __be32 nfserr,
 		     union nfsd4_op_u *u)
 {
 	struct nfsd4_getattr *getattr = &u->getattr;
+=======
+nfsd4_encode_getattr(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_getattr *getattr)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct svc_fh *fhp = getattr->ga_fhp;
 	struct xdr_stream *xdr = resp->xdr;
 
@@ -3790,10 +4200,15 @@ nfsd4_encode_getattr(struct nfsd4_compoundres *resp, __be32 nfserr,
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_encode_getfh(struct nfsd4_compoundres *resp, __be32 nfserr,
 		   union nfsd4_op_u *u)
 {
 	struct svc_fh **fhpp = &u->getfh;
+=======
+nfsd4_encode_getfh(struct nfsd4_compoundres *resp, __be32 nfserr, struct svc_fh **fhpp)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	struct svc_fh *fhp = *fhpp;
 	unsigned int len;
@@ -3847,10 +4262,15 @@ again:
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_encode_lock(struct nfsd4_compoundres *resp, __be32 nfserr,
 		  union nfsd4_op_u *u)
 {
 	struct nfsd4_lock *lock = &u->lock;
+=======
+nfsd4_encode_lock(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_lock *lock)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 
 	if (!nfserr)
@@ -3862,10 +4282,15 @@ nfsd4_encode_lock(struct nfsd4_compoundres *resp, __be32 nfserr,
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_encode_lockt(struct nfsd4_compoundres *resp, __be32 nfserr,
 		   union nfsd4_op_u *u)
 {
 	struct nfsd4_lockt *lockt = &u->lockt;
+=======
+nfsd4_encode_lockt(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_lockt *lockt)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 
 	if (nfserr == nfserr_denied)
@@ -3874,10 +4299,15 @@ nfsd4_encode_lockt(struct nfsd4_compoundres *resp, __be32 nfserr,
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_encode_locku(struct nfsd4_compoundres *resp, __be32 nfserr,
 		   union nfsd4_op_u *u)
 {
 	struct nfsd4_locku *locku = &u->locku;
+=======
+nfsd4_encode_locku(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_locku *locku)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 
 	return nfsd4_encode_stateid(xdr, &locku->lu_stateid);
@@ -3885,10 +4315,15 @@ nfsd4_encode_locku(struct nfsd4_compoundres *resp, __be32 nfserr,
 
 
 static __be32
+<<<<<<< HEAD
 nfsd4_encode_link(struct nfsd4_compoundres *resp, __be32 nfserr,
 		  union nfsd4_op_u *u)
 {
 	struct nfsd4_link *link = &u->link;
+=======
+nfsd4_encode_link(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_link *link)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	__be32 *p;
 
@@ -3901,10 +4336,15 @@ nfsd4_encode_link(struct nfsd4_compoundres *resp, __be32 nfserr,
 
 
 static __be32
+<<<<<<< HEAD
 nfsd4_encode_open(struct nfsd4_compoundres *resp, __be32 nfserr,
 		  union nfsd4_op_u *u)
 {
 	struct nfsd4_open *open = &u->open;
+=======
+nfsd4_encode_open(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_open *open)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	__be32 *p;
 
@@ -3997,20 +4437,30 @@ nfsd4_encode_open(struct nfsd4_compoundres *resp, __be32 nfserr,
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_encode_open_confirm(struct nfsd4_compoundres *resp, __be32 nfserr,
 			  union nfsd4_op_u *u)
 {
 	struct nfsd4_open_confirm *oc = &u->open_confirm;
+=======
+nfsd4_encode_open_confirm(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_open_confirm *oc)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 
 	return nfsd4_encode_stateid(xdr, &oc->oc_resp_stateid);
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_encode_open_downgrade(struct nfsd4_compoundres *resp, __be32 nfserr,
 			    union nfsd4_op_u *u)
 {
 	struct nfsd4_open_downgrade *od = &u->open_downgrade;
+=======
+nfsd4_encode_open_downgrade(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_open_downgrade *od)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 
 	return nfsd4_encode_stateid(xdr, &od->od_stateid);
@@ -4109,9 +4559,14 @@ static __be32 nfsd4_encode_readv(struct nfsd4_compoundres *resp,
 
 static __be32
 nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
+<<<<<<< HEAD
 		  union nfsd4_op_u *u)
 {
 	struct nfsd4_read *read = &u->read;
+=======
+		  struct nfsd4_read *read)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	bool splice_ok = test_bit(RQ_SPLICE_OK, &resp->rqstp->rq_flags);
 	unsigned long maxcount;
 	struct xdr_stream *xdr = resp->xdr;
@@ -4152,10 +4607,15 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_encode_readlink(struct nfsd4_compoundres *resp, __be32 nfserr,
 		      union nfsd4_op_u *u)
 {
 	struct nfsd4_readlink *readlink = &u->readlink;
+=======
+nfsd4_encode_readlink(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_readlink *readlink)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 *p, *maxcount_p, zero = xdr_zero;
 	struct xdr_stream *xdr = resp->xdr;
 	int length_offset = xdr->buf->len;
@@ -4199,10 +4659,15 @@ out_err:
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_encode_readdir(struct nfsd4_compoundres *resp, __be32 nfserr,
 		     union nfsd4_op_u *u)
 {
 	struct nfsd4_readdir *readdir = &u->readdir;
+=======
+nfsd4_encode_readdir(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_readdir *readdir)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	int maxcount;
 	int bytes_left;
 	loff_t offset;
@@ -4292,10 +4757,15 @@ err_no_verf:
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_encode_remove(struct nfsd4_compoundres *resp, __be32 nfserr,
 		    union nfsd4_op_u *u)
 {
 	struct nfsd4_remove *remove = &u->remove;
+=======
+nfsd4_encode_remove(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_remove *remove)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	__be32 *p;
 
@@ -4307,10 +4777,15 @@ nfsd4_encode_remove(struct nfsd4_compoundres *resp, __be32 nfserr,
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_encode_rename(struct nfsd4_compoundres *resp, __be32 nfserr,
 		    union nfsd4_op_u *u)
 {
 	struct nfsd4_rename *rename = &u->rename;
+=======
+nfsd4_encode_rename(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_rename *rename)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	__be32 *p;
 
@@ -4392,9 +4867,14 @@ nfsd4_do_encode_secinfo(struct xdr_stream *xdr, struct svc_export *exp)
 
 static __be32
 nfsd4_encode_secinfo(struct nfsd4_compoundres *resp, __be32 nfserr,
+<<<<<<< HEAD
 		     union nfsd4_op_u *u)
 {
 	struct nfsd4_secinfo *secinfo = &u->secinfo;
+=======
+		     struct nfsd4_secinfo *secinfo)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 
 	return nfsd4_do_encode_secinfo(xdr, secinfo->si_exp);
@@ -4402,9 +4882,14 @@ nfsd4_encode_secinfo(struct nfsd4_compoundres *resp, __be32 nfserr,
 
 static __be32
 nfsd4_encode_secinfo_no_name(struct nfsd4_compoundres *resp, __be32 nfserr,
+<<<<<<< HEAD
 		     union nfsd4_op_u *u)
 {
 	struct nfsd4_secinfo_no_name *secinfo = &u->secinfo_no_name;
+=======
+		     struct nfsd4_secinfo_no_name *secinfo)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 
 	return nfsd4_do_encode_secinfo(xdr, secinfo->sin_exp);
@@ -4415,10 +4900,15 @@ nfsd4_encode_secinfo_no_name(struct nfsd4_compoundres *resp, __be32 nfserr,
  * regardless of the error status.
  */
 static __be32
+<<<<<<< HEAD
 nfsd4_encode_setattr(struct nfsd4_compoundres *resp, __be32 nfserr,
 		     union nfsd4_op_u *u)
 {
 	struct nfsd4_setattr *setattr = &u->setattr;
+=======
+nfsd4_encode_setattr(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_setattr *setattr)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	__be32 *p;
 
@@ -4441,10 +4931,15 @@ nfsd4_encode_setattr(struct nfsd4_compoundres *resp, __be32 nfserr,
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_encode_setclientid(struct nfsd4_compoundres *resp, __be32 nfserr,
 			 union nfsd4_op_u *u)
 {
 	struct nfsd4_setclientid *scd = &u->setclientid;
+=======
+nfsd4_encode_setclientid(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_setclientid *scd)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	__be32 *p;
 
@@ -4467,10 +4962,15 @@ nfsd4_encode_setclientid(struct nfsd4_compoundres *resp, __be32 nfserr,
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_encode_write(struct nfsd4_compoundres *resp, __be32 nfserr,
 		   union nfsd4_op_u *u)
 {
 	struct nfsd4_write *write = &u->write;
+=======
+nfsd4_encode_write(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_write *write)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	__be32 *p;
 
@@ -4486,9 +4986,14 @@ nfsd4_encode_write(struct nfsd4_compoundres *resp, __be32 nfserr,
 
 static __be32
 nfsd4_encode_exchange_id(struct nfsd4_compoundres *resp, __be32 nfserr,
+<<<<<<< HEAD
 			 union nfsd4_op_u *u)
 {
 	struct nfsd4_exchange_id *exid = &u->exchange_id;
+=======
+			 struct nfsd4_exchange_id *exid)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	__be32 *p;
 	char *major_id;
@@ -4565,9 +5070,14 @@ nfsd4_encode_exchange_id(struct nfsd4_compoundres *resp, __be32 nfserr,
 
 static __be32
 nfsd4_encode_create_session(struct nfsd4_compoundres *resp, __be32 nfserr,
+<<<<<<< HEAD
 			    union nfsd4_op_u *u)
 {
 	struct nfsd4_create_session *sess = &u->create_session;
+=======
+			    struct nfsd4_create_session *sess)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	__be32 *p;
 
@@ -4619,9 +5129,14 @@ nfsd4_encode_create_session(struct nfsd4_compoundres *resp, __be32 nfserr,
 
 static __be32
 nfsd4_encode_sequence(struct nfsd4_compoundres *resp, __be32 nfserr,
+<<<<<<< HEAD
 		      union nfsd4_op_u *u)
 {
 	struct nfsd4_sequence *seq = &u->sequence;
+=======
+		      struct nfsd4_sequence *seq)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	__be32 *p;
 
@@ -4643,9 +5158,14 @@ nfsd4_encode_sequence(struct nfsd4_compoundres *resp, __be32 nfserr,
 
 static __be32
 nfsd4_encode_test_stateid(struct nfsd4_compoundres *resp, __be32 nfserr,
+<<<<<<< HEAD
 			  union nfsd4_op_u *u)
 {
 	struct nfsd4_test_stateid *test_stateid = &u->test_stateid;
+=======
+			  struct nfsd4_test_stateid *test_stateid)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	struct nfsd4_test_stateid_id *stateid, *next;
 	__be32 *p;
@@ -4665,9 +5185,14 @@ nfsd4_encode_test_stateid(struct nfsd4_compoundres *resp, __be32 nfserr,
 #ifdef CONFIG_NFSD_PNFS
 static __be32
 nfsd4_encode_getdeviceinfo(struct nfsd4_compoundres *resp, __be32 nfserr,
+<<<<<<< HEAD
 		union nfsd4_op_u *u)
 {
 	struct nfsd4_getdeviceinfo *gdev = &u->getdeviceinfo;
+=======
+		struct nfsd4_getdeviceinfo *gdev)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	const struct nfsd4_layout_ops *ops;
 	u32 starting_len = xdr->buf->len, needed_len;
@@ -4722,9 +5247,14 @@ toosmall:
 
 static __be32
 nfsd4_encode_layoutget(struct nfsd4_compoundres *resp, __be32 nfserr,
+<<<<<<< HEAD
 		union nfsd4_op_u *u)
 {
 	struct nfsd4_layoutget *lgp = &u->layoutget;
+=======
+		struct nfsd4_layoutget *lgp)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	const struct nfsd4_layout_ops *ops;
 	__be32 *p;
@@ -4750,9 +5280,14 @@ nfsd4_encode_layoutget(struct nfsd4_compoundres *resp, __be32 nfserr,
 
 static __be32
 nfsd4_encode_layoutcommit(struct nfsd4_compoundres *resp, __be32 nfserr,
+<<<<<<< HEAD
 			  union nfsd4_op_u *u)
 {
 	struct nfsd4_layoutcommit *lcp = &u->layoutcommit;
+=======
+			  struct nfsd4_layoutcommit *lcp)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	__be32 *p;
 
@@ -4772,9 +5307,14 @@ nfsd4_encode_layoutcommit(struct nfsd4_compoundres *resp, __be32 nfserr,
 
 static __be32
 nfsd4_encode_layoutreturn(struct nfsd4_compoundres *resp, __be32 nfserr,
+<<<<<<< HEAD
 		union nfsd4_op_u *u)
 {
 	struct nfsd4_layoutreturn *lrp = &u->layoutreturn;
+=======
+		struct nfsd4_layoutreturn *lrp)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	__be32 *p;
 
@@ -4859,9 +5399,14 @@ nfsd42_encode_nl4_server(struct nfsd4_compoundres *resp, struct nl4_server *ns)
 
 static __be32
 nfsd4_encode_copy(struct nfsd4_compoundres *resp, __be32 nfserr,
+<<<<<<< HEAD
 		  union nfsd4_op_u *u)
 {
 	struct nfsd4_copy *copy = &u->copy;
+=======
+		  struct nfsd4_copy *copy)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 *p;
 
 	nfserr = nfsd42_encode_write_res(resp, &copy->cp_res,
@@ -4877,9 +5422,14 @@ nfsd4_encode_copy(struct nfsd4_compoundres *resp, __be32 nfserr,
 
 static __be32
 nfsd4_encode_offload_status(struct nfsd4_compoundres *resp, __be32 nfserr,
+<<<<<<< HEAD
 			    union nfsd4_op_u *u)
 {
 	struct nfsd4_offload_status *os = &u->offload_status;
+=======
+			    struct nfsd4_offload_status *os)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	__be32 *p;
 
@@ -4893,6 +5443,7 @@ nfsd4_encode_offload_status(struct nfsd4_compoundres *resp, __be32 nfserr,
 
 static __be32
 nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
+<<<<<<< HEAD
 			    struct nfsd4_read *read)
 {
 	bool splice_ok = test_bit(RQ_SPLICE_OK, &resp->rqstp->rq_flags);
@@ -4900,10 +5451,29 @@ nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
 	struct xdr_stream *xdr = resp->xdr;
 	unsigned long maxcount;
 	__be32 nfserr, *p;
+=======
+			    struct nfsd4_read *read,
+			    unsigned long *maxcount, u32 *eof,
+			    loff_t *pos)
+{
+	struct xdr_stream *xdr = resp->xdr;
+	struct file *file = read->rd_nf->nf_file;
+	int starting_len = xdr->buf->len;
+	loff_t hole_pos;
+	__be32 nfserr;
+	__be32 *p, tmp;
+	__be64 tmp64;
+
+	hole_pos = pos ? *pos : vfs_llseek(file, read->rd_offset, SEEK_HOLE);
+	if (hole_pos > read->rd_offset)
+		*maxcount = min_t(unsigned long, *maxcount, hole_pos - read->rd_offset);
+	*maxcount = min_t(unsigned long, *maxcount, (xdr->buf->buflen - xdr->buf->len));
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Content type, offset, byte count */
 	p = xdr_reserve_space(xdr, 4 + 8 + 4);
 	if (!p)
+<<<<<<< HEAD
 		return nfserr_io;
 	if (resp->xdr->buf->page_len && splice_ok) {
 		WARN_ON_ONCE(splice_ok);
@@ -4924,11 +5494,67 @@ nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
 	p = xdr_encode_hyper(p, read->rd_offset);
 	*p = cpu_to_be32(read->rd_length);
 
+=======
+		return nfserr_resource;
+
+	read->rd_vlen = xdr_reserve_space_vec(xdr, resp->rqstp->rq_vec, *maxcount);
+	if (read->rd_vlen < 0)
+		return nfserr_resource;
+
+	nfserr = nfsd_readv(resp->rqstp, read->rd_fhp, file, read->rd_offset,
+			    resp->rqstp->rq_vec, read->rd_vlen, maxcount, eof);
+	if (nfserr)
+		return nfserr;
+	xdr_truncate_encode(xdr, starting_len + 16 + xdr_align_size(*maxcount));
+
+	tmp = htonl(NFS4_CONTENT_DATA);
+	write_bytes_to_xdr_buf(xdr->buf, starting_len,      &tmp,   4);
+	tmp64 = cpu_to_be64(read->rd_offset);
+	write_bytes_to_xdr_buf(xdr->buf, starting_len + 4,  &tmp64, 8);
+	tmp = htonl(*maxcount);
+	write_bytes_to_xdr_buf(xdr->buf, starting_len + 12, &tmp,   4);
+
+	tmp = xdr_zero;
+	write_bytes_to_xdr_buf(xdr->buf, starting_len + 16 + *maxcount, &tmp,
+			       xdr_pad_size(*maxcount));
+	return nfs_ok;
+}
+
+static __be32
+nfsd4_encode_read_plus_hole(struct nfsd4_compoundres *resp,
+			    struct nfsd4_read *read,
+			    unsigned long *maxcount, u32 *eof)
+{
+	struct file *file = read->rd_nf->nf_file;
+	loff_t data_pos = vfs_llseek(file, read->rd_offset, SEEK_DATA);
+	loff_t f_size = i_size_read(file_inode(file));
+	unsigned long count;
+	__be32 *p;
+
+	if (data_pos == -ENXIO)
+		data_pos = f_size;
+	else if (data_pos <= read->rd_offset || (data_pos < f_size && data_pos % PAGE_SIZE))
+		return nfsd4_encode_read_plus_data(resp, read, maxcount, eof, &f_size);
+	count = data_pos - read->rd_offset;
+
+	/* Content type, offset, byte count */
+	p = xdr_reserve_space(resp->xdr, 4 + 8 + 8);
+	if (!p)
+		return nfserr_resource;
+
+	*p++ = htonl(NFS4_CONTENT_HOLE);
+	p = xdr_encode_hyper(p, read->rd_offset);
+	p = xdr_encode_hyper(p, count);
+
+	*eof = (read->rd_offset + count) >= f_size;
+	*maxcount = min_t(unsigned long, count, *maxcount);
+>>>>>>> b7ba80a49124 (Commit)
 	return nfs_ok;
 }
 
 static __be32
 nfsd4_encode_read_plus(struct nfsd4_compoundres *resp, __be32 nfserr,
+<<<<<<< HEAD
 		       union nfsd4_op_u *u)
 {
 	struct nfsd4_read *read = &u->read;
@@ -4940,10 +5566,29 @@ nfsd4_encode_read_plus(struct nfsd4_compoundres *resp, __be32 nfserr,
 
 	if (nfserr)
 		return nfserr;
+=======
+		       struct nfsd4_read *read)
+{
+	unsigned long maxcount, count;
+	struct xdr_stream *xdr = resp->xdr;
+	struct file *file;
+	int starting_len = xdr->buf->len;
+	int last_segment = xdr->buf->len;
+	int segments = 0;
+	__be32 *p, tmp;
+	bool is_data;
+	loff_t pos;
+	u32 eof;
+
+	if (nfserr)
+		return nfserr;
+	file = read->rd_nf->nf_file;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* eof flag, segment count */
 	p = xdr_reserve_space(xdr, 4 + 4);
 	if (!p)
+<<<<<<< HEAD
 		return nfserr_io;
 	xdr_commit_encode(xdr);
 
@@ -4962,14 +5607,66 @@ nfsd4_encode_read_plus(struct nfsd4_compoundres *resp, __be32 nfserr,
 out:
 	p = xdr_encode_bool(p, read->rd_eof);
 	*p = cpu_to_be32(segments);
+=======
+		return nfserr_resource;
+	xdr_commit_encode(xdr);
+
+	maxcount = min_t(unsigned long, read->rd_length,
+			 (xdr->buf->buflen - xdr->buf->len));
+	count    = maxcount;
+
+	eof = read->rd_offset >= i_size_read(file_inode(file));
+	if (eof)
+		goto out;
+
+	pos = vfs_llseek(file, read->rd_offset, SEEK_HOLE);
+	is_data = pos > read->rd_offset;
+
+	while (count > 0 && !eof) {
+		maxcount = count;
+		if (is_data)
+			nfserr = nfsd4_encode_read_plus_data(resp, read, &maxcount, &eof,
+						segments == 0 ? &pos : NULL);
+		else
+			nfserr = nfsd4_encode_read_plus_hole(resp, read, &maxcount, &eof);
+		if (nfserr)
+			goto out;
+		count -= maxcount;
+		read->rd_offset += maxcount;
+		is_data = !is_data;
+		last_segment = xdr->buf->len;
+		segments++;
+	}
+
+out:
+	if (nfserr && segments == 0)
+		xdr_truncate_encode(xdr, starting_len);
+	else {
+		if (nfserr) {
+			xdr_truncate_encode(xdr, last_segment);
+			nfserr = nfs_ok;
+			eof = 0;
+		}
+		tmp = htonl(eof);
+		write_bytes_to_xdr_buf(xdr->buf, starting_len,     &tmp, 4);
+		tmp = htonl(segments);
+		write_bytes_to_xdr_buf(xdr->buf, starting_len + 4, &tmp, 4);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return nfserr;
 }
 
 static __be32
 nfsd4_encode_copy_notify(struct nfsd4_compoundres *resp, __be32 nfserr,
+<<<<<<< HEAD
 			 union nfsd4_op_u *u)
 {
 	struct nfsd4_copy_notify *cn = &u->copy_notify;
+=======
+			 struct nfsd4_copy_notify *cn)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	__be32 *p;
 
@@ -5003,9 +5700,14 @@ nfsd4_encode_copy_notify(struct nfsd4_compoundres *resp, __be32 nfserr,
 
 static __be32
 nfsd4_encode_seek(struct nfsd4_compoundres *resp, __be32 nfserr,
+<<<<<<< HEAD
 		  union nfsd4_op_u *u)
 {
 	struct nfsd4_seek *seek = &u->seek;
+=======
+		  struct nfsd4_seek *seek)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	__be32 *p;
 
 	p = xdr_reserve_space(resp->xdr, 4 + 8);
@@ -5016,8 +5718,12 @@ nfsd4_encode_seek(struct nfsd4_compoundres *resp, __be32 nfserr,
 }
 
 static __be32
+<<<<<<< HEAD
 nfsd4_encode_noop(struct nfsd4_compoundres *resp, __be32 nfserr,
 		  union nfsd4_op_u *p)
+=======
+nfsd4_encode_noop(struct nfsd4_compoundres *resp, __be32 nfserr, void *p)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return nfserr;
 }
@@ -5068,9 +5774,14 @@ nfsd4_vbuf_to_stream(struct xdr_stream *xdr, char *buf, u32 buflen)
 
 static __be32
 nfsd4_encode_getxattr(struct nfsd4_compoundres *resp, __be32 nfserr,
+<<<<<<< HEAD
 		      union nfsd4_op_u *u)
 {
 	struct nfsd4_getxattr *getxattr = &u->getxattr;
+=======
+		      struct nfsd4_getxattr *getxattr)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	__be32 *p, err;
 
@@ -5093,9 +5804,14 @@ nfsd4_encode_getxattr(struct nfsd4_compoundres *resp, __be32 nfserr,
 
 static __be32
 nfsd4_encode_setxattr(struct nfsd4_compoundres *resp, __be32 nfserr,
+<<<<<<< HEAD
 		      union nfsd4_op_u *u)
 {
 	struct nfsd4_setxattr *setxattr = &u->setxattr;
+=======
+		      struct nfsd4_setxattr *setxattr)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	__be32 *p;
 
@@ -5135,9 +5851,14 @@ nfsd4_listxattr_validate_cookie(struct nfsd4_listxattrs *listxattrs,
 
 static __be32
 nfsd4_encode_listxattrs(struct nfsd4_compoundres *resp, __be32 nfserr,
+<<<<<<< HEAD
 			union nfsd4_op_u *u)
 {
 	struct nfsd4_listxattrs *listxattrs = &u->listxattrs;
+=======
+			struct nfsd4_listxattrs *listxattrs)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	u32 cookie_offset, count_offset, eof;
 	u32 left, xdrleft, slen, count;
@@ -5247,9 +5968,14 @@ out:
 
 static __be32
 nfsd4_encode_removexattr(struct nfsd4_compoundres *resp, __be32 nfserr,
+<<<<<<< HEAD
 			 union nfsd4_op_u *u)
 {
 	struct nfsd4_removexattr *removexattr = &u->removexattr;
+=======
+			 struct nfsd4_removexattr *removexattr)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct xdr_stream *xdr = resp->xdr;
 	__be32 *p;
 
@@ -5261,7 +5987,11 @@ nfsd4_encode_removexattr(struct nfsd4_compoundres *resp, __be32 nfserr,
 	return 0;
 }
 
+<<<<<<< HEAD
 typedef __be32(*nfsd4_enc)(struct nfsd4_compoundres *, __be32, union nfsd4_op_u *u);
+=======
+typedef __be32(* nfsd4_enc)(struct nfsd4_compoundres *, __be32, void *);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Note: nfsd4_enc_ops vector is shared for v4.0 and v4.1
@@ -5269,6 +5999,7 @@ typedef __be32(*nfsd4_enc)(struct nfsd4_compoundres *, __be32, union nfsd4_op_u 
  * done in the decoding phase.
  */
 static const nfsd4_enc nfsd4_enc_ops[] = {
+<<<<<<< HEAD
 	[OP_ACCESS]		= nfsd4_encode_access,
 	[OP_CLOSE]		= nfsd4_encode_close,
 	[OP_COMMIT]		= nfsd4_encode_commit,
@@ -5356,6 +6087,95 @@ static const nfsd4_enc nfsd4_enc_ops[] = {
 	[OP_SETXATTR]		= nfsd4_encode_setxattr,
 	[OP_LISTXATTRS]		= nfsd4_encode_listxattrs,
 	[OP_REMOVEXATTR]	= nfsd4_encode_removexattr,
+=======
+	[OP_ACCESS]		= (nfsd4_enc)nfsd4_encode_access,
+	[OP_CLOSE]		= (nfsd4_enc)nfsd4_encode_close,
+	[OP_COMMIT]		= (nfsd4_enc)nfsd4_encode_commit,
+	[OP_CREATE]		= (nfsd4_enc)nfsd4_encode_create,
+	[OP_DELEGPURGE]		= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_DELEGRETURN]	= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_GETATTR]		= (nfsd4_enc)nfsd4_encode_getattr,
+	[OP_GETFH]		= (nfsd4_enc)nfsd4_encode_getfh,
+	[OP_LINK]		= (nfsd4_enc)nfsd4_encode_link,
+	[OP_LOCK]		= (nfsd4_enc)nfsd4_encode_lock,
+	[OP_LOCKT]		= (nfsd4_enc)nfsd4_encode_lockt,
+	[OP_LOCKU]		= (nfsd4_enc)nfsd4_encode_locku,
+	[OP_LOOKUP]		= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_LOOKUPP]		= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_NVERIFY]		= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_OPEN]		= (nfsd4_enc)nfsd4_encode_open,
+	[OP_OPENATTR]		= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_OPEN_CONFIRM]	= (nfsd4_enc)nfsd4_encode_open_confirm,
+	[OP_OPEN_DOWNGRADE]	= (nfsd4_enc)nfsd4_encode_open_downgrade,
+	[OP_PUTFH]		= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_PUTPUBFH]		= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_PUTROOTFH]		= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_READ]		= (nfsd4_enc)nfsd4_encode_read,
+	[OP_READDIR]		= (nfsd4_enc)nfsd4_encode_readdir,
+	[OP_READLINK]		= (nfsd4_enc)nfsd4_encode_readlink,
+	[OP_REMOVE]		= (nfsd4_enc)nfsd4_encode_remove,
+	[OP_RENAME]		= (nfsd4_enc)nfsd4_encode_rename,
+	[OP_RENEW]		= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_RESTOREFH]		= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_SAVEFH]		= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_SECINFO]		= (nfsd4_enc)nfsd4_encode_secinfo,
+	[OP_SETATTR]		= (nfsd4_enc)nfsd4_encode_setattr,
+	[OP_SETCLIENTID]	= (nfsd4_enc)nfsd4_encode_setclientid,
+	[OP_SETCLIENTID_CONFIRM] = (nfsd4_enc)nfsd4_encode_noop,
+	[OP_VERIFY]		= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_WRITE]		= (nfsd4_enc)nfsd4_encode_write,
+	[OP_RELEASE_LOCKOWNER]	= (nfsd4_enc)nfsd4_encode_noop,
+
+	/* NFSv4.1 operations */
+	[OP_BACKCHANNEL_CTL]	= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_BIND_CONN_TO_SESSION] = (nfsd4_enc)nfsd4_encode_bind_conn_to_session,
+	[OP_EXCHANGE_ID]	= (nfsd4_enc)nfsd4_encode_exchange_id,
+	[OP_CREATE_SESSION]	= (nfsd4_enc)nfsd4_encode_create_session,
+	[OP_DESTROY_SESSION]	= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_FREE_STATEID]	= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_GET_DIR_DELEGATION]	= (nfsd4_enc)nfsd4_encode_noop,
+#ifdef CONFIG_NFSD_PNFS
+	[OP_GETDEVICEINFO]	= (nfsd4_enc)nfsd4_encode_getdeviceinfo,
+	[OP_GETDEVICELIST]	= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_LAYOUTCOMMIT]	= (nfsd4_enc)nfsd4_encode_layoutcommit,
+	[OP_LAYOUTGET]		= (nfsd4_enc)nfsd4_encode_layoutget,
+	[OP_LAYOUTRETURN]	= (nfsd4_enc)nfsd4_encode_layoutreturn,
+#else
+	[OP_GETDEVICEINFO]	= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_GETDEVICELIST]	= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_LAYOUTCOMMIT]	= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_LAYOUTGET]		= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_LAYOUTRETURN]	= (nfsd4_enc)nfsd4_encode_noop,
+#endif
+	[OP_SECINFO_NO_NAME]	= (nfsd4_enc)nfsd4_encode_secinfo_no_name,
+	[OP_SEQUENCE]		= (nfsd4_enc)nfsd4_encode_sequence,
+	[OP_SET_SSV]		= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_TEST_STATEID]	= (nfsd4_enc)nfsd4_encode_test_stateid,
+	[OP_WANT_DELEGATION]	= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_DESTROY_CLIENTID]	= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_RECLAIM_COMPLETE]	= (nfsd4_enc)nfsd4_encode_noop,
+
+	/* NFSv4.2 operations */
+	[OP_ALLOCATE]		= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_COPY]		= (nfsd4_enc)nfsd4_encode_copy,
+	[OP_COPY_NOTIFY]	= (nfsd4_enc)nfsd4_encode_copy_notify,
+	[OP_DEALLOCATE]		= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_IO_ADVISE]		= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_LAYOUTERROR]	= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_LAYOUTSTATS]	= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_OFFLOAD_CANCEL]	= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_OFFLOAD_STATUS]	= (nfsd4_enc)nfsd4_encode_offload_status,
+	[OP_READ_PLUS]		= (nfsd4_enc)nfsd4_encode_read_plus,
+	[OP_SEEK]		= (nfsd4_enc)nfsd4_encode_seek,
+	[OP_WRITE_SAME]		= (nfsd4_enc)nfsd4_encode_noop,
+	[OP_CLONE]		= (nfsd4_enc)nfsd4_encode_noop,
+
+	/* RFC 8276 extended atributes operations */
+	[OP_GETXATTR]		= (nfsd4_enc)nfsd4_encode_getxattr,
+	[OP_SETXATTR]		= (nfsd4_enc)nfsd4_encode_setxattr,
+	[OP_LISTXATTRS]		= (nfsd4_enc)nfsd4_encode_listxattrs,
+	[OP_REMOVEXATTR]	= (nfsd4_enc)nfsd4_encode_removexattr,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*

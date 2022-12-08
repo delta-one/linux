@@ -160,7 +160,10 @@ static int mtk_cpu_resources_init(struct platform_device *pdev,
 	struct mtk_cpufreq_data *data;
 	struct device *dev = &pdev->dev;
 	struct resource *res;
+<<<<<<< HEAD
 	struct of_phandle_args args;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void __iomem *base;
 	int ret, i;
 	int index;
@@ -169,6 +172,7 @@ static int mtk_cpu_resources_init(struct platform_device *pdev,
 	if (!data)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	ret = of_perf_domain_get_sharing_cpumask(policy->cpu, "performance-domains",
 						 "#performance-domain-cells",
 						 policy->cpus, &args);
@@ -177,6 +181,13 @@ static int mtk_cpu_resources_init(struct platform_device *pdev,
 
 	index = args.args[0];
 	of_node_put(args.np);
+=======
+	index = of_perf_domain_get_sharing_cpumask(policy->cpu, "performance-domains",
+						   "#performance-domain-cells",
+						   policy->cpus);
+	if (index < 0)
+		return index;
+>>>>>>> b7ba80a49124 (Commit)
 
 	res = platform_get_resource(pdev, IORESOURCE_MEM, index);
 	if (!res) {
@@ -317,16 +328,23 @@ static int mtk_cpufreq_hw_driver_probe(struct platform_device *pdev)
 
 static int mtk_cpufreq_hw_driver_remove(struct platform_device *pdev)
 {
+<<<<<<< HEAD
 	cpufreq_unregister_driver(&cpufreq_mtk_hw_driver);
 
 	return 0;
+=======
+	return cpufreq_unregister_driver(&cpufreq_mtk_hw_driver);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id mtk_cpufreq_hw_match[] = {
 	{ .compatible = "mediatek,cpufreq-hw", .data = &cpufreq_mtk_offsets },
 	{}
 };
+<<<<<<< HEAD
 MODULE_DEVICE_TABLE(of, mtk_cpufreq_hw_match);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct platform_driver mtk_cpufreq_hw_driver = {
 	.probe = mtk_cpufreq_hw_driver_probe,

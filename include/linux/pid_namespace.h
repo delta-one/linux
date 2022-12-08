@@ -16,6 +16,7 @@
 
 struct fs_pin;
 
+<<<<<<< HEAD
 #if defined(CONFIG_SYSCTL) && defined(CONFIG_MEMFD_CREATE)
 /*
  * sysctl for vm.memfd_noexec
@@ -31,6 +32,8 @@ struct fs_pin;
 #define MEMFD_NOEXEC_SCOPE_NOEXEC_ENFORCED	2
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct pid_namespace {
 	struct idr idr;
 	struct rcu_head rcu;
@@ -46,10 +49,13 @@ struct pid_namespace {
 	struct ucounts *ucounts;
 	int reboot;	/* group exit code if this pidns was rebooted */
 	struct ns_common ns;
+<<<<<<< HEAD
 #if defined(CONFIG_SYSCTL) && defined(CONFIG_MEMFD_CREATE)
 	/* sysctl for vm.memfd_noexec */
 	int memfd_noexec_scope;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 } __randomize_layout;
 
 extern struct pid_namespace init_pid_ns;

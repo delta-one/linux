@@ -22,7 +22,10 @@ config SFC
 	depends on PTP_1588_CLOCK_OPTIONAL
 	select MDIO
 	select CRC32
+<<<<<<< HEAD
 	select NET_DEVLINK
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  This driver supports 10/40-gigabit Ethernet cards based on
 	  the Solarflare SFC9100-family controllers.

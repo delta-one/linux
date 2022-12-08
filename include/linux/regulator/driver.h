@@ -687,8 +687,12 @@ static inline int regulator_err2notif(int err)
 
 
 struct regulator_dev *
+<<<<<<< HEAD
 regulator_register(struct device *dev,
 		   const struct regulator_desc *regulator_desc,
+=======
+regulator_register(const struct regulator_desc *regulator_desc,
+>>>>>>> b7ba80a49124 (Commit)
 		   const struct regulator_config *config);
 struct regulator_dev *
 devm_regulator_register(struct device *dev,

@@ -149,7 +149,10 @@ struct ptp_qoriq {
 	struct device *dev;
 	bool extts_fifo_support;
 	bool fiper3_support;
+<<<<<<< HEAD
 	bool etsec;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int irq;
 	int phc_index;
 	u32 tclk_period;  /* nanoseconds */

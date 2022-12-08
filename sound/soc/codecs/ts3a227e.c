@@ -258,6 +258,7 @@ int ts3a227e_enable_jack_detect(struct snd_soc_component *component,
 }
 EXPORT_SYMBOL_GPL(ts3a227e_enable_jack_detect);
 
+<<<<<<< HEAD
 static int ts3a227e_set_jack(struct snd_soc_component *component,
 			     struct snd_soc_jack *jack, void *data)
 {
@@ -277,6 +278,9 @@ static const struct snd_soc_component_driver ts3a227e_soc_driver = {
 	.set_jack = ts3a227e_set_jack,
 	.get_jack_type = ts3a227e_get_jack_type,
 };
+=======
+static struct snd_soc_component_driver ts3a227e_soc_driver;
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct regmap_config ts3a227e_regmap_config = {
 	.val_bits = 8,

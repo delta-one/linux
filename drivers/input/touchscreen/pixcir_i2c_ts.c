@@ -405,7 +405,11 @@ static void pixcir_input_close(struct input_dev *dev)
 	pixcir_stop(ts);
 }
 
+<<<<<<< HEAD
 static int pixcir_i2c_ts_suspend(struct device *dev)
+=======
+static int __maybe_unused pixcir_i2c_ts_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct pixcir_i2c_ts_data *ts = i2c_get_clientdata(client);
@@ -432,7 +436,11 @@ unlock:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int pixcir_i2c_ts_resume(struct device *dev)
+=======
+static int __maybe_unused pixcir_i2c_ts_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct pixcir_i2c_ts_data *ts = i2c_get_clientdata(client);
@@ -459,12 +467,21 @@ unlock:
 	return ret;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(pixcir_dev_pm_ops,
 				pixcir_i2c_ts_suspend, pixcir_i2c_ts_resume);
 
 static int pixcir_i2c_ts_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static SIMPLE_DEV_PM_OPS(pixcir_dev_pm_ops,
+			 pixcir_i2c_ts_suspend, pixcir_i2c_ts_resume);
+
+static int pixcir_i2c_ts_probe(struct i2c_client *client,
+			       const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = &client->dev;
 	struct pixcir_i2c_ts_data *tsdata;
 	struct input_dev *input;
@@ -614,10 +631,17 @@ MODULE_DEVICE_TABLE(of, pixcir_of_match);
 static struct i2c_driver pixcir_i2c_ts_driver = {
 	.driver = {
 		.name	= "pixcir_ts",
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&pixcir_dev_pm_ops),
 		.of_match_table = of_match_ptr(pixcir_of_match),
 	},
 	.probe_new	= pixcir_i2c_ts_probe,
+=======
+		.pm	= &pixcir_dev_pm_ops,
+		.of_match_table = of_match_ptr(pixcir_of_match),
+	},
+	.probe		= pixcir_i2c_ts_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= pixcir_i2c_ts_id,
 };
 

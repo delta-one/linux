@@ -393,7 +393,11 @@ static int cg3_probe(struct platform_device *op)
 
 	cg3_blank(FB_BLANK_UNBLANK, info);
 
+<<<<<<< HEAD
 	if (!of_property_present(dp, "width")) {
+=======
+	if (!of_find_property(dp, "width", NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = cg3_do_default_mode(par);
 		if (err)
 			goto out_unmap_screen;
@@ -434,7 +438,11 @@ out_err:
 	return err;
 }
 
+<<<<<<< HEAD
 static void cg3_remove(struct platform_device *op)
+=======
+static int cg3_remove(struct platform_device *op)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fb_info *info = dev_get_drvdata(&op->dev);
 	struct cg3_par *par = info->par;
@@ -446,6 +454,11 @@ static void cg3_remove(struct platform_device *op)
 	of_iounmap(&op->resource[0], info->screen_base, info->fix.smem_len);
 
 	framebuffer_release(info);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id cg3_match[] = {
@@ -465,7 +478,11 @@ static struct platform_driver cg3_driver = {
 		.of_match_table = cg3_match,
 	},
 	.probe		= cg3_probe,
+<<<<<<< HEAD
 	.remove_new	= cg3_remove,
+=======
+	.remove		= cg3_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int __init cg3_init(void)

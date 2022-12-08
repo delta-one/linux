@@ -56,7 +56,12 @@ enum ams_i2c_cmd {
 	AMS_CMD_START,
 };
 
+<<<<<<< HEAD
 static int ams_i2c_probe(struct i2c_client *client);
+=======
+static int ams_i2c_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id);
+>>>>>>> b7ba80a49124 (Commit)
 static void ams_i2c_remove(struct i2c_client *client);
 
 static const struct i2c_device_id ams_id[] = {
@@ -69,7 +74,11 @@ static struct i2c_driver ams_i2c_driver = {
 	.driver = {
 		.name   = "ams",
 	},
+<<<<<<< HEAD
 	.probe_new      = ams_i2c_probe,
+=======
+	.probe          = ams_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove         = ams_i2c_remove,
 	.id_table       = ams_id,
 };
@@ -154,7 +163,12 @@ static void ams_i2c_get_xyz(s8 *x, s8 *y, s8 *z)
 	*z = ams_i2c_read(AMS_DATAZ);
 }
 
+<<<<<<< HEAD
 static int ams_i2c_probe(struct i2c_client *client)
+=======
+static int ams_i2c_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int vmaj, vmin;
 	int result;

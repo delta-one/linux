@@ -29,6 +29,7 @@ int ethnl_cable_test_amplitude(struct phy_device *phydev, u8 pair, s16 mV);
 int ethnl_cable_test_pulse(struct phy_device *phydev, u16 mV);
 int ethnl_cable_test_step(struct phy_device *phydev, u32 first, u32 last,
 			  u32 step);
+<<<<<<< HEAD
 void ethtool_aggregate_mac_stats(struct net_device *dev,
 				 struct ethtool_eth_mac_stats *mac_stats);
 void ethtool_aggregate_phy_stats(struct net_device *dev,
@@ -40,6 +41,8 @@ void ethtool_aggregate_pause_stats(struct net_device *dev,
 void ethtool_aggregate_rmon_stats(struct net_device *dev,
 				  struct ethtool_rmon_stats *rmon_stats);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else
 static inline int ethnl_cable_test_alloc(struct phy_device *phydev, u8 cmd)
 {
@@ -81,6 +84,7 @@ static inline int ethnl_cable_test_step(struct phy_device *phydev, u32 first,
 {
 	return -EOPNOTSUPP;
 }
+<<<<<<< HEAD
 
 static inline void
 ethtool_aggregate_mac_stats(struct net_device *dev,
@@ -112,5 +116,7 @@ ethtool_aggregate_rmon_stats(struct net_device *dev,
 {
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* IS_ENABLED(CONFIG_ETHTOOL_NETLINK) */
 #endif /* _LINUX_ETHTOOL_NETLINK_H_ */

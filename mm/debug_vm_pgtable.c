@@ -15,7 +15,10 @@
 #include <linux/hugetlb.h>
 #include <linux/kernel.h>
 #include <linux/kconfig.h>
+<<<<<<< HEAD
 #include <linux/memblock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mm.h>
 #include <linux/mman.h>
 #include <linux/mm_types.h>
@@ -39,7 +42,15 @@
  * Please refer Documentation/mm/arch_pgtable_helpers.rst for the semantics
  * expectations that are being validated here. All future changes in here
  * or the documentation need to be in sync.
+<<<<<<< HEAD
  *
+=======
+ */
+
+#define VMFLAGS	(VM_READ|VM_WRITE|VM_EXEC)
+
+/*
+>>>>>>> b7ba80a49124 (Commit)
  * On s390 platform, the lower 4 bits are used to identify given page table
  * entry type. But these bits might affect the ability to clear entries with
  * pxx_clear() because of how dynamic page table folding works on s390. So
@@ -81,7 +92,10 @@ struct pgtable_debug_args {
 	unsigned long		pmd_pfn;
 	unsigned long		pte_pfn;
 
+<<<<<<< HEAD
 	unsigned long		fixed_alignment;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long		fixed_pgd_pfn;
 	unsigned long		fixed_p4d_pfn;
 	unsigned long		fixed_pud_pfn;
@@ -109,10 +123,17 @@ static void __init pte_basic_tests(struct pgtable_debug_args *args, int idx)
 	WARN_ON(!pte_same(pte, pte));
 	WARN_ON(!pte_young(pte_mkyoung(pte_mkold(pte))));
 	WARN_ON(!pte_dirty(pte_mkdirty(pte_mkclean(pte))));
+<<<<<<< HEAD
 	WARN_ON(!pte_write(pte_mkwrite(pte_wrprotect(pte), args->vma)));
 	WARN_ON(pte_young(pte_mkold(pte_mkyoung(pte))));
 	WARN_ON(pte_dirty(pte_mkclean(pte_mkdirty(pte))));
 	WARN_ON(pte_write(pte_wrprotect(pte_mkwrite(pte, args->vma))));
+=======
+	WARN_ON(!pte_write(pte_mkwrite(pte_wrprotect(pte))));
+	WARN_ON(pte_young(pte_mkold(pte_mkyoung(pte))));
+	WARN_ON(pte_dirty(pte_mkclean(pte_mkdirty(pte))));
+	WARN_ON(pte_write(pte_wrprotect(pte_mkwrite(pte))));
+>>>>>>> b7ba80a49124 (Commit)
 	WARN_ON(pte_dirty(pte_wrprotect(pte_mkclean(pte))));
 	WARN_ON(!pte_dirty(pte_wrprotect(pte_mkdirty(pte))));
 }
@@ -153,7 +174,11 @@ static void __init pte_advanced_tests(struct pgtable_debug_args *args)
 	pte = pte_mkclean(pte);
 	set_pte_at(args->mm, args->vaddr, args->ptep, pte);
 	flush_dcache_page(page);
+<<<<<<< HEAD
 	pte = pte_mkwrite(pte, args->vma);
+=======
+	pte = pte_mkwrite(pte);
+>>>>>>> b7ba80a49124 (Commit)
 	pte = pte_mkdirty(pte);
 	ptep_set_access_flags(args->vma, args->vaddr, args->ptep, pte, 1);
 	pte = ptep_get(args->ptep);
@@ -173,6 +198,21 @@ static void __init pte_advanced_tests(struct pgtable_debug_args *args)
 	ptep_get_and_clear_full(args->mm, args->vaddr, args->ptep, 1);
 }
 
+<<<<<<< HEAD
+=======
+static void __init pte_savedwrite_tests(struct pgtable_debug_args *args)
+{
+	pte_t pte = pfn_pte(args->fixed_pte_pfn, args->page_prot_none);
+
+	if (!IS_ENABLED(CONFIG_NUMA_BALANCING))
+		return;
+
+	pr_debug("Validating PTE saved write\n");
+	WARN_ON(!pte_savedwrite(pte_mk_savedwrite(pte_clear_savedwrite(pte))));
+	WARN_ON(pte_savedwrite(pte_clear_savedwrite(pte_mk_savedwrite(pte))));
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_TRANSPARENT_HUGEPAGE
 static void __init pmd_basic_tests(struct pgtable_debug_args *args, int idx)
 {
@@ -199,10 +239,17 @@ static void __init pmd_basic_tests(struct pgtable_debug_args *args, int idx)
 	WARN_ON(!pmd_same(pmd, pmd));
 	WARN_ON(!pmd_young(pmd_mkyoung(pmd_mkold(pmd))));
 	WARN_ON(!pmd_dirty(pmd_mkdirty(pmd_mkclean(pmd))));
+<<<<<<< HEAD
 	WARN_ON(!pmd_write(pmd_mkwrite(pmd_wrprotect(pmd), args->vma)));
 	WARN_ON(pmd_young(pmd_mkold(pmd_mkyoung(pmd))));
 	WARN_ON(pmd_dirty(pmd_mkclean(pmd_mkdirty(pmd))));
 	WARN_ON(pmd_write(pmd_wrprotect(pmd_mkwrite(pmd, args->vma))));
+=======
+	WARN_ON(!pmd_write(pmd_mkwrite(pmd_wrprotect(pmd))));
+	WARN_ON(pmd_young(pmd_mkold(pmd_mkyoung(pmd))));
+	WARN_ON(pmd_dirty(pmd_mkclean(pmd_mkdirty(pmd))));
+	WARN_ON(pmd_write(pmd_wrprotect(pmd_mkwrite(pmd))));
+>>>>>>> b7ba80a49124 (Commit)
 	WARN_ON(pmd_dirty(pmd_wrprotect(pmd_mkclean(pmd))));
 	WARN_ON(!pmd_dirty(pmd_wrprotect(pmd_mkdirty(pmd))));
 	/*
@@ -253,7 +300,11 @@ static void __init pmd_advanced_tests(struct pgtable_debug_args *args)
 	pmd = pmd_mkclean(pmd);
 	set_pmd_at(args->mm, vaddr, args->pmdp, pmd);
 	flush_dcache_page(page);
+<<<<<<< HEAD
 	pmd = pmd_mkwrite(pmd, args->vma);
+=======
+	pmd = pmd_mkwrite(pmd);
+>>>>>>> b7ba80a49124 (Commit)
 	pmd = pmd_mkdirty(pmd);
 	pmdp_set_access_flags(args->vma, vaddr, args->pmdp, pmd, 1);
 	pmd = READ_ONCE(*args->pmdp);
@@ -292,6 +343,25 @@ static void __init pmd_leaf_tests(struct pgtable_debug_args *args)
 	WARN_ON(!pmd_leaf(pmd));
 }
 
+<<<<<<< HEAD
+=======
+static void __init pmd_savedwrite_tests(struct pgtable_debug_args *args)
+{
+	pmd_t pmd;
+
+	if (!IS_ENABLED(CONFIG_NUMA_BALANCING))
+		return;
+
+	if (!has_transparent_hugepage())
+		return;
+
+	pr_debug("Validating PMD saved write\n");
+	pmd = pfn_pmd(args->fixed_pmd_pfn, args->page_prot_none);
+	WARN_ON(!pmd_savedwrite(pmd_mk_savedwrite(pmd_clear_savedwrite(pmd))));
+	WARN_ON(pmd_savedwrite(pmd_clear_savedwrite(pmd_mk_savedwrite(pmd))));
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
 static void __init pud_basic_tests(struct pgtable_debug_args *args, int idx)
 {
@@ -425,6 +495,10 @@ static void __init pmd_advanced_tests(struct pgtable_debug_args *args) { }
 static void __init pud_advanced_tests(struct pgtable_debug_args *args) { }
 static void __init pmd_leaf_tests(struct pgtable_debug_args *args) { }
 static void __init pud_leaf_tests(struct pgtable_debug_args *args) { }
+<<<<<<< HEAD
+=======
+static void __init pmd_savedwrite_tests(struct pgtable_debug_args *args) { }
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
 
 #ifdef CONFIG_HAVE_ARCH_HUGE_VMAP
@@ -432,8 +506,12 @@ static void __init pmd_huge_tests(struct pgtable_debug_args *args)
 {
 	pmd_t pmd;
 
+<<<<<<< HEAD
 	if (!arch_vmap_pmd_supported(args->page_prot) ||
 	    args->fixed_alignment < PMD_SIZE)
+=======
+	if (!arch_vmap_pmd_supported(args->page_prot))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	pr_debug("Validating PMD huge\n");
@@ -452,8 +530,12 @@ static void __init pud_huge_tests(struct pgtable_debug_args *args)
 {
 	pud_t pud;
 
+<<<<<<< HEAD
 	if (!arch_vmap_pud_supported(args->page_prot) ||
 	    args->fixed_alignment < PUD_SIZE)
+=======
+	if (!arch_vmap_pud_supported(args->page_prot))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	pr_debug("Validating PUD huge\n");
@@ -810,6 +892,7 @@ static void __init pmd_swap_soft_dirty_tests(struct pgtable_debug_args *args) { 
 
 static void __init pte_swap_exclusive_tests(struct pgtable_debug_args *args)
 {
+<<<<<<< HEAD
 	unsigned long max_swap_offset;
 	swp_entry_t entry, entry2;
 	pte_t pte;
@@ -840,6 +923,17 @@ static void __init pte_swap_exclusive_tests(struct pgtable_debug_args *args)
 	WARN_ON(!is_swap_pte(pte));
 	entry2 = pte_to_swp_entry(pte);
 	WARN_ON(memcmp(&entry, &entry2, sizeof(entry)));
+=======
+#ifdef __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+	pte_t pte = pfn_pte(args->fixed_pte_pfn, args->page_prot);
+
+	pr_debug("Validating PTE swap exclusive\n");
+	pte = pte_swp_mkexclusive(pte);
+	WARN_ON(!pte_swp_exclusive(pte));
+	pte = pte_swp_clear_exclusive(pte);
+	WARN_ON(pte_swp_exclusive(pte));
+#endif /* __HAVE_ARCH_PTE_SWP_EXCLUSIVE */
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __init pte_swap_tests(struct pgtable_debug_args *args)
@@ -928,13 +1022,22 @@ static void __init hugetlb_basic_tests(struct pgtable_debug_args *args)
 	pte = mk_huge_pte(page, args->page_prot);
 
 	WARN_ON(!huge_pte_dirty(huge_pte_mkdirty(pte)));
+<<<<<<< HEAD
 	WARN_ON(!huge_pte_write(huge_pte_mkwrite(huge_pte_wrprotect(pte), args->vma)));
 	WARN_ON(huge_pte_write(huge_pte_wrprotect(huge_pte_mkwrite(pte, args->vma))));
+=======
+	WARN_ON(!huge_pte_write(huge_pte_mkwrite(huge_pte_wrprotect(pte))));
+	WARN_ON(huge_pte_write(huge_pte_wrprotect(huge_pte_mkwrite(pte))));
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_ARCH_WANT_GENERAL_HUGETLB
 	pte = pfn_pte(args->fixed_pmd_pfn, args->page_prot);
 
+<<<<<<< HEAD
 	WARN_ON(!pte_huge(arch_make_huge_pte(pte, PMD_SHIFT, VM_ACCESS_FLAGS)));
+=======
+	WARN_ON(!pte_huge(pte_mkhuge(pte)));
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_ARCH_WANT_GENERAL_HUGETLB */
 }
 #else  /* !CONFIG_HUGETLB_PAGE */
@@ -1048,7 +1151,11 @@ static void __init destroy_args(struct pgtable_debug_args *args)
 
 	if (args->pte_pfn != ULONG_MAX) {
 		page = pfn_to_page(args->pte_pfn);
+<<<<<<< HEAD
 		__free_page(page);
+=======
+		__free_pages(page, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 		args->pte_pfn = ULONG_MAX;
 	}
@@ -1086,7 +1193,11 @@ debug_vm_pgtable_alloc_huge_page(struct pgtable_debug_args *args, int order)
 	struct page *page = NULL;
 
 #ifdef CONFIG_CONTIG_ALLOC
+<<<<<<< HEAD
 	if (order > MAX_ORDER) {
+=======
+	if (order >= MAX_ORDER) {
+>>>>>>> b7ba80a49124 (Commit)
 		page = alloc_contig_pages((1 << order), GFP_KERNEL,
 					  first_online_node, NULL);
 		if (page) {
@@ -1096,12 +1207,17 @@ debug_vm_pgtable_alloc_huge_page(struct pgtable_debug_args *args, int order)
 	}
 #endif
 
+<<<<<<< HEAD
 	if (order <= MAX_ORDER)
+=======
+	if (order < MAX_ORDER)
+>>>>>>> b7ba80a49124 (Commit)
 		page = alloc_pages(GFP_KERNEL, order);
 
 	return page;
 }
 
+<<<<<<< HEAD
 /*
  * Check if a physical memory range described by <pstart, pend> contains
  * an area that is of size psize, and aligned to psize.
@@ -1181,6 +1297,12 @@ static void __init init_fixed_pfns(struct pgtable_debug_args *args)
 static int __init init_args(struct pgtable_debug_args *args)
 {
 	struct page *page = NULL;
+=======
+static int __init init_args(struct pgtable_debug_args *args)
+{
+	struct page *page = NULL;
+	phys_addr_t phys;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = 0;
 
 	/*
@@ -1192,7 +1314,11 @@ static int __init init_args(struct pgtable_debug_args *args)
 	 */
 	memset(args, 0, sizeof(*args));
 	args->vaddr              = get_random_vaddr();
+<<<<<<< HEAD
 	args->page_prot          = vm_get_page_prot(VM_ACCESS_FLAGS);
+=======
+	args->page_prot          = vm_get_page_prot(VMFLAGS);
+>>>>>>> b7ba80a49124 (Commit)
 	args->page_prot_none     = vm_get_page_prot(VM_NONE);
 	args->is_contiguous_page = false;
 	args->pud_pfn            = ULONG_MAX;
@@ -1260,7 +1386,26 @@ static int __init init_args(struct pgtable_debug_args *args)
 	args->start_ptep = pmd_pgtable(READ_ONCE(*args->pmdp));
 	WARN_ON(!args->start_ptep);
 
+<<<<<<< HEAD
 	init_fixed_pfns(args);
+=======
+	/*
+	 * PFN for mapping at PTE level is determined from a standard kernel
+	 * text symbol. But pfns for higher page table levels are derived by
+	 * masking lower bits of this real pfn. These derived pfns might not
+	 * exist on the platform but that does not really matter as pfn_pxx()
+	 * helpers will still create appropriate entries for the test. This
+	 * helps avoid large memory block allocations to be used for mapping
+	 * at higher page table levels in some of the tests.
+	 */
+	phys = __pa_symbol(&start_kernel);
+	args->fixed_pgd_pfn = __phys_to_pfn(phys & PGDIR_MASK);
+	args->fixed_p4d_pfn = __phys_to_pfn(phys & P4D_MASK);
+	args->fixed_pud_pfn = __phys_to_pfn(phys & PUD_MASK);
+	args->fixed_pmd_pfn = __phys_to_pfn(phys & PMD_MASK);
+	args->fixed_pte_pfn = __phys_to_pfn(phys & PAGE_MASK);
+	WARN_ON(!pfn_valid(args->fixed_pte_pfn));
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Allocate (huge) pages because some of the tests need to access
@@ -1290,7 +1435,11 @@ static int __init init_args(struct pgtable_debug_args *args)
 		}
 	}
 
+<<<<<<< HEAD
 	page = alloc_page(GFP_KERNEL);
+=======
+	page = alloc_pages(GFP_KERNEL, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (page)
 		args->pte_pfn = page_to_pfn(page);
 
@@ -1344,6 +1493,12 @@ static int __init debug_vm_pgtable(void)
 	pmd_leaf_tests(&args);
 	pud_leaf_tests(&args);
 
+<<<<<<< HEAD
+=======
+	pte_savedwrite_tests(&args);
+	pmd_savedwrite_tests(&args);
+
+>>>>>>> b7ba80a49124 (Commit)
 	pte_special_tests(&args);
 	pte_protnone_tests(&args);
 	pmd_protnone_tests(&args);

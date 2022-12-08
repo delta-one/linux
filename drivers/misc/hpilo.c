@@ -888,7 +888,11 @@ static int __init ilo_init(void)
 	int error;
 	dev_t dev;
 
+<<<<<<< HEAD
 	ilo_class = class_create("iLO");
+=======
+	ilo_class = class_create(THIS_MODULE, "iLO");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(ilo_class)) {
 		error = PTR_ERR(ilo_class);
 		goto out;

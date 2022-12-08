@@ -51,10 +51,13 @@ static const struct pci_device_id pci_tbl[] = {
 };
 MODULE_DEVICE_TABLE(pci, pci_tbl);
 
+<<<<<<< HEAD
 struct amd_geode_priv {
 	struct pci_dev *pcidev;
 	void __iomem *membase;
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int geode_rng_data_read(struct hwrng *rng, u32 *data)
 {
@@ -94,7 +97,10 @@ static int __init geode_rng_init(void)
 	const struct pci_device_id *ent;
 	void __iomem *mem;
 	unsigned long rng_base;
+<<<<<<< HEAD
 	struct amd_geode_priv *priv;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	for_each_pci_dev(pdev) {
 		ent = pci_match_id(pci_tbl, pdev);
@@ -102,6 +108,7 @@ static int __init geode_rng_init(void)
 			goto found;
 	}
 	/* Device not found. */
+<<<<<<< HEAD
 	return err;
 
 found:
@@ -122,6 +129,19 @@ found:
 	geode_rng.priv = (unsigned long)priv;
 	priv->membase = mem;
 	priv->pcidev = pdev;
+=======
+	goto out;
+
+found:
+	rng_base = pci_resource_start(pdev, 0);
+	if (rng_base == 0)
+		goto out;
+	err = -ENOMEM;
+	mem = ioremap(rng_base, 0x58);
+	if (!mem)
+		goto out;
+	geode_rng.priv = (unsigned long)mem;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pr_info("AMD Geode RNG detected\n");
 	err = hwrng_register(&geode_rng);
@@ -130,19 +150,28 @@ found:
 		       err);
 		goto err_unmap;
 	}
+<<<<<<< HEAD
+=======
+out:
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 
 err_unmap:
 	iounmap(mem);
+<<<<<<< HEAD
 free_priv:
 	kfree(priv);
 put_dev:
 	pci_dev_put(pdev);
 	return err;
+=======
+	goto out;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __exit geode_rng_exit(void)
 {
+<<<<<<< HEAD
 	struct amd_geode_priv *priv;
 
 	priv = (struct amd_geode_priv *)geode_rng.priv;
@@ -150,6 +179,12 @@ static void __exit geode_rng_exit(void)
 	iounmap(priv->membase);
 	pci_dev_put(priv->pcidev);
 	kfree(priv);
+=======
+	void __iomem *mem = (void __iomem *)geode_rng.priv;
+
+	hwrng_unregister(&geode_rng);
+	iounmap(mem);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 module_init(geode_rng_init);

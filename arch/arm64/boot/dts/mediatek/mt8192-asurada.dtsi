@@ -11,6 +11,7 @@
 
 / {
 	aliases {
+<<<<<<< HEAD
 		i2c0 = &i2c0;
 		i2c1 = &i2c1;
 		i2c2 = &i2c2;
@@ -18,6 +19,8 @@
 		i2c7 = &i2c7;
 		mmc0 = &mmc0;
 		mmc1 = &mmc1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		serial0 = &uart0;
 	};
 
@@ -30,6 +33,7 @@
 		reg = <0 0x40000000 0 0x80000000>;
 	};
 
+<<<<<<< HEAD
 	backlight_lcd0: backlight-lcd0 {
 		compatible = "pwm-backlight";
 		pwms = <&pwm0 0 500000>;
@@ -83,6 +87,8 @@
 		vin-supply = <&mt6359_vio18_ldo_reg>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* system wide LDO 1.8V power rail */
 	pp1800_ldo_g: regulator-1v8-g {
 		compatible = "regulator-fixed";
@@ -94,6 +100,7 @@
 		vin-supply = <&pp3300_g>;
 	};
 
+<<<<<<< HEAD
 	pp1800_mipibrdg: regulator-1v8-mipibrdg {
 		compatible = "regulator-fixed";
 		regulator-name = "pp1800_mipibrdg";
@@ -116,6 +123,8 @@
 		vin-supply = <&pp3300_g>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* system wide switching 3.3V power rail */
 	pp3300_g: regulator-3v3-g {
 		compatible = "regulator-fixed";
@@ -138,6 +147,7 @@
 		vin-supply = <&ppvar_sys>;
 	};
 
+<<<<<<< HEAD
 	pp3300_mipibrdg: regulator-3v3-mipibrdg {
 		compatible = "regulator-fixed";
 		regulator-name = "pp3300_mipibrdg";
@@ -149,6 +159,8 @@
 		vin-supply = <&pp3300_g>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* separately switched 3.3V power rail */
 	pp3300_u: regulator-3v3-u {
 		compatible = "regulator-fixed";
@@ -209,6 +221,7 @@
 			reg = <0 0xc0000000 0 0x4000000>;
 		};
 	};
+<<<<<<< HEAD
 
 	sound: sound {
 		mediatek,platform = <&afe>;
@@ -273,6 +286,8 @@
 
 &dsi_out {
 	remote-endpoint = <&anx7625_in>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &i2c0 {
@@ -323,6 +338,7 @@
 	clock-frequency = <400000>;
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c3_pins>;
+<<<<<<< HEAD
 
 	anx_bridge: anx7625@58 {
 		compatible = "analogix,anx7625";
@@ -370,6 +386,8 @@
 			};
 		};
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &i2c7 {
@@ -380,10 +398,13 @@
 	pinctrl-0 = <&i2c7_pins>;
 };
 
+<<<<<<< HEAD
 &mipi_tx0 {
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &mmc0 {
 	status = "okay";
 
@@ -715,6 +736,7 @@
 			  "AUD_DAT_MISO0",
 			  "AUD_DAT_MISO1";
 
+<<<<<<< HEAD
 	anx7625_pins: anx7625-default-pins {
 		pins-out {
 			pinmux = <PINMUX_GPIO41__FUNC_GPIO41>,
@@ -888,6 +910,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cr50_int: cr50-irq-default-pins {
 		pins-gsc-ap-int-odl {
 			pinmux = <PINMUX_GPIO171__FUNC_GPIO171>;
@@ -1100,6 +1124,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	pp1000_dpbrdg_en_pins: pp1000-dpbrdg-en-pins {
 		pins-en {
 			pinmux = <PINMUX_GPIO19__FUNC_GPIO19>;
@@ -1142,6 +1167,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pp3300_wlan_pins: pp3300-wlan-pins {
 		pins-pcie-en-pp3300-wlan {
 			pinmux = <PINMUX_GPIO143__FUNC_GPIO143>;
@@ -1149,6 +1176,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	pwm0_pins: pwm0-default-pins {
 		pins-pwm {
 			pinmux = <PINMUX_GPIO40__FUNC_DISP_PWM>;
@@ -1160,6 +1188,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	scp_pins: scp-pins {
 		pins-vreq-vao {
 			pinmux = <PINMUX_GPIO195__FUNC_SCP_VREQ_VAO>;
@@ -1215,6 +1245,7 @@
 			output-low;
 		};
 	};
+<<<<<<< HEAD
 
 	vow_clk_miso_off_pins: vow-clk-miso-off-pins {
 		pins-miso-off {
@@ -1239,12 +1270,15 @@
 			pinmux = <PINMUX_GPIO218__FUNC_VOW_DAT_MISO>;
 		};
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &pmic {
 	interrupts-extended = <&pio 214 IRQ_TYPE_LEVEL_HIGH>;
 };
 
+<<<<<<< HEAD
 &pwm0 {
 	status = "okay";
 
@@ -1252,6 +1286,8 @@
 	pinctrl-0 = <&pwm0_pins>;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &scp {
 	status = "okay";
 

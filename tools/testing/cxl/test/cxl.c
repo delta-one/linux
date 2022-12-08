@@ -9,6 +9,7 @@
 #include <linux/pci.h>
 #include <linux/mm.h>
 #include <cxlmem.h>
+<<<<<<< HEAD
 
 #include "../watermark.h"
 #include "mock.h"
@@ -66,18 +67,44 @@ static inline bool is_single_bridge(struct device *dev)
 
 static struct acpi_device acpi0017_mock;
 static struct acpi_device host_bridge[NR_BRIDGES] = {
+=======
+#include "mock.h"
+
+#define NR_CXL_HOST_BRIDGES 2
+#define NR_CXL_ROOT_PORTS 2
+#define NR_CXL_SWITCH_PORTS 2
+#define NR_CXL_PORT_DECODERS 8
+
+static struct platform_device *cxl_acpi;
+static struct platform_device *cxl_host_bridge[NR_CXL_HOST_BRIDGES];
+static struct platform_device
+	*cxl_root_port[NR_CXL_HOST_BRIDGES * NR_CXL_ROOT_PORTS];
+static struct platform_device
+	*cxl_switch_uport[NR_CXL_HOST_BRIDGES * NR_CXL_ROOT_PORTS];
+static struct platform_device
+	*cxl_switch_dport[NR_CXL_HOST_BRIDGES * NR_CXL_ROOT_PORTS *
+			  NR_CXL_SWITCH_PORTS];
+struct platform_device
+	*cxl_mem[NR_CXL_HOST_BRIDGES * NR_CXL_ROOT_PORTS * NR_CXL_SWITCH_PORTS];
+
+static struct acpi_device acpi0017_mock;
+static struct acpi_device host_bridge[NR_CXL_HOST_BRIDGES] = {
+>>>>>>> b7ba80a49124 (Commit)
 	[0] = {
 		.handle = &host_bridge[0],
 	},
 	[1] = {
 		.handle = &host_bridge[1],
 	},
+<<<<<<< HEAD
 	[2] = {
 		.handle = &host_bridge[2],
 	},
 	[3] = {
 		.handle = &host_bridge[3],
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static bool is_mock_dev(struct device *dev)
@@ -87,12 +114,15 @@ static bool is_mock_dev(struct device *dev)
 	for (i = 0; i < ARRAY_SIZE(cxl_mem); i++)
 		if (dev == &cxl_mem[i]->dev)
 			return true;
+<<<<<<< HEAD
 	for (i = 0; i < ARRAY_SIZE(cxl_mem_single); i++)
 		if (dev == &cxl_mem_single[i]->dev)
 			return true;
 	for (i = 0; i < ARRAY_SIZE(cxl_rcd); i++)
 		if (dev == &cxl_rcd[i]->dev)
 			return true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (dev == &cxl_acpi->dev)
 		return true;
 	return false;
@@ -114,7 +144,11 @@ static bool is_mock_adev(struct acpi_device *adev)
 
 static struct {
 	struct acpi_table_cedt cedt;
+<<<<<<< HEAD
 	struct acpi_cedt_chbs chbs[NR_BRIDGES];
+=======
+	struct acpi_cedt_chbs chbs[NR_CXL_HOST_BRIDGES];
+>>>>>>> b7ba80a49124 (Commit)
 	struct {
 		struct acpi_cedt_cfmws cfmws;
 		u32 target[1];
@@ -131,6 +165,7 @@ static struct {
 		struct acpi_cedt_cfmws cfmws;
 		u32 target[2];
 	} cfmws3;
+<<<<<<< HEAD
 	struct {
 		struct acpi_cedt_cfmws cfmws;
 		u32 target[1];
@@ -155,6 +190,8 @@ static struct {
 		struct acpi_cedt_cxims cxims;
 		u64 xormap_list[2];
 	} cxims0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 } __packed mock_cedt = {
 	.cedt = {
 		.header = {
@@ -179,6 +216,7 @@ static struct {
 		.uid = 1,
 		.cxl_version = ACPI_CEDT_CHBS_VERSION_CXL20,
 	},
+<<<<<<< HEAD
 	.chbs[2] = {
 		.header = {
 			.type = ACPI_CEDT_TYPE_CHBS,
@@ -195,6 +233,8 @@ static struct {
 		.uid = 3,
 		.cxl_version = ACPI_CEDT_CHBS_VERSION_CXL11,
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.cfmws0 = {
 		.cfmws = {
 			.header = {
@@ -255,6 +295,7 @@ static struct {
 		},
 		.target = { 0, 1, },
 	},
+<<<<<<< HEAD
 	.cfmws4 = {
 		.cfmws = {
 			.header = {
@@ -348,10 +389,16 @@ static struct {
 };
 
 struct acpi_cedt_cfmws *mock_cfmws[] = {
+=======
+};
+
+struct acpi_cedt_cfmws *mock_cfmws[4] = {
+>>>>>>> b7ba80a49124 (Commit)
 	[0] = &mock_cedt.cfmws0.cfmws,
 	[1] = &mock_cedt.cfmws1.cfmws,
 	[2] = &mock_cedt.cfmws2.cfmws,
 	[3] = &mock_cedt.cfmws3.cfmws,
+<<<<<<< HEAD
 	[4] = &mock_cedt.cfmws4.cfmws,
 	[5] = &mock_cedt.cfmws5.cfmws,
 	/* Modulo Math above, XOR Math below */
@@ -369,6 +416,8 @@ static int cfmws_end;
 
 struct acpi_cedt_cxims *mock_cxims[1] = {
 	[0] = &mock_cedt.cxims0.cxims,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct cxl_mock_res {
@@ -394,11 +443,19 @@ static void depopulate_all_mock_resources(void)
 	mutex_unlock(&mock_res_lock);
 }
 
+<<<<<<< HEAD
 static struct cxl_mock_res *alloc_mock_res(resource_size_t size, int align)
 {
 	struct cxl_mock_res *res = kzalloc(sizeof(*res), GFP_KERNEL);
 	struct genpool_data_align data = {
 		.align = align,
+=======
+static struct cxl_mock_res *alloc_mock_res(resource_size_t size)
+{
+	struct cxl_mock_res *res = kzalloc(sizeof(*res), GFP_KERNEL);
+	struct genpool_data_align data = {
+		.align = SZ_256M,
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	unsigned long phys;
 
@@ -433,17 +490,28 @@ static int populate_cedt(void)
 		else
 			size = ACPI_CEDT_CHBS_LENGTH_CXL11;
 
+<<<<<<< HEAD
 		res = alloc_mock_res(size, size);
+=======
+		res = alloc_mock_res(size);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!res)
 			return -ENOMEM;
 		chbs->base = res->range.start;
 		chbs->length = size;
 	}
 
+<<<<<<< HEAD
 	for (i = cfmws_start; i <= cfmws_end; i++) {
 		struct acpi_cedt_cfmws *window = mock_cfmws[i];
 
 		res = alloc_mock_res(window->window_size, SZ_256M);
+=======
+	for (i = 0; i < ARRAY_SIZE(mock_cfmws); i++) {
+		struct acpi_cedt_cfmws *window = mock_cfmws[i];
+
+		res = alloc_mock_res(window->window_size);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!res)
 			return -ENOMEM;
 		window->base_hpa = res->range.start;
@@ -452,12 +520,19 @@ static int populate_cedt(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 static bool is_mock_port(struct device *dev);
 
 /*
  * WARNING, this hack assumes the format of 'struct cxl_cfmws_context'
  * and 'struct cxl_chbs_context' share the property that the first
  * struct member is a cxl_test device being probed by the cxl_acpi
+=======
+/*
+ * WARNING, this hack assumes the format of 'struct
+ * cxl_cfmws_context' and 'struct cxl_chbs_context' share the property that
+ * the first struct member is the device being probed by the cxl_acpi
+>>>>>>> b7ba80a49124 (Commit)
  * driver.
  */
 struct cxl_cedt_context {
@@ -474,7 +549,11 @@ static int mock_acpi_table_parse_cedt(enum acpi_cedt_type id,
 	unsigned long end;
 	int i;
 
+<<<<<<< HEAD
 	if (!is_mock_port(dev) && !is_mock_dev(dev))
+=======
+	if (dev != &cxl_acpi->dev)
+>>>>>>> b7ba80a49124 (Commit)
 		return acpi_table_parse_cedt(id, handler_arg, arg);
 
 	if (id == ACPI_CEDT_TYPE_CHBS)
@@ -485,12 +564,17 @@ static int mock_acpi_table_parse_cedt(enum acpi_cedt_type id,
 		}
 
 	if (id == ACPI_CEDT_TYPE_CFMWS)
+<<<<<<< HEAD
 		for (i = cfmws_start; i <= cfmws_end; i++) {
+=======
+		for (i = 0; i < ARRAY_SIZE(mock_cfmws); i++) {
+>>>>>>> b7ba80a49124 (Commit)
 			h = (union acpi_subtable_headers *) mock_cfmws[i];
 			end = (unsigned long) h + mock_cfmws[i]->header.length;
 			handler_arg(h, arg, end);
 		}
 
+<<<<<<< HEAD
 	if (id == ACPI_CEDT_TYPE_CXIMS)
 		for (i = 0; i < ARRAY_SIZE(mock_cxims); i++) {
 			h = (union acpi_subtable_headers *)mock_cxims[i];
@@ -498,6 +582,8 @@ static int mock_acpi_table_parse_cedt(enum acpi_cedt_type id,
 			handler_arg(h, arg, end);
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -508,6 +594,7 @@ static bool is_mock_bridge(struct device *dev)
 	for (i = 0; i < ARRAY_SIZE(cxl_host_bridge); i++)
 		if (dev == &cxl_host_bridge[i]->dev)
 			return true;
+<<<<<<< HEAD
 	for (i = 0; i < ARRAY_SIZE(cxl_hb_single); i++)
 		if (dev == &cxl_hb_single[i]->dev)
 			return true;
@@ -515,6 +602,8 @@ static bool is_mock_bridge(struct device *dev)
 		if (dev == &cxl_rch[i]->dev)
 			return true;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return false;
 }
 
@@ -537,6 +626,7 @@ static bool is_mock_port(struct device *dev)
 		if (dev == &cxl_switch_dport[i]->dev)
 			return true;
 
+<<<<<<< HEAD
 	for (i = 0; i < ARRAY_SIZE(cxl_root_single); i++)
 		if (dev == &cxl_root_single[i]->dev)
 			return true;
@@ -549,6 +639,8 @@ static bool is_mock_port(struct device *dev)
 		if (dev == &cxl_swd_single[i]->dev)
 			return true;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (is_cxl_memdev(dev))
 		return is_mock_dev(dev->parent);
 
@@ -584,14 +676,20 @@ mock_acpi_evaluate_integer(acpi_handle handle, acpi_string pathname,
 	return AE_OK;
 }
 
+<<<<<<< HEAD
 static struct pci_bus mock_pci_bus[NR_BRIDGES];
 static struct acpi_pci_root mock_pci_root[ARRAY_SIZE(mock_pci_bus)] = {
+=======
+static struct pci_bus mock_pci_bus[NR_CXL_HOST_BRIDGES];
+static struct acpi_pci_root mock_pci_root[NR_CXL_HOST_BRIDGES] = {
+>>>>>>> b7ba80a49124 (Commit)
 	[0] = {
 		.bus = &mock_pci_bus[0],
 	},
 	[1] = {
 		.bus = &mock_pci_bus[1],
 	},
+<<<<<<< HEAD
 	[2] = {
 		.bus = &mock_pci_bus[2],
 	},
@@ -599,6 +697,8 @@ static struct acpi_pci_root mock_pci_root[ARRAY_SIZE(mock_pci_bus)] = {
 		.bus = &mock_pci_bus[3],
 	},
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static bool is_mock_bus(struct pci_bus *bus)
@@ -620,8 +720,12 @@ static struct acpi_pci_root *mock_acpi_pci_find_root(acpi_handle handle)
 	return &mock_pci_root[host_bridge_index(adev)];
 }
 
+<<<<<<< HEAD
 static struct cxl_hdm *mock_cxl_setup_hdm(struct cxl_port *port,
 					  struct cxl_endpoint_dvsec_info *info)
+=======
+static struct cxl_hdm *mock_cxl_setup_hdm(struct cxl_port *port)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cxl_hdm *cxlhdm = devm_kzalloc(&port->dev, sizeof(*cxlhdm), GFP_KERNEL);
 
@@ -704,6 +808,7 @@ static int mock_decoder_reset(struct cxl_decoder *cxld)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void default_mock_decoder(struct cxl_decoder *cxld)
 {
 	cxld->hpa_range = (struct range){
@@ -842,6 +947,9 @@ static void mock_init_hdm_decoder(struct cxl_decoder *cxld)
 
 static int mock_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
 				       struct cxl_endpoint_dvsec_info *info)
+=======
+static int mock_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cxl_port *port = cxlhdm->port;
 	struct cxl_port *parent_port = to_cxl_port(port->dev.parent);
@@ -886,7 +994,20 @@ static int mock_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
 			cxld = &cxled->cxld;
 		}
 
+<<<<<<< HEAD
 		mock_init_hdm_decoder(cxld);
+=======
+		cxld->hpa_range = (struct range) {
+			.start = 0,
+			.end = -1,
+		};
+
+		cxld->interleave_ways = min_not_zero(target_count, 1);
+		cxld->interleave_granularity = SZ_4K;
+		cxld->target_type = CXL_DECODER_EXPANDER;
+		cxld->commit = mock_decoder_commit;
+		cxld->reset = mock_decoder_reset;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (target_count) {
 			rc = device_for_each_child(port->uport, &ctx,
@@ -915,10 +1036,15 @@ static int mock_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
 
 static int mock_cxl_port_enumerate_dports(struct cxl_port *port)
 {
+<<<<<<< HEAD
+=======
+	struct device *dev = &port->dev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct platform_device **array;
 	int i, array_size;
 
 	if (port->depth == 1) {
+<<<<<<< HEAD
 		if (is_multi_bridge(port->uport)) {
 			array_size = ARRAY_SIZE(cxl_root_port);
 			array = cxl_root_port;
@@ -944,6 +1070,13 @@ static int mock_cxl_port_enumerate_dports(struct cxl_port *port)
 				dev_name(port->uport));
 			return -ENXIO;
 		}
+=======
+		array_size = ARRAY_SIZE(cxl_root_port);
+		array = cxl_root_port;
+	} else if (port->depth == 2) {
+		array_size = ARRAY_SIZE(cxl_switch_dport);
+		array = cxl_switch_dport;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		dev_WARN_ONCE(&port->dev, 1, "unexpected depth %d\n",
 			      port->depth);
@@ -954,23 +1087,40 @@ static int mock_cxl_port_enumerate_dports(struct cxl_port *port)
 		struct platform_device *pdev = array[i];
 		struct cxl_dport *dport;
 
+<<<<<<< HEAD
 		if (pdev->dev.parent != port->uport) {
 			dev_dbg(&port->dev, "%s: mismatch parent %s\n",
 				dev_name(port->uport),
 				dev_name(pdev->dev.parent));
 			continue;
 		}
+=======
+		if (pdev->dev.parent != port->uport)
+			continue;
+>>>>>>> b7ba80a49124 (Commit)
 
 		dport = devm_cxl_add_dport(port, &pdev->dev, pdev->id,
 					   CXL_RESOURCE_NONE);
 
+<<<<<<< HEAD
 		if (IS_ERR(dport))
 			return PTR_ERR(dport);
+=======
+		if (IS_ERR(dport)) {
+			dev_err(dev, "failed to add dport: %s (%ld)\n",
+				dev_name(&pdev->dev), PTR_ERR(dport));
+			return PTR_ERR(dport);
+		}
+
+		dev_dbg(dev, "add dport%d: %s\n", pdev->id,
+			dev_name(&pdev->dev));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
 }
 
+<<<<<<< HEAD
 resource_size_t mock_cxl_rcrb_to_component(struct device *dev,
 					   resource_size_t rcrb,
 					   enum cxl_rcrb which)
@@ -980,6 +1130,8 @@ resource_size_t mock_cxl_rcrb_to_component(struct device *dev,
 	return (resource_size_t) which + 1;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct cxl_mock_ops cxl_mock_ops = {
 	.is_mock_adev = is_mock_adev,
 	.is_mock_bridge = is_mock_bridge,
@@ -988,7 +1140,10 @@ static struct cxl_mock_ops cxl_mock_ops = {
 	.is_mock_dev = is_mock_dev,
 	.acpi_table_parse_cedt = mock_acpi_table_parse_cedt,
 	.acpi_evaluate_integer = mock_acpi_evaluate_integer,
+<<<<<<< HEAD
 	.cxl_rcrb_to_component = mock_cxl_rcrb_to_component,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.acpi_pci_find_root = mock_acpi_pci_find_root,
 	.devm_cxl_port_enumerate_dports = mock_cxl_port_enumerate_dports,
 	.devm_cxl_setup_hdm = mock_cxl_setup_hdm,
@@ -1013,6 +1168,7 @@ static void mock_companion(struct acpi_device *adev, struct device *dev)
 #define SZ_512G (SZ_64G * 8)
 #endif
 
+<<<<<<< HEAD
 static __init int cxl_rch_init(void)
 {
 	int rc, i;
@@ -1246,16 +1402,21 @@ static void cxl_single_exit(void)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static __init int cxl_test_init(void)
 {
 	int rc, i;
 
+<<<<<<< HEAD
 	cxl_acpi_test();
 	cxl_core_test();
 	cxl_mem_test();
 	cxl_pmem_test();
 	cxl_port_test();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	register_cxl_mock_ops(&cxl_mock_ops);
 
 	cxl_mock_pool = gen_pool_create(ilog2(SZ_2M), NUMA_NO_NODE);
@@ -1269,6 +1430,7 @@ static __init int cxl_test_init(void)
 	if (rc)
 		goto err_gen_pool_add;
 
+<<<<<<< HEAD
 	if (interleave_arithmetic == 1) {
 		cfmws_start = CFMWS_XOR_ARRAY_START;
 		cfmws_end = CFMWS_XOR_ARRAY_END;
@@ -1277,6 +1439,8 @@ static __init int cxl_test_init(void)
 		cfmws_end = CFMWS_MOD_ARRAY_END;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rc = populate_cedt();
 	if (rc)
 		goto err_populate;
@@ -1297,7 +1461,10 @@ static __init int cxl_test_init(void)
 		}
 
 		cxl_host_bridge[i] = pdev;
+<<<<<<< HEAD
 		mock_pci_bus[i].bridge = &pdev->dev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		rc = sysfs_create_link(&pdev->dev.kobj, &pdev->dev.kobj,
 				       "physical_node");
 		if (rc)
@@ -1329,7 +1496,11 @@ static __init int cxl_test_init(void)
 
 		pdev = platform_device_alloc("cxl_switch_uport", i);
 		if (!pdev)
+<<<<<<< HEAD
 			goto err_uport;
+=======
+			goto err_port;
+>>>>>>> b7ba80a49124 (Commit)
 		pdev->dev.parent = &root_port->dev;
 
 		rc = platform_device_add(pdev);
@@ -1347,7 +1518,11 @@ static __init int cxl_test_init(void)
 
 		pdev = platform_device_alloc("cxl_switch_dport", i);
 		if (!pdev)
+<<<<<<< HEAD
 			goto err_dport;
+=======
+			goto err_port;
+>>>>>>> b7ba80a49124 (Commit)
 		pdev->dev.parent = &uport->dev;
 
 		rc = platform_device_add(pdev);
@@ -1358,6 +1533,10 @@ static __init int cxl_test_init(void)
 		cxl_switch_dport[i] = pdev;
 	}
 
+<<<<<<< HEAD
+=======
+	BUILD_BUG_ON(ARRAY_SIZE(cxl_mem) != ARRAY_SIZE(cxl_switch_dport));
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < ARRAY_SIZE(cxl_mem); i++) {
 		struct platform_device *dport = cxl_switch_dport[i];
 		struct platform_device *pdev;
@@ -1376,6 +1555,7 @@ static __init int cxl_test_init(void)
 		cxl_mem[i] = pdev;
 	}
 
+<<<<<<< HEAD
 	rc = cxl_single_init();
 	if (rc)
 		goto err_mem;
@@ -1387,6 +1567,11 @@ static __init int cxl_test_init(void)
 	cxl_acpi = platform_device_alloc("cxl_acpi", 0);
 	if (!cxl_acpi)
 		goto err_rch;
+=======
+	cxl_acpi = platform_device_alloc("cxl_acpi", 0);
+	if (!cxl_acpi)
+		goto err_mem;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mock_companion(&acpi0017_mock, &cxl_acpi->dev);
 	acpi0017_mock.dev.bus = &platform_bus_type;
@@ -1399,10 +1584,13 @@ static __init int cxl_test_init(void)
 
 err_add:
 	platform_device_put(cxl_acpi);
+<<<<<<< HEAD
 err_rch:
 	cxl_rch_exit();
 err_single:
 	cxl_single_exit();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err_mem:
 	for (i = ARRAY_SIZE(cxl_mem) - 1; i >= 0; i--)
 		platform_device_unregister(cxl_mem[i]);
@@ -1438,8 +1626,11 @@ static __exit void cxl_test_exit(void)
 	int i;
 
 	platform_device_unregister(cxl_acpi);
+<<<<<<< HEAD
 	cxl_rch_exit();
 	cxl_single_exit();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = ARRAY_SIZE(cxl_mem) - 1; i >= 0; i--)
 		platform_device_unregister(cxl_mem[i]);
 	for (i = ARRAY_SIZE(cxl_switch_dport) - 1; i >= 0; i--)
@@ -1461,8 +1652,11 @@ static __exit void cxl_test_exit(void)
 	unregister_cxl_mock_ops(&cxl_mock_ops);
 }
 
+<<<<<<< HEAD
 module_param(interleave_arithmetic, int, 0444);
 MODULE_PARM_DESC(interleave_arithmetic, "Modulo:0, XOR:1");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 module_init(cxl_test_init);
 module_exit(cxl_test_exit);
 MODULE_LICENSE("GPL v2");

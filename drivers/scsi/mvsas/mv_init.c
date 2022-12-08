@@ -142,7 +142,11 @@ static void mvs_free(struct mvs_info *mvi)
 		scsi_host_put(mvi->shost);
 	list_for_each_entry(mwq, &mvi->wq_list, entry)
 		cancel_delayed_work(&mwq->work_q);
+<<<<<<< HEAD
 	kfree(mvi->rsvd_tags);
+=======
+	kfree(mvi->tags);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(mvi);
 }
 
@@ -284,7 +288,14 @@ static int mvs_alloc(struct mvs_info *mvi, struct Scsi_Host *shost)
 			printk(KERN_DEBUG "failed to create dma pool %s.\n", pool_name);
 			goto err_out;
 	}
+<<<<<<< HEAD
 
+=======
+	mvi->tags_num = slot_nr;
+
+	/* Initialize tags */
+	mvs_tag_init(mvi);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 err_out:
 	return 1;
@@ -366,8 +377,13 @@ static struct mvs_info *mvs_pci_alloc(struct pci_dev *pdev,
 	mvi->sas = sha;
 	mvi->shost = shost;
 
+<<<<<<< HEAD
 	mvi->rsvd_tags = bitmap_zalloc(MVS_RSVD_SLOTS, GFP_KERNEL);
 	if (!mvi->rsvd_tags)
+=======
+	mvi->tags = kzalloc(MVS_CHIP_SLOT_SZ>>3, GFP_KERNEL);
+	if (!mvi->tags)
+>>>>>>> b7ba80a49124 (Commit)
 		goto err_out;
 
 	if (MVS_CHIP_DISP->chip_ioremap(mvi))
@@ -468,8 +484,11 @@ static void  mvs_post_sas_ha_init(struct Scsi_Host *shost,
 	else
 		can_queue = MVS_CHIP_SLOT_SZ;
 
+<<<<<<< HEAD
 	can_queue -= MVS_RSVD_SLOTS;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	shost->sg_tablesize = min_t(u16, SG_ALL, MVS_MAX_SG);
 	shost->can_queue = can_queue;
 	mvi->shost->cmd_per_lun = MVS_QUEUE_SIZE;

@@ -1102,7 +1102,10 @@ static int vdec_probe(struct platform_device *pdev)
 
 err_vdev_release:
 	video_device_release(vdev);
+<<<<<<< HEAD
 	v4l2_device_unregister(&core->v4l2_dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -1111,7 +1114,10 @@ static int vdec_remove(struct platform_device *pdev)
 	struct amvdec_core *core = platform_get_drvdata(pdev);
 
 	video_unregister_device(core->vdev_dec);
+<<<<<<< HEAD
 	v4l2_device_unregister(&core->v4l2_dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

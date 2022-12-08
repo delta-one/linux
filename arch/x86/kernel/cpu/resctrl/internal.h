@@ -8,16 +8,44 @@
 #include <linux/fs_context.h>
 #include <linux/jump_label.h>
 
+<<<<<<< HEAD
+=======
+#define MSR_IA32_L3_QOS_CFG		0xc81
+#define MSR_IA32_L2_QOS_CFG		0xc82
+#define MSR_IA32_L3_CBM_BASE		0xc90
+#define MSR_IA32_L2_CBM_BASE		0xd10
+#define MSR_IA32_MBA_THRTL_BASE		0xd50
+#define MSR_IA32_MBA_BW_BASE		0xc0000200
+
+#define MSR_IA32_QM_CTR			0x0c8e
+#define MSR_IA32_QM_EVTSEL		0x0c8d
+
+>>>>>>> b7ba80a49124 (Commit)
 #define L3_QOS_CDP_ENABLE		0x01ULL
 
 #define L2_QOS_CDP_ENABLE		0x01ULL
 
+<<<<<<< HEAD
+=======
+/*
+ * Event IDs are used to program IA32_QM_EVTSEL before reading event
+ * counter from IA32_QM_CTR
+ */
+#define QOS_L3_OCCUP_EVENT_ID		0x01
+#define QOS_L3_MBM_TOTAL_EVENT_ID	0x02
+#define QOS_L3_MBM_LOCAL_EVENT_ID	0x03
+
+>>>>>>> b7ba80a49124 (Commit)
 #define CQM_LIMBOCHECK_INTERVAL	1000
 
 #define MBM_CNTR_WIDTH_BASE		24
 #define MBM_OVERFLOW_INTERVAL		1000
 #define MAX_MBA_BW			100u
 #define MBA_IS_LINEAR			0x4
+<<<<<<< HEAD
+=======
+#define MBA_MAX_MBPS			U32_MAX
+>>>>>>> b7ba80a49124 (Commit)
 #define MAX_MBA_BW_AMD			0x800
 #define MBM_CNTR_WIDTH_OFFSET_AMD	20
 
@@ -30,6 +58,7 @@
  */
 #define MBM_CNTR_WIDTH_OFFSET_MAX (62 - MBM_CNTR_WIDTH_BASE)
 
+<<<<<<< HEAD
 /* Reads to Local DRAM Memory */
 #define READS_TO_LOCAL_MEM		BIT(0)
 
@@ -53,6 +82,8 @@
 
 /* Max event bits supported */
 #define MAX_EVT_CONFIG_BITS		GENMASK(6, 0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct rdt_fs_context {
 	struct kernfs_fs_context	kfc;
@@ -75,6 +106,7 @@ DECLARE_STATIC_KEY_FALSE(rdt_mon_enable_key);
  * struct mon_evt - Entry in the event list of a resource
  * @evtid:		event id
  * @name:		name of the event
+<<<<<<< HEAD
  * @configurable:	true if the event is configurable
  * @list:		entry in &rdt_resource->evt_list
  */
@@ -82,6 +114,13 @@ struct mon_evt {
 	enum resctrl_event_id	evtid;
 	char			*name;
 	bool			configurable;
+=======
+ * @list:		entry in &rdt_resource->evt_list
+ */
+struct mon_evt {
+	u32			evtid;
+	char			*name;
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head	list;
 };
 
@@ -97,9 +136,15 @@ struct mon_evt {
 union mon_data_bits {
 	void *priv;
 	struct {
+<<<<<<< HEAD
 		unsigned int rid		: 10;
 		enum resctrl_event_id evtid	: 8;
 		unsigned int domid		: 14;
+=======
+		unsigned int rid	: 10;
+		unsigned int evtid	: 8;
+		unsigned int domid	: 14;
+>>>>>>> b7ba80a49124 (Commit)
 	} u;
 };
 
@@ -107,12 +152,21 @@ struct rmid_read {
 	struct rdtgroup		*rgrp;
 	struct rdt_resource	*r;
 	struct rdt_domain	*d;
+<<<<<<< HEAD
 	enum resctrl_event_id	evtid;
 	bool			first;
 	int			err;
 	u64			val;
 };
 
+=======
+	int			evtid;
+	bool			first;
+	u64			val;
+};
+
+extern unsigned int resctrl_cqm_threshold;
+>>>>>>> b7ba80a49124 (Commit)
 extern bool rdt_alloc_capable;
 extern bool rdt_mon_capable;
 extern unsigned int rdt_mon_features;
@@ -294,19 +348,32 @@ struct rftype {
 
 /**
  * struct mbm_state - status for each MBM counter in each domain
+<<<<<<< HEAD
  * @prev_bw_bytes: Previous bytes value read for bandwidth calculation
+=======
+ * @chunks:	Total data moved (multiply by rdt_group.mon_scale to get bytes)
+ * @prev_msr:	Value of IA32_QM_CTR for this RMID last time we read it
+ * @prev_bw_msr:Value of previous IA32_QM_CTR for bandwidth counting
+>>>>>>> b7ba80a49124 (Commit)
  * @prev_bw:	The most recent bandwidth in MBps
  * @delta_bw:	Difference between the current and previous bandwidth
  * @delta_comp:	Indicates whether to compute the delta_bw
  */
 struct mbm_state {
+<<<<<<< HEAD
 	u64	prev_bw_bytes;
+=======
+	u64	chunks;
+	u64	prev_msr;
+	u64	prev_bw_msr;
+>>>>>>> b7ba80a49124 (Commit)
 	u32	prev_bw;
 	u32	delta_bw;
 	bool	delta_comp;
 };
 
 /**
+<<<<<<< HEAD
  * struct arch_mbm_state - values used to compute resctrl_arch_rmid_read()s
  *			   return value.
  * @chunks:	Total data moved (multiply by rdt_group.mon_scale to get bytes)
@@ -319,20 +386,30 @@ struct arch_mbm_state {
 };
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * struct rdt_hw_domain - Arch private attributes of a set of CPUs that share
  *			  a resource
  * @d_resctrl:	Properties exposed to the resctrl file system
  * @ctrl_val:	array of cache or mem ctrl values (indexed by CLOSID)
+<<<<<<< HEAD
  * @arch_mbm_total:	arch private state for MBM total bandwidth
  * @arch_mbm_local:	arch private state for MBM local bandwidth
+=======
+ * @mbps_val:	When mba_sc is enabled, this holds the bandwidth in MBps
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Members of this structure are accessed via helpers that provide abstraction.
  */
 struct rdt_hw_domain {
 	struct rdt_domain		d_resctrl;
 	u32				*ctrl_val;
+<<<<<<< HEAD
 	struct arch_mbm_state		*arch_mbm_total;
 	struct arch_mbm_state		*arch_mbm_local;
+=======
+	u32				*mbps_val;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline struct rdt_hw_domain *resctrl_to_arch_dom(struct rdt_domain *r)
@@ -434,7 +511,10 @@ enum resctrl_res_level {
 	RDT_RESOURCE_L3,
 	RDT_RESOURCE_L2,
 	RDT_RESOURCE_MBA,
+<<<<<<< HEAD
 	RDT_RESOURCE_SMBA,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Must be the last */
 	RDT_NUM_RESOURCES,
@@ -476,6 +556,17 @@ int resctrl_arch_set_cdp_enabled(enum resctrl_res_level l, bool enable);
 	for_each_rdt_resource(r)					      \
 		if (r->mon_capable)
 
+<<<<<<< HEAD
+=======
+#define for_each_alloc_enabled_rdt_resource(r)				      \
+	for_each_rdt_resource(r)					      \
+		if (r->alloc_enabled)
+
+#define for_each_mon_enabled_rdt_resource(r)				      \
+	for_each_rdt_resource(r)					      \
+		if (r->mon_enabled)
+
+>>>>>>> b7ba80a49124 (Commit)
 /* CPUID.(EAX=10H, ECX=ResID=1).EAX */
 union cpuid_0x10_1_eax {
 	struct {
@@ -537,9 +628,18 @@ void closid_free(int closid);
 int alloc_rmid(void);
 void free_rmid(u32 rmid);
 int rdt_get_mon_l3_config(struct rdt_resource *r);
+<<<<<<< HEAD
 bool __init rdt_cpu_has(int flag);
 void mon_event_count(void *info);
 int rdtgroup_mondata_show(struct seq_file *m, void *arg);
+=======
+void mon_event_count(void *info);
+int rdtgroup_mondata_show(struct seq_file *m, void *arg);
+void rmdir_mondata_subdir_allrdtgrp(struct rdt_resource *r,
+				    unsigned int dom_id);
+void mkdir_mondata_subdir_allrdtgrp(struct rdt_resource *r,
+				    struct rdt_domain *d);
+>>>>>>> b7ba80a49124 (Commit)
 void mon_event_read(struct rmid_read *rr, struct rdt_resource *r,
 		    struct rdt_domain *d, struct rdtgroup *rdtgrp,
 		    int evtid, int first);
@@ -548,13 +648,21 @@ void mbm_setup_overflow_handler(struct rdt_domain *dom,
 void mbm_handle_overflow(struct work_struct *work);
 void __init intel_rdt_mbm_apply_quirk(void);
 bool is_mba_sc(struct rdt_resource *r);
+<<<<<<< HEAD
+=======
+void setup_default_ctrlval(struct rdt_resource *r, u32 *dc, u32 *dm);
+u32 delay_bw_map(unsigned long bw, struct rdt_resource *r);
+>>>>>>> b7ba80a49124 (Commit)
 void cqm_setup_limbo_handler(struct rdt_domain *dom, unsigned long delay_ms);
 void cqm_handle_limbo(struct work_struct *work);
 bool has_busy_rmid(struct rdt_resource *r, struct rdt_domain *d);
 void __check_limbo(struct rdt_domain *d, bool force_free);
 void rdt_domain_reconfigure_cdp(struct rdt_resource *r);
 void __init thread_throttle_mode_init(void);
+<<<<<<< HEAD
 void __init mbm_config_rftype_init(const char *config);
 void rdt_staged_configs_clear(void);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _ASM_X86_RESCTRL_INTERNAL_H */

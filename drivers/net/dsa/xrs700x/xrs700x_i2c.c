@@ -76,7 +76,12 @@ static const struct regmap_config xrs700x_i2c_regmap_config = {
 	.val_format_endian = REGMAP_ENDIAN_BIG
 };
 
+<<<<<<< HEAD
 static int xrs700x_i2c_probe(struct i2c_client *i2c)
+=======
+static int xrs700x_i2c_probe(struct i2c_client *i2c,
+			     const struct i2c_device_id *i2c_id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct xrs700x *priv;
 	int ret;
@@ -112,6 +117,11 @@ static void xrs700x_i2c_remove(struct i2c_client *i2c)
 		return;
 
 	xrs700x_switch_remove(priv);
+<<<<<<< HEAD
+=======
+
+	i2c_set_clientdata(i2c, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void xrs700x_i2c_shutdown(struct i2c_client *i2c)
@@ -147,7 +157,11 @@ static struct i2c_driver xrs700x_i2c_driver = {
 		.name	= "xrs700x-i2c",
 		.of_match_table = of_match_ptr(xrs700x_i2c_dt_ids),
 	},
+<<<<<<< HEAD
 	.probe_new = xrs700x_i2c_probe,
+=======
+	.probe	= xrs700x_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove	= xrs700x_i2c_remove,
 	.shutdown = xrs700x_i2c_shutdown,
 	.id_table = xrs700x_i2c_id,

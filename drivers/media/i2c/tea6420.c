@@ -87,7 +87,12 @@ static const struct v4l2_subdev_ops tea6420_ops = {
 	.audio = &tea6420_audio_ops,
 };
 
+<<<<<<< HEAD
 static int tea6420_probe(struct i2c_client *client)
+=======
+static int tea6420_probe(struct i2c_client *client,
+			  const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct v4l2_subdev *sd;
 	int err, i;
@@ -132,7 +137,11 @@ static struct i2c_driver tea6420_driver = {
 	.driver = {
 		.name	= "tea6420",
 	},
+<<<<<<< HEAD
 	.probe_new	= tea6420_probe,
+=======
+	.probe		= tea6420_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= tea6420_remove,
 	.id_table	= tea6420_id,
 };

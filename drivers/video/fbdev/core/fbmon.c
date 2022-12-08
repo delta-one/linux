@@ -1050,7 +1050,11 @@ static u32 fb_get_vblank(u32 hfreq)
 }
 
 /**
+<<<<<<< HEAD
  * fb_get_hblank_by_hfreq - get horizontal blank time given hfreq
+=======
+ * fb_get_hblank_by_freq - get horizontal blank time given hfreq
+>>>>>>> b7ba80a49124 (Commit)
  * @hfreq: horizontal freq
  * @xres: horizontal resolution in pixels
  *

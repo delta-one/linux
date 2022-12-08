@@ -409,6 +409,7 @@ int nilfs_resize_fs(struct super_block *sb, __u64 newsize)
 		goto out;
 
 	/*
+<<<<<<< HEAD
 	 * Prevent underflow in second superblock position calculation.
 	 * The exact minimum size check is done in nilfs_sufile_resize().
 	 */
@@ -418,6 +419,8 @@ int nilfs_resize_fs(struct super_block *sb, __u64 newsize)
 	}
 
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * Write lock is required to protect some functions depending
 	 * on the number of segments, the number of reserved segments,
 	 * and so forth.
@@ -1142,6 +1145,11 @@ static int nilfs_remount(struct super_block *sb, int *flags, char *data)
 	if ((bool)(*flags & SB_RDONLY) == sb_rdonly(sb))
 		goto out;
 	if (*flags & SB_RDONLY) {
+<<<<<<< HEAD
+=======
+		/* Shutting down log writer */
+		nilfs_detach_log_writer(sb);
+>>>>>>> b7ba80a49124 (Commit)
 		sb->s_flags |= SB_RDONLY;
 
 		/*

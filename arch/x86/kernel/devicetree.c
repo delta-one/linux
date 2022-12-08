@@ -31,6 +31,14 @@ char __initdata cmd_line[COMMAND_LINE_SIZE];
 
 int __initdata of_ioapic;
 
+<<<<<<< HEAD
+=======
+void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+{
+	BUG();
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 void __init add_dtb(u64 data)
 {
 	initial_dtb = data + offsetof(struct setup_data, data);
@@ -162,6 +170,7 @@ static void __init dtb_lapic_setup(void)
 			return;
 	}
 	smp_found_config = 1;
+<<<<<<< HEAD
 	if (of_property_read_bool(dn, "intel,virtual-wire-mode")) {
 		pr_info("Virtual Wire compatibility mode.\n");
 		pic_mode = 0;
@@ -170,6 +179,9 @@ static void __init dtb_lapic_setup(void)
 		pic_mode = 1;
 	}
 
+=======
+	pic_mode = 1;
+>>>>>>> b7ba80a49124 (Commit)
 	register_lapic_address(lapic_addr);
 }
 
@@ -250,7 +262,11 @@ static void __init dtb_add_ioapic(struct device_node *dn)
 
 	ret = of_address_to_resource(dn, 0, &r);
 	if (ret) {
+<<<<<<< HEAD
 		pr_err("Can't obtain address from device node %pOF.\n", dn);
+=======
+		printk(KERN_ERR "Can't obtain address from device node %pOF.\n", dn);
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 	mp_register_ioapic(++ioapic_id, r.start, gsi_top, &cfg);
@@ -267,7 +283,11 @@ static void __init dtb_ioapic_setup(void)
 		of_ioapic = 1;
 		return;
 	}
+<<<<<<< HEAD
 	pr_err("Error: No information about IO-APIC in OF.\n");
+=======
+	printk(KERN_ERR "Error: No information about IO-APIC in OF.\n");
+>>>>>>> b7ba80a49124 (Commit)
 }
 #else
 static void __init dtb_ioapic_setup(void) {}

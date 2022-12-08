@@ -7,6 +7,12 @@
  * PDPI Lightning 4 gamecard driver for Linux.
  */
 
+<<<<<<< HEAD
+=======
+/*
+ */
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/io.h>
 #include <linux/delay.h>
 #include <linux/errno.h>

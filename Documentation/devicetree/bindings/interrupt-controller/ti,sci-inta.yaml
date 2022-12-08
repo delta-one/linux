@@ -59,9 +59,12 @@ properties:
 
   interrupt-controller: true
 
+<<<<<<< HEAD
   '#interrupt-cells':
     const: 0
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   msi-controller: true
 
   ti,interrupt-ranges:

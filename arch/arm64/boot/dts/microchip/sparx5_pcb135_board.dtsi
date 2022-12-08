@@ -208,7 +208,11 @@
 };
 
 &mdio0 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+	status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 	phy0: ethernet-phy@0 {
 		reg = <0>;
 	};
@@ -284,7 +288,11 @@
 };
 
 &mdio1 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+	status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 	phy24: ethernet-phy@24 {
 		reg = <0>;
 	};
@@ -360,7 +368,11 @@
 };
 
 &mdio3 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+	status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 	phy64: ethernet-phy@64 {
 		reg = <28>;
 	};

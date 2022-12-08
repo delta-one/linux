@@ -199,17 +199,29 @@ static void layout_sections(struct module *mod, const Elf_Ehdr *hdr,
 	for (m = 0; m < ARRAY_SIZE(masks); ++m) {
 		for (i = 0; i < hdr->e_shnum; ++i) {
 			Elf_Shdr *s = &sechdrs[i];
+<<<<<<< HEAD
 			struct module_memory *mod_mem;
 
 			mod_mem = &mod->mem[MOD_TEXT];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 			if ((s->sh_flags & masks[m][0]) != masks[m][0]
 			    || (s->sh_flags & masks[m][1])
 			    || s->sh_entsize != ~0UL)
 				continue;
 			s->sh_entsize =
+<<<<<<< HEAD
 				get_offset((unsigned long *)&mod_mem->size, s);
 		}
+=======
+				get_offset((unsigned long *)&mod->core_layout.size, s);
+		}
+
+		if (m == 0)
+			mod->core_layout.text_size = mod->core_layout.size;
+
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -640,7 +652,11 @@ static int vpe_elfload(struct vpe *v)
 		layout_sections(&mod, hdr, sechdrs, secstrings);
 	}
 
+<<<<<<< HEAD
 	v->load_addr = alloc_progmem(mod.mem[MOD_TEXT].size);
+=======
+	v->load_addr = alloc_progmem(mod.core_layout.size);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!v->load_addr)
 		return -ENOMEM;
 

@@ -44,7 +44,10 @@ static int snooze_loop(struct cpuidle_device *dev,
 	pseries_idle_prolog();
 	local_irq_enable();
 	snooze_exit_time = get_tb() + snooze_timeout;
+<<<<<<< HEAD
 	dev->poll_time_limit = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	while (!need_resched()) {
 		HMT_low();
@@ -55,7 +58,10 @@ static int snooze_loop(struct cpuidle_device *dev,
 			 * loop anyway. Require a barrier after polling is
 			 * cleared to order subsequent test of need_resched().
 			 */
+<<<<<<< HEAD
 			dev->poll_time_limit = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			clear_thread_flag(TIF_POLLING_NRFLAG);
 			smp_mb();
 			break;
@@ -270,8 +276,12 @@ static struct cpuidle_state dedicated_states[NR_DEDICATED_STATES] = {
 		.desc = "snooze",
 		.exit_latency = 0,
 		.target_residency = 0,
+<<<<<<< HEAD
 		.enter = &snooze_loop,
 		.flags = CPUIDLE_FLAG_POLLING },
+=======
+		.enter = &snooze_loop },
+>>>>>>> b7ba80a49124 (Commit)
 	{ /* CEDE */
 		.name = "CEDE",
 		.desc = "CEDE",
@@ -289,8 +299,12 @@ static struct cpuidle_state shared_states[] = {
 		.desc = "snooze",
 		.exit_latency = 0,
 		.target_residency = 0,
+<<<<<<< HEAD
 		.enter = &snooze_loop,
 		.flags = CPUIDLE_FLAG_POLLING },
+=======
+		.enter = &snooze_loop },
+>>>>>>> b7ba80a49124 (Commit)
 	{ /* Shared Cede */
 		.name = "Shared Cede",
 		.desc = "Shared Cede",

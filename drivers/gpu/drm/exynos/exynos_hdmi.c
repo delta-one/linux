@@ -893,7 +893,11 @@ static int hdmi_get_modes(struct drm_connector *connector)
 	if (!edid)
 		return -ENODEV;
 
+<<<<<<< HEAD
 	hdata->dvi_mode = !connector->display_info.is_hdmi;
+=======
+	hdata->dvi_mode = !drm_detect_hdmi_monitor(edid);
+>>>>>>> b7ba80a49124 (Commit)
 	DRM_DEV_DEBUG_KMS(hdata->dev, "%s : width[%d] x height[%d]\n",
 			  (hdata->dvi_mode ? "dvi monitor" : "hdmi monitor"),
 			  edid->width_cm, edid->height_cm);
@@ -922,8 +926,13 @@ static int hdmi_find_phy_conf(struct hdmi_context *hdata, u32 pixel_clock)
 	return -EINVAL;
 }
 
+<<<<<<< HEAD
 static enum drm_mode_status hdmi_mode_valid(struct drm_connector *connector,
 					    struct drm_display_mode *mode)
+=======
+static int hdmi_mode_valid(struct drm_connector *connector,
+			struct drm_display_mode *mode)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hdmi_context *hdata = connector_to_hdmi(connector);
 	int ret;

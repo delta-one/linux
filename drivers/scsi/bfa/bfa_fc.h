@@ -1548,7 +1548,11 @@ enum fdmi_port_attribute_type {
 struct fdmi_attr_s {
 	__be16        type;
 	__be16        len;
+<<<<<<< HEAD
 	u8         value[];
+=======
+	u8         value[1];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*

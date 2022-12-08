@@ -145,6 +145,10 @@ examples:
         #size-cells = <0>;
 
         nand@0 {
+<<<<<<< HEAD
             reg = <0>;
+=======
+                reg = <0>;
+>>>>>>> b7ba80a49124 (Commit)
         };
     };

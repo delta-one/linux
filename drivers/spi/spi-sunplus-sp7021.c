@@ -504,13 +504,21 @@ static int sp7021_spi_controller_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void sp7021_spi_controller_remove(struct platform_device *pdev)
+=======
+static int sp7021_spi_controller_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_controller *ctlr = dev_get_drvdata(&pdev->dev);
 
 	spi_unregister_controller(ctlr);
 	pm_runtime_disable(&pdev->dev);
 	pm_runtime_set_suspended(&pdev->dev);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __maybe_unused sp7021_spi_controller_suspend(struct device *dev)
@@ -563,7 +571,11 @@ MODULE_DEVICE_TABLE(of, sp7021_spi_controller_ids);
 
 static struct platform_driver sp7021_spi_controller_driver = {
 	.probe = sp7021_spi_controller_probe,
+<<<<<<< HEAD
 	.remove_new = sp7021_spi_controller_remove,
+=======
+	.remove = sp7021_spi_controller_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "sunplus,sp7021-spi-controller",
 		.of_match_table = sp7021_spi_controller_ids,

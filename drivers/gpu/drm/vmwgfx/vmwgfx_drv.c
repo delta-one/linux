@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0 OR MIT
 /**************************************************************************
  *
+<<<<<<< HEAD
  * Copyright 2009-2023 VMware, Inc., Palo Alto, CA., USA
+=======
+ * Copyright 2009-2022 VMware, Inc., Palo Alto, CA., USA
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the
@@ -25,6 +29,7 @@
  *
  **************************************************************************/
 
+<<<<<<< HEAD
 
 #include "vmwgfx_drv.h"
 
@@ -37,14 +42,28 @@
 #include <drm/drm_aperture.h>
 #include <drm/drm_drv.h>
 #include <drm/drm_fbdev_generic.h>
+=======
+#include <linux/dma-mapping.h>
+#include <linux/module.h>
+#include <linux/pci.h>
+#include <linux/cc_platform.h>
+
+#include <drm/drm_aperture.h>
+#include <drm/drm_drv.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_gem_ttm_helper.h>
 #include <drm/drm_ioctl.h>
 #include <drm/drm_module.h>
 #include <drm/drm_sysfs.h>
+<<<<<<< HEAD
+=======
+#include <drm/ttm/ttm_bo_driver.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/ttm/ttm_range_manager.h>
 #include <drm/ttm/ttm_placement.h>
 #include <generated/utsrelease.h>
 
+<<<<<<< HEAD
 #include <linux/cc_platform.h>
 #include <linux/dma-mapping.h>
 #include <linux/module.h>
@@ -53,6 +72,19 @@
 
 #define VMWGFX_DRIVER_DESC "Linux drm driver for VMware graphics devices"
 
+=======
+#include "ttm_object.h"
+#include "vmwgfx_binding.h"
+#include "vmwgfx_devcaps.h"
+#include "vmwgfx_drv.h"
+#include "vmwgfx_mksstat.h"
+
+#define VMWGFX_DRIVER_DESC "Linux drm driver for VMware graphics devices"
+
+#define VMW_MIN_INITIAL_WIDTH 800
+#define VMW_MIN_INITIAL_HEIGHT 600
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Fully encoded drm commands. Might move to vmw_drm.h
  */
@@ -263,6 +295,10 @@ static const struct pci_device_id vmw_pci_id_list[] = {
 };
 MODULE_DEVICE_TABLE(pci, vmw_pci_id_list);
 
+<<<<<<< HEAD
+=======
+static int enable_fbdev = IS_ENABLED(CONFIG_DRM_VMWGFX_FBCON);
+>>>>>>> b7ba80a49124 (Commit)
 static int vmw_restrict_iommu;
 static int vmw_force_coherent;
 static int vmw_restrict_dma_mask;
@@ -272,6 +308,11 @@ static int vmw_probe(struct pci_dev *, const struct pci_device_id *);
 static int vmwgfx_pm_notifier(struct notifier_block *nb, unsigned long val,
 			      void *ptr);
 
+<<<<<<< HEAD
+=======
+MODULE_PARM_DESC(enable_fbdev, "Enable vmwgfx fbdev");
+module_param_named(enable_fbdev, enable_fbdev, int, 0600);
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_PARM_DESC(restrict_iommu, "Try to limit IOMMU usage for TTM pages");
 module_param_named(restrict_iommu, vmw_restrict_iommu, int, 0600);
 MODULE_PARM_DESC(force_coherent, "Force coherent TTM pages");
@@ -387,6 +428,7 @@ static void vmw_print_sm_type(struct vmw_private *dev_priv)
 static int vmw_dummy_query_bo_create(struct vmw_private *dev_priv)
 {
 	int ret;
+<<<<<<< HEAD
 	struct vmw_bo *vbo;
 	struct ttm_bo_kmap_obj map;
 	volatile SVGA3dQueryResult *result;
@@ -398,12 +440,19 @@ static int vmw_dummy_query_bo_create(struct vmw_private *dev_priv)
 		.size = PAGE_SIZE,
 		.pin = true
 	};
+=======
+	struct vmw_buffer_object *vbo;
+	struct ttm_bo_kmap_obj map;
+	volatile SVGA3dQueryResult *result;
+	bool dummy;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Create the vbo as pinned, so that a tryreserve will
 	 * immediately succeed. This is because we're the only
 	 * user of the bo currently.
 	 */
+<<<<<<< HEAD
 	ret = vmw_bo_create(dev_priv, &bo_params, &vbo);
 	if (unlikely(ret != 0))
 		return ret;
@@ -413,6 +462,19 @@ static int vmw_dummy_query_bo_create(struct vmw_private *dev_priv)
 	vmw_bo_pin_reserved(vbo, true);
 
 	ret = ttm_bo_kmap(&vbo->tbo, 0, 1, &map);
+=======
+	ret = vmw_bo_create(dev_priv, PAGE_SIZE,
+			    &vmw_sys_placement, false, true,
+			    &vmw_bo_bo_free, &vbo);
+	if (unlikely(ret != 0))
+		return ret;
+
+	ret = ttm_bo_reserve(&vbo->base, false, true, NULL);
+	BUG_ON(ret != 0);
+	vmw_bo_pin_reserved(vbo, true);
+
+	ret = ttm_bo_kmap(&vbo->base, 0, 1, &map);
+>>>>>>> b7ba80a49124 (Commit)
 	if (likely(ret == 0)) {
 		result = ttm_kmap_obj_virtual(&map, &dummy);
 		result->totalSize = sizeof(*result);
@@ -421,7 +483,11 @@ static int vmw_dummy_query_bo_create(struct vmw_private *dev_priv)
 		ttm_bo_kunmap(&map);
 	}
 	vmw_bo_pin_reserved(vbo, false);
+<<<<<<< HEAD
 	ttm_bo_unreserve(&vbo->tbo);
+=======
+	ttm_bo_unreserve(&vbo->base);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (unlikely(ret != 0)) {
 		DRM_ERROR("Dummy query buffer map failed.\n");
@@ -626,8 +692,13 @@ static void vmw_get_initial_size(struct vmw_private *dev_priv)
 	width = vmw_read(dev_priv, SVGA_REG_WIDTH);
 	height = vmw_read(dev_priv, SVGA_REG_HEIGHT);
 
+<<<<<<< HEAD
 	width = max_t(uint32_t, width, VMWGFX_MIN_INITIAL_WIDTH);
 	height = max_t(uint32_t, height, VMWGFX_MIN_INITIAL_HEIGHT);
+=======
+	width = max_t(uint32_t, width, VMW_MIN_INITIAL_WIDTH);
+	height = max_t(uint32_t, height, VMW_MIN_INITIAL_HEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (width > dev_priv->fb_max_width ||
 	    height > dev_priv->fb_max_height) {
@@ -636,8 +707,13 @@ static void vmw_get_initial_size(struct vmw_private *dev_priv)
 		 * This is a host error and shouldn't occur.
 		 */
 
+<<<<<<< HEAD
 		width  = VMWGFX_MIN_INITIAL_WIDTH;
 		height = VMWGFX_MIN_INITIAL_HEIGHT;
+=======
+		width = VMW_MIN_INITIAL_WIDTH;
+		height = VMW_MIN_INITIAL_HEIGHT;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	dev_priv->initial_width = width;
@@ -809,6 +885,7 @@ static int vmw_detect_version(struct vmw_private *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void vmw_write_driver_id(struct vmw_private *dev)
 {
 	if ((dev->capabilities2 & SVGA_CAP2_DX2) != 0) {
@@ -846,6 +923,8 @@ static void vmw_sw_context_fini(struct vmw_private *dev_priv)
 		vmw_binding_state_free(sw_context->staged_bindings);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int vmw_driver_load(struct vmw_private *dev_priv, u32 pci_id)
 {
 	int ret;
@@ -855,8 +934,11 @@ static int vmw_driver_load(struct vmw_private *dev_priv, u32 pci_id)
 
 	dev_priv->drm.dev_private = dev_priv;
 
+<<<<<<< HEAD
 	vmw_sw_context_init(dev_priv);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_init(&dev_priv->cmdbuf_mutex);
 	mutex_init(&dev_priv->binding_mutex);
 	spin_lock_init(&dev_priv->resource_lock);
@@ -886,6 +968,12 @@ static int vmw_driver_load(struct vmw_private *dev_priv, u32 pci_id)
 
 	dev_priv->assume_16bpp = !!vmw_assume_16bpp;
 
+<<<<<<< HEAD
+=======
+	dev_priv->enable_fb = enable_fbdev;
+
+
+>>>>>>> b7ba80a49124 (Commit)
 	dev_priv->capabilities = vmw_read(dev_priv, SVGA_REG_CAPABILITIES);
 	vmw_print_bitmap(&dev_priv->drm, "Capabilities",
 			 dev_priv->capabilities,
@@ -1009,7 +1097,11 @@ static int vmw_driver_load(struct vmw_private *dev_priv, u32 pci_id)
 		goto out_err0;
 	}
 
+<<<<<<< HEAD
 	dev_priv->tdev = ttm_object_device_init(&vmw_prime_dmabuf_ops);
+=======
+	dev_priv->tdev = ttm_object_device_init(12, &vmw_prime_dmabuf_ops);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (unlikely(dev_priv->tdev == NULL)) {
 		drm_err(&dev_priv->drm,
@@ -1130,7 +1222,16 @@ static int vmw_driver_load(struct vmw_private *dev_priv, u32 pci_id)
 	vmw_host_printf("vmwgfx: Module Version: %d.%d.%d (kernel: %s)",
 			VMWGFX_DRIVER_MAJOR, VMWGFX_DRIVER_MINOR,
 			VMWGFX_DRIVER_PATCHLEVEL, UTS_RELEASE);
+<<<<<<< HEAD
 	vmw_write_driver_id(dev_priv);
+=======
+
+	if (dev_priv->enable_fb) {
+		vmw_fifo_resource_inc(dev_priv);
+		vmw_svga_enable(dev_priv);
+		vmw_fb_init(dev_priv);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_priv->pm_nb.notifier_call = vmwgfx_pm_notifier;
 	register_pm_notifier(&dev_priv->pm_nb);
@@ -1177,10 +1278,22 @@ static void vmw_driver_unload(struct drm_device *dev)
 
 	unregister_pm_notifier(&dev_priv->pm_nb);
 
+<<<<<<< HEAD
 	vmw_sw_context_fini(dev_priv);
 	vmw_fifo_resource_dec(dev_priv);
 
 	vmw_svga_disable(dev_priv);
+=======
+	if (dev_priv->ctx.res_ht_initialized)
+		vmwgfx_ht_remove(&dev_priv->ctx.res_ht);
+	vfree(dev_priv->ctx.cmd_bounce);
+	if (dev_priv->enable_fb) {
+		vmw_fb_off(dev_priv);
+		vmw_fb_close(dev_priv);
+		vmw_fifo_resource_dec(dev_priv);
+		vmw_svga_disable(dev_priv);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	vmw_kms_close(dev_priv);
 	vmw_overlay_close(dev_priv);
@@ -1202,6 +1315,11 @@ static void vmw_driver_unload(struct drm_device *dev)
 		vmw_irq_uninstall(&dev_priv->drm);
 
 	ttm_object_device_release(&dev_priv->tdev);
+<<<<<<< HEAD
+=======
+	if (dev_priv->ctx.staged_bindings)
+		vmw_binding_state_free(dev_priv->ctx.staged_bindings);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = vmw_res_context; i < vmw_res_max; ++i)
 		idr_destroy(&dev_priv->res_idr[i]);
@@ -1230,7 +1348,11 @@ static int vmw_driver_open(struct drm_device *dev, struct drm_file *file_priv)
 	if (unlikely(!vmw_fp))
 		return ret;
 
+<<<<<<< HEAD
 	vmw_fp->tfile = ttm_object_file_init(dev_priv->tdev);
+=======
+	vmw_fp->tfile = ttm_object_file_init(dev_priv->tdev, 10);
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(vmw_fp->tfile == NULL))
 		goto out_no_tfile;
 
@@ -1318,6 +1440,11 @@ static void vmw_master_drop(struct drm_device *dev,
 	struct vmw_private *dev_priv = vmw_priv(dev);
 
 	vmw_kms_legacy_hotspot_clear(dev_priv);
+<<<<<<< HEAD
+=======
+	if (!dev_priv->enable_fb)
+		vmw_svga_disable(dev_priv);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -1510,19 +1637,38 @@ static int vmw_pm_freeze(struct device *kdev)
 		DRM_ERROR("Failed to freeze modesetting.\n");
 		return ret;
 	}
+<<<<<<< HEAD
+=======
+	if (dev_priv->enable_fb)
+		vmw_fb_off(dev_priv);
+>>>>>>> b7ba80a49124 (Commit)
 
 	vmw_execbuf_release_pinned_bo(dev_priv);
 	vmw_resource_evict_all(dev_priv);
 	vmw_release_device_early(dev_priv);
 	while (ttm_device_swapout(&dev_priv->bdev, &ctx, GFP_KERNEL) > 0);
+<<<<<<< HEAD
 	vmw_fifo_resource_dec(dev_priv);
 	if (atomic_read(&dev_priv->num_fifo_resources) != 0) {
 		DRM_ERROR("Can't hibernate while 3D resources are active.\n");
 		vmw_fifo_resource_inc(dev_priv);
+=======
+	if (dev_priv->enable_fb)
+		vmw_fifo_resource_dec(dev_priv);
+	if (atomic_read(&dev_priv->num_fifo_resources) != 0) {
+		DRM_ERROR("Can't hibernate while 3D resources are active.\n");
+		if (dev_priv->enable_fb)
+			vmw_fifo_resource_inc(dev_priv);
+>>>>>>> b7ba80a49124 (Commit)
 		WARN_ON(vmw_request_device_late(dev_priv));
 		dev_priv->suspend_locked = false;
 		if (dev_priv->suspend_state)
 			vmw_kms_resume(dev);
+<<<<<<< HEAD
+=======
+		if (dev_priv->enable_fb)
+			vmw_fb_on(dev_priv);
+>>>>>>> b7ba80a49124 (Commit)
 		return -EBUSY;
 	}
 
@@ -1542,19 +1688,35 @@ static int vmw_pm_restore(struct device *kdev)
 
 	vmw_detect_version(dev_priv);
 
+<<<<<<< HEAD
 	vmw_fifo_resource_inc(dev_priv);
+=======
+	if (dev_priv->enable_fb)
+		vmw_fifo_resource_inc(dev_priv);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = vmw_request_device(dev_priv);
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	__vmw_svga_enable(dev_priv);
+=======
+	if (dev_priv->enable_fb)
+		__vmw_svga_enable(dev_priv);
+>>>>>>> b7ba80a49124 (Commit)
 
 	vmw_fence_fifo_up(dev_priv->fman);
 	dev_priv->suspend_locked = false;
 	if (dev_priv->suspend_state)
 		vmw_kms_resume(&dev_priv->drm);
 
+<<<<<<< HEAD
+=======
+	if (dev_priv->enable_fb)
+		vmw_fb_on(dev_priv);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1571,7 +1733,11 @@ static const struct file_operations vmwgfx_driver_fops = {
 	.open = drm_open,
 	.release = drm_release,
 	.unlocked_ioctl = vmw_unlocked_ioctl,
+<<<<<<< HEAD
 	.mmap = drm_gem_mmap,
+=======
+	.mmap = vmw_mmap,
+>>>>>>> b7ba80a49124 (Commit)
 	.poll = drm_poll,
 	.read = drm_read,
 #if defined(CONFIG_COMPAT)
@@ -1645,10 +1811,13 @@ static int vmw_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 	if (ret)
 		goto out_unload;
 
+<<<<<<< HEAD
 	vmw_fifo_resource_inc(vmw);
 	vmw_svga_enable(vmw);
 	drm_fbdev_generic_setup(&vmw->drm,  0);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vmw_debugfs_gem_init(vmw);
 	vmw_debugfs_resource_managers_init(vmw);
 

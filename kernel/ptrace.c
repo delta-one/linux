@@ -813,7 +813,11 @@ static long ptrace_get_rseq_configuration(struct task_struct *task,
 {
 	struct ptrace_rseq_configuration conf = {
 		.rseq_abi_pointer = (u64)(uintptr_t)task->rseq,
+<<<<<<< HEAD
 		.rseq_abi_size = task->rseq_len,
+=======
+		.rseq_abi_size = sizeof(*task->rseq),
+>>>>>>> b7ba80a49124 (Commit)
 		.signature = task->rseq_sig,
 		.flags = 0,
 	};

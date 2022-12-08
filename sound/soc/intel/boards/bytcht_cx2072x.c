@@ -111,7 +111,11 @@ static int byt_cht_cx2072x_fixup(struct snd_soc_pcm_runtime *rtd,
 		hw_param_interval(params, SNDRV_PCM_HW_PARAM_CHANNELS);
 	int ret;
 
+<<<<<<< HEAD
 	/* The DSP will convert the FE rate to 48k, stereo, 24bits */
+=======
+	/* The DSP will covert the FE rate to 48k, stereo, 24bits */
+>>>>>>> b7ba80a49124 (Commit)
 	rate->min = rate->max = 48000;
 	channels->min = channels->max = 2;
 
@@ -253,9 +257,15 @@ static int snd_byt_cht_cx2072x_probe(struct platform_device *pdev)
 	if (adev) {
 		snprintf(codec_name, sizeof(codec_name), "i2c-%s",
 			 acpi_dev_name(adev));
+<<<<<<< HEAD
 		byt_cht_cx2072x_dais[dai_index].codecs->name = codec_name;
 	}
 	acpi_dev_put(adev);
+=======
+		put_device(&adev->dev);
+		byt_cht_cx2072x_dais[dai_index].codecs->name = codec_name;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* override platform name, if required */
 	ret = snd_soc_fixup_dai_links_platform_name(&byt_cht_cx2072x_card,

@@ -7,7 +7,10 @@
 #include "symbol.h"
 #include "callchain.h"
 #include "record.h"
+<<<<<<< HEAD
 #include "util/perf_regs.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 void arch__add_leaf_frame_record_opts(struct record_opts *opts)
 {

@@ -13,6 +13,7 @@ static inline bool stress_slb(void)
 	return static_branch_unlikely(&stress_slb_key);
 }
 
+<<<<<<< HEAD
 extern bool stress_hpt_enabled;
 
 DECLARE_STATIC_KEY_FALSE(stress_hpt_key);
@@ -24,6 +25,8 @@ static inline bool stress_hpt(void)
 
 void hpt_do_stress(unsigned long ea, unsigned long hpte_group);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void slb_setup_new_exec(void);
 
 void exit_lazy_flush_tlb(struct mm_struct *mm, bool always_flush);

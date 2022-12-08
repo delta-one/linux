@@ -54,6 +54,7 @@
 		/* bpf_strtoul() */
 		BPF_EMIT_CALL(BPF_FUNC_strtoul),
 
+<<<<<<< HEAD
 		BPF_MOV64_IMM(BPF_REG_0, 0),
 		BPF_EXIT_INSN(),
 	},
@@ -61,6 +62,14 @@
 	.errstr_unpriv = "invalid indirect read from stack R4 off -16+4 size 8",
 	/* in privileged mode reads from uninitialized stack locations are permitted */
 	.result = ACCEPT,
+=======
+		BPF_MOV64_IMM(BPF_REG_0, 1),
+		BPF_EXIT_INSN(),
+	},
+	.result = REJECT,
+	.prog_type = BPF_PROG_TYPE_CGROUP_SYSCTL,
+	.errstr = "invalid indirect read from stack R4 off -16+4 size 8",
+>>>>>>> b7ba80a49124 (Commit)
 },
 {
 	"ARG_PTR_TO_LONG misaligned",

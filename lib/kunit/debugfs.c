@@ -55,6 +55,7 @@ static int debugfs_print_results(struct seq_file *seq, void *v)
 	enum kunit_status success = kunit_suite_has_succeeded(suite);
 	struct kunit_case *test_case;
 
+<<<<<<< HEAD
 	if (!suite)
 		return 0;
 
@@ -66,14 +67,24 @@ static int debugfs_print_results(struct seq_file *seq, void *v)
 	seq_puts(seq, KUNIT_SUBTEST_INDENT "KTAP version 1\n");
 	seq_printf(seq, KUNIT_SUBTEST_INDENT "# Subtest: %s\n", suite->name);
 	seq_printf(seq, KUNIT_SUBTEST_INDENT "1..%zd\n", kunit_suite_num_test_cases(suite));
+=======
+	if (!suite || !suite->log)
+		return 0;
+
+	seq_printf(seq, "%s", suite->log);
+>>>>>>> b7ba80a49124 (Commit)
 
 	kunit_suite_for_each_test_case(suite, test_case)
 		debugfs_print_result(seq, suite, test_case);
 
+<<<<<<< HEAD
 	if (suite->log)
 		seq_printf(seq, "%s", suite->log);
 
 	seq_printf(seq, "%s %d %s\n",
+=======
+	seq_printf(seq, "%s %d - %s\n",
+>>>>>>> b7ba80a49124 (Commit)
 		   kunit_status_to_ok_not_ok(success), 1, suite->name);
 	return 0;
 }

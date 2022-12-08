@@ -1040,9 +1040,12 @@ static int au1200fb_fb_check_var(struct fb_var_screeninfo *var,
 	u32 pixclock;
 	int screen_size, plane;
 
+<<<<<<< HEAD
 	if (!var->pixclock)
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	plane = fbdev->plane;
 
 	/* Make sure that the mode respect all LCD controller and
@@ -1765,7 +1768,11 @@ failed:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void au1200fb_drv_remove(struct platform_device *dev)
+=======
+static int au1200fb_drv_remove(struct platform_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct au1200fb_platdata *pd = platform_get_drvdata(dev);
 	struct fb_info *fbi;
@@ -1788,6 +1795,11 @@ static void au1200fb_drv_remove(struct platform_device *dev)
 	}
 
 	free_irq(platform_get_irq(dev, 0), (void *)dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM
@@ -1838,7 +1850,11 @@ static struct platform_driver au1200fb_driver = {
 		.pm	= AU1200FB_PMOPS,
 	},
 	.probe		= au1200fb_drv_probe,
+<<<<<<< HEAD
 	.remove_new	= au1200fb_drv_remove,
+=======
+	.remove		= au1200fb_drv_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(au1200fb_driver);
 

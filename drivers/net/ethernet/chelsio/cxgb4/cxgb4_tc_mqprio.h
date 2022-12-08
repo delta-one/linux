@@ -4,7 +4,11 @@
 #ifndef __CXGB4_TC_MQPRIO_H__
 #define __CXGB4_TC_MQPRIO_H__
 
+<<<<<<< HEAD
 #include <net/pkt_sched.h>
+=======
+#include <net/pkt_cls.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #define CXGB4_EOSW_TXQ_DEFAULT_DESC_NUM 128
 

@@ -1164,7 +1164,11 @@ xprt_request_enqueue_receive(struct rpc_task *task)
 	spin_unlock(&xprt->queue_lock);
 
 	/* Turn off autodisconnect */
+<<<<<<< HEAD
 	del_timer_sync(&xprt->timer);
+=======
+	del_singleshot_timer_sync(&xprt->timer);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1788,7 +1792,11 @@ static int xprt_alloc_id(struct rpc_xprt *xprt)
 {
 	int id;
 
+<<<<<<< HEAD
 	id = ida_alloc(&rpc_xprt_ids, GFP_KERNEL);
+=======
+	id = ida_simple_get(&rpc_xprt_ids, 0, 0, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (id < 0)
 		return id;
 
@@ -1798,7 +1806,11 @@ static int xprt_alloc_id(struct rpc_xprt *xprt)
 
 static void xprt_free_id(struct rpc_xprt *xprt)
 {
+<<<<<<< HEAD
 	ida_free(&rpc_xprt_ids, xprt->id);
+=======
+	ida_simple_remove(&rpc_xprt_ids, xprt->id);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct rpc_xprt *xprt_alloc(struct net *net, size_t size,
@@ -1822,7 +1834,14 @@ struct rpc_xprt *xprt_alloc(struct net *net, size_t size,
 			goto out_free;
 		list_add(&req->rq_list, &xprt->free);
 	}
+<<<<<<< HEAD
 	xprt->max_reqs = max_t(unsigned int, max_alloc, num_prealloc);
+=======
+	if (max_alloc > num_prealloc)
+		xprt->max_reqs = max_alloc;
+	else
+		xprt->max_reqs = num_prealloc;
+>>>>>>> b7ba80a49124 (Commit)
 	xprt->min_reqs = num_prealloc;
 	xprt->num_reqs = num_prealloc;
 
@@ -1865,7 +1884,11 @@ xprt_alloc_xid(struct rpc_xprt *xprt)
 static void
 xprt_init_xid(struct rpc_xprt *xprt)
 {
+<<<<<<< HEAD
 	xprt->xid = get_random_u32();
+=======
+	xprt->xid = prandom_u32();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void

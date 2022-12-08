@@ -10,7 +10,10 @@
 #include <linux/mm.h>
 
 #include <asm/processor-flags.h>
+<<<<<<< HEAD
 #include <asm/cacheinfo.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/cpufeature.h>
 #include <asm/tlbflush.h>
 #include <asm/mtrr.h>
@@ -397,6 +400,12 @@ print_fixed(unsigned base, unsigned step, const mtrr_type *types)
 	}
 }
 
+<<<<<<< HEAD
+=======
+static void prepare_set(void);
+static void post_set(void);
+
+>>>>>>> b7ba80a49124 (Commit)
 static void __init print_mtrr_state(void)
 {
 	unsigned int i;
@@ -442,6 +451,23 @@ static void __init print_mtrr_state(void)
 		pr_debug("TOM2: %016llx aka %lldM\n", mtrr_tom2, mtrr_tom2>>20);
 }
 
+<<<<<<< HEAD
+=======
+/* PAT setup for BP. We need to go through sync steps here */
+void __init mtrr_bp_pat_init(void)
+{
+	unsigned long flags;
+
+	local_irq_save(flags);
+	prepare_set();
+
+	pat_init();
+
+	post_set();
+	local_irq_restore(flags);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Grab all of the MTRR state for this CPU into *state */
 bool __init get_mtrr_state(void)
 {
@@ -668,10 +694,14 @@ static u32 deftype_lo, deftype_hi;
 /**
  * set_mtrr_state - Set the MTRR state for this CPU.
  *
+<<<<<<< HEAD
  * NOTE: The CPU must already be in a safe state for MTRR changes, including
  *       measures that only a single CPU can be active in set_mtrr_state() in
  *       order to not be subject to races for usage of deftype_lo. This is
  *       accomplished by taking cache_disable_lock.
+=======
+ * NOTE: The CPU must already be in a safe state for MTRR changes.
+>>>>>>> b7ba80a49124 (Commit)
  * RETURNS: 0 if no changes made, else a mask indicating what was changed.
  */
 static unsigned long set_mtrr_state(void)
@@ -702,13 +732,64 @@ static unsigned long set_mtrr_state(void)
 	return change_mask;
 }
 
+<<<<<<< HEAD
 void mtrr_disable(void)
 {
+=======
+
+static unsigned long cr4;
+static DEFINE_RAW_SPINLOCK(set_atomicity_lock);
+
+/*
+ * Since we are disabling the cache don't allow any interrupts,
+ * they would run extremely slow and would only increase the pain.
+ *
+ * The caller must ensure that local interrupts are disabled and
+ * are reenabled after post_set() has been called.
+ */
+static void prepare_set(void) __acquires(set_atomicity_lock)
+{
+	unsigned long cr0;
+
+	/*
+	 * Note that this is not ideal
+	 * since the cache is only flushed/disabled for this CPU while the
+	 * MTRRs are changed, but changing this requires more invasive
+	 * changes to the way the kernel boots
+	 */
+
+	raw_spin_lock(&set_atomicity_lock);
+
+	/* Enter the no-fill (CD=1, NW=0) cache mode and flush caches. */
+	cr0 = read_cr0() | X86_CR0_CD;
+	write_cr0(cr0);
+
+	/*
+	 * Cache flushing is the most time-consuming step when programming
+	 * the MTRRs. Fortunately, as per the Intel Software Development
+	 * Manual, we can skip it if the processor supports cache self-
+	 * snooping.
+	 */
+	if (!static_cpu_has(X86_FEATURE_SELFSNOOP))
+		wbinvd();
+
+	/* Save value of CR4 and clear Page Global Enable (bit 7) */
+	if (boot_cpu_has(X86_FEATURE_PGE)) {
+		cr4 = __read_cr4();
+		__write_cr4(cr4 & ~X86_CR4_PGE);
+	}
+
+	/* Flush all TLBs via a mov %cr3, %reg; mov %reg, %cr3 */
+	count_vm_tlb_event(NR_TLB_LOCAL_FLUSH_ALL);
+	flush_tlb_local();
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Save MTRR state */
 	rdmsr(MSR_MTRRdefType, deftype_lo, deftype_hi);
 
 	/* Disable MTRRs, and set the default type to uncached */
 	mtrr_wrmsr(MSR_MTRRdefType, deftype_lo & ~0xcff, deftype_hi);
+<<<<<<< HEAD
 }
 
 void mtrr_enable(void)
@@ -720,16 +801,62 @@ void mtrr_enable(void)
 void mtrr_generic_set_state(void)
 {
 	unsigned long mask, count;
+=======
+
+	/* Again, only flush caches if we have to. */
+	if (!static_cpu_has(X86_FEATURE_SELFSNOOP))
+		wbinvd();
+}
+
+static void post_set(void) __releases(set_atomicity_lock)
+{
+	/* Flush TLBs (no need to flush caches - they are disabled) */
+	count_vm_tlb_event(NR_TLB_LOCAL_FLUSH_ALL);
+	flush_tlb_local();
+
+	/* Intel (P6) standard MTRRs */
+	mtrr_wrmsr(MSR_MTRRdefType, deftype_lo, deftype_hi);
+
+	/* Enable caches */
+	write_cr0(read_cr0() & ~X86_CR0_CD);
+
+	/* Restore value of CR4 */
+	if (boot_cpu_has(X86_FEATURE_PGE))
+		__write_cr4(cr4);
+	raw_spin_unlock(&set_atomicity_lock);
+}
+
+static void generic_set_all(void)
+{
+	unsigned long mask, count;
+	unsigned long flags;
+
+	local_irq_save(flags);
+	prepare_set();
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Actually set the state */
 	mask = set_mtrr_state();
 
+<<<<<<< HEAD
+=======
+	/* also set PAT */
+	pat_init();
+
+	post_set();
+	local_irq_restore(flags);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Use the atomic bitops to update the global mask */
 	for (count = 0; count < sizeof(mask) * 8; ++count) {
 		if (mask & 0x01)
 			set_bit(count, &smp_changes_mask);
 		mask >>= 1;
 	}
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -751,7 +878,11 @@ static void generic_set_mtrr(unsigned int reg, unsigned long base,
 	vr = &mtrr_state.var_ranges[reg];
 
 	local_irq_save(flags);
+<<<<<<< HEAD
 	cache_disable();
+=======
+	prepare_set();
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (size == 0) {
 		/*
@@ -770,7 +901,11 @@ static void generic_set_mtrr(unsigned int reg, unsigned long base,
 		mtrr_wrmsr(MTRRphysMask_MSR(reg), vr->mask_lo, vr->mask_hi);
 	}
 
+<<<<<<< HEAD
 	cache_enable();
+=======
+	post_set();
+>>>>>>> b7ba80a49124 (Commit)
 	local_irq_restore(flags);
 }
 
@@ -829,6 +964,11 @@ int positive_have_wrcomb(void)
  * Generic structure...
  */
 const struct mtrr_ops generic_mtrr_ops = {
+<<<<<<< HEAD
+=======
+	.use_intel_if		= 1,
+	.set_all		= generic_set_all,
+>>>>>>> b7ba80a49124 (Commit)
 	.get			= generic_get_mtrr,
 	.get_free_region	= generic_get_free_region,
 	.set			= generic_set_mtrr,

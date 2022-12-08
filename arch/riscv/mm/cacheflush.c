@@ -3,7 +3,10 @@
  * Copyright (C) 2017 SiFive
  */
 
+<<<<<<< HEAD
 #include <linux/of.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/cacheflush.h>
 
 #ifdef CONFIG_SMP
@@ -83,6 +86,7 @@ void flush_icache_pte(pte_t pte)
 {
 	struct page *page = pte_page(pte);
 
+<<<<<<< HEAD
 	/*
 	 * HugeTLB pages are always fully mapped, so only setting head page's
 	 * PG_dcache_clean flag is enough.
@@ -145,3 +149,9 @@ void riscv_init_cbo_blocksizes(void)
 	if (cboz_block_size)
 		riscv_cboz_block_size = cboz_block_size;
 }
+=======
+	if (!test_and_set_bit(PG_dcache_clean, &page->flags))
+		flush_icache_all();
+}
+#endif /* CONFIG_MMU */
+>>>>>>> b7ba80a49124 (Commit)

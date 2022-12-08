@@ -10,7 +10,11 @@
 #include <linux/mmu_notifier.h>
 
 #include <drm/drm_gem.h>
+<<<<<<< HEAD
 #include <drm/ttm/ttm_bo.h>
+=======
+#include <drm/ttm/ttm_bo_api.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <uapi/drm/i915_drm.h>
 
 #include "i915_active.h"
@@ -107,8 +111,12 @@ struct drm_i915_gem_object_ops {
 	 * pinning or for as long as the object lock is held.
 	 */
 	int (*migrate)(struct drm_i915_gem_object *obj,
+<<<<<<< HEAD
 		       struct intel_memory_region *mr,
 		       unsigned int flags);
+=======
+		       struct intel_memory_region *mr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	void (*release)(struct drm_i915_gem_object *obj);
 
@@ -327,18 +335,28 @@ struct drm_i915_gem_object {
  * dealing with userspace objects the CPU fault handler is free to ignore this.
  */
 #define I915_BO_ALLOC_GPU_ONLY	  BIT(6)
+<<<<<<< HEAD
 #define I915_BO_ALLOC_CCS_AUX	  BIT(7)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define I915_BO_ALLOC_FLAGS (I915_BO_ALLOC_CONTIGUOUS | \
 			     I915_BO_ALLOC_VOLATILE | \
 			     I915_BO_ALLOC_CPU_CLEAR | \
 			     I915_BO_ALLOC_USER | \
 			     I915_BO_ALLOC_PM_VOLATILE | \
 			     I915_BO_ALLOC_PM_EARLY | \
+<<<<<<< HEAD
 			     I915_BO_ALLOC_GPU_ONLY | \
 			     I915_BO_ALLOC_CCS_AUX)
 #define I915_BO_READONLY          BIT(8)
 #define I915_TILING_QUIRK_BIT     9 /* unknown swizzling; do not release! */
 #define I915_BO_PROTECTED         BIT(10)
+=======
+			     I915_BO_ALLOC_GPU_ONLY)
+#define I915_BO_READONLY          BIT(7)
+#define I915_TILING_QUIRK_BIT     8 /* unknown swizzling; do not release! */
+#define I915_BO_PROTECTED         BIT(9)
+>>>>>>> b7ba80a49124 (Commit)
 	/**
 	 * @mem_flags - Mutable placement-related flags
 	 *

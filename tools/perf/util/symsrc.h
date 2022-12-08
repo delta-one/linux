@@ -26,7 +26,10 @@ struct symsrc {
 	GElf_Shdr	     opdshdr;
 
 	Elf_Scn		     *symtab;
+<<<<<<< HEAD
 	size_t		     symtab_idx;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	GElf_Shdr	     symshdr;
 
 	Elf_Scn		     *dynsym;

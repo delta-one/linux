@@ -215,7 +215,11 @@ static void gr_dfs_create(struct gr_udc *dev)
 
 static void gr_dfs_delete(struct gr_udc *dev)
 {
+<<<<<<< HEAD
 	debugfs_lookup_and_remove(dev_name(dev->dev), usb_debug_root);
+=======
+	debugfs_remove(debugfs_lookup(dev_name(dev->dev), usb_debug_root));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #else /* !CONFIG_USB_GADGET_DEBUG_FS */
@@ -1906,6 +1910,10 @@ static int gr_udc_start(struct usb_gadget *gadget,
 	spin_lock(&dev->lock);
 
 	/* Hook up the driver */
+<<<<<<< HEAD
+=======
+	driver->driver.bus = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	dev->driver = driver;
 
 	/* Get ready for host detection */

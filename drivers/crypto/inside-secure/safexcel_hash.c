@@ -30,7 +30,11 @@ struct safexcel_ahash_ctx {
 	bool fb_init_done;
 	bool fb_do_setkey;
 
+<<<<<<< HEAD
 	struct crypto_aes_ctx *aes;
+=======
+	struct crypto_cipher *kaes;
+>>>>>>> b7ba80a49124 (Commit)
 	struct crypto_ahash *fback;
 	struct crypto_shash *shpre;
 	struct shash_desc *shdesc;
@@ -231,7 +235,11 @@ static int safexcel_handle_req_result(struct safexcel_crypto_priv *priv,
 	struct safexcel_result_desc *rdesc;
 	struct ahash_request *areq = ahash_request_cast(async);
 	struct crypto_ahash *ahash = crypto_ahash_reqtfm(areq);
+<<<<<<< HEAD
 	struct safexcel_ahash_req *sreq = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *sreq = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(ahash);
 	u64 cache_len;
 
@@ -312,7 +320,11 @@ static int safexcel_ahash_send_req(struct crypto_async_request *async, int ring,
 				   int *commands, int *results)
 {
 	struct ahash_request *areq = ahash_request_cast(async);
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(areq));
 	struct safexcel_crypto_priv *priv = ctx->base.priv;
 	struct safexcel_command_desc *cdesc, *first_cdesc = NULL;
@@ -569,7 +581,11 @@ static int safexcel_handle_result(struct safexcel_crypto_priv *priv, int ring,
 				  bool *should_complete, int *ret)
 {
 	struct ahash_request *areq = ahash_request_cast(async);
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	BUG_ON(!(priv->flags & EIP197_TRC_CACHE) && req->needs_inv);
@@ -608,7 +624,11 @@ static int safexcel_ahash_send(struct crypto_async_request *async,
 			       int ring, int *commands, int *results)
 {
 	struct ahash_request *areq = ahash_request_cast(async);
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	if (req->needs_inv)
@@ -624,17 +644,27 @@ static int safexcel_ahash_exit_inv(struct crypto_tfm *tfm)
 	struct safexcel_ahash_ctx *ctx = crypto_tfm_ctx(tfm);
 	struct safexcel_crypto_priv *priv = ctx->base.priv;
 	EIP197_REQUEST_ON_STACK(req, ahash, EIP197_AHASH_REQ_SIZE);
+<<<<<<< HEAD
 	struct safexcel_ahash_req *rctx = ahash_request_ctx_dma(req);
 	DECLARE_CRYPTO_WAIT(result);
 	int ring = ctx->base.ring;
 	int err;
+=======
+	struct safexcel_ahash_req *rctx = ahash_request_ctx(req);
+	struct safexcel_inv_result result = {};
+	int ring = ctx->base.ring;
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, EIP197_AHASH_REQ_SIZE);
 
 	/* create invalidation request */
 	init_completion(&result.completion);
 	ahash_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
+<<<<<<< HEAD
 				   crypto_req_done, &result);
+=======
+				   safexcel_inv_complete, &result);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ahash_request_set_tfm(req, __crypto_ahash_cast(tfm));
 	ctx = crypto_tfm_ctx(req->base.tfm);
@@ -648,11 +678,20 @@ static int safexcel_ahash_exit_inv(struct crypto_tfm *tfm)
 	queue_work(priv->ring[ring].workqueue,
 		   &priv->ring[ring].work_data.work);
 
+<<<<<<< HEAD
 	err = crypto_wait_req(-EINPROGRESS, &result);
 
 	if (err) {
 		dev_warn(priv->dev, "hash: completion error (%d)\n", err);
 		return err;
+=======
+	wait_for_completion(&result.completion);
+
+	if (result.error) {
+		dev_warn(priv->dev, "hash: completion error (%d)\n",
+			 result.error);
+		return result.error;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -663,7 +702,11 @@ static int safexcel_ahash_exit_inv(struct crypto_tfm *tfm)
  */
 static int safexcel_ahash_cache(struct ahash_request *areq)
 {
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 	u64 cache_len;
 
 	/* cache_len: everything accepted by the driver but not sent yet,
@@ -689,7 +732,11 @@ static int safexcel_ahash_cache(struct ahash_request *areq)
 static int safexcel_ahash_enqueue(struct ahash_request *areq)
 {
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(areq));
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 	struct safexcel_crypto_priv *priv = ctx->base.priv;
 	int ret, ring;
 
@@ -741,7 +788,11 @@ static int safexcel_ahash_enqueue(struct ahash_request *areq)
 
 static int safexcel_ahash_update(struct ahash_request *areq)
 {
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	/* If the request is 0 length, do nothing */
@@ -766,7 +817,11 @@ static int safexcel_ahash_update(struct ahash_request *areq)
 
 static int safexcel_ahash_final(struct ahash_request *areq)
 {
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(areq));
 
 	req->finish = true;
@@ -824,7 +879,11 @@ static int safexcel_ahash_final(struct ahash_request *areq)
 			result[i] = swab32(ctx->base.ipad.word[i + 4]);
 		}
 		areq->result[0] ^= 0x80;			// 10- padding
+<<<<<<< HEAD
 		aes_encrypt(ctx->aes, areq->result, areq->result);
+=======
+		crypto_cipher_encrypt_one(ctx->kaes, areq->result, areq->result);
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	} else if (unlikely(req->hmac &&
 			    (req->len == req->block_sz) &&
@@ -870,7 +929,11 @@ static int safexcel_ahash_final(struct ahash_request *areq)
 
 static int safexcel_ahash_finup(struct ahash_request *areq)
 {
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	req->finish = true;
 
@@ -880,7 +943,11 @@ static int safexcel_ahash_finup(struct ahash_request *areq)
 
 static int safexcel_ahash_export(struct ahash_request *areq, void *out)
 {
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 	struct safexcel_ahash_export_state *export = out;
 
 	export->len = req->len;
@@ -896,7 +963,11 @@ static int safexcel_ahash_export(struct ahash_request *areq, void *out)
 
 static int safexcel_ahash_import(struct ahash_request *areq, const void *in)
 {
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 	const struct safexcel_ahash_export_state *export = in;
 	int ret;
 
@@ -927,15 +998,24 @@ static int safexcel_ahash_cra_init(struct crypto_tfm *tfm)
 	ctx->base.handle_result = safexcel_handle_result;
 	ctx->fb_do_setkey = false;
 
+<<<<<<< HEAD
 	crypto_ahash_set_reqsize_dma(__crypto_ahash_cast(tfm),
 				     sizeof(struct safexcel_ahash_req));
+=======
+	crypto_ahash_set_reqsize(__crypto_ahash_cast(tfm),
+				 sizeof(struct safexcel_ahash_req));
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 static int safexcel_sha1_init(struct ahash_request *areq)
 {
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(areq));
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(*req));
 
@@ -1012,7 +1092,11 @@ struct safexcel_alg_template safexcel_alg_sha1 = {
 static int safexcel_hmac_sha1_init(struct ahash_request *areq)
 {
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(areq));
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(*req));
 
@@ -1042,11 +1126,34 @@ static int safexcel_hmac_sha1_digest(struct ahash_request *areq)
 	return safexcel_ahash_finup(areq);
 }
 
+<<<<<<< HEAD
+=======
+struct safexcel_ahash_result {
+	struct completion completion;
+	int error;
+};
+
+static void safexcel_ahash_complete(struct crypto_async_request *req, int error)
+{
+	struct safexcel_ahash_result *result = req->data;
+
+	if (error == -EINPROGRESS)
+		return;
+
+	result->error = error;
+	complete(&result->completion);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int safexcel_hmac_init_pad(struct ahash_request *areq,
 				  unsigned int blocksize, const u8 *key,
 				  unsigned int keylen, u8 *ipad, u8 *opad)
 {
+<<<<<<< HEAD
 	DECLARE_CRYPTO_WAIT(result);
+=======
+	struct safexcel_ahash_result result;
+>>>>>>> b7ba80a49124 (Commit)
 	struct scatterlist sg;
 	int ret, i;
 	u8 *keydup;
@@ -1059,12 +1166,25 @@ static int safexcel_hmac_init_pad(struct ahash_request *areq,
 			return -ENOMEM;
 
 		ahash_request_set_callback(areq, CRYPTO_TFM_REQ_MAY_BACKLOG,
+<<<<<<< HEAD
 					   crypto_req_done, &result);
 		sg_init_one(&sg, keydup, keylen);
 		ahash_request_set_crypt(areq, &sg, ipad, keylen);
 
 		ret = crypto_ahash_digest(areq);
 		ret = crypto_wait_req(ret, &result);
+=======
+					   safexcel_ahash_complete, &result);
+		sg_init_one(&sg, keydup, keylen);
+		ahash_request_set_crypt(areq, &sg, ipad, keylen);
+		init_completion(&result.completion);
+
+		ret = crypto_ahash_digest(areq);
+		if (ret == -EINPROGRESS || ret == -EBUSY) {
+			wait_for_completion_interruptible(&result.completion);
+			ret = result.error;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Avoid leaking */
 		kfree_sensitive(keydup);
@@ -1089,28 +1209,55 @@ static int safexcel_hmac_init_pad(struct ahash_request *areq,
 static int safexcel_hmac_init_iv(struct ahash_request *areq,
 				 unsigned int blocksize, u8 *pad, void *state)
 {
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req;
 	DECLARE_CRYPTO_WAIT(result);
+=======
+	struct safexcel_ahash_result result;
+	struct safexcel_ahash_req *req;
+>>>>>>> b7ba80a49124 (Commit)
 	struct scatterlist sg;
 	int ret;
 
 	ahash_request_set_callback(areq, CRYPTO_TFM_REQ_MAY_BACKLOG,
+<<<<<<< HEAD
 				   crypto_req_done, &result);
 	sg_init_one(&sg, pad, blocksize);
 	ahash_request_set_crypt(areq, &sg, pad, blocksize);
+=======
+				   safexcel_ahash_complete, &result);
+	sg_init_one(&sg, pad, blocksize);
+	ahash_request_set_crypt(areq, &sg, pad, blocksize);
+	init_completion(&result.completion);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = crypto_ahash_init(areq);
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	req = ahash_request_ctx_dma(areq);
+=======
+	req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 	req->hmac = true;
 	req->last_req = true;
 
 	ret = crypto_ahash_update(areq);
+<<<<<<< HEAD
 	ret = crypto_wait_req(ret, &result);
 
 	return ret ?: crypto_ahash_export(areq, state);
+=======
+	if (ret && ret != -EINPROGRESS && ret != -EBUSY)
+		return ret;
+
+	wait_for_completion_interruptible(&result.completion);
+	if (result.error)
+		return result.error;
+
+	return crypto_ahash_export(areq, state);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __safexcel_hmac_setkey(const char *alg, const u8 *key,
@@ -1238,7 +1385,11 @@ struct safexcel_alg_template safexcel_alg_hmac_sha1 = {
 static int safexcel_sha256_init(struct ahash_request *areq)
 {
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(areq));
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(*req));
 
@@ -1295,7 +1446,11 @@ struct safexcel_alg_template safexcel_alg_sha256 = {
 static int safexcel_sha224_init(struct ahash_request *areq)
 {
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(areq));
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(*req));
 
@@ -1359,7 +1514,11 @@ static int safexcel_hmac_sha224_setkey(struct crypto_ahash *tfm, const u8 *key,
 static int safexcel_hmac_sha224_init(struct ahash_request *areq)
 {
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(areq));
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(*req));
 
@@ -1431,7 +1590,11 @@ static int safexcel_hmac_sha256_setkey(struct crypto_ahash *tfm, const u8 *key,
 static int safexcel_hmac_sha256_init(struct ahash_request *areq)
 {
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(areq));
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(*req));
 
@@ -1496,7 +1659,11 @@ struct safexcel_alg_template safexcel_alg_hmac_sha256 = {
 static int safexcel_sha512_init(struct ahash_request *areq)
 {
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(areq));
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(*req));
 
@@ -1553,7 +1720,11 @@ struct safexcel_alg_template safexcel_alg_sha512 = {
 static int safexcel_sha384_init(struct ahash_request *areq)
 {
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(areq));
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(*req));
 
@@ -1617,7 +1788,11 @@ static int safexcel_hmac_sha512_setkey(struct crypto_ahash *tfm, const u8 *key,
 static int safexcel_hmac_sha512_init(struct ahash_request *areq)
 {
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(areq));
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(*req));
 
@@ -1689,7 +1864,11 @@ static int safexcel_hmac_sha384_setkey(struct crypto_ahash *tfm, const u8 *key,
 static int safexcel_hmac_sha384_init(struct ahash_request *areq)
 {
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(areq));
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(*req));
 
@@ -1754,7 +1933,11 @@ struct safexcel_alg_template safexcel_alg_hmac_sha384 = {
 static int safexcel_md5_init(struct ahash_request *areq)
 {
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(areq));
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(*req));
 
@@ -1811,7 +1994,11 @@ struct safexcel_alg_template safexcel_alg_md5 = {
 static int safexcel_hmac_md5_init(struct ahash_request *areq)
 {
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(areq));
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(*req));
 
@@ -1894,7 +2081,11 @@ static int safexcel_crc32_cra_init(struct crypto_tfm *tfm)
 static int safexcel_crc32_init(struct ahash_request *areq)
 {
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(areq));
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(*req));
 
@@ -1966,7 +2157,11 @@ struct safexcel_alg_template safexcel_alg_crc32 = {
 static int safexcel_cbcmac_init(struct ahash_request *areq)
 {
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(areq));
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(*req));
 
@@ -2057,14 +2252,23 @@ static int safexcel_xcbcmac_setkey(struct crypto_ahash *tfm, const u8 *key,
 				 unsigned int len)
 {
 	struct safexcel_ahash_ctx *ctx = crypto_tfm_ctx(crypto_ahash_tfm(tfm));
+<<<<<<< HEAD
 	u32 key_tmp[3 * AES_BLOCK_SIZE / sizeof(u32)];
 	int ret, i;
 
 	ret = aes_expandkey(ctx->aes, key, len);
+=======
+	struct crypto_aes_ctx aes;
+	u32 key_tmp[3 * AES_BLOCK_SIZE / sizeof(u32)];
+	int ret, i;
+
+	ret = aes_expandkey(&aes, key, len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
 	/* precompute the XCBC key material */
+<<<<<<< HEAD
 	aes_encrypt(ctx->aes, (u8 *)key_tmp + 2 * AES_BLOCK_SIZE,
 		    "\x1\x1\x1\x1\x1\x1\x1\x1\x1\x1\x1\x1\x1\x1\x1\x1");
 	aes_encrypt(ctx->aes, (u8 *)key_tmp,
@@ -2077,6 +2281,30 @@ static int safexcel_xcbcmac_setkey(struct crypto_ahash *tfm, const u8 *key,
 	ret = aes_expandkey(ctx->aes,
 			    (u8 *)key_tmp + 2 * AES_BLOCK_SIZE,
 			    AES_MIN_KEY_SIZE);
+=======
+	crypto_cipher_clear_flags(ctx->kaes, CRYPTO_TFM_REQ_MASK);
+	crypto_cipher_set_flags(ctx->kaes, crypto_ahash_get_flags(tfm) &
+				CRYPTO_TFM_REQ_MASK);
+	ret = crypto_cipher_setkey(ctx->kaes, key, len);
+	if (ret)
+		return ret;
+
+	crypto_cipher_encrypt_one(ctx->kaes, (u8 *)key_tmp + 2 * AES_BLOCK_SIZE,
+		"\x1\x1\x1\x1\x1\x1\x1\x1\x1\x1\x1\x1\x1\x1\x1\x1");
+	crypto_cipher_encrypt_one(ctx->kaes, (u8 *)key_tmp,
+		"\x2\x2\x2\x2\x2\x2\x2\x2\x2\x2\x2\x2\x2\x2\x2\x2");
+	crypto_cipher_encrypt_one(ctx->kaes, (u8 *)key_tmp + AES_BLOCK_SIZE,
+		"\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3");
+	for (i = 0; i < 3 * AES_BLOCK_SIZE / sizeof(u32); i++)
+		ctx->base.ipad.word[i] = swab32(key_tmp[i]);
+
+	crypto_cipher_clear_flags(ctx->kaes, CRYPTO_TFM_REQ_MASK);
+	crypto_cipher_set_flags(ctx->kaes, crypto_ahash_get_flags(tfm) &
+				CRYPTO_TFM_REQ_MASK);
+	ret = crypto_cipher_setkey(ctx->kaes,
+				   (u8 *)key_tmp + 2 * AES_BLOCK_SIZE,
+				   AES_MIN_KEY_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -2084,6 +2312,10 @@ static int safexcel_xcbcmac_setkey(struct crypto_ahash *tfm, const u8 *key,
 	ctx->key_sz = AES_MIN_KEY_SIZE + 2 * AES_BLOCK_SIZE;
 	ctx->cbcmac = false;
 
+<<<<<<< HEAD
+=======
+	memzero_explicit(&aes, sizeof(aes));
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -2092,15 +2324,24 @@ static int safexcel_xcbcmac_cra_init(struct crypto_tfm *tfm)
 	struct safexcel_ahash_ctx *ctx = crypto_tfm_ctx(tfm);
 
 	safexcel_ahash_cra_init(tfm);
+<<<<<<< HEAD
 	ctx->aes = kmalloc(sizeof(*ctx->aes), GFP_KERNEL);
 	return PTR_ERR_OR_ZERO(ctx->aes);
+=======
+	ctx->kaes = crypto_alloc_cipher("aes", 0, 0);
+	return PTR_ERR_OR_ZERO(ctx->kaes);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void safexcel_xcbcmac_cra_exit(struct crypto_tfm *tfm)
 {
 	struct safexcel_ahash_ctx *ctx = crypto_tfm_ctx(tfm);
 
+<<<<<<< HEAD
 	kfree(ctx->aes);
+=======
+	crypto_free_cipher(ctx->kaes);
+>>>>>>> b7ba80a49124 (Commit)
 	safexcel_ahash_cra_exit(tfm);
 }
 
@@ -2140,23 +2381,47 @@ static int safexcel_cmac_setkey(struct crypto_ahash *tfm, const u8 *key,
 				unsigned int len)
 {
 	struct safexcel_ahash_ctx *ctx = crypto_tfm_ctx(crypto_ahash_tfm(tfm));
+<<<<<<< HEAD
+=======
+	struct crypto_aes_ctx aes;
+>>>>>>> b7ba80a49124 (Commit)
 	__be64 consts[4];
 	u64 _const[2];
 	u8 msb_mask, gfmask;
 	int ret, i;
 
+<<<<<<< HEAD
 	/* precompute the CMAC key material */
 	ret = aes_expandkey(ctx->aes, key, len);
+=======
+	ret = aes_expandkey(&aes, key, len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
 	for (i = 0; i < len / sizeof(u32); i++)
+<<<<<<< HEAD
 		ctx->base.ipad.word[i + 8] = swab32(ctx->aes->key_enc[i]);
+=======
+		ctx->base.ipad.word[i + 8] = swab32(aes.key_enc[i]);
+
+	/* precompute the CMAC key material */
+	crypto_cipher_clear_flags(ctx->kaes, CRYPTO_TFM_REQ_MASK);
+	crypto_cipher_set_flags(ctx->kaes, crypto_ahash_get_flags(tfm) &
+				CRYPTO_TFM_REQ_MASK);
+	ret = crypto_cipher_setkey(ctx->kaes, key, len);
+	if (ret)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* code below borrowed from crypto/cmac.c */
 	/* encrypt the zero block */
 	memset(consts, 0, AES_BLOCK_SIZE);
+<<<<<<< HEAD
 	aes_encrypt(ctx->aes, (u8 *)consts, (u8 *)consts);
+=======
+	crypto_cipher_encrypt_one(ctx->kaes, (u8 *)consts, (u8 *)consts);
+>>>>>>> b7ba80a49124 (Commit)
 
 	gfmask = 0x87;
 	_const[0] = be64_to_cpu(consts[1]);
@@ -2188,6 +2453,10 @@ static int safexcel_cmac_setkey(struct crypto_ahash *tfm, const u8 *key,
 	}
 	ctx->cbcmac = false;
 
+<<<<<<< HEAD
+=======
+	memzero_explicit(&aes, sizeof(aes));
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -2226,7 +2495,11 @@ struct safexcel_alg_template safexcel_alg_cmac = {
 static int safexcel_sm3_init(struct ahash_request *areq)
 {
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(areq));
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(*req));
 
@@ -2290,7 +2563,11 @@ static int safexcel_hmac_sm3_setkey(struct crypto_ahash *tfm, const u8 *key,
 static int safexcel_hmac_sm3_init(struct ahash_request *areq)
 {
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(areq));
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(*req));
 
@@ -2356,7 +2633,11 @@ static int safexcel_sha3_224_init(struct ahash_request *areq)
 {
 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(areq);
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(tfm);
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(*req));
 
@@ -2374,7 +2655,11 @@ static int safexcel_sha3_fbcheck(struct ahash_request *req)
 {
 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(tfm);
+<<<<<<< HEAD
 	struct ahash_request *subreq = ahash_request_ctx_dma(req);
+=======
+	struct ahash_request *subreq = ahash_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = 0;
 
 	if (ctx->do_fallback) {
@@ -2411,7 +2696,11 @@ static int safexcel_sha3_update(struct ahash_request *req)
 {
 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(tfm);
+<<<<<<< HEAD
 	struct ahash_request *subreq = ahash_request_ctx_dma(req);
+=======
+	struct ahash_request *subreq = ahash_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ctx->do_fallback = true;
 	return safexcel_sha3_fbcheck(req) ?: crypto_ahash_update(subreq);
@@ -2421,7 +2710,11 @@ static int safexcel_sha3_final(struct ahash_request *req)
 {
 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(tfm);
+<<<<<<< HEAD
 	struct ahash_request *subreq = ahash_request_ctx_dma(req);
+=======
+	struct ahash_request *subreq = ahash_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ctx->do_fallback = true;
 	return safexcel_sha3_fbcheck(req) ?: crypto_ahash_final(subreq);
@@ -2431,7 +2724,11 @@ static int safexcel_sha3_finup(struct ahash_request *req)
 {
 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(tfm);
+<<<<<<< HEAD
 	struct ahash_request *subreq = ahash_request_ctx_dma(req);
+=======
+	struct ahash_request *subreq = ahash_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ctx->do_fallback |= !req->nbytes;
 	if (ctx->do_fallback)
@@ -2446,7 +2743,11 @@ static int safexcel_sha3_digest_fallback(struct ahash_request *req)
 {
 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(tfm);
+<<<<<<< HEAD
 	struct ahash_request *subreq = ahash_request_ctx_dma(req);
+=======
+	struct ahash_request *subreq = ahash_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ctx->do_fallback = true;
 	ctx->fb_init_done = false;
@@ -2466,7 +2767,11 @@ static int safexcel_sha3_export(struct ahash_request *req, void *out)
 {
 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(tfm);
+<<<<<<< HEAD
 	struct ahash_request *subreq = ahash_request_ctx_dma(req);
+=======
+	struct ahash_request *subreq = ahash_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ctx->do_fallback = true;
 	return safexcel_sha3_fbcheck(req) ?: crypto_ahash_export(subreq, out);
@@ -2476,7 +2781,11 @@ static int safexcel_sha3_import(struct ahash_request *req, const void *in)
 {
 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(tfm);
+<<<<<<< HEAD
 	struct ahash_request *subreq = ahash_request_ctx_dma(req);
+=======
+	struct ahash_request *subreq = ahash_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ctx->do_fallback = true;
 	return safexcel_sha3_fbcheck(req) ?: crypto_ahash_import(subreq, in);
@@ -2500,10 +2809,16 @@ static int safexcel_sha3_cra_init(struct crypto_tfm *tfm)
 	/* Update statesize from fallback algorithm! */
 	crypto_hash_alg_common(ahash)->statesize =
 		crypto_ahash_statesize(ctx->fback);
+<<<<<<< HEAD
 	crypto_ahash_set_reqsize_dma(
 		ahash, max(sizeof(struct safexcel_ahash_req),
 			   sizeof(struct ahash_request) +
 			   crypto_ahash_reqsize(ctx->fback)));
+=======
+	crypto_ahash_set_reqsize(ahash, max(sizeof(struct safexcel_ahash_req),
+					    sizeof(struct ahash_request) +
+					    crypto_ahash_reqsize(ctx->fback)));
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -2550,7 +2865,11 @@ static int safexcel_sha3_256_init(struct ahash_request *areq)
 {
 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(areq);
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(tfm);
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(*req));
 
@@ -2608,7 +2927,11 @@ static int safexcel_sha3_384_init(struct ahash_request *areq)
 {
 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(areq);
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(tfm);
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(*req));
 
@@ -2666,7 +2989,11 @@ static int safexcel_sha3_512_init(struct ahash_request *areq)
 {
 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(areq);
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(tfm);
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(*req));
 
@@ -2816,7 +3143,11 @@ static int safexcel_hmac_sha3_224_init(struct ahash_request *areq)
 {
 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(areq);
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(tfm);
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(*req));
 
@@ -2887,7 +3218,11 @@ static int safexcel_hmac_sha3_256_init(struct ahash_request *areq)
 {
 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(areq);
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(tfm);
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(*req));
 
@@ -2958,7 +3293,11 @@ static int safexcel_hmac_sha3_384_init(struct ahash_request *areq)
 {
 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(areq);
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(tfm);
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(*req));
 
@@ -3029,7 +3368,11 @@ static int safexcel_hmac_sha3_512_init(struct ahash_request *areq)
 {
 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(areq);
 	struct safexcel_ahash_ctx *ctx = crypto_ahash_ctx(tfm);
+<<<<<<< HEAD
 	struct safexcel_ahash_req *req = ahash_request_ctx_dma(areq);
+=======
+	struct safexcel_ahash_req *req = ahash_request_ctx(areq);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(req, 0, sizeof(*req));
 

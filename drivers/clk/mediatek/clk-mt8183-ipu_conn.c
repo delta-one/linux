@@ -94,6 +94,7 @@ static const struct mtk_gate ipu_conn_clks[] = {
 		"ipu_conn_cab3to1_slice", "dsp1_sel", 17),
 };
 
+<<<<<<< HEAD
 static const struct mtk_clk_desc ipu_conn_desc = {
 	.clks = ipu_conn_clks,
 	.num_clks = ARRAY_SIZE(ipu_conn_clks),
@@ -112,10 +113,37 @@ MODULE_DEVICE_TABLE(of, of_match_clk_mt8183_ipu_conn);
 static struct platform_driver clk_mt8183_ipu_conn_drv = {
 	.probe = mtk_clk_simple_probe,
 	.remove = mtk_clk_simple_remove,
+=======
+static int clk_mt8183_ipu_conn_probe(struct platform_device *pdev)
+{
+	struct clk_hw_onecell_data *clk_data;
+	struct device_node *node = pdev->dev.of_node;
+
+	clk_data = mtk_alloc_clk_data(CLK_IPU_CONN_NR_CLK);
+
+	mtk_clk_register_gates(node, ipu_conn_clks, ARRAY_SIZE(ipu_conn_clks),
+			clk_data);
+
+	return of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+}
+
+static const struct of_device_id of_match_clk_mt8183_ipu_conn[] = {
+	{ .compatible = "mediatek,mt8183-ipu_conn", },
+	{}
+};
+
+static struct platform_driver clk_mt8183_ipu_conn_drv = {
+	.probe = clk_mt8183_ipu_conn_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "clk-mt8183-ipu_conn",
 		.of_match_table = of_match_clk_mt8183_ipu_conn,
 	},
 };
+<<<<<<< HEAD
 module_platform_driver(clk_mt8183_ipu_conn_drv);
 MODULE_LICENSE("GPL");
+=======
+
+builtin_platform_driver(clk_mt8183_ipu_conn_drv);
+>>>>>>> b7ba80a49124 (Commit)

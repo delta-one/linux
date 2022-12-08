@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <linux/bpf.h>
 #include <bpf/bpf_helpers.h>
+<<<<<<< HEAD
 #include "bpf_misc.h"
 
 struct Small {
@@ -11,6 +12,16 @@ struct Small {
 struct Big {
 	long x;
 	long y;
+=======
+
+struct Small {
+	int x;
+};
+
+struct Big {
+	int x;
+	int y;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 __noinline int foo(const struct Big *big)
@@ -22,8 +33,12 @@ __noinline int foo(const struct Big *big)
 }
 
 SEC("cgroup_skb/ingress")
+<<<<<<< HEAD
 __failure __msg("invalid indirect access to stack")
 int global_func10(struct __sk_buff *skb)
+=======
+int test_cls(struct __sk_buff *skb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct Small small = {.x = skb->len };
 

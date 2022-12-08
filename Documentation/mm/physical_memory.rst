@@ -3,6 +3,7 @@
 ===============
 Physical Memory
 ===============
+<<<<<<< HEAD
 
 Linux is available for a wide range of architectures so there is a need for an
 architecture-independent abstraction to represent the physical memory. This
@@ -369,3 +370,5 @@ Initialization
 .. admonition:: Stub
 
    This section is incomplete. Please list and describe the appropriate fields.
+=======
+>>>>>>> b7ba80a49124 (Commit)

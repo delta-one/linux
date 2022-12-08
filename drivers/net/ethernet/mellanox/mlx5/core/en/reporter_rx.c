@@ -8,6 +8,7 @@
 #include "ptp.h"
 #include "lib/tout.h"
 
+<<<<<<< HEAD
 /* Keep this string array consistent with the MLX5E_RQ_STATE_* enums in en.h */
 static const char * const rq_sw_state_type_name[] = {
 	[MLX5E_RQ_STATE_ENABLED] = "enabled",
@@ -21,6 +22,8 @@ static const char * const rq_sw_state_type_name[] = {
 	[MLX5E_RQ_STATE_XSK] = "xsk",
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mlx5e_query_rq_state(struct mlx5_core_dev *dev, u32 rqn, u8 *state)
 {
 	int outlen = MLX5_ST_SZ_BYTES(query_rq_out);
@@ -147,17 +150,49 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
+=======
+static int mlx5e_rq_to_ready(struct mlx5e_rq *rq, int curr_state)
+{
+	struct net_device *dev = rq->netdev;
+	int err;
+
+	err = mlx5e_modify_rq_state(rq, curr_state, MLX5_RQC_STATE_RST);
+	if (err) {
+		netdev_err(dev, "Failed to move rq 0x%x to reset\n", rq->rqn);
+		return err;
+	}
+	err = mlx5e_modify_rq_state(rq, MLX5_RQC_STATE_RST, MLX5_RQC_STATE_RDY);
+	if (err) {
+		netdev_err(dev, "Failed to move rq 0x%x to ready\n", rq->rqn);
+		return err;
+	}
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int mlx5e_rx_reporter_err_rq_cqe_recover(void *ctx)
 {
 	struct mlx5e_rq *rq = ctx;
 	int err;
 
 	mlx5e_deactivate_rq(rq);
+<<<<<<< HEAD
 	err = mlx5e_flush_rq(rq, MLX5_RQC_STATE_ERR);
 	clear_bit(MLX5E_RQ_STATE_RECOVERING, &rq->state);
 	if (err)
 		return err;
 
+=======
+	mlx5e_free_rx_descs(rq);
+
+	err = mlx5e_rq_to_ready(rq, MLX5_RQC_STATE_ERR);
+	if (err)
+		goto out;
+
+	clear_bit(MLX5E_RQ_STATE_RECOVERING, &rq->state);
+>>>>>>> b7ba80a49124 (Commit)
 	mlx5e_activate_rq(rq);
 	rq->stats->recover++;
 	if (rq->channel)
@@ -165,6 +200,12 @@ static int mlx5e_rx_reporter_err_rq_cqe_recover(void *ctx)
 	else
 		mlx5e_trigger_napi_sched(rq->cq.napi);
 	return 0;
+<<<<<<< HEAD
+=======
+out:
+	clear_bit(MLX5E_RQ_STATE_RECOVERING, &rq->state);
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int mlx5e_rx_reporter_timeout_recover(void *ctx)
@@ -252,6 +293,7 @@ static int mlx5e_reporter_icosq_diagnose(struct mlx5e_icosq *icosq, u8 hw_state,
 	return mlx5e_health_fmsg_named_obj_nest_end(fmsg);
 }
 
+<<<<<<< HEAD
 static int mlx5e_health_rq_put_sw_state(struct devlink_fmsg *fmsg, struct mlx5e_rq *rq)
 {
 	int err;
@@ -281,6 +323,8 @@ static int mlx5e_health_rq_put_sw_state(struct devlink_fmsg *fmsg, struct mlx5e_
 	return devlink_fmsg_obj_nest_end(fmsg);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int
 mlx5e_rx_reporter_build_diagnose_output_rq_common(struct mlx5e_rq *rq,
 						  struct devlink_fmsg *fmsg)
@@ -307,6 +351,13 @@ mlx5e_rx_reporter_build_diagnose_output_rq_common(struct mlx5e_rq *rq,
 	if (err)
 		return err;
 
+<<<<<<< HEAD
+=======
+	err = devlink_fmsg_u8_pair_put(fmsg, "SW state", rq->state);
+	if (err)
+		return err;
+
+>>>>>>> b7ba80a49124 (Commit)
 	err = devlink_fmsg_u32_pair_put(fmsg, "WQE counter", wqe_counter);
 	if (err)
 		return err;
@@ -319,10 +370,13 @@ mlx5e_rx_reporter_build_diagnose_output_rq_common(struct mlx5e_rq *rq,
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	err = mlx5e_health_rq_put_sw_state(fmsg, rq);
 	if (err)
 		return err;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = mlx5e_health_cq_diag_fmsg(&rq->cq, fmsg);
 	if (err)
 		return err;
@@ -501,11 +555,15 @@ static int mlx5e_rx_reporter_diagnose(struct devlink_health_reporter *reporter,
 		goto unlock;
 
 	for (i = 0; i < priv->channels.num; i++) {
+<<<<<<< HEAD
 		struct mlx5e_channel *c = priv->channels.c[i];
 		struct mlx5e_rq *rq;
 
 		rq = test_bit(MLX5E_CHANNEL_STATE_XSK, c->state) ?
 			&c->xskrq : &c->rq;
+=======
+		struct mlx5e_rq *rq = &priv->channels.c[i]->rq;
+>>>>>>> b7ba80a49124 (Commit)
 
 		err = mlx5e_rx_reporter_build_diagnose_output(rq, fmsg);
 		if (err)
@@ -778,10 +836,17 @@ static const struct devlink_health_reporter_ops mlx5_rx_reporter_ops = {
 
 void mlx5e_reporter_rx_create(struct mlx5e_priv *priv)
 {
+<<<<<<< HEAD
 	struct devlink_health_reporter *reporter;
 
 	reporter = devlink_port_health_reporter_create(priv->netdev->devlink_port,
 						       &mlx5_rx_reporter_ops,
+=======
+	struct devlink_port *dl_port = mlx5e_devlink_get_dl_port(priv);
+	struct devlink_health_reporter *reporter;
+
+	reporter = devlink_port_health_reporter_create(dl_port, &mlx5_rx_reporter_ops,
+>>>>>>> b7ba80a49124 (Commit)
 						       MLX5E_REPORTER_RX_GRACEFUL_PERIOD, priv);
 	if (IS_ERR(reporter)) {
 		netdev_warn(priv->netdev, "Failed to create rx reporter, err = %ld\n",
@@ -796,6 +861,10 @@ void mlx5e_reporter_rx_destroy(struct mlx5e_priv *priv)
 	if (!priv->rx_reporter)
 		return;
 
+<<<<<<< HEAD
 	devlink_health_reporter_destroy(priv->rx_reporter);
+=======
+	devlink_port_health_reporter_destroy(priv->rx_reporter);
+>>>>>>> b7ba80a49124 (Commit)
 	priv->rx_reporter = NULL;
 }

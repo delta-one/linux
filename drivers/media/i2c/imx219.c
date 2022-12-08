@@ -42,6 +42,7 @@
 /* External clock frequency is 24.0M */
 #define IMX219_XCLK_FREQ		24000000
 
+<<<<<<< HEAD
 /* Pixel rate is fixed for all the modes */
 #define IMX219_PIXEL_RATE		182400000
 #define IMX219_PIXEL_RATE_4LANE		280800000
@@ -52,6 +53,12 @@
 #define IMX219_REG_CSI_LANE_MODE	0x0114
 #define IMX219_CSI_2_LANE_MODE		0x01
 #define IMX219_CSI_4_LANE_MODE		0x03
+=======
+/* Pixel rate is fixed at 182.4M for all the modes */
+#define IMX219_PIXEL_RATE		182400000
+
+#define IMX219_DEFAULT_LINK_FREQ	456000000
+>>>>>>> b7ba80a49124 (Commit)
 
 /* V_TIMING internal */
 #define IMX219_REG_VTS			0x0160
@@ -95,12 +102,15 @@
 
 #define IMX219_REG_ORIENTATION		0x0172
 
+<<<<<<< HEAD
 /* Binning  Mode */
 #define IMX219_REG_BINNING_MODE		0x0174
 #define IMX219_BINNING_NONE		0x0000
 #define IMX219_BINNING_2X2		0x0101
 #define IMX219_BINNING_2X2_ANALOG	0x0303
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Test Pattern Control */
 #define IMX219_REG_TEST_PATTERN		0x0600
 #define IMX219_TEST_PATTERN_DISABLE	0
@@ -155,6 +165,7 @@ struct imx219_mode {
 
 	/* Default register values */
 	struct imx219_reg_list reg_list;
+<<<<<<< HEAD
 
 	/* 2x2 binning is used */
 	bool binning;
@@ -207,6 +218,8 @@ static const struct imx219_reg imx219_common_regs[] = {
 	{0x0128, 0x00},	/* DPHY Auto Mode */
 	{0x012a, 0x18},	/* EXCK_Freq */
 	{0x012b, 0x00},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -215,6 +228,20 @@ static const struct imx219_reg imx219_common_regs[] = {
  * 3280x2464 = mode 2, 1920x1080 = mode 1, 1640x1232 = mode 4, 640x480 = mode 7.
  */
 static const struct imx219_reg mode_3280x2464_regs[] = {
+<<<<<<< HEAD
+=======
+	{0x0100, 0x00},
+	{0x30eb, 0x0c},
+	{0x30eb, 0x05},
+	{0x300a, 0xff},
+	{0x300b, 0xff},
+	{0x30eb, 0x05},
+	{0x30eb, 0x09},
+	{0x0114, 0x01},
+	{0x0128, 0x00},
+	{0x012a, 0x18},
+	{0x012b, 0x00},
+>>>>>>> b7ba80a49124 (Commit)
 	{0x0164, 0x00},
 	{0x0165, 0x00},
 	{0x0166, 0x0c},
@@ -227,13 +254,62 @@ static const struct imx219_reg mode_3280x2464_regs[] = {
 	{0x016d, 0xd0},
 	{0x016e, 0x09},
 	{0x016f, 0xa0},
+<<<<<<< HEAD
+=======
+	{0x0170, 0x01},
+	{0x0171, 0x01},
+	{0x0174, 0x00},
+	{0x0175, 0x00},
+	{0x0301, 0x05},
+	{0x0303, 0x01},
+	{0x0304, 0x03},
+	{0x0305, 0x03},
+	{0x0306, 0x00},
+	{0x0307, 0x39},
+	{0x030b, 0x01},
+	{0x030c, 0x00},
+	{0x030d, 0x72},
+>>>>>>> b7ba80a49124 (Commit)
 	{0x0624, 0x0c},
 	{0x0625, 0xd0},
 	{0x0626, 0x09},
 	{0x0627, 0xa0},
+<<<<<<< HEAD
 };
 
 static const struct imx219_reg mode_1920_1080_regs[] = {
+=======
+	{0x455e, 0x00},
+	{0x471e, 0x4b},
+	{0x4767, 0x0f},
+	{0x4750, 0x14},
+	{0x4540, 0x00},
+	{0x47b4, 0x14},
+	{0x4713, 0x30},
+	{0x478b, 0x10},
+	{0x478f, 0x10},
+	{0x4793, 0x10},
+	{0x4797, 0x0e},
+	{0x479b, 0x0e},
+	{0x0162, 0x0d},
+	{0x0163, 0x78},
+};
+
+static const struct imx219_reg mode_1920_1080_regs[] = {
+	{0x0100, 0x00},
+	{0x30eb, 0x05},
+	{0x30eb, 0x0c},
+	{0x300a, 0xff},
+	{0x300b, 0xff},
+	{0x30eb, 0x05},
+	{0x30eb, 0x09},
+	{0x0114, 0x01},
+	{0x0128, 0x00},
+	{0x012a, 0x18},
+	{0x012b, 0x00},
+	{0x0162, 0x0d},
+	{0x0163, 0x78},
+>>>>>>> b7ba80a49124 (Commit)
 	{0x0164, 0x02},
 	{0x0165, 0xa8},
 	{0x0166, 0x0a},
@@ -246,13 +322,58 @@ static const struct imx219_reg mode_1920_1080_regs[] = {
 	{0x016d, 0x80},
 	{0x016e, 0x04},
 	{0x016f, 0x38},
+<<<<<<< HEAD
+=======
+	{0x0170, 0x01},
+	{0x0171, 0x01},
+	{0x0174, 0x00},
+	{0x0175, 0x00},
+	{0x0301, 0x05},
+	{0x0303, 0x01},
+	{0x0304, 0x03},
+	{0x0305, 0x03},
+	{0x0306, 0x00},
+	{0x0307, 0x39},
+	{0x030b, 0x01},
+	{0x030c, 0x00},
+	{0x030d, 0x72},
+>>>>>>> b7ba80a49124 (Commit)
 	{0x0624, 0x07},
 	{0x0625, 0x80},
 	{0x0626, 0x04},
 	{0x0627, 0x38},
+<<<<<<< HEAD
 };
 
 static const struct imx219_reg mode_1640_1232_regs[] = {
+=======
+	{0x455e, 0x00},
+	{0x471e, 0x4b},
+	{0x4767, 0x0f},
+	{0x4750, 0x14},
+	{0x4540, 0x00},
+	{0x47b4, 0x14},
+	{0x4713, 0x30},
+	{0x478b, 0x10},
+	{0x478f, 0x10},
+	{0x4793, 0x10},
+	{0x4797, 0x0e},
+	{0x479b, 0x0e},
+};
+
+static const struct imx219_reg mode_1640_1232_regs[] = {
+	{0x0100, 0x00},
+	{0x30eb, 0x0c},
+	{0x30eb, 0x05},
+	{0x300a, 0xff},
+	{0x300b, 0xff},
+	{0x30eb, 0x05},
+	{0x30eb, 0x09},
+	{0x0114, 0x01},
+	{0x0128, 0x00},
+	{0x012a, 0x18},
+	{0x012b, 0x00},
+>>>>>>> b7ba80a49124 (Commit)
 	{0x0164, 0x00},
 	{0x0165, 0x00},
 	{0x0166, 0x0c},
@@ -265,13 +386,62 @@ static const struct imx219_reg mode_1640_1232_regs[] = {
 	{0x016d, 0x68},
 	{0x016e, 0x04},
 	{0x016f, 0xd0},
+<<<<<<< HEAD
+=======
+	{0x0170, 0x01},
+	{0x0171, 0x01},
+	{0x0174, 0x01},
+	{0x0175, 0x01},
+	{0x0301, 0x05},
+	{0x0303, 0x01},
+	{0x0304, 0x03},
+	{0x0305, 0x03},
+	{0x0306, 0x00},
+	{0x0307, 0x39},
+	{0x030b, 0x01},
+	{0x030c, 0x00},
+	{0x030d, 0x72},
+>>>>>>> b7ba80a49124 (Commit)
 	{0x0624, 0x06},
 	{0x0625, 0x68},
 	{0x0626, 0x04},
 	{0x0627, 0xd0},
+<<<<<<< HEAD
 };
 
 static const struct imx219_reg mode_640_480_regs[] = {
+=======
+	{0x455e, 0x00},
+	{0x471e, 0x4b},
+	{0x4767, 0x0f},
+	{0x4750, 0x14},
+	{0x4540, 0x00},
+	{0x47b4, 0x14},
+	{0x4713, 0x30},
+	{0x478b, 0x10},
+	{0x478f, 0x10},
+	{0x4793, 0x10},
+	{0x4797, 0x0e},
+	{0x479b, 0x0e},
+	{0x0162, 0x0d},
+	{0x0163, 0x78},
+};
+
+static const struct imx219_reg mode_640_480_regs[] = {
+	{0x0100, 0x00},
+	{0x30eb, 0x05},
+	{0x30eb, 0x0c},
+	{0x300a, 0xff},
+	{0x300b, 0xff},
+	{0x30eb, 0x05},
+	{0x30eb, 0x09},
+	{0x0114, 0x01},
+	{0x0128, 0x00},
+	{0x012a, 0x18},
+	{0x012b, 0x00},
+	{0x0162, 0x0d},
+	{0x0163, 0x78},
+>>>>>>> b7ba80a49124 (Commit)
 	{0x0164, 0x03},
 	{0x0165, 0xe8},
 	{0x0166, 0x08},
@@ -284,10 +454,41 @@ static const struct imx219_reg mode_640_480_regs[] = {
 	{0x016d, 0x80},
 	{0x016e, 0x01},
 	{0x016f, 0xe0},
+<<<<<<< HEAD
+=======
+	{0x0170, 0x01},
+	{0x0171, 0x01},
+	{0x0174, 0x03},
+	{0x0175, 0x03},
+	{0x0301, 0x05},
+	{0x0303, 0x01},
+	{0x0304, 0x03},
+	{0x0305, 0x03},
+	{0x0306, 0x00},
+	{0x0307, 0x39},
+	{0x030b, 0x01},
+	{0x030c, 0x00},
+	{0x030d, 0x72},
+>>>>>>> b7ba80a49124 (Commit)
 	{0x0624, 0x06},
 	{0x0625, 0x68},
 	{0x0626, 0x04},
 	{0x0627, 0xd0},
+<<<<<<< HEAD
+=======
+	{0x455e, 0x00},
+	{0x471e, 0x4b},
+	{0x4767, 0x0f},
+	{0x4750, 0x14},
+	{0x4540, 0x00},
+	{0x47b4, 0x14},
+	{0x4713, 0x30},
+	{0x478b, 0x10},
+	{0x478f, 0x10},
+	{0x4793, 0x10},
+	{0x4797, 0x0e},
+	{0x479b, 0x0e},
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct imx219_reg raw8_framefmt_regs[] = {
@@ -306,10 +507,13 @@ static const s64 imx219_link_freq_menu[] = {
 	IMX219_DEFAULT_LINK_FREQ,
 };
 
+<<<<<<< HEAD
 static const s64 imx219_link_freq_4lane_menu[] = {
 	IMX219_DEFAULT_LINK_FREQ_4LANE,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const char * const imx219_test_pattern_menu[] = {
 	"Disabled",
 	"Color Bars",
@@ -401,7 +605,10 @@ static const struct imx219_mode supported_modes[] = {
 			.num_of_regs = ARRAY_SIZE(mode_3280x2464_regs),
 			.regs = mode_3280x2464_regs,
 		},
+<<<<<<< HEAD
 		.binning = false,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		/* 1080P 30fps cropped */
@@ -418,7 +625,10 @@ static const struct imx219_mode supported_modes[] = {
 			.num_of_regs = ARRAY_SIZE(mode_1920_1080_regs),
 			.regs = mode_1920_1080_regs,
 		},
+<<<<<<< HEAD
 		.binning = false,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		/* 2x2 binned 30fps mode */
@@ -435,7 +645,10 @@ static const struct imx219_mode supported_modes[] = {
 			.num_of_regs = ARRAY_SIZE(mode_1640_1232_regs),
 			.regs = mode_1640_1232_regs,
 		},
+<<<<<<< HEAD
 		.binning = true,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	{
 		/* 640x480 30fps mode */
@@ -452,7 +665,10 @@ static const struct imx219_mode supported_modes[] = {
 			.num_of_regs = ARRAY_SIZE(mode_640_480_regs),
 			.regs = mode_640_480_regs,
 		},
+<<<<<<< HEAD
 		.binning = true,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 
@@ -489,9 +705,12 @@ struct imx219 {
 
 	/* Streaming on/off */
 	bool streaming;
+<<<<<<< HEAD
 
 	/* Two or Four lanes */
 	u8 lanes;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline struct imx219 *to_imx219(struct v4l2_subdev *_sd)
@@ -902,6 +1121,7 @@ static int imx219_set_framefmt(struct imx219 *imx219)
 	return -EINVAL;
 }
 
+<<<<<<< HEAD
 static int imx219_set_binning(struct imx219 *imx219)
 {
 	if (!imx219->mode->binning) {
@@ -931,6 +1151,8 @@ static int imx219_set_binning(struct imx219 *imx219)
 	return -EINVAL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct v4l2_rect *
 __imx219_get_pad_crop(struct imx219 *imx219,
 		      struct v4l2_subdev_state *sd_state,
@@ -983,6 +1205,7 @@ static int imx219_get_selection(struct v4l2_subdev *sd,
 	return -EINVAL;
 }
 
+<<<<<<< HEAD
 static int imx219_configure_lanes(struct imx219 *imx219)
 {
 	return imx219_write_reg(imx219, IMX219_REG_CSI_LANE_MODE,
@@ -990,6 +1213,8 @@ static int imx219_configure_lanes(struct imx219 *imx219)
 				IMX219_CSI_2_LANE_MODE : IMX219_CSI_4_LANE_MODE);
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int imx219_start_streaming(struct imx219 *imx219)
 {
 	struct i2c_client *client = v4l2_get_subdevdata(&imx219->sd);
@@ -1000,6 +1225,7 @@ static int imx219_start_streaming(struct imx219 *imx219)
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
 	/* Send all registers that are common to all modes */
 	ret = imx219_write_regs(imx219, imx219_common_regs, ARRAY_SIZE(imx219_common_regs));
 	if (ret) {
@@ -1014,6 +1240,8 @@ static int imx219_start_streaming(struct imx219 *imx219)
 		goto err_rpm_put;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Apply default values of current mode */
 	reg_list = &imx219->mode->reg_list;
 	ret = imx219_write_regs(imx219, reg_list->regs, reg_list->num_of_regs);
@@ -1029,6 +1257,7 @@ static int imx219_start_streaming(struct imx219 *imx219)
 		goto err_rpm_put;
 	}
 
+<<<<<<< HEAD
 	ret = imx219_set_binning(imx219);
 	if (ret) {
 		dev_err(&client->dev, "%s failed to set binning: %d\n",
@@ -1036,6 +1265,8 @@ static int imx219_start_streaming(struct imx219 *imx219)
 		goto err_rpm_put;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Apply customized values from user */
 	ret =  __v4l2_ctrl_handler_setup(imx219->sd.ctrl_handler);
 	if (ret)
@@ -1252,11 +1483,14 @@ static const struct v4l2_subdev_internal_ops imx219_internal_ops = {
 	.open = imx219_open,
 };
 
+<<<<<<< HEAD
 static unsigned long imx219_get_pixel_rate(struct imx219 *imx219)
 {
 	return (imx219->lanes == 2) ? IMX219_PIXEL_RATE : IMX219_PIXEL_RATE_4LANE;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Initialize control handlers */
 static int imx219_init_controls(struct imx219 *imx219)
 {
@@ -1278,16 +1512,26 @@ static int imx219_init_controls(struct imx219 *imx219)
 	/* By default, PIXEL_RATE is read only */
 	imx219->pixel_rate = v4l2_ctrl_new_std(ctrl_hdlr, &imx219_ctrl_ops,
 					       V4L2_CID_PIXEL_RATE,
+<<<<<<< HEAD
 					       imx219_get_pixel_rate(imx219),
 					       imx219_get_pixel_rate(imx219), 1,
 					       imx219_get_pixel_rate(imx219));
+=======
+					       IMX219_PIXEL_RATE,
+					       IMX219_PIXEL_RATE, 1,
+					       IMX219_PIXEL_RATE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	imx219->link_freq =
 		v4l2_ctrl_new_int_menu(ctrl_hdlr, &imx219_ctrl_ops,
 				       V4L2_CID_LINK_FREQ,
 				       ARRAY_SIZE(imx219_link_freq_menu) - 1, 0,
+<<<<<<< HEAD
 				       (imx219->lanes == 2) ? imx219_link_freq_menu :
 				       imx219_link_freq_4lane_menu);
+=======
+				       imx219_link_freq_menu);
+>>>>>>> b7ba80a49124 (Commit)
 	if (imx219->link_freq)
 		imx219->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
 
@@ -1382,7 +1626,11 @@ static void imx219_free_controls(struct imx219 *imx219)
 	mutex_destroy(&imx219->mutex);
 }
 
+<<<<<<< HEAD
 static int imx219_check_hwcfg(struct device *dev, struct imx219 *imx219)
+=======
+static int imx219_check_hwcfg(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fwnode_handle *endpoint;
 	struct v4l2_fwnode_endpoint ep_cfg = {
@@ -1402,12 +1650,19 @@ static int imx219_check_hwcfg(struct device *dev, struct imx219 *imx219)
 	}
 
 	/* Check the number of MIPI CSI2 data lanes */
+<<<<<<< HEAD
 	if (ep_cfg.bus.mipi_csi2.num_data_lanes != 2 &&
 	    ep_cfg.bus.mipi_csi2.num_data_lanes != 4) {
 		dev_err(dev, "only 2 or 4 data lanes are currently supported\n");
 		goto error_out;
 	}
 	imx219->lanes = ep_cfg.bus.mipi_csi2.num_data_lanes;
+=======
+	if (ep_cfg.bus.mipi_csi2.num_data_lanes != 2) {
+		dev_err(dev, "only 2 data lanes are currently supported\n");
+		goto error_out;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Check the link frequency set in device tree */
 	if (!ep_cfg.nr_of_link_frequencies) {
@@ -1416,8 +1671,12 @@ static int imx219_check_hwcfg(struct device *dev, struct imx219 *imx219)
 	}
 
 	if (ep_cfg.nr_of_link_frequencies != 1 ||
+<<<<<<< HEAD
 	   (ep_cfg.link_frequencies[0] != ((imx219->lanes == 2) ?
 	    IMX219_DEFAULT_LINK_FREQ : IMX219_DEFAULT_LINK_FREQ_4LANE))) {
+=======
+	    ep_cfg.link_frequencies[0] != IMX219_DEFAULT_LINK_FREQ) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(dev, "Link frequency not supported: %lld\n",
 			ep_cfg.link_frequencies[0]);
 		goto error_out;
@@ -1445,7 +1704,11 @@ static int imx219_probe(struct i2c_client *client)
 	v4l2_i2c_subdev_init(&imx219->sd, client, &imx219_subdev_ops);
 
 	/* Check the hardware configuration in device tree */
+<<<<<<< HEAD
 	if (imx219_check_hwcfg(dev, imx219))
+=======
+	if (imx219_check_hwcfg(dev))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	/* Get system clock (xclk) */

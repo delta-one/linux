@@ -38,7 +38,13 @@
 #include <linux/pci.h>
 
 #include <drm/drm_aperture.h>
+<<<<<<< HEAD
 #include <drm/drm_drv.h>
+=======
+#include <drm/drm_crtc_helper.h>
+#include <drm/drm_drv.h>
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_file.h>
 #include <drm/drm_gem.h>
 #include <drm/drm_ioctl.h>

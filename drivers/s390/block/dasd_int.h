@@ -642,6 +642,10 @@ struct dasd_device {
 struct dasd_block {
 	/* Block device stuff. */
 	struct gendisk *gdp;
+<<<<<<< HEAD
+=======
+	struct request_queue *request_queue;
+>>>>>>> b7ba80a49124 (Commit)
 	spinlock_t request_queue_lock;
 	struct blk_mq_tag_set tag_set;
 	struct block_device *bdev;
@@ -849,7 +853,10 @@ extern debug_info_t *dasd_debug_area;
 extern struct dasd_profile dasd_global_profile;
 extern unsigned int dasd_global_profile_level;
 extern const struct block_device_operations dasd_device_operations;
+<<<<<<< HEAD
 extern struct blk_mq_ops dasd_mq_ops;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 extern struct kmem_cache *dasd_page_cache;
 

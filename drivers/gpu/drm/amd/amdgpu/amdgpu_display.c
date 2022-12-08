@@ -38,6 +38,7 @@
 #include <linux/pci.h>
 #include <linux/pm_runtime.h>
 #include <drm/drm_crtc_helper.h>
+<<<<<<< HEAD
 #include <drm/drm_edid.h>
 #include <drm/drm_fb_helper.h>
 #include <drm/drm_gem_framebuffer_helper.h>
@@ -80,6 +81,16 @@ void amdgpu_display_hotplug_work_func(struct work_struct *work)
 	drm_helper_hpd_irq_event(dev);
 }
 
+=======
+#include <drm/drm_damage_helper.h>
+#include <drm/drm_drv.h>
+#include <drm/drm_edid.h>
+#include <drm/drm_gem_framebuffer_helper.h>
+#include <drm/drm_fb_helper.h>
+#include <drm/drm_fourcc.h>
+#include <drm/drm_vblank.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 static int amdgpu_display_framebuffer_init(struct drm_device *dev,
 					   struct amdgpu_framebuffer *rfb,
 					   const struct drm_mode_fb_cmd2 *mode_cmd,
@@ -534,6 +545,15 @@ static const struct drm_framebuffer_funcs amdgpu_fb_funcs = {
 	.create_handle = drm_gem_fb_create_handle,
 };
 
+<<<<<<< HEAD
+=======
+static const struct drm_framebuffer_funcs amdgpu_fb_funcs_atomic = {
+	.destroy = drm_gem_fb_destroy,
+	.create_handle = drm_gem_fb_create_handle,
+	.dirty = drm_atomic_helper_dirtyfb,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 uint32_t amdgpu_display_supported_domains(struct amdgpu_device *adev,
 					  uint64_t bo_flags)
 {
@@ -550,7 +570,11 @@ uint32_t amdgpu_display_supported_domains(struct amdgpu_device *adev,
 	 */
 	if ((bo_flags & AMDGPU_GEM_CREATE_CPU_GTT_USWC) &&
 	    amdgpu_bo_support_uswc(bo_flags) &&
+<<<<<<< HEAD
 	    adev->dc_enabled &&
+=======
+	    amdgpu_device_asic_has_dc_support(adev->asic_type) &&
+>>>>>>> b7ba80a49124 (Commit)
 	    adev->mode_info.gpu_vm_support)
 		domain |= AMDGPU_GEM_DOMAIN_GTT;
 #endif
@@ -1136,8 +1160,15 @@ static int amdgpu_display_gem_fb_verify_and_init(struct drm_device *dev,
 	if (ret)
 		goto err;
 
+<<<<<<< HEAD
 	ret = drm_framebuffer_init(dev, &rfb->base, &amdgpu_fb_funcs);
 
+=======
+	if (drm_drv_uses_atomic_modeset(dev))
+		ret = drm_framebuffer_init(dev, &rfb->base, &amdgpu_fb_funcs_atomic);
+	else
+		ret = drm_framebuffer_init(dev, &rfb->base, &amdgpu_fb_funcs);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto err;
 
@@ -1250,6 +1281,10 @@ amdgpu_display_user_framebuffer_create(struct drm_device *dev,
 
 const struct drm_mode_config_funcs amdgpu_mode_funcs = {
 	.fb_create = amdgpu_display_user_framebuffer_create,
+<<<<<<< HEAD
+=======
+	.output_poll_changed = drm_fb_helper_output_poll_changed,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct drm_prop_enum_list amdgpu_underscan_enum_list[] =
@@ -1316,7 +1351,11 @@ int amdgpu_display_modeset_create_props(struct amdgpu_device *adev)
 					 "dither",
 					 amdgpu_dither_enum_list, sz);
 
+<<<<<<< HEAD
 	if (adev->dc_enabled) {
+=======
+	if (amdgpu_device_has_dc_support(adev)) {
+>>>>>>> b7ba80a49124 (Commit)
 		adev->mode_info.abm_level_property =
 			drm_property_create_range(adev_to_drm(adev), 0,
 						  "abm level", 0, 4);
@@ -1618,8 +1657,11 @@ int amdgpu_display_suspend_helper(struct amdgpu_device *adev)
 	struct drm_connector_list_iter iter;
 	int r;
 
+<<<<<<< HEAD
 	drm_kms_helper_poll_disable(dev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* turn off display hw */
 	drm_modeset_lock_all(dev);
 	drm_connector_list_iter_begin(dev, &iter);
@@ -1696,8 +1738,11 @@ int amdgpu_display_resume_helper(struct amdgpu_device *adev)
 
 	drm_modeset_unlock_all(dev);
 
+<<<<<<< HEAD
 	drm_kms_helper_poll_enable(dev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

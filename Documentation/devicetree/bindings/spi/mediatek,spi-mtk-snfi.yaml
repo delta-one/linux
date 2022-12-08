@@ -18,12 +18,21 @@ description: |
   using the accompanying ECC engine. There should be only one spi
   slave device following generic spi bindings.
 
+<<<<<<< HEAD
+=======
+allOf:
+  - $ref: /schemas/spi/spi-controller.yaml#
+
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   compatible:
     enum:
       - mediatek,mt7622-snand
       - mediatek,mt7629-snand
+<<<<<<< HEAD
       - mediatek,mt7986-snand
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     items:
@@ -34,20 +43,34 @@ properties:
       - description: NFI interrupt
 
   clocks:
+<<<<<<< HEAD
     minItems: 2
     maxItems: 3
 
   clock-names:
     minItems: 2
     maxItems: 3
+=======
+    items:
+      - description: clock used for the controller
+      - description: clock used for the SPI bus
+
+  clock-names:
+    items:
+      - const: nfi_clk
+      - const: pad_clk
+>>>>>>> b7ba80a49124 (Commit)
 
   nand-ecc-engine:
     description: device-tree node of the accompanying ECC engine.
     $ref: /schemas/types.yaml#/definitions/phandle
 
+<<<<<<< HEAD
   mediatek,rx-latch-latency-ns:
     description: Data read latch latency, unit is nanoseconds.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg
@@ -56,6 +79,7 @@ required:
   - clock-names
   - nand-ecc-engine
 
+<<<<<<< HEAD
 allOf:
   - $ref: /schemas/spi/spi-controller.yaml#
   - if:
@@ -93,6 +117,8 @@ allOf:
             - const: pad_clk
             - const: nfi_hclk
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 unevaluatedProperties: false
 
 examples:

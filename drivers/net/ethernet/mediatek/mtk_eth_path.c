@@ -96,11 +96,16 @@ static int set_mux_gmac2_gmac0_to_gephy(struct mtk_eth *eth, int path)
 
 static int set_mux_u3_gmac2_to_qphy(struct mtk_eth *eth, int path)
 {
+<<<<<<< HEAD
 	unsigned int val = 0, mask = 0, reg = 0;
+=======
+	unsigned int val = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	bool updated = true;
 
 	switch (path) {
 	case MTK_ETH_PATH_GMAC2_SGMII:
+<<<<<<< HEAD
 		if (MTK_HAS_CAPS(eth->soc->caps, MTK_U3_COPHY_V2)) {
 			reg = USB_PHY_SWITCH_REG;
 			val = SGMII_QPHY_SEL;
@@ -110,6 +115,9 @@ static int set_mux_u3_gmac2_to_qphy(struct mtk_eth *eth, int path)
 			val = CO_QPHY_SEL;
 			mask = val;
 		}
+=======
+		val = CO_QPHY_SEL;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		updated = false;
@@ -117,7 +125,11 @@ static int set_mux_u3_gmac2_to_qphy(struct mtk_eth *eth, int path)
 	}
 
 	if (updated)
+<<<<<<< HEAD
 		regmap_update_bits(eth->infra, reg, mask, val);
+=======
+		regmap_update_bits(eth->infra, INFRA_MISC2, CO_QPHY_SEL, val);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_dbg(eth->dev, "path %s in %s updated = %d\n",
 		mtk_eth_path_name(path), __func__, updated);

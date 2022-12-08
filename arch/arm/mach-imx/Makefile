@@ -34,6 +34,10 @@ obj-$(CONFIG_HAVE_IMX_GPC) += gpc.o
 obj-$(CONFIG_HAVE_IMX_MMDC) += mmdc.o
 obj-$(CONFIG_HAVE_IMX_SRC) += src.o
 ifneq ($(CONFIG_SOC_IMX6)$(CONFIG_SOC_IMX7D_CA7)$(CONFIG_SOC_LS1021A),)
+<<<<<<< HEAD
+=======
+AFLAGS_headsmp.o :=-Wa,-march=armv7-a
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_SMP) += headsmp.o platsmp.o
 obj-$(CONFIG_HOTPLUG_CPU) += hotplug.o
 endif
@@ -47,10 +51,18 @@ obj-$(CONFIG_SOC_IMX7D_CM4) += mach-imx7d-cm4.o
 obj-$(CONFIG_SOC_IMX7ULP) += mach-imx7ulp.o pm-imx7ulp.o
 
 ifeq ($(CONFIG_SUSPEND),y)
+<<<<<<< HEAD
+=======
+AFLAGS_suspend-imx6.o :=-Wa,-march=armv7-a
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_SOC_IMX6) += suspend-imx6.o
 obj-$(CONFIG_SOC_IMX53) += suspend-imx53.o
 endif
 ifeq ($(CONFIG_ARM_CPU_SUSPEND),y)
+<<<<<<< HEAD
+=======
+AFLAGS_resume-imx6.o :=-Wa,-march=armv7-a
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_SOC_IMX6) += resume-imx6.o
 endif
 obj-$(CONFIG_SOC_IMX6) += pm-imx6.o

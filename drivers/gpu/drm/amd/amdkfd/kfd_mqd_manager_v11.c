@@ -126,10 +126,13 @@ static void init_mqd(struct mqd_manager *mm, void **mqd,
 	m->compute_static_thread_mgmt_se1 = 0xFFFFFFFF;
 	m->compute_static_thread_mgmt_se2 = 0xFFFFFFFF;
 	m->compute_static_thread_mgmt_se3 = 0xFFFFFFFF;
+<<<<<<< HEAD
 	m->compute_static_thread_mgmt_se4 = 0xFFFFFFFF;
 	m->compute_static_thread_mgmt_se5 = 0xFFFFFFFF;
 	m->compute_static_thread_mgmt_se6 = 0xFFFFFFFF;
 	m->compute_static_thread_mgmt_se7 = 0xFFFFFFFF;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	m->cp_hqd_persistent_state = CP_HQD_PERSISTENT_STATE__PRELOAD_REQ_MASK |
 			0x55 << CP_HQD_PERSISTENT_STATE__PRELOAD_SIZE__SHIFT;
@@ -308,6 +311,7 @@ static void init_mqd_sdma(struct mqd_manager *mm, void **mqd,
 		struct queue_properties *q)
 {
 	struct v11_sdma_mqd *m;
+<<<<<<< HEAD
 	int size;
 
 	m = (struct v11_sdma_mqd *) mqd_mem_obj->cpu_ptr;
@@ -318,6 +322,13 @@ static void init_mqd_sdma(struct mqd_manager *mm, void **mqd,
 		size = sizeof(struct v11_sdma_mqd);
 
 	memset(m, 0, size);
+=======
+
+	m = (struct v11_sdma_mqd *) mqd_mem_obj->cpu_ptr;
+
+	memset(m, 0, sizeof(struct v11_sdma_mqd));
+
+>>>>>>> b7ba80a49124 (Commit)
 	*mqd = m;
 	if (gart_addr)
 		*gart_addr = mqd_mem_obj->gpu_addr;
@@ -338,8 +349,12 @@ static void update_mqd_sdma(struct mqd_manager *mm, void *mqd,
 		<< SDMA0_QUEUE0_RB_CNTL__RB_SIZE__SHIFT |
 		q->vmid << SDMA0_QUEUE0_RB_CNTL__RB_VMID__SHIFT |
 		1 << SDMA0_QUEUE0_RB_CNTL__RPTR_WRITEBACK_ENABLE__SHIFT |
+<<<<<<< HEAD
 		6 << SDMA0_QUEUE0_RB_CNTL__RPTR_WRITEBACK_TIMER__SHIFT |
 		1 << SDMA0_QUEUE0_RB_CNTL__F32_WPTR_POLL_ENABLE__SHIFT;
+=======
+		6 << SDMA0_QUEUE0_RB_CNTL__RPTR_WRITEBACK_TIMER__SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 
 	m->sdmax_rlcx_rb_base = lower_32_bits(q->queue_address >> 8);
 	m->sdmax_rlcx_rb_base_hi = upper_32_bits(q->queue_address >> 8);
@@ -448,6 +463,7 @@ struct mqd_manager *mqd_manager_init_v11(enum KFD_MQD_TYPE type,
 #if defined(CONFIG_DEBUG_FS)
 		mqd->debugfs_show_mqd = debugfs_show_mqd_sdma;
 #endif
+<<<<<<< HEAD
 		/*
 		 * To allocate SDMA MQDs by generic functions
 		 * when MES is enabled.
@@ -456,6 +472,8 @@ struct mqd_manager *mqd_manager_init_v11(enum KFD_MQD_TYPE type,
 			mqd->allocate_mqd = allocate_mqd;
 			mqd->free_mqd = kfd_free_mqd_cp;
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		pr_debug("%s@%i\n", __func__, __LINE__);
 		break;
 	default:

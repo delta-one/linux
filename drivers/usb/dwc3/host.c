@@ -11,8 +11,18 @@
 #include <linux/of.h>
 #include <linux/platform_device.h>
 
+<<<<<<< HEAD
 #include "core.h"
 
+=======
+#include "../host/xhci-plat.h"
+#include "core.h"
+
+static const struct xhci_plat_priv dwc3_xhci_plat_priv = {
+	.quirks = XHCI_SKIP_PHY_INIT,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static void dwc3_host_fill_xhci_irq_res(struct dwc3 *dwc,
 					int irq, char *name)
 {
@@ -92,6 +102,14 @@ int dwc3_host_init(struct dwc3 *dwc)
 		goto err;
 	}
 
+<<<<<<< HEAD
+=======
+	ret = platform_device_add_data(xhci, &dwc3_xhci_plat_priv,
+					sizeof(dwc3_xhci_plat_priv));
+	if (ret)
+		goto err;
+
+>>>>>>> b7ba80a49124 (Commit)
 	memset(props, 0, sizeof(struct property_entry) * ARRAY_SIZE(props));
 
 	if (dwc->usb3_lpm_capable)

@@ -10,7 +10,10 @@
 #include "intel_breadcrumbs.h"
 #include "intel_gt.h"
 #include "intel_gt_irq.h"
+<<<<<<< HEAD
 #include "intel_gt_print.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_gt_regs.h"
 #include "intel_uncore.h"
 #include "intel_rps.h"
@@ -18,9 +21,12 @@
 
 static void guc_irq_handler(struct intel_guc *guc, u16 iir)
 {
+<<<<<<< HEAD
 	if (unlikely(!guc->interrupts.enabled))
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (iir & GUC_INTR_GUC2HOST)
 		intel_guc_to_host_event_handler(guc);
 }
@@ -48,8 +54,13 @@ gen11_gt_engine_identity(struct intel_gt *gt,
 		 !time_after32(local_clock() >> 10, timeout_ts));
 
 	if (unlikely(!(ident & GEN11_INTR_DATA_VALID))) {
+<<<<<<< HEAD
 		gt_err(gt, "INTR_IDENTITY_REG%u:%u 0x%08x not valid!\n",
 		       bank, bit, ident);
+=======
+		DRM_ERROR("INTR_IDENTITY_REG%u:%u 0x%08x not valid!\n",
+			  bank, bit, ident);
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 
@@ -76,7 +87,11 @@ gen11_other_irq_handler(struct intel_gt *gt, const u8 instance,
 		return gen11_rps_irq_handler(&media_gt->rps, iir);
 
 	if (instance == OTHER_KCR_INSTANCE)
+<<<<<<< HEAD
 		return intel_pxp_irq_handler(gt->i915->pxp, iir);
+=======
+		return intel_pxp_irq_handler(&gt->pxp, iir);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (instance == OTHER_GSC_INSTANCE)
 		return intel_gsc_irq_handler(gt, iir);
@@ -85,6 +100,7 @@ gen11_other_irq_handler(struct intel_gt *gt, const u8 instance,
 		  instance, iir);
 }
 
+<<<<<<< HEAD
 static struct intel_gt *pick_gt(struct intel_gt *gt, u8 class, u8 instance)
 {
 	struct intel_gt *media_gt = gt->i915->media_gt;
@@ -106,6 +122,37 @@ static struct intel_gt *pick_gt(struct intel_gt *gt, u8 class, u8 instance)
 	default:
 		return gt;
 	}
+=======
+static void
+gen11_engine_irq_handler(struct intel_gt *gt, const u8 class,
+			 const u8 instance, const u16 iir)
+{
+	struct intel_engine_cs *engine;
+
+	/*
+	 * Platforms with standalone media have their media engines in another
+	 * GT.
+	 */
+	if (MEDIA_VER(gt->i915) >= 13 &&
+	    (class == VIDEO_DECODE_CLASS || class == VIDEO_ENHANCEMENT_CLASS)) {
+		if (!gt->i915->media_gt)
+			goto err;
+
+		gt = gt->i915->media_gt;
+	}
+
+	if (instance <= MAX_ENGINE_INSTANCE)
+		engine = gt->engine_class[class][instance];
+	else
+		engine = NULL;
+
+	if (likely(engine))
+		return intel_engine_cs_irq(engine, iir);
+
+err:
+	WARN_ONCE(1, "unhandled engine interrupt class=0x%x, instance=0x%x\n",
+		  class, instance);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -118,6 +165,7 @@ gen11_gt_identity_handler(struct intel_gt *gt, const u32 identity)
 	if (unlikely(!intr))
 		return;
 
+<<<<<<< HEAD
 	/*
 	 * Platforms with standalone media have the media and GSC engines in
 	 * another GT.
@@ -129,6 +177,10 @@ gen11_gt_identity_handler(struct intel_gt *gt, const u32 identity)
 		if (engine)
 			return intel_engine_cs_irq(engine, intr);
 	}
+=======
+	if (class <= COPY_ENGINE_CLASS || class == COMPUTE_CLASS)
+		return gen11_engine_irq_handler(gt, class, instance, intr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (class == OTHER_CLASS)
 		return gen11_other_irq_handler(gt, instance, intr);
@@ -211,7 +263,11 @@ void gen11_gt_irq_reset(struct intel_gt *gt)
 	intel_uncore_write(uncore, GEN11_VCS_VECS_INTR_ENABLE,	  0);
 	if (CCS_MASK(gt))
 		intel_uncore_write(uncore, GEN12_CCS_RSVD_INTR_ENABLE, 0);
+<<<<<<< HEAD
 	if (HAS_HECI_GSC(gt->i915) || HAS_ENGINE(gt, GSC0))
+=======
+	if (HAS_HECI_GSC(gt->i915))
+>>>>>>> b7ba80a49124 (Commit)
 		intel_uncore_write(uncore, GEN11_GUNIT_CSME_INTR_ENABLE, 0);
 
 	/* Restore masks irqs on RCS, BCS, VCS and VECS engines. */
@@ -238,7 +294,11 @@ void gen11_gt_irq_reset(struct intel_gt *gt)
 		intel_uncore_write(uncore, GEN12_CCS0_CCS1_INTR_MASK, ~0);
 	if (HAS_ENGINE(gt, CCS2) || HAS_ENGINE(gt, CCS3))
 		intel_uncore_write(uncore, GEN12_CCS2_CCS3_INTR_MASK, ~0);
+<<<<<<< HEAD
 	if (HAS_HECI_GSC(gt->i915) || HAS_ENGINE(gt, GSC0))
+=======
+	if (HAS_HECI_GSC(gt->i915))
+>>>>>>> b7ba80a49124 (Commit)
 		intel_uncore_write(uncore, GEN11_GUNIT_CSME_INTR_MASK, ~0);
 
 	intel_uncore_write(uncore, GEN11_GPM_WGBOXPERF_INTR_ENABLE, 0);
@@ -254,8 +314,12 @@ void gen11_gt_irq_postinstall(struct intel_gt *gt)
 {
 	struct intel_uncore *uncore = gt->uncore;
 	u32 irqs = GT_RENDER_USER_INTERRUPT;
+<<<<<<< HEAD
 	u32 guc_mask = intel_uc_wants_guc(&gt->uc) ? GUC_INTR_GUC2HOST : 0;
 	u32 gsc_mask = 0;
+=======
+	const u32 gsc_mask = GSC_IRQ_INTF(0) | GSC_IRQ_INTF(1);
+>>>>>>> b7ba80a49124 (Commit)
 	u32 dmask;
 	u32 smask;
 
@@ -267,11 +331,14 @@ void gen11_gt_irq_postinstall(struct intel_gt *gt)
 	dmask = irqs << 16 | irqs;
 	smask = irqs << 16;
 
+<<<<<<< HEAD
 	if (HAS_ENGINE(gt, GSC0))
 		gsc_mask = irqs;
 	else if (HAS_HECI_GSC(gt->i915))
 		gsc_mask = GSC_IRQ_INTF(0) | GSC_IRQ_INTF(1);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	BUILD_BUG_ON(irqs & 0xffff0000);
 
 	/* Enable RCS, BCS, VCS and VECS class interrupts. */
@@ -279,8 +346,14 @@ void gen11_gt_irq_postinstall(struct intel_gt *gt)
 	intel_uncore_write(uncore, GEN11_VCS_VECS_INTR_ENABLE, dmask);
 	if (CCS_MASK(gt))
 		intel_uncore_write(uncore, GEN12_CCS_RSVD_INTR_ENABLE, smask);
+<<<<<<< HEAD
 	if (gsc_mask)
 		intel_uncore_write(uncore, GEN11_GUNIT_CSME_INTR_ENABLE, gsc_mask);
+=======
+	if (HAS_HECI_GSC(gt->i915))
+		intel_uncore_write(uncore, GEN11_GUNIT_CSME_INTR_ENABLE,
+				   gsc_mask);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Unmask irqs on RCS, BCS, VCS and VECS engines. */
 	intel_uncore_write(uncore, GEN11_RCS0_RSVD_INTR_MASK, ~smask);
@@ -306,6 +379,7 @@ void gen11_gt_irq_postinstall(struct intel_gt *gt)
 		intel_uncore_write(uncore, GEN12_CCS0_CCS1_INTR_MASK, ~dmask);
 	if (HAS_ENGINE(gt, CCS2) || HAS_ENGINE(gt, CCS3))
 		intel_uncore_write(uncore, GEN12_CCS2_CCS3_INTR_MASK, ~dmask);
+<<<<<<< HEAD
 	if (gsc_mask)
 		intel_uncore_write(uncore, GEN11_GUNIT_CSME_INTR_MASK, ~gsc_mask);
 
@@ -322,6 +396,11 @@ void gen11_gt_irq_postinstall(struct intel_gt *gt)
 		intel_uncore_rmw(uncore, MTL_GUC_MGUC_INTR_MASK, mask, 0);
 	}
 
+=======
+	if (HAS_HECI_GSC(gt->i915))
+		intel_uncore_write(uncore, GEN11_GUNIT_CSME_INTR_MASK, ~gsc_mask);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * RPS interrupts will get enabled/disabled on demand when RPS itself
 	 * is enabled/disabled.
@@ -330,6 +409,13 @@ void gen11_gt_irq_postinstall(struct intel_gt *gt)
 	gt->pm_imr = ~gt->pm_ier;
 	intel_uncore_write(uncore, GEN11_GPM_WGBOXPERF_INTR_ENABLE, 0);
 	intel_uncore_write(uncore, GEN11_GPM_WGBOXPERF_INTR_MASK,  ~0);
+<<<<<<< HEAD
+=======
+
+	/* Same thing for GuC interrupts */
+	intel_uncore_write(uncore, GEN11_GUC_SG_INTR_ENABLE, 0);
+	intel_uncore_write(uncore, GEN11_GUC_SG_INTR_MASK,  ~0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void gen5_gt_irq_handler(struct intel_gt *gt, u32 gt_iir)
@@ -378,7 +464,11 @@ void gen6_gt_irq_handler(struct intel_gt *gt, u32 gt_iir)
 	if (gt_iir & (GT_BLT_CS_ERROR_INTERRUPT |
 		      GT_BSD_CS_ERROR_INTERRUPT |
 		      GT_CS_MASTER_ERROR_INTERRUPT))
+<<<<<<< HEAD
 		gt_dbg(gt, "Command parser error, gt_iir 0x%08x\n", gt_iir);
+=======
+		DRM_DEBUG("Command parser error, gt_iir 0x%08x\n", gt_iir);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (gt_iir & GT_PARITY_ERROR(gt->i915))
 		gen7_parity_error_irq_handler(gt, gt_iir);

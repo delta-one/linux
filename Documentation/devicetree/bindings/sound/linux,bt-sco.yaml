@@ -9,9 +9,12 @@ title: Bluetooth SCO Audio Codec
 maintainers:
   - Mark Brown <broonie@kernel.org>
 
+<<<<<<< HEAD
 allOf:
   - $ref: dai-common.yaml#
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   '#sound-dai-cells':
     enum:
@@ -29,7 +32,11 @@ required:
   - '#sound-dai-cells'
   - compatible
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |

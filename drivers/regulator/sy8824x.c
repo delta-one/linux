@@ -233,8 +233,12 @@ MODULE_DEVICE_TABLE(i2c, sy8824_id);
 static struct i2c_driver sy8824_regulator_driver = {
 	.driver = {
 		.name = "sy8824-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
 		.of_match_table = sy8824_dt_ids,
+=======
+		.of_match_table = of_match_ptr(sy8824_dt_ids),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe_new = sy8824_i2c_probe,
 	.id_table = sy8824_id,

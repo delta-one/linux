@@ -19,7 +19,10 @@
 #include <uapi/linux/virtio_blk.h>
 #include <uapi/linux/virtio_config.h>
 #include <uapi/linux/virtio_pci.h>
+<<<<<<< HEAD
 #include <uapi/linux/vdpa.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define N3000_DEVICE_ID		0x1041
 #define N3000_SUBSYS_DEVICE_ID	0x001A
@@ -39,6 +42,12 @@
 #define IFCVF_DBG(pdev, fmt, ...)	dev_dbg(&pdev->dev, fmt, ##__VA_ARGS__)
 #define IFCVF_INFO(pdev, fmt, ...)	dev_info(&pdev->dev, fmt, ##__VA_ARGS__)
 
+<<<<<<< HEAD
+=======
+#define ifcvf_private_to_vf(adapter) \
+	(&((struct ifcvf_adapter *)adapter)->vf)
+
+>>>>>>> b7ba80a49124 (Commit)
 /* all vqs and config interrupt has its own vector */
 #define MSIX_VECTOR_PER_VQ_AND_CONFIG		1
 /* all vqs share a vector, and config interrupt has a separate vector */
@@ -76,8 +85,11 @@ struct ifcvf_hw {
 	u32 dev_type;
 	u64 req_features;
 	u64 hw_features;
+<<<<<<< HEAD
 	/* provisioned device features */
 	u64 dev_features;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct virtio_pci_common_cfg __iomem *common_cfg;
 	void __iomem *dev_cfg;
 	struct vring_info vring[IFCVF_MAX_QUEUES];
@@ -89,13 +101,20 @@ struct ifcvf_hw {
 	u16 nr_vring;
 	/* VIRTIO_PCI_CAP_DEVICE_CFG size */
 	u32 cap_dev_config_size;
+<<<<<<< HEAD
 	struct pci_dev *pdev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct ifcvf_adapter {
 	struct vdpa_device vdpa;
 	struct pci_dev *pdev;
+<<<<<<< HEAD
 	struct ifcvf_hw *vf;
+=======
+	struct ifcvf_hw vf;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct ifcvf_vring_lm_cfg {
@@ -110,7 +129,10 @@ struct ifcvf_lm_cfg {
 
 struct ifcvf_vdpa_mgmt_dev {
 	struct vdpa_mgmt_dev mdev;
+<<<<<<< HEAD
 	struct ifcvf_hw vf;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct ifcvf_adapter *adapter;
 	struct pci_dev *pdev;
 };

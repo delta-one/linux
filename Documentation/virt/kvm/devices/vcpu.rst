@@ -171,8 +171,11 @@ configured values on other VCPUs.  Userspace should configure the interrupt
 numbers on at least one VCPU after creating all VCPUs and before running any
 VCPUs.
 
+<<<<<<< HEAD
 .. _kvm_arm_vcpu_pvtime_ctrl:
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 3. GROUP: KVM_ARM_VCPU_PVTIME_CTRL
 ==================================
 

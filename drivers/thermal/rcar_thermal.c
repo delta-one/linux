@@ -101,6 +101,10 @@ struct rcar_thermal_priv {
 	list_for_each_entry(pos, &common->head, list)
 
 #define MCELSIUS(temp)			((temp) * 1000)
+<<<<<<< HEAD
+=======
+#define rcar_zone_to_priv(zone)		((zone)->devdata)
+>>>>>>> b7ba80a49124 (Commit)
 #define rcar_priv_to_dev(priv)		((priv)->common->dev)
 #define rcar_has_irq_support(priv)	((priv)->common->base)
 #define rcar_id_to_shift(priv)		((priv)->id * 8)
@@ -272,7 +276,11 @@ static int rcar_thermal_get_current_temp(struct rcar_thermal_priv *priv,
 
 static int rcar_thermal_get_temp(struct thermal_zone_device *zone, int *temp)
 {
+<<<<<<< HEAD
 	struct rcar_thermal_priv *priv = thermal_zone_device_priv(zone);
+=======
+	struct rcar_thermal_priv *priv = rcar_zone_to_priv(zone);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return rcar_thermal_get_current_temp(priv, temp);
 }
@@ -509,6 +517,14 @@ static int rcar_thermal_probe(struct platform_device *pdev)
 		}
 
 		if (chip->use_of_thermal) {
+<<<<<<< HEAD
+=======
+			/*
+			 * thermal_zone doesn't enable hwmon as default,
+			 * but, enable it here to keep compatible
+			 */
+			priv->zone->tzp->no_hwmon = false;
+>>>>>>> b7ba80a49124 (Commit)
 			ret = thermal_add_hwmon_sysfs(priv->zone);
 			if (ret)
 				goto error_unregister;

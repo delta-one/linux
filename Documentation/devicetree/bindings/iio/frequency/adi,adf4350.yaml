@@ -160,16 +160,24 @@ properties:
       2: +2dBm
       3: +5dBm
 
+<<<<<<< HEAD
+=======
+additionalProperties: false
+
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg
   - clocks
 
+<<<<<<< HEAD
 allOf:
   - $ref: /schemas/spi/spi-peripheral-props.yaml#
 
 unevaluatedProperties: false
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 examples:
   - |
     spi {

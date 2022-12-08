@@ -588,7 +588,13 @@ static void agp_amd64_remove(struct pci_dev *pdev)
 	agp_bridges_found--;
 }
 
+<<<<<<< HEAD
 static int agp_amd64_resume(struct device *dev)
+=======
+#define agp_amd64_suspend NULL
+
+static int __maybe_unused agp_amd64_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pci_dev *pdev = to_pci_dev(dev);
 
@@ -725,7 +731,11 @@ static const struct pci_device_id agp_amd64_pci_promisc_table[] = {
 	{ }
 };
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(agp_amd64_pm_ops, NULL, agp_amd64_resume);
+=======
+static SIMPLE_DEV_PM_OPS(agp_amd64_pm_ops, agp_amd64_suspend, agp_amd64_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct pci_driver agp_amd64_pci_driver = {
 	.name		= "agpgart-amd64",

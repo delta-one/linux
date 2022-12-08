@@ -26,7 +26,10 @@
 #include "util/string2.h"
 
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/numa.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/rbtree.h>
 #include <linux/string.h>
 #include <linux/zalloc.h>
@@ -36,7 +39,10 @@
 #include <regex.h>
 
 #include <linux/ctype.h>
+<<<<<<< HEAD
 #include <traceevent/event-parse.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int	kmem_slab;
 static int	kmem_page;
@@ -186,6 +192,7 @@ static int evsel__process_alloc_event(struct evsel *evsel, struct perf_sample *s
 	total_allocated += bytes_alloc;
 
 	nr_allocs++;
+<<<<<<< HEAD
 
 	/*
 	 * Commit 11e9734bcb6a ("mm/slab_common: unify NUMA and UMA
@@ -213,6 +220,24 @@ static int evsel__process_alloc_event(struct evsel *evsel, struct perf_sample *s
 	}
 
 	return 0;
+=======
+	return 0;
+}
+
+static int evsel__process_alloc_node_event(struct evsel *evsel, struct perf_sample *sample)
+{
+	int ret = evsel__process_alloc_event(evsel, sample);
+
+	if (!ret) {
+		int node1 = cpu__get_node((struct perf_cpu){.cpu = sample->cpu}),
+		    node2 = evsel__intval(evsel, sample, "node");
+
+		if (node1 != node2)
+			nr_cross_allocs++;
+	}
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int ptr_cmp(void *, void *);
@@ -1380,8 +1405,13 @@ static int __cmd_kmem(struct perf_session *session)
 		/* slab allocator */
 		{ "kmem:kmalloc",		evsel__process_alloc_event, },
 		{ "kmem:kmem_cache_alloc",	evsel__process_alloc_event, },
+<<<<<<< HEAD
 		{ "kmem:kmalloc_node",		evsel__process_alloc_event, },
 		{ "kmem:kmem_cache_alloc_node", evsel__process_alloc_event, },
+=======
+		{ "kmem:kmalloc_node",		evsel__process_alloc_node_event, },
+		{ "kmem:kmem_cache_alloc_node", evsel__process_alloc_node_event, },
+>>>>>>> b7ba80a49124 (Commit)
 		{ "kmem:kfree",			evsel__process_free_event, },
 		{ "kmem:kmem_cache_free",	evsel__process_free_event, },
 		/* page allocator */
@@ -1835,6 +1865,7 @@ static int parse_line_opt(const struct option *opt __maybe_unused,
 	return 0;
 }
 
+<<<<<<< HEAD
 static bool slab_legacy_tp_is_exposed(void)
 {
 	/*
@@ -1848,6 +1879,8 @@ static bool slab_legacy_tp_is_exposed(void)
 		false : true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __cmd_record(int argc, const char **argv)
 {
 	const char * const record_args[] = {
@@ -1855,6 +1888,7 @@ static int __cmd_record(int argc, const char **argv)
 	};
 	const char * const slab_events[] = {
 	"-e", "kmem:kmalloc",
+<<<<<<< HEAD
 	"-e", "kmem:kfree",
 	"-e", "kmem:kmem_cache_alloc",
 	"-e", "kmem:kmem_cache_free",
@@ -1862,6 +1896,13 @@ static int __cmd_record(int argc, const char **argv)
 	const char * const slab_legacy_events[] = {
 	"-e", "kmem:kmalloc_node",
 	"-e", "kmem:kmem_cache_alloc_node",
+=======
+	"-e", "kmem:kmalloc_node",
+	"-e", "kmem:kfree",
+	"-e", "kmem:kmem_cache_alloc",
+	"-e", "kmem:kmem_cache_alloc_node",
+	"-e", "kmem:kmem_cache_free",
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	const char * const page_events[] = {
 	"-e", "kmem:mm_page_alloc",
@@ -1869,6 +1910,7 @@ static int __cmd_record(int argc, const char **argv)
 	};
 	unsigned int rec_argc, i, j;
 	const char **rec_argv;
+<<<<<<< HEAD
 	unsigned int slab_legacy_tp_exposed = slab_legacy_tp_is_exposed();
 
 	rec_argc = ARRAY_SIZE(record_args) + argc - 1;
@@ -1877,6 +1919,12 @@ static int __cmd_record(int argc, const char **argv)
 		if (slab_legacy_tp_exposed)
 			rec_argc += ARRAY_SIZE(slab_legacy_events);
 	}
+=======
+
+	rec_argc = ARRAY_SIZE(record_args) + argc - 1;
+	if (kmem_slab)
+		rec_argc += ARRAY_SIZE(slab_events);
+>>>>>>> b7ba80a49124 (Commit)
 	if (kmem_page)
 		rec_argc += ARRAY_SIZE(page_events) + 1; /* for -g */
 
@@ -1891,10 +1939,13 @@ static int __cmd_record(int argc, const char **argv)
 	if (kmem_slab) {
 		for (j = 0; j < ARRAY_SIZE(slab_events); j++, i++)
 			rec_argv[i] = strdup(slab_events[j]);
+<<<<<<< HEAD
 		if (slab_legacy_tp_exposed) {
 			for (j = 0; j < ARRAY_SIZE(slab_legacy_events); j++, i++)
 				rec_argv[i] = strdup(slab_legacy_events[j]);
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (kmem_page) {
 		rec_argv[i++] = strdup("-g");

@@ -6,8 +6,13 @@ config CRYPTO_GHASH_ARM64_CE
 	tristate "Hash functions: GHASH (ARMv8 Crypto Extensions)"
 	depends on KERNEL_MODE_NEON
 	select CRYPTO_HASH
+<<<<<<< HEAD
 	select CRYPTO_LIB_AES
 	select CRYPTO_LIB_GF128MUL
+=======
+	select CRYPTO_GF128MUL
+	select CRYPTO_LIB_AES
+>>>>>>> b7ba80a49124 (Commit)
 	select CRYPTO_AEAD
 	help
 	  GCM GHASH function (NIST SP800-38D)
@@ -36,7 +41,11 @@ config CRYPTO_POLY1305_NEON
 	  Architecture: arm64 using:
 	  - NEON (Advanced SIMD) extensions
 
+<<<<<<< HEAD
 config CRYPTO_SHA1_ARM64_CE
+=======
+config CRYPTO_SHA1_ARM64
+>>>>>>> b7ba80a49124 (Commit)
 	tristate "Hash functions: SHA-1 (ARMv8 Crypto Extensions)"
 	depends on KERNEL_MODE_NEON
 	select CRYPTO_HASH
@@ -96,6 +105,7 @@ config CRYPTO_SHA3_ARM64
 	  Architecture: arm64 using:
 	  - ARMv8.2 Crypto Extensions
 
+<<<<<<< HEAD
 config CRYPTO_SM3_NEON
 	tristate "Hash functions: SM3 (NEON)"
 	depends on KERNEL_MODE_NEON
@@ -107,6 +117,8 @@ config CRYPTO_SM3_NEON
 	  Architecture: arm64 using:
 	  - NEON (Advanced SIMD) extensions
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config CRYPTO_SM3_ARM64_CE
 	tristate "Hash functions: SM3 (ARMv8.2 Crypto Extensions)"
 	depends on KERNEL_MODE_NEON
@@ -231,7 +243,11 @@ config CRYPTO_SM4_ARM64_CE
 	  - NEON (Advanced SIMD) extensions
 
 config CRYPTO_SM4_ARM64_CE_BLK
+<<<<<<< HEAD
 	tristate "Ciphers: SM4, modes: ECB/CBC/CFB/CTR/XTS (ARMv8 Crypto Extensions)"
+=======
+	tristate "Ciphers: SM4, modes: ECB/CBC/CFB/CTR (ARMv8 Crypto Extensions)"
+>>>>>>> b7ba80a49124 (Commit)
 	depends on KERNEL_MODE_NEON
 	select CRYPTO_SKCIPHER
 	select CRYPTO_SM4
@@ -242,8 +258,11 @@ config CRYPTO_SM4_ARM64_CE_BLK
 	  - CBC (Cipher Block Chaining) mode (NIST SP800-38A)
 	  - CFB (Cipher Feedback) mode (NIST SP800-38A)
 	  - CTR (Counter) mode (NIST SP800-38A)
+<<<<<<< HEAD
 	  - XTS (XOR Encrypt XOR with ciphertext stealing) mode (NIST SP800-38E
 	    and IEEE 1619)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	  Architecture: arm64 using:
 	  - ARMv8 Crypto Extensions
@@ -281,6 +300,7 @@ config CRYPTO_AES_ARM64_CE_CCM
 	  - ARMv8 Crypto Extensions
 	  - NEON (Advanced SIMD) extensions
 
+<<<<<<< HEAD
 config CRYPTO_SM4_ARM64_CE_CCM
 	tristate "AEAD cipher: SM4 in CCM mode (ARMv8 Crypto Extensions)"
 	depends on KERNEL_MODE_NEON
@@ -313,6 +333,8 @@ config CRYPTO_SM4_ARM64_CE_GCM
 	  - PMULL (Polynomial Multiply Long) instructions
 	  - NEON (Advanced SIMD) extensions
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config CRYPTO_CRCT10DIF_ARM64_CE
 	tristate "CRCT10DIF (PMULL)"
 	depends on KERNEL_MODE_NEON && CRC_T10DIF

@@ -24,7 +24,15 @@
 	qcom,board-id = <8 0>;
 
 	chosen {
+<<<<<<< HEAD
 		bootargs = "maxcpus=2";
+=======
+		/*
+		 * Due to an unknown-for-a-few-years regression,
+		 * SDHCI only works on MSM8996 in PIO (lame) mode.
+		 */
+		bootargs = "sdhci.debug_quirks=0x40 sdhci.debug_quirks2=0x4 maxcpus=2";
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	reserved-memory {
@@ -100,8 +108,13 @@
 };
 
 &blsp1_i2c3 {
+<<<<<<< HEAD
 	clock-frequency = <355000>;
 	status = "okay";
+=======
+	status = "okay";
+	clock-frequency = <355000>;
+>>>>>>> b7ba80a49124 (Commit)
 
 	tof_sensor: vl53l0x@29 {
 		compatible = "st,vl53l0x";
@@ -114,15 +127,25 @@
 };
 
 &blsp2_i2c5 {
+<<<<<<< HEAD
 	clock-frequency = <355000>;
 	status = "okay";
+=======
+	status = "okay";
+	clock-frequency = <355000>;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* FUSB301 USB-C controller */
 };
 
 &blsp2_i2c6 {
+<<<<<<< HEAD
 	clock-frequency = <355000>;
 	status = "okay";
+=======
+	status = "okay";
+	clock-frequency = <355000>;
+>>>>>>> b7ba80a49124 (Commit)
 
 	synaptics@2c {
 		compatible = "syna,rmi4-i2c";
@@ -179,10 +202,18 @@
 };
 
 &hsusb_phy1 {
+<<<<<<< HEAD
 	vdd-supply = <&pm8994_l28>;
 	vdda-pll-supply = <&pm8994_l12>;
 	vdda-phy-dpdm-supply = <&pm8994_l24>;
 	status = "okay";
+=======
+	status = "okay";
+
+	vdd-supply = <&pm8994_l28>;
+	vdda-pll-supply = <&pm8994_l12>;
+	vdda-phy-dpdm-supply = <&pm8994_l24>;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &mmcc {
@@ -190,10 +221,15 @@
 };
 
 &pcie0 {
+<<<<<<< HEAD
+=======
+	status = "okay";
+>>>>>>> b7ba80a49124 (Commit)
 	perst-gpios = <&tlmm 35 GPIO_ACTIVE_LOW>;
 	wake-gpios = <&tlmm 37 GPIO_ACTIVE_HIGH>;
 	vddpe-3v3-supply = <&wlan_en>;
 	vdda-supply = <&pm8994_l28>;
+<<<<<<< HEAD
 	status = "okay";
 };
 
@@ -201,6 +237,15 @@
 	vdda-phy-supply = <&pm8994_l28>;
 	vdda-pll-supply = <&pm8994_l12>;
 	status = "okay";
+=======
+};
+
+&pcie_phy {
+	status = "okay";
+
+	vdda-phy-supply = <&pm8994_l28>;
+	vdda-pll-supply = <&pm8994_l12>;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &pm8994_gpios {
@@ -472,8 +517,13 @@
 };
 
 &pm8994_resin {
+<<<<<<< HEAD
 	linux,code = <KEY_VOLUMEUP>;
 	status = "okay";
+=======
+	status = "okay";
+	linux,code = <KEY_VOLUMEUP>;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &pmi8994_gpios {
@@ -617,6 +667,7 @@
 };
 
 &pmi8994_wled {
+<<<<<<< HEAD
 	default-brightness = <512>;
 	qcom,num-strings = <3>;
 	status = "okay";
@@ -624,6 +675,15 @@
 
 &rpm_requests {
 	regulators-0 {
+=======
+	status = "okay";
+	default-brightness = <512>;
+	qcom,num-strings = <3>;
+};
+
+&rpm_requests {
+	pm8994-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,rpm-pm8994-regulators";
 
 		vdd_s1-supply = <&vph_pwr>;
@@ -819,10 +879,17 @@
 };
 
 &sdhc1 {
+<<<<<<< HEAD
+=======
+	/* eMMC doesn't seem to cooperate even in PIO mode.. */
+	status = "disabled";
+
+>>>>>>> b7ba80a49124 (Commit)
 	vmmc-supply = <&pm8994_l20>;
 	vqmmc-supply = <&pm8994_s4>;
 	mmc-hs400-1_8v;
 	mmc-hs200-1_8v;
+<<<<<<< HEAD
 	status = "okay";
 };
 
@@ -831,6 +898,16 @@
 	vmmc-supply = <&pm8994_l21>;
 	vqmmc-supply = <&pm8994_l13>;
 	status = "okay";
+=======
+};
+
+&sdhc2 {
+	status = "okay";
+
+	cd-gpios = <&tlmm 40 GPIO_ACTIVE_HIGH>;
+	vmmc-supply = <&pm8994_l21>;
+	vqmmc-supply = <&pm8994_l13>;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &tlmm {
@@ -838,28 +915,44 @@
 	pinctrl-0 = <&sw_service_gpio>;
 	pinctrl-names = "default";
 
+<<<<<<< HEAD
 	disp_reset_n_gpio: disp-reset-n-state {
+=======
+	disp_reset_n_gpio: disp-reset-n {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio8";
 		function = "gpio";
 		drive-strength = <2>;
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	mdp_vsync_p_gpio: mdp-vsync-p-state {
+=======
+	mdp_vsync_p_gpio: mdp-vsync-p {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio10";
 		function = "mdp_vsync";
 		drive-strength = <2>;
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	sw_service_gpio: sw-service-gpio-state {
+=======
+	sw_service_gpio: sw-service-gpio {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio16";
 		function = "gpio";
 		drive-strength = <2>;
 		bias-pull-up;
 	};
 
+<<<<<<< HEAD
 	usb_detect: usb-detect-state {
+=======
+	usb_detect: usb-detect {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio25";
 		function = "gpio";
 		drive-strength = <2>;
@@ -867,7 +960,11 @@
 		output-high;
 	};
 
+<<<<<<< HEAD
 	uim_detect_en: uim-detect-en-state {
+=======
+	uim_detect_en: uim-detect-en {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio29";
 		function = "gpio";
 		drive-strength = <2>;
@@ -875,14 +972,22 @@
 		output-high;
 	};
 
+<<<<<<< HEAD
 	tray_det_pin: tray-det-state {
+=======
+	tray_det_pin: tray-det {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio40";
 		function = "gpio";
 		drive-strength = <2>;
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	tp_vddio_en: tp-vddio-en-state {
+=======
+	tp_vddio_en: tp-vddio-en {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio50";
 		function = "gpio";
 		drive-strength = <2>;
@@ -890,7 +995,11 @@
 		output-high;
 	};
 
+<<<<<<< HEAD
 	lcd_vddio_en: lcd-vddio-en-state {
+=======
+	lcd_vddio_en: lcd-vddio-en {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio51";
 		function = "gpio";
 		drive-strength = <2>;
@@ -898,14 +1007,25 @@
 		output-low;
 	};
 
+<<<<<<< HEAD
 	wl_host_wake: wl-host-wake-state {
+=======
+	wl_host_wake: wl-host-wake {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio79";
 		function = "gpio";
 		drive-strength = <2>;
 		bias-pull-down;
+<<<<<<< HEAD
 	};
 
 	wl_reg_on: wl-reg-on-state {
+=======
+		input-high;
+	};
+
+	wl_reg_on: wl-reg-on {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio84";
 		function = "gpio";
 		drive-strength = <2>;
@@ -913,20 +1033,32 @@
 		output-low;
 	};
 
+<<<<<<< HEAD
 	ts_reset_n: ts-rst-n-state {
+=======
+	ts_reset_n: ts-rst-n {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio89";
 		function = "gpio";
 		drive-strength = <2>;
 	};
 
+<<<<<<< HEAD
 	touch_int_n: touch-int-n-state {
+=======
+	touch_int_n: touch-int-n {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio125";
 		function = "gpio";
 		drive-strength = <2>;
 		bias-pull-up;
 	};
 
+<<<<<<< HEAD
 	touch_int_sleep: touch-int-sleep-state {
+=======
+	touch_int_sleep: touch-int-sleep {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio125";
 		function = "gpio";
 		drive-strength = <2>;
@@ -934,15 +1066,28 @@
 	};
 };
 
+<<<<<<< HEAD
 &usb3 {
 	qcom,select-utmi-as-pipe-clk;
 	status = "okay";
+=======
+/*
+ * For reasons that are currently unknown (but probably related to fusb301), USB takes about
+ * 6 minutes to wake up (nothing interesting in kernel logs), but then it works as it should.
+ */
+&usb3 {
+	status = "okay";
+	qcom,select-utmi-as-pipe-clk;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &usb3_dwc3 {
 	extcon = <&usb3_id>;
 	dr_mode = "peripheral";
+<<<<<<< HEAD
 	maximum-speed = "high-speed";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	phys = <&hsusb_phy1>;
 	phy-names = "usb2-phy";
 	snps,hird-threshold = /bits/ 8 <0>;

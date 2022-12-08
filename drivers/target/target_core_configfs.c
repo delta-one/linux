@@ -12,7 +12,10 @@
  *
  ****************************************************************************/
 
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/moduleparam.h>
 #include <generated/utsrelease.h>
@@ -335,6 +338,7 @@ EXPORT_SYMBOL(target_undepend_item);
 /*##############################################################################
 // Start functions called by external Target Fabrics Modules
 //############################################################################*/
+<<<<<<< HEAD
 static int target_disable_feature(struct se_portal_group *se_tpg)
 {
 	return 0;
@@ -358,6 +362,8 @@ static int target_default_get_cmd_state(struct se_cmd *se_cmd)
 {
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int target_fabric_tf_ops_check(const struct target_core_fabric_ops *tfo)
 {
@@ -385,14 +391,55 @@ static int target_fabric_tf_ops_check(const struct target_core_fabric_ops *tfo)
 		pr_err("Missing tfo->tpg_get_tag()\n");
 		return -EINVAL;
 	}
+<<<<<<< HEAD
+=======
+	if (!tfo->tpg_check_demo_mode) {
+		pr_err("Missing tfo->tpg_check_demo_mode()\n");
+		return -EINVAL;
+	}
+	if (!tfo->tpg_check_demo_mode_cache) {
+		pr_err("Missing tfo->tpg_check_demo_mode_cache()\n");
+		return -EINVAL;
+	}
+	if (!tfo->tpg_check_demo_mode_write_protect) {
+		pr_err("Missing tfo->tpg_check_demo_mode_write_protect()\n");
+		return -EINVAL;
+	}
+	if (!tfo->tpg_check_prod_mode_write_protect) {
+		pr_err("Missing tfo->tpg_check_prod_mode_write_protect()\n");
+		return -EINVAL;
+	}
+	if (!tfo->tpg_get_inst_index) {
+		pr_err("Missing tfo->tpg_get_inst_index()\n");
+		return -EINVAL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	if (!tfo->release_cmd) {
 		pr_err("Missing tfo->release_cmd()\n");
 		return -EINVAL;
 	}
+<<<<<<< HEAD
+=======
+	if (!tfo->sess_get_index) {
+		pr_err("Missing tfo->sess_get_index()\n");
+		return -EINVAL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	if (!tfo->write_pending) {
 		pr_err("Missing tfo->write_pending()\n");
 		return -EINVAL;
 	}
+<<<<<<< HEAD
+=======
+	if (!tfo->set_default_node_attributes) {
+		pr_err("Missing tfo->set_default_node_attributes()\n");
+		return -EINVAL;
+	}
+	if (!tfo->get_cmd_state) {
+		pr_err("Missing tfo->get_cmd_state()\n");
+		return -EINVAL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	if (!tfo->queue_data_in) {
 		pr_err("Missing tfo->queue_data_in()\n");
 		return -EINVAL;
@@ -438,6 +485,7 @@ static int target_fabric_tf_ops_check(const struct target_core_fabric_ops *tfo)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void target_set_default_ops(struct target_core_fabric_ops *tfo)
 {
 	if (!tfo->tpg_check_demo_mode)
@@ -468,6 +516,10 @@ static void target_set_default_ops(struct target_core_fabric_ops *tfo)
 int target_register_template(const struct target_core_fabric_ops *fo)
 {
 	struct target_core_fabric_ops *tfo;
+=======
+int target_register_template(const struct target_core_fabric_ops *fo)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct target_fabric_configfs *tf;
 	int ret;
 
@@ -480,6 +532,7 @@ int target_register_template(const struct target_core_fabric_ops *fo)
 		pr_err("%s: could not allocate memory!\n", __func__);
 		return -ENOMEM;
 	}
+<<<<<<< HEAD
 	tfo = kzalloc(sizeof(struct target_core_fabric_ops), GFP_KERNEL);
 	if (!tfo) {
 		kfree(tf);
@@ -492,6 +545,12 @@ int target_register_template(const struct target_core_fabric_ops *fo)
 	INIT_LIST_HEAD(&tf->tf_list);
 	atomic_set(&tf->tf_access_cnt, 0);
 	tf->tf_ops = tfo;
+=======
+
+	INIT_LIST_HEAD(&tf->tf_list);
+	atomic_set(&tf->tf_access_cnt, 0);
+	tf->tf_ops = fo;
+>>>>>>> b7ba80a49124 (Commit)
 	target_fabric_setup_cits(tf);
 
 	mutex_lock(&g_tf_lock);
@@ -519,7 +578,10 @@ void target_unregister_template(const struct target_core_fabric_ops *fo)
 			 */
 			rcu_barrier();
 			kfree(t->tf_tpg_base_cit.ct_attrs);
+<<<<<<< HEAD
 			kfree(t->tf_ops);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			kfree(t);
 			return;
 		}
@@ -576,7 +638,10 @@ DEF_CONFIGFS_ATTRIB_SHOW(unmap_granularity);
 DEF_CONFIGFS_ATTRIB_SHOW(unmap_granularity_alignment);
 DEF_CONFIGFS_ATTRIB_SHOW(unmap_zeroes_data);
 DEF_CONFIGFS_ATTRIB_SHOW(max_write_same_len);
+<<<<<<< HEAD
 DEF_CONFIGFS_ATTRIB_SHOW(emulate_rsoc);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define DEF_CONFIGFS_ATTRIB_STORE_U32(_name)				\
 static ssize_t _name##_store(struct config_item *item, const char *page,\
@@ -607,7 +672,11 @@ static ssize_t _name##_store(struct config_item *item, const char *page,	\
 	bool flag;							\
 	int ret;							\
 									\
+<<<<<<< HEAD
 	ret = kstrtobool(page, &flag);					\
+=======
+	ret = strtobool(page, &flag);					\
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)							\
 		return ret;						\
 	da->_name = flag;						\
@@ -667,7 +736,11 @@ static ssize_t emulate_model_alias_store(struct config_item *item,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	ret = kstrtobool(page, &flag);
+=======
+	ret = strtobool(page, &flag);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 
@@ -689,7 +762,11 @@ static ssize_t emulate_write_cache_store(struct config_item *item,
 	bool flag;
 	int ret;
 
+<<<<<<< HEAD
 	ret = kstrtobool(page, &flag);
+=======
+	ret = strtobool(page, &flag);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 
@@ -741,7 +818,11 @@ static ssize_t emulate_tas_store(struct config_item *item,
 	bool flag;
 	int ret;
 
+<<<<<<< HEAD
 	ret = kstrtobool(page, &flag);
+=======
+	ret = strtobool(page, &flag);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 
@@ -766,7 +847,11 @@ static ssize_t emulate_tpu_store(struct config_item *item,
 	bool flag;
 	int ret;
 
+<<<<<<< HEAD
 	ret = kstrtobool(page, &flag);
+=======
+	ret = strtobool(page, &flag);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 
@@ -796,7 +881,11 @@ static ssize_t emulate_tpws_store(struct config_item *item,
 	bool flag;
 	int ret;
 
+<<<<<<< HEAD
 	ret = kstrtobool(page, &flag);
+=======
+	ret = strtobool(page, &flag);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 
@@ -895,7 +984,11 @@ static ssize_t pi_prot_format_store(struct config_item *item,
 	bool flag;
 	int ret;
 
+<<<<<<< HEAD
 	ret = kstrtobool(page, &flag);
+=======
+	ret = strtobool(page, &flag);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 
@@ -932,7 +1025,11 @@ static ssize_t pi_prot_verify_store(struct config_item *item,
 	bool flag;
 	int ret;
 
+<<<<<<< HEAD
 	ret = kstrtobool(page, &flag);
+=======
+	ret = strtobool(page, &flag);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 
@@ -961,7 +1058,11 @@ static ssize_t force_pr_aptpl_store(struct config_item *item,
 	bool flag;
 	int ret;
 
+<<<<<<< HEAD
 	ret = kstrtobool(page, &flag);
+=======
+	ret = strtobool(page, &flag);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 	if (da->da_dev->export_count) {
@@ -983,7 +1084,11 @@ static ssize_t emulate_rest_reord_store(struct config_item *item,
 	bool flag;
 	int ret;
 
+<<<<<<< HEAD
 	ret = kstrtobool(page, &flag);
+=======
+	ret = strtobool(page, &flag);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 
@@ -1006,7 +1111,11 @@ static ssize_t unmap_zeroes_data_store(struct config_item *item,
 	bool flag;
 	int ret;
 
+<<<<<<< HEAD
 	ret = kstrtobool(page, &flag);
+=======
+	ret = strtobool(page, &flag);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 
@@ -1130,6 +1239,11 @@ static ssize_t block_size_store(struct config_item *item,
 	}
 
 	da->block_size = val;
+<<<<<<< HEAD
+=======
+	if (da->max_bytes_per_io)
+		da->hw_max_sectors = da->max_bytes_per_io / val;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pr_debug("dev[%p]: SE Device block_size changed to %u\n",
 			da->da_dev, val);
@@ -1153,7 +1267,11 @@ static ssize_t alua_support_store(struct config_item *item,
 	bool flag, oldflag;
 	int ret;
 
+<<<<<<< HEAD
 	ret = kstrtobool(page, &flag);
+=======
+	ret = strtobool(page, &flag);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 
@@ -1192,7 +1310,11 @@ static ssize_t pgr_support_store(struct config_item *item,
 	bool flag, oldflag;
 	int ret;
 
+<<<<<<< HEAD
 	ret = kstrtobool(page, &flag);
+=======
+	ret = strtobool(page, &flag);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 
@@ -1214,6 +1336,7 @@ static ssize_t pgr_support_store(struct config_item *item,
 	return count;
 }
 
+<<<<<<< HEAD
 static ssize_t emulate_rsoc_store(struct config_item *item,
 		const char *page, size_t count)
 {
@@ -1231,6 +1354,8 @@ static ssize_t emulate_rsoc_store(struct config_item *item,
 	return count;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 CONFIGFS_ATTR(, emulate_model_alias);
 CONFIGFS_ATTR(, emulate_dpo);
 CONFIGFS_ATTR(, emulate_fua_write);
@@ -1243,7 +1368,10 @@ CONFIGFS_ATTR(, emulate_tpws);
 CONFIGFS_ATTR(, emulate_caw);
 CONFIGFS_ATTR(, emulate_3pc);
 CONFIGFS_ATTR(, emulate_pr);
+<<<<<<< HEAD
 CONFIGFS_ATTR(, emulate_rsoc);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 CONFIGFS_ATTR(, pi_prot_type);
 CONFIGFS_ATTR_RO(, hw_pi_prot_type);
 CONFIGFS_ATTR(, pi_prot_format);
@@ -1307,7 +1435,10 @@ struct configfs_attribute *sbc_attrib_attrs[] = {
 	&attr_max_write_same_len,
 	&attr_alua_support,
 	&attr_pgr_support,
+<<<<<<< HEAD
 	&attr_emulate_rsoc,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	NULL,
 };
 EXPORT_SYMBOL(sbc_attrib_attrs);

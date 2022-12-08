@@ -137,9 +137,12 @@ static int start_task(void)
 
 	/* Create the work queue and queue the LED task */
 	led_wq = create_singlethread_workqueue("led_wq");	
+<<<<<<< HEAD
 	if (!led_wq)
 		return -ENOMEM;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	queue_delayed_work(led_wq, &led_task, 0);
 
 	return 0;

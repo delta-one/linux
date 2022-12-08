@@ -139,9 +139,15 @@ static struct attribute *mISDN_attrs[] = {
 };
 ATTRIBUTE_GROUPS(mISDN);
 
+<<<<<<< HEAD
 static int mISDN_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct mISDNdevice *mdev = dev_to_mISDN(dev);
+=======
+static int mISDN_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct mISDNdevice *mdev = dev_to_mISDN(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!mdev)
 		return 0;
@@ -159,6 +165,10 @@ static void mISDN_class_release(struct class *cls)
 
 static struct class mISDN_class = {
 	.name = "mISDN",
+<<<<<<< HEAD
+=======
+	.owner = THIS_MODULE,
+>>>>>>> b7ba80a49124 (Commit)
 	.dev_uevent = mISDN_uevent,
 	.dev_groups = mISDN_groups,
 	.dev_release = mISDN_dev_release,
@@ -221,7 +231,11 @@ mISDN_register_device(struct mISDNdevice *dev,
 
 	err = get_free_devid();
 	if (err < 0)
+<<<<<<< HEAD
 		return err;
+=======
+		goto error1;
+>>>>>>> b7ba80a49124 (Commit)
 	dev->id = err;
 
 	device_initialize(&dev->dev);
@@ -232,12 +246,19 @@ mISDN_register_device(struct mISDNdevice *dev,
 	if (debug & DEBUG_CORE)
 		printk(KERN_DEBUG "mISDN_register %s %d\n",
 		       dev_name(&dev->dev), dev->id);
+<<<<<<< HEAD
 	dev->dev.class = &mISDN_class;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = create_stack(dev);
 	if (err)
 		goto error1;
 
+<<<<<<< HEAD
+=======
+	dev->dev.class = &mISDN_class;
+>>>>>>> b7ba80a49124 (Commit)
 	dev->dev.platform_data = dev;
 	dev->dev.parent = parent;
 	dev_set_drvdata(&dev->dev, dev);
@@ -249,8 +270,13 @@ mISDN_register_device(struct mISDNdevice *dev,
 
 error3:
 	delete_stack(dev);
+<<<<<<< HEAD
 error1:
 	put_device(&dev->dev);
+=======
+	return err;
+error1:
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 
 }

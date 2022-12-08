@@ -691,6 +691,7 @@ static int mvpp2_dbgfs_port_init(struct dentry *parent,
 	return 0;
 }
 
+<<<<<<< HEAD
 static struct dentry *mvpp2_root;
 
 void mvpp2_dbgfs_exit(void)
@@ -698,6 +699,8 @@ void mvpp2_dbgfs_exit(void)
 	debugfs_remove(mvpp2_root);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void mvpp2_dbgfs_cleanup(struct mvpp2 *priv)
 {
 	debugfs_remove_recursive(priv->dbgfs_dir);
@@ -707,6 +710,10 @@ void mvpp2_dbgfs_cleanup(struct mvpp2 *priv)
 
 void mvpp2_dbgfs_init(struct mvpp2 *priv, const char *name)
 {
+<<<<<<< HEAD
+=======
+	static struct dentry *mvpp2_root;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dentry *mvpp2_dir;
 	int ret, i;
 

@@ -29,7 +29,10 @@
 #define _VMWGFX_MKSSTAT_H_
 
 #include <asm/page.h>
+<<<<<<< HEAD
 #include <linux/kconfig.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Reservation marker for mksstat pid's */
 #define MKSSTAT_PID_RESERVED -1
@@ -42,7 +45,10 @@
 
 typedef enum {
 	MKSSTAT_KERN_EXECBUF, /* vmw_execbuf_ioctl */
+<<<<<<< HEAD
 	MKSSTAT_KERN_COTABLE_RESIZE,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	MKSSTAT_KERN_COUNT /* Reserved entry; always last */
 } mksstat_kern_stats_t;

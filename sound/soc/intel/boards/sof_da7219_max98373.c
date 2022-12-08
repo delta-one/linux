@@ -7,13 +7,20 @@
 
 #include <linux/input.h>
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <sound/jack.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <sound/pcm.h>
 #include <sound/pcm_params.h>
 #include <linux/platform_device.h>
 #include <sound/soc.h>
 #include <sound/soc-acpi.h>
 #include "../../codecs/da7219.h"
+<<<<<<< HEAD
+=======
+#include "../../codecs/da7219-aad.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "hda_dsp_common.h"
 
 #define DIALOG_CODEC_DAI	"da7219-hifi"
@@ -184,7 +191,11 @@ static int da7219_codec_init(struct snd_soc_pcm_runtime *rtd)
 	snd_jack_set_key(jack->jack, SND_JACK_BTN_1, KEY_VOLUMEUP);
 	snd_jack_set_key(jack->jack, SND_JACK_BTN_2, KEY_VOLUMEDOWN);
 	snd_jack_set_key(jack->jack, SND_JACK_BTN_3, KEY_VOICECOMMAND);
+<<<<<<< HEAD
 	snd_soc_component_set_jack(component, jack, NULL);
+=======
+	da7219_aad_jack_det(component, jack);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -195,7 +206,11 @@ static int ssp1_hw_params(struct snd_pcm_substream *substream,
 	struct snd_soc_pcm_runtime *runtime = asoc_substream_to_rtd(substream);
 	int ret, j;
 
+<<<<<<< HEAD
 	for (j = 0; j < runtime->dai_link->num_codecs; j++) {
+=======
+	for (j = 0; j < runtime->num_codecs; j++) {
+>>>>>>> b7ba80a49124 (Commit)
 		struct snd_soc_dai *codec_dai = asoc_rtd_to_codec(runtime, j);
 
 		if (!strcmp(codec_dai->component->name, MAXIM_DEV0_NAME)) {

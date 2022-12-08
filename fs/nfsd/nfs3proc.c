@@ -13,7 +13,10 @@
 #include "cache.h"
 #include "xdr3.h"
 #include "vfs.h"
+<<<<<<< HEAD
 #include "filecache.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define NFSDDBG_FACILITY		NFSDDBG_PROC
 
@@ -320,7 +323,11 @@ nfsd3_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
 		iap->ia_mode &= ~current_umask();
 
 	fh_fill_pre_attrs(fhp);
+<<<<<<< HEAD
 	host_err = vfs_create(&nop_mnt_idmap, inode, child, iap->ia_mode, true);
+=======
+	host_err = vfs_create(&init_user_ns, inode, child, iap->ia_mode, true);
+>>>>>>> b7ba80a49124 (Commit)
 	if (host_err < 0) {
 		status = nfserrno(host_err);
 		goto out;
@@ -764,7 +771,10 @@ nfsd3_proc_commit(struct svc_rqst *rqstp)
 {
 	struct nfsd3_commitargs *argp = rqstp->rq_argp;
 	struct nfsd3_commitres *resp = rqstp->rq_resp;
+<<<<<<< HEAD
 	struct nfsd_file *nf;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	dprintk("nfsd: COMMIT(3)   %s %u@%Lu\n",
 				SVCFH_fmt(&argp->fh),
@@ -772,6 +782,7 @@ nfsd3_proc_commit(struct svc_rqst *rqstp)
 				(unsigned long long) argp->offset);
 
 	fh_copy(&resp->fh, &argp->fh);
+<<<<<<< HEAD
 	resp->status = nfsd_file_acquire_gc(rqstp, &resp->fh, NFSD_MAY_WRITE |
 					    NFSD_MAY_NOT_BREAK_LEASE, &nf);
 	if (resp->status)
@@ -780,6 +791,10 @@ nfsd3_proc_commit(struct svc_rqst *rqstp)
 				   argp->count, resp->verf);
 	nfsd_file_put(nf);
 out:
+=======
+	resp->status = nfsd_commit(rqstp, &resp->fh, argp->offset,
+				   argp->count, resp->verf);
+>>>>>>> b7ba80a49124 (Commit)
 	return rpc_success;
 }
 
@@ -1064,11 +1079,18 @@ static const struct svc_procedure nfsd_procedures3[22] = {
 	},
 };
 
+<<<<<<< HEAD
 static DEFINE_PER_CPU_ALIGNED(unsigned long,
 			      nfsd_count3[ARRAY_SIZE(nfsd_procedures3)]);
 const struct svc_version nfsd_version3 = {
 	.vs_vers	= 3,
 	.vs_nproc	= ARRAY_SIZE(nfsd_procedures3),
+=======
+static unsigned int nfsd_count3[ARRAY_SIZE(nfsd_procedures3)];
+const struct svc_version nfsd_version3 = {
+	.vs_vers	= 3,
+	.vs_nproc	= 22,
+>>>>>>> b7ba80a49124 (Commit)
 	.vs_proc	= nfsd_procedures3,
 	.vs_dispatch	= nfsd_dispatch,
 	.vs_count	= nfsd_count3,

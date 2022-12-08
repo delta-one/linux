@@ -6,6 +6,7 @@
 #define _ASM_CACHEFLUSH_H
 
 #include <linux/mm.h>
+<<<<<<< HEAD
 #include <asm/cpu-info.h>
 #include <asm/cacheops.h>
 
@@ -33,6 +34,12 @@ static inline unsigned int cpu_last_level_cache_line_size(void)
 
 asmlinkage void __flush_cache_all(void);
 void local_flush_icache_range(unsigned long start, unsigned long end);
+=======
+#include <asm/cpu-features.h>
+#include <asm/cacheops.h>
+
+extern void local_flush_icache_range(unsigned long start, unsigned long end);
+>>>>>>> b7ba80a49124 (Commit)
 
 #define flush_icache_range	local_flush_icache_range
 #define flush_icache_user_range	local_flush_icache_range
@@ -58,6 +65,7 @@ void local_flush_icache_range(unsigned long start, unsigned long end);
 	:								\
 	: "i" (op), "ZC" (*(unsigned char *)(addr)))
 
+<<<<<<< HEAD
 static inline void flush_cache_line(int leaf, unsigned long addr)
 {
 	switch (leaf) {
@@ -82,6 +90,46 @@ static inline void flush_cache_line(int leaf, unsigned long addr)
 	default:
 		break;
 	}
+=======
+static inline void flush_icache_line_indexed(unsigned long addr)
+{
+	cache_op(Index_Invalidate_I, addr);
+}
+
+static inline void flush_dcache_line_indexed(unsigned long addr)
+{
+	cache_op(Index_Writeback_Inv_D, addr);
+}
+
+static inline void flush_vcache_line_indexed(unsigned long addr)
+{
+	cache_op(Index_Writeback_Inv_V, addr);
+}
+
+static inline void flush_scache_line_indexed(unsigned long addr)
+{
+	cache_op(Index_Writeback_Inv_S, addr);
+}
+
+static inline void flush_icache_line(unsigned long addr)
+{
+	cache_op(Hit_Invalidate_I, addr);
+}
+
+static inline void flush_dcache_line(unsigned long addr)
+{
+	cache_op(Hit_Writeback_Inv_D, addr);
+}
+
+static inline void flush_vcache_line(unsigned long addr)
+{
+	cache_op(Hit_Writeback_Inv_V, addr);
+}
+
+static inline void flush_scache_line(unsigned long addr)
+{
+	cache_op(Hit_Writeback_Inv_S, addr);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #include <asm-generic/cacheflush.h>

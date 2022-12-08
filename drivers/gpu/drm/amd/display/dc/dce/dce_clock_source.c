@@ -930,6 +930,7 @@ static bool dce112_program_pix_clk(
 		REG_WRITE(MODULO[inst], dp_dto_ref_100hz);
 
 		/* Enable DTO */
+<<<<<<< HEAD
 		if (clk_src->cs_mask->PIPE0_DTO_SRC_SEL)
 			REG_UPDATE_2(PIXEL_RATE_CNTL[inst],
 					DP_DTO0_ENABLE, 1,
@@ -937,6 +938,9 @@ static bool dce112_program_pix_clk(
 		else
 			REG_UPDATE(PIXEL_RATE_CNTL[inst],
 					DP_DTO0_ENABLE, 1);
+=======
+		REG_UPDATE(PIXEL_RATE_CNTL[inst], DP_DTO0_ENABLE, 1);
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 	}
 	/* First disable SS
@@ -1001,6 +1005,10 @@ static bool dcn31_program_pix_clk(
 			REG_WRITE(PHASE[inst], pll_settings->actual_pix_clk_100hz * 100);
 			REG_WRITE(MODULO[inst], dp_dto_ref_khz * 1000);
 		}
+<<<<<<< HEAD
+=======
+#if defined(CONFIG_DRM_AMD_DC_DCN)
+>>>>>>> b7ba80a49124 (Commit)
 		/* Enable DTO */
 		if (clk_src->cs_mask->PIPE0_DTO_SRC_SEL)
 			if (encoding == DP_128b_132b_ENCODING)
@@ -1014,6 +1022,12 @@ static bool dcn31_program_pix_clk(
 		else
 			REG_UPDATE(PIXEL_RATE_CNTL[inst],
 					DP_DTO0_ENABLE, 1);
+<<<<<<< HEAD
+=======
+#else
+		REG_UPDATE(PIXEL_RATE_CNTL[inst], DP_DTO0_ENABLE, 1);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		if (IS_FPGA_MAXIMUS_DC(clock_source->ctx->dce_environment)) {
 			unsigned int inst = pix_clk_params->controller_id - CONTROLLER_ID_D0;
@@ -1025,6 +1039,10 @@ static bool dcn31_program_pix_clk(
 			REG_WRITE(MODULO[inst], dp_dto_ref_100hz);
 
 			/* Enable DTO */
+<<<<<<< HEAD
+=======
+	#if defined(CONFIG_DRM_AMD_DC_DCN)
+>>>>>>> b7ba80a49124 (Commit)
 			if (clk_src->cs_mask->PIPE0_DTO_SRC_SEL)
 				REG_UPDATE_2(PIXEL_RATE_CNTL[inst],
 						DP_DTO0_ENABLE, 1,
@@ -1032,12 +1050,26 @@ static bool dcn31_program_pix_clk(
 			else
 				REG_UPDATE(PIXEL_RATE_CNTL[inst],
 						DP_DTO0_ENABLE, 1);
+<<<<<<< HEAD
 			return true;
 		}
 
 		if (clk_src->cs_mask->PIPE0_DTO_SRC_SEL)
 			REG_UPDATE(PIXEL_RATE_CNTL[inst],
 					PIPE0_DTO_SRC_SEL, 0);
+=======
+	#else
+			REG_UPDATE(PIXEL_RATE_CNTL[inst], DP_DTO0_ENABLE, 1);
+	#endif
+			return true;
+		}
+
+#if defined(CONFIG_DRM_AMD_DC_DCN)
+		if (clk_src->cs_mask->PIPE0_DTO_SRC_SEL)
+			REG_UPDATE(PIXEL_RATE_CNTL[inst],
+					PIPE0_DTO_SRC_SEL, 0);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*ATOMBIOS expects pixel rate adjusted by deep color ratio)*/
 		bp_pc_params.controller_id = pix_clk_params->controller_id;
@@ -1270,6 +1302,7 @@ static bool dcn3_program_pix_clk(
 			REG_WRITE(PHASE[inst], pll_settings->actual_pix_clk_100hz * 100);
 			REG_WRITE(MODULO[inst], dp_dto_ref_khz * 1000);
 		}
+<<<<<<< HEAD
 		/* Enable DTO */
 		if (clk_src->cs_mask->PIPE0_DTO_SRC_SEL)
 			REG_UPDATE_2(PIXEL_RATE_CNTL[inst],
@@ -1278,6 +1311,9 @@ static bool dcn3_program_pix_clk(
 		else
 			REG_UPDATE(PIXEL_RATE_CNTL[inst],
 					DP_DTO0_ENABLE, 1);
+=======
+		REG_UPDATE(PIXEL_RATE_CNTL[inst], DP_DTO0_ENABLE, 1);
+>>>>>>> b7ba80a49124 (Commit)
 	} else
 		// For other signal types(HDMI_TYPE_A, DVI) Driver still to call VBIOS Command table
 		dce112_program_pix_clk(clock_source, pix_clk_params, encoding, pll_settings);

@@ -120,9 +120,15 @@ static const struct iio_info tpl0102_info = {
 	.write_raw = tpl0102_write_raw,
 };
 
+<<<<<<< HEAD
 static int tpl0102_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int tpl0102_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = &client->dev;
 	struct tpl0102_data *data;
 	struct iio_dev *indio_dev;
@@ -161,7 +167,11 @@ static struct i2c_driver tpl0102_driver = {
 	.driver = {
 		.name = "tpl0102",
 	},
+<<<<<<< HEAD
 	.probe_new = tpl0102_probe,
+=======
+	.probe = tpl0102_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = tpl0102_id,
 };
 

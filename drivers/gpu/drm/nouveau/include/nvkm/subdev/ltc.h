@@ -4,8 +4,12 @@
 #include <core/subdev.h>
 #include <core/mm.h>
 
+<<<<<<< HEAD
 #define NVKM_LTC_MAX_ZBC_COLOR_CNT 32
 #define NVKM_LTC_MAX_ZBC_DEPTH_CNT 16
+=======
+#define NVKM_LTC_MAX_ZBC_CNT 16
+>>>>>>> b7ba80a49124 (Commit)
 
 struct nvkm_ltc {
 	const struct nvkm_ltc_func *func;
@@ -19,6 +23,7 @@ struct nvkm_ltc {
 	u32 tag_base;
 	struct nvkm_memory *tag_ram;
 
+<<<<<<< HEAD
 	int zbc_color_min;
 	int zbc_color_max;
 	u32 zbc_color[NVKM_LTC_MAX_ZBC_COLOR_CNT][4];
@@ -26,6 +31,13 @@ struct nvkm_ltc {
 	int zbc_depth_max;
 	u32 zbc_depth[NVKM_LTC_MAX_ZBC_DEPTH_CNT];
 	u32 zbc_stencil[NVKM_LTC_MAX_ZBC_DEPTH_CNT];
+=======
+	int zbc_min;
+	int zbc_max;
+	u32 zbc_color[NVKM_LTC_MAX_ZBC_CNT][4];
+	u32 zbc_depth[NVKM_LTC_MAX_ZBC_CNT];
+	u32 zbc_stencil[NVKM_LTC_MAX_ZBC_CNT];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 void nvkm_ltc_tags_clear(struct nvkm_device *, u32 first, u32 count);
@@ -44,5 +56,8 @@ int gm200_ltc_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct 
 int gp100_ltc_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct nvkm_ltc **);
 int gp102_ltc_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct nvkm_ltc **);
 int gp10b_ltc_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct nvkm_ltc **);
+<<<<<<< HEAD
 int ga102_ltc_new(struct nvkm_device *, enum nvkm_subdev_type, int inst, struct nvkm_ltc **);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

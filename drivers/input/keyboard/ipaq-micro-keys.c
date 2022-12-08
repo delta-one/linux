@@ -124,7 +124,11 @@ static int micro_key_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int micro_key_suspend(struct device *dev)
+=======
+static int __maybe_unused micro_key_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ipaq_micro_keys *keys = dev_get_drvdata(dev);
 
@@ -133,7 +137,11 @@ static int micro_key_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int micro_key_resume(struct device *dev)
+=======
+static int __maybe_unused micro_key_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ipaq_micro_keys *keys = dev_get_drvdata(dev);
 	struct input_dev *input = keys->input;
@@ -148,13 +156,22 @@ static int micro_key_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(micro_key_dev_pm_ops,
 				micro_key_suspend, micro_key_resume);
+=======
+static SIMPLE_DEV_PM_OPS(micro_key_dev_pm_ops,
+			 micro_key_suspend, micro_key_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct platform_driver micro_key_device_driver = {
 	.driver = {
 		.name    = "ipaq-micro-keys",
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&micro_key_dev_pm_ops),
+=======
+		.pm	= &micro_key_dev_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe   = micro_key_probe,
 };

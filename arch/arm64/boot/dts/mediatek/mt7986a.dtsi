@@ -8,15 +8,24 @@
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 #include <dt-bindings/clock/mt7986-clk.h>
 #include <dt-bindings/reset/mt7986-resets.h>
+<<<<<<< HEAD
 #include <dt-bindings/phy/phy.h>
 
 / {
 	compatible = "mediatek,mt7986a";
+=======
+
+/ {
+>>>>>>> b7ba80a49124 (Commit)
 	interrupt-parent = <&gic>;
 	#address-cells = <2>;
 	#size-cells = <2>;
 
+<<<<<<< HEAD
 	clk40m: oscillator-40m {
+=======
+	clk40m: oscillator@0 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "fixed-clock";
 		clock-frequency = <40000000>;
 		#clock-cells = <0>;
@@ -78,6 +87,7 @@
 			no-map;
 			reg = <0 0x4fc00000 0 0x00100000>;
 		};
+<<<<<<< HEAD
 
 		wo_emi0: wo-emi@4fd00000 {
 			reg = <0 0x4fd00000 0 0x40000>;
@@ -119,6 +129,8 @@
 			no-map;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	timer {
@@ -155,12 +167,15 @@
 			#clock-cells = <1>;
 		};
 
+<<<<<<< HEAD
 		wed_pcie: wed-pcie@10003000 {
 			compatible = "mediatek,mt7986-wed-pcie",
 				     "syscon";
 			reg = <0 0x10003000 0 0x10>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		topckgen: topckgen@1001b000 {
 			compatible = "mediatek,mt7986-topckgen", "syscon";
 			reg = <0 0x1001B000 0 0x1000>;
@@ -168,7 +183,12 @@
 		};
 
 		watchdog: watchdog@1001c000 {
+<<<<<<< HEAD
 			compatible = "mediatek,mt7986-wdt";
+=======
+			compatible = "mediatek,mt7986-wdt",
+				     "mediatek,mt6589-wdt";
+>>>>>>> b7ba80a49124 (Commit)
 			reg = <0 0x1001c000 0 0x1000>;
 			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
 			#reset-cells = <1>;
@@ -216,7 +236,11 @@
 			#clock-cells = <1>;
 		};
 
+<<<<<<< HEAD
 		trng: rng@1020f000 {
+=======
+		trng: trng@1020f000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "mediatek,mt7986-rng",
 				     "mediatek,mt7623-rng";
 			reg = <0 0x1020f000 0 0x100>;
@@ -225,6 +249,7 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		crypto: crypto@10320000 {
 			compatible = "inside-secure,safexcel-eip97";
 			reg = <0 0x10320000 0 0x40000>;
@@ -240,6 +265,8 @@
 			status = "disabled";
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		uart0: serial@11002000 {
 			compatible = "mediatek,mt7986-uart",
 				     "mediatek,mt6577-uart";
@@ -281,6 +308,7 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		i2c0: i2c@11008000 {
 			compatible = "mediatek,mt7986-i2c";
 			reg = <0 0x11008000 0 0x90>,
@@ -444,6 +472,8 @@
 			};
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ethsys: syscon@15000000 {
 			 #address-cells = <1>;
 			 #size-cells = <1>;
@@ -454,17 +484,29 @@
 			 #reset-cells = <1>;
 		};
 
+<<<<<<< HEAD
+=======
+		wed_pcie: wed-pcie@10003000 {
+			compatible = "mediatek,mt7986-wed-pcie",
+				     "syscon";
+			reg = <0 0x10003000 0 0x10>;
+		};
+
+>>>>>>> b7ba80a49124 (Commit)
 		wed0: wed@15010000 {
 			compatible = "mediatek,mt7986-wed",
 				     "syscon";
 			reg = <0 0x15010000 0 0x1000>;
 			interrupt-parent = <&gic>;
 			interrupts = <GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH>;
+<<<<<<< HEAD
 			memory-region = <&wo_emi0>, <&wo_ilm0>, <&wo_dlm0>,
 					<&wo_data>, <&wo_boot>;
 			memory-region-names = "wo-emi", "wo-ilm", "wo-dlm",
 					      "wo-data", "wo-boot";
 			mediatek,wo-ccif = <&wo_ccif0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		wed1: wed@15011000 {
@@ -473,6 +515,7 @@
 			reg = <0 0x15011000 0 0x1000>;
 			interrupt-parent = <&gic>;
 			interrupts = <GIC_SPI 206 IRQ_TYPE_LEVEL_HIGH>;
+<<<<<<< HEAD
 			memory-region = <&wo_emi1>, <&wo_ilm1>, <&wo_dlm1>,
 					<&wo_data>, <&wo_boot>;
 			memory-region-names = "wo-emi", "wo-ilm", "wo-dlm",
@@ -492,6 +535,8 @@
 			reg = <0 0x151ad000 0 0x1000>;
 			interrupt-parent = <&gic>;
 			interrupts = <GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		eth: ethernet@15100000 {

@@ -117,6 +117,19 @@ struct x86_emulate_ops {
 			struct x86_exception *fault, bool system);
 
 	/*
+<<<<<<< HEAD
+=======
+	 * read_phys: Read bytes of standard (non-emulated/special) memory.
+	 *            Used for descriptor reading.
+	 *  @addr:  [IN ] Physical address from which to read.
+	 *  @val:   [OUT] Value read from memory.
+	 *  @bytes: [IN ] Number of bytes to read from memory.
+	 */
+	int (*read_phys)(struct x86_emulate_ctxt *ctxt, unsigned long addr,
+			void *val, unsigned int bytes);
+
+	/*
+>>>>>>> b7ba80a49124 (Commit)
 	 * write_std: Write bytes of standard (non-emulated/special) memory.
 	 *            Used for descriptor writing.
 	 *  @addr:  [IN ] Linear address to which to write.
@@ -199,8 +212,16 @@ struct x86_emulate_ops {
 	int (*cpl)(struct x86_emulate_ctxt *ctxt);
 	void (*get_dr)(struct x86_emulate_ctxt *ctxt, int dr, ulong *dest);
 	int (*set_dr)(struct x86_emulate_ctxt *ctxt, int dr, ulong value);
+<<<<<<< HEAD
 	int (*set_msr_with_filter)(struct x86_emulate_ctxt *ctxt, u32 msr_index, u64 data);
 	int (*get_msr_with_filter)(struct x86_emulate_ctxt *ctxt, u32 msr_index, u64 *pdata);
+=======
+	u64 (*get_smbase)(struct x86_emulate_ctxt *ctxt);
+	void (*set_smbase)(struct x86_emulate_ctxt *ctxt, u64 smbase);
+	int (*set_msr_with_filter)(struct x86_emulate_ctxt *ctxt, u32 msr_index, u64 data);
+	int (*get_msr_with_filter)(struct x86_emulate_ctxt *ctxt, u32 msr_index, u64 *pdata);
+	int (*set_msr)(struct x86_emulate_ctxt *ctxt, u32 msr_index, u64 data);
+>>>>>>> b7ba80a49124 (Commit)
 	int (*get_msr)(struct x86_emulate_ctxt *ctxt, u32 msr_index, u64 *pdata);
 	int (*check_pmc)(struct x86_emulate_ctxt *ctxt, u32 pmc);
 	int (*read_pmc)(struct x86_emulate_ctxt *ctxt, u32 pmc, u64 *pdata);
@@ -220,9 +241,15 @@ struct x86_emulate_ops {
 
 	void (*set_nmi_mask)(struct x86_emulate_ctxt *ctxt, bool masked);
 
+<<<<<<< HEAD
 	bool (*is_smm)(struct x86_emulate_ctxt *ctxt);
 	bool (*is_guest_mode)(struct x86_emulate_ctxt *ctxt);
 	int (*leave_smm)(struct x86_emulate_ctxt *ctxt);
+=======
+	unsigned (*get_hflags)(struct x86_emulate_ctxt *ctxt);
+	void (*exiting_smm)(struct x86_emulate_ctxt *ctxt);
+	int (*leave_smm)(struct x86_emulate_ctxt *ctxt, const char *smstate);
+>>>>>>> b7ba80a49124 (Commit)
 	void (*triple_fault)(struct x86_emulate_ctxt *ctxt);
 	int (*set_xcr)(struct x86_emulate_ctxt *ctxt, u32 index, u64 xcr);
 };
@@ -276,6 +303,14 @@ enum x86emul_mode {
 	X86EMUL_MODE_PROT64,	/* 64-bit (long) mode.    */
 };
 
+<<<<<<< HEAD
+=======
+/* These match some of the HF_* flags defined in kvm_host.h  */
+#define X86EMUL_GUEST_MASK           (1 << 5) /* VCPU is in guest-mode */
+#define X86EMUL_SMM_MASK             (1 << 6)
+#define X86EMUL_SMM_INSIDE_NMI_MASK  (1 << 7)
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * fastop functions are declared as taking a never-defined fastop parameter,
  * so they can't be called from C directly.
@@ -508,6 +543,7 @@ void emulator_invalidate_register_cache(struct x86_emulate_ctxt *ctxt);
 void emulator_writeback_register_cache(struct x86_emulate_ctxt *ctxt);
 bool emulator_can_use_gpa(struct x86_emulate_ctxt *ctxt);
 
+<<<<<<< HEAD
 static inline ulong reg_read(struct x86_emulate_ctxt *ctxt, unsigned nr)
 {
 	if (KVM_EMULATOR_BUG_ON(nr >= NR_EMULATOR_GPRS, ctxt))
@@ -539,4 +575,6 @@ static inline ulong *reg_rmw(struct x86_emulate_ctxt *ctxt, unsigned nr)
 	return reg_write(ctxt, nr);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _ASM_X86_KVM_X86_EMULATE_H */

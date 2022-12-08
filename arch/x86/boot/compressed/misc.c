@@ -277,7 +277,11 @@ static inline void handle_relocations(void *output, unsigned long output_len,
 { }
 #endif
 
+<<<<<<< HEAD
 static size_t parse_elf(void *output)
+=======
+static void parse_elf(void *output)
+>>>>>>> b7ba80a49124 (Commit)
 {
 #ifdef CONFIG_X86_64
 	Elf64_Ehdr ehdr;
@@ -293,8 +297,15 @@ static size_t parse_elf(void *output)
 	if (ehdr.e_ident[EI_MAG0] != ELFMAG0 ||
 	   ehdr.e_ident[EI_MAG1] != ELFMAG1 ||
 	   ehdr.e_ident[EI_MAG2] != ELFMAG2 ||
+<<<<<<< HEAD
 	   ehdr.e_ident[EI_MAG3] != ELFMAG3)
 		error("Kernel is not a valid ELF file");
+=======
+	   ehdr.e_ident[EI_MAG3] != ELFMAG3) {
+		error("Kernel is not a valid ELF file");
+		return;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	debug_putstr("Parsing ELF... ");
 
@@ -326,8 +337,11 @@ static size_t parse_elf(void *output)
 	}
 
 	free(phdrs);
+<<<<<<< HEAD
 
 	return ehdr.e_entry - LOAD_PHYSICAL_ADDR;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -356,7 +370,10 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
 	const unsigned long kernel_total_size = VO__end - VO__text;
 	unsigned long virt_addr = LOAD_PHYSICAL_ADDR;
 	unsigned long needed_size;
+<<<<<<< HEAD
 	size_t entry_offset;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Retain x86 boot parameters pointer passed from startup_32/64. */
 	boot_params = rmode;
@@ -457,17 +474,27 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
 	debug_putstr("\nDecompressing Linux... ");
 	__decompress(input_data, input_len, NULL, NULL, output, output_len,
 			NULL, error);
+<<<<<<< HEAD
 	entry_offset = parse_elf(output);
 	handle_relocations(output, output_len, virt_addr);
 
 	debug_putstr("done.\nBooting the kernel (entry_offset: 0x");
 	debug_puthex(entry_offset);
 	debug_putstr(").\n");
+=======
+	parse_elf(output);
+	handle_relocations(output, output_len, virt_addr);
+	debug_putstr("done.\nBooting the kernel.\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Disable exception handling before booting the kernel */
 	cleanup_exception_handling();
 
+<<<<<<< HEAD
 	return output + entry_offset;
+=======
+	return output;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void fortify_panic(const char *name)

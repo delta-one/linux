@@ -56,7 +56,11 @@ static void flush_work_handle(struct work_struct *work)
 	if (test_and_clear_bit(HNS_ROCE_FLUSH_FLAG, &hr_qp->flush_flag)) {
 		ret = hns_roce_modify_qp(&hr_qp->ibqp, &attr, attr_mask, NULL);
 		if (ret)
+<<<<<<< HEAD
 			dev_err(dev, "modify QP to error state failed(%d) during CQE flush\n",
+=======
+			dev_err(dev, "Modify QP to error state failed(%d) during CQE flush\n",
+>>>>>>> b7ba80a49124 (Commit)
 				ret);
 	}
 
@@ -105,7 +109,11 @@ void hns_roce_qp_event(struct hns_roce_dev *hr_dev, u32 qpn, int event_type)
 	xa_unlock(&hr_dev->qp_table_xa);
 
 	if (!qp) {
+<<<<<<< HEAD
 		dev_warn(dev, "async event for bogus QP %08x\n", qpn);
+=======
+		dev_warn(dev, "Async event for bogus QP %08x\n", qpn);
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
@@ -275,7 +283,11 @@ static int hns_roce_qp_store(struct hns_roce_dev *hr_dev,
 
 	ret = xa_err(xa_store_irq(xa, hr_qp->qpn, hr_qp, GFP_KERNEL));
 	if (ret)
+<<<<<<< HEAD
 		dev_err(hr_dev->dev, "failed to xa store for QPC\n");
+=======
+		dev_err(hr_dev->dev, "Failed to xa store for QPC\n");
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		/* add QP to device's QP list for softwc */
 		add_qp_to_list(hr_dev, hr_qp, init_attr->send_cq,
@@ -296,14 +308,22 @@ static int alloc_qpc(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp)
 	/* Alloc memory for QPC */
 	ret = hns_roce_table_get(hr_dev, &qp_table->qp_table, hr_qp->qpn);
 	if (ret) {
+<<<<<<< HEAD
 		dev_err(dev, "failed to get QPC table\n");
+=======
+		dev_err(dev, "Failed to get QPC table\n");
+>>>>>>> b7ba80a49124 (Commit)
 		goto err_out;
 	}
 
 	/* Alloc memory for IRRL */
 	ret = hns_roce_table_get(hr_dev, &qp_table->irrl_table, hr_qp->qpn);
 	if (ret) {
+<<<<<<< HEAD
 		dev_err(dev, "failed to get IRRL table\n");
+=======
+		dev_err(dev, "Failed to get IRRL table\n");
+>>>>>>> b7ba80a49124 (Commit)
 		goto err_put_qp;
 	}
 
@@ -312,7 +332,11 @@ static int alloc_qpc(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp)
 		ret = hns_roce_table_get(hr_dev, &qp_table->trrl_table,
 					 hr_qp->qpn);
 		if (ret) {
+<<<<<<< HEAD
 			dev_err(dev, "failed to get TRRL table\n");
+=======
+			dev_err(dev, "Failed to get TRRL table\n");
+>>>>>>> b7ba80a49124 (Commit)
 			goto err_put_irrl;
 		}
 	}
@@ -322,7 +346,11 @@ static int alloc_qpc(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp)
 		ret = hns_roce_table_get(hr_dev, &qp_table->sccc_table,
 					 hr_qp->qpn);
 		if (ret) {
+<<<<<<< HEAD
 			dev_err(dev, "failed to get SCC CTX table\n");
+=======
+			dev_err(dev, "Failed to get SCC CTX table\n");
+>>>>>>> b7ba80a49124 (Commit)
 			goto err_put_trrl;
 		}
 	}
@@ -433,6 +461,10 @@ static int set_rq_size(struct hns_roce_dev *hr_dev, struct ib_qp_cap *cap,
 	if (!has_rq) {
 		hr_qp->rq.wqe_cnt = 0;
 		hr_qp->rq.max_gs = 0;
+<<<<<<< HEAD
+=======
+		hr_qp->rq_inl_buf.wqe_cnt = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		cap->max_recv_wr = 0;
 		cap->max_recv_sge = 0;
 
@@ -462,6 +494,15 @@ static int set_rq_size(struct hns_roce_dev *hr_dev, struct ib_qp_cap *cap,
 				    hr_qp->rq.max_gs);
 
 	hr_qp->rq.wqe_cnt = cnt;
+<<<<<<< HEAD
+=======
+	if (hr_dev->caps.flags & HNS_ROCE_CAP_FLAG_RQ_INLINE &&
+	    hr_qp->ibqp.qp_type != IB_QPT_UD &&
+	    hr_qp->ibqp.qp_type != IB_QPT_GSI)
+		hr_qp->rq_inl_buf.wqe_cnt = cnt;
+	else
+		hr_qp->rq_inl_buf.wqe_cnt = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	cap->max_recv_wr = cnt;
 	cap->max_recv_sge = hr_qp->rq.max_gs - hr_qp->rq.rsv_sge;
@@ -469,6 +510,7 @@ static int set_rq_size(struct hns_roce_dev *hr_dev, struct ib_qp_cap *cap,
 	return 0;
 }
 
+<<<<<<< HEAD
 static u32 get_max_inline_data(struct hns_roce_dev *hr_dev,
 			       struct ib_qp_cap *cap)
 {
@@ -477,10 +519,21 @@ static u32 get_max_inline_data(struct hns_roce_dev *hr_dev,
 		return min(cap->max_inline_data,
 			   hr_dev->caps.max_sq_inline);
 	}
+=======
+static u32 get_wqe_ext_sge_cnt(struct hns_roce_qp *qp)
+{
+	/* GSI/UD QP only has extended sge */
+	if (qp->ibqp.qp_type == IB_QPT_GSI || qp->ibqp.qp_type == IB_QPT_UD)
+		return qp->sq.max_gs;
+
+	if (qp->sq.max_gs > HNS_ROCE_SGE_IN_WQE)
+		return qp->sq.max_gs - HNS_ROCE_SGE_IN_WQE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static void update_inline_data(struct hns_roce_qp *hr_qp,
 			       struct ib_qp_cap *cap)
 {
@@ -561,10 +614,24 @@ static void set_ext_sge_param(struct hns_roce_dev *hr_dev, u32 sq_wqe_cnt,
 		hr_qp->sq.max_gs = min(hr_qp->sq.max_gs, hr_dev->caps.max_sq_sg);
 		hr_qp->sq.ext_sge_cnt = hr_qp->sq.max_gs;
 	}
+=======
+static void set_ext_sge_param(struct hns_roce_dev *hr_dev, u32 sq_wqe_cnt,
+			      struct hns_roce_qp *hr_qp, struct ib_qp_cap *cap)
+{
+	u32 total_sge_cnt;
+	u32 wqe_sge_cnt;
+
+	hr_qp->sge.sge_shift = HNS_ROCE_SGE_SHIFT;
+
+	hr_qp->sq.max_gs = max(1U, cap->max_send_sge);
+
+	wqe_sge_cnt = get_wqe_ext_sge_cnt(hr_qp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* If the number of extended sge is not zero, they MUST use the
 	 * space of HNS_HW_PAGE_SIZE at least.
 	 */
+<<<<<<< HEAD
 	if (ext_wqe_sge_cnt) {
 		total_sge_cnt = roundup_pow_of_two(sq_wqe_cnt * ext_wqe_sge_cnt);
 		hr_qp->sge.sge_cnt = max(total_sge_cnt,
@@ -572,6 +639,13 @@ static void set_ext_sge_param(struct hns_roce_dev *hr_dev, u32 sq_wqe_cnt,
 	}
 
 	update_inline_data(hr_qp, cap);
+=======
+	if (wqe_sge_cnt) {
+		total_sge_cnt = roundup_pow_of_two(sq_wqe_cnt * wqe_sge_cnt);
+		hr_qp->sge.sge_cnt = max(total_sge_cnt,
+				(u32)HNS_HW_PAGE_SIZE / HNS_ROCE_SGE_SIZE);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int check_sq_size_with_integrity(struct hns_roce_dev *hr_dev,
@@ -620,7 +694,10 @@ static int set_user_sq_size(struct hns_roce_dev *hr_dev,
 
 	hr_qp->sq.wqe_shift = ucmd->log_sq_stride;
 	hr_qp->sq.wqe_cnt = cnt;
+<<<<<<< HEAD
 	cap->max_send_sge = hr_qp->sq.max_gs;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -725,6 +802,52 @@ static int hns_roce_qp_has_rq(struct ib_qp_init_attr *attr)
 	return 1;
 }
 
+<<<<<<< HEAD
+=======
+static int alloc_rq_inline_buf(struct hns_roce_qp *hr_qp,
+			       struct ib_qp_init_attr *init_attr)
+{
+	u32 max_recv_sge = init_attr->cap.max_recv_sge;
+	u32 wqe_cnt = hr_qp->rq_inl_buf.wqe_cnt;
+	struct hns_roce_rinl_wqe *wqe_list;
+	int i;
+
+	/* allocate recv inline buf */
+	wqe_list = kcalloc(wqe_cnt, sizeof(struct hns_roce_rinl_wqe),
+			   GFP_KERNEL);
+	if (!wqe_list)
+		goto err;
+
+	/* Allocate a continuous buffer for all inline sge we need */
+	wqe_list[0].sg_list = kcalloc(wqe_cnt, (max_recv_sge *
+				      sizeof(struct hns_roce_rinl_sge)),
+				      GFP_KERNEL);
+	if (!wqe_list[0].sg_list)
+		goto err_wqe_list;
+
+	/* Assign buffers of sg_list to each inline wqe */
+	for (i = 1; i < wqe_cnt; i++)
+		wqe_list[i].sg_list = &wqe_list[0].sg_list[i * max_recv_sge];
+
+	hr_qp->rq_inl_buf.wqe_list = wqe_list;
+
+	return 0;
+
+err_wqe_list:
+	kfree(wqe_list);
+
+err:
+	return -ENOMEM;
+}
+
+static void free_rq_inline_buf(struct hns_roce_qp *hr_qp)
+{
+	if (hr_qp->rq_inl_buf.wqe_list)
+		kfree(hr_qp->rq_inl_buf.wqe_list[0].sg_list);
+	kfree(hr_qp->rq_inl_buf.wqe_list);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int alloc_qp_buf(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp,
 			struct ib_qp_init_attr *init_attr,
 			struct ib_udata *udata, unsigned long addr)
@@ -733,6 +856,21 @@ static int alloc_qp_buf(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp,
 	struct hns_roce_buf_attr buf_attr = {};
 	int ret;
 
+<<<<<<< HEAD
+=======
+	if (!udata && hr_qp->rq_inl_buf.wqe_cnt) {
+		ret = alloc_rq_inline_buf(hr_qp, init_attr);
+		if (ret) {
+			ibdev_err(ibdev,
+				  "failed to alloc inline buf, ret = %d.\n",
+				  ret);
+			return ret;
+		}
+	} else {
+		hr_qp->rq_inl_buf.wqe_list = NULL;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = set_wqe_buf_attr(hr_dev, hr_qp, &buf_attr);
 	if (ret) {
 		ibdev_err(ibdev, "failed to split WQE buf, ret = %d.\n", ret);
@@ -752,6 +890,10 @@ static int alloc_qp_buf(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp,
 	return 0;
 
 err_inline:
+<<<<<<< HEAD
+=======
+	free_rq_inline_buf(hr_qp);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -759,6 +901,10 @@ err_inline:
 static void free_qp_buf(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp)
 {
 	hns_roce_mtr_destroy(hr_dev, &hr_qp->mtr);
+<<<<<<< HEAD
+=======
+	free_rq_inline_buf(hr_qp);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline bool user_qp_has_sdb(struct hns_roce_dev *hr_dev,
@@ -994,9 +1140,19 @@ static int set_qp_param(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp,
 			struct hns_roce_ib_create_qp *ucmd)
 {
 	struct ib_device *ibdev = &hr_dev->ib_dev;
+<<<<<<< HEAD
 	struct hns_roce_ucontext *uctx;
 	int ret;
 
+=======
+	int ret;
+
+	if (init_attr->cap.max_inline_data > hr_dev->caps.max_sq_inline)
+		init_attr->cap.max_inline_data = hr_dev->caps.max_sq_inline;
+
+	hr_qp->max_inline_data = init_attr->cap.max_inline_data;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (init_attr->sq_sig_type == IB_SIGNAL_ALL_WR)
 		hr_qp->sq_signal_bits = IB_SIGNAL_ALL_WR;
 	else
@@ -1019,17 +1175,23 @@ static int set_qp_param(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp,
 			return ret;
 		}
 
+<<<<<<< HEAD
 		uctx = rdma_udata_to_drv_context(udata, struct hns_roce_ucontext,
 						 ibucontext);
 		hr_qp->config = uctx->config;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ret = set_user_sq_size(hr_dev, &init_attr->cap, hr_qp, ucmd);
 		if (ret)
 			ibdev_err(ibdev,
 				  "failed to set user SQ size, ret = %d.\n",
 				  ret);
 	} else {
+<<<<<<< HEAD
 		if (hr_dev->pci_dev->revision >= PCI_REVISION_ID_HIP09)
 			hr_qp->config = HNS_ROCE_EXSGE_FLAGS;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ret = set_kernel_sq_size(hr_dev, &init_attr->cap, hr_qp);
 		if (ret)
 			ibdev_err(ibdev,
@@ -1212,7 +1374,11 @@ int hns_roce_create_qp(struct ib_qp *qp, struct ib_qp_init_attr *init_attr,
 
 	ret = hns_roce_create_qp_common(hr_dev, pd, init_attr, udata, hr_qp);
 	if (ret)
+<<<<<<< HEAD
 		ibdev_err(ibdev, "create QP type 0x%x failed(%d)\n",
+=======
+		ibdev_err(ibdev, "Create QP type 0x%x failed(%d)\n",
+>>>>>>> b7ba80a49124 (Commit)
 			  init_attr->qp_type, ret);
 
 	return ret;
@@ -1346,7 +1512,11 @@ int hns_roce_modify_qp(struct ib_qp *ibqp, struct ib_qp_attr *attr,
 		goto out;
 
 	ret = hr_dev->hw->modify_qp(ibqp, attr, attr_mask, cur_state,
+<<<<<<< HEAD
 				    new_state, udata);
+=======
+				    new_state);
+>>>>>>> b7ba80a49124 (Commit)
 
 out:
 	mutex_unlock(&hr_qp->mutex);

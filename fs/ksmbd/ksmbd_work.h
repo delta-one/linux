@@ -68,7 +68,11 @@ struct ksmbd_work {
 	/* Request is encrypted */
 	bool                            encrypted:1;
 	/* Is this SYNC or ASYNC ksmbd_work */
+<<<<<<< HEAD
 	bool                            synchronous:1;
+=======
+	bool                            syncronous:1;
+>>>>>>> b7ba80a49124 (Commit)
 	bool                            need_invalidate_rkey:1;
 
 	unsigned int                    remote_key;

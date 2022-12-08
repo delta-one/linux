@@ -30,6 +30,7 @@
 #include <asm/tlbflush.h>
 #include <linux/vmalloc.h>
 
+<<<<<<< HEAD
 #ifdef CONFIG_KMAP_LOCAL
 static inline int kmap_local_calc_idx(int idx)
 {
@@ -41,6 +42,8 @@ static inline int kmap_local_calc_idx(int idx)
 #endif
 #endif /* CONFIG_KMAP_LOCAL */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Virtual_count is not a pure "count".
  *  0 means that it is not mapped, and has not been mapped
@@ -153,6 +156,7 @@ pte_t *pkmap_page_table;
 
 struct page *__kmap_to_page(void *vaddr)
 {
+<<<<<<< HEAD
 	unsigned long base = (unsigned long) vaddr & PAGE_MASK;
 	struct kmap_ctrl *kctrl = &current->kmap_ctrl;
 	unsigned long addr = (unsigned long)vaddr;
@@ -176,6 +180,14 @@ struct page *__kmap_to_page(void *vaddr)
 			if (base_addr == base)
 				return pte_page(kctrl->pteval[i]);
 		}
+=======
+	unsigned long addr = (unsigned long)vaddr;
+
+	if (addr >= PKMAP_ADDR(0) && addr < PKMAP_ADDR(LAST_PKMAP)) {
+		int i = PKMAP_NR(addr);
+
+		return pte_page(pkmap_page_table[i]);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return virt_to_page(vaddr);
@@ -490,6 +502,13 @@ static inline void kmap_local_idx_pop(void)
 # define arch_kmap_local_post_unmap(vaddr)		do { } while (0)
 #endif
 
+<<<<<<< HEAD
+=======
+#ifndef arch_kmap_local_map_idx
+#define arch_kmap_local_map_idx(idx, pfn)	kmap_local_calc_idx(idx)
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef arch_kmap_local_unmap_idx
 #define arch_kmap_local_unmap_idx(idx, vaddr)	kmap_local_calc_idx(idx)
 #endif
@@ -518,6 +537,14 @@ static inline bool kmap_high_unmap_local(unsigned long vaddr)
 	return false;
 }
 
+<<<<<<< HEAD
+=======
+static inline int kmap_local_calc_idx(int idx)
+{
+	return idx + KM_MAX_IDX * smp_processor_id();
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static pte_t *__kmap_pte;
 
 static pte_t *kmap_get_pte(unsigned long vaddr, int idx)

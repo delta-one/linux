@@ -129,8 +129,12 @@ static int sof_ipc3_pcm_hw_params(struct snd_soc_component *component,
 		return ret;
 	}
 
+<<<<<<< HEAD
 	ret = snd_sof_set_stream_data_offset(sdev, &spcm->stream[substream->stream],
 					     ipc_params_reply.posn_offset);
+=======
+	ret = snd_sof_set_stream_data_offset(sdev, substream, ipc_params_reply.posn_offset);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0) {
 		dev_err(component->dev, "%s: invalid stream data offset for PCM %d\n",
 			__func__, spcm->pcm.pcm_id);
@@ -337,7 +341,10 @@ static int sof_ipc3_pcm_dai_link_fixup(struct snd_soc_pcm_runtime *rtd,
 			channels->min, channels->max);
 		break;
 	case SOF_DAI_AMD_SP:
+<<<<<<< HEAD
 	case SOF_DAI_AMD_SP_VIRTUAL:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		rate->min = private->dai_config->acpsp.fsync_rate;
 		rate->max = private->dai_config->acpsp.fsync_rate;
 		channels->min = private->dai_config->acpsp.tdm_slots;
@@ -349,7 +356,10 @@ static int sof_ipc3_pcm_dai_link_fixup(struct snd_soc_pcm_runtime *rtd,
 			channels->min, channels->max);
 		break;
 	case SOF_DAI_AMD_HS:
+<<<<<<< HEAD
 	case SOF_DAI_AMD_HS_VIRTUAL:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		rate->min = private->dai_config->acphs.fsync_rate;
 		rate->max = private->dai_config->acphs.fsync_rate;
 		channels->min = private->dai_config->acphs.tdm_slots;
@@ -382,5 +392,8 @@ const struct sof_ipc_pcm_ops ipc3_pcm_ops = {
 	.hw_free = sof_ipc3_pcm_hw_free,
 	.trigger = sof_ipc3_pcm_trigger,
 	.dai_link_fixup = sof_ipc3_pcm_dai_link_fixup,
+<<<<<<< HEAD
 	.reset_hw_params_during_stop = true,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };

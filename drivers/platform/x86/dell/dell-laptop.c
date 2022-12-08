@@ -97,7 +97,10 @@ static struct rfkill *bluetooth_rfkill;
 static struct rfkill *wwan_rfkill;
 static bool force_rfkill;
 static bool micmute_led_registered;
+<<<<<<< HEAD
 static bool mute_led_registered;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 module_param(force_rfkill, bool, 0444);
 MODULE_PARM_DESC(force_rfkill, "enable rfkill on non whitelisted models");
@@ -2178,6 +2181,7 @@ static struct led_classdev micmute_led_cdev = {
 	.default_trigger = "audio-micmute",
 };
 
+<<<<<<< HEAD
 static int mute_led_set(struct led_classdev *led_cdev,
 			   enum led_brightness brightness)
 {
@@ -2206,6 +2210,8 @@ static struct led_classdev mute_led_cdev = {
 	.default_trigger = "audio-mute",
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __init dell_init(void)
 {
 	struct calling_interface_token *token;
@@ -2222,7 +2228,11 @@ static int __init dell_init(void)
 	ret = platform_driver_register(&platform_driver);
 	if (ret)
 		goto fail_platform_driver;
+<<<<<<< HEAD
 	platform_device = platform_device_alloc("dell-laptop", PLATFORM_DEVID_NONE);
+=======
+	platform_device = platform_device_alloc("dell-laptop", -1);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!platform_device) {
 		ret = -ENOMEM;
 		goto fail_platform_device1;
@@ -2259,6 +2269,7 @@ static int __init dell_init(void)
 		micmute_led_registered = true;
 	}
 
+<<<<<<< HEAD
 	if (dell_smbios_find_token(GLOBAL_MUTE_DISABLE) &&
 	    dell_smbios_find_token(GLOBAL_MUTE_ENABLE)) {
 		mute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MUTE);
@@ -2268,6 +2279,8 @@ static int __init dell_init(void)
 		mute_led_registered = true;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
 		return 0;
 
@@ -2315,8 +2328,11 @@ fail_get_brightness:
 fail_backlight:
 	if (micmute_led_registered)
 		led_classdev_unregister(&micmute_led_cdev);
+<<<<<<< HEAD
 	if (mute_led_registered)
 		led_classdev_unregister(&mute_led_cdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 fail_led:
 	dell_cleanup_rfkill();
 fail_rfkill:
@@ -2339,8 +2355,11 @@ static void __exit dell_exit(void)
 	backlight_device_unregister(dell_backlight_device);
 	if (micmute_led_registered)
 		led_classdev_unregister(&micmute_led_cdev);
+<<<<<<< HEAD
 	if (mute_led_registered)
 		led_classdev_unregister(&mute_led_cdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dell_cleanup_rfkill();
 	if (platform_device) {
 		platform_device_unregister(platform_device);

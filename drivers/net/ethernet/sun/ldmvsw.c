@@ -287,9 +287,12 @@ static int vsw_port_probe(struct vio_dev *vdev, const struct vio_device_id *id)
 
 	hp = mdesc_grab();
 
+<<<<<<< HEAD
 	if (!hp)
 		return -ENODEV;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rmac = mdesc_get_property(hp, vdev->mp, remote_macaddr_prop, &len);
 	err = -ENODEV;
 	if (!rmac) {
@@ -357,7 +360,12 @@ static int vsw_port_probe(struct vio_dev *vdev, const struct vio_device_id *id)
 
 	dev_set_drvdata(&vdev->dev, port);
 
+<<<<<<< HEAD
 	netif_napi_add(dev, &port->napi, sunvnet_poll_common);
+=======
+	netif_napi_add(dev, &port->napi, sunvnet_poll_common,
+		       NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_irqsave(&vp->lock, flags);
 	list_add_rcu(&port->list, &vp->port_list);

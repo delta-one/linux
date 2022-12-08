@@ -83,13 +83,19 @@ static inline bool pte_xchg(pte_t *ptep, pte_t old, pte_t new)
 }
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_ARCH_HAS_HUGEPD
+=======
+>>>>>>> b7ba80a49124 (Commit)
 typedef struct { unsigned long pd; } hugepd_t;
 #define __hugepd(x) ((hugepd_t) { (x) })
 static inline unsigned long hpd_val(hugepd_t x)
 {
 	return x.pd;
 }
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _ASM_POWERPC_PGTABLE_TYPES_H */

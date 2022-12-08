@@ -1,6 +1,11 @@
 /* SPDX-License-Identifier: GPL-2.0-or-later */
 /*
+<<<<<<< HEAD
  *  Copyright 2016-2023 Broadcom Inc. All rights reserved.
+=======
+ *  Copyright 2016-2021 Broadcom Inc. All rights reserved.
+ *
+>>>>>>> b7ba80a49124 (Commit)
  */
 #ifndef MPI30_SAS_H
 #define MPI30_SAS_H     1

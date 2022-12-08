@@ -95,6 +95,7 @@ struct clk_limit_table_entry {
 	unsigned int wck_ratio;
 };
 
+<<<<<<< HEAD
 struct clk_limit_num_entries {
 	unsigned int num_dcfclk_levels;
 	unsigned int num_fclk_levels;
@@ -112,6 +113,12 @@ struct clk_limit_table {
 	struct clk_limit_table_entry entries[MAX_NUM_DPM_LVL];
 	struct clk_limit_num_entries num_entries_per_clk;
 	unsigned int num_entries; /* highest populated dpm level for back compatibility */
+=======
+/* This table is contiguous */
+struct clk_limit_table {
+	struct clk_limit_table_entry entries[MAX_NUM_DPM_LVL];
+	unsigned int num_entries;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct wm_range_table_entry {

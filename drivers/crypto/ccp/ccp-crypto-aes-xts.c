@@ -62,7 +62,11 @@ static struct ccp_unit_size_map xts_unit_sizes[] = {
 static int ccp_aes_xts_complete(struct crypto_async_request *async_req, int ret)
 {
 	struct skcipher_request *req = skcipher_request_cast(async_req);
+<<<<<<< HEAD
 	struct ccp_aes_req_ctx *rctx = skcipher_request_ctx_dma(req);
+=======
+	struct ccp_aes_req_ctx *rctx = skcipher_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ret)
 		return ret;
@@ -75,7 +79,11 @@ static int ccp_aes_xts_complete(struct crypto_async_request *async_req, int ret)
 static int ccp_aes_xts_setkey(struct crypto_skcipher *tfm, const u8 *key,
 			      unsigned int key_len)
 {
+<<<<<<< HEAD
 	struct ccp_ctx *ctx = crypto_skcipher_ctx_dma(tfm);
+=======
+	struct ccp_ctx *ctx = crypto_skcipher_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int ccpversion = ccp_version();
 	int ret;
 
@@ -105,8 +113,13 @@ static int ccp_aes_xts_crypt(struct skcipher_request *req,
 			     unsigned int encrypt)
 {
 	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
+<<<<<<< HEAD
 	struct ccp_ctx *ctx = crypto_skcipher_ctx_dma(tfm);
 	struct ccp_aes_req_ctx *rctx = skcipher_request_ctx_dma(req);
+=======
+	struct ccp_ctx *ctx = crypto_skcipher_ctx(tfm);
+	struct ccp_aes_req_ctx *rctx = skcipher_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int ccpversion = ccp_version();
 	unsigned int fallback = 0;
 	unsigned int unit;
@@ -196,7 +209,11 @@ static int ccp_aes_xts_decrypt(struct skcipher_request *req)
 
 static int ccp_aes_xts_init_tfm(struct crypto_skcipher *tfm)
 {
+<<<<<<< HEAD
 	struct ccp_ctx *ctx = crypto_skcipher_ctx_dma(tfm);
+=======
+	struct ccp_ctx *ctx = crypto_skcipher_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	struct crypto_skcipher *fallback_tfm;
 
 	ctx->complete = ccp_aes_xts_complete;
@@ -210,16 +227,25 @@ static int ccp_aes_xts_init_tfm(struct crypto_skcipher *tfm)
 	}
 	ctx->u.aes.tfm_skcipher = fallback_tfm;
 
+<<<<<<< HEAD
 	crypto_skcipher_set_reqsize_dma(tfm,
 					sizeof(struct ccp_aes_req_ctx) +
 					crypto_skcipher_reqsize(fallback_tfm));
+=======
+	crypto_skcipher_set_reqsize(tfm, sizeof(struct ccp_aes_req_ctx) +
+					 crypto_skcipher_reqsize(fallback_tfm));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
 static void ccp_aes_xts_exit_tfm(struct crypto_skcipher *tfm)
 {
+<<<<<<< HEAD
 	struct ccp_ctx *ctx = crypto_skcipher_ctx_dma(tfm);
+=======
+	struct ccp_ctx *ctx = crypto_skcipher_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 
 	crypto_free_skcipher(ctx->u.aes.tfm_skcipher);
 }
@@ -247,8 +273,12 @@ static int ccp_register_aes_xts_alg(struct list_head *head,
 				  CRYPTO_ALG_KERN_DRIVER_ONLY |
 				  CRYPTO_ALG_NEED_FALLBACK;
 	alg->base.cra_blocksize	= AES_BLOCK_SIZE;
+<<<<<<< HEAD
 	alg->base.cra_ctxsize	= sizeof(struct ccp_ctx) +
 				  crypto_dma_padding();
+=======
+	alg->base.cra_ctxsize	= sizeof(struct ccp_ctx);
+>>>>>>> b7ba80a49124 (Commit)
 	alg->base.cra_priority	= CCP_CRA_PRIORITY;
 	alg->base.cra_module	= THIS_MODULE;
 

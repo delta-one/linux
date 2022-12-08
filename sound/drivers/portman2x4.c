@@ -182,11 +182,27 @@ static inline void portman_write_command(struct portman *pm, u8 value)
 	parport_write_control(pm->pardev->port, value);
 }
 
+<<<<<<< HEAD
+=======
+static inline u8 portman_read_command(struct portman *pm)
+{
+	return parport_read_control(pm->pardev->port);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline u8 portman_read_status(struct portman *pm)
 {
 	return parport_read_status(pm->pardev->port);
 }
 
+<<<<<<< HEAD
+=======
+static inline u8 portman_read_data(struct portman *pm)
+{
+	return parport_read_data(pm->pardev->port);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline void portman_write_data(struct portman *pm, u8 value)
 {
 	parport_write_data(pm->pardev->port, value);
@@ -785,18 +801,31 @@ __err:
 	return err;
 }
 
+<<<<<<< HEAD
 static void snd_portman_remove(struct platform_device *pdev)
+=======
+static int snd_portman_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct snd_card *card = platform_get_drvdata(pdev);
 
 	if (card)
 		snd_card_free(card);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 
 static struct platform_driver snd_portman_driver = {
 	.probe  = snd_portman_probe,
+<<<<<<< HEAD
 	.remove_new = snd_portman_remove,
+=======
+	.remove = snd_portman_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = PLATFORM_DRIVER,
 	}

@@ -205,9 +205,17 @@ err:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void eukrea_tlv320_remove(struct platform_device *pdev)
 {
 	snd_soc_unregister_card(&eukrea_tlv320);
+=======
+static int eukrea_tlv320_remove(struct platform_device *pdev)
+{
+	snd_soc_unregister_card(&eukrea_tlv320);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id imx_tlv320_dt_ids[] = {
@@ -222,7 +230,11 @@ static struct platform_driver eukrea_tlv320_driver = {
 		.of_match_table = imx_tlv320_dt_ids,
 	},
 	.probe = eukrea_tlv320_probe,
+<<<<<<< HEAD
 	.remove_new = eukrea_tlv320_remove,
+=======
+	.remove = eukrea_tlv320_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(eukrea_tlv320_driver);

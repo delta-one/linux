@@ -1,8 +1,15 @@
 ===========================
+<<<<<<< HEAD
 Livepatch module ELF format
 ===========================
 
 This document outlines the ELF format requirements that livepatch modules must follow.
+=======
+Livepatch module Elf format
+===========================
+
+This document outlines the Elf format requirements that livepatch modules must follow.
+>>>>>>> b7ba80a49124 (Commit)
 
 
 .. Table of Contents
@@ -20,17 +27,28 @@ code. So, instead of duplicating code and re-implementing what the module
 loader can already do, livepatch leverages existing code in the module
 loader to perform the all the arch-specific relocation work. Specifically,
 livepatch reuses the apply_relocate_add() function in the module loader to
+<<<<<<< HEAD
 write relocations. The patch module ELF format described in this document
+=======
+write relocations. The patch module Elf format described in this document
+>>>>>>> b7ba80a49124 (Commit)
 enables livepatch to be able to do this. The hope is that this will make
 livepatch more easily portable to other architectures and reduce the amount
 of arch-specific code required to port livepatch to a particular
 architecture.
 
 Since apply_relocate_add() requires access to a module's section header
+<<<<<<< HEAD
 table, symbol table, and relocation section indices, ELF information is
 preserved for livepatch modules (see section 5). Livepatch manages its own
 relocation sections and symbols, which are described in this document. The
 ELF constants used to mark livepatch symbols and relocation sections were
+=======
+table, symbol table, and relocation section indices, Elf information is
+preserved for livepatch modules (see section 5). Livepatch manages its own
+relocation sections and symbols, which are described in this document. The
+Elf constants used to mark livepatch symbols and relocation sections were
+>>>>>>> b7ba80a49124 (Commit)
 selected from OS-specific ranges according to the definitions from glibc.
 
 Why does livepatch need to write its own relocations?
@@ -43,7 +61,11 @@ reject the livepatch module. Furthermore, we cannot apply relocations that
 affect modules not yet loaded at patch module load time (e.g. a patch to a
 driver that is not loaded). Formerly, livepatch solved this problem by
 embedding special "dynrela" (dynamic rela) sections in the resulting patch
+<<<<<<< HEAD
 module ELF output. Using these dynrela sections, livepatch could resolve
+=======
+module Elf output. Using these dynrela sections, livepatch could resolve
+>>>>>>> b7ba80a49124 (Commit)
 symbols while taking into account its scope and what module the symbol
 belongs to, and then manually apply the dynamic relocations. However this
 approach required livepatch to supply arch-specific code in order to write
@@ -80,7 +102,11 @@ Example:
 3. Livepatch relocation sections
 ================================
 
+<<<<<<< HEAD
 A livepatch module manages its own ELF relocation sections to apply
+=======
+A livepatch module manages its own Elf relocation sections to apply
+>>>>>>> b7ba80a49124 (Commit)
 relocations to modules as well as to the kernel (vmlinux) at the
 appropriate time. For example, if a patch module patches a driver that is
 not currently loaded, livepatch will apply the corresponding livepatch
@@ -95,7 +121,11 @@ also possible for a livepatch module to have no livepatch relocation
 sections, as in the case of the sample livepatch module (see
 samples/livepatch).
 
+<<<<<<< HEAD
 Since ELF information is preserved for livepatch modules (see Section 5), a
+=======
+Since Elf information is preserved for livepatch modules (see Section 5), a
+>>>>>>> b7ba80a49124 (Commit)
 livepatch relocation section can be applied simply by passing in the
 appropriate section index to apply_relocate_add(), which then uses it to
 access the relocation section and apply the relocations.
@@ -291,12 +321,30 @@ Examples:
   Note that the 'Ndx' (Section index) for these symbols is SHN_LIVEPATCH (0xff20).
   "OS" means OS-specific.
 
+<<<<<<< HEAD
 5. Symbol table and ELF section access
+=======
+5. Symbol table and Elf section access
+>>>>>>> b7ba80a49124 (Commit)
 ======================================
 A livepatch module's symbol table is accessible through module->symtab.
 
 Since apply_relocate_add() requires access to a module's section headers,
+<<<<<<< HEAD
 symbol table, and relocation section indices, ELF information is preserved for
 livepatch modules and is made accessible by the module loader through
 module->klp_info, which is a :c:type:`klp_modinfo` struct. When a livepatch module
 loads, this struct is filled in by the module loader.
+=======
+symbol table, and relocation section indices, Elf information is preserved for
+livepatch modules and is made accessible by the module loader through
+module->klp_info, which is a klp_modinfo struct. When a livepatch module loads,
+this struct is filled in by the module loader. Its fields are documented below::
+
+	struct klp_modinfo {
+		Elf_Ehdr hdr; /* Elf header */
+		Elf_Shdr *sechdrs; /* Section header table */
+		char *secstrings; /* String table for the section headers */
+		unsigned int symndx; /* The symbol table section index */
+	};
+>>>>>>> b7ba80a49124 (Commit)

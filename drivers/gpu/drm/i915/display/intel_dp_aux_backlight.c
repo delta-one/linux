@@ -105,11 +105,14 @@ enum intel_dp_aux_backlight_modparam {
 	INTEL_DP_AUX_BACKLIGHT_FORCE_INTEL = 3,
 };
 
+<<<<<<< HEAD
 static bool is_intel_tcon_cap(const u8 tcon_cap[4])
 {
 	return tcon_cap[0] >= 1;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Intel EDP backlight callbacks */
 static bool
 intel_dp_aux_supports_hdr_backlight(struct intel_connector *connector)
@@ -130,12 +133,23 @@ intel_dp_aux_supports_hdr_backlight(struct intel_connector *connector)
 	if (!(tcon_cap[1] & INTEL_EDP_HDR_TCON_BRIGHTNESS_NITS_CAP))
 		return false;
 
+<<<<<<< HEAD
 	drm_dbg_kms(&i915->drm, "[CONNECTOR:%d:%s] Detected %s HDR backlight interface version %d\n",
 		    connector->base.base.id, connector->base.name,
 		    is_intel_tcon_cap(tcon_cap) ? "Intel" : "unsupported", tcon_cap[0]);
 
 	if (!is_intel_tcon_cap(tcon_cap))
 		return false;
+=======
+	if (tcon_cap[0] >= 1) {
+		drm_dbg_kms(&i915->drm, "Detected Intel HDR backlight interface version %d\n",
+			    tcon_cap[0]);
+	} else {
+		drm_dbg_kms(&i915->drm, "Detected unsupported HDR backlight interface version %d\n",
+			    tcon_cap[0]);
+		return false;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * If we don't have HDR static metadata there is no way to
@@ -150,8 +164,12 @@ intel_dp_aux_supports_hdr_backlight(struct intel_connector *connector)
 	    !(connector->base.hdr_sink_metadata.hdmi_type1.metadata_type &
 	      BIT(HDMI_STATIC_METADATA_TYPE1))) {
 		drm_info(&i915->drm,
+<<<<<<< HEAD
 			 "[CONNECTOR:%d:%s] Panel is missing HDR static metadata. Possible support for Intel HDR backlight interface is not used. If your backlight controls don't work try booting with i915.enable_dpcd_backlight=%d. needs this, please file a _new_ bug report on drm/i915, see " FDO_BUG_URL " for details.\n",
 			 connector->base.base.id, connector->base.name,
+=======
+			 "Panel is missing HDR static metadata. Possible support for Intel HDR backlight interface is not used. If your backlight controls don't work try booting with i915.enable_dpcd_backlight=%d. needs this, please file a _new_ bug report on drm/i915, see " FDO_BUG_URL " for details.\n",
+>>>>>>> b7ba80a49124 (Commit)
 			 INTEL_DP_AUX_BACKLIGHT_FORCE_INTEL);
 		return false;
 	}
@@ -172,8 +190,12 @@ intel_dp_aux_hdr_get_backlight(struct intel_connector *connector, enum pipe pipe
 	u8 buf[2] = { 0 };
 
 	if (drm_dp_dpcd_readb(&intel_dp->aux, INTEL_EDP_HDR_GETSET_CTRL_PARAMS, &tmp) != 1) {
+<<<<<<< HEAD
 		drm_err(&i915->drm, "[CONNECTOR:%d:%s] Failed to read current backlight mode from DPCD\n",
 			connector->base.base.id, connector->base.name);
+=======
+		drm_err(&i915->drm, "Failed to read current backlight mode from DPCD\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 
@@ -190,8 +212,12 @@ intel_dp_aux_hdr_get_backlight(struct intel_connector *connector, enum pipe pipe
 
 	if (drm_dp_dpcd_read(&intel_dp->aux, INTEL_EDP_BRIGHTNESS_NITS_LSB, buf,
 			     sizeof(buf)) != sizeof(buf)) {
+<<<<<<< HEAD
 		drm_err(&i915->drm, "[CONNECTOR:%d:%s] Failed to read brightness from DPCD\n",
 			connector->base.base.id, connector->base.name);
+=======
+		drm_err(&i915->drm, "Failed to read brightness from DPCD\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 
@@ -211,8 +237,12 @@ intel_dp_aux_hdr_set_aux_backlight(const struct drm_connector_state *conn_state,
 
 	if (drm_dp_dpcd_write(&intel_dp->aux, INTEL_EDP_BRIGHTNESS_NITS_LSB, buf,
 			      sizeof(buf)) != sizeof(buf))
+<<<<<<< HEAD
 		drm_err(dev, "[CONNECTOR:%d:%s] Failed to write brightness level to DPCD\n",
 			connector->base.base.id, connector->base.name);
+=======
+		drm_err(dev, "Failed to write brightness level to DPCD\n");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -245,8 +275,12 @@ intel_dp_aux_hdr_enable_backlight(const struct intel_crtc_state *crtc_state,
 
 	ret = drm_dp_dpcd_readb(&intel_dp->aux, INTEL_EDP_HDR_GETSET_CTRL_PARAMS, &old_ctrl);
 	if (ret != 1) {
+<<<<<<< HEAD
 		drm_err(&i915->drm, "[CONNECTOR:%d:%s] Failed to read current backlight control mode: %d\n",
 			connector->base.base.id, connector->base.name, ret);
+=======
+		drm_err(&i915->drm, "Failed to read current backlight control mode: %d\n", ret);
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
@@ -262,10 +296,16 @@ intel_dp_aux_hdr_enable_backlight(const struct intel_crtc_state *crtc_state,
 		ctrl &= ~INTEL_EDP_HDR_TCON_BRIGHTNESS_AUX_ENABLE;
 	}
 
+<<<<<<< HEAD
 	if (ctrl != old_ctrl &&
 	    drm_dp_dpcd_writeb(&intel_dp->aux, INTEL_EDP_HDR_GETSET_CTRL_PARAMS, ctrl) != 1)
 		drm_err(&i915->drm, "[CONNECTOR:%d:%s] Failed to configure DPCD brightness controls\n",
 			connector->base.base.id, connector->base.name);
+=======
+	if (ctrl != old_ctrl)
+		if (drm_dp_dpcd_writeb(&intel_dp->aux, INTEL_EDP_HDR_GETSET_CTRL_PARAMS, ctrl) != 1)
+			drm_err(&i915->drm, "Failed to configure DPCD brightness controls\n");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -282,11 +322,14 @@ intel_dp_aux_hdr_disable_backlight(const struct drm_connector_state *conn_state,
 	panel->backlight.pwm_funcs->disable(conn_state, intel_backlight_invert_pwm_level(connector, 0));
 }
 
+<<<<<<< HEAD
 static const char *dpcd_vs_pwm_str(bool aux)
 {
 	return aux ? "DPCD" : "PWM";
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int
 intel_dp_aux_hdr_setup_backlight(struct intel_connector *connector, enum pipe pipe)
 {
@@ -296,6 +339,7 @@ intel_dp_aux_hdr_setup_backlight(struct intel_connector *connector, enum pipe pi
 		&connector->base.display_info.luminance_range;
 	int ret;
 
+<<<<<<< HEAD
 	drm_dbg_kms(&i915->drm, "[CONNECTOR:%d:%s] SDR backlight is controlled through %s\n",
 		    connector->base.base.id, connector->base.name,
 		    dpcd_vs_pwm_str(panel->backlight.edp.intel.sdr_uses_aux));
@@ -306,6 +350,17 @@ intel_dp_aux_hdr_setup_backlight(struct intel_connector *connector, enum pipe pi
 			drm_err(&i915->drm,
 				"[CONNECTOR:%d:%s] Failed to setup SDR backlight controls through PWM: %d\n",
 				connector->base.base.id, connector->base.name, ret);
+=======
+	if (panel->backlight.edp.intel.sdr_uses_aux) {
+		drm_dbg_kms(&i915->drm, "SDR backlight is controlled through DPCD\n");
+	} else {
+		drm_dbg_kms(&i915->drm, "SDR backlight is controlled through PWM\n");
+
+		ret = panel->backlight.pwm_funcs->setup(connector, pipe);
+		if (ret < 0) {
+			drm_err(&i915->drm,
+				"Failed to setup SDR backlight controls through PWM: %d\n", ret);
+>>>>>>> b7ba80a49124 (Commit)
 			return ret;
 		}
 	}
@@ -318,10 +373,15 @@ intel_dp_aux_hdr_setup_backlight(struct intel_connector *connector, enum pipe pi
 		panel->backlight.min = 0;
 	}
 
+<<<<<<< HEAD
 	drm_dbg_kms(&i915->drm, "[CONNECTOR:%d:%s] Using AUX HDR interface for backlight control (range %d..%d)\n",
 		    connector->base.base.id, connector->base.name,
 		    panel->backlight.min, panel->backlight.max);
 
+=======
+	drm_dbg_kms(&i915->drm, "Using backlight range %d..%d\n", panel->backlight.min,
+		    panel->backlight.max);
+>>>>>>> b7ba80a49124 (Commit)
 
 	panel->backlight.level = intel_dp_aux_hdr_get_backlight(connector, pipe);
 	panel->backlight.enabled = panel->backlight.level != 0;
@@ -403,6 +463,7 @@ static int intel_dp_aux_vesa_setup_backlight(struct intel_connector *connector, 
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
 	drm_dbg_kms(&i915->drm, "[CONNECTOR:%d:%s] AUX VESA backlight enable is controlled through %s\n",
 		    connector->base.base.id, connector->base.name,
 		    dpcd_vs_pwm_str(panel->backlight.edp.vesa.info.aux_enable));
@@ -410,12 +471,19 @@ static int intel_dp_aux_vesa_setup_backlight(struct intel_connector *connector, 
 		    connector->base.base.id, connector->base.name,
 		    dpcd_vs_pwm_str(panel->backlight.edp.vesa.info.aux_set));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!panel->backlight.edp.vesa.info.aux_set || !panel->backlight.edp.vesa.info.aux_enable) {
 		ret = panel->backlight.pwm_funcs->setup(connector, pipe);
 		if (ret < 0) {
 			drm_err(&i915->drm,
+<<<<<<< HEAD
 				"[CONNECTOR:%d:%s] Failed to setup PWM backlight controls for eDP backlight: %d\n",
 				connector->base.base.id, connector->base.name, ret);
+=======
+				"Failed to setup PWM backlight controls for eDP backlight: %d\n",
+				ret);
+>>>>>>> b7ba80a49124 (Commit)
 			return ret;
 		}
 	}
@@ -442,9 +510,12 @@ static int intel_dp_aux_vesa_setup_backlight(struct intel_connector *connector, 
 		}
 	}
 
+<<<<<<< HEAD
 	drm_dbg_kms(&i915->drm, "[CONNECTOR:%d:%s] Using AUX VESA interface for backlight control\n",
 		    connector->base.base.id, connector->base.name);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -455,8 +526,12 @@ intel_dp_aux_supports_vesa_backlight(struct intel_connector *connector)
 	struct drm_i915_private *i915 = dp_to_i915(intel_dp);
 
 	if (drm_edp_backlight_supported(intel_dp->edp_dpcd)) {
+<<<<<<< HEAD
 		drm_dbg_kms(&i915->drm, "[CONNECTOR:%d:%s] AUX Backlight Control Supported!\n",
 			    connector->base.base.id, connector->base.name);
+=======
+		drm_dbg_kms(&i915->drm, "AUX Backlight Control Supported!\n");
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 	}
 	return false;
@@ -532,15 +607,23 @@ int intel_dp_aux_init_backlight_funcs(struct intel_connector *connector)
 	 * interfaces is to probe for Intel's first, and VESA's second.
 	 */
 	if (try_intel_interface && intel_dp_aux_supports_hdr_backlight(connector)) {
+<<<<<<< HEAD
 		drm_dbg_kms(dev, "[CONNECTOR:%d:%s] Using Intel proprietary eDP backlight controls\n",
 			    connector->base.base.id, connector->base.name);
+=======
+		drm_dbg_kms(dev, "Using Intel proprietary eDP backlight controls\n");
+>>>>>>> b7ba80a49124 (Commit)
 		panel->backlight.funcs = &intel_dp_hdr_bl_funcs;
 		return 0;
 	}
 
 	if (try_vesa_interface && intel_dp_aux_supports_vesa_backlight(connector)) {
+<<<<<<< HEAD
 		drm_dbg_kms(dev, "[CONNECTOR:%d:%s] Using VESA eDP backlight controls\n",
 			    connector->base.base.id, connector->base.name);
+=======
+		drm_dbg_kms(dev, "Using VESA eDP backlight controls\n");
+>>>>>>> b7ba80a49124 (Commit)
 		panel->backlight.funcs = &intel_dp_vesa_bl_funcs;
 		return 0;
 	}

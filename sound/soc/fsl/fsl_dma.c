@@ -890,13 +890,22 @@ static int fsl_soc_dma_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void fsl_soc_dma_remove(struct platform_device *pdev)
+=======
+static int fsl_soc_dma_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct dma_object *dma = dev_get_drvdata(&pdev->dev);
 
 	iounmap(dma->channel);
 	irq_dispose_mapping(dma->irq);
 	kfree(dma);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id fsl_soc_dma_ids[] = {
@@ -911,7 +920,11 @@ static struct platform_driver fsl_soc_dma_driver = {
 		.of_match_table = fsl_soc_dma_ids,
 	},
 	.probe = fsl_soc_dma_probe,
+<<<<<<< HEAD
 	.remove_new = fsl_soc_dma_remove,
+=======
+	.remove = fsl_soc_dma_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(fsl_soc_dma_driver);

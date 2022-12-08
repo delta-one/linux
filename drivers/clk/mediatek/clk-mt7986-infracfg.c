@@ -87,6 +87,7 @@ static const struct mtk_gate_regs infra2_cg_regs = {
 	.sta_ofs = 0x68,
 };
 
+<<<<<<< HEAD
 #define GATE_INFRA0(_id, _name, _parent, _shift)			\
 	GATE_MTK(_id, _name, _parent, &infra0_cg_regs, _shift, &mtk_clk_gate_ops_setclr)
 
@@ -95,6 +96,28 @@ static const struct mtk_gate_regs infra2_cg_regs = {
 
 #define GATE_INFRA2(_id, _name, _parent, _shift)			\
 	GATE_MTK(_id, _name, _parent, &infra2_cg_regs, _shift, &mtk_clk_gate_ops_setclr)
+=======
+#define GATE_INFRA0(_id, _name, _parent, _shift)                               \
+	{                                                                      \
+		.id = _id, .name = _name, .parent_name = _parent,              \
+		.regs = &infra0_cg_regs, .shift = _shift,                      \
+		.ops = &mtk_clk_gate_ops_setclr,                               \
+	}
+
+#define GATE_INFRA1(_id, _name, _parent, _shift)                               \
+	{                                                                      \
+		.id = _id, .name = _name, .parent_name = _parent,              \
+		.regs = &infra1_cg_regs, .shift = _shift,                      \
+		.ops = &mtk_clk_gate_ops_setclr,                               \
+	}
+
+#define GATE_INFRA2(_id, _name, _parent, _shift)                               \
+	{                                                                      \
+		.id = _id, .name = _name, .parent_name = _parent,              \
+		.regs = &infra2_cg_regs, .shift = _shift,                      \
+		.ops = &mtk_clk_gate_ops_setclr,                               \
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct mtk_gate infra_clks[] = {
 	/* INFRA0 */
@@ -141,7 +164,11 @@ static const struct mtk_gate infra_clks[] = {
 		    18),
 	GATE_INFRA1(CLK_INFRA_MSDC_66M_CK, "infra_msdc_66m", "infra_sysaxi_d2",
 		    19),
+<<<<<<< HEAD
 	GATE_INFRA1(CLK_INFRA_ADC_26M_CK, "infra_adc_26m", "infra_adc_frc", 20),
+=======
+	GATE_INFRA1(CLK_INFRA_ADC_26M_CK, "infra_adc_26m", "csw_f26m_sel", 20),
+>>>>>>> b7ba80a49124 (Commit)
 	GATE_INFRA1(CLK_INFRA_ADC_FRC_CK, "infra_adc_frc", "csw_f26m_sel", 21),
 	GATE_INFRA1(CLK_INFRA_FBIST2FPC_CK, "infra_fbist2fpc", "nfi1x_sel", 23),
 	/* INFRA2 */
@@ -157,6 +184,7 @@ static const struct mtk_gate infra_clks[] = {
 	GATE_INFRA2(CLK_INFRA_IPCIEB_CK, "infra_ipcieb", "sysaxi_sel", 15),
 };
 
+<<<<<<< HEAD
 static const struct mtk_clk_desc infra_desc = {
 	.clks = infra_clks,
 	.num_clks = ARRAY_SIZE(infra_clks),
@@ -174,10 +202,60 @@ static const struct of_device_id of_match_clk_mt7986_infracfg[] = {
 MODULE_DEVICE_TABLE(of, of_match_clk_mt7986_infracfg);
 
 static struct platform_driver clk_mt7986_infracfg_drv = {
+=======
+static int clk_mt7986_infracfg_probe(struct platform_device *pdev)
+{
+	struct clk_hw_onecell_data *clk_data;
+	struct device_node *node = pdev->dev.of_node;
+	int r;
+	void __iomem *base;
+	int nr = ARRAY_SIZE(infra_divs) + ARRAY_SIZE(infra_muxes) +
+		 ARRAY_SIZE(infra_clks);
+
+	base = of_iomap(node, 0);
+	if (!base) {
+		pr_err("%s(): ioremap failed\n", __func__);
+		return -ENOMEM;
+	}
+
+	clk_data = mtk_alloc_clk_data(nr);
+
+	if (!clk_data)
+		return -ENOMEM;
+
+	mtk_clk_register_factors(infra_divs, ARRAY_SIZE(infra_divs), clk_data);
+	mtk_clk_register_muxes(infra_muxes, ARRAY_SIZE(infra_muxes), node,
+			       &mt7986_clk_lock, clk_data);
+	mtk_clk_register_gates(node, infra_clks, ARRAY_SIZE(infra_clks),
+			       clk_data);
+
+	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+	if (r) {
+		pr_err("%s(): could not register clock provider: %d\n",
+		       __func__, r);
+		goto free_infracfg_data;
+	}
+	return r;
+
+free_infracfg_data:
+	mtk_free_clk_data(clk_data);
+	return r;
+
+}
+
+static const struct of_device_id of_match_clk_mt7986_infracfg[] = {
+	{ .compatible = "mediatek,mt7986-infracfg", },
+	{}
+};
+
+static struct platform_driver clk_mt7986_infracfg_drv = {
+	.probe = clk_mt7986_infracfg_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "clk-mt7986-infracfg",
 		.of_match_table = of_match_clk_mt7986_infracfg,
 	},
+<<<<<<< HEAD
 	.probe = mtk_clk_simple_probe,
 	.remove = mtk_clk_simple_remove,
 };
@@ -185,3 +263,7 @@ module_platform_driver(clk_mt7986_infracfg_drv);
 
 MODULE_DESCRIPTION("MediaTek MT7986 infracfg clocks driver");
 MODULE_LICENSE("GPL");
+=======
+};
+builtin_platform_driver(clk_mt7986_infracfg_drv);
+>>>>>>> b7ba80a49124 (Commit)

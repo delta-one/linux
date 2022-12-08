@@ -16,17 +16,27 @@ obj-y :=	open.o read_write.o file_table.o super.o \
 		pnode.o splice.o sync.o utimes.o d_path.o \
 		stack.o fs_struct.o statfs.o fs_pin.o nsfs.o \
 		fs_types.o fs_context.o fs_parser.o fsopen.o init.o \
+<<<<<<< HEAD
 		kernel_read_file.o mnt_idmapping.o remap_range.o
 
 ifeq ($(CONFIG_BLOCK),y)
 obj-y +=	buffer.o mpage.o
+=======
+		kernel_read_file.o remap_range.o
+
+ifeq ($(CONFIG_BLOCK),y)
+obj-y +=	buffer.o direct-io.o mpage.o
+>>>>>>> b7ba80a49124 (Commit)
 else
 obj-y +=	no-block.o
 endif
 
 obj-$(CONFIG_PROC_FS) += proc_namespace.o
 
+<<<<<<< HEAD
 obj-$(CONFIG_LEGACY_DIRECT_IO)	+= direct-io.o
+=======
+>>>>>>> b7ba80a49124 (Commit)
 obj-y				+= notify/
 obj-$(CONFIG_EPOLL)		+= eventpoll.o
 obj-y				+= anon_inodes.o
@@ -39,6 +49,10 @@ obj-$(CONFIG_FS_DAX)		+= dax.o
 obj-$(CONFIG_FS_ENCRYPTION)	+= crypto/
 obj-$(CONFIG_FS_VERITY)		+= verity/
 obj-$(CONFIG_FILE_LOCKING)      += locks.o
+<<<<<<< HEAD
+=======
+obj-$(CONFIG_BINFMT_AOUT)	+= binfmt_aout.o
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_BINFMT_MISC)	+= binfmt_misc.o
 obj-$(CONFIG_BINFMT_SCRIPT)	+= binfmt_script.o
 obj-$(CONFIG_BINFMT_ELF)	+= binfmt_elf.o

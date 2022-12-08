@@ -351,9 +351,15 @@ static const struct of_device_id da9063_dt_ids[] = {
 	{ }
 };
 MODULE_DEVICE_TABLE(of, da9063_dt_ids);
+<<<<<<< HEAD
 static int da9063_i2c_probe(struct i2c_client *i2c)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(i2c);
+=======
+static int da9063_i2c_probe(struct i2c_client *i2c,
+			    const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct da9063 *da9063;
 	int ret;
 
@@ -469,7 +475,11 @@ static struct i2c_driver da9063_i2c_driver = {
 		.name = "da9063",
 		.of_match_table = da9063_dt_ids,
 	},
+<<<<<<< HEAD
 	.probe_new = da9063_i2c_probe,
+=======
+	.probe    = da9063_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = da9063_i2c_id,
 };
 

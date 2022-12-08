@@ -26,6 +26,10 @@
 
 #include <linux/pci.h>
 
+<<<<<<< HEAD
+=======
+#include <drm/drm_crtc_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_device.h>
 #include <drm/radeon_drm.h>
 

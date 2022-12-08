@@ -125,39 +125,63 @@
 	leds {
 		compatible = "gpio-leds";
 
+<<<<<<< HEAD
 		led-user-1 {
+=======
+		user_led1 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "green:user1";
 			gpios = <&gpio4 0 0>; /* <&gpio_user_led_1>; */
 			linux,default-trigger = "heartbeat";
 		};
 
+<<<<<<< HEAD
 		led-user-2 {
+=======
+		user_led2 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "green:user2";
 			gpios = <&gpio4 1 0>; /* <&gpio_user_led_2>; */
 			linux,default-trigger = "mmc0";
 		};
 
+<<<<<<< HEAD
 		led-user-3 {
+=======
+		user_led3 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "green:user3";
 			gpios = <&gpio4 2 0>; /* <&gpio_user_led_3>; */
 			linux,default-trigger = "mmc1";
 		};
 
+<<<<<<< HEAD
 		led-user-4 {
+=======
+		user_led4 {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "green:user4";
 			gpios = <&gpio4 3 0>; /* <&gpio_user_led_4>; */
 			panic-indicator;
 			linux,default-trigger = "none";
 		};
 
+<<<<<<< HEAD
 		led-wlan {
+=======
+		wlan_active_led {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "yellow:wlan";
 			gpios = <&gpio3 5 0>; /* <&gpio_wlan_active_led>; */
 			linux,default-trigger = "phy0tx";
 			default-state = "off";
 		};
 
+<<<<<<< HEAD
 		led-bt {
+=======
+		bt_active_led {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "blue:bt";
 			gpios = <&gpio4 7 0>; /* <&gpio_bt_active_led>; */
 			linux,default-trigger = "hci0-power";

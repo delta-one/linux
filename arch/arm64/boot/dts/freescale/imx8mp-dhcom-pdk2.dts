@@ -104,10 +104,27 @@
 	};
 };
 
+<<<<<<< HEAD
 &fec {	/* Second ethernet */
 	pinctrl-0 = <&pinctrl_fec_rgmii>;
 	phy-handle = <&ethphypdk>;
 	phy-mode = "rgmii";
+=======
+/*
+ * PDK2 carrier board uses SoM with KSZ9131 populated and connected to
+ * SoM EQoS ethernet RGMII interface. Remove the other SoM PHY DT node.
+ */
+/delete-node/ &ethphy0f;
+
+/*
+ * PDK2 carrier board has KSZ9021 PHY populated and connected to SoM FEC
+ * ethernet RGMII interface. The SoM is not populated with second FEC PHY.
+ */
+/delete-node/ &ethphy1f;
+
+&fec {	/* Second ethernet */
+	phy-handle = <&ethphypdk>;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mdio {
 		ethphypdk: ethernet-phy@7 { /* KSZ 9021 */
@@ -141,6 +158,7 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &pcie_phy {
 	clock-names = "ref";
 	clocks = <&clk IMX8MP_SYS_PLL2_100M>;
@@ -155,6 +173,8 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &usb3_1 {
 	fsl,over-current-active-low;
 };
@@ -163,7 +183,11 @@
 	/*
 	 * GPIO_A,B,C,D are connected to buttons.
 	 * GPIO_E,F,H,I are connected to LEDs.
+<<<<<<< HEAD
 	 * GPIO_M is connected to CLKOUT1.
+=======
+	 * GPIO_M is connected to CLKOUT2.
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	pinctrl-0 = <&pinctrl_hog_base
 		     &pinctrl_dhcom_g &pinctrl_dhcom_j

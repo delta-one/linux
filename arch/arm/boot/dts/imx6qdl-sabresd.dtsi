@@ -130,7 +130,11 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_gpio_leds>;
 
+<<<<<<< HEAD
 		led-red {
+=======
+		red {
+>>>>>>> b7ba80a49124 (Commit)
 			gpios = <&gpio1 2 0>;
 			default-state = "on";
 		};
@@ -311,8 +315,13 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_i2c2_egalax_int>;
 		interrupt-parent = <&gpio6>;
+<<<<<<< HEAD
 		interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
 		wakeup-gpios = <&gpio6 8 GPIO_ACTIVE_LOW>;
+=======
+		interrupts = <8 IRQ_TYPE_EDGE_FALLING>;
+		wakeup-gpios = <&gpio6 8 GPIO_ACTIVE_HIGH>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	ov5640: camera@3c {
@@ -450,8 +459,13 @@
 		compatible = "eeti,egalax_ts";
 		reg = <0x04>;
 		interrupt-parent = <&gpio6>;
+<<<<<<< HEAD
 		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
 		wakeup-gpios = <&gpio6 7 GPIO_ACTIVE_LOW>;
+=======
+		interrupts = <7 2>;
+		wakeup-gpios = <&gpio6 7 0>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	magnetometer@e {

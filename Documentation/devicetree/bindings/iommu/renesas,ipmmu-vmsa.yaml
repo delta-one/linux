@@ -29,7 +29,10 @@ properties:
               - renesas,ipmmu-r8a7793  # R-Car M2-N
               - renesas,ipmmu-r8a7794  # R-Car E2
           - const: renesas,ipmmu-vmsa  # R-Mobile APE6 or R-Car Gen2 or RZ/G1
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - items:
           - enum:
               - renesas,ipmmu-r8a774a1 # RZ/G2M
@@ -44,12 +47,19 @@ properties:
               - renesas,ipmmu-r8a77980 # R-Car V3H
               - renesas,ipmmu-r8a77990 # R-Car E3
               - renesas,ipmmu-r8a77995 # R-Car D3
+<<<<<<< HEAD
 
       - items:
           - enum:
               - renesas,ipmmu-r8a779a0           # R-Car V3U
               - renesas,ipmmu-r8a779f0           # R-Car S4-8
               - renesas,ipmmu-r8a779g0           # R-Car V4H
+=======
+              - renesas,ipmmu-r8a779a0 # R-Car V3U
+      - items:
+          - enum:
+              - renesas,ipmmu-r8a779f0 # R-Car S4-8
+>>>>>>> b7ba80a49124 (Commit)
           - const: renesas,rcar-gen4-ipmmu-vmsa  # R-Car Gen4
 
   reg:
@@ -74,6 +84,7 @@ properties:
   renesas,ipmmu-main:
     $ref: /schemas/types.yaml#/definitions/phandle-array
     items:
+<<<<<<< HEAD
       - minItems: 1
         items:
           - description: phandle to main IPMMU
@@ -84,6 +95,18 @@ properties:
               instances.
     description:
       Reference to the main IPMMU.
+=======
+      - items:
+          - description: phandle to main IPMMU
+          - description: the interrupt bit number associated with the particular
+              cache IPMMU device. The interrupt bit number needs to match the main
+              IPMMU IMSSTR register. Only used by cache IPMMU instances.
+    description:
+      Reference to the main IPMMU phandle plus 1 cell. The cell is
+      the interrupt bit number associated with the particular cache IPMMU
+      device. The interrupt bit number needs to match the main IPMMU IMSSTR
+      register. Only used by cache IPMMU instances.
+>>>>>>> b7ba80a49124 (Commit)
 
 required:
   - compatible
@@ -109,6 +132,7 @@ allOf:
       required:
         - power-domains
 
+<<<<<<< HEAD
   - if:
       properties:
         compatible:
@@ -125,6 +149,8 @@ allOf:
           items:
             - minItems: 2
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 examples:
   - |
     #include <dt-bindings/clock/r8a7791-cpg-mssr.h>

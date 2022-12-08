@@ -13,14 +13,21 @@
 #include <linux/kernel.h>
 #include <linux/list.h>
 #include <linux/memblock.h>
+<<<<<<< HEAD
+=======
+#include <linux/pstore_ram.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/rslib.h>
 #include <linux/slab.h>
 #include <linux/uaccess.h>
 #include <linux/vmalloc.h>
 #include <asm/page.h>
 
+<<<<<<< HEAD
 #include "ram_internal.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct persistent_ram_buffer - persistent circular RAM buffer
  *
@@ -440,11 +447,15 @@ static void *persistent_ram_vmap(phys_addr_t start, size_t size,
 		phys_addr_t addr = page_start + i * PAGE_SIZE;
 		pages[i] = pfn_to_page(addr >> PAGE_SHIFT);
 	}
+<<<<<<< HEAD
 	/*
 	 * VM_IOREMAP used here to bypass this region during vread()
 	 * and kmap_atomic() (i.e. kcore) to avoid __va() failures.
 	 */
 	vaddr = vmap(pages, page_count, VM_MAP | VM_IOREMAP, prot);
+=======
+	vaddr = vmap(pages, page_count, VM_MAP, prot);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(pages);
 
 	/*
@@ -548,6 +559,7 @@ static int persistent_ram_post_init(struct persistent_ram_zone *prz, u32 sig,
 	return 0;
 }
 
+<<<<<<< HEAD
 void persistent_ram_free(struct persistent_ram_zone **_prz)
 {
 	struct persistent_ram_zone *prz;
@@ -556,6 +568,10 @@ void persistent_ram_free(struct persistent_ram_zone **_prz)
 		return;
 
 	prz = *_prz;
+=======
+void persistent_ram_free(struct persistent_ram_zone *prz)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	if (!prz)
 		return;
 
@@ -579,7 +595,10 @@ void persistent_ram_free(struct persistent_ram_zone **_prz)
 	persistent_ram_free_old(prz);
 	kfree(prz->label);
 	kfree(prz);
+<<<<<<< HEAD
 	*_prz = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct persistent_ram_zone *persistent_ram_new(phys_addr_t start, size_t size,
@@ -616,6 +635,10 @@ struct persistent_ram_zone *persistent_ram_new(phys_addr_t start, size_t size,
 
 	return prz;
 err:
+<<<<<<< HEAD
 	persistent_ram_free(&prz);
+=======
+	persistent_ram_free(prz);
+>>>>>>> b7ba80a49124 (Commit)
 	return ERR_PTR(ret);
 }

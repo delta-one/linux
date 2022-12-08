@@ -1558,12 +1558,16 @@ static int __init s3fb_init(void)
 
 #ifndef MODULE
 	char *option = NULL;
+<<<<<<< HEAD
 #endif
 
 	if (fb_modesetting_disabled("s3fb"))
 		return -ENODEV;
 
 #ifndef MODULE
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (fb_get_options("s3fb", &option))
 		return -ENODEV;
 	s3fb_setup(option);

@@ -89,6 +89,7 @@ trip_point_type_show(struct device *dev, struct device_attribute *attr,
 	if (sscanf(attr->attr.name, "trip_point_%d_type", &trip_id) != 1)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	mutex_lock(&tz->lock);
 
 	if (device_is_registered(dev))
@@ -98,6 +99,9 @@ trip_point_type_show(struct device *dev, struct device_attribute *attr,
 
 	mutex_unlock(&tz->lock);
 
+=======
+	result = thermal_zone_get_trip(tz, trip_id, &trip);
+>>>>>>> b7ba80a49124 (Commit)
 	if (result)
 		return result;
 
@@ -126,6 +130,7 @@ trip_point_temp_store(struct device *dev, struct device_attribute *attr,
 	if (sscanf(attr->attr.name, "trip_point_%d_temp", &trip_id) != 1)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	mutex_lock(&tz->lock);
 
 	if (!device_is_registered(dev)) {
@@ -146,6 +151,20 @@ unlock:
 	mutex_unlock(&tz->lock);
 	
 	return ret ? ret : count;
+=======
+	ret = thermal_zone_get_trip(tz, trip_id, &trip);
+ 	if (ret)
+ 		return ret;
+
+	if (kstrtoint(buf, 10, &trip.temperature))
+		return -EINVAL;
+
+	ret = thermal_zone_set_trip(tz, trip_id, &trip);
+	if (ret)
+		return ret;
+
+	return count;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t
@@ -159,6 +178,7 @@ trip_point_temp_show(struct device *dev, struct device_attribute *attr,
 	if (sscanf(attr->attr.name, "trip_point_%d_temp", &trip_id) != 1)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	mutex_lock(&tz->lock);
 
 	if (device_is_registered(dev))
@@ -168,6 +188,9 @@ trip_point_temp_show(struct device *dev, struct device_attribute *attr,
 
 	mutex_unlock(&tz->lock);
 
+=======
+	ret = thermal_zone_get_trip(tz, trip_id, &trip);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -185,6 +208,7 @@ trip_point_hyst_store(struct device *dev, struct device_attribute *attr,
 	if (sscanf(attr->attr.name, "trip_point_%d_hyst", &trip_id) != 1)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (kstrtoint(buf, 10, &trip.hysteresis))
 		return -EINVAL;
 
@@ -204,6 +228,20 @@ unlock:
 	mutex_unlock(&tz->lock);
 
 	return ret ? ret : count;
+=======
+	ret = thermal_zone_get_trip(tz, trip_id, &trip);
+	if (ret)
+		return ret;
+
+	if (kstrtoint(buf, 10, &trip.hysteresis))
+		return -EINVAL;
+
+	ret = thermal_zone_set_trip(tz, trip_id, &trip);
+	if (ret)
+		return ret;
+
+	return count;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t
@@ -217,6 +255,7 @@ trip_point_hyst_show(struct device *dev, struct device_attribute *attr,
 	if (sscanf(attr->attr.name, "trip_point_%d_hyst", &trip_id) != 1)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	mutex_lock(&tz->lock);
 
 	if (device_is_registered(dev))
@@ -225,6 +264,11 @@ trip_point_hyst_show(struct device *dev, struct device_attribute *attr,
 		ret = -ENODEV;
 
 	mutex_unlock(&tz->lock);
+=======
+	ret = thermal_zone_get_trip(tz, trip_id, &trip);
+	if (ret)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret ? ret : sprintf(buf, "%d\n", trip.hysteresis);
 }
@@ -273,6 +317,7 @@ emul_temp_store(struct device *dev, struct device_attribute *attr,
 	if (kstrtoint(buf, 10, &temperature))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	mutex_lock(&tz->lock);
 
 	if (!device_is_registered(dev)) {
@@ -290,6 +335,18 @@ emul_temp_store(struct device *dev, struct device_attribute *attr,
 
 unlock:
 	mutex_unlock(&tz->lock);
+=======
+	if (!tz->ops->set_emul_temp) {
+		mutex_lock(&tz->lock);
+		tz->emul_temperature = temperature;
+		mutex_unlock(&tz->lock);
+	} else {
+		ret = tz->ops->set_emul_temp(tz, temperature);
+	}
+
+	if (!ret)
+		thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret ? ret : count;
 }
@@ -593,8 +650,18 @@ static ssize_t max_state_show(struct device *dev, struct device_attribute *attr,
 			      char *buf)
 {
 	struct thermal_cooling_device *cdev = to_cooling_device(dev);
+<<<<<<< HEAD
 
 	return sprintf(buf, "%ld\n", cdev->max_state);
+=======
+	unsigned long state;
+	int ret;
+
+	ret = cdev->ops->get_max_state(cdev, &state);
+	if (ret)
+		return ret;
+	return sprintf(buf, "%ld\n", state);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t cur_state_show(struct device *dev, struct device_attribute *attr,
@@ -624,10 +691,13 @@ cur_state_store(struct device *dev, struct device_attribute *attr,
 	if ((long)state < 0)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	/* Requested state should be less than max_state + 1 */
 	if (state > cdev->max_state)
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&cdev->lock);
 
 	result = cdev->ops->set_cur_state(cdev, state);
@@ -665,6 +735,10 @@ struct cooling_dev_stats {
 	spinlock_t lock;
 	unsigned int total_trans;
 	unsigned long state;
+<<<<<<< HEAD
+=======
+	unsigned long max_states;
+>>>>>>> b7ba80a49124 (Commit)
 	ktime_t last_time;
 	ktime_t *time_in_state;
 	unsigned int *trans_table;
@@ -685,8 +759,11 @@ void thermal_cooling_device_stats_update(struct thermal_cooling_device *cdev,
 {
 	struct cooling_dev_stats *stats = cdev->stats;
 
+<<<<<<< HEAD
 	lockdep_assert_held(&cdev->lock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!stats)
 		return;
 
@@ -696,7 +773,11 @@ void thermal_cooling_device_stats_update(struct thermal_cooling_device *cdev,
 		goto unlock;
 
 	update_time_in_state(stats);
+<<<<<<< HEAD
 	stats->trans_table[stats->state * (cdev->max_state + 1) + new_state]++;
+=======
+	stats->trans_table[stats->state * stats->max_states + new_state]++;
+>>>>>>> b7ba80a49124 (Commit)
 	stats->state = new_state;
 	stats->total_trans++;
 
@@ -708,6 +789,7 @@ static ssize_t total_trans_show(struct device *dev,
 				struct device_attribute *attr, char *buf)
 {
 	struct thermal_cooling_device *cdev = to_cooling_device(dev);
+<<<<<<< HEAD
 	struct cooling_dev_stats *stats;
 	int ret = 0;
 
@@ -716,14 +798,21 @@ static ssize_t total_trans_show(struct device *dev,
 	stats = cdev->stats;
 	if (!stats)
 		goto unlock;
+=======
+	struct cooling_dev_stats *stats = cdev->stats;
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock(&stats->lock);
 	ret = sprintf(buf, "%u\n", stats->total_trans);
 	spin_unlock(&stats->lock);
 
+<<<<<<< HEAD
 unlock:
 	mutex_unlock(&cdev->lock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -732,6 +821,7 @@ time_in_state_ms_show(struct device *dev, struct device_attribute *attr,
 		      char *buf)
 {
 	struct thermal_cooling_device *cdev = to_cooling_device(dev);
+<<<<<<< HEAD
 	struct cooling_dev_stats *stats;
 	ssize_t len = 0;
 	int i;
@@ -747,14 +837,27 @@ time_in_state_ms_show(struct device *dev, struct device_attribute *attr,
 	update_time_in_state(stats);
 
 	for (i = 0; i <= cdev->max_state; i++) {
+=======
+	struct cooling_dev_stats *stats = cdev->stats;
+	ssize_t len = 0;
+	int i;
+
+	spin_lock(&stats->lock);
+	update_time_in_state(stats);
+
+	for (i = 0; i < stats->max_states; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 		len += sprintf(buf + len, "state%u\t%llu\n", i,
 			       ktime_to_ms(stats->time_in_state[i]));
 	}
 	spin_unlock(&stats->lock);
 
+<<<<<<< HEAD
 unlock:
 	mutex_unlock(&cdev->lock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return len;
 }
 
@@ -763,6 +866,7 @@ reset_store(struct device *dev, struct device_attribute *attr, const char *buf,
 	    size_t count)
 {
 	struct thermal_cooling_device *cdev = to_cooling_device(dev);
+<<<<<<< HEAD
 	struct cooling_dev_stats *stats;
 	int i, states;
 
@@ -773,6 +877,10 @@ reset_store(struct device *dev, struct device_attribute *attr, const char *buf,
 		goto unlock;
 
 	states = cdev->max_state + 1;
+=======
+	struct cooling_dev_stats *stats = cdev->stats;
+	int i, states = stats->max_states;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock(&stats->lock);
 
@@ -781,14 +889,21 @@ reset_store(struct device *dev, struct device_attribute *attr, const char *buf,
 	memset(stats->trans_table, 0,
 	       states * states * sizeof(*stats->trans_table));
 
+<<<<<<< HEAD
 	for (i = 0; i < states; i++)
+=======
+	for (i = 0; i < stats->max_states; i++)
+>>>>>>> b7ba80a49124 (Commit)
 		stats->time_in_state[i] = ktime_set(0, 0);
 
 	spin_unlock(&stats->lock);
 
+<<<<<<< HEAD
 unlock:
 	mutex_unlock(&cdev->lock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return count;
 }
 
@@ -796,6 +911,7 @@ static ssize_t trans_table_show(struct device *dev,
 				struct device_attribute *attr, char *buf)
 {
 	struct thermal_cooling_device *cdev = to_cooling_device(dev);
+<<<<<<< HEAD
 	struct cooling_dev_stats *stats;
 	ssize_t len = 0;
 	int i, j;
@@ -811,10 +927,20 @@ static ssize_t trans_table_show(struct device *dev,
 	len += snprintf(buf + len, PAGE_SIZE - len, " From  :    To\n");
 	len += snprintf(buf + len, PAGE_SIZE - len, "       : ");
 	for (i = 0; i <= cdev->max_state; i++) {
+=======
+	struct cooling_dev_stats *stats = cdev->stats;
+	ssize_t len = 0;
+	int i, j;
+
+	len += snprintf(buf + len, PAGE_SIZE - len, " From  :    To\n");
+	len += snprintf(buf + len, PAGE_SIZE - len, "       : ");
+	for (i = 0; i < stats->max_states; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (len >= PAGE_SIZE)
 			break;
 		len += snprintf(buf + len, PAGE_SIZE - len, "state%2u  ", i);
 	}
+<<<<<<< HEAD
 	if (len >= PAGE_SIZE) {
 		len = PAGE_SIZE;
 		goto unlock;
@@ -823,16 +949,32 @@ static ssize_t trans_table_show(struct device *dev,
 	len += snprintf(buf + len, PAGE_SIZE - len, "\n");
 
 	for (i = 0; i <= cdev->max_state; i++) {
+=======
+	if (len >= PAGE_SIZE)
+		return PAGE_SIZE;
+
+	len += snprintf(buf + len, PAGE_SIZE - len, "\n");
+
+	for (i = 0; i < stats->max_states; i++) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (len >= PAGE_SIZE)
 			break;
 
 		len += snprintf(buf + len, PAGE_SIZE - len, "state%2u:", i);
 
+<<<<<<< HEAD
 		for (j = 0; j <= cdev->max_state; j++) {
 			if (len >= PAGE_SIZE)
 				break;
 			len += snprintf(buf + len, PAGE_SIZE - len, "%8u ",
 				stats->trans_table[i * (cdev->max_state + 1) + j]);
+=======
+		for (j = 0; j < stats->max_states; j++) {
+			if (len >= PAGE_SIZE)
+				break;
+			len += snprintf(buf + len, PAGE_SIZE - len, "%8u ",
+				stats->trans_table[i * stats->max_states + j]);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		if (len >= PAGE_SIZE)
 			break;
@@ -841,12 +983,17 @@ static ssize_t trans_table_show(struct device *dev,
 
 	if (len >= PAGE_SIZE) {
 		pr_warn_once("Thermal transition table exceeds PAGE_SIZE. Disabling\n");
+<<<<<<< HEAD
 		len = -EFBIG;
 	}
 
 unlock:
 	mutex_unlock(&cdev->lock);
 
+=======
+		return -EFBIG;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return len;
 }
 
@@ -872,11 +1019,21 @@ static void cooling_device_stats_setup(struct thermal_cooling_device *cdev)
 {
 	const struct attribute_group *stats_attr_group = NULL;
 	struct cooling_dev_stats *stats;
+<<<<<<< HEAD
 	/* Total number of states is highest state + 1 */
 	unsigned long states = cdev->max_state + 1;
 	int var;
 
 	lockdep_assert_held(&cdev->lock);
+=======
+	unsigned long states;
+	int var;
+
+	if (cdev->ops->get_max_state(cdev, &states))
+		goto out;
+
+	states++; /* Total number of states is highest state + 1 */
+>>>>>>> b7ba80a49124 (Commit)
 
 	var = sizeof(*stats);
 	var += sizeof(*stats->time_in_state) * states;
@@ -890,6 +1047,10 @@ static void cooling_device_stats_setup(struct thermal_cooling_device *cdev)
 	stats->trans_table = (unsigned int *)(stats->time_in_state + states);
 	cdev->stats = stats;
 	stats->last_time = ktime_get();
+<<<<<<< HEAD
+=======
+	stats->max_states = states;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_init(&stats->lock);
 
@@ -903,8 +1064,11 @@ out:
 
 static void cooling_device_stats_destroy(struct thermal_cooling_device *cdev)
 {
+<<<<<<< HEAD
 	lockdep_assert_held(&cdev->lock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(cdev->stats);
 	cdev->stats = NULL;
 }
@@ -929,12 +1093,15 @@ void thermal_cooling_device_destroy_sysfs(struct thermal_cooling_device *cdev)
 	cooling_device_stats_destroy(cdev);
 }
 
+<<<<<<< HEAD
 void thermal_cooling_device_stats_reinit(struct thermal_cooling_device *cdev)
 {
 	cooling_device_stats_destroy(cdev);
 	cooling_device_stats_setup(cdev);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* these helper will be used only at the time of bindig */
 ssize_t
 trip_point_show(struct device *dev, struct device_attribute *attr, char *buf)

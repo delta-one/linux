@@ -1,7 +1,10 @@
 .. SPDX-License-Identifier: GFDL-1.1-no-invariants-or-later
 
+<<<<<<< HEAD
 .. _cec_pin_error_inj:
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 CEC Pin Framework Error Injection
 =================================
 

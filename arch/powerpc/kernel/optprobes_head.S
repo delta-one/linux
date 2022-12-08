@@ -73,7 +73,11 @@ optprobe_template_entry:
 	 * further below.
 	 */
 #ifdef CONFIG_PPC64
+<<<<<<< HEAD
 	LOAD_PACA_TOC()
+=======
+	ld	r2,PACATOC(r13)
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 	.global optprobe_template_op_address
@@ -85,7 +89,11 @@ optprobe_template_op_address:
 	TEMPLATE_FOR_IMM_LOAD_INSNS
 
 	/* 2. pt_regs pointer in r4 */
+<<<<<<< HEAD
 	addi	r4,r1,STACK_INT_FRAME_REGS
+=======
+	addi	r4,r1,STACK_FRAME_OVERHEAD
+>>>>>>> b7ba80a49124 (Commit)
 
 	.global optprobe_template_call_handler
 optprobe_template_call_handler:
@@ -96,7 +104,11 @@ optprobe_template_call_handler:
 	 * Parameters for instruction emulation:
 	 * 1. Pass SP in register r3.
 	 */
+<<<<<<< HEAD
 	addi	r3,r1,STACK_INT_FRAME_REGS
+=======
+	addi	r3,r1,STACK_FRAME_OVERHEAD
+>>>>>>> b7ba80a49124 (Commit)
 
 	.global optprobe_template_insn
 optprobe_template_insn:

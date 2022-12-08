@@ -57,12 +57,17 @@ enum clock_rate {
 #define LDO_1P8V_OFF	0x58 /* ... bottom bit is "enabled" */
 
 /* CRYSTAL COVE PMIC register set */
+<<<<<<< HEAD
 #define CRYSTAL_BYT_1P8V_REG	0x5d
 #define CRYSTAL_BYT_2P8V_REG	0x66
 
 #define CRYSTAL_CHT_1P8V_REG	0x57
 #define CRYSTAL_CHT_2P8V_REG	0x5d
 
+=======
+#define CRYSTAL_1P8V_REG	0x57
+#define CRYSTAL_2P8V_REG	0x5d
+>>>>>>> b7ba80a49124 (Commit)
 #define CRYSTAL_ON		0x63
 #define CRYSTAL_OFF		0x62
 
@@ -138,6 +143,27 @@ static DEFINE_MUTEX(vcm_lock);
 
 static struct gmin_subdev *find_gmin_subdev(struct v4l2_subdev *subdev);
 
+<<<<<<< HEAD
+=======
+/*
+ * Legacy/stub behavior copied from upstream platform_camera.c.  The
+ * atomisp driver relies on these values being non-NULL in a few
+ * places, even though they are hard-coded in all current
+ * implementations.
+ */
+const struct atomisp_camera_caps *atomisp_get_default_camera_caps(void)
+{
+	static const struct atomisp_camera_caps caps = {
+		.sensor_num = 1,
+		.sensor = {
+			{ .stream_num = 1, },
+		},
+	};
+	return &caps;
+}
+EXPORT_SYMBOL_GPL(atomisp_get_default_camera_caps);
+
+>>>>>>> b7ba80a49124 (Commit)
 const struct atomisp_platform_data *atomisp_get_platform_data(void)
 {
 	return &pdata;
@@ -149,6 +175,10 @@ int atomisp_register_i2c_module(struct v4l2_subdev *subdev,
 				enum intel_v4l2_subdev_type type)
 {
 	int i;
+<<<<<<< HEAD
+=======
+	struct i2c_board_info *bi;
+>>>>>>> b7ba80a49124 (Commit)
 	struct gmin_subdev *gs;
 	struct i2c_client *client = v4l2_get_subdevdata(subdev);
 	struct acpi_device *adev = ACPI_COMPANION(&client->dev);
@@ -161,6 +191,7 @@ int atomisp_register_i2c_module(struct v4l2_subdev *subdev,
 	 * tickled during suspend/resume.  This has caused power and
 	 * performance issues on multiple devices.
 	 */
+<<<<<<< HEAD
 
 	/*
 	 * Turn off the device before disabling ACPI power resources
@@ -169,6 +200,8 @@ int atomisp_register_i2c_module(struct v4l2_subdev *subdev,
 	 * ACPI power resources which were enabled/referenced before probe().
 	 */
 	acpi_device_set_power(adev, ACPI_STATE_D3_COLD);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	adev->power.flags.power_resources = 0;
 
 	for (i = 0; i < MAX_SUBDEVS; i++)
@@ -190,10 +223,42 @@ int atomisp_register_i2c_module(struct v4l2_subdev *subdev,
 	pdata.subdevs[i].type = type;
 	pdata.subdevs[i].port = gs->csi_port;
 	pdata.subdevs[i].subdev = subdev;
+<<<<<<< HEAD
+=======
+	pdata.subdevs[i].v4l2_subdev.i2c_adapter_id = client->adapter->nr;
+
+	/* Convert i2c_client to i2c_board_info */
+	bi = &pdata.subdevs[i].v4l2_subdev.board_info;
+	memcpy(bi->type, client->name, I2C_NAME_SIZE);
+	bi->flags = client->flags;
+	bi->addr = client->addr;
+	bi->irq = client->irq;
+	bi->platform_data = plat_data;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 EXPORT_SYMBOL_GPL(atomisp_register_i2c_module);
 
+<<<<<<< HEAD
+=======
+struct v4l2_subdev *atomisp_gmin_find_subdev(struct i2c_adapter *adapter,
+	struct i2c_board_info *board_info)
+{
+	int i;
+
+	for (i = 0; i < MAX_SUBDEVS && pdata.subdevs[i].type; i++) {
+		struct intel_v4l2_subdev_table *sd = &pdata.subdevs[i];
+
+		if (sd->v4l2_subdev.i2c_adapter_id == adapter->nr &&
+		    sd->v4l2_subdev.board_info.addr == board_info->addr)
+			return sd->subdev;
+	}
+	return NULL;
+}
+EXPORT_SYMBOL_GPL(atomisp_gmin_find_subdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 int atomisp_gmin_remove_subdev(struct v4l2_subdev *sd)
 {
 	int i, j;
@@ -828,7 +893,10 @@ static int gmin_v1p8_ctrl(struct v4l2_subdev *subdev, int on)
 	struct gmin_subdev *gs = find_gmin_subdev(subdev);
 	int ret;
 	int value;
+<<<<<<< HEAD
 	int reg;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!gs || gs->v1p8_on == on)
 		return 0;
@@ -884,6 +952,7 @@ static int gmin_v1p8_ctrl(struct v4l2_subdev *subdev, int on)
 				     LDO10_REG, value, 0xff);
 		break;
 	case PMIC_CRYSTALCOVE:
+<<<<<<< HEAD
 		if (IS_ISP2401)
 			reg = CRYSTAL_CHT_1P8V_REG;
 		else
@@ -893,6 +962,12 @@ static int gmin_v1p8_ctrl(struct v4l2_subdev *subdev, int on)
 
 		ret = gmin_i2c_write(subdev->dev, gs->pwm_i2c_addr,
 				     reg, value, 0xff);
+=======
+		value = on ? CRYSTAL_ON : CRYSTAL_OFF;
+
+		ret = gmin_i2c_write(subdev->dev, gs->pwm_i2c_addr,
+				     CRYSTAL_1P8V_REG, value, 0xff);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		dev_err(subdev->dev, "Couldn't set power mode for v1p8\n");
@@ -909,7 +984,10 @@ static int gmin_v2p8_ctrl(struct v4l2_subdev *subdev, int on)
 	struct gmin_subdev *gs = find_gmin_subdev(subdev);
 	int ret;
 	int value;
+<<<<<<< HEAD
 	int reg;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (WARN_ON(!gs))
 		return -ENODEV;
@@ -966,6 +1044,7 @@ static int gmin_v2p8_ctrl(struct v4l2_subdev *subdev, int on)
 				     LDO9_REG, value, 0xff);
 		break;
 	case PMIC_CRYSTALCOVE:
+<<<<<<< HEAD
 		if (IS_ISP2401)
 			reg = CRYSTAL_CHT_2P8V_REG;
 		else
@@ -975,6 +1054,12 @@ static int gmin_v2p8_ctrl(struct v4l2_subdev *subdev, int on)
 
 		ret = gmin_i2c_write(subdev->dev, gs->pwm_i2c_addr,
 				     reg, value, 0xff);
+=======
+		value = on ? CRYSTAL_ON : CRYSTAL_OFF;
+
+		ret = gmin_i2c_write(subdev->dev, gs->pwm_i2c_addr,
+				     CRYSTAL_2P8V_REG, value, 0xff);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		dev_err(subdev->dev, "Couldn't set power mode for v2p8\n");
@@ -1045,6 +1130,7 @@ static int gmin_flisclk_ctrl(struct v4l2_subdev *subdev, int on)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int camera_sensor_csi_alloc(struct v4l2_subdev *sd, u32 port, u32 lanes,
 				   u32 format, u32 bayer_order)
 {
@@ -1077,6 +1163,8 @@ static void camera_sensor_csi_free(struct v4l2_subdev *sd)
 	kfree(csi);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int gmin_csi_cfg(struct v4l2_subdev *sd, int flag)
 {
 	struct i2c_client *client = v4l2_get_subdevdata(sd);
@@ -1085,6 +1173,7 @@ static int gmin_csi_cfg(struct v4l2_subdev *sd, int flag)
 	if (!client || !gs)
 		return -ENODEV;
 
+<<<<<<< HEAD
 	if (flag)
 		return camera_sensor_csi_alloc(sd, gs->csi_port, gs->csi_lanes,
 					       gs->csi_fmt, gs->csi_bayer);
@@ -1153,6 +1242,12 @@ void atomisp_unregister_subdev(struct v4l2_subdev *subdev)
 }
 EXPORT_SYMBOL_GPL(atomisp_unregister_subdev);
 
+=======
+	return camera_sensor_csi(sd, gs->csi_port, gs->csi_lanes,
+				 gs->csi_fmt, gs->csi_bayer, flag);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct camera_vcm_control *gmin_get_vcm_ctrl(struct v4l2_subdev *subdev,
 	char *camera_module)
 {
@@ -1282,14 +1377,25 @@ static int gmin_get_config_dsm_var(struct device *dev,
 	if (!strcmp(var, "CamClk"))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	/* Return on unexpected object type */
 	obj = acpi_evaluate_dsm_typed(handle, &atomisp_dsm_guid, 0, 0, NULL,
 				      ACPI_TYPE_PACKAGE);
+=======
+	obj = acpi_evaluate_dsm(handle, &atomisp_dsm_guid, 0, 0, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!obj) {
 		dev_info_once(dev, "Didn't find ACPI _DSM table.\n");
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	/* Return on unexpected object type */
+	if (obj->type != ACPI_TYPE_PACKAGE)
+		return -EINVAL;
+
+>>>>>>> b7ba80a49124 (Commit)
 #if 0 /* Just for debugging purposes */
 	for (i = 0; i < obj->package.count; i++) {
 		union acpi_object *cur = &obj->package.elements[i];
@@ -1433,6 +1539,38 @@ int gmin_get_var_int(struct device *dev, bool is_gmin, const char *var, int def)
 }
 EXPORT_SYMBOL_GPL(gmin_get_var_int);
 
+<<<<<<< HEAD
+=======
+int camera_sensor_csi(struct v4l2_subdev *sd, u32 port,
+		      u32 lanes, u32 format, u32 bayer_order, int flag)
+{
+	struct i2c_client *client = v4l2_get_subdevdata(sd);
+	struct camera_mipi_info *csi = NULL;
+
+	if (flag) {
+		csi = kzalloc(sizeof(*csi), GFP_KERNEL);
+		if (!csi)
+			return -ENOMEM;
+		csi->port = port;
+		csi->num_lanes = lanes;
+		csi->input_format = format;
+		csi->raw_bayer_order = bayer_order;
+		v4l2_set_subdev_hostdata(sd, (void *)csi);
+		csi->metadata_format = ATOMISP_INPUT_FORMAT_EMBEDDED;
+		csi->metadata_effective_width = NULL;
+		dev_info(&client->dev,
+			 "camera pdata: port: %d lanes: %d order: %8.8x\n",
+			 port, lanes, bayer_order);
+	} else {
+		csi = v4l2_get_subdev_hostdata(sd);
+		kfree(csi);
+	}
+
+	return 0;
+}
+EXPORT_SYMBOL_GPL(camera_sensor_csi);
+
+>>>>>>> b7ba80a49124 (Commit)
 /* PCI quirk: The BYT ISP advertises PCI runtime PM but it doesn't
  * work.  Disable so the kernel framework doesn't hang the device
  * trying.  The driver itself does direct calls to the PUNIT to manage

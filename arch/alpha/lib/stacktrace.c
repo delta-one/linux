@@ -92,7 +92,11 @@ stacktrace(void)
 {
 	instr * ret_pc;
 	instr * prologue = (instr *)stacktrace;
+<<<<<<< HEAD
 	unsigned char *sp = (unsigned char *)current_stack_pointer;
+=======
+	register unsigned char * sp __asm__ ("$30");
+>>>>>>> b7ba80a49124 (Commit)
 
 	printk("\tstack trace:\n");
 	do {

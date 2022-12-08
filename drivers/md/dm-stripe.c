@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2001-2003 Sistina Software (UK) Limited.
  *
@@ -16,8 +19,11 @@
 #include <linux/slab.h>
 #include <linux/log2.h>
 
+<<<<<<< HEAD
 static struct workqueue_struct *dm_stripe_wq;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define DM_MSG_PREFIX "striped"
 #define DM_IO_ERROR_THRESHOLD 15
 
@@ -111,13 +117,23 @@ static int stripe_ctr(struct dm_target *ti, unsigned int argc, char **argv)
 
 	width = ti->len;
 	if (sector_div(width, stripes)) {
+<<<<<<< HEAD
 		ti->error = "Target length not divisible by number of stripes";
+=======
+		ti->error = "Target length not divisible by "
+		    "number of stripes";
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
 	tmp_len = width;
 	if (sector_div(tmp_len, chunk_size)) {
+<<<<<<< HEAD
 		ti->error = "Target length not divisible by chunk size";
+=======
+		ti->error = "Target length not divisible by "
+		    "chunk size";
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
@@ -125,13 +141,23 @@ static int stripe_ctr(struct dm_target *ti, unsigned int argc, char **argv)
 	 * Do we have enough arguments for that many stripes ?
 	 */
 	if (argc != (2 + 2 * stripes)) {
+<<<<<<< HEAD
 		ti->error = "Not enough destinations specified";
+=======
+		ti->error = "Not enough destinations "
+			"specified";
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 
 	sc = kmalloc(struct_size(sc, stripe, stripes), GFP_KERNEL);
 	if (!sc) {
+<<<<<<< HEAD
 		ti->error = "Memory allocation for striped context failed";
+=======
+		ti->error = "Memory allocation for striped context "
+		    "failed";
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENOMEM;
 	}
 
@@ -261,18 +287,30 @@ static int stripe_map_range(struct stripe_c *sc, struct bio *bio,
 			sc->stripe[target_stripe].physical_start;
 		bio->bi_iter.bi_size = to_bytes(end - begin);
 		return DM_MAPIO_REMAPPED;
+<<<<<<< HEAD
 	}
 
 	/* The range doesn't map to the target stripe */
 	bio_endio(bio);
 	return DM_MAPIO_SUBMITTED;
+=======
+	} else {
+		/* The range doesn't map to the target stripe */
+		bio_endio(bio);
+		return DM_MAPIO_SUBMITTED;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int stripe_map(struct dm_target *ti, struct bio *bio)
 {
 	struct stripe_c *sc = ti->private;
 	uint32_t stripe;
+<<<<<<< HEAD
 	unsigned int target_bio_nr;
+=======
+	unsigned target_bio_nr;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (bio->bi_opf & REQ_PREFLUSH) {
 		target_bio_nr = dm_bio_get_target_bio_nr(bio);
@@ -358,7 +396,11 @@ static size_t stripe_dax_recovery_write(struct dm_target *ti, pgoff_t pgoff,
  */
 
 static void stripe_status(struct dm_target *ti, status_type_t type,
+<<<<<<< HEAD
 			  unsigned int status_flags, char *result, unsigned int maxlen)
+=======
+			  unsigned status_flags, char *result, unsigned maxlen)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct stripe_c *sc = (struct stripe_c *) ti->private;
 	unsigned int sz = 0;
@@ -367,12 +409,23 @@ static void stripe_status(struct dm_target *ti, status_type_t type,
 	switch (type) {
 	case STATUSTYPE_INFO:
 		DMEMIT("%d ", sc->stripes);
+<<<<<<< HEAD
 		for (i = 0; i < sc->stripes; i++)
 			DMEMIT("%s ", sc->stripe[i].dev->name);
 
 		DMEMIT("1 ");
 		for (i = 0; i < sc->stripes; i++)
 			DMEMIT("%c", atomic_read(&(sc->stripe[i].error_count)) ?  'D' : 'A');
+=======
+		for (i = 0; i < sc->stripes; i++)  {
+			DMEMIT("%s ", sc->stripe[i].dev->name);
+		}
+		DMEMIT("1 ");
+		for (i = 0; i < sc->stripes; i++) {
+			DMEMIT("%c", atomic_read(&(sc->stripe[i].error_count)) ?
+			       'D' : 'A');
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	case STATUSTYPE_TABLE:
@@ -403,7 +456,11 @@ static void stripe_status(struct dm_target *ti, status_type_t type,
 static int stripe_end_io(struct dm_target *ti, struct bio *bio,
 		blk_status_t *error)
 {
+<<<<<<< HEAD
 	unsigned int i;
+=======
+	unsigned i;
+>>>>>>> b7ba80a49124 (Commit)
 	char major_minor[16];
 	struct stripe_c *sc = ti->private;
 
@@ -430,7 +487,11 @@ static int stripe_end_io(struct dm_target *ti, struct bio *bio,
 			atomic_inc(&(sc->stripe[i].error_count));
 			if (atomic_read(&(sc->stripe[i].error_count)) <
 			    DM_IO_ERROR_THRESHOLD)
+<<<<<<< HEAD
 				queue_work(dm_stripe_wq, &sc->trigger_event);
+=======
+				schedule_work(&sc->trigger_event);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 	return DM_ENDIO_DONE;
@@ -441,7 +502,11 @@ static int stripe_iterate_devices(struct dm_target *ti,
 {
 	struct stripe_c *sc = ti->private;
 	int ret = 0;
+<<<<<<< HEAD
 	unsigned int i = 0;
+=======
+	unsigned i = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	do {
 		ret = fn(ti, sc->stripe[i].dev,
@@ -456,7 +521,11 @@ static void stripe_io_hints(struct dm_target *ti,
 			    struct queue_limits *limits)
 {
 	struct stripe_c *sc = ti->private;
+<<<<<<< HEAD
 	unsigned int chunk_size = sc->chunk_size << SECTOR_SHIFT;
+=======
+	unsigned chunk_size = sc->chunk_size << SECTOR_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 
 	blk_limits_io_min(limits, chunk_size);
 	blk_limits_io_opt(limits, chunk_size * sc->stripes);
@@ -483,6 +552,7 @@ int __init dm_stripe_init(void)
 {
 	int r;
 
+<<<<<<< HEAD
 	dm_stripe_wq = alloc_workqueue("dm_stripe_wq", 0, 0);
 	if (!dm_stripe_wq)
 		return -ENOMEM;
@@ -491,6 +561,11 @@ int __init dm_stripe_init(void)
 		destroy_workqueue(dm_stripe_wq);
 		DMWARN("target registration failed");
 	}
+=======
+	r = dm_register_target(&stripe_target);
+	if (r < 0)
+		DMWARN("target registration failed");
+>>>>>>> b7ba80a49124 (Commit)
 
 	return r;
 }
@@ -498,5 +573,8 @@ int __init dm_stripe_init(void)
 void dm_stripe_exit(void)
 {
 	dm_unregister_target(&stripe_target);
+<<<<<<< HEAD
 	destroy_workqueue(dm_stripe_wq);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }

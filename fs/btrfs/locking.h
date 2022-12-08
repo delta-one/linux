@@ -78,6 +78,7 @@ enum btrfs_lock_nesting {
 	BTRFS_NESTING_MAX,
 };
 
+<<<<<<< HEAD
 enum btrfs_lockdep_trans_states {
 	BTRFS_LOCKDEP_TRANS_COMMIT_START,
 	BTRFS_LOCKDEP_TRANS_UNBLOCKED,
@@ -154,6 +155,8 @@ enum btrfs_lockdep_trans_states {
 				 &lock##_key, 0);				\
 	} while (0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static_assert(BTRFS_NESTING_MAX <= MAX_LOCKDEP_SUBCLASSES,
 	      "too many lock subclasses defined");
 

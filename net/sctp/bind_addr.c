@@ -73,12 +73,15 @@ int sctp_bind_addr_copy(struct net *net, struct sctp_bind_addr *dest,
 		}
 	}
 
+<<<<<<< HEAD
 	/* If somehow no addresses were found that can be used with this
 	 * scope, it's an error.
 	 */
 	if (list_empty(&dest->address_list))
 		error = -ENETUNREACH;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	if (error)
 		sctp_bind_addr_clean(dest);

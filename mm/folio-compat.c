@@ -6,7 +6,10 @@
 
 #include <linux/migrate.h>
 #include <linux/pagemap.h>
+<<<<<<< HEAD
 #include <linux/rmap.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/swap.h>
 #include "internal.h"
 
@@ -40,6 +43,15 @@ void wait_for_stable_page(struct page *page)
 }
 EXPORT_SYMBOL_GPL(wait_for_stable_page);
 
+<<<<<<< HEAD
+=======
+bool page_mapped(struct page *page)
+{
+	return folio_mapped(page_folio(page));
+}
+EXPORT_SYMBOL(page_mapped);
+
+>>>>>>> b7ba80a49124 (Commit)
 void mark_page_accessed(struct page *page)
 {
 	folio_mark_accessed(page_folio(page));
@@ -77,6 +89,15 @@ bool redirty_page_for_writepage(struct writeback_control *wbc,
 }
 EXPORT_SYMBOL(redirty_page_for_writepage);
 
+<<<<<<< HEAD
+=======
+void lru_cache_add(struct page *page)
+{
+	folio_add_lru(page_folio(page));
+}
+EXPORT_SYMBOL(lru_cache_add);
+
+>>>>>>> b7ba80a49124 (Commit)
 void lru_cache_add_inactive_or_unevictable(struct page *page,
 		struct vm_area_struct *vma)
 {
@@ -97,8 +118,13 @@ struct page *pagecache_get_page(struct address_space *mapping, pgoff_t index,
 	struct folio *folio;
 
 	folio = __filemap_get_folio(mapping, index, fgp_flags, gfp);
+<<<<<<< HEAD
 	if (IS_ERR(folio))
 		return NULL;
+=======
+	if ((fgp_flags & FGP_HEAD) || !folio || xa_is_value(folio))
+		return &folio->page;
+>>>>>>> b7ba80a49124 (Commit)
 	return folio_file_page(folio, index);
 }
 EXPORT_SYMBOL(pagecache_get_page);
@@ -113,10 +139,28 @@ struct page *grab_cache_page_write_begin(struct address_space *mapping,
 }
 EXPORT_SYMBOL(grab_cache_page_write_begin);
 
+<<<<<<< HEAD
 bool isolate_lru_page(struct page *page)
 {
 	if (WARN_RATELIMIT(PageTail(page), "trying to isolate tail page"))
 		return false;
+=======
+void delete_from_page_cache(struct page *page)
+{
+	return filemap_remove_folio(page_folio(page));
+}
+
+int try_to_release_page(struct page *page, gfp_t gfp)
+{
+	return filemap_release_folio(page_folio(page), gfp);
+}
+EXPORT_SYMBOL(try_to_release_page);
+
+int isolate_lru_page(struct page *page)
+{
+	if (WARN_RATELIMIT(PageTail(page), "trying to isolate tail page"))
+		return -EBUSY;
+>>>>>>> b7ba80a49124 (Commit)
 	return folio_isolate_lru((struct folio *)page);
 }
 
@@ -124,6 +168,7 @@ void putback_lru_page(struct page *page)
 {
 	folio_putback_lru(page_folio(page));
 }
+<<<<<<< HEAD
 
 #ifdef CONFIG_MMU
 void page_add_new_anon_rmap(struct page *page, struct vm_area_struct *vma,
@@ -134,3 +179,5 @@ void page_add_new_anon_rmap(struct page *page, struct vm_area_struct *vma,
 	return folio_add_new_anon_rmap((struct folio *)page, vma, address);
 }
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)

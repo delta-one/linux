@@ -1821,6 +1821,7 @@ static void ofdpa_port_fdb_learn_work(struct work_struct *work)
 	const struct ofdpa_fdb_learn_work *lw =
 		container_of(work, struct ofdpa_fdb_learn_work, work);
 	bool removing = (lw->flags & OFDPA_OP_FLAG_REMOVE);
+<<<<<<< HEAD
 	struct switchdev_notifier_fdb_info info = {};
 	enum switchdev_notifier_type event;
 
@@ -1832,6 +1833,21 @@ static void ofdpa_port_fdb_learn_work(struct work_struct *work)
 
 	rtnl_lock();
 	call_switchdev_notifiers(event, lw->ofdpa_port->dev, &info.info, NULL);
+=======
+	bool learned = (lw->flags & OFDPA_OP_FLAG_LEARNED);
+	struct switchdev_notifier_fdb_info info = {};
+
+	info.addr = lw->addr;
+	info.vid = lw->vid;
+
+	rtnl_lock();
+	if (learned && removing)
+		call_switchdev_notifiers(SWITCHDEV_FDB_DEL_TO_BRIDGE,
+					 lw->ofdpa_port->dev, &info.info, NULL);
+	else if (learned && !removing)
+		call_switchdev_notifiers(SWITCHDEV_FDB_ADD_TO_BRIDGE,
+					 lw->ofdpa_port->dev, &info.info, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	rtnl_unlock();
 
 	kfree(work);
@@ -1863,9 +1879,12 @@ static int ofdpa_port_fdb_learn(struct ofdpa_port *ofdpa_port,
 	if (!ofdpa_port_is_bridged(ofdpa_port))
 		return 0;
 
+<<<<<<< HEAD
 	if (!(flags & OFDPA_OP_FLAG_LEARNED))
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	lw = kzalloc(sizeof(*lw), GFP_ATOMIC);
 	if (!lw)
 		return -ENOMEM;

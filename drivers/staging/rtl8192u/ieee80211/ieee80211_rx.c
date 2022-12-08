@@ -951,11 +951,17 @@ int ieee80211_rx(struct ieee80211_device *ieee, struct sk_buff *skb,
 #endif
 
 	if (ieee->iw_mode == IW_MODE_MONITOR) {
+<<<<<<< HEAD
 		unsigned int len = skb->len;
 
 		ieee80211_monitor_rx(ieee, skb, rx_stats);
 		stats->rx_packets++;
 		stats->rx_bytes += len;
+=======
+		ieee80211_monitor_rx(ieee, skb, rx_stats);
+		stats->rx_packets++;
+		stats->rx_bytes += skb->len;
+>>>>>>> b7ba80a49124 (Commit)
 		return 1;
 	}
 
@@ -1808,7 +1814,11 @@ int ieee80211_parse_info_param(struct ieee80211_device *ieee,
 				info_element->data[0] == 0x00 &&
 				info_element->data[1] == 0x13 &&
 				info_element->data[2] == 0x74)) {
+<<<<<<< HEAD
 				netdev_dbg(ieee->dev, "========> Atheros AP exists\n");
+=======
+				netdev_dbg(ieee->dev, "========> athros AP is exist\n");
+>>>>>>> b7ba80a49124 (Commit)
 				network->atheros_cap_exist = true;
 			} else
 				network->atheros_cap_exist = false;

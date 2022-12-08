@@ -26,10 +26,15 @@ static const char * const npc_flow_names[] = {
 	[NPC_VLAN_ETYPE_STAG] = "vlan ether type stag",
 	[NPC_OUTER_VID]	= "outer vlan id",
 	[NPC_TOS]	= "tos",
+<<<<<<< HEAD
 	[NPC_IPFRAG_IPV4] = "fragmented IPv4 header ",
 	[NPC_SIP_IPV4]	= "ipv4 source ip",
 	[NPC_DIP_IPV4]	= "ipv4 destination ip",
 	[NPC_IPFRAG_IPV6] = "fragmented IPv6 header ",
+=======
+	[NPC_SIP_IPV4]	= "ipv4 source ip",
+	[NPC_DIP_IPV4]	= "ipv4 destination ip",
+>>>>>>> b7ba80a49124 (Commit)
 	[NPC_SIP_IPV6]	= "ipv6 source ip",
 	[NPC_DIP_IPV6]	= "ipv6 destination ip",
 	[NPC_IPPROTO_TCP] = "ip proto tcp",
@@ -45,6 +50,7 @@ static const char * const npc_flow_names[] = {
 	[NPC_DPORT_UDP]	= "udp destination port",
 	[NPC_SPORT_SCTP] = "sctp source port",
 	[NPC_DPORT_SCTP] = "sctp destination port",
+<<<<<<< HEAD
 	[NPC_LXMB]	= "Mcast/Bcast header ",
 	[NPC_UNKNOWN]	= "unknown",
 };
@@ -62,6 +68,11 @@ bool npc_is_feature_supported(struct rvu *rvu, u64 features, u8 intf)
 	return !unsupported;
 }
 
+=======
+	[NPC_UNKNOWN]	= "unknown",
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 const char *npc_get_field_name(u8 hdr)
 {
 	if (hdr >= ARRAY_SIZE(npc_flow_names))
@@ -356,10 +367,15 @@ static void npc_handle_multi_layer_fields(struct rvu *rvu, int blkaddr, u8 intf)
 	vlan_tag2 = &key_fields[NPC_VLAN_TAG2];
 
 	/* if key profile programmed does not extract Ethertype at all */
+<<<<<<< HEAD
 	if (!etype_ether->nr_kws && !etype_tag1->nr_kws && !etype_tag2->nr_kws) {
 		dev_err(rvu->dev, "mkex: Ethertype is not extracted.\n");
 		goto vlan_tci;
 	}
+=======
+	if (!etype_ether->nr_kws && !etype_tag1->nr_kws && !etype_tag2->nr_kws)
+		goto vlan_tci;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* if key profile programmed extracts Ethertype from one layer */
 	if (etype_ether->nr_kws && !etype_tag1->nr_kws && !etype_tag2->nr_kws)
@@ -372,34 +388,50 @@ static void npc_handle_multi_layer_fields(struct rvu *rvu, int blkaddr, u8 intf)
 	/* if key profile programmed extracts Ethertype from multiple layers */
 	if (etype_ether->nr_kws && etype_tag1->nr_kws) {
 		for (i = 0; i < NPC_MAX_KWS_IN_KEY; i++) {
+<<<<<<< HEAD
 			if (etype_ether->kw_mask[i] != etype_tag1->kw_mask[i]) {
 				dev_err(rvu->dev, "mkex: Etype pos is different for untagged and tagged pkts.\n");
 				goto vlan_tci;
 			}
+=======
+			if (etype_ether->kw_mask[i] != etype_tag1->kw_mask[i])
+				goto vlan_tci;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		key_fields[NPC_ETYPE] = *etype_tag1;
 	}
 	if (etype_ether->nr_kws && etype_tag2->nr_kws) {
 		for (i = 0; i < NPC_MAX_KWS_IN_KEY; i++) {
+<<<<<<< HEAD
 			if (etype_ether->kw_mask[i] != etype_tag2->kw_mask[i]) {
 				dev_err(rvu->dev, "mkex: Etype pos is different for untagged and double tagged pkts.\n");
 				goto vlan_tci;
 			}
+=======
+			if (etype_ether->kw_mask[i] != etype_tag2->kw_mask[i])
+				goto vlan_tci;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		key_fields[NPC_ETYPE] = *etype_tag2;
 	}
 	if (etype_tag1->nr_kws && etype_tag2->nr_kws) {
 		for (i = 0; i < NPC_MAX_KWS_IN_KEY; i++) {
+<<<<<<< HEAD
 			if (etype_tag1->kw_mask[i] != etype_tag2->kw_mask[i]) {
 				dev_err(rvu->dev, "mkex: Etype pos is different for tagged and double tagged pkts.\n");
 				goto vlan_tci;
 			}
+=======
+			if (etype_tag1->kw_mask[i] != etype_tag2->kw_mask[i])
+				goto vlan_tci;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		key_fields[NPC_ETYPE] = *etype_tag2;
 	}
 
 	/* check none of higher layers overwrite Ethertype */
 	start_lid = key_fields[NPC_ETYPE].layer_mdata.lid + 1;
+<<<<<<< HEAD
 	if (npc_check_overlap(rvu, blkaddr, NPC_ETYPE, start_lid, intf)) {
 		dev_err(rvu->dev, "mkex: Ethertype is overwritten by higher layers.\n");
 		goto vlan_tci;
@@ -411,6 +443,15 @@ vlan_tci:
 		dev_err(rvu->dev, "mkex: Outer vlan tci is not extracted.\n");
 		goto done;
 	}
+=======
+	if (npc_check_overlap(rvu, blkaddr, NPC_ETYPE, start_lid, intf))
+		goto vlan_tci;
+	*features |= BIT_ULL(NPC_ETYPE);
+vlan_tci:
+	/* if key profile does not extract outer vlan tci at all */
+	if (!vlan_tag1->nr_kws && !vlan_tag2->nr_kws)
+		goto done;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* if key profile extracts outer vlan tci from one layer */
 	if (vlan_tag1->nr_kws && !vlan_tag2->nr_kws)
@@ -421,19 +462,29 @@ vlan_tci:
 	/* if key profile extracts outer vlan tci from multiple layers */
 	if (vlan_tag1->nr_kws && vlan_tag2->nr_kws) {
 		for (i = 0; i < NPC_MAX_KWS_IN_KEY; i++) {
+<<<<<<< HEAD
 			if (vlan_tag1->kw_mask[i] != vlan_tag2->kw_mask[i]) {
 				dev_err(rvu->dev, "mkex: Out vlan tci pos is different for tagged and double tagged pkts.\n");
 				goto done;
 			}
+=======
+			if (vlan_tag1->kw_mask[i] != vlan_tag2->kw_mask[i])
+				goto done;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		key_fields[NPC_OUTER_VID] = *vlan_tag2;
 	}
 	/* check none of higher layers overwrite outer vlan tci */
 	start_lid = key_fields[NPC_OUTER_VID].layer_mdata.lid + 1;
+<<<<<<< HEAD
 	if (npc_check_overlap(rvu, blkaddr, NPC_OUTER_VID, start_lid, intf)) {
 		dev_err(rvu->dev, "mkex: Outer vlan tci is overwritten by higher layers.\n");
 		goto done;
 	}
+=======
+	if (npc_check_overlap(rvu, blkaddr, NPC_OUTER_VID, start_lid, intf))
+		goto done;
+>>>>>>> b7ba80a49124 (Commit)
 	*features |= BIT_ULL(NPC_OUTER_VID);
 done:
 	return;
@@ -451,6 +502,11 @@ static void npc_scan_ldata(struct rvu *rvu, int blkaddr, u8 lid,
 	nr_bytes = FIELD_GET(NPC_BYTESM, cfg) + 1;
 	hdr = FIELD_GET(NPC_HDR_OFFSET, cfg);
 	key = FIELD_GET(NPC_KEY_OFFSET, cfg);
+<<<<<<< HEAD
+=======
+	start_kwi = key / 8;
+	offset = (key * 8) % 64;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* For Tx, Layer A has NIX_INST_HDR_S(64 bytes) preceding
 	 * ethernet header.
@@ -465,18 +521,26 @@ static void npc_scan_ldata(struct rvu *rvu, int blkaddr, u8 lid,
 
 #define NPC_SCAN_HDR(name, hlid, hlt, hstart, hlen)			       \
 do {									       \
+<<<<<<< HEAD
 	start_kwi = key / 8;						       \
 	offset = (key * 8) % 64;					       \
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (lid == (hlid) && lt == (hlt)) {				       \
 		if ((hstart) >= hdr &&					       \
 		    ((hstart) + (hlen)) <= (hdr + nr_bytes)) {	               \
 			bit_offset = (hdr + nr_bytes - (hstart) - (hlen)) * 8; \
 			npc_set_layer_mdata(mcam, (name), cfg, lid, lt, intf); \
+<<<<<<< HEAD
 			offset += bit_offset;				       \
 			start_kwi += offset / 64;			       \
 			offset %= 64;					       \
 			npc_set_kw_masks(mcam, (name), (hlen) * 8,	       \
 					 start_kwi, offset, intf);	       \
+=======
+			npc_set_kw_masks(mcam, (name), (hlen) * 8,	       \
+					 start_kwi, offset + bit_offset, intf);\
+>>>>>>> b7ba80a49124 (Commit)
 		}							       \
 	}								       \
 } while (0)
@@ -486,10 +550,15 @@ do {									       \
 	 * Example: Source IP is 4 bytes and starts at 12th byte of IP header
 	 */
 	NPC_SCAN_HDR(NPC_TOS, NPC_LID_LC, NPC_LT_LC_IP, 1, 1);
+<<<<<<< HEAD
 	NPC_SCAN_HDR(NPC_IPFRAG_IPV4, NPC_LID_LC, NPC_LT_LC_IP, 6, 1);
 	NPC_SCAN_HDR(NPC_SIP_IPV4, NPC_LID_LC, NPC_LT_LC_IP, 12, 4);
 	NPC_SCAN_HDR(NPC_DIP_IPV4, NPC_LID_LC, NPC_LT_LC_IP, 16, 4);
 	NPC_SCAN_HDR(NPC_IPFRAG_IPV6, NPC_LID_LC, NPC_LT_LC_IP6_EXT, 6, 1);
+=======
+	NPC_SCAN_HDR(NPC_SIP_IPV4, NPC_LID_LC, NPC_LT_LC_IP, 12, 4);
+	NPC_SCAN_HDR(NPC_DIP_IPV4, NPC_LID_LC, NPC_LT_LC_IP, 16, 4);
+>>>>>>> b7ba80a49124 (Commit)
 	NPC_SCAN_HDR(NPC_SIP_IPV6, NPC_LID_LC, NPC_LT_LC_IP6, 8, 16);
 	NPC_SCAN_HDR(NPC_DIP_IPV6, NPC_LID_LC, NPC_LT_LC_IP6, 24, 16);
 	NPC_SCAN_HDR(NPC_SPORT_UDP, NPC_LID_LD, NPC_LT_LD_UDP, 0, 2);
@@ -559,10 +628,13 @@ static void npc_set_features(struct rvu *rvu, int blkaddr, u8 intf)
 	if (npc_check_field(rvu, blkaddr, NPC_LB, intf))
 		*features |= BIT_ULL(NPC_VLAN_ETYPE_CTAG) |
 			     BIT_ULL(NPC_VLAN_ETYPE_STAG);
+<<<<<<< HEAD
 
 	/* for L2M/L2B/L3M/L3B, check if the type is present in the key */
 	if (npc_check_field(rvu, blkaddr, NPC_LXMB, intf))
 		*features |= BIT_ULL(NPC_LXMB);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Scan key extraction profile and record how fields of our interest
@@ -640,6 +712,19 @@ static int npc_scan_verify_kex(struct rvu *rvu, int blkaddr)
 		dev_err(rvu->dev, "Channel cannot be overwritten\n");
 		return -EINVAL;
 	}
+<<<<<<< HEAD
+=======
+	/* DMAC should be present in key for unicast filter to work */
+	if (!npc_is_field_present(rvu, NPC_DMAC, NIX_INTF_RX)) {
+		dev_err(rvu->dev, "DMAC not present in Key\n");
+		return -EINVAL;
+	}
+	/* check that none of the fields overwrite DMAC */
+	if (npc_check_overlap(rvu, blkaddr, NPC_DMAC, 0, NIX_INTF_RX)) {
+		dev_err(rvu->dev, "DMAC cannot be overwritten\n");
+		return -EINVAL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	npc_set_features(rvu, blkaddr, NIX_INTF_TX);
 	npc_set_features(rvu, blkaddr, NIX_INTF_RX);
@@ -670,9 +755,15 @@ static int npc_check_unsupported_flows(struct rvu *rvu, u64 features, u8 intf)
 
 	unsupported = (*mcam_features ^ features) & ~(*mcam_features);
 	if (unsupported) {
+<<<<<<< HEAD
 		dev_warn(rvu->dev, "Unsupported flow(s):\n");
 		for_each_set_bit(bit, (unsigned long *)&unsupported, 64)
 			dev_warn(rvu->dev, "%s ", npc_get_field_name(bit));
+=======
+		dev_info(rvu->dev, "Unsupported flow(s):\n");
+		for_each_set_bit(bit, (unsigned long *)&unsupported, 64)
+			dev_info(rvu->dev, "%s ", npc_get_field_name(bit));
+>>>>>>> b7ba80a49124 (Commit)
 		return -EOPNOTSUPP;
 	}
 
@@ -882,11 +973,14 @@ static void npc_update_flow(struct rvu *rvu, struct mcam_entry *entry,
 		npc_update_entry(rvu, NPC_LE, entry, NPC_LT_LE_ESP,
 				 0, ~0ULL, 0, intf);
 
+<<<<<<< HEAD
 	if (features & BIT_ULL(NPC_LXMB)) {
 		output->lxmb = is_broadcast_ether_addr(pkt->dmac) ? 2 : 1;
 		npc_update_entry(rvu, NPC_LXMB, entry, output->lxmb, 0,
 				 output->lxmb, 0, intf);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define NPC_WRITE_FLOW(field, member, val_lo, val_hi, mask_lo, mask_hi)	      \
 do {									      \
 	if (features & BIT_ULL((field))) {				      \
@@ -903,8 +997,11 @@ do {									      \
 	NPC_WRITE_FLOW(NPC_ETYPE, etype, ntohs(pkt->etype), 0,
 		       ntohs(mask->etype), 0);
 	NPC_WRITE_FLOW(NPC_TOS, tos, pkt->tos, 0, mask->tos, 0);
+<<<<<<< HEAD
 	NPC_WRITE_FLOW(NPC_IPFRAG_IPV4, ip_flag, pkt->ip_flag, 0,
 		       mask->ip_flag, 0);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	NPC_WRITE_FLOW(NPC_SIP_IPV4, ip4src, ntohl(pkt->ip4src), 0,
 		       ntohl(mask->ip4src), 0);
 	NPC_WRITE_FLOW(NPC_DIP_IPV4, ip4dst, ntohl(pkt->ip4dst), 0,
@@ -925,8 +1022,11 @@ do {									      \
 	NPC_WRITE_FLOW(NPC_OUTER_VID, vlan_tci, ntohs(pkt->vlan_tci), 0,
 		       ntohs(mask->vlan_tci), 0);
 
+<<<<<<< HEAD
 	NPC_WRITE_FLOW(NPC_IPFRAG_IPV6, next_header, pkt->next_header, 0,
 		       mask->next_header, 0);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	npc_update_ipv6_flow(rvu, entry, features, pkt, mask, output, intf);
 	npc_update_vlan_features(rvu, entry, features, intf);
 
@@ -1031,6 +1131,7 @@ static void npc_update_rx_entry(struct rvu *rvu, struct rvu_pfvf *pfvf,
 	action.match_id = req->match_id;
 	action.flow_key_alg = req->flow_key_alg;
 
+<<<<<<< HEAD
 	if (req->op == NIX_RX_ACTION_DEFAULT) {
 		if (pfvf->def_ucast_rule) {
 			action = pfvf->def_ucast_rule->rx_action;
@@ -1045,6 +1146,10 @@ static void npc_update_rx_entry(struct rvu *rvu, struct rvu_pfvf *pfvf,
 			action.op = NIX_RX_ACTIONOP_UCAST;
 		}
 	}
+=======
+	if (req->op == NIX_RX_ACTION_DEFAULT && pfvf->def_ucast_rule)
+		action = pfvf->def_ucast_rule->rx_action;
+>>>>>>> b7ba80a49124 (Commit)
 
 	entry->action = *(u64 *)&action;
 
@@ -1205,7 +1310,10 @@ find_rule:
 	rule->chan_mask = write_req.entry_data.kw_mask[0] & NPC_KEX_CHAN_MASK;
 	rule->chan = write_req.entry_data.kw[0] & NPC_KEX_CHAN_MASK;
 	rule->chan &= rule->chan_mask;
+<<<<<<< HEAD
 	rule->lxmb = dummy.lxmb;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (is_npc_intf_tx(req->intf))
 		rule->intf = pfvf->nix_tx_intf;
 	else
@@ -1268,6 +1376,7 @@ int rvu_mbox_handler_npc_install_flow(struct rvu *rvu,
 	if (!is_npc_interface_valid(rvu, req->intf))
 		return NPC_FLOW_INTF_INVALID;
 
+<<<<<<< HEAD
 	/* If DMAC is not extracted in MKEX, rules installed by AF
 	 * can rely on L2MB bit set by hardware protocol checker for
 	 * broadcast and multicast addresses.
@@ -1297,6 +1406,8 @@ int rvu_mbox_handler_npc_install_flow(struct rvu *rvu,
 	}
 
 process_flow:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (from_vf && req->default_rule)
 		return NPC_FLOW_VF_PERM_DENIED;
 
@@ -1640,6 +1751,7 @@ int npc_install_mcam_drop_rule(struct rvu *rvu, int mcam_idx, u16 *counter_idx,
 
 	return 0;
 }
+<<<<<<< HEAD
 
 int rvu_mbox_handler_npc_get_field_status(struct rvu *rvu,
 					  struct npc_get_field_status_req *req,
@@ -1659,3 +1771,5 @@ int rvu_mbox_handler_npc_get_field_status(struct rvu *rvu,
 
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

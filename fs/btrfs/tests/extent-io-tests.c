@@ -132,7 +132,11 @@ static int test_find_delalloc(u32 sectorsize)
 	 * Passing NULL as we don't have fs_info but tracepoints are not used
 	 * at this point
 	 */
+<<<<<<< HEAD
 	extent_io_tree_init(NULL, tmp, IO_TREE_SELFTEST);
+=======
+	extent_io_tree_init(NULL, tmp, IO_TREE_SELFTEST, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * First go through and create and mark all of our pages dirty, we pin
@@ -489,7 +493,11 @@ static int test_find_first_clear_extent_bit(void)
 
 	test_msg("running find_first_clear_extent_bit test");
 
+<<<<<<< HEAD
 	extent_io_tree_init(NULL, &tree, IO_TREE_SELFTEST);
+=======
+	extent_io_tree_init(NULL, &tree, IO_TREE_SELFTEST, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Test correct handling of empty tree */
 	find_first_clear_extent_bit(&tree, 0, &start, &end, CHUNK_TRIMMED);

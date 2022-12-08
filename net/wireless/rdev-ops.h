@@ -1494,6 +1494,7 @@ rdev_del_link_station(struct cfg80211_registered_device *rdev,
 	return ret;
 }
 
+<<<<<<< HEAD
 static inline int
 rdev_set_hw_timestamp(struct cfg80211_registered_device *rdev,
 		      struct net_device *dev,
@@ -1511,4 +1512,6 @@ rdev_set_hw_timestamp(struct cfg80211_registered_device *rdev,
 
 	return ret;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __CFG80211_RDEV_OPS */

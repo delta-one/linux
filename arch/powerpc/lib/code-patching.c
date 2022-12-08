@@ -4,17 +4,23 @@
  */
 
 #include <linux/kprobes.h>
+<<<<<<< HEAD
 #include <linux/mmu_context.h>
 #include <linux/random.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/vmalloc.h>
 #include <linux/init.h>
 #include <linux/cpuhotplug.h>
 #include <linux/uaccess.h>
 #include <linux/jump_label.h>
 
+<<<<<<< HEAD
 #include <asm/debug.h>
 #include <asm/pgalloc.h>
 #include <asm/tlb.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/tlbflush.h>
 #include <asm/page.h>
 #include <asm/code-patching.h>
@@ -46,6 +52,7 @@ int raw_patch_instruction(u32 *addr, ppc_inst_t instr)
 	return __patch_instruction(addr, instr, addr);
 }
 
+<<<<<<< HEAD
 struct patch_context {
 	union {
 		struct vm_struct *area;
@@ -56,10 +63,15 @@ struct patch_context {
 };
 
 static DEFINE_PER_CPU(struct patch_context, cpu_patching_context);
+=======
+#ifdef CONFIG_STRICT_KERNEL_RWX
+static DEFINE_PER_CPU(struct vm_struct *, text_poke_area);
+>>>>>>> b7ba80a49124 (Commit)
 
 static int map_patch_area(void *addr, unsigned long text_poke_addr);
 static void unmap_patch_area(unsigned long addr);
 
+<<<<<<< HEAD
 static bool mm_patch_enabled(void)
 {
 	return IS_ENABLED(CONFIG_SMP) && radix_enabled();
@@ -99,6 +111,8 @@ static void stop_using_temp_mm(struct mm_struct *temp_mm,
 	restore_breakpoints();
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int text_area_cpu_up(unsigned int cpu)
 {
 	struct vm_struct *area;
@@ -120,15 +134,20 @@ static int text_area_cpu_up(unsigned int cpu)
 
 	unmap_patch_area(addr);
 
+<<<<<<< HEAD
 	this_cpu_write(cpu_patching_context.area, area);
 	this_cpu_write(cpu_patching_context.addr, addr);
 	this_cpu_write(cpu_patching_context.pte, virt_to_kpte(addr));
+=======
+	this_cpu_write(text_poke_area, area);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
 static int text_area_cpu_down(unsigned int cpu)
 {
+<<<<<<< HEAD
 	free_vm_area(this_cpu_read(cpu_patching_context.area));
 	this_cpu_write(cpu_patching_context.area, NULL);
 	this_cpu_write(cpu_patching_context.addr, 0);
@@ -195,11 +214,15 @@ static int text_area_cpu_down_mm(unsigned int cpu)
 	this_cpu_write(cpu_patching_context.mm, NULL);
 	this_cpu_write(cpu_patching_context.addr, 0);
 
+=======
+	free_vm_area(this_cpu_read(text_poke_area));
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 static __ro_after_init DEFINE_STATIC_KEY_FALSE(poking_init_done);
 
+<<<<<<< HEAD
 void __init poking_init(void)
 {
 	int ret;
@@ -222,6 +245,18 @@ void __init poking_init(void)
 	if (WARN_ON(ret < 0))
 		return;
 
+=======
+/*
+ * Although BUG_ON() is rude, in this case it should only happen if ENOMEM, and
+ * we judge it as being preferable to a kernel that will crash later when
+ * someone tries to use patch_instruction().
+ */
+void __init poking_init(void)
+{
+	BUG_ON(!cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
+		"powerpc/text_poke:online", text_area_cpu_up,
+		text_area_cpu_down));
+>>>>>>> b7ba80a49124 (Commit)
 	static_branch_enable(&poking_init_done);
 }
 
@@ -278,6 +313,7 @@ static void unmap_patch_area(unsigned long addr)
 	flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
 }
 
+<<<<<<< HEAD
 static int __do_patch_instruction_mm(u32 *addr, ppc_inst_t instr)
 {
 	int err;
@@ -328,6 +364,8 @@ static int __do_patch_instruction_mm(u32 *addr, ppc_inst_t instr)
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __do_patch_instruction(u32 *addr, ppc_inst_t instr)
 {
 	int err;
@@ -336,10 +374,17 @@ static int __do_patch_instruction(u32 *addr, ppc_inst_t instr)
 	pte_t *pte;
 	unsigned long pfn = get_patch_pfn(addr);
 
+<<<<<<< HEAD
 	text_poke_addr = (unsigned long)__this_cpu_read(cpu_patching_context.addr) & PAGE_MASK;
 	patch_addr = (u32 *)(text_poke_addr + offset_in_page(addr));
 
 	pte = __this_cpu_read(cpu_patching_context.pte);
+=======
+	text_poke_addr = (unsigned long)__this_cpu_read(text_poke_area)->addr & PAGE_MASK;
+	patch_addr = (u32 *)(text_poke_addr + offset_in_page(addr));
+
+	pte = virt_to_kpte(text_poke_addr);
+>>>>>>> b7ba80a49124 (Commit)
 	__set_pte_at(&init_mm, text_poke_addr, pte, pfn_pte(pfn, PAGE_KERNEL), 0);
 	/* See ptesync comment in radix__set_pte_at() */
 	if (radix_enabled())
@@ -353,7 +398,11 @@ static int __do_patch_instruction(u32 *addr, ppc_inst_t instr)
 	return err;
 }
 
+<<<<<<< HEAD
 int patch_instruction(u32 *addr, ppc_inst_t instr)
+=======
+static int do_patch_instruction(u32 *addr, ppc_inst_t instr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int err;
 	unsigned long flags;
@@ -363,6 +412,7 @@ int patch_instruction(u32 *addr, ppc_inst_t instr)
 	 * when text_poke_area is not ready, but we still need
 	 * to allow patching. We just do the plain old patching
 	 */
+<<<<<<< HEAD
 	if (!IS_ENABLED(CONFIG_STRICT_KERNEL_RWX) ||
 	    !static_branch_likely(&poking_init_done))
 		return raw_patch_instruction(addr, instr);
@@ -372,10 +422,39 @@ int patch_instruction(u32 *addr, ppc_inst_t instr)
 		err = __do_patch_instruction_mm(addr, instr);
 	else
 		err = __do_patch_instruction(addr, instr);
+=======
+	if (!static_branch_likely(&poking_init_done))
+		return raw_patch_instruction(addr, instr);
+
+	local_irq_save(flags);
+	err = __do_patch_instruction(addr, instr);
+>>>>>>> b7ba80a49124 (Commit)
 	local_irq_restore(flags);
 
 	return err;
 }
+<<<<<<< HEAD
+=======
+#else /* !CONFIG_STRICT_KERNEL_RWX */
+
+static int do_patch_instruction(u32 *addr, ppc_inst_t instr)
+{
+	return raw_patch_instruction(addr, instr);
+}
+
+#endif /* CONFIG_STRICT_KERNEL_RWX */
+
+__ro_after_init DEFINE_STATIC_KEY_FALSE(init_mem_is_free);
+
+int patch_instruction(u32 *addr, ppc_inst_t instr)
+{
+	/* Make sure we aren't patching a freed init section */
+	if (static_branch_likely(&init_mem_is_free) && init_section_contains(addr, 4))
+		return 0;
+
+	return do_patch_instruction(addr, instr);
+}
+>>>>>>> b7ba80a49124 (Commit)
 NOKPROBE_SYMBOL(patch_instruction);
 
 int patch_branch(u32 *addr, unsigned long target, int flags)

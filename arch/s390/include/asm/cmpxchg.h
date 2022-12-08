@@ -14,8 +14,13 @@
 
 void __xchg_called_with_bad_pointer(void);
 
+<<<<<<< HEAD
 static __always_inline unsigned long
 __arch_xchg(unsigned long x, unsigned long address, int size)
+=======
+static __always_inline unsigned long __xchg(unsigned long x,
+					    unsigned long address, int size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long old;
 	int shift;
@@ -77,8 +82,13 @@ __arch_xchg(unsigned long x, unsigned long address, int size)
 	__typeof__(*(ptr)) __ret;					\
 									\
 	__ret = (__typeof__(*(ptr)))					\
+<<<<<<< HEAD
 		__arch_xchg((unsigned long)(x), (unsigned long)(ptr),	\
 			    sizeof(*(ptr)));				\
+=======
+		__xchg((unsigned long)(x), (unsigned long)(ptr),	\
+		       sizeof(*(ptr)));					\
+>>>>>>> b7ba80a49124 (Commit)
 	__ret;								\
 })
 
@@ -88,6 +98,7 @@ static __always_inline unsigned long __cmpxchg(unsigned long address,
 					       unsigned long old,
 					       unsigned long new, int size)
 {
+<<<<<<< HEAD
 	switch (size) {
 	case 1: {
 		unsigned int prev, shift, mask;
@@ -172,6 +183,69 @@ static __always_inline unsigned long __cmpxchg(unsigned long address,
 		return prev;
 	}
 	}
+=======
+	unsigned long prev, tmp;
+	int shift;
+
+	switch (size) {
+	case 1:
+		shift = (3 ^ (address & 3)) << 3;
+		address ^= address & 3;
+		asm volatile(
+			"       l       %0,%2\n"
+			"0:     nr      %0,%5\n"
+			"       lr      %1,%0\n"
+			"       or      %0,%3\n"
+			"       or      %1,%4\n"
+			"       cs      %0,%1,%2\n"
+			"       jnl     1f\n"
+			"       xr      %1,%0\n"
+			"       nr      %1,%5\n"
+			"       jnz     0b\n"
+			"1:"
+			: "=&d" (prev), "=&d" (tmp), "+Q" (*(int *) address)
+			: "d" ((old & 0xff) << shift),
+			  "d" ((new & 0xff) << shift),
+			  "d" (~(0xff << shift))
+			: "memory", "cc");
+		return prev >> shift;
+	case 2:
+		shift = (2 ^ (address & 2)) << 3;
+		address ^= address & 2;
+		asm volatile(
+			"       l       %0,%2\n"
+			"0:     nr      %0,%5\n"
+			"       lr      %1,%0\n"
+			"       or      %0,%3\n"
+			"       or      %1,%4\n"
+			"       cs      %0,%1,%2\n"
+			"       jnl     1f\n"
+			"       xr      %1,%0\n"
+			"       nr      %1,%5\n"
+			"       jnz     0b\n"
+			"1:"
+			: "=&d" (prev), "=&d" (tmp), "+Q" (*(int *) address)
+			: "d" ((old & 0xffff) << shift),
+			  "d" ((new & 0xffff) << shift),
+			  "d" (~(0xffff << shift))
+			: "memory", "cc");
+		return prev >> shift;
+	case 4:
+		asm volatile(
+			"       cs      %0,%3,%1\n"
+			: "=&d" (prev), "+Q" (*(int *) address)
+			: "0" (old), "d" (new)
+			: "memory", "cc");
+		return prev;
+	case 8:
+		asm volatile(
+			"       csg     %0,%3,%1\n"
+			: "=&d" (prev), "+QS" (*(long *) address)
+			: "0" (old), "d" (new)
+			: "memory", "cc");
+		return prev;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	__cmpxchg_called_with_bad_pointer();
 	return old;
 }

@@ -193,8 +193,11 @@ struct tegra_mc_soc {
 	unsigned int num_address_bits;
 	unsigned int atom_size;
 
+<<<<<<< HEAD
 	unsigned int num_carveouts;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u16 client_id_mask;
 	u8 num_channels;
 
@@ -246,8 +249,11 @@ unsigned int tegra_mc_get_emem_device_count(struct tegra_mc *mc);
 #ifdef CONFIG_TEGRA_MC
 struct tegra_mc *devm_tegra_memory_controller_get(struct device *dev);
 int tegra_mc_probe_device(struct tegra_mc *mc, struct device *dev);
+<<<<<<< HEAD
 int tegra_mc_get_carveout_info(struct tegra_mc *mc, unsigned int id,
                                phys_addr_t *base, u64 *size);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else
 static inline struct tegra_mc *
 devm_tegra_memory_controller_get(struct device *dev)
@@ -260,6 +266,7 @@ tegra_mc_probe_device(struct tegra_mc *mc, struct device *dev)
 {
 	return -ENODEV;
 }
+<<<<<<< HEAD
 
 static inline int
 tegra_mc_get_carveout_info(struct tegra_mc *mc, unsigned int id,
@@ -267,6 +274,8 @@ tegra_mc_get_carveout_info(struct tegra_mc *mc, unsigned int id,
 {
 	return -ENODEV;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #endif /* __SOC_TEGRA_MC_H__ */

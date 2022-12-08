@@ -10,6 +10,10 @@
 
 / {
 	model = "fsl,T1040RDB-REV-A";
+<<<<<<< HEAD
+=======
+	compatible = "fsl,T1040RDB-REV-A";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &seville_port0 {

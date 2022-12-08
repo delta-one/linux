@@ -333,7 +333,12 @@ static const struct regmap_config drv2667_regmap_config = {
 	.cache_type = REGCACHE_NONE,
 };
 
+<<<<<<< HEAD
 static int drv2667_probe(struct i2c_client *client)
+=======
+static int drv2667_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct drv2667_data *haptics;
 	int error;
@@ -399,7 +404,11 @@ static int drv2667_probe(struct i2c_client *client)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int drv2667_suspend(struct device *dev)
+=======
+static int __maybe_unused drv2667_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct drv2667_data *haptics = dev_get_drvdata(dev);
 	int ret = 0;
@@ -428,7 +437,11 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int drv2667_resume(struct device *dev)
+=======
+static int __maybe_unused drv2667_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct drv2667_data *haptics = dev_get_drvdata(dev);
 	int ret = 0;
@@ -457,7 +470,11 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(drv2667_pm_ops, drv2667_suspend, drv2667_resume);
+=======
+static SIMPLE_DEV_PM_OPS(drv2667_pm_ops, drv2667_suspend, drv2667_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct i2c_device_id drv2667_id[] = {
 	{ "drv2667", 0 },
@@ -474,11 +491,19 @@ MODULE_DEVICE_TABLE(of, drv2667_of_match);
 #endif
 
 static struct i2c_driver drv2667_driver = {
+<<<<<<< HEAD
 	.probe_new	= drv2667_probe,
 	.driver		= {
 		.name	= "drv2667-haptics",
 		.of_match_table = of_match_ptr(drv2667_of_match),
 		.pm	= pm_sleep_ptr(&drv2667_pm_ops),
+=======
+	.probe		= drv2667_probe,
+	.driver		= {
+		.name	= "drv2667-haptics",
+		.of_match_table = of_match_ptr(drv2667_of_match),
+		.pm	= &drv2667_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.id_table = drv2667_id,
 };

@@ -167,7 +167,10 @@ required:
   - interrupt-names
 
 allOf:
+<<<<<<< HEAD
   - $ref: dai-common.yaml#
+=======
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         opmode:
@@ -178,7 +181,11 @@ allOf:
       required:
         - tdm-slots
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |

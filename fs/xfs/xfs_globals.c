@@ -4,7 +4,10 @@
  * All Rights Reserved.
  */
 #include "xfs.h"
+<<<<<<< HEAD
 #include "xfs_error.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Tunable XFS parameters.  xfs_params is required even when CONFIG_SYSCTL=n,
@@ -16,7 +19,11 @@ xfs_param_t xfs_params = {
 			  /*	MIN		DFLT		MAX	*/
 	.sgid_inherit	= {	0,		0,		1	},
 	.symlink_mode	= {	0,		0,		1	},
+<<<<<<< HEAD
 	.panic_mask	= {	0,		0,		XFS_PTAG_MASK},
+=======
+	.panic_mask	= {	0,		0,		256	},
+>>>>>>> b7ba80a49124 (Commit)
 	.error_level	= {	0,		3,		11	},
 	.syncd_timer	= {	1*100,		30*100,		7200*100},
 	.stats_clear	= {	0,		0,		1	},

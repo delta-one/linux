@@ -1662,6 +1662,7 @@ err_disable_pclk:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void cdns_i3c_master_remove(struct platform_device *pdev)
 {
 	struct cdns_i3c_master *master = platform_get_drvdata(pdev);
@@ -1670,11 +1671,30 @@ static void cdns_i3c_master_remove(struct platform_device *pdev)
 
 	clk_disable_unprepare(master->sysclk);
 	clk_disable_unprepare(master->pclk);
+=======
+static int cdns_i3c_master_remove(struct platform_device *pdev)
+{
+	struct cdns_i3c_master *master = platform_get_drvdata(pdev);
+	int ret;
+
+	ret = i3c_master_unregister(&master->base);
+	if (ret)
+		return ret;
+
+	clk_disable_unprepare(master->sysclk);
+	clk_disable_unprepare(master->pclk);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver cdns_i3c_master = {
 	.probe = cdns_i3c_master_probe,
+<<<<<<< HEAD
 	.remove_new = cdns_i3c_master_remove,
+=======
+	.remove = cdns_i3c_master_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "cdns-i3c-master",
 		.of_match_table = cdns_i3c_master_of_ids,

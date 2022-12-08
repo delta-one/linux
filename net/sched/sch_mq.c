@@ -247,8 +247,16 @@ static void mq_walk(struct Qdisc *sch, struct qdisc_walker *arg)
 
 	arg->count = arg->skip;
 	for (ntx = arg->skip; ntx < dev->num_tx_queues; ntx++) {
+<<<<<<< HEAD
 		if (!tc_qdisc_stats_dump(sch, ntx + 1, arg))
 			break;
+=======
+		if (arg->fn(sch, ntx + 1, arg) < 0) {
+			arg->stop = 1;
+			break;
+		}
+		arg->count++;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 

@@ -61,7 +61,11 @@
 };
 
 &apps_rsc {
+<<<<<<< HEAD
 	regulators-0 {
+=======
+	pm8150-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8150-rpmh-regulators";
 		qcom,pmic-id = "a";
 
@@ -216,7 +220,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	regulators-1 {
+=======
+	pm8150l-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8150l-rpmh-regulators";
 		qcom,pmic-id = "c";
 
@@ -329,7 +337,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	regulators-2 {
+=======
+	pm8009-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8009-rpmh-regulators";
 		qcom,pmic-id = "f";
 
@@ -475,7 +487,11 @@
 &tlmm {
 	gpio-reserved-ranges = <126 4>;
 
+<<<<<<< HEAD
 	da7280_intr_default: da7280-intr-default-state {
+=======
+	da7280_intr_default: da7280-intr-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio42";
 		function = "gpio";
 		bias-pull-up;

@@ -6,7 +6,10 @@
 
 #include <linux/kernel.h>
 #include <linux/fs.h>
+<<<<<<< HEAD
 #include <linux/filelock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/uaccess.h>
 #include <linux/backing-dev.h>
 #include <linux/writeback.h>
@@ -70,14 +73,22 @@ static void ksmbd_vfs_inherit_owner(struct ksmbd_work *work,
  *
  * the reference count of @parent isn't incremented.
  */
+<<<<<<< HEAD
 int ksmbd_vfs_lock_parent(struct mnt_idmap *idmap, struct dentry *parent,
+=======
+int ksmbd_vfs_lock_parent(struct user_namespace *user_ns, struct dentry *parent,
+>>>>>>> b7ba80a49124 (Commit)
 			  struct dentry *child)
 {
 	struct dentry *dentry;
 	int ret = 0;
 
 	inode_lock_nested(d_inode(parent), I_MUTEX_PARENT);
+<<<<<<< HEAD
 	dentry = lookup_one(idmap, child->d_name.name, parent,
+=======
+	dentry = lookup_one(user_ns, child->d_name.name, parent,
+>>>>>>> b7ba80a49124 (Commit)
 			    child->d_name.len);
 	if (IS_ERR(dentry)) {
 		ret = PTR_ERR(dentry);
@@ -97,20 +108,32 @@ out_err:
 	return ret;
 }
 
+<<<<<<< HEAD
 int ksmbd_vfs_may_delete(struct mnt_idmap *idmap,
+=======
+int ksmbd_vfs_may_delete(struct user_namespace *user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 			 struct dentry *dentry)
 {
 	struct dentry *parent;
 	int ret;
 
 	parent = dget_parent(dentry);
+<<<<<<< HEAD
 	ret = ksmbd_vfs_lock_parent(idmap, parent, dentry);
+=======
+	ret = ksmbd_vfs_lock_parent(user_ns, parent, dentry);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dput(parent);
 		return ret;
 	}
 
+<<<<<<< HEAD
 	ret = inode_permission(idmap, d_inode(parent),
+=======
+	ret = inode_permission(user_ns, d_inode(parent),
+>>>>>>> b7ba80a49124 (Commit)
 			       MAY_EXEC | MAY_WRITE);
 
 	inode_unlock(d_inode(parent));
@@ -118,7 +141,11 @@ int ksmbd_vfs_may_delete(struct mnt_idmap *idmap,
 	return ret;
 }
 
+<<<<<<< HEAD
 int ksmbd_vfs_query_maximal_access(struct mnt_idmap *idmap,
+=======
+int ksmbd_vfs_query_maximal_access(struct user_namespace *user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 				   struct dentry *dentry, __le32 *daccess)
 {
 	struct dentry *parent;
@@ -126,12 +153,17 @@ int ksmbd_vfs_query_maximal_access(struct mnt_idmap *idmap,
 
 	*daccess = cpu_to_le32(FILE_READ_ATTRIBUTES | READ_CONTROL);
 
+<<<<<<< HEAD
 	if (!inode_permission(idmap, d_inode(dentry), MAY_OPEN | MAY_WRITE))
+=======
+	if (!inode_permission(user_ns, d_inode(dentry), MAY_OPEN | MAY_WRITE))
+>>>>>>> b7ba80a49124 (Commit)
 		*daccess |= cpu_to_le32(WRITE_DAC | WRITE_OWNER | SYNCHRONIZE |
 				FILE_WRITE_DATA | FILE_APPEND_DATA |
 				FILE_WRITE_EA | FILE_WRITE_ATTRIBUTES |
 				FILE_DELETE_CHILD);
 
+<<<<<<< HEAD
 	if (!inode_permission(idmap, d_inode(dentry), MAY_OPEN | MAY_READ))
 		*daccess |= FILE_READ_DATA_LE | FILE_READ_EA_LE;
 
@@ -140,12 +172,26 @@ int ksmbd_vfs_query_maximal_access(struct mnt_idmap *idmap,
 
 	parent = dget_parent(dentry);
 	ret = ksmbd_vfs_lock_parent(idmap, parent, dentry);
+=======
+	if (!inode_permission(user_ns, d_inode(dentry), MAY_OPEN | MAY_READ))
+		*daccess |= FILE_READ_DATA_LE | FILE_READ_EA_LE;
+
+	if (!inode_permission(user_ns, d_inode(dentry), MAY_OPEN | MAY_EXEC))
+		*daccess |= FILE_EXECUTE_LE;
+
+	parent = dget_parent(dentry);
+	ret = ksmbd_vfs_lock_parent(user_ns, parent, dentry);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		dput(parent);
 		return ret;
 	}
 
+<<<<<<< HEAD
 	if (!inode_permission(idmap, d_inode(parent), MAY_EXEC | MAY_WRITE))
+=======
+	if (!inode_permission(user_ns, d_inode(parent), MAY_EXEC | MAY_WRITE))
+>>>>>>> b7ba80a49124 (Commit)
 		*daccess |= FILE_DELETE_LE;
 
 	inode_unlock(d_inode(parent));
@@ -178,7 +224,11 @@ int ksmbd_vfs_create(struct ksmbd_work *work, const char *name, umode_t mode)
 	}
 
 	mode |= S_IFREG;
+<<<<<<< HEAD
 	err = vfs_create(mnt_idmap(path.mnt), d_inode(path.dentry),
+=======
+	err = vfs_create(mnt_user_ns(path.mnt), d_inode(path.dentry),
+>>>>>>> b7ba80a49124 (Commit)
 			 dentry, mode, true);
 	if (!err) {
 		ksmbd_vfs_inherit_owner(work, d_inode(path.dentry),
@@ -200,7 +250,11 @@ int ksmbd_vfs_create(struct ksmbd_work *work, const char *name, umode_t mode)
  */
 int ksmbd_vfs_mkdir(struct ksmbd_work *work, const char *name, umode_t mode)
 {
+<<<<<<< HEAD
 	struct mnt_idmap *idmap;
+=======
+	struct user_namespace *user_ns;
+>>>>>>> b7ba80a49124 (Commit)
 	struct path path;
 	struct dentry *dentry;
 	int err;
@@ -216,15 +270,25 @@ int ksmbd_vfs_mkdir(struct ksmbd_work *work, const char *name, umode_t mode)
 		return err;
 	}
 
+<<<<<<< HEAD
 	idmap = mnt_idmap(path.mnt);
 	mode |= S_IFDIR;
 	err = vfs_mkdir(idmap, d_inode(path.dentry), dentry, mode);
+=======
+	user_ns = mnt_user_ns(path.mnt);
+	mode |= S_IFDIR;
+	err = vfs_mkdir(user_ns, d_inode(path.dentry), dentry, mode);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		goto out;
 	} else if (d_unhashed(dentry)) {
 		struct dentry *d;
 
+<<<<<<< HEAD
 		d = lookup_one(idmap, dentry->d_name.name, dentry->d_parent,
+=======
+		d = lookup_one(user_ns, dentry->d_name.name, dentry->d_parent,
+>>>>>>> b7ba80a49124 (Commit)
 			       dentry->d_name.len);
 		if (IS_ERR(d)) {
 			err = PTR_ERR(d);
@@ -246,7 +310,11 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 static ssize_t ksmbd_vfs_getcasexattr(struct mnt_idmap *idmap,
+=======
+static ssize_t ksmbd_vfs_getcasexattr(struct user_namespace *user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 				      struct dentry *dentry, char *attr_name,
 				      int attr_name_len, char **attr_value)
 {
@@ -263,7 +331,11 @@ static ssize_t ksmbd_vfs_getcasexattr(struct mnt_idmap *idmap,
 		if (strncasecmp(attr_name, name, attr_name_len))
 			continue;
 
+<<<<<<< HEAD
 		value_len = ksmbd_vfs_getxattr(idmap,
+=======
+		value_len = ksmbd_vfs_getxattr(user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 					       dentry,
 					       name,
 					       attr_value);
@@ -286,7 +358,11 @@ static int ksmbd_vfs_stream_read(struct ksmbd_file *fp, char *buf, loff_t *pos,
 	ksmbd_debug(VFS, "read stream data pos : %llu, count : %zd\n",
 		    *pos, count);
 
+<<<<<<< HEAD
 	v_len = ksmbd_vfs_getcasexattr(file_mnt_idmap(fp->filp),
+=======
+	v_len = ksmbd_vfs_getcasexattr(file_mnt_user_ns(fp->filp),
+>>>>>>> b7ba80a49124 (Commit)
 				       fp->filp->f_path.dentry,
 				       fp->stream.name,
 				       fp->stream.size,
@@ -322,7 +398,11 @@ static int check_lock_range(struct file *filp, loff_t start, loff_t end,
 			    unsigned char type)
 {
 	struct file_lock *flock;
+<<<<<<< HEAD
 	struct file_lock_context *ctx = locks_inode_context(file_inode(filp));
+=======
+	struct file_lock_context *ctx = file_inode(filp)->i_flctx;
+>>>>>>> b7ba80a49124 (Commit)
 	int error = 0;
 
 	if (!ctx || list_empty_careful(&ctx->flc_posix))
@@ -410,7 +490,11 @@ static int ksmbd_vfs_stream_write(struct ksmbd_file *fp, char *buf, loff_t *pos,
 				  size_t count)
 {
 	char *stream_buf = NULL, *wbuf;
+<<<<<<< HEAD
 	struct mnt_idmap *idmap = file_mnt_idmap(fp->filp);
+=======
+	struct user_namespace *user_ns = file_mnt_user_ns(fp->filp);
+>>>>>>> b7ba80a49124 (Commit)
 	size_t size, v_len;
 	int err = 0;
 
@@ -423,7 +507,11 @@ static int ksmbd_vfs_stream_write(struct ksmbd_file *fp, char *buf, loff_t *pos,
 		count = (*pos + count) - XATTR_SIZE_MAX;
 	}
 
+<<<<<<< HEAD
 	v_len = ksmbd_vfs_getcasexattr(idmap,
+=======
+	v_len = ksmbd_vfs_getcasexattr(user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 				       fp->filp->f_path.dentry,
 				       fp->stream.name,
 				       fp->stream.size,
@@ -449,7 +537,11 @@ static int ksmbd_vfs_stream_write(struct ksmbd_file *fp, char *buf, loff_t *pos,
 
 	memcpy(&stream_buf[*pos], buf, count);
 
+<<<<<<< HEAD
 	err = ksmbd_vfs_setxattr(idmap,
+=======
+	err = ksmbd_vfs_setxattr(user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 				 fp->filp->f_path.dentry,
 				 fp->stream.name,
 				 (void *)stream_buf,
@@ -584,7 +676,11 @@ int ksmbd_vfs_fsync(struct ksmbd_work *work, u64 fid, u64 p_id)
  */
 int ksmbd_vfs_remove_file(struct ksmbd_work *work, char *name)
 {
+<<<<<<< HEAD
 	struct mnt_idmap *idmap;
+=======
+	struct user_namespace *user_ns;
+>>>>>>> b7ba80a49124 (Commit)
 	struct path path;
 	struct dentry *parent;
 	int err;
@@ -599,9 +695,15 @@ int ksmbd_vfs_remove_file(struct ksmbd_work *work, char *name)
 		return err;
 	}
 
+<<<<<<< HEAD
 	idmap = mnt_idmap(path.mnt);
 	parent = dget_parent(path.dentry);
 	err = ksmbd_vfs_lock_parent(idmap, parent, path.dentry);
+=======
+	user_ns = mnt_user_ns(path.mnt);
+	parent = dget_parent(path.dentry);
+	err = ksmbd_vfs_lock_parent(user_ns, parent, path.dentry);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		dput(parent);
 		path_put(&path);
@@ -615,12 +717,20 @@ int ksmbd_vfs_remove_file(struct ksmbd_work *work, char *name)
 	}
 
 	if (S_ISDIR(d_inode(path.dentry)->i_mode)) {
+<<<<<<< HEAD
 		err = vfs_rmdir(idmap, d_inode(parent), path.dentry);
+=======
+		err = vfs_rmdir(user_ns, d_inode(parent), path.dentry);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err && err != -ENOTEMPTY)
 			ksmbd_debug(VFS, "%s: rmdir failed, err %d\n", name,
 				    err);
 	} else {
+<<<<<<< HEAD
 		err = vfs_unlink(idmap, d_inode(parent), path.dentry, NULL);
+=======
+		err = vfs_unlink(user_ns, d_inode(parent), path.dentry, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err)
 			ksmbd_debug(VFS, "%s: unlink failed, err %d\n", name,
 				    err);
@@ -673,7 +783,11 @@ int ksmbd_vfs_link(struct ksmbd_work *work, const char *oldname,
 		goto out3;
 	}
 
+<<<<<<< HEAD
 	err = vfs_link(oldpath.dentry, mnt_idmap(newpath.mnt),
+=======
+	err = vfs_link(oldpath.dentry, mnt_user_ns(newpath.mnt),
+>>>>>>> b7ba80a49124 (Commit)
 		       d_inode(newpath.dentry),
 		       dentry, NULL);
 	if (err)
@@ -712,10 +826,17 @@ static int ksmbd_validate_entry_in_use(struct dentry *src_dent)
 }
 
 static int __ksmbd_vfs_rename(struct ksmbd_work *work,
+<<<<<<< HEAD
 			      struct mnt_idmap *src_idmap,
 			      struct dentry *src_dent_parent,
 			      struct dentry *src_dent,
 			      struct mnt_idmap *dst_idmap,
+=======
+			      struct user_namespace *src_user_ns,
+			      struct dentry *src_dent_parent,
+			      struct dentry *src_dent,
+			      struct user_namespace *dst_user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 			      struct dentry *dst_dent_parent,
 			      struct dentry *trap_dent,
 			      char *dst_name)
@@ -741,8 +862,13 @@ static int __ksmbd_vfs_rename(struct ksmbd_work *work,
 	if (ksmbd_override_fsids(work))
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	dst_dent = lookup_one(dst_idmap, dst_name,
 			      dst_dent_parent, strlen(dst_name));
+=======
+	dst_dent = lookup_one(dst_user_ns, dst_name, dst_dent_parent,
+			      strlen(dst_name));
+>>>>>>> b7ba80a49124 (Commit)
 	err = PTR_ERR(dst_dent);
 	if (IS_ERR(dst_dent)) {
 		pr_err("lookup failed %s [%d]\n", dst_name, err);
@@ -752,10 +878,17 @@ static int __ksmbd_vfs_rename(struct ksmbd_work *work,
 	err = -ENOTEMPTY;
 	if (dst_dent != trap_dent && !d_really_is_positive(dst_dent)) {
 		struct renamedata rd = {
+<<<<<<< HEAD
 			.old_mnt_idmap	= src_idmap,
 			.old_dir	= d_inode(src_dent_parent),
 			.old_dentry	= src_dent,
 			.new_mnt_idmap	= dst_idmap,
+=======
+			.old_mnt_userns	= src_user_ns,
+			.old_dir	= d_inode(src_dent_parent),
+			.old_dentry	= src_dent,
+			.new_mnt_userns	= dst_user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 			.new_dir	= d_inode(dst_dent_parent),
 			.new_dentry	= dst_dent,
 		};
@@ -773,7 +906,11 @@ out:
 int ksmbd_vfs_fp_rename(struct ksmbd_work *work, struct ksmbd_file *fp,
 			char *newname)
 {
+<<<<<<< HEAD
 	struct mnt_idmap *idmap;
+=======
+	struct user_namespace *user_ns;
+>>>>>>> b7ba80a49124 (Commit)
 	struct path dst_path;
 	struct dentry *src_dent_parent, *dst_dent_parent;
 	struct dentry *src_dent, *trap_dent, *src_child;
@@ -801,8 +938,13 @@ int ksmbd_vfs_fp_rename(struct ksmbd_work *work, struct ksmbd_file *fp,
 	trap_dent = lock_rename(src_dent_parent, dst_dent_parent);
 	dget(src_dent);
 	dget(dst_dent_parent);
+<<<<<<< HEAD
 	idmap = file_mnt_idmap(fp->filp);
 	src_child = lookup_one(idmap, src_dent->d_name.name, src_dent_parent,
+=======
+	user_ns = file_mnt_user_ns(fp->filp);
+	src_child = lookup_one(user_ns, src_dent->d_name.name, src_dent_parent,
+>>>>>>> b7ba80a49124 (Commit)
 			       src_dent->d_name.len);
 	if (IS_ERR(src_child)) {
 		err = PTR_ERR(src_child);
@@ -817,10 +959,17 @@ int ksmbd_vfs_fp_rename(struct ksmbd_work *work, struct ksmbd_file *fp,
 	dput(src_child);
 
 	err = __ksmbd_vfs_rename(work,
+<<<<<<< HEAD
 				 idmap,
 				 src_dent_parent,
 				 src_dent,
 				 mnt_idmap(dst_path.mnt),
+=======
+				 user_ns,
+				 src_dent_parent,
+				 src_dent,
+				 mnt_user_ns(dst_path.mnt),
+>>>>>>> b7ba80a49124 (Commit)
 				 dst_dent_parent,
 				 trap_dent,
 				 dst_name);
@@ -908,22 +1057,37 @@ ssize_t ksmbd_vfs_listxattr(struct dentry *dentry, char **list)
 	return size;
 }
 
+<<<<<<< HEAD
 static ssize_t ksmbd_vfs_xattr_len(struct mnt_idmap *idmap,
 				   struct dentry *dentry, char *xattr_name)
 {
 	return vfs_getxattr(idmap, dentry, xattr_name, NULL, 0);
+=======
+static ssize_t ksmbd_vfs_xattr_len(struct user_namespace *user_ns,
+				   struct dentry *dentry, char *xattr_name)
+{
+	return vfs_getxattr(user_ns, dentry, xattr_name, NULL, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
  * ksmbd_vfs_getxattr() - vfs helper for smb get extended attributes value
+<<<<<<< HEAD
  * @idmap:	idmap
+=======
+ * @user_ns:	user namespace
+>>>>>>> b7ba80a49124 (Commit)
  * @dentry:	dentry of file for getting xattrs
  * @xattr_name:	name of xattr name to query
  * @xattr_buf:	destination buffer xattr value
  *
  * Return:	read xattr value length on success, otherwise error
  */
+<<<<<<< HEAD
 ssize_t ksmbd_vfs_getxattr(struct mnt_idmap *idmap,
+=======
+ssize_t ksmbd_vfs_getxattr(struct user_namespace *user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 			   struct dentry *dentry,
 			   char *xattr_name, char **xattr_buf)
 {
@@ -931,7 +1095,11 @@ ssize_t ksmbd_vfs_getxattr(struct mnt_idmap *idmap,
 	char *buf;
 
 	*xattr_buf = NULL;
+<<<<<<< HEAD
 	xattr_len = ksmbd_vfs_xattr_len(idmap, dentry, xattr_name);
+=======
+	xattr_len = ksmbd_vfs_xattr_len(user_ns, dentry, xattr_name);
+>>>>>>> b7ba80a49124 (Commit)
 	if (xattr_len < 0)
 		return xattr_len;
 
@@ -939,7 +1107,11 @@ ssize_t ksmbd_vfs_getxattr(struct mnt_idmap *idmap,
 	if (!buf)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	xattr_len = vfs_getxattr(idmap, dentry, xattr_name,
+=======
+	xattr_len = vfs_getxattr(user_ns, dentry, xattr_name,
+>>>>>>> b7ba80a49124 (Commit)
 				 (void *)buf, xattr_len);
 	if (xattr_len > 0)
 		*xattr_buf = buf;
@@ -950,22 +1122,38 @@ ssize_t ksmbd_vfs_getxattr(struct mnt_idmap *idmap,
 
 /**
  * ksmbd_vfs_setxattr() - vfs helper for smb set extended attributes value
+<<<<<<< HEAD
  * @idmap:	idmap of the relevant mount
  * @dentry:	dentry to set XATTR at
  * @attr_name:	xattr name for setxattr
  * @attr_value:	xattr value to set
  * @attr_size:	size of xattr value
+=======
+ * @user_ns:	user namespace
+ * @dentry:	dentry to set XATTR at
+ * @name:	xattr name for setxattr
+ * @value:	xattr value to set
+ * @size:	size of xattr value
+>>>>>>> b7ba80a49124 (Commit)
  * @flags:	destination buffer length
  *
  * Return:	0 on success, otherwise error
  */
+<<<<<<< HEAD
 int ksmbd_vfs_setxattr(struct mnt_idmap *idmap,
+=======
+int ksmbd_vfs_setxattr(struct user_namespace *user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 		       struct dentry *dentry, const char *attr_name,
 		       void *attr_value, size_t attr_size, int flags)
 {
 	int err;
 
+<<<<<<< HEAD
 	err = vfs_setxattr(idmap,
+=======
+	err = vfs_setxattr(user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 			   dentry,
 			   attr_name,
 			   attr_value,
@@ -1075,6 +1263,7 @@ int ksmbd_vfs_fqar_lseek(struct ksmbd_file *fp, loff_t start, loff_t length,
 	return ret;
 }
 
+<<<<<<< HEAD
 int ksmbd_vfs_remove_xattr(struct mnt_idmap *idmap,
 			   struct dentry *dentry, char *attr_name)
 {
@@ -1082,19 +1271,38 @@ int ksmbd_vfs_remove_xattr(struct mnt_idmap *idmap,
 }
 
 int ksmbd_vfs_unlink(struct mnt_idmap *idmap,
+=======
+int ksmbd_vfs_remove_xattr(struct user_namespace *user_ns,
+			   struct dentry *dentry, char *attr_name)
+{
+	return vfs_removexattr(user_ns, dentry, attr_name);
+}
+
+int ksmbd_vfs_unlink(struct user_namespace *user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 		     struct dentry *dir, struct dentry *dentry)
 {
 	int err = 0;
 
+<<<<<<< HEAD
 	err = ksmbd_vfs_lock_parent(idmap, dir, dentry);
+=======
+	err = ksmbd_vfs_lock_parent(user_ns, dir, dentry);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return err;
 	dget(dentry);
 
 	if (S_ISDIR(d_inode(dentry)->i_mode))
+<<<<<<< HEAD
 		err = vfs_rmdir(idmap, d_inode(dir), dentry);
 	else
 		err = vfs_unlink(idmap, d_inode(dir), dentry, NULL);
+=======
+		err = vfs_rmdir(user_ns, d_inode(dir), dentry);
+	else
+		err = vfs_unlink(user_ns, d_inode(dir), dentry, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dput(dentry);
 	inode_unlock(d_inode(dir));
@@ -1144,12 +1352,16 @@ static bool __caseless_lookup(struct dir_context *ctx, const char *name,
 			     unsigned int d_type)
 {
 	struct ksmbd_readdir_data *buf;
+<<<<<<< HEAD
 	int cmp = -EINVAL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	buf = container_of(ctx, struct ksmbd_readdir_data, ctx);
 
 	if (buf->used != namlen)
 		return true;
+<<<<<<< HEAD
 	if (IS_ENABLED(CONFIG_UNICODE) && buf->um) {
 		const struct qstr q_buf = {.name = buf->private,
 					   .len = buf->used};
@@ -1161,6 +1373,9 @@ static bool __caseless_lookup(struct dir_context *ctx, const char *name,
 	if (cmp < 0)
 		cmp = strncasecmp((char *)buf->private, name, namlen);
 	if (!cmp) {
+=======
+	if (!strncasecmp((char *)buf->private, name, namlen)) {
+>>>>>>> b7ba80a49124 (Commit)
 		memcpy((char *)buf->private, name, namlen);
 		buf->dirent_count = 1;
 		return false;
@@ -1176,8 +1391,12 @@ static bool __caseless_lookup(struct dir_context *ctx, const char *name,
  *
  * Return:	0 on success, otherwise error
  */
+<<<<<<< HEAD
 static int ksmbd_vfs_lookup_in_dir(const struct path *dir, char *name,
 				   size_t namelen, struct unicode_map *um)
+=======
+static int ksmbd_vfs_lookup_in_dir(const struct path *dir, char *name, size_t namelen)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 	struct file *dfilp;
@@ -1187,7 +1406,10 @@ static int ksmbd_vfs_lookup_in_dir(const struct path *dir, char *name,
 		.private	= name,
 		.used		= namelen,
 		.dirent_count	= 0,
+<<<<<<< HEAD
 		.um		= um,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	dfilp = dentry_open(dir, flags, current_cred());
@@ -1250,8 +1472,12 @@ int ksmbd_vfs_kern_path(struct ksmbd_work *work, char *name,
 				break;
 
 			err = ksmbd_vfs_lookup_in_dir(&parent, filename,
+<<<<<<< HEAD
 						      filename_len,
 						      work->conn->um);
+=======
+						      filename_len);
+>>>>>>> b7ba80a49124 (Commit)
 			path_put(&parent);
 			if (err)
 				goto out;
@@ -1299,7 +1525,11 @@ struct dentry *ksmbd_vfs_kern_path_create(struct ksmbd_work *work,
 	return dent;
 }
 
+<<<<<<< HEAD
 int ksmbd_vfs_remove_acl_xattrs(struct mnt_idmap *idmap,
+=======
+int ksmbd_vfs_remove_acl_xattrs(struct user_namespace *user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 				struct dentry *dentry)
 {
 	char *name, *xattr_list = NULL;
@@ -1322,7 +1552,11 @@ int ksmbd_vfs_remove_acl_xattrs(struct mnt_idmap *idmap,
 			     sizeof(XATTR_NAME_POSIX_ACL_ACCESS) - 1) ||
 		    !strncmp(name, XATTR_NAME_POSIX_ACL_DEFAULT,
 			     sizeof(XATTR_NAME_POSIX_ACL_DEFAULT) - 1)) {
+<<<<<<< HEAD
 			err = vfs_remove_acl(idmap, dentry, name);
+=======
+			err = ksmbd_vfs_remove_xattr(user_ns, dentry, name);
+>>>>>>> b7ba80a49124 (Commit)
 			if (err)
 				ksmbd_debug(SMB,
 					    "remove acl xattr failed : %s\n", name);
@@ -1333,7 +1567,11 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 int ksmbd_vfs_remove_sd_xattrs(struct mnt_idmap *idmap,
+=======
+int ksmbd_vfs_remove_sd_xattrs(struct user_namespace *user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 			       struct dentry *dentry)
 {
 	char *name, *xattr_list = NULL;
@@ -1353,7 +1591,11 @@ int ksmbd_vfs_remove_sd_xattrs(struct mnt_idmap *idmap,
 		ksmbd_debug(SMB, "%s, len %zd\n", name, strlen(name));
 
 		if (!strncmp(name, XATTR_NAME_SD, XATTR_NAME_SD_LEN)) {
+<<<<<<< HEAD
 			err = ksmbd_vfs_remove_xattr(idmap, dentry, name);
+=======
+			err = ksmbd_vfs_remove_xattr(user_ns, dentry, name);
+>>>>>>> b7ba80a49124 (Commit)
 			if (err)
 				ksmbd_debug(SMB, "remove xattr failed : %s\n", name);
 		}
@@ -1363,7 +1605,11 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 static struct xattr_smb_acl *ksmbd_vfs_make_xattr_posix_acl(struct mnt_idmap *idmap,
+=======
+static struct xattr_smb_acl *ksmbd_vfs_make_xattr_posix_acl(struct user_namespace *user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 							    struct inode *inode,
 							    int acl_type)
 {
@@ -1376,7 +1622,11 @@ static struct xattr_smb_acl *ksmbd_vfs_make_xattr_posix_acl(struct mnt_idmap *id
 	if (!IS_ENABLED(CONFIG_FS_POSIX_ACL))
 		return NULL;
 
+<<<<<<< HEAD
 	posix_acls = get_inode_acl(inode, acl_type);
+=======
+	posix_acls = get_acl(inode, acl_type);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!posix_acls)
 		return NULL;
 
@@ -1393,14 +1643,22 @@ static struct xattr_smb_acl *ksmbd_vfs_make_xattr_posix_acl(struct mnt_idmap *id
 		switch (pa_entry->e_tag) {
 		case ACL_USER:
 			xa_entry->type = SMB_ACL_USER;
+<<<<<<< HEAD
 			xa_entry->uid = posix_acl_uid_translate(idmap, pa_entry);
+=======
+			xa_entry->uid = posix_acl_uid_translate(user_ns, pa_entry);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case ACL_USER_OBJ:
 			xa_entry->type = SMB_ACL_USER_OBJ;
 			break;
 		case ACL_GROUP:
 			xa_entry->type = SMB_ACL_GROUP;
+<<<<<<< HEAD
 			xa_entry->gid = posix_acl_gid_translate(idmap, pa_entry);
+=======
+			xa_entry->gid = posix_acl_gid_translate(user_ns, pa_entry);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		case ACL_GROUP_OBJ:
 			xa_entry->type = SMB_ACL_GROUP_OBJ;
@@ -1429,7 +1687,11 @@ out:
 }
 
 int ksmbd_vfs_set_sd_xattr(struct ksmbd_conn *conn,
+<<<<<<< HEAD
 			   struct mnt_idmap *idmap,
+=======
+			   struct user_namespace *user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 			   struct dentry *dentry,
 			   struct smb_ntsd *pntsd, int len)
 {
@@ -1462,6 +1724,7 @@ int ksmbd_vfs_set_sd_xattr(struct ksmbd_conn *conn,
 		return rc;
 	}
 
+<<<<<<< HEAD
 	smb_acl = ksmbd_vfs_make_xattr_posix_acl(idmap, inode,
 						 ACL_TYPE_ACCESS);
 	if (S_ISDIR(inode->i_mode))
@@ -1469,6 +1732,15 @@ int ksmbd_vfs_set_sd_xattr(struct ksmbd_conn *conn,
 							     ACL_TYPE_DEFAULT);
 
 	rc = ndr_encode_posix_acl(&acl_ndr, idmap, inode,
+=======
+	smb_acl = ksmbd_vfs_make_xattr_posix_acl(user_ns, inode,
+						 ACL_TYPE_ACCESS);
+	if (S_ISDIR(inode->i_mode))
+		def_smb_acl = ksmbd_vfs_make_xattr_posix_acl(user_ns, inode,
+							     ACL_TYPE_DEFAULT);
+
+	rc = ndr_encode_posix_acl(&acl_ndr, user_ns, inode,
+>>>>>>> b7ba80a49124 (Commit)
 				  smb_acl, def_smb_acl);
 	if (rc) {
 		pr_err("failed to encode ndr to posix acl\n");
@@ -1488,7 +1760,11 @@ int ksmbd_vfs_set_sd_xattr(struct ksmbd_conn *conn,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	rc = ksmbd_vfs_setxattr(idmap, dentry,
+=======
+	rc = ksmbd_vfs_setxattr(user_ns, dentry,
+>>>>>>> b7ba80a49124 (Commit)
 				XATTR_NAME_SD, sd_ndr.data,
 				sd_ndr.offset, 0);
 	if (rc < 0)
@@ -1503,7 +1779,11 @@ out:
 }
 
 int ksmbd_vfs_get_sd_xattr(struct ksmbd_conn *conn,
+<<<<<<< HEAD
 			   struct mnt_idmap *idmap,
+=======
+			   struct user_namespace *user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 			   struct dentry *dentry,
 			   struct smb_ntsd **pntsd)
 {
@@ -1515,7 +1795,11 @@ int ksmbd_vfs_get_sd_xattr(struct ksmbd_conn *conn,
 	struct xattr_smb_acl *smb_acl = NULL, *def_smb_acl = NULL;
 	__u8 cmp_hash[XATTR_SD_HASH_SIZE] = {0};
 
+<<<<<<< HEAD
 	rc = ksmbd_vfs_getxattr(idmap, dentry, XATTR_NAME_SD, &n.data);
+=======
+	rc = ksmbd_vfs_getxattr(user_ns, dentry, XATTR_NAME_SD, &n.data);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc <= 0)
 		return rc;
 
@@ -1524,6 +1808,7 @@ int ksmbd_vfs_get_sd_xattr(struct ksmbd_conn *conn,
 	if (rc)
 		goto free_n_data;
 
+<<<<<<< HEAD
 	smb_acl = ksmbd_vfs_make_xattr_posix_acl(idmap, inode,
 						 ACL_TYPE_ACCESS);
 	if (S_ISDIR(inode->i_mode))
@@ -1531,6 +1816,15 @@ int ksmbd_vfs_get_sd_xattr(struct ksmbd_conn *conn,
 							     ACL_TYPE_DEFAULT);
 
 	rc = ndr_encode_posix_acl(&acl_ndr, idmap, inode, smb_acl,
+=======
+	smb_acl = ksmbd_vfs_make_xattr_posix_acl(user_ns, inode,
+						 ACL_TYPE_ACCESS);
+	if (S_ISDIR(inode->i_mode))
+		def_smb_acl = ksmbd_vfs_make_xattr_posix_acl(user_ns, inode,
+							     ACL_TYPE_DEFAULT);
+
+	rc = ndr_encode_posix_acl(&acl_ndr, user_ns, inode, smb_acl,
+>>>>>>> b7ba80a49124 (Commit)
 				  def_smb_acl);
 	if (rc) {
 		pr_err("failed to encode ndr to posix acl\n");
@@ -1577,7 +1871,11 @@ free_n_data:
 	return rc;
 }
 
+<<<<<<< HEAD
 int ksmbd_vfs_set_dos_attrib_xattr(struct mnt_idmap *idmap,
+=======
+int ksmbd_vfs_set_dos_attrib_xattr(struct user_namespace *user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 				   struct dentry *dentry,
 				   struct xattr_dos_attrib *da)
 {
@@ -1588,7 +1886,11 @@ int ksmbd_vfs_set_dos_attrib_xattr(struct mnt_idmap *idmap,
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	err = ksmbd_vfs_setxattr(idmap, dentry, XATTR_NAME_DOS_ATTRIBUTE,
+=======
+	err = ksmbd_vfs_setxattr(user_ns, dentry, XATTR_NAME_DOS_ATTRIBUTE,
+>>>>>>> b7ba80a49124 (Commit)
 				 (void *)n.data, n.offset, 0);
 	if (err)
 		ksmbd_debug(SMB, "failed to store dos attribute in xattr\n");
@@ -1597,14 +1899,22 @@ int ksmbd_vfs_set_dos_attrib_xattr(struct mnt_idmap *idmap,
 	return err;
 }
 
+<<<<<<< HEAD
 int ksmbd_vfs_get_dos_attrib_xattr(struct mnt_idmap *idmap,
+=======
+int ksmbd_vfs_get_dos_attrib_xattr(struct user_namespace *user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 				   struct dentry *dentry,
 				   struct xattr_dos_attrib *da)
 {
 	struct ndr n;
 	int err;
 
+<<<<<<< HEAD
 	err = ksmbd_vfs_getxattr(idmap, dentry, XATTR_NAME_DOS_ATTRIBUTE,
+=======
+	err = ksmbd_vfs_getxattr(user_ns, dentry, XATTR_NAME_DOS_ATTRIBUTE,
+>>>>>>> b7ba80a49124 (Commit)
 				 (char **)&n.data);
 	if (err > 0) {
 		n.length = err;
@@ -1651,14 +1961,22 @@ void *ksmbd_vfs_init_kstat(char **p, struct ksmbd_kstat *ksmbd_kstat)
 }
 
 int ksmbd_vfs_fill_dentry_attrs(struct ksmbd_work *work,
+<<<<<<< HEAD
 				struct mnt_idmap *idmap,
+=======
+				struct user_namespace *user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 				struct dentry *dentry,
 				struct ksmbd_kstat *ksmbd_kstat)
 {
 	u64 time;
 	int rc;
 
+<<<<<<< HEAD
 	generic_fillattr(idmap, d_inode(dentry), ksmbd_kstat->kstat);
+=======
+	generic_fillattr(user_ns, d_inode(dentry), ksmbd_kstat->kstat);
+>>>>>>> b7ba80a49124 (Commit)
 
 	time = ksmbd_UnixTimeToNT(ksmbd_kstat->kstat->ctime);
 	ksmbd_kstat->create_time = time;
@@ -1676,7 +1994,11 @@ int ksmbd_vfs_fill_dentry_attrs(struct ksmbd_work *work,
 				   KSMBD_SHARE_FLAG_STORE_DOS_ATTRS)) {
 		struct xattr_dos_attrib da;
 
+<<<<<<< HEAD
 		rc = ksmbd_vfs_get_dos_attrib_xattr(idmap, dentry, &da);
+=======
+		rc = ksmbd_vfs_get_dos_attrib_xattr(user_ns, dentry, &da);
+>>>>>>> b7ba80a49124 (Commit)
 		if (rc > 0) {
 			ksmbd_kstat->file_attributes = cpu_to_le32(da.attr);
 			ksmbd_kstat->create_time = da.create_time;
@@ -1688,7 +2010,11 @@ int ksmbd_vfs_fill_dentry_attrs(struct ksmbd_work *work,
 	return 0;
 }
 
+<<<<<<< HEAD
 ssize_t ksmbd_vfs_casexattr_len(struct mnt_idmap *idmap,
+=======
+ssize_t ksmbd_vfs_casexattr_len(struct user_namespace *user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 				struct dentry *dentry, char *attr_name,
 				int attr_name_len)
 {
@@ -1705,7 +2031,11 @@ ssize_t ksmbd_vfs_casexattr_len(struct mnt_idmap *idmap,
 		if (strncasecmp(attr_name, name, attr_name_len))
 			continue;
 
+<<<<<<< HEAD
 		value_len = ksmbd_vfs_xattr_len(idmap, dentry, name);
+=======
+		value_len = ksmbd_vfs_xattr_len(user_ns, dentry, name);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	}
 
@@ -1795,9 +2125,15 @@ int ksmbd_vfs_copy_file_ranges(struct ksmbd_work *work,
 		ret = vfs_copy_file_range(src_fp->filp, src_off,
 					  dst_fp->filp, dst_off, len, 0);
 		if (ret == -EOPNOTSUPP || ret == -EXDEV)
+<<<<<<< HEAD
 			ret = vfs_copy_file_range(src_fp->filp, src_off,
 						  dst_fp->filp, dst_off, len,
 						  COPY_FILE_SPLICE);
+=======
+			ret = generic_copy_file_range(src_fp->filp, src_off,
+						      dst_fp->filp, dst_off,
+						      len, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret < 0)
 			return ret;
 
@@ -1824,12 +2160,20 @@ void ksmbd_vfs_posix_lock_unblock(struct file_lock *flock)
 	locks_delete_block(flock);
 }
 
+<<<<<<< HEAD
 int ksmbd_vfs_set_init_posix_acl(struct mnt_idmap *idmap,
 				 struct dentry *dentry)
 {
 	struct posix_acl_state acl_state;
 	struct posix_acl *acls;
 	struct inode *inode = d_inode(dentry);
+=======
+int ksmbd_vfs_set_init_posix_acl(struct user_namespace *user_ns,
+				 struct inode *inode)
+{
+	struct posix_acl_state acl_state;
+	struct posix_acl *acls;
+>>>>>>> b7ba80a49124 (Commit)
 	int rc;
 
 	if (!IS_ENABLED(CONFIG_FS_POSIX_ACL))
@@ -1858,13 +2202,22 @@ int ksmbd_vfs_set_init_posix_acl(struct mnt_idmap *idmap,
 		return -ENOMEM;
 	}
 	posix_state_to_acl(&acl_state, acls->a_entries);
+<<<<<<< HEAD
 	rc = set_posix_acl(idmap, dentry, ACL_TYPE_ACCESS, acls);
+=======
+	rc = set_posix_acl(user_ns, inode, ACL_TYPE_ACCESS, acls);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc < 0)
 		ksmbd_debug(SMB, "Set posix acl(ACL_TYPE_ACCESS) failed, rc : %d\n",
 			    rc);
 	else if (S_ISDIR(inode->i_mode)) {
 		posix_state_to_acl(&acl_state, acls->a_entries);
+<<<<<<< HEAD
 		rc = set_posix_acl(idmap, dentry, ACL_TYPE_DEFAULT, acls);
+=======
+		rc = set_posix_acl(user_ns, inode, ACL_TYPE_DEFAULT,
+				   acls);
+>>>>>>> b7ba80a49124 (Commit)
 		if (rc < 0)
 			ksmbd_debug(SMB, "Set posix acl(ACL_TYPE_DEFAULT) failed, rc : %d\n",
 				    rc);
@@ -1874,18 +2227,30 @@ int ksmbd_vfs_set_init_posix_acl(struct mnt_idmap *idmap,
 	return rc;
 }
 
+<<<<<<< HEAD
 int ksmbd_vfs_inherit_posix_acl(struct mnt_idmap *idmap,
 				struct dentry *dentry, struct inode *parent_inode)
 {
 	struct posix_acl *acls;
 	struct posix_acl_entry *pace;
 	struct inode *inode = d_inode(dentry);
+=======
+int ksmbd_vfs_inherit_posix_acl(struct user_namespace *user_ns,
+				struct inode *inode, struct inode *parent_inode)
+{
+	struct posix_acl *acls;
+	struct posix_acl_entry *pace;
+>>>>>>> b7ba80a49124 (Commit)
 	int rc, i;
 
 	if (!IS_ENABLED(CONFIG_FS_POSIX_ACL))
 		return -EOPNOTSUPP;
 
+<<<<<<< HEAD
 	acls = get_inode_acl(parent_inode, ACL_TYPE_DEFAULT);
+=======
+	acls = get_acl(parent_inode, ACL_TYPE_DEFAULT);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!acls)
 		return -ENOENT;
 	pace = acls->a_entries;
@@ -1897,12 +2262,20 @@ int ksmbd_vfs_inherit_posix_acl(struct mnt_idmap *idmap,
 		}
 	}
 
+<<<<<<< HEAD
 	rc = set_posix_acl(idmap, dentry, ACL_TYPE_ACCESS, acls);
+=======
+	rc = set_posix_acl(user_ns, inode, ACL_TYPE_ACCESS, acls);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc < 0)
 		ksmbd_debug(SMB, "Set posix acl(ACL_TYPE_ACCESS) failed, rc : %d\n",
 			    rc);
 	if (S_ISDIR(inode->i_mode)) {
+<<<<<<< HEAD
 		rc = set_posix_acl(idmap, dentry, ACL_TYPE_DEFAULT,
+=======
+		rc = set_posix_acl(user_ns, inode, ACL_TYPE_DEFAULT,
+>>>>>>> b7ba80a49124 (Commit)
 				   acls);
 		if (rc < 0)
 			ksmbd_debug(SMB, "Set posix acl(ACL_TYPE_DEFAULT) failed, rc : %d\n",

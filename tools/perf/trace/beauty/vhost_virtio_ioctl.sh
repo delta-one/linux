@@ -5,14 +5,22 @@
 
 printf "static const char *vhost_virtio_ioctl_cmds[] = {\n"
 regex='^#[[:space:]]*define[[:space:]]+VHOST_(\w+)[[:space:]]+_IOW?\([[:space:]]*VHOST_VIRTIO[[:space:]]*,[[:space:]]*(0x[[:xdigit:]]+).*'
+<<<<<<< HEAD
 grep -E $regex ${header_dir}/vhost.h | \
+=======
+egrep $regex ${header_dir}/vhost.h | \
+>>>>>>> b7ba80a49124 (Commit)
 	sed -r "s/$regex/\2 \1/g"	| \
 	sort | xargs printf "\t[%s] = \"%s\",\n"
 printf "};\n"
 
 printf "static const char *vhost_virtio_ioctl_read_cmds[] = {\n"
 regex='^#[[:space:]]*define[[:space:]]+VHOST_(\w+)[[:space:]]+_IOW?R\([[:space:]]*VHOST_VIRTIO[[:space:]]*,[[:space:]]*(0x[[:xdigit:]]+).*'
+<<<<<<< HEAD
 grep -E $regex ${header_dir}/vhost.h | \
+=======
+egrep $regex ${header_dir}/vhost.h | \
+>>>>>>> b7ba80a49124 (Commit)
 	sed -r "s/$regex/\2 \1/g"	| \
 	sort | xargs printf "\t[%s] = \"%s\",\n"
 printf "};\n"

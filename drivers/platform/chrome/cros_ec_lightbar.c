@@ -8,7 +8,10 @@
 #include <linux/device.h>
 #include <linux/fs.h>
 #include <linux/kobject.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/platform_data/cros_ec_commands.h>
 #include <linux/platform_data/cros_ec_proto.h>
@@ -34,7 +37,11 @@ static ssize_t interval_msec_show(struct device *dev,
 {
 	unsigned long msec = lb_interval_jiffies * 1000 / HZ;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%lu\n", msec);
+=======
+	return scnprintf(buf, PAGE_SIZE, "%lu\n", msec);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t interval_msec_store(struct device *dev,
@@ -169,7 +176,11 @@ static ssize_t version_show(struct device *dev,
 	if (!get_lightbar_version(ec, &version, &flags))
 		return -EIO;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d %d\n", version, flags);
+=======
+	return scnprintf(buf, PAGE_SIZE, "%d %d\n", version, flags);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t brightness_store(struct device *dev,
@@ -302,15 +313,27 @@ static ssize_t sequence_show(struct device *dev,
 
 	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
 	if (ret < 0) {
+<<<<<<< HEAD
 		ret = sysfs_emit(buf, "XFER / EC ERROR %d / %d\n", ret, msg->result);
+=======
+		ret = scnprintf(buf, PAGE_SIZE, "XFER / EC ERROR %d / %d\n",
+				ret, msg->result);
+>>>>>>> b7ba80a49124 (Commit)
 		goto exit;
 	}
 
 	resp = (struct ec_response_lightbar *)msg->data;
 	if (resp->get_seq.num >= ARRAY_SIZE(seqname))
+<<<<<<< HEAD
 		ret = sysfs_emit(buf, "%d\n", resp->get_seq.num);
 	else
 		ret = sysfs_emit(buf, "%s\n", seqname[resp->get_seq.num]);
+=======
+		ret = scnprintf(buf, PAGE_SIZE, "%d\n", resp->get_seq.num);
+	else
+		ret = scnprintf(buf, PAGE_SIZE, "%s\n",
+				seqname[resp->get_seq.num]);
+>>>>>>> b7ba80a49124 (Commit)
 
 exit:
 	kfree(msg);
@@ -481,7 +504,11 @@ static ssize_t userspace_control_show(struct device *dev,
 				      struct device_attribute *attr,
 				      char *buf)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", userspace_control);
+=======
+	return scnprintf(buf, PAGE_SIZE, "%d\n", userspace_control);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t userspace_control_store(struct device *dev,
@@ -492,7 +519,11 @@ static ssize_t userspace_control_store(struct device *dev,
 	bool enable;
 	int ret;
 
+<<<<<<< HEAD
 	ret = kstrtobool(buf, &enable);
+=======
+	ret = strtobool(buf, &enable);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 
@@ -600,7 +631,10 @@ static struct platform_driver cros_ec_lightbar_driver = {
 	.driver = {
 		.name = DRV_NAME,
 		.pm = &cros_ec_lightbar_pm_ops,
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = cros_ec_lightbar_probe,
 	.remove = cros_ec_lightbar_remove,

@@ -106,7 +106,12 @@ static const struct iio_info mc3230_info = {
 	.read_raw	= mc3230_read_raw,
 };
 
+<<<<<<< HEAD
 static int mc3230_probe(struct i2c_client *client)
+=======
+static int mc3230_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 	struct iio_dev *indio_dev;
@@ -190,7 +195,11 @@ static struct i2c_driver mc3230_driver = {
 		.name = "mc3230",
 		.pm = pm_sleep_ptr(&mc3230_pm_ops),
 	},
+<<<<<<< HEAD
 	.probe_new	= mc3230_probe,
+=======
+	.probe		= mc3230_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= mc3230_remove,
 	.id_table	= mc3230_i2c_id,
 };

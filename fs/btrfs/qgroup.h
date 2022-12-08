@@ -11,7 +11,10 @@
 #include <linux/kobject.h>
 #include "ulist.h"
 #include "delayed-ref.h"
+<<<<<<< HEAD
 #include "misc.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Btrfs qgroup overview
@@ -243,11 +246,17 @@ static inline u64 btrfs_qgroup_subvolid(u64 qgroupid)
 /*
  * For qgroup event trace points only
  */
+<<<<<<< HEAD
 enum {
 	ENUM_BIT(QGROUP_RESERVE),
 	ENUM_BIT(QGROUP_RELEASE),
 	ENUM_BIT(QGROUP_FREE),
 };
+=======
+#define QGROUP_RESERVE		(1<<0)
+#define QGROUP_RELEASE		(1<<1)
+#define QGROUP_FREE		(1<<2)
+>>>>>>> b7ba80a49124 (Commit)
 
 int btrfs_quota_enable(struct btrfs_fs_info *fs_info);
 int btrfs_quota_disable(struct btrfs_fs_info *fs_info);
@@ -321,7 +330,11 @@ int btrfs_qgroup_trace_extent_post(struct btrfs_trans_handle *trans,
  * (NULL trans)
  */
 int btrfs_qgroup_trace_extent(struct btrfs_trans_handle *trans, u64 bytenr,
+<<<<<<< HEAD
 			      u64 num_bytes);
+=======
+			      u64 num_bytes, gfp_t gfp_flag);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Inform qgroup to trace all leaf items of data

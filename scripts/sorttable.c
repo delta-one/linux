@@ -304,7 +304,10 @@ static int do_file(char const *const fname, void *addr)
 	switch (r2(&ehdr->e_machine)) {
 	case EM_386:
 	case EM_AARCH64:
+<<<<<<< HEAD
 	case EM_LOONGARCH:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case EM_RISCV:
 	case EM_S390:
 	case EM_X86_64:
@@ -318,6 +321,10 @@ static int do_file(char const *const fname, void *addr)
 	case EM_ARCOMPACT:
 	case EM_ARCV2:
 	case EM_ARM:
+<<<<<<< HEAD
+=======
+	case EM_LOONGARCH:
+>>>>>>> b7ba80a49124 (Commit)
 	case EM_MICROBLAZE:
 	case EM_MIPS:
 	case EM_XTENSA:

@@ -99,7 +99,11 @@ int omap_irq_enable_framedone(struct drm_crtc *crtc, bool enable)
 }
 
 /**
+<<<<<<< HEAD
  * omap_irq_enable_vblank - enable vblank interrupt events
+=======
+ * enable_vblank - enable vblank interrupt events
+>>>>>>> b7ba80a49124 (Commit)
  * @crtc: DRM CRTC
  *
  * Enable vblank interrupts for @crtc.  If the device doesn't have
@@ -129,7 +133,11 @@ int omap_irq_enable_vblank(struct drm_crtc *crtc)
 }
 
 /**
+<<<<<<< HEAD
  * omap_irq_disable_vblank - disable vblank interrupt events
+=======
+ * disable_vblank - disable vblank interrupt events
+>>>>>>> b7ba80a49124 (Commit)
  * @crtc: DRM CRTC
  *
  * Disable vblank interrupts for @crtc.  If the device doesn't have

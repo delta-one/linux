@@ -2,7 +2,10 @@
 menuconfig B53
 	tristate "Broadcom BCM53xx managed switch support"
 	depends on NET_DSA
+<<<<<<< HEAD
 	select NET_DSA_TAG_NONE
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select NET_DSA_TAG_BRCM
 	select NET_DSA_TAG_BRCM_LEGACY
 	select NET_DSA_TAG_BRCM_PREPEND

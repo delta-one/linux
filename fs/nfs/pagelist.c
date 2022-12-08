@@ -21,7 +21,10 @@
 #include <linux/nfs_page.h>
 #include <linux/nfs_mount.h>
 #include <linux/export.h>
+<<<<<<< HEAD
 #include <linux/filelock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "internal.h"
 #include "pnfs.h"
@@ -32,6 +35,7 @@
 static struct kmem_cache *nfs_page_cachep;
 static const struct rpc_call_ops nfs_pgio_common_ops;
 
+<<<<<<< HEAD
 struct nfs_page_iter_page {
 	const struct nfs_page *req;
 	size_t count;
@@ -68,6 +72,8 @@ static struct page *nfs_page_iter_page_get(struct nfs_page_iter_page *i)
 	return NULL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct nfs_pgio_mirror *
 nfs_pgio_get_mirror(struct nfs_pageio_descriptor *desc, u32 idx)
 {
@@ -427,7 +433,11 @@ nfs_page_group_init(struct nfs_page *req, struct nfs_page *prev)
 		 * has extra ref from the write/commit path to handle handoff
 		 * between write and commit lists. */
 		if (test_bit(PG_INODE_REF, &prev->wb_head->wb_flags)) {
+<<<<<<< HEAD
 			inode = nfs_page_to_inode(req);
+=======
+			inode = page_file_mapping(req->wb_page)->host;
+>>>>>>> b7ba80a49124 (Commit)
 			set_bit(PG_INODE_REF, &req->wb_flags);
 			kref_get(&req->wb_kref);
 			atomic_long_inc(&NFS_I(inode)->nrequests);
@@ -467,9 +477,16 @@ out:
 		nfs_release_request(head);
 }
 
+<<<<<<< HEAD
 static struct nfs_page *nfs_page_create(struct nfs_lock_context *l_ctx,
 					unsigned int pgbase, pgoff_t index,
 					unsigned int offset, unsigned int count)
+=======
+static struct nfs_page *
+__nfs_create_request(struct nfs_lock_context *l_ctx, struct page *page,
+		   unsigned int pgbase, unsigned int offset,
+		   unsigned int count)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nfs_page		*req;
 	struct nfs_open_context *ctx = l_ctx->open_context;
@@ -488,15 +505,27 @@ static struct nfs_page *nfs_page_create(struct nfs_lock_context *l_ctx,
 	/* Initialize the request struct. Initially, we assume a
 	 * long write-back delay. This will be adjusted in
 	 * update_nfs_request below if the region is not locked. */
+<<<<<<< HEAD
 	req->wb_pgbase = pgbase;
 	req->wb_index = index;
 	req->wb_offset = offset;
 	req->wb_bytes = count;
+=======
+	req->wb_page    = page;
+	if (page) {
+		req->wb_index = page_index(page);
+		get_page(page);
+	}
+	req->wb_offset  = offset;
+	req->wb_pgbase	= pgbase;
+	req->wb_bytes   = count;
+>>>>>>> b7ba80a49124 (Commit)
 	kref_init(&req->wb_kref);
 	req->wb_nio = 0;
 	return req;
 }
 
+<<<<<<< HEAD
 static void nfs_page_assign_folio(struct nfs_page *req, struct folio *folio)
 {
 	if (folio != NULL) {
@@ -520,22 +549,36 @@ static void nfs_page_assign_page(struct nfs_page *req, struct page *page)
  * @page: page to write
  * @pgbase: starting offset within the page for the write
  * @offset: file offset for the write
+=======
+/**
+ * nfs_create_request - Create an NFS read/write request.
+ * @ctx: open context to use
+ * @page: page to write
+ * @offset: starting offset within the page for the write
+>>>>>>> b7ba80a49124 (Commit)
  * @count: number of bytes to read/write
  *
  * The page must be locked by the caller. This makes sure we never
  * create two different requests for the same page.
  * User should ensure it is safe to sleep in this function.
  */
+<<<<<<< HEAD
 struct nfs_page *nfs_page_create_from_page(struct nfs_open_context *ctx,
 					   struct page *page,
 					   unsigned int pgbase, loff_t offset,
 					   unsigned int count)
+=======
+struct nfs_page *
+nfs_create_request(struct nfs_open_context *ctx, struct page *page,
+		   unsigned int offset, unsigned int count)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nfs_lock_context *l_ctx = nfs_get_lock_context(ctx);
 	struct nfs_page *ret;
 
 	if (IS_ERR(l_ctx))
 		return ERR_CAST(l_ctx);
+<<<<<<< HEAD
 	ret = nfs_page_create(l_ctx, pgbase, offset >> PAGE_SHIFT,
 			      offset_in_page(offset), count);
 	if (!IS_ERR(ret)) {
@@ -572,6 +615,11 @@ struct nfs_page *nfs_page_create_from_folio(struct nfs_open_context *ctx,
 		nfs_page_assign_folio(ret, folio);
 		nfs_page_group_init(ret, NULL);
 	}
+=======
+	ret = __nfs_create_request(l_ctx, page, offset, offset, count);
+	if (!IS_ERR(ret))
+		nfs_page_group_init(ret, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	nfs_put_lock_context(l_ctx);
 	return ret;
 }
@@ -584,6 +632,7 @@ nfs_create_subreq(struct nfs_page *req,
 {
 	struct nfs_page *last;
 	struct nfs_page *ret;
+<<<<<<< HEAD
 	struct folio *folio = nfs_page_to_folio(req);
 	struct page *page = nfs_page_to_page(req, pgbase);
 
@@ -594,6 +643,12 @@ nfs_create_subreq(struct nfs_page *req,
 			nfs_page_assign_folio(ret, folio);
 		else
 			nfs_page_assign_page(ret, page);
+=======
+
+	ret = __nfs_create_request(req->wb_lock_context, req->wb_page,
+			pgbase, offset, count);
+	if (!IS_ERR(ret)) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* find the last request */
 		for (last = req->wb_head;
 		     last->wb_this_page != req->wb_head;
@@ -601,6 +656,10 @@ nfs_create_subreq(struct nfs_page *req,
 			;
 
 		nfs_lock_request(ret);
+<<<<<<< HEAD
+=======
+		ret->wb_index = req->wb_index;
+>>>>>>> b7ba80a49124 (Commit)
 		nfs_page_group_init(ret, last);
 		ret->wb_nio = req->wb_nio;
 	}
@@ -639,16 +698,23 @@ void nfs_unlock_and_release_request(struct nfs_page *req)
  */
 static void nfs_clear_request(struct nfs_page *req)
 {
+<<<<<<< HEAD
 	struct folio *folio = nfs_page_to_folio(req);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct page *page = req->wb_page;
 	struct nfs_lock_context *l_ctx = req->wb_lock_context;
 	struct nfs_open_context *ctx;
 
+<<<<<<< HEAD
 	if (folio != NULL) {
 		folio_put(folio);
 		req->wb_folio = NULL;
 		clear_bit(PG_FOLIO, &req->wb_flags);
 	} else if (page != NULL) {
+=======
+	if (page != NULL) {
+>>>>>>> b7ba80a49124 (Commit)
 		put_page(page);
 		req->wb_page = NULL;
 	}
@@ -786,14 +852,23 @@ EXPORT_SYMBOL_GPL(nfs_pgio_header_free);
 /**
  * nfs_pgio_rpcsetup - Set up arguments for a pageio call
  * @hdr: The pageio hdr
+<<<<<<< HEAD
  * @pgbase: base
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @count: Number of bytes to read
  * @how: How to commit data (writes only)
  * @cinfo: Commit information for the call (writes only)
  */
+<<<<<<< HEAD
 static void nfs_pgio_rpcsetup(struct nfs_pgio_header *hdr, unsigned int pgbase,
 			      unsigned int count, int how,
 			      struct nfs_commit_info *cinfo)
+=======
+static void nfs_pgio_rpcsetup(struct nfs_pgio_header *hdr,
+			      unsigned int count,
+			      int how, struct nfs_commit_info *cinfo)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nfs_page *req = hdr->req;
 
@@ -804,7 +879,11 @@ static void nfs_pgio_rpcsetup(struct nfs_pgio_header *hdr, unsigned int pgbase,
 	hdr->args.offset = req_offset(req);
 	/* pnfs_set_layoutcommit needs this */
 	hdr->mds_offset = hdr->args.offset;
+<<<<<<< HEAD
 	hdr->args.pgbase = pgbase;
+=======
+	hdr->args.pgbase = req->wb_pgbase;
+>>>>>>> b7ba80a49124 (Commit)
 	hdr->args.pages  = hdr->page_array.pagevec;
 	hdr->args.count  = count;
 	hdr->args.context = get_nfs_open_context(nfs_req_openctx(req));
@@ -990,10 +1069,16 @@ int nfs_generic_pgio(struct nfs_pageio_descriptor *desc,
 	struct nfs_commit_info cinfo;
 	struct nfs_page_array *pg_array = &hdr->page_array;
 	unsigned int pagecount, pageused;
+<<<<<<< HEAD
 	unsigned int pg_base = offset_in_page(mirror->pg_base);
 	gfp_t gfp_flags = nfs_io_gfp_mask();
 
 	pagecount = nfs_page_array_len(pg_base, mirror->pg_count);
+=======
+	gfp_t gfp_flags = nfs_io_gfp_mask();
+
+	pagecount = nfs_page_array_len(mirror->pg_base, mirror->pg_count);
+>>>>>>> b7ba80a49124 (Commit)
 	pg_array->npages = pagecount;
 
 	if (pagecount <= ARRAY_SIZE(pg_array->page_array))
@@ -1013,6 +1098,7 @@ int nfs_generic_pgio(struct nfs_pageio_descriptor *desc,
 	last_page = NULL;
 	pageused = 0;
 	while (!list_empty(head)) {
+<<<<<<< HEAD
 		struct nfs_page_iter_page i;
 		struct page *page;
 
@@ -1033,6 +1119,18 @@ int nfs_generic_pgio(struct nfs_pageio_descriptor *desc,
 		}
 	}
 full:
+=======
+		req = nfs_list_entry(head->next);
+		nfs_list_move_request(req, &hdr->pages);
+
+		if (!last_page || last_page != req->wb_page) {
+			pageused++;
+			if (pageused > pagecount)
+				break;
+			*pages++ = last_page = req->wb_page;
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	if (WARN_ON_ONCE(pageused != pagecount)) {
 		nfs_pgio_error(hdr);
 		desc->pg_error = -EINVAL;
@@ -1044,8 +1142,12 @@ full:
 		desc->pg_ioflags &= ~FLUSH_COND_STABLE;
 
 	/* Set up the argument struct */
+<<<<<<< HEAD
 	nfs_pgio_rpcsetup(hdr, pg_base, mirror->pg_count, desc->pg_ioflags,
 			  &cinfo);
+=======
+	nfs_pgio_rpcsetup(hdr, mirror->pg_count, desc->pg_ioflags, &cinfo);
+>>>>>>> b7ba80a49124 (Commit)
 	desc->pg_rpc_callops = &nfs_pgio_common_ops;
 	return 0;
 }
@@ -1141,6 +1243,7 @@ static bool nfs_match_lock_context(const struct nfs_lock_context *l1,
 	return l1->lockowner == l2->lockowner;
 }
 
+<<<<<<< HEAD
 static bool nfs_page_is_contiguous(const struct nfs_page *prev,
 				   const struct nfs_page *req)
 {
@@ -1159,6 +1262,8 @@ static bool nfs_page_is_contiguous(const struct nfs_page *prev,
 	return false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * nfs_coalesce_size - test two requests for compatibility
  * @prev: pointer to nfs_page
@@ -1180,15 +1285,32 @@ static unsigned int nfs_coalesce_size(struct nfs_page *prev,
 	if (prev) {
 		if (!nfs_match_open_context(nfs_req_openctx(req), nfs_req_openctx(prev)))
 			return 0;
+<<<<<<< HEAD
 		flctx = locks_inode_context(d_inode(nfs_req_openctx(req)->dentry));
+=======
+		flctx = d_inode(nfs_req_openctx(req)->dentry)->i_flctx;
+>>>>>>> b7ba80a49124 (Commit)
 		if (flctx != NULL &&
 		    !(list_empty_careful(&flctx->flc_posix) &&
 		      list_empty_careful(&flctx->flc_flock)) &&
 		    !nfs_match_lock_context(req->wb_lock_context,
 					    prev->wb_lock_context))
 			return 0;
+<<<<<<< HEAD
 		if (!nfs_page_is_contiguous(prev, req))
 			return 0;
+=======
+		if (req_offset(req) != req_offset(prev) + prev->wb_bytes)
+			return 0;
+		if (req->wb_page == prev->wb_page) {
+			if (req->wb_pgbase != prev->wb_pgbase + prev->wb_bytes)
+				return 0;
+		} else {
+			if (req->wb_pgbase != 0 ||
+			    prev->wb_pgbase + prev->wb_bytes != PAGE_SIZE)
+				return 0;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return pgio->pg_ops->pg_test(pgio, prev, req);
 }
@@ -1528,13 +1650,17 @@ void nfs_pageio_cond_complete(struct nfs_pageio_descriptor *desc, pgoff_t index)
 {
 	struct nfs_pgio_mirror *mirror;
 	struct nfs_page *prev;
+<<<<<<< HEAD
 	struct folio *folio;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 midx;
 
 	for (midx = 0; midx < desc->pg_mirror_count; midx++) {
 		mirror = nfs_pgio_get_mirror(desc, midx);
 		if (!list_empty(&mirror->pg_list)) {
 			prev = nfs_list_entry(mirror->pg_list.prev);
+<<<<<<< HEAD
 			folio = nfs_page_to_folio(prev);
 			if (folio) {
 				if (index == folio_next_index(folio))
@@ -1543,6 +1669,12 @@ void nfs_pageio_cond_complete(struct nfs_pageio_descriptor *desc, pgoff_t index)
 				continue;
 			nfs_pageio_complete(desc);
 			break;
+=======
+			if (index != prev->wb_index + 1) {
+				nfs_pageio_complete(desc);
+				break;
+			}
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 }

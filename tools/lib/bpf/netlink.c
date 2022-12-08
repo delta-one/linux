@@ -9,7 +9,10 @@
 #include <linux/if_ether.h>
 #include <linux/pkt_cls.h>
 #include <linux/rtnetlink.h>
+<<<<<<< HEAD
 #include <linux/netdev.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <sys/socket.h>
 #include <errno.h>
 #include <time.h>
@@ -40,6 +43,7 @@ struct xdp_id_md {
 	int ifindex;
 	__u32 flags;
 	struct xdp_link_info info;
+<<<<<<< HEAD
 	__u64 feature_flags;
 };
 
@@ -49,6 +53,11 @@ struct xdp_features_md {
 };
 
 static int libbpf_netlink_open(__u32 *nl_pid, int proto)
+=======
+};
+
+static int libbpf_netlink_open(__u32 *nl_pid)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sockaddr_nl sa;
 	socklen_t addrlen;
@@ -58,7 +67,11 @@ static int libbpf_netlink_open(__u32 *nl_pid, int proto)
 	memset(&sa, 0, sizeof(sa));
 	sa.nl_family = AF_NETLINK;
 
+<<<<<<< HEAD
 	sock = socket(AF_NETLINK, SOCK_RAW | SOCK_CLOEXEC, proto);
+=======
+	sock = socket(AF_NETLINK, SOCK_RAW | SOCK_CLOEXEC, NETLINK_ROUTE);
+>>>>>>> b7ba80a49124 (Commit)
 	if (sock < 0)
 		return -errno;
 
@@ -219,14 +232,22 @@ done:
 }
 
 static int libbpf_netlink_send_recv(struct libbpf_nla_req *req,
+<<<<<<< HEAD
 				    int proto, __dump_nlmsg_t parse_msg,
+=======
+				    __dump_nlmsg_t parse_msg,
+>>>>>>> b7ba80a49124 (Commit)
 				    libbpf_dump_nlmsg_t parse_attr,
 				    void *cookie)
 {
 	__u32 nl_pid = 0;
 	int sock, ret;
 
+<<<<<<< HEAD
 	sock = libbpf_netlink_open(&nl_pid, proto);
+=======
+	sock = libbpf_netlink_open(&nl_pid);
+>>>>>>> b7ba80a49124 (Commit)
 	if (sock < 0)
 		return sock;
 
@@ -245,6 +266,7 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int parse_genl_family_id(struct nlmsghdr *nh, libbpf_dump_nlmsg_t fn,
 				void *cookie)
 {
@@ -282,6 +304,8 @@ static int libbpf_netlink_resolve_genl_family_id(const char *name,
 					parse_genl_family_id, NULL, id);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __bpf_set_link_xdp_fd_replace(int ifindex, int fd, int old_fd,
 					 __u32 flags)
 {
@@ -315,7 +339,11 @@ static int __bpf_set_link_xdp_fd_replace(int ifindex, int fd, int old_fd,
 	}
 	nlattr_end_nested(&req, nla);
 
+<<<<<<< HEAD
 	return libbpf_netlink_send_recv(&req, NETLINK_ROUTE, NULL, NULL, NULL);
+=======
+	return libbpf_netlink_send_recv(&req, NULL, NULL, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int bpf_xdp_attach(int ifindex, int prog_fd, __u32 flags, const struct bpf_xdp_attach_opts *opts)
@@ -401,6 +429,7 @@ static int get_xdp_info(void *cookie, void *msg, struct nlattr **tb)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int parse_xdp_features(struct nlmsghdr *nh, libbpf_dump_nlmsg_t fn,
 			      void *cookie)
 {
@@ -424,6 +453,8 @@ static int parse_xdp_features(struct nlmsghdr *nh, libbpf_dump_nlmsg_t fn,
 	return NL_DONE;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int bpf_xdp_query(int ifindex, int xdp_flags, struct bpf_xdp_query_opts *opts)
 {
 	struct libbpf_nla_req req = {
@@ -433,10 +464,13 @@ int bpf_xdp_query(int ifindex, int xdp_flags, struct bpf_xdp_query_opts *opts)
 		.ifinfo.ifi_family = AF_PACKET,
 	};
 	struct xdp_id_md xdp_id = {};
+<<<<<<< HEAD
 	struct xdp_features_md md = {
 		.ifindex = ifindex,
 	};
 	__u16 id;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	if (!OPTS_VALID(opts, bpf_xdp_query_opts))
@@ -453,7 +487,11 @@ int bpf_xdp_query(int ifindex, int xdp_flags, struct bpf_xdp_query_opts *opts)
 	xdp_id.ifindex = ifindex;
 	xdp_id.flags = xdp_flags;
 
+<<<<<<< HEAD
 	err = libbpf_netlink_send_recv(&req, NETLINK_ROUTE, __dump_link_nlmsg,
+=======
+	err = libbpf_netlink_send_recv(&req, __dump_link_nlmsg,
+>>>>>>> b7ba80a49124 (Commit)
 				       get_xdp_info, &xdp_id);
 	if (err)
 		return libbpf_err(err);
@@ -464,6 +502,7 @@ int bpf_xdp_query(int ifindex, int xdp_flags, struct bpf_xdp_query_opts *opts)
 	OPTS_SET(opts, skb_prog_id, xdp_id.info.skb_prog_id);
 	OPTS_SET(opts, attach_mode, xdp_id.info.attach_mode);
 
+<<<<<<< HEAD
 	if (!OPTS_HAS(opts, feature_flags))
 		return 0;
 
@@ -495,6 +534,8 @@ int bpf_xdp_query(int ifindex, int xdp_flags, struct bpf_xdp_query_opts *opts)
 	opts->feature_flags = md.flags;
 
 skip_feature_flags:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -595,7 +636,11 @@ static int tc_qdisc_modify(struct bpf_tc_hook *hook, int cmd, int flags)
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
 	return libbpf_netlink_send_recv(&req, NETLINK_ROUTE, NULL, NULL, NULL);
+=======
+	return libbpf_netlink_send_recv(&req, NULL, NULL, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int tc_qdisc_create_excl(struct bpf_tc_hook *hook)
@@ -695,7 +740,11 @@ static int tc_add_fd_and_name(struct libbpf_nla_req *req, int fd)
 	int len, ret;
 
 	memset(&info, 0, info_len);
+<<<<<<< HEAD
 	ret = bpf_prog_get_info_by_fd(fd, &info, &info_len);
+=======
+	ret = bpf_obj_get_info_by_fd(fd, &info, &info_len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 
@@ -775,8 +824,12 @@ int bpf_tc_attach(const struct bpf_tc_hook *hook, struct bpf_tc_opts *opts)
 
 	info.opts = opts;
 
+<<<<<<< HEAD
 	ret = libbpf_netlink_send_recv(&req, NETLINK_ROUTE, get_tc_info, NULL,
 				       &info);
+=======
+	ret = libbpf_netlink_send_recv(&req, get_tc_info, NULL, &info);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return libbpf_err(ret);
 	if (!info.processed)
@@ -842,7 +895,11 @@ static int __bpf_tc_detach(const struct bpf_tc_hook *hook,
 			return ret;
 	}
 
+<<<<<<< HEAD
 	return libbpf_netlink_send_recv(&req, NETLINK_ROUTE, NULL, NULL, NULL);
+=======
+	return libbpf_netlink_send_recv(&req, NULL, NULL, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int bpf_tc_detach(const struct bpf_tc_hook *hook,
@@ -907,8 +964,12 @@ int bpf_tc_query(const struct bpf_tc_hook *hook, struct bpf_tc_opts *opts)
 
 	info.opts = opts;
 
+<<<<<<< HEAD
 	ret = libbpf_netlink_send_recv(&req, NETLINK_ROUTE, get_tc_info, NULL,
 				       &info);
+=======
+	ret = libbpf_netlink_send_recv(&req, get_tc_info, NULL, &info);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return libbpf_err(ret);
 	if (!info.processed)

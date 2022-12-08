@@ -19,6 +19,7 @@ struct {
 	__type(value, __u64);
 } arraymap1 SEC(".maps");
 
+<<<<<<< HEAD
 struct {
 	__uint(type, BPF_MAP_TYPE_HASH);
 	__uint(max_entries, 10);
@@ -26,13 +27,19 @@ struct {
 	__type(value, __u32);
 } hashmap1 SEC(".maps");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 __u32 key_sum = 0;
 __u64 val_sum = 0;
 
 SEC("iter/bpf_map_elem")
 int dump_bpf_array_map(struct bpf_iter__bpf_map_elem *ctx)
 {
+<<<<<<< HEAD
 	__u32 *hmap_val, *key = ctx->key;
+=======
+	__u32 *key = ctx->key;
+>>>>>>> b7ba80a49124 (Commit)
 	__u64 *val = ctx->value;
 
 	if (key == (void *)0 || val == (void *)0)
@@ -42,6 +49,7 @@ int dump_bpf_array_map(struct bpf_iter__bpf_map_elem *ctx)
 	bpf_seq_write(ctx->meta->seq, val, sizeof(__u64));
 	key_sum += *key;
 	val_sum += *val;
+<<<<<<< HEAD
 
 	/* workaround - It's necessary to do this convoluted (val, key)
 	 * write into hashmap1, instead of simply doing
@@ -54,6 +62,8 @@ int dump_bpf_array_map(struct bpf_iter__bpf_map_elem *ctx)
 	if (hmap_val)
 		*hmap_val = *key;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	*val = *key;
 	return 0;
 }

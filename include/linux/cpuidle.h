@@ -14,7 +14,10 @@
 #include <linux/percpu.h>
 #include <linux/list.h>
 #include <linux/hrtimer.h>
+<<<<<<< HEAD
 #include <linux/context_tracking.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define CPUIDLE_STATE_MAX	10
 #define CPUIDLE_NAME_LEN	16
@@ -116,6 +119,7 @@ struct cpuidle_device {
 DECLARE_PER_CPU(struct cpuidle_device *, cpuidle_devices);
 DECLARE_PER_CPU(struct cpuidle_device, cpuidle_dev);
 
+<<<<<<< HEAD
 static __always_inline void ct_cpuidle_enter(void)
 {
 	lockdep_assert_irqs_disabled();
@@ -145,6 +149,8 @@ static __always_inline void ct_cpuidle_exit(void)
 	instrumentation_begin();
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /****************************
  * CPUIDLE DRIVER INTERFACE *
  ****************************/
@@ -307,7 +313,11 @@ extern s64 cpuidle_governor_latency_req(unsigned int cpu);
 #define __CPU_PM_CPU_IDLE_ENTER(low_level_idle_enter,			\
 				idx,					\
 				state,					\
+<<<<<<< HEAD
 				is_retention, is_rcu)			\
+=======
+				is_retention)				\
+>>>>>>> b7ba80a49124 (Commit)
 ({									\
 	int __ret = 0;							\
 									\
@@ -319,11 +329,15 @@ extern s64 cpuidle_governor_latency_req(unsigned int cpu);
 	if (!is_retention)						\
 		__ret =  cpu_pm_enter();				\
 	if (!__ret) {							\
+<<<<<<< HEAD
 		if (!is_rcu)						\
 			ct_cpuidle_enter();				\
 		__ret = low_level_idle_enter(state);			\
 		if (!is_rcu)						\
 			ct_cpuidle_exit();				\
+=======
+		__ret = low_level_idle_enter(state);			\
+>>>>>>> b7ba80a49124 (Commit)
 		if (!is_retention)					\
 			cpu_pm_exit();					\
 	}								\
@@ -332,6 +346,7 @@ extern s64 cpuidle_governor_latency_req(unsigned int cpu);
 })
 
 #define CPU_PM_CPU_IDLE_ENTER(low_level_idle_enter, idx)	\
+<<<<<<< HEAD
 	__CPU_PM_CPU_IDLE_ENTER(low_level_idle_enter, idx, idx, 0, 0)
 
 #define CPU_PM_CPU_IDLE_ENTER_RETENTION(low_level_idle_enter, idx)	\
@@ -348,5 +363,17 @@ extern s64 cpuidle_governor_latency_req(unsigned int cpu);
 
 #define CPU_PM_CPU_IDLE_ENTER_RETENTION_PARAM_RCU(low_level_idle_enter, idx, state)	\
 	__CPU_PM_CPU_IDLE_ENTER(low_level_idle_enter, idx, state, 1, 1)
+=======
+	__CPU_PM_CPU_IDLE_ENTER(low_level_idle_enter, idx, idx, 0)
+
+#define CPU_PM_CPU_IDLE_ENTER_RETENTION(low_level_idle_enter, idx)	\
+	__CPU_PM_CPU_IDLE_ENTER(low_level_idle_enter, idx, idx, 1)
+
+#define CPU_PM_CPU_IDLE_ENTER_PARAM(low_level_idle_enter, idx, state)	\
+	__CPU_PM_CPU_IDLE_ENTER(low_level_idle_enter, idx, state, 0)
+
+#define CPU_PM_CPU_IDLE_ENTER_RETENTION_PARAM(low_level_idle_enter, idx, state)	\
+	__CPU_PM_CPU_IDLE_ENTER(low_level_idle_enter, idx, state, 1)
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _LINUX_CPUIDLE_H */

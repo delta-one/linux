@@ -486,16 +486,26 @@ static void probe_kernel_image_config(const char *define_prefix)
 		}
 	}
 
+<<<<<<< HEAD
+=======
+end_parse:
+	if (file)
+		gzclose(file);
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < ARRAY_SIZE(options); i++) {
 		if (define_prefix && !options[i].macro_dump)
 			continue;
 		print_kernel_option(options[i].name, values[i], define_prefix);
 		free(values[i]);
 	}
+<<<<<<< HEAD
 
 end_parse:
 	if (file)
 		gzclose(file);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool probe_bpf_syscall(const char *define_prefix)

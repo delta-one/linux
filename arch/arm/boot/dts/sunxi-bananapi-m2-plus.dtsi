@@ -89,6 +89,7 @@
 	};
 
 	reg_gmac_3v3: gmac-3v3 {
+<<<<<<< HEAD
 		compatible = "regulator-fixed";
 		regulator-name = "gmac-3v3";
 		regulator-min-microvolt = <3300000>;
@@ -96,6 +97,15 @@
 		startup-delay-us = <100000>;
 		enable-active-high;
 		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>;
+=======
+		      compatible = "regulator-fixed";
+		      regulator-name = "gmac-3v3";
+		      regulator-min-microvolt = <3300000>;
+		      regulator-max-microvolt = <3300000>;
+		      startup-delay-us = <100000>;
+		      enable-active-high;
+		      gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	wifi_pwrseq: wifi_pwrseq {

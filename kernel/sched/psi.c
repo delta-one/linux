@@ -189,7 +189,10 @@ static void group_init(struct psi_group *group)
 	INIT_DELAYED_WORK(&group->avgs_work, psi_avgs_work);
 	mutex_init(&group->avgs_lock);
 	/* Init trigger-related members */
+<<<<<<< HEAD
 	atomic_set(&group->poll_scheduled, 0);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_init(&group->trigger_lock);
 	INIT_LIST_HEAD(&group->triggers);
 	group->poll_min_period = U32_MAX;
@@ -243,8 +246,11 @@ static void get_recent_times(struct psi_group *group, int cpu,
 			     u32 *pchanged_states)
 {
 	struct psi_group_cpu *groupc = per_cpu_ptr(group->pcpu, cpu);
+<<<<<<< HEAD
 	int current_cpu = raw_smp_processor_id();
 	unsigned int tasks[NR_PSI_TASK_COUNTS];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u64 now, state_start;
 	enum psi_states s;
 	unsigned int seq;
@@ -259,8 +265,11 @@ static void get_recent_times(struct psi_group *group, int cpu,
 		memcpy(times, groupc->times, sizeof(groupc->times));
 		state_mask = groupc->state_mask;
 		state_start = groupc->state_start;
+<<<<<<< HEAD
 		if (cpu == current_cpu)
 			memcpy(tasks, groupc->tasks, sizeof(groupc->tasks));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} while (read_seqcount_retry(&groupc->seq, seq));
 
 	/* Calculate state time deltas against the previous snapshot */
@@ -285,6 +294,7 @@ static void get_recent_times(struct psi_group *group, int cpu,
 		if (delta)
 			*pchanged_states |= (1 << s);
 	}
+<<<<<<< HEAD
 
 	/*
 	 * When collect_percpu_times() from the avgs_work, we don't want to
@@ -307,6 +317,8 @@ static void get_recent_times(struct psi_group *group, int cpu,
 		if (reschedule)
 			*pchanged_states |= PSI_STATE_RESCHEDULE;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void calc_avgs(unsigned long avg[3], int missed_periods,
@@ -442,6 +454,10 @@ static void psi_avgs_work(struct work_struct *work)
 	struct delayed_work *dwork;
 	struct psi_group *group;
 	u32 changed_states;
+<<<<<<< HEAD
+=======
+	bool nonidle;
+>>>>>>> b7ba80a49124 (Commit)
 	u64 now;
 
 	dwork = to_delayed_work(work);
@@ -452,6 +468,10 @@ static void psi_avgs_work(struct work_struct *work)
 	now = sched_clock();
 
 	collect_percpu_times(group, PSI_AVGS, &changed_states);
+<<<<<<< HEAD
+=======
+	nonidle = changed_states & (1 << PSI_NONIDLE);
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * If there is task activity, periodically fold the per-cpu
 	 * times and feed samples into the running averages. If things
@@ -462,7 +482,11 @@ static void psi_avgs_work(struct work_struct *work)
 	if (now >= group->avg_next_update)
 		group->avg_next_update = update_averages(group, now);
 
+<<<<<<< HEAD
 	if (changed_states & PSI_STATE_RESCHEDULE) {
+=======
+	if (nonidle) {
+>>>>>>> b7ba80a49124 (Commit)
 		schedule_delayed_work(dwork, nsecs_to_jiffies(
 				group->avg_next_update - now) + 1);
 	}
@@ -564,12 +588,19 @@ static u64 update_triggers(struct psi_group *group, u64 now)
 
 			/* Calculate growth since last update */
 			growth = window_update(&t->win, now, total[t->state]);
+<<<<<<< HEAD
 			if (!t->pending_event) {
 				if (growth < t->threshold)
 					continue;
 
 				t->pending_event = true;
 			}
+=======
+			if (growth < t->threshold)
+				continue;
+
+			t->pending_event = true;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		/* Limit event signaling to once per window */
 		if (now < t->last_event_time + t->win.size)
@@ -590,17 +621,31 @@ static u64 update_triggers(struct psi_group *group, u64 now)
 	return now + group->poll_min_period;
 }
 
+<<<<<<< HEAD
 /* Schedule polling if it's not already scheduled or forced. */
 static void psi_schedule_poll_work(struct psi_group *group, unsigned long delay,
 				   bool force)
+=======
+/* Schedule polling if it's not already scheduled. */
+static void psi_schedule_poll_work(struct psi_group *group, unsigned long delay)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct task_struct *task;
 
 	/*
+<<<<<<< HEAD
 	 * atomic_xchg should be called even when !force to provide a
 	 * full memory barrier (see the comment inside psi_poll_work).
 	 */
 	if (atomic_xchg(&group->poll_scheduled, 1) && !force)
+=======
+	 * Do not reschedule if already scheduled.
+	 * Possible race with a timer scheduled after this check but before
+	 * mod_timer below can be tolerated because group->polling_next_update
+	 * will keep updates on schedule.
+	 */
+	if (timer_pending(&group->poll_timer))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	rcu_read_lock();
@@ -612,15 +657,21 @@ static void psi_schedule_poll_work(struct psi_group *group, unsigned long delay,
 	 */
 	if (likely(task))
 		mod_timer(&group->poll_timer, jiffies + delay);
+<<<<<<< HEAD
 	else
 		atomic_set(&group->poll_scheduled, 0);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	rcu_read_unlock();
 }
 
 static void psi_poll_work(struct psi_group *group)
 {
+<<<<<<< HEAD
 	bool force_reschedule = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 changed_states;
 	u64 now;
 
@@ -628,6 +679,7 @@ static void psi_poll_work(struct psi_group *group)
 
 	now = sched_clock();
 
+<<<<<<< HEAD
 	if (now > group->polling_until) {
 		/*
 		 * We are either about to start or might stop polling if no
@@ -665,6 +717,8 @@ static void psi_poll_work(struct psi_group *group)
 	}
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	collect_percpu_times(group, PSI_POLL, &changed_states);
 
 	if (changed_states & group->poll_states) {
@@ -690,8 +744,12 @@ static void psi_poll_work(struct psi_group *group)
 		group->polling_next_update = update_triggers(group, now);
 
 	psi_schedule_poll_work(group,
+<<<<<<< HEAD
 		nsecs_to_jiffies(group->polling_next_update - now) + 1,
 		force_reschedule);
+=======
+		nsecs_to_jiffies(group->polling_next_update - now) + 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 out:
 	mutex_unlock(&group->trigger_lock);
@@ -852,7 +910,11 @@ static void psi_group_change(struct psi_group *group, int cpu,
 	write_seqcount_end(&groupc->seq);
 
 	if (state_mask & group->poll_states)
+<<<<<<< HEAD
 		psi_schedule_poll_work(group, 1, false);
+=======
+		psi_schedule_poll_work(group, 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (wake_clock && !delayed_work_pending(&group->avgs_work))
 		schedule_delayed_work(&group->avgs_work, PSI_FREQ);
@@ -1006,7 +1068,11 @@ void psi_account_irqtime(struct task_struct *task, u32 delta)
 		write_seqcount_end(&groupc->seq);
 
 		if (group->poll_states & (1 << PSI_IRQ_FULL))
+<<<<<<< HEAD
 			psi_schedule_poll_work(group, 1, false);
+=======
+			psi_schedule_poll_work(group, 1);
+>>>>>>> b7ba80a49124 (Commit)
 	} while ((group = group->parent));
 }
 #endif
@@ -1343,11 +1409,18 @@ void psi_trigger_destroy(struct psi_trigger *t)
 
 	group = t->group;
 	/*
+<<<<<<< HEAD
 	 * Wakeup waiters to stop polling and clear the queue to prevent it from
 	 * being accessed later. Can happen if cgroup is deleted from under a
 	 * polling process.
 	 */
 	wake_up_pollfree(&t->event_wait);
+=======
+	 * Wakeup waiters to stop polling. Can happen if cgroup is deleted
+	 * from under a polling process.
+	 */
+	wake_up_interruptible(&t->event_wait);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_lock(&group->trigger_lock);
 
@@ -1393,7 +1466,10 @@ void psi_trigger_destroy(struct psi_trigger *t)
 		 * can no longer be found through group->poll_task.
 		 */
 		kthread_stop(task_to_destroy);
+<<<<<<< HEAD
 		atomic_set(&group->poll_scheduled, 0);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	kfree(t);
 }

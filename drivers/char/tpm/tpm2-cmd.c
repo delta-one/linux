@@ -777,12 +777,19 @@ out:
 
 int tpm2_find_cc(struct tpm_chip *chip, u32 cc)
 {
+<<<<<<< HEAD
 	u32 cc_mask;
 	int i;
 
 	cc_mask = 1 << TPM2_CC_ATTR_VENDOR | GENMASK(15, 0);
 	for (i = 0; i < chip->nr_commands; i++)
 		if (cc == (chip->cc_attrs_tbl[i] & cc_mask))
+=======
+	int i;
+
+	for (i = 0; i < chip->nr_commands; i++)
+		if (cc == (chip->cc_attrs_tbl[i] & GENMASK(15, 0)))
+>>>>>>> b7ba80a49124 (Commit)
 			return i;
 
 	return -1;

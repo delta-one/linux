@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 Amlogic Meson Power Controller (deprecated)
 ===========================================
+=======
+Amlogic Meson Power Controller
+==============================
+>>>>>>> b7ba80a49124 (Commit)
 
 The Amlogic Meson SoCs embeds an internal Power domain controller.
 

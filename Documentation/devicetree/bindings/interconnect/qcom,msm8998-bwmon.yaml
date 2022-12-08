@@ -24,6 +24,7 @@ properties:
     oneOf:
       - items:
           - enum:
+<<<<<<< HEAD
               - qcom,sc7280-cpu-bwmon
               - qcom,sc8280xp-cpu-bwmon
               - qcom,sdm845-bwmon
@@ -35,6 +36,12 @@ properties:
               - qcom,sc8280xp-llcc-bwmon
               - qcom,sm8550-llcc-bwmon
           - const: qcom,sc7280-llcc-bwmon
+=======
+              - qcom,sc7280-bwmon
+              - qcom,sdm845-bwmon
+          - const: qcom,msm8998-bwmon
+      - const: qcom,msm8998-bwmon       # BWMON v4
+>>>>>>> b7ba80a49124 (Commit)
       - const: qcom,sc7280-llcc-bwmon   # BWMON v5
       - const: qcom,sdm845-llcc-bwmon   # BWMON v5
 

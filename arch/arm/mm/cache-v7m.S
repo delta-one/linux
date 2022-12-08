@@ -18,8 +18,11 @@
 
 #include "proc-macros.S"
 
+<<<<<<< HEAD
 .arch armv7-m
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Generic V7M read/write macros for memory mapped cache operations */
 .macro v7m_cache_read, rt, reg
 	movw	\rt, #:lower16:BASEADDR_V7M_SCB + \reg

@@ -74,7 +74,11 @@ void str_printf(struct gstr *gs, const char *fmt, ...)
 }
 
 /* Retrieve value of growable string */
+<<<<<<< HEAD
 char *str_get(struct gstr *gs)
+=======
+const char *str_get(struct gstr *gs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return gs->s;
 }

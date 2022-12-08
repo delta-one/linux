@@ -39,7 +39,11 @@ unevaluatedProperties: false
 
 examples:
   - |
+<<<<<<< HEAD
     spi {
+=======
+    spi0 {
+>>>>>>> b7ba80a49124 (Commit)
         #address-cells = <1>;
         #size-cells = <0>;
 
@@ -47,7 +51,10 @@ examples:
             compatible = "google,cros-ec-spi";
             reg = <0>;
             spi-max-frequency = <5000000>;
+<<<<<<< HEAD
             interrupts = <99 0>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
             i2c-tunnel {
                 compatible = "google,cros-ec-i2c-tunnel";

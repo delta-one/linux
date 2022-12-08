@@ -104,7 +104,10 @@ TRACE_DEFINE_ENUM(EXT4_FC_REASON_RESIZE);
 TRACE_DEFINE_ENUM(EXT4_FC_REASON_RENAME_DIR);
 TRACE_DEFINE_ENUM(EXT4_FC_REASON_FALLOC_RANGE);
 TRACE_DEFINE_ENUM(EXT4_FC_REASON_INODE_JOURNAL_DATA);
+<<<<<<< HEAD
 TRACE_DEFINE_ENUM(EXT4_FC_REASON_ENCRYPTED_FILENAME);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 TRACE_DEFINE_ENUM(EXT4_FC_REASON_MAX);
 
 #define show_fc_reason(reason)						\
@@ -117,8 +120,12 @@ TRACE_DEFINE_ENUM(EXT4_FC_REASON_MAX);
 		{ EXT4_FC_REASON_RESIZE,	"RESIZE"},		\
 		{ EXT4_FC_REASON_RENAME_DIR,	"RENAME_DIR"},		\
 		{ EXT4_FC_REASON_FALLOC_RANGE,	"FALLOC_RANGE"},	\
+<<<<<<< HEAD
 		{ EXT4_FC_REASON_INODE_JOURNAL_DATA,	"INODE_JOURNAL_DATA"}, \
 		{ EXT4_FC_REASON_ENCRYPTED_FILENAME,	"ENCRYPTED_FILENAME"})
+=======
+		{ EXT4_FC_REASON_INODE_JOURNAL_DATA,	"INODE_JOURNAL_DATA"})
+>>>>>>> b7ba80a49124 (Commit)
 
 TRACE_EVENT(ext4_other_inode_update_time,
 	TP_PROTO(struct inode *inode, ino_t orig_ino),
@@ -584,6 +591,16 @@ DECLARE_EVENT_CLASS(ext4__page_op,
 		  (unsigned long) __entry->index)
 );
 
+<<<<<<< HEAD
+=======
+DEFINE_EVENT(ext4__page_op, ext4_writepage,
+
+	TP_PROTO(struct page *page),
+
+	TP_ARGS(page)
+);
+
+>>>>>>> b7ba80a49124 (Commit)
 DEFINE_EVENT(ext4__page_op, ext4_readpage,
 
 	TP_PROTO(struct page *page),
@@ -1739,6 +1756,7 @@ TRACE_EVENT(ext4_load_inode,
 		  (unsigned long) __entry->ino)
 );
 
+<<<<<<< HEAD
 TRACE_EVENT(ext4_journal_start_sb,
 	TP_PROTO(struct super_block *sb, int blocks, int rsv_blocks,
 		 int revoke_creds, int type, unsigned long IP),
@@ -1752,6 +1770,20 @@ TRACE_EVENT(ext4_journal_start_sb,
 		__field(	int,		rsv_blocks	)
 		__field(	int,		revoke_creds	)
 		__field(	int,		type		)
+=======
+TRACE_EVENT(ext4_journal_start,
+	TP_PROTO(struct super_block *sb, int blocks, int rsv_blocks,
+		 int revoke_creds, unsigned long IP),
+
+	TP_ARGS(sb, blocks, rsv_blocks, revoke_creds, IP),
+
+	TP_STRUCT__entry(
+		__field(	dev_t,	dev			)
+		__field(unsigned long,	ip			)
+		__field(	  int,	blocks			)
+		__field(	  int,	rsv_blocks		)
+		__field(	  int,	revoke_creds		)
+>>>>>>> b7ba80a49124 (Commit)
 	),
 
 	TP_fast_assign(
@@ -1760,6 +1792,7 @@ TRACE_EVENT(ext4_journal_start_sb,
 		__entry->blocks		 = blocks;
 		__entry->rsv_blocks	 = rsv_blocks;
 		__entry->revoke_creds	 = revoke_creds;
+<<<<<<< HEAD
 		__entry->type		 = type;
 	),
 
@@ -1799,6 +1832,13 @@ TRACE_EVENT(ext4_journal_start_inode,
 		  " type %d, ino %lu, caller %pS", MAJOR(__entry->dev),
 		  MINOR(__entry->dev), __entry->blocks, __entry->rsv_blocks,
 		  __entry->revoke_creds, __entry->type, __entry->ino,
+=======
+	),
+
+	TP_printk("dev %d,%d blocks %d, rsv_blocks %d, revoke_creds %d, "
+		  "caller %pS", MAJOR(__entry->dev), MINOR(__entry->dev),
+		  __entry->blocks, __entry->rsv_blocks, __entry->revoke_creds,
+>>>>>>> b7ba80a49124 (Commit)
 		  (void *)__entry->ip)
 );
 
@@ -2794,7 +2834,11 @@ TRACE_EVENT(ext4_fc_stats,
 	),
 
 	TP_printk("dev %d,%d fc ineligible reasons:\n"
+<<<<<<< HEAD
 		  "%s:%u, %s:%u, %s:%u, %s:%u, %s:%u, %s:%u, %s:%u, %s:%u, %s:%u, %s:%u"
+=======
+		  "%s:%u, %s:%u, %s:%u, %s:%u, %s:%u, %s:%u, %s:%u, %s:%u, %s:%u "
+>>>>>>> b7ba80a49124 (Commit)
 		  "num_commits:%lu, ineligible: %lu, numblks: %lu",
 		  MAJOR(__entry->dev), MINOR(__entry->dev),
 		  FC_REASON_NAME_STAT(EXT4_FC_REASON_XATTR),
@@ -2806,7 +2850,10 @@ TRACE_EVENT(ext4_fc_stats,
 		  FC_REASON_NAME_STAT(EXT4_FC_REASON_RENAME_DIR),
 		  FC_REASON_NAME_STAT(EXT4_FC_REASON_FALLOC_RANGE),
 		  FC_REASON_NAME_STAT(EXT4_FC_REASON_INODE_JOURNAL_DATA),
+<<<<<<< HEAD
 		  FC_REASON_NAME_STAT(EXT4_FC_REASON_ENCRYPTED_FILENAME),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		  __entry->fc_commits, __entry->fc_ineligible_commits,
 		  __entry->fc_numblks)
 );

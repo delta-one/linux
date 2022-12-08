@@ -4,7 +4,10 @@
 #include <stddef.h>
 #include <linux/bpf.h>
 #include <bpf/bpf_helpers.h>
+<<<<<<< HEAD
 #include "bpf_misc.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct {
 	__uint(type, BPF_MAP_TYPE_ARRAY);
@@ -20,7 +23,10 @@ int test_obj_id(void *ctx)
 	__u64 *value;
 
 	value = bpf_map_lookup_elem(&test_map_id, &key);
+<<<<<<< HEAD
 	__sink(value);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

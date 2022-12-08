@@ -43,6 +43,12 @@ struct linux_binprm {
 		 * original userspace.
 		 */
 		point_of_no_return:1;
+<<<<<<< HEAD
+=======
+#ifdef __alpha__
+	unsigned int taso:1;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	struct file *executable; /* Executable to pass to the interpreter */
 	struct file *interpreter;
 	struct file *file;

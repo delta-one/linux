@@ -11,6 +11,10 @@
 #include <linux/mfd/mc13xxx.h>
 #include <linux/of.h>
 #include <linux/of_device.h>
+<<<<<<< HEAD
+=======
+#include <linux/of_gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/i2c.h>
 #include <linux/err.h>
 
@@ -51,9 +55,15 @@ static const struct regmap_config mc13xxx_regmap_i2c_config = {
 	.cache_type = REGCACHE_NONE,
 };
 
+<<<<<<< HEAD
 static int mc13xxx_i2c_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int mc13xxx_i2c_probe(struct i2c_client *client,
+		const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct mc13xxx *mc13xxx;
 	int ret;
 
@@ -95,7 +105,11 @@ static struct i2c_driver mc13xxx_i2c_driver = {
 		.name = "mc13xxx",
 		.of_match_table = mc13xxx_dt_ids,
 	},
+<<<<<<< HEAD
 	.probe_new = mc13xxx_i2c_probe,
+=======
+	.probe = mc13xxx_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = mc13xxx_i2c_remove,
 };
 

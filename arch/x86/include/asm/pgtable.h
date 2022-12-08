@@ -124,6 +124,7 @@ extern pmdval_t early_pmd_flags;
  * The following only work if pte_present() is true.
  * Undefined behaviour if not..
  */
+<<<<<<< HEAD
 static inline bool pte_dirty(pte_t pte)
 {
 	return pte_flags(pte) & _PAGE_DIRTY_BITS;
@@ -135,6 +136,11 @@ static inline bool pte_shstk(pte_t pte)
 		return false;
 
 	return (pte_flags(pte) & (_PAGE_RW | _PAGE_DIRTY)) == _PAGE_DIRTY;
+=======
+static inline int pte_dirty(pte_t pte)
+{
+	return pte_flags(pte) & _PAGE_DIRTY;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline int pte_young(pte_t pte)
@@ -142,6 +148,7 @@ static inline int pte_young(pte_t pte)
 	return pte_flags(pte) & _PAGE_ACCESSED;
 }
 
+<<<<<<< HEAD
 static inline bool pmd_dirty(pmd_t pmd)
 {
 	return pmd_flags(pmd) & _PAGE_DIRTY_BITS;
@@ -157,14 +164,27 @@ static inline bool pmd_shstk(pmd_t pmd)
 }
 
 #define pmd_young pmd_young
+=======
+static inline int pmd_dirty(pmd_t pmd)
+{
+	return pmd_flags(pmd) & _PAGE_DIRTY;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline int pmd_young(pmd_t pmd)
 {
 	return pmd_flags(pmd) & _PAGE_ACCESSED;
 }
 
+<<<<<<< HEAD
 static inline bool pud_dirty(pud_t pud)
 {
 	return pud_flags(pud) & _PAGE_DIRTY_BITS;
+=======
+static inline int pud_dirty(pud_t pud)
+{
+	return pud_flags(pud) & _PAGE_DIRTY;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline int pud_young(pud_t pud)
@@ -174,6 +194,7 @@ static inline int pud_young(pud_t pud)
 
 static inline int pte_write(pte_t pte)
 {
+<<<<<<< HEAD
 	/*
 	 * Shadow stack pages are logically writable, but do not have
 	 * _PAGE_RW.  Check for them separately from _PAGE_RW itself.
@@ -195,6 +216,9 @@ static inline int pmd_write(pmd_t pmd)
 static inline int pud_write(pud_t pud)
 {
 	return pud_flags(pud) & _PAGE_RW;
+=======
+	return pte_flags(pte) & _PAGE_RW;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline int pte_huge(pte_t pte)
@@ -326,6 +350,7 @@ static inline pte_t pte_clear_flags(pte_t pte, pteval_t clear)
 	return native_make_pte(v & ~clear);
 }
 
+<<<<<<< HEAD
 /*
  * Write protection operations can result in Dirty=1,Write=0 PTEs. But in the
  * case of X86_FEATURE_USER_SHSTK, the software SavedDirty bit is used, since
@@ -399,11 +424,21 @@ static inline int pte_uffd_wp(pte_t pte)
 #endif
 
 	return wp;
+=======
+#ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
+static inline int pte_uffd_wp(pte_t pte)
+{
+	return pte_flags(pte) & _PAGE_UFFD_WP;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline pte_t pte_mkuffd_wp(pte_t pte)
 {
+<<<<<<< HEAD
 	return pte_wrprotect(pte_set_flags(pte, _PAGE_UFFD_WP));
+=======
+	return pte_set_flags(pte, _PAGE_UFFD_WP);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline pte_t pte_clear_uffd_wp(pte_t pte)
@@ -414,7 +449,11 @@ static inline pte_t pte_clear_uffd_wp(pte_t pte)
 
 static inline pte_t pte_mkclean(pte_t pte)
 {
+<<<<<<< HEAD
 	return pte_clear_flags(pte, _PAGE_DIRTY_BITS);
+=======
+	return pte_clear_flags(pte, _PAGE_DIRTY);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline pte_t pte_mkold(pte_t pte)
@@ -422,6 +461,14 @@ static inline pte_t pte_mkold(pte_t pte)
 	return pte_clear_flags(pte, _PAGE_ACCESSED);
 }
 
+<<<<<<< HEAD
+=======
+static inline pte_t pte_wrprotect(pte_t pte)
+{
+	return pte_clear_flags(pte, _PAGE_RW);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline pte_t pte_mkexec(pte_t pte)
 {
 	return pte_clear_flags(pte, _PAGE_NX);
@@ -429,6 +476,7 @@ static inline pte_t pte_mkexec(pte_t pte)
 
 static inline pte_t pte_mkdirty(pte_t pte)
 {
+<<<<<<< HEAD
 	pteval_t dirty = _PAGE_DIRTY;
 
 	/* Avoid creating Dirty=1,Write=0 PTEs */
@@ -442,6 +490,9 @@ static inline pte_t pte_mkwrite_shstk(pte_t pte)
 {
 	/* pte_clear_saveddirty() also sets Dirty=1 */
 	return pte_clear_saveddirty(pte);
+=======
+	return pte_set_flags(pte, _PAGE_DIRTY | _PAGE_SOFT_DIRTY);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline pte_t pte_mkyoung(pte_t pte)
@@ -449,15 +500,22 @@ static inline pte_t pte_mkyoung(pte_t pte)
 	return pte_set_flags(pte, _PAGE_ACCESSED);
 }
 
+<<<<<<< HEAD
 static inline pte_t pte_mkwrite_kernel(pte_t pte)
+=======
+static inline pte_t pte_mkwrite(pte_t pte)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return pte_set_flags(pte, _PAGE_RW);
 }
 
+<<<<<<< HEAD
 struct vm_area_struct;
 
 pte_t pte_mkwrite(pte_t pte, struct vm_area_struct *vma);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline pte_t pte_mkhuge(pte_t pte)
 {
 	return pte_set_flags(pte, _PAGE_PSE);
@@ -502,6 +560,7 @@ static inline pmd_t pmd_clear_flags(pmd_t pmd, pmdval_t clear)
 	return native_make_pmd(v & ~clear);
 }
 
+<<<<<<< HEAD
 /* See comments above pte_mksaveddirty() */
 static inline pmd_t pmd_mksaveddirty(pmd_t pmd)
 {
@@ -535,6 +594,8 @@ static inline pmd_t pmd_wrprotect(pmd_t pmd)
 	return pmd;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
 static inline int pmd_uffd_wp(pmd_t pmd)
 {
@@ -543,7 +604,11 @@ static inline int pmd_uffd_wp(pmd_t pmd)
 
 static inline pmd_t pmd_mkuffd_wp(pmd_t pmd)
 {
+<<<<<<< HEAD
 	return pmd_wrprotect(pmd_set_flags(pmd, _PAGE_UFFD_WP));
+=======
+	return pmd_set_flags(pmd, _PAGE_UFFD_WP);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline pmd_t pmd_clear_uffd_wp(pmd_t pmd)
@@ -559,11 +624,21 @@ static inline pmd_t pmd_mkold(pmd_t pmd)
 
 static inline pmd_t pmd_mkclean(pmd_t pmd)
 {
+<<<<<<< HEAD
 	return pmd_clear_flags(pmd, _PAGE_DIRTY_BITS);
+=======
+	return pmd_clear_flags(pmd, _PAGE_DIRTY);
+}
+
+static inline pmd_t pmd_wrprotect(pmd_t pmd)
+{
+	return pmd_clear_flags(pmd, _PAGE_RW);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline pmd_t pmd_mkdirty(pmd_t pmd)
 {
+<<<<<<< HEAD
 	pmdval_t dirty = _PAGE_DIRTY;
 
 	/* Avoid creating (HW)Dirty=1, Write=0 PMDs */
@@ -576,6 +651,9 @@ static inline pmd_t pmd_mkdirty(pmd_t pmd)
 static inline pmd_t pmd_mkwrite_shstk(pmd_t pmd)
 {
 	return pmd_clear_saveddirty(pmd);
+=======
+	return pmd_set_flags(pmd, _PAGE_DIRTY | _PAGE_SOFT_DIRTY);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline pmd_t pmd_mkdevmap(pmd_t pmd)
@@ -593,7 +671,14 @@ static inline pmd_t pmd_mkyoung(pmd_t pmd)
 	return pmd_set_flags(pmd, _PAGE_ACCESSED);
 }
 
+<<<<<<< HEAD
 pmd_t pmd_mkwrite(pmd_t pmd, struct vm_area_struct *vma);
+=======
+static inline pmd_t pmd_mkwrite(pmd_t pmd)
+{
+	return pmd_set_flags(pmd, _PAGE_RW);
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline pud_t pud_set_flags(pud_t pud, pudval_t set)
 {
@@ -609,6 +694,7 @@ static inline pud_t pud_clear_flags(pud_t pud, pudval_t clear)
 	return native_make_pud(v & ~clear);
 }
 
+<<<<<<< HEAD
 /* See comments above pte_mksaveddirty() */
 static inline pud_t pud_mksaveddirty(pud_t pud)
 {
@@ -629,6 +715,8 @@ static inline pud_t pud_clear_saveddirty(pud_t pud)
 	return pud_clear_flags(pud, _PAGE_SAVED_DIRTY);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline pud_t pud_mkold(pud_t pud)
 {
 	return pud_clear_flags(pud, _PAGE_ACCESSED);
@@ -636,11 +724,16 @@ static inline pud_t pud_mkold(pud_t pud)
 
 static inline pud_t pud_mkclean(pud_t pud)
 {
+<<<<<<< HEAD
 	return pud_clear_flags(pud, _PAGE_DIRTY_BITS);
+=======
+	return pud_clear_flags(pud, _PAGE_DIRTY);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline pud_t pud_wrprotect(pud_t pud)
 {
+<<<<<<< HEAD
 	pud = pud_clear_flags(pud, _PAGE_RW);
 
 	/*
@@ -651,10 +744,14 @@ static inline pud_t pud_wrprotect(pud_t pud)
 	if (pud_dirty(pud))
 		pud = pud_mksaveddirty(pud);
 	return pud;
+=======
+	return pud_clear_flags(pud, _PAGE_RW);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline pud_t pud_mkdirty(pud_t pud)
 {
+<<<<<<< HEAD
 	pudval_t dirty = _PAGE_DIRTY;
 
 	/* Avoid creating (HW)Dirty=1, Write=0 PUDs */
@@ -662,6 +759,9 @@ static inline pud_t pud_mkdirty(pud_t pud)
 		dirty = _PAGE_SAVED_DIRTY;
 
 	return pud_set_flags(pud, dirty | _PAGE_SOFT_DIRTY);
+=======
+	return pud_set_flags(pud, _PAGE_DIRTY | _PAGE_SOFT_DIRTY);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline pud_t pud_mkdevmap(pud_t pud)
@@ -681,11 +781,15 @@ static inline pud_t pud_mkyoung(pud_t pud)
 
 static inline pud_t pud_mkwrite(pud_t pud)
 {
+<<<<<<< HEAD
 	pud = pud_set_flags(pud, _PAGE_RW);
 
 	if (pud_dirty(pud))
 		pud = pud_clear_saveddirty(pud);
 	return pud;
+=======
+	return pud_set_flags(pud, _PAGE_RW);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_HAVE_ARCH_SOFT_DIRTY
@@ -802,8 +906,11 @@ static inline u64 flip_protnone_guard(u64 oldval, u64 val, u64 mask);
 static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
 {
 	pteval_t val = pte_val(pte), oldval = val;
+<<<<<<< HEAD
 	bool wr_protected;
 	pte_t pte_result;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Chop off the NX bit (if present), and add the NX portion of
@@ -812,6 +919,7 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
 	val &= _PAGE_CHG_MASK;
 	val |= check_pgprot(newprot) & ~_PAGE_CHG_MASK;
 	val = flip_protnone_guard(oldval, val, PTE_PFN_MASK);
+<<<<<<< HEAD
 
 	pte_result = __pte(val);
 
@@ -825,11 +933,15 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
 		pte_result = pte_mksaveddirty(pte_result);
 
 	return pte_result;
+=======
+	return __pte(val);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
 {
 	pmdval_t val = pmd_val(pmd), oldval = val;
+<<<<<<< HEAD
 	bool wr_protected;
 	pmd_t pmd_result;
 
@@ -849,6 +961,13 @@ static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
 		pmd_result = pmd_mksaveddirty(pmd_result);
 
 	return pmd_result;
+=======
+
+	val &= _HPAGE_CHG_MASK;
+	val |= check_pgprot(newprot) & ~_HPAGE_CHG_MASK;
+	val = flip_protnone_guard(oldval, val, PHYSICAL_PMD_PAGE_MASK);
+	return __pmd(val);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1032,6 +1151,7 @@ static inline unsigned long pmd_page_vaddr(pmd_t pmd)
  * (Currently stuck as a macro because of indirect forward reference
  * to linux/mm.h:page_to_nid())
  */
+<<<<<<< HEAD
 #define mk_pte(page, pgprot)						 \
 ({									 \
 	pgprot_t __pgprot = pgprot;					 \
@@ -1041,6 +1161,9 @@ static inline unsigned long pmd_page_vaddr(pmd_t pmd)
 		    _PAGE_DIRTY);					 \
 	pfn_pte(page_to_pfn(page), __pgprot);				 \
 })
+=======
+#define mk_pte(page, pgprot)   pfn_pte(page_to_pfn(page), (pgprot))
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline int pmd_bad(pmd_t pmd)
 {
@@ -1306,6 +1429,7 @@ static inline pte_t ptep_get_and_clear_full(struct mm_struct *mm,
 static inline void ptep_set_wrprotect(struct mm_struct *mm,
 				      unsigned long addr, pte_t *ptep)
 {
+<<<<<<< HEAD
 #ifdef CONFIG_X86_USER_SHADOW_STACK
 	/*
 	 * Avoid accidentally creating shadow stack PTEs
@@ -1327,6 +1451,12 @@ static inline void ptep_set_wrprotect(struct mm_struct *mm,
 }
 
 #define flush_tlb_fix_spurious_fault(vma, address, ptep) do { } while (0)
+=======
+	clear_bit(_PAGE_BIT_RW, (unsigned long *)&ptep->pte);
+}
+
+#define flush_tlb_fix_spurious_fault(vma, address) do { } while (0)
+>>>>>>> b7ba80a49124 (Commit)
 
 #define mk_pmd(page, pgprot)   pfn_pmd(page_to_pfn(page), (pgprot))
 
@@ -1349,6 +1479,15 @@ extern int pmdp_clear_flush_young(struct vm_area_struct *vma,
 				  unsigned long address, pmd_t *pmdp);
 
 
+<<<<<<< HEAD
+=======
+#define pmd_write pmd_write
+static inline int pmd_write(pmd_t pmd)
+{
+	return pmd_flags(pmd) & _PAGE_RW;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #define __HAVE_ARCH_PMDP_HUGE_GET_AND_CLEAR
 static inline pmd_t pmdp_huge_get_and_clear(struct mm_struct *mm, unsigned long addr,
 				       pmd_t *pmdp)
@@ -1375,6 +1514,7 @@ static inline pud_t pudp_huge_get_and_clear(struct mm_struct *mm,
 static inline void pmdp_set_wrprotect(struct mm_struct *mm,
 				      unsigned long addr, pmd_t *pmdp)
 {
+<<<<<<< HEAD
 #ifdef CONFIG_X86_USER_SHADOW_STACK
 	/*
 	 * Avoid accidentally creating shadow stack PTEs
@@ -1396,6 +1536,17 @@ static inline void pmdp_set_wrprotect(struct mm_struct *mm,
 	clear_bit(_PAGE_BIT_RW, (unsigned long *)pmdp);
 }
 
+=======
+	clear_bit(_PAGE_BIT_RW, (unsigned long *)pmdp);
+}
+
+#define pud_write pud_write
+static inline int pud_write(pud_t pud)
+{
+	return pud_flags(pud) & _PAGE_RW;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifndef pmdp_establish
 #define pmdp_establish pmdp_establish
 static inline pmd_t pmdp_establish(struct vm_area_struct *vma,
@@ -1534,6 +1685,11 @@ static inline void update_mmu_cache_pud(struct vm_area_struct *vma,
 		unsigned long addr, pud_t *pud)
 {
 }
+<<<<<<< HEAD
+=======
+#ifdef _PAGE_SWP_EXCLUSIVE
+#define __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+>>>>>>> b7ba80a49124 (Commit)
 static inline pte_t pte_swp_mkexclusive(pte_t pte)
 {
 	return pte_set_flags(pte, _PAGE_SWP_EXCLUSIVE);
@@ -1548,6 +1704,10 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
 {
 	return pte_clear_flags(pte, _PAGE_SWP_EXCLUSIVE);
 }
+<<<<<<< HEAD
+=======
+#endif /* _PAGE_SWP_EXCLUSIVE */
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_HAVE_ARCH_SOFT_DIRTY
 static inline pte_t pte_swp_mksoft_dirty(pte_t pte)
@@ -1646,11 +1806,14 @@ static inline bool __pte_access_permitted(unsigned long pteval, bool write)
 {
 	unsigned long need_pte_bits = _PAGE_PRESENT|_PAGE_USER;
 
+<<<<<<< HEAD
 	/*
 	 * Write=0,Dirty=1 PTEs are shadow stack, which the kernel
 	 * shouldn't generally allow access to, but since they
 	 * are already Write=0, the below logic covers both cases.
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (write)
 		need_pte_bits |= _PAGE_RW;
 
@@ -1692,6 +1855,7 @@ static inline bool arch_has_hw_pte_young(void)
 	return true;
 }
 
+<<<<<<< HEAD
 #define arch_check_zapped_pte arch_check_zapped_pte
 void arch_check_zapped_pte(struct vm_area_struct *vma, pte_t pte);
 
@@ -1706,6 +1870,8 @@ static inline bool arch_has_hw_nonleaf_pmd_young(void)
 }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PAGE_TABLE_CHECK
 static inline bool pte_user_accessible_page(pte_t pte)
 {

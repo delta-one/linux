@@ -23,7 +23,11 @@ u8 ice_dcb_get_tc(struct ice_vsi *vsi, int queue_index);
 int
 ice_pf_dcb_cfg(struct ice_pf *pf, struct ice_dcbx_cfg *new_cfg, bool locked);
 int ice_dcb_bwchk(struct ice_pf *pf, struct ice_dcbx_cfg *dcbcfg);
+<<<<<<< HEAD
 void ice_pf_dcb_recfg(struct ice_pf *pf, bool locked);
+=======
+void ice_pf_dcb_recfg(struct ice_pf *pf);
+>>>>>>> b7ba80a49124 (Commit)
 void ice_vsi_cfg_dcb_rings(struct ice_vsi *vsi);
 int ice_init_pf_dcb(struct ice_pf *pf, bool locked);
 void ice_update_dcb_stats(struct ice_pf *pf);
@@ -128,7 +132,11 @@ static inline u8 ice_get_pfc_mode(struct ice_pf *pf)
 	return 0;
 }
 
+<<<<<<< HEAD
 static inline void ice_pf_dcb_recfg(struct ice_pf *pf, bool locked) { }
+=======
+static inline void ice_pf_dcb_recfg(struct ice_pf *pf) { }
+>>>>>>> b7ba80a49124 (Commit)
 static inline void ice_vsi_cfg_dcb_rings(struct ice_vsi *vsi) { }
 static inline void ice_update_dcb_stats(struct ice_pf *pf) { }
 static inline void

@@ -515,6 +515,12 @@ int perf_evsel__alloc_id(struct perf_evsel *evsel, int ncpus, int nthreads)
 	if (ncpus == 0 || nthreads == 0)
 		return 0;
 
+<<<<<<< HEAD
+=======
+	if (evsel->system_wide)
+		nthreads = 1;
+
+>>>>>>> b7ba80a49124 (Commit)
 	evsel->sample_id = xyarray__new(ncpus, nthreads, sizeof(struct perf_sample_id));
 	if (evsel->sample_id == NULL)
 		return -ENOMEM;

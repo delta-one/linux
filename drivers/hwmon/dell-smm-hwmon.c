@@ -1447,10 +1447,16 @@ static int __init i8k_init(void)
 	 */
 	if (i8k_get_dell_signature(I8K_SMM_GET_DELL_SIG1) &&
 	    i8k_get_dell_signature(I8K_SMM_GET_DELL_SIG2)) {
+<<<<<<< HEAD
 		if (!force)
 			return -ENODEV;
 
 		pr_err("Unable to get Dell SMM signature\n");
+=======
+		pr_err("unable to get SMM Dell signature\n");
+		if (!force)
+			return -ENODEV;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	dell_smm_device = platform_create_bundle(&dell_smm_driver, dell_smm_probe, NULL, 0, NULL,

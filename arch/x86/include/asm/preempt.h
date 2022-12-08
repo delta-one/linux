@@ -4,11 +4,19 @@
 
 #include <asm/rmwcc.h>
 #include <asm/percpu.h>
+<<<<<<< HEAD
 #include <asm/current.h>
 
 #include <linux/thread_info.h>
 #include <linux/static_call_types.h>
 
+=======
+#include <linux/thread_info.h>
+#include <linux/static_call_types.h>
+
+DECLARE_PER_CPU(int, __preempt_count);
+
+>>>>>>> b7ba80a49124 (Commit)
 /* We use the MSB mostly because its available */
 #define PREEMPT_NEED_RESCHED	0x80000000
 
@@ -24,7 +32,11 @@
  */
 static __always_inline int preempt_count(void)
 {
+<<<<<<< HEAD
 	return raw_cpu_read_4(pcpu_hot.preempt_count) & ~PREEMPT_NEED_RESCHED;
+=======
+	return raw_cpu_read_4(__preempt_count) & ~PREEMPT_NEED_RESCHED;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static __always_inline void preempt_count_set(int pc)
@@ -32,10 +44,17 @@ static __always_inline void preempt_count_set(int pc)
 	int old, new;
 
 	do {
+<<<<<<< HEAD
 		old = raw_cpu_read_4(pcpu_hot.preempt_count);
 		new = (old & PREEMPT_NEED_RESCHED) |
 			(pc & ~PREEMPT_NEED_RESCHED);
 	} while (raw_cpu_cmpxchg_4(pcpu_hot.preempt_count, old, new) != old);
+=======
+		old = raw_cpu_read_4(__preempt_count);
+		new = (old & PREEMPT_NEED_RESCHED) |
+			(pc & ~PREEMPT_NEED_RESCHED);
+	} while (raw_cpu_cmpxchg_4(__preempt_count, old, new) != old);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -44,7 +63,11 @@ static __always_inline void preempt_count_set(int pc)
 #define init_task_preempt_count(p) do { } while (0)
 
 #define init_idle_preempt_count(p, cpu) do { \
+<<<<<<< HEAD
 	per_cpu(pcpu_hot.preempt_count, (cpu)) = PREEMPT_DISABLED; \
+=======
+	per_cpu(__preempt_count, (cpu)) = PREEMPT_DISABLED; \
+>>>>>>> b7ba80a49124 (Commit)
 } while (0)
 
 /*
@@ -58,17 +81,29 @@ static __always_inline void preempt_count_set(int pc)
 
 static __always_inline void set_preempt_need_resched(void)
 {
+<<<<<<< HEAD
 	raw_cpu_and_4(pcpu_hot.preempt_count, ~PREEMPT_NEED_RESCHED);
+=======
+	raw_cpu_and_4(__preempt_count, ~PREEMPT_NEED_RESCHED);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static __always_inline void clear_preempt_need_resched(void)
 {
+<<<<<<< HEAD
 	raw_cpu_or_4(pcpu_hot.preempt_count, PREEMPT_NEED_RESCHED);
+=======
+	raw_cpu_or_4(__preempt_count, PREEMPT_NEED_RESCHED);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static __always_inline bool test_preempt_need_resched(void)
 {
+<<<<<<< HEAD
 	return !(raw_cpu_read_4(pcpu_hot.preempt_count) & PREEMPT_NEED_RESCHED);
+=======
+	return !(raw_cpu_read_4(__preempt_count) & PREEMPT_NEED_RESCHED);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -77,12 +112,20 @@ static __always_inline bool test_preempt_need_resched(void)
 
 static __always_inline void __preempt_count_add(int val)
 {
+<<<<<<< HEAD
 	raw_cpu_add_4(pcpu_hot.preempt_count, val);
+=======
+	raw_cpu_add_4(__preempt_count, val);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static __always_inline void __preempt_count_sub(int val)
 {
+<<<<<<< HEAD
 	raw_cpu_add_4(pcpu_hot.preempt_count, -val);
+=======
+	raw_cpu_add_4(__preempt_count, -val);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -92,8 +135,12 @@ static __always_inline void __preempt_count_sub(int val)
  */
 static __always_inline bool __preempt_count_dec_and_test(void)
 {
+<<<<<<< HEAD
 	return GEN_UNARY_RMWcc("decl", pcpu_hot.preempt_count, e,
 			       __percpu_arg([var]));
+=======
+	return GEN_UNARY_RMWcc("decl", __preempt_count, e, __percpu_arg([var]));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -101,7 +148,11 @@ static __always_inline bool __preempt_count_dec_and_test(void)
  */
 static __always_inline bool should_resched(int preempt_offset)
 {
+<<<<<<< HEAD
 	return unlikely(raw_cpu_read_4(pcpu_hot.preempt_count) == preempt_offset);
+=======
+	return unlikely(raw_cpu_read_4(__preempt_count) == preempt_offset);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PREEMPTION

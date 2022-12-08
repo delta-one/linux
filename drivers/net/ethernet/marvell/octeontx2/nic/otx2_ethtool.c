@@ -1268,6 +1268,7 @@ end:
 	return err;
 }
 
+<<<<<<< HEAD
 static void otx2_get_fec_stats(struct net_device *netdev,
 			       struct ethtool_fec_stats *fec_stats)
 {
@@ -1301,6 +1302,8 @@ static void otx2_get_fec_stats(struct net_device *netdev,
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct ethtool_ops otx2_ethtool_ops = {
 	.supported_coalesce_params = ETHTOOL_COALESCE_USECS |
 				     ETHTOOL_COALESCE_MAX_FRAMES |
@@ -1331,7 +1334,10 @@ static const struct ethtool_ops otx2_ethtool_ops = {
 	.get_pauseparam		= otx2_get_pauseparam,
 	.set_pauseparam		= otx2_set_pauseparam,
 	.get_ts_info		= otx2_get_ts_info,
+<<<<<<< HEAD
 	.get_fec_stats		= otx2_get_fec_stats,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.get_fecparam		= otx2_get_fecparam,
 	.set_fecparam		= otx2_set_fecparam,
 	.get_link_ksettings     = otx2_get_link_ksettings,

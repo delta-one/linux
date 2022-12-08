@@ -11,7 +11,11 @@ $id: http://devicetree.org/schemas/example-schema.yaml#
 # $schema is the meta-schema this schema should be validated with.
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: An Example Device
+=======
+title: An example schema annotated with jsonschema details
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Rob Herring <robh@kernel.org>

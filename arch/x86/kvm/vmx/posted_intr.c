@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-only
+<<<<<<< HEAD
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/kvm_host.h>
 
 #include <asm/irq_remapping.h>

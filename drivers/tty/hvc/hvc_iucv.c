@@ -29,6 +29,10 @@
 
 
 /* General device driver settings */
+<<<<<<< HEAD
+=======
+#define HVC_IUCV_MAGIC		0xc9e4c3e5
+>>>>>>> b7ba80a49124 (Commit)
 #define MAX_HVC_IUCV_LINES	HVC_ALLOC_TTY_ADAPTERS
 #define MEMPOOL_MIN_NR		(PAGE_SIZE / sizeof(struct iucv_tty_buffer)/4)
 
@@ -130,9 +134,15 @@ static struct iucv_handler hvc_iucv_handler = {
  */
 static struct hvc_iucv_private *hvc_iucv_get_private(uint32_t num)
 {
+<<<<<<< HEAD
 	if (num > hvc_iucv_devices)
 		return NULL;
 	return hvc_iucv_table[num];
+=======
+	if ((num < HVC_IUCV_MAGIC) || (num - HVC_IUCV_MAGIC > hvc_iucv_devices))
+		return NULL;
+	return hvc_iucv_table[num - HVC_IUCV_MAGIC];
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -658,13 +668,21 @@ static void hvc_iucv_notifier_hangup(struct hvc_struct *hp, int id)
 /**
  * hvc_iucv_dtr_rts() - HVC notifier for handling DTR/RTS
  * @hp:		Pointer the HVC device (struct hvc_struct)
+<<<<<<< HEAD
  * @active:	True to raise or false to lower DTR/RTS lines
+=======
+ * @raise:	Non-zero to raise or zero to lower DTR/RTS lines
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This routine notifies the HVC back-end to raise or lower DTR/RTS
  * lines.  Raising DTR/RTS is ignored.  Lowering DTR/RTS indicates to
  * drop the IUCV connection (similar to hang up the modem).
  */
+<<<<<<< HEAD
 static void hvc_iucv_dtr_rts(struct hvc_struct *hp, bool active)
+=======
+static void hvc_iucv_dtr_rts(struct hvc_struct *hp, int raise)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hvc_iucv_private *priv;
 	struct iucv_path        *path;
@@ -672,7 +690,11 @@ static void hvc_iucv_dtr_rts(struct hvc_struct *hp, bool active)
 	/* Raising the DTR/RTS is ignored as IUCV connections can be
 	 * established at any times.
 	 */
+<<<<<<< HEAD
 	if (active)
+=======
+	if (raise)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	priv = hvc_iucv_get_private(hp->vtermno);
@@ -1071,8 +1093,13 @@ static int __init hvc_iucv_alloc(int id, unsigned int is_console)
 	priv->is_console = is_console;
 
 	/* allocate hvc device */
+<<<<<<< HEAD
 	priv->hvc = hvc_alloc(id, /*		 PAGE_SIZE */
 			      id, &hvc_iucv_ops, 256);
+=======
+	priv->hvc = hvc_alloc(HVC_IUCV_MAGIC + id, /*		  PAGE_SIZE */
+			      HVC_IUCV_MAGIC + id, &hvc_iucv_ops, 256);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(priv->hvc)) {
 		rc = PTR_ERR(priv->hvc);
 		goto out_error_hvc;
@@ -1370,7 +1397,11 @@ static int __init hvc_iucv_init(void)
 
 	/* register the first terminal device as console
 	 * (must be done before allocating hvc terminal devices) */
+<<<<<<< HEAD
 	rc = hvc_instantiate(0, IUCV_HVC_CON_IDX, &hvc_iucv_ops);
+=======
+	rc = hvc_instantiate(HVC_IUCV_MAGIC, IUCV_HVC_CON_IDX, &hvc_iucv_ops);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc) {
 		pr_err("Registering HVC terminal device as "
 		       "Linux console failed\n");

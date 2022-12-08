@@ -165,12 +165,15 @@ struct resp_res {
 			u64		va;
 			u32		resid;
 		} read;
+<<<<<<< HEAD
 		struct {
 			u32		length;
 			u64		va;
 			u8		type;
 			u8		level;
 		} flush;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
@@ -283,6 +286,20 @@ enum rxe_mr_lookup_type {
 	RXE_LOOKUP_REMOTE,
 };
 
+<<<<<<< HEAD
+=======
+#define RXE_BUF_PER_MAP		(PAGE_SIZE / sizeof(struct rxe_phys_buf))
+
+struct rxe_phys_buf {
+	u64      addr;
+	u64      size;
+};
+
+struct rxe_map {
+	struct rxe_phys_buf	buf[RXE_BUF_PER_MAP];
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline int rkey_is_mw(u32 rkey)
 {
 	u32 index = rkey >> 8;
@@ -299,16 +316,30 @@ struct rxe_mr {
 	u32			lkey;
 	u32			rkey;
 	enum rxe_mr_state	state;
+<<<<<<< HEAD
 	int			access;
 	atomic_t		num_mw;
 
 	unsigned int		page_offset;
 	unsigned int		page_shift;
 	u64			page_mask;
+=======
+	enum ib_mr_type		type;
+	u64			iova;
+	size_t			length;
+	u32			offset;
+	int			access;
+
+	int			page_shift;
+	int			page_mask;
+	int			map_shift;
+	int			map_mask;
+>>>>>>> b7ba80a49124 (Commit)
 
 	u32			num_buf;
 	u32			nbuf;
 
+<<<<<<< HEAD
 	struct xarray		page_list;
 };
 
@@ -316,6 +347,15 @@ static inline unsigned int mr_page_size(struct rxe_mr *mr)
 {
 	return mr ? mr->ibmr.page_size : PAGE_SIZE;
 }
+=======
+	u32			max_buf;
+	u32			num_map;
+
+	atomic_t		num_mw;
+
+	struct rxe_map		**map;
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 enum rxe_mw_state {
 	RXE_MW_STATE_INVALID	= RXE_MR_STATE_INVALID,

@@ -559,9 +559,18 @@ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
 		return PTR_ERR(hsphy->base);
 
 	hsphy->ref_clk = devm_clk_get(dev, "ref");
+<<<<<<< HEAD
 	if (IS_ERR(hsphy->ref_clk))
 		return dev_err_probe(dev, PTR_ERR(hsphy->ref_clk),
 				     "failed to get ref clk\n");
+=======
+	if (IS_ERR(hsphy->ref_clk)) {
+		ret = PTR_ERR(hsphy->ref_clk);
+		if (ret != -EPROBE_DEFER)
+			dev_err(dev, "failed to get ref clk, %d\n", ret);
+		return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	hsphy->phy_reset = devm_reset_control_get_exclusive(&pdev->dev, NULL);
 	if (IS_ERR(hsphy->phy_reset)) {
@@ -574,9 +583,18 @@ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
 		hsphy->vregs[i].supply = qcom_snps_hsphy_vreg_names[i];
 
 	ret = devm_regulator_bulk_get(dev, num, hsphy->vregs);
+<<<<<<< HEAD
 	if (ret)
 		return dev_err_probe(dev, ret,
 				     "failed to get regulator supplies\n");
+=======
+	if (ret) {
+		if (ret != -EPROBE_DEFER)
+			dev_err(dev, "failed to get regulator supplies: %d\n",
+				ret);
+		return ret;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	pm_runtime_set_active(dev);
 	pm_runtime_enable(dev);

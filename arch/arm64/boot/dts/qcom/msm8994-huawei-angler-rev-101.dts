@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
+<<<<<<< HEAD
 /*
  * Copyright (c) 2015, Huawei Inc. All rights reserved.
+=======
+/* Copyright (c) 2015, Huawei Inc. All rights reserved.
+>>>>>>> b7ba80a49124 (Commit)
  * Copyright (c) 2016, The Linux Foundation. All rights reserved.
  * Copyright (c) 2021-2022, Petr Vorel <petr.vorel@gmail.com>
  */
@@ -9,6 +13,12 @@
 
 #include "msm8994.dtsi"
 
+<<<<<<< HEAD
+=======
+/* Angler's firmware does not report where the memory is allocated */
+/delete-node/ &cont_splash_mem;
+
+>>>>>>> b7ba80a49124 (Commit)
 / {
 	model = "Huawei Nexus 6P";
 	compatible = "huawei,angler", "qcom,msm8994";
@@ -25,6 +35,7 @@
 	chosen {
 		stdout-path = "serial0:115200n8";
 	};
+<<<<<<< HEAD
 
 	reserved-memory {
 		#address-cells = <2>;
@@ -41,6 +52,8 @@
 			no-map;
 		};
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &blsp1_uart2 {

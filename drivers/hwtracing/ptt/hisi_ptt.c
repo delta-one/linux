@@ -356,6 +356,7 @@ static int hisi_ptt_register_irq(struct hisi_ptt *hisi_ptt)
 
 static int hisi_ptt_init_filters(struct pci_dev *pdev, void *data)
 {
+<<<<<<< HEAD
 	struct pci_dev *root_port = pcie_find_root_port(pdev);
 	struct hisi_ptt_filter_desc *filter;
 	struct hisi_ptt *hisi_ptt = data;
@@ -368,6 +369,10 @@ static int hisi_ptt_init_filters(struct pci_dev *pdev, void *data)
 	if (port_devid < hisi_ptt->lower_bdf ||
 	    port_devid > hisi_ptt->upper_bdf)
 		return 0;
+=======
+	struct hisi_ptt_filter_desc *filter;
+	struct hisi_ptt *hisi_ptt = data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * We won't fail the probe if filter allocation failed here. The filters

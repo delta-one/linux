@@ -233,7 +233,11 @@ struct devfreq_event_dev *devfreq_event_get_edev_by_phandle(struct device *dev,
 
 	mutex_lock(&devfreq_event_list_lock);
 	list_for_each_entry(edev, &devfreq_event_list, node) {
+<<<<<<< HEAD
 		if (edev->dev.parent && device_match_of_node(edev->dev.parent, node))
+=======
+		if (edev->dev.parent && edev->dev.parent->of_node == node)
+>>>>>>> b7ba80a49124 (Commit)
 			goto out;
 	}
 
@@ -469,7 +473,11 @@ ATTRIBUTE_GROUPS(devfreq_event);
 
 static int __init devfreq_event_init(void)
 {
+<<<<<<< HEAD
 	devfreq_event_class = class_create("devfreq-event");
+=======
+	devfreq_event_class = class_create(THIS_MODULE, "devfreq-event");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(devfreq_event_class)) {
 		pr_err("%s: couldn't create class\n", __FILE__);
 		return PTR_ERR(devfreq_event_class);

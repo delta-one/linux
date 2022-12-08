@@ -168,7 +168,11 @@
 		/* MTD partition table */
 		partition@0 {
 			label = "SPL";
+<<<<<<< HEAD
 			reg = <0x00000000 0x00080000>;
+=======
+			reg = <0x00000000 0x000080000>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		partition@1 {
@@ -188,7 +192,11 @@
 
 		partition@4 {
 			label = "File System";
+<<<<<<< HEAD
 			reg = <0x00780000 0x07880000>;
+=======
+			reg = <0x00780000 0x007880000>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 };

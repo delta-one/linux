@@ -35,7 +35,10 @@ void dcn31_zero_pipe_dcc_fraction(display_e2e_pipe_params_st *pipes,
 				  int pipe_cnt);
 
 void dcn31_update_soc_for_wm_a(struct dc *dc, struct dc_state *context);
+<<<<<<< HEAD
 void dcn315_update_soc_for_wm_a(struct dc *dc, struct dc_state *context);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 void dcn31_calculate_wm_and_dlg_fp(
 		struct dc *dc, struct dc_state *context,
@@ -46,10 +49,14 @@ void dcn31_calculate_wm_and_dlg_fp(
 void dcn31_update_bw_bounding_box(struct dc *dc, struct clk_bw_params *bw_params);
 void dcn315_update_bw_bounding_box(struct dc *dc, struct clk_bw_params *bw_params);
 void dcn316_update_bw_bounding_box(struct dc *dc, struct clk_bw_params *bw_params);
+<<<<<<< HEAD
 int dcn_get_max_non_odm_pix_rate_100hz(struct _vcs_dpi_soc_bounding_box_st *soc);
 
 int dcn31x_populate_dml_pipes_from_context(struct dc *dc,
 					  struct dc_state *context,
 					  display_e2e_pipe_params_st *pipes,
 					  bool fast_validate);
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __DCN31_FPU_H__*/

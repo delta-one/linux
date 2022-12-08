@@ -21,7 +21,11 @@
 
 static void ar9002_hw_rx_enable(struct ath_hw *ah)
 {
+<<<<<<< HEAD
 	REG_WRITE(ah, AR_CR, AR_CR_RXE(ah));
+=======
+	REG_WRITE(ah, AR_CR, AR_CR_RXE);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ar9002_hw_set_desc_link(void *ds, u32 ds_link)
@@ -40,14 +44,23 @@ static bool ar9002_hw_get_isr(struct ath_hw *ah, enum ath9k_int *masked,
 	struct ath_common *common = ath9k_hw_common(ah);
 
 	if (!AR_SREV_9100(ah)) {
+<<<<<<< HEAD
 		if (REG_READ(ah, AR_INTR_ASYNC_CAUSE(ah)) & AR_INTR_MAC_IRQ) {
 			if ((REG_READ(ah, AR_RTC_STATUS(ah)) & AR_RTC_STATUS_M(ah))
+=======
+		if (REG_READ(ah, AR_INTR_ASYNC_CAUSE) & AR_INTR_MAC_IRQ) {
+			if ((REG_READ(ah, AR_RTC_STATUS) & AR_RTC_STATUS_M)
+>>>>>>> b7ba80a49124 (Commit)
 			    == AR_RTC_STATUS_ON) {
 				isr = REG_READ(ah, AR_ISR);
 			}
 		}
 
+<<<<<<< HEAD
 		sync_cause = REG_READ(ah, AR_INTR_SYNC_CAUSE(ah)) &
+=======
+		sync_cause = REG_READ(ah, AR_INTR_SYNC_CAUSE) &
+>>>>>>> b7ba80a49124 (Commit)
 			AR_INTR_SYNC_DEFAULT;
 
 		*masked = 0;
@@ -138,7 +151,11 @@ static bool ar9002_hw_get_isr(struct ath_hw *ah, enum ath9k_int *masked,
 		u32 s5_s;
 
 		if (pCap->hw_caps & ATH9K_HW_CAP_RAC_SUPPORTED) {
+<<<<<<< HEAD
 			s5_s = REG_READ(ah, AR_ISR_S5_S(ah));
+=======
+			s5_s = REG_READ(ah, AR_ISR_S5_S);
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			s5_s = REG_READ(ah, AR_ISR_S5);
 		}
@@ -201,8 +218,13 @@ static bool ar9002_hw_get_isr(struct ath_hw *ah, enum ath9k_int *masked,
 				"AR_INTR_SYNC_LOCAL_TIMEOUT\n");
 		}
 
+<<<<<<< HEAD
 		REG_WRITE(ah, AR_INTR_SYNC_CAUSE_CLR(ah), sync_cause);
 		(void) REG_READ(ah, AR_INTR_SYNC_CAUSE_CLR(ah));
+=======
+		REG_WRITE(ah, AR_INTR_SYNC_CAUSE_CLR, sync_cause);
+		(void) REG_READ(ah, AR_INTR_SYNC_CAUSE_CLR);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return true;

@@ -60,7 +60,10 @@ struct int3400_thermal_priv {
 	int odvp_count;
 	int *odvp;
 	u32 os_uuid_mask;
+<<<<<<< HEAD
 	int production_mode;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct odvp_attr *odvp_attrs;
 };
 
@@ -131,7 +134,14 @@ static ssize_t available_uuids_show(struct device *dev,
 
 	for (i = 0; i < INT3400_THERMAL_MAXIMUM_UUID; i++) {
 		if (priv->uuid_bitmap & (1 << i))
+<<<<<<< HEAD
 			length += sysfs_emit_at(buf, length, int3400_thermal_uuids[i]);
+=======
+			length += scnprintf(&buf[length],
+					    PAGE_SIZE - length,
+					    "%s\n",
+					    int3400_thermal_uuids[i]);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return length;
@@ -149,7 +159,14 @@ static ssize_t current_uuid_show(struct device *dev,
 
 	for (i = 0; i <= INT3400_THERMAL_CRITICAL; i++) {
 		if (priv->os_uuid_mask & BIT(i))
+<<<<<<< HEAD
 			length += sysfs_emit_at(buf, length, int3400_thermal_uuids[i]);
+=======
+			length += scnprintf(&buf[length],
+					    PAGE_SIZE - length,
+					    "%s\n",
+					    int3400_thermal_uuids[i]);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (length)
@@ -310,6 +327,7 @@ end:
 	return result;
 }
 
+<<<<<<< HEAD
 static ssize_t production_mode_show(struct device *dev, struct device_attribute *attr,
 				     char *buf)
 {
@@ -348,6 +366,8 @@ static void production_mode_exit(struct int3400_thermal_priv *priv)
 		sysfs_remove_file(&priv->pdev->dev.kobj, &dev_attr_production_mode.attr);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static ssize_t odvp_show(struct device *dev, struct device_attribute *attr,
 			 char *buf)
 {
@@ -497,7 +517,11 @@ static int int3400_thermal_get_temp(struct thermal_zone_device *thermal,
 static int int3400_thermal_change_mode(struct thermal_zone_device *thermal,
 				       enum thermal_device_mode mode)
 {
+<<<<<<< HEAD
 	struct int3400_thermal_priv *priv = thermal_zone_device_priv(thermal);
+=======
+	struct int3400_thermal_priv *priv = thermal->devdata;
+>>>>>>> b7ba80a49124 (Commit)
 	int result = 0;
 
 	if (!priv)
@@ -643,6 +667,7 @@ static int int3400_thermal_probe(struct platform_device *pdev)
 	if (result)
 		goto free_sysfs;
 
+<<<<<<< HEAD
 	result = production_mode_init(priv);
 	if (result)
 		goto free_notify;
@@ -652,6 +677,10 @@ static int int3400_thermal_probe(struct platform_device *pdev)
 free_notify:
 	acpi_remove_notify_handler(priv->adev->handle, ACPI_DEVICE_NOTIFY,
 				   int3400_notify);
+=======
+	return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 free_sysfs:
 	cleanup_odvp(priv);
 	if (!ZERO_OR_NULL_PTR(priv->data_vault)) {
@@ -678,8 +707,11 @@ static int int3400_thermal_remove(struct platform_device *pdev)
 {
 	struct int3400_thermal_priv *priv = platform_get_drvdata(pdev);
 
+<<<<<<< HEAD
 	production_mode_exit(priv);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	acpi_remove_notify_handler(
 			priv->adev->handle, ACPI_DEVICE_NOTIFY,
 			int3400_notify);

@@ -10,7 +10,11 @@ maintainers:
   - Leilk Liu <leilk.liu@mediatek.com>
 
 allOf:
+<<<<<<< HEAD
   - $ref: /schemas/spi/spi-controller.yaml#
+=======
+  - $ref: "/schemas/spi/spi-controller.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:

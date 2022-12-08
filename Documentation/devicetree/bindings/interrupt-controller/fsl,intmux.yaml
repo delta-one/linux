@@ -7,8 +7,12 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
 title: Freescale INTMUX interrupt multiplexer
 
 maintainers:
+<<<<<<< HEAD
   - Shawn Guo <shawnguo@kernel.org>
   - NXP Linux Team <linux-imx@nxp.com>
+=======
+  - Joakim Zhang <qiangqing.zhang@nxp.com>
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:

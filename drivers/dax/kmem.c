@@ -146,7 +146,11 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
 		if (rc) {
 			dev_warn(dev, "mapping%d: %#llx-%#llx memory add failed\n",
 					i, range.start, range.end);
+<<<<<<< HEAD
 			remove_resource(res);
+=======
+			release_resource(res);
+>>>>>>> b7ba80a49124 (Commit)
 			kfree(res);
 			data->res[i] = NULL;
 			if (mapped)
@@ -195,7 +199,11 @@ static void dev_dax_kmem_remove(struct dev_dax *dev_dax)
 
 		rc = remove_memory(range.start, range_len(&range));
 		if (rc == 0) {
+<<<<<<< HEAD
 			remove_resource(data->res[i]);
+=======
+			release_resource(data->res[i]);
+>>>>>>> b7ba80a49124 (Commit)
 			kfree(data->res[i]);
 			data->res[i] = NULL;
 			success++;
@@ -239,7 +247,10 @@ static void dev_dax_kmem_remove(struct dev_dax *dev_dax)
 static struct dax_device_driver device_dax_kmem_driver = {
 	.probe = dev_dax_kmem_probe,
 	.remove = dev_dax_kmem_remove,
+<<<<<<< HEAD
 	.type = DAXDRV_KMEM_TYPE,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int __init dax_kmem_init(void)

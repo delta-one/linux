@@ -33,7 +33,10 @@ properties:
       - description: I2C devices
         enum:
           - adi,ad5311r
+<<<<<<< HEAD
           - adi,ad5337r
+=======
+>>>>>>> b7ba80a49124 (Commit)
           - adi,ad5338r
           - adi,ad5671r
           - adi,ad5675r

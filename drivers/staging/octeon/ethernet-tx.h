@@ -5,8 +5,13 @@
  * Copyright (c) 2003-2007 Cavium Networks
  */
 
+<<<<<<< HEAD
 netdev_tx_t cvm_oct_xmit(struct sk_buff *skb, struct net_device *dev);
 netdev_tx_t cvm_oct_xmit_pow(struct sk_buff *skb, struct net_device *dev);
+=======
+int cvm_oct_xmit(struct sk_buff *skb, struct net_device *dev);
+int cvm_oct_xmit_pow(struct sk_buff *skb, struct net_device *dev);
+>>>>>>> b7ba80a49124 (Commit)
 int cvm_oct_transmit_qos(struct net_device *dev, void *work_queue_entry,
 			 int do_free, int qos);
 void cvm_oct_tx_initialize(void);

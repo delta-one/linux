@@ -32,7 +32,10 @@
 
 #include "coresight-etm.h"
 #include "coresight-etm-perf.h"
+<<<<<<< HEAD
 #include "coresight-trace-id.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Not really modular but using module_param is the easiest way to
@@ -455,6 +458,7 @@ static int etm_cpu_id(struct coresight_device *csdev)
 	return drvdata->cpu;
 }
 
+<<<<<<< HEAD
 int etm_read_alloc_trace_id(struct etm_drvdata *drvdata)
 {
 	int trace_id;
@@ -478,19 +482,59 @@ int etm_read_alloc_trace_id(struct etm_drvdata *drvdata)
 void etm_release_trace_id(struct etm_drvdata *drvdata)
 {
 	coresight_trace_id_put_cpu_id(drvdata->cpu);
+=======
+int etm_get_trace_id(struct etm_drvdata *drvdata)
+{
+	unsigned long flags;
+	int trace_id = -1;
+	struct device *etm_dev;
+
+	if (!drvdata)
+		goto out;
+
+	etm_dev = drvdata->csdev->dev.parent;
+	if (!local_read(&drvdata->mode))
+		return drvdata->traceid;
+
+	pm_runtime_get_sync(etm_dev);
+
+	spin_lock_irqsave(&drvdata->spinlock, flags);
+
+	CS_UNLOCK(drvdata->base);
+	trace_id = (etm_readl(drvdata, ETMTRACEIDR) & ETM_TRACEID_MASK);
+	CS_LOCK(drvdata->base);
+
+	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+	pm_runtime_put(etm_dev);
+
+out:
+	return trace_id;
+
+}
+
+static int etm_trace_id(struct coresight_device *csdev)
+{
+	struct etm_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+
+	return etm_get_trace_id(drvdata);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int etm_enable_perf(struct coresight_device *csdev,
 			   struct perf_event *event)
 {
 	struct etm_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+<<<<<<< HEAD
 	int trace_id;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (WARN_ON_ONCE(drvdata->cpu != smp_processor_id()))
 		return -EINVAL;
 
 	/* Configure the tracer based on the session's specifics */
 	etm_parse_event_config(drvdata, event);
+<<<<<<< HEAD
 
 	/*
 	 * perf allocates cpu ids as part of _setup_aux() - device needs to use
@@ -508,6 +552,8 @@ static int etm_enable_perf(struct coresight_device *csdev,
 	}
 	drvdata->traceid = (u8)trace_id;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* And enable it */
 	return etm_enable_hw(drvdata);
 }
@@ -520,11 +566,14 @@ static int etm_enable_sysfs(struct coresight_device *csdev)
 
 	spin_lock(&drvdata->spinlock);
 
+<<<<<<< HEAD
 	/* sysfs needs to allocate and set a trace ID */
 	ret = etm_read_alloc_trace_id(drvdata);
 	if (ret < 0)
 		goto unlock_enable_sysfs;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Configure the ETM only if the CPU is online.  If it isn't online
 	 * hw configuration will take place on the local CPU during bring up.
@@ -541,10 +590,13 @@ static int etm_enable_sysfs(struct coresight_device *csdev)
 		ret = -ENODEV;
 	}
 
+<<<<<<< HEAD
 	if (ret)
 		etm_release_trace_id(drvdata);
 
 unlock_enable_sysfs:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock(&drvdata->spinlock);
 
 	if (!ret)
@@ -628,12 +680,15 @@ static void etm_disable_perf(struct coresight_device *csdev)
 	coresight_disclaim_device_unlocked(csdev);
 
 	CS_LOCK(drvdata->base);
+<<<<<<< HEAD
 
 	/*
 	 * perf will release trace ids when _free_aux()
 	 * is called at the end of the session
 	 */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void etm_disable_sysfs(struct coresight_device *csdev)
@@ -658,6 +713,7 @@ static void etm_disable_sysfs(struct coresight_device *csdev)
 	spin_unlock(&drvdata->spinlock);
 	cpus_read_unlock();
 
+<<<<<<< HEAD
 	/*
 	 * we only release trace IDs when resetting sysfs.
 	 * This permits sysfs users to read the trace ID after the trace
@@ -665,6 +721,8 @@ static void etm_disable_sysfs(struct coresight_device *csdev)
 	 * prior trace id allocation method
 	 */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dev_dbg(&csdev->dev, "ETM tracing disabled\n");
 }
 
@@ -701,6 +759,10 @@ static void etm_disable(struct coresight_device *csdev,
 
 static const struct coresight_ops_source etm_source_ops = {
 	.cpu_id		= etm_cpu_id,
+<<<<<<< HEAD
+=======
+	.trace_id	= etm_trace_id,
+>>>>>>> b7ba80a49124 (Commit)
 	.enable		= etm_enable,
 	.disable	= etm_disable,
 };
@@ -810,6 +872,14 @@ static void etm_init_arch_data(void *info)
 	CS_LOCK(drvdata->base);
 }
 
+<<<<<<< HEAD
+=======
+static void etm_init_trace_id(struct etm_drvdata *drvdata)
+{
+	drvdata->traceid = coresight_get_trace_id(drvdata->cpu);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int __init etm_hp_setup(void)
 {
 	int ret;
@@ -895,6 +965,10 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
 	if (etm_arch_supported(drvdata->arch) == false)
 		return -EINVAL;
 
+<<<<<<< HEAD
+=======
+	etm_init_trace_id(drvdata);
+>>>>>>> b7ba80a49124 (Commit)
 	etm_set_default(&drvdata->config);
 
 	pdata = coresight_get_platform_data(dev);

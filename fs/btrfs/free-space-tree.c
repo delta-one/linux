@@ -5,17 +5,23 @@
 
 #include <linux/kernel.h>
 #include <linux/sched/mm.h>
+<<<<<<< HEAD
 #include "messages.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "ctree.h"
 #include "disk-io.h"
 #include "locking.h"
 #include "free-space-tree.h"
 #include "transaction.h"
 #include "block-group.h"
+<<<<<<< HEAD
 #include "fs.h"
 #include "accessors.h"
 #include "extent-tree.h"
 #include "root-tree.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int __add_block_group_free_space(struct btrfs_trans_handle *trans,
 					struct btrfs_block_group *block_group,
@@ -808,7 +814,11 @@ int __remove_from_free_space_tree(struct btrfs_trans_handle *trans,
 	u32 flags;
 	int ret;
 
+<<<<<<< HEAD
 	if (test_bit(BLOCK_GROUP_FLAG_NEEDS_FREE_SPACE, &block_group->runtime_flags)) {
+=======
+	if (block_group->needs_free_space) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = __add_block_group_free_space(trans, block_group, path);
 		if (ret)
 			return ret;
@@ -1001,7 +1011,11 @@ int __add_to_free_space_tree(struct btrfs_trans_handle *trans,
 	u32 flags;
 	int ret;
 
+<<<<<<< HEAD
 	if (test_bit(BLOCK_GROUP_FLAG_NEEDS_FREE_SPACE, &block_group->runtime_flags)) {
+=======
+	if (block_group->needs_free_space) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = __add_block_group_free_space(trans, block_group, path);
 		if (ret)
 			return ret;
@@ -1283,7 +1297,11 @@ int btrfs_clear_free_space_tree(struct btrfs_fs_info *fs_info)
 	list_del(&free_space_root->dirty_list);
 
 	btrfs_tree_lock(free_space_root->node);
+<<<<<<< HEAD
 	btrfs_clear_buffer_dirty(trans, free_space_root->node);
+=======
+	btrfs_clean_tree_block(free_space_root->node);
+>>>>>>> b7ba80a49124 (Commit)
 	btrfs_tree_unlock(free_space_root->node);
 	btrfs_free_tree_block(trans, btrfs_root_id(free_space_root),
 			      free_space_root->node, 0, 1);
@@ -1304,7 +1322,11 @@ static int __add_block_group_free_space(struct btrfs_trans_handle *trans,
 {
 	int ret;
 
+<<<<<<< HEAD
 	clear_bit(BLOCK_GROUP_FLAG_NEEDS_FREE_SPACE, &block_group->runtime_flags);
+=======
+	block_group->needs_free_space = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = add_new_free_space_info(trans, block_group, path);
 	if (ret)
@@ -1326,7 +1348,11 @@ int add_block_group_free_space(struct btrfs_trans_handle *trans,
 		return 0;
 
 	mutex_lock(&block_group->free_space_lock);
+<<<<<<< HEAD
 	if (!test_bit(BLOCK_GROUP_FLAG_NEEDS_FREE_SPACE, &block_group->runtime_flags))
+=======
+	if (!block_group->needs_free_space)
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 
 	path = btrfs_alloc_path();
@@ -1359,7 +1385,11 @@ int remove_block_group_free_space(struct btrfs_trans_handle *trans,
 	if (!btrfs_fs_compat_ro(trans->fs_info, FREE_SPACE_TREE))
 		return 0;
 
+<<<<<<< HEAD
 	if (test_bit(BLOCK_GROUP_FLAG_NEEDS_FREE_SPACE, &block_group->runtime_flags)) {
+=======
+	if (block_group->needs_free_space) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* We never added this block group to the free space tree. */
 		return 0;
 	}

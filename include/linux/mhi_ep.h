@@ -70,8 +70,13 @@ struct mhi_ep_db_info {
  * @cmd_ctx_cache_phys: Physical address of the host command context cache
  * @chdb: Array of channel doorbell interrupt info
  * @event_lock: Lock for protecting event rings
+<<<<<<< HEAD
  * @state_lock: Lock for protecting state transitions
  * @list_lock: Lock for protecting state transition and channel doorbell lists
+=======
+ * @list_lock: Lock for protecting state transition and channel doorbell lists
+ * @state_lock: Lock for protecting state transitions
+>>>>>>> b7ba80a49124 (Commit)
  * @st_transition_list: List of state transitions
  * @ch_db_list: List of queued channel doorbells
  * @wq: Dedicated workqueue for handling rings and state changes
@@ -117,8 +122,13 @@ struct mhi_ep_cntrl {
 
 	struct mhi_ep_db_info chdb[4];
 	struct mutex event_lock;
+<<<<<<< HEAD
 	struct mutex state_lock;
 	spinlock_t list_lock;
+=======
+	spinlock_t list_lock;
+	spinlock_t state_lock;
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct list_head st_transition_list;
 	struct list_head ch_db_list;

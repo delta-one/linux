@@ -1123,9 +1123,16 @@ static int sonypi_acpi_add(struct acpi_device *device)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void sonypi_acpi_remove(struct acpi_device *device)
 {
 	sonypi_acpi_device = NULL;
+=======
+static int sonypi_acpi_remove(struct acpi_device *device)
+{
+	sonypi_acpi_device = NULL;
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct acpi_device_id sonypi_device_ids[] = {

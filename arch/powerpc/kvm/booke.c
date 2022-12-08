@@ -719,6 +719,10 @@ int kvmppc_core_prepare_to_enter(struct kvm_vcpu *vcpu)
 	if (vcpu->arch.shared->msr & MSR_WE) {
 		local_irq_enable();
 		kvm_vcpu_halt(vcpu);
+<<<<<<< HEAD
+=======
+		kvm_clear_request(KVM_REQ_UNHALT, vcpu);
+>>>>>>> b7ba80a49124 (Commit)
 		hard_irq_disable();
 
 		kvmppc_set_exit_type(vcpu, EMULATED_MTMSRWE_EXITS);
@@ -912,15 +916,27 @@ static int kvmppc_handle_debug(struct kvm_vcpu *vcpu)
 
 static void kvmppc_fill_pt_regs(struct pt_regs *regs)
 {
+<<<<<<< HEAD
 	ulong r1, msr, lr;
+=======
+	ulong r1, ip, msr, lr;
+>>>>>>> b7ba80a49124 (Commit)
 
 	asm("mr %0, 1" : "=r"(r1));
 	asm("mflr %0" : "=r"(lr));
 	asm("mfmsr %0" : "=r"(msr));
+<<<<<<< HEAD
 
 	memset(regs, 0, sizeof(*regs));
 	regs->gpr[1] = r1;
 	regs->nip = _THIS_IP_;
+=======
+	asm("bl 1f; 1: mflr %0" : "=r"(ip));
+
+	memset(regs, 0, sizeof(*regs));
+	regs->gpr[1] = r1;
+	regs->nip = ip;
+>>>>>>> b7ba80a49124 (Commit)
 	regs->msr = msr;
 	regs->link = lr;
 }
@@ -1014,9 +1030,12 @@ int kvmppc_handle_exit(struct kvm_vcpu *vcpu, unsigned int exit_nr)
 	u32 last_inst = KVM_INST_FETCH_FAILED;
 	enum emulation_result emulated = EMULATE_DONE;
 
+<<<<<<< HEAD
 	/* Fix irq state (pairs with kvmppc_fix_ee_before_entry()) */
 	kvmppc_fix_ee_after_exit();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* update before a new last_exit_type is rewritten */
 	kvmppc_update_timing_stats(vcpu);
 
@@ -1210,7 +1229,11 @@ int kvmppc_handle_exit(struct kvm_vcpu *vcpu, unsigned int exit_nr)
 
 /*
  * On cores with Vector category, KVM is loaded only if CONFIG_ALTIVEC,
+<<<<<<< HEAD
  * see kvmppc_e500mc_check_processor_compat().
+=======
+ * see kvmppc_core_check_processor_compat().
+>>>>>>> b7ba80a49124 (Commit)
  */
 #ifdef CONFIG_ALTIVEC
 	case BOOKE_INTERRUPT_ALTIVEC_UNAVAIL:

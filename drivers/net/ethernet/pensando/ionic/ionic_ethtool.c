@@ -511,6 +511,7 @@ static int ionic_set_coalesce(struct net_device *netdev,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int ionic_validate_cmb_config(struct ionic_lif *lif,
 				     struct ionic_queue_params *qparam)
 {
@@ -592,6 +593,8 @@ static int ionic_cmb_rings_toggle(struct ionic_lif *lif, bool cmb_tx, bool cmb_r
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void ionic_get_ringparam(struct net_device *netdev,
 				struct ethtool_ringparam *ring,
 				struct kernel_ethtool_ringparam *kernel_ring,
@@ -603,8 +606,11 @@ static void ionic_get_ringparam(struct net_device *netdev,
 	ring->tx_pending = lif->ntxq_descs;
 	ring->rx_max_pending = IONIC_MAX_RX_DESC;
 	ring->rx_pending = lif->nrxq_descs;
+<<<<<<< HEAD
 	kernel_ring->tx_push = test_bit(IONIC_LIF_F_CMB_TX_RINGS, lif->state);
 	kernel_ring->rx_push = test_bit(IONIC_LIF_F_CMB_RX_RINGS, lif->state);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int ionic_set_ringparam(struct net_device *netdev,
@@ -634,6 +640,7 @@ static int ionic_set_ringparam(struct net_device *netdev,
 
 	/* if nothing to do return success */
 	if (ring->tx_pending == lif->ntxq_descs &&
+<<<<<<< HEAD
 	    ring->rx_pending == lif->nrxq_descs &&
 	    kernel_ring->tx_push == test_bit(IONIC_LIF_F_CMB_TX_RINGS, lif->state) &&
 	    kernel_ring->rx_push == test_bit(IONIC_LIF_F_CMB_RX_RINGS, lif->state))
@@ -656,6 +663,11 @@ static int ionic_set_ringparam(struct net_device *netdev,
 			return err;
 	}
 
+=======
+	    ring->rx_pending == lif->nrxq_descs)
+		return 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (ring->tx_pending != lif->ntxq_descs)
 		netdev_info(netdev, "Changing Tx ring size from %d to %d\n",
 			    lif->ntxq_descs, ring->tx_pending);
@@ -671,6 +683,12 @@ static int ionic_set_ringparam(struct net_device *netdev,
 		return 0;
 	}
 
+<<<<<<< HEAD
+=======
+	qparam.ntxq_descs = ring->tx_pending;
+	qparam.nrxq_descs = ring->rx_pending;
+
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&lif->queue_lock);
 	err = ionic_reconfigure_queues(lif, &qparam);
 	mutex_unlock(&lif->queue_lock);
@@ -737,7 +755,11 @@ static int ionic_set_channels(struct net_device *netdev,
 				    lif->nxqs, ch->combined_count);
 
 		qparam.nxqs = ch->combined_count;
+<<<<<<< HEAD
 		qparam.intr_split = false;
+=======
+		qparam.intr_split = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		max_cnt /= 2;
 		if (ch->rx_count > max_cnt)
@@ -753,6 +775,7 @@ static int ionic_set_channels(struct net_device *netdev,
 				    lif->nxqs, ch->rx_count);
 
 		qparam.nxqs = ch->rx_count;
+<<<<<<< HEAD
 		qparam.intr_split = true;
 	}
 
@@ -760,6 +783,11 @@ static int ionic_set_channels(struct net_device *netdev,
 	if (err < 0)
 		return err;
 
+=======
+		qparam.intr_split = 1;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* if we're not running, just set the values and return */
 	if (!netif_running(lif->netdev)) {
 		lif->nxqs = qparam.nxqs;
@@ -1068,8 +1096,11 @@ static const struct ethtool_ops ionic_ethtool_ops = {
 	.supported_coalesce_params = ETHTOOL_COALESCE_USECS |
 				     ETHTOOL_COALESCE_USE_ADAPTIVE_RX |
 				     ETHTOOL_COALESCE_USE_ADAPTIVE_TX,
+<<<<<<< HEAD
 	.supported_ring_params = ETHTOOL_RING_USE_TX_PUSH |
 				 ETHTOOL_RING_USE_RX_PUSH,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.get_drvinfo		= ionic_get_drvinfo,
 	.get_regs_len		= ionic_get_regs_len,
 	.get_regs		= ionic_get_regs,

@@ -1,6 +1,7 @@
 /* SPDX-License-Identifier: MIT */
 #ifndef __NVKM_FIRMWARE_H__
 #define __NVKM_FIRMWARE_H__
+<<<<<<< HEAD
 #include <core/memory.h>
 #include <core/option.h>
 #include <core/subdev.h>
@@ -29,6 +30,11 @@ int nvkm_firmware_ctor(const struct nvkm_firmware_func *, const char *name, stru
 		       const void *ptr, int len, struct nvkm_firmware *);
 void nvkm_firmware_dtor(struct nvkm_firmware *);
 
+=======
+#include <core/option.h>
+#include <core/subdev.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 int nvkm_firmware_get(const struct nvkm_subdev *, const char *fwname, int ver,
 		      const struct firmware **);
 void nvkm_firmware_put(const struct firmware *);

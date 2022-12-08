@@ -11,14 +11,20 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <sys/mman.h>
+<<<<<<< HEAD
 #include <traceevent/event-parse.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
 
 #include "trace-event.h"
 #include "debug.h"
+<<<<<<< HEAD
 #include "util.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int input_fd;
 
@@ -416,7 +422,11 @@ ssize_t trace_report(int fd, struct trace_event *tevent, bool __repipe)
 		return -1;
 	}
 	file_bigendian = buf[0];
+<<<<<<< HEAD
 	host_bigendian = host_is_bigendian() ? 1 : 0;
+=======
+	host_bigendian = bigendian();
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (trace_event__init(tevent)) {
 		pr_debug("trace_event__init failed");

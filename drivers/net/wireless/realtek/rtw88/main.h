@@ -356,7 +356,11 @@ enum rtw_flags {
 	RTW_FLAG_RUNNING,
 	RTW_FLAG_FW_RUNNING,
 	RTW_FLAG_SCANNING,
+<<<<<<< HEAD
 	RTW_FLAG_POWERON,
+=======
+	RTW_FLAG_INACTIVE_PS,
+>>>>>>> b7ba80a49124 (Commit)
 	RTW_FLAG_LEISURE_PS,
 	RTW_FLAG_LEISURE_PS_DEEP,
 	RTW_FLAG_DIG_DISABLE,
@@ -871,10 +875,13 @@ struct rtw_chip_ops {
 			       bool is_tx2_path);
 	void (*config_txrx_mode)(struct rtw_dev *rtwdev, u8 tx_path,
 				 u8 rx_path, bool is_tx2_path);
+<<<<<<< HEAD
 	/* for USB/SDIO only */
 	void (*fill_txdesc_checksum)(struct rtw_dev *rtwdev,
 				     struct rtw_tx_pkt_info *pkt_info,
 				     u8 *txdesc);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* for coex */
 	void (*coex_set_init)(struct rtw_dev *rtwdev);
@@ -1505,6 +1512,11 @@ struct rtw_coex_stat {
 };
 
 struct rtw_coex {
+<<<<<<< HEAD
+=======
+	/* protects coex info request section */
+	struct mutex mutex;
+>>>>>>> b7ba80a49124 (Commit)
 	struct sk_buff_head queue;
 	wait_queue_head_t wait;
 
@@ -1853,7 +1865,10 @@ struct rtw_fw_state {
 	u16 h2c_version;
 	u32 feature;
 	u32 feature_ext;
+<<<<<<< HEAD
 	enum rtw_fw_type type;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum rtw_sar_sources {
@@ -1997,6 +2012,12 @@ struct rtw_dev {
 	/* ensures exclusive access from mac80211 callbacks */
 	struct mutex mutex;
 
+<<<<<<< HEAD
+=======
+	/* read/write rf register */
+	spinlock_t rf_lock;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* watch dog every 2 sec */
 	struct delayed_work watch_dog_work;
 	u32 watch_dog_cnt;
@@ -2022,6 +2043,11 @@ struct rtw_dev {
 	struct {
 		/* incicate the mail box to use with fw */
 		u8 last_box_num;
+<<<<<<< HEAD
+=======
+		/* protect to send h2c to fw */
+		spinlock_t lock;
+>>>>>>> b7ba80a49124 (Commit)
 		u32 seq;
 	} h2c;
 

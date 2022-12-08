@@ -1132,8 +1132,12 @@ static int i2c_imx_read(struct imx_i2c_struct *i2c_imx, struct i2c_msg *msgs,
 	int i, result;
 	unsigned int temp;
 	int block_data = msgs->flags & I2C_M_RECV_LEN;
+<<<<<<< HEAD
 	int use_dma = i2c_imx->dma && msgs->flags & I2C_M_DMA_SAFE &&
 		msgs->len >= DMA_THRESHOLD && !block_data;
+=======
+	int use_dma = i2c_imx->dma && msgs->len >= DMA_THRESHOLD && !block_data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_dbg(&i2c_imx->adapter.dev,
 		"<%s> write slave address: addr=0x%x\n",
@@ -1299,8 +1303,12 @@ static int i2c_imx_xfer_common(struct i2c_adapter *adapter,
 			result = i2c_imx_read(i2c_imx, &msgs[i], is_lastmsg, atomic);
 		} else {
 			if (!atomic &&
+<<<<<<< HEAD
 			    i2c_imx->dma && msgs[i].len >= DMA_THRESHOLD &&
 				msgs[i].flags & I2C_M_DMA_SAFE)
+=======
+			    i2c_imx->dma && msgs[i].len >= DMA_THRESHOLD)
+>>>>>>> b7ba80a49124 (Commit)
 				result = i2c_imx_dma_write(i2c_imx, &msgs[i]);
 			else
 				result = i2c_imx_write(i2c_imx, &msgs[i], atomic);
@@ -1451,7 +1459,12 @@ static int i2c_imx_probe(struct platform_device *pdev)
 	if (irq < 0)
 		return irq;
 
+<<<<<<< HEAD
 	base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	base = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(base))
 		return PTR_ERR(base);
 
@@ -1482,11 +1495,24 @@ static int i2c_imx_probe(struct platform_device *pdev)
 	ACPI_COMPANION_SET(&i2c_imx->adapter.dev, ACPI_COMPANION(&pdev->dev));
 
 	/* Get I2C clock */
+<<<<<<< HEAD
 	i2c_imx->clk = devm_clk_get_enabled(&pdev->dev, NULL);
+=======
+	i2c_imx->clk = devm_clk_get(&pdev->dev, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(i2c_imx->clk))
 		return dev_err_probe(&pdev->dev, PTR_ERR(i2c_imx->clk),
 				     "can't get I2C clock\n");
 
+<<<<<<< HEAD
+=======
+	ret = clk_prepare_enable(i2c_imx->clk);
+	if (ret) {
+		dev_err(&pdev->dev, "can't enable I2C clock, ret=%d\n", ret);
+		return ret;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Init queue */
 	init_waitqueue_head(&i2c_imx->queue);
 
@@ -1558,6 +1584,10 @@ rpm_disable:
 	pm_runtime_disable(&pdev->dev);
 	pm_runtime_set_suspended(&pdev->dev);
 	pm_runtime_dont_use_autosuspend(&pdev->dev);
+<<<<<<< HEAD
+=======
+	clk_disable_unprepare(i2c_imx->clk);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -1583,6 +1613,10 @@ static int i2c_imx_remove(struct platform_device *pdev)
 		imx_i2c_write_reg(0, i2c_imx, IMX_I2C_IFDR);
 		imx_i2c_write_reg(0, i2c_imx, IMX_I2C_I2CR);
 		imx_i2c_write_reg(0, i2c_imx, IMX_I2C_I2SR);
+<<<<<<< HEAD
+=======
+		clk_disable(i2c_imx->clk);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	clk_notifier_unregister(i2c_imx->clk, &i2c_imx->clk_change_nb);
@@ -1590,6 +1624,11 @@ static int i2c_imx_remove(struct platform_device *pdev)
 	if (irq >= 0)
 		free_irq(irq, i2c_imx);
 
+<<<<<<< HEAD
+=======
+	clk_unprepare(i2c_imx->clk);
+
+>>>>>>> b7ba80a49124 (Commit)
 	pm_runtime_put_noidle(&pdev->dev);
 	pm_runtime_disable(&pdev->dev);
 

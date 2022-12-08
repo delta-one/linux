@@ -2,13 +2,27 @@
 #define __PERF_MMAP_H 1
 
 #include <internal/mmap.h>
+<<<<<<< HEAD
 #include <linux/types.h>
 #include <linux/bitops.h>
 #include <perf/cpumap.h>
+=======
+#include <linux/compiler.h>
+#include <linux/refcount.h>
+#include <linux/types.h>
+#include <linux/ring_buffer.h>
+#include <linux/bitops.h>
+#include <perf/cpumap.h>
+#include <stdbool.h>
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef HAVE_AIO_SUPPORT
 #include <aio.h>
 #endif
 #include "auxtrace.h"
+<<<<<<< HEAD
+=======
+#include "event.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "util/compress.h"
 
 struct aiocb;

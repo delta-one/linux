@@ -20,10 +20,17 @@ properties:
       - nvidia,tegra194-display
 
   '#address-cells':
+<<<<<<< HEAD
     enum: [ 1, 2 ]
 
   '#size-cells':
     enum: [ 1, 2 ]
+=======
+    const: 1
+
+  '#size-cells':
+    const: 1
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1
@@ -138,6 +145,10 @@ examples:
                  <&bpmp TEGRA186_CLK_NVDISPLAY_DSC>,
                  <&bpmp TEGRA186_CLK_NVDISPLAYHUB>;
         clock-names = "disp", "dsc", "hub";
+<<<<<<< HEAD
+=======
+        status = "disabled";
+>>>>>>> b7ba80a49124 (Commit)
 
         power-domains = <&bpmp TEGRA186_POWER_DOMAIN_DISP>;
 
@@ -226,6 +237,10 @@ examples:
         clocks = <&bpmp TEGRA194_CLK_NVDISPLAY_DISP>,
                  <&bpmp TEGRA194_CLK_NVDISPLAYHUB>;
         clock-names = "disp", "hub";
+<<<<<<< HEAD
+=======
+        status = "disabled";
+>>>>>>> b7ba80a49124 (Commit)
 
         power-domains = <&bpmp TEGRA194_POWER_DOMAIN_DISP>;
 

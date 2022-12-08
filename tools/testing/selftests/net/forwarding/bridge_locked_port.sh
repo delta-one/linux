@@ -1,6 +1,7 @@
 #!/bin/bash
 # SPDX-License-Identifier: GPL-2.0
 
+<<<<<<< HEAD
 ALL_TESTS="
 	locked_port_ipv4
 	locked_port_ipv6
@@ -11,6 +12,9 @@ ALL_TESTS="
 	locked_port_mab_flush
 "
 
+=======
+ALL_TESTS="locked_port_ipv4 locked_port_ipv6 locked_port_vlan"
+>>>>>>> b7ba80a49124 (Commit)
 NUM_NETIFS=4
 CHECK_TC="no"
 source lib.sh
@@ -175,6 +179,7 @@ locked_port_ipv6()
 	log_test "Locked port ipv6"
 }
 
+<<<<<<< HEAD
 locked_port_mab()
 {
 	RET=0
@@ -319,6 +324,8 @@ locked_port_mab_flush()
 	log_test "Locked port MAB FDB flush"
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 trap cleanup EXIT
 
 setup_prepare

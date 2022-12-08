@@ -8,15 +8,22 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
 title: Intel KeemBay I2S
 
 maintainers:
+<<<<<<< HEAD
   - Daniele Alessandrelli <daniele.alessandrelli@intel.com>
   - Paul J. Murphy <paul.j.murphy@intel.com>
+=======
+  - Sia, Jee Heng <jee.heng.sia@intel.com>
+>>>>>>> b7ba80a49124 (Commit)
 
 description: |
  Intel KeemBay I2S
 
+<<<<<<< HEAD
 allOf:
   - $ref: dai-common.yaml#
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   compatible:
     enum:
@@ -68,7 +75,11 @@ required:
   - clock-names
   - interrupts
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |

@@ -128,7 +128,11 @@ static int hashmap_grow(struct hashmap *map)
 }
 
 static bool hashmap_find_entry(const struct hashmap *map,
+<<<<<<< HEAD
 			       const long key, size_t hash,
+=======
+			       const void *key, size_t hash,
+>>>>>>> b7ba80a49124 (Commit)
 			       struct hashmap_entry ***pprev,
 			       struct hashmap_entry **entry)
 {
@@ -151,18 +155,30 @@ static bool hashmap_find_entry(const struct hashmap *map,
 	return false;
 }
 
+<<<<<<< HEAD
 int hashmap_insert(struct hashmap *map, long key, long value,
 		   enum hashmap_insert_strategy strategy,
 		   long *old_key, long *old_value)
+=======
+int hashmap__insert(struct hashmap *map, const void *key, void *value,
+		    enum hashmap_insert_strategy strategy,
+		    const void **old_key, void **old_value)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hashmap_entry *entry;
 	size_t h;
 	int err;
 
 	if (old_key)
+<<<<<<< HEAD
 		*old_key = 0;
 	if (old_value)
 		*old_value = 0;
+=======
+		*old_key = NULL;
+	if (old_value)
+		*old_value = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	h = hash_bits(map->hash_fn(key, map->ctx), map->cap_bits);
 	if (strategy != HASHMAP_APPEND &&
@@ -203,7 +219,11 @@ int hashmap_insert(struct hashmap *map, long key, long value,
 	return 0;
 }
 
+<<<<<<< HEAD
 bool hashmap_find(const struct hashmap *map, long key, long *value)
+=======
+bool hashmap__find(const struct hashmap *map, const void *key, void **value)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hashmap_entry *entry;
 	size_t h;
@@ -217,8 +237,13 @@ bool hashmap_find(const struct hashmap *map, long key, long *value)
 	return true;
 }
 
+<<<<<<< HEAD
 bool hashmap_delete(struct hashmap *map, long key,
 		    long *old_key, long *old_value)
+=======
+bool hashmap__delete(struct hashmap *map, const void *key,
+		     const void **old_key, void **old_value)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hashmap_entry **pprev, *entry;
 	size_t h;

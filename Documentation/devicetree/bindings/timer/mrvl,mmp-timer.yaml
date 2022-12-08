@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/timer/mrvl,mmp-timer.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Marvell MMP Timer
+=======
+title: Marvell MMP Timer bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Daniel Lezcano <daniel.lezcano@linaro.org>

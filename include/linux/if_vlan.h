@@ -76,7 +76,11 @@ static inline bool is_vlan_dev(const struct net_device *dev)
         return dev->priv_flags & IFF_802_1Q_VLAN;
 }
 
+<<<<<<< HEAD
 #define skb_vlan_tag_present(__skb)	(!!(__skb)->vlan_all)
+=======
+#define skb_vlan_tag_present(__skb)	((__skb)->vlan_present)
+>>>>>>> b7ba80a49124 (Commit)
 #define skb_vlan_tag_get(__skb)		((__skb)->vlan_tci)
 #define skb_vlan_tag_get_id(__skb)	((__skb)->vlan_tci & VLAN_VID_MASK)
 #define skb_vlan_tag_get_cfi(__skb)	(!!((__skb)->vlan_tci & VLAN_CFI_MASK))
@@ -471,7 +475,11 @@ static inline struct sk_buff *vlan_insert_tag_set_proto(struct sk_buff *skb,
  */
 static inline void __vlan_hwaccel_clear_tag(struct sk_buff *skb)
 {
+<<<<<<< HEAD
 	skb->vlan_all = 0;
+=======
+	skb->vlan_present = 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -483,7 +491,13 @@ static inline void __vlan_hwaccel_clear_tag(struct sk_buff *skb)
  */
 static inline void __vlan_hwaccel_copy_tag(struct sk_buff *dst, const struct sk_buff *src)
 {
+<<<<<<< HEAD
 	dst->vlan_all = src->vlan_all;
+=======
+	dst->vlan_present = src->vlan_present;
+	dst->vlan_proto = src->vlan_proto;
+	dst->vlan_tci = src->vlan_tci;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -517,6 +531,10 @@ static inline void __vlan_hwaccel_put_tag(struct sk_buff *skb,
 {
 	skb->vlan_proto = vlan_proto;
 	skb->vlan_tci = vlan_tci;
+<<<<<<< HEAD
+=======
+	skb->vlan_present = 1;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

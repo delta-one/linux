@@ -143,7 +143,10 @@ dml_get_pipe_attr_decl(vready_at_or_after_vsync);
 dml_get_pipe_attr_decl(min_dst_y_next_start);
 dml_get_pipe_attr_decl(vstartup_calculated);
 dml_get_pipe_attr_decl(subviewport_lines_needed_in_mall);
+<<<<<<< HEAD
 dml_get_pipe_attr_decl(surface_size_in_mall);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 double get_total_immediate_flip_bytes(
 		struct display_mode_lib *mode_lib,
@@ -263,7 +266,10 @@ struct vba_vars_st {
 	int maxMpcComb;
 	bool UseMaximumVStartup;
 
+<<<<<<< HEAD
 	double MaxVRatioPre;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	double WritebackDISPCLK;
 	double DPPCLKUsingSingleDPPLuma;
 	double DPPCLKUsingSingleDPPChroma;
@@ -421,6 +427,7 @@ struct vba_vars_st {
 	double MinPixelChunkSizeBytes;
 	unsigned int DCCMetaBufferSizeBytes;
 	// Pipe/Plane Parameters
+<<<<<<< HEAD
 
 	/** @VoltageLevel:
 	 * Every ASIC has a fixed number of DPM states, and some devices might
@@ -430,6 +437,8 @@ struct vba_vars_st {
 	 * special SOC voltages, it mostly matches the total number of DPM
 	 * states.
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int VoltageLevel;
 	double FabricClock;
 	double DRAMSpeed;
@@ -1052,7 +1061,10 @@ struct vba_vars_st {
 	double MinFullDETBufferingTime;
 	double AverageReadBandwidthGBytePerSecond;
 	bool   FirstMainPlane;
+<<<<<<< HEAD
 	bool NotEnoughDETSwathFillLatencyHiding;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	unsigned int ViewportWidthChroma[DC__NUM_DPP__MAX];
 	unsigned int ViewportHeightChroma[DC__NUM_DPP__MAX];
@@ -1165,7 +1177,11 @@ struct vba_vars_st {
 	double UrgBurstFactorLumaPre[DC__NUM_DPP__MAX];
 	double UrgBurstFactorChromaPre[DC__NUM_DPP__MAX];
 	bool NotUrgentLatencyHidingPre[DC__NUM_DPP__MAX];
+<<<<<<< HEAD
 	bool LinkCapacitySupport[DC__VOLTAGE_STATES];
+=======
+	bool LinkCapacitySupport[DC__NUM_DPP__MAX];
+>>>>>>> b7ba80a49124 (Commit)
 	bool VREADY_AT_OR_AFTER_VSYNC[DC__NUM_DPP__MAX];
 	unsigned int MIN_DST_Y_NEXT_START[DC__NUM_DPP__MAX];
 	unsigned int VFrontPorch[DC__NUM_DPP__MAX];
@@ -1236,7 +1252,10 @@ struct vba_vars_st {
 	unsigned int BlockWidthC[DC__NUM_DPP__MAX];
 	unsigned int SubViewportLinesNeededInMALL[DC__NUM_DPP__MAX];
 	bool VActiveBandwithSupport[DC__VOLTAGE_STATES][2];
+<<<<<<< HEAD
 	bool NotEnoughDETSwathFillLatencyHidingPerState[DC__VOLTAGE_STATES][2];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct dummy_vars dummy_vars;
 };
 

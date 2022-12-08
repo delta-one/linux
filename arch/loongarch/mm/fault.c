@@ -135,9 +135,12 @@ static void __kprobes __do_page_fault(struct pt_regs *regs,
 	struct vm_area_struct *vma = NULL;
 	vm_fault_t fault;
 
+<<<<<<< HEAD
 	if (kprobe_page_fault(regs, current->thread.trap_nr))
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * We fault-in kernel-space virtual memory on-demand. The
 	 * 'reference' page table is init_mm.pgd.

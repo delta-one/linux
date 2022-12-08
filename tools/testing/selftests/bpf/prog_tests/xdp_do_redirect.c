@@ -4,14 +4,30 @@
 #include <net/if.h>
 #include <linux/if_ether.h>
 #include <linux/if_packet.h>
+<<<<<<< HEAD
 #include <linux/if_link.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/ipv6.h>
 #include <linux/in6.h>
 #include <linux/udp.h>
 #include <bpf/bpf_endian.h>
+<<<<<<< HEAD
 #include <uapi/linux/netdev.h>
 #include "test_xdp_do_redirect.skel.h"
 
+=======
+#include "test_xdp_do_redirect.skel.h"
+
+#define SYS(fmt, ...)						\
+	({							\
+		char cmd[1024];					\
+		snprintf(cmd, sizeof(cmd), fmt, ##__VA_ARGS__);	\
+		if (!ASSERT_OK(system(cmd), cmd))		\
+			goto out;				\
+	})
+
+>>>>>>> b7ba80a49124 (Commit)
 struct udp_packet {
 	struct ethhdr eth;
 	struct ipv6hdr iph;
@@ -57,6 +73,7 @@ static int attach_tc_prog(struct bpf_tc_hook *hook, int fd)
 }
 
 /* The maximum permissible size is: PAGE_SIZE - sizeof(struct xdp_page_head) -
+<<<<<<< HEAD
  * SKB_DATA_ALIGN(sizeof(struct skb_shared_info)) - XDP_PACKET_HEADROOM =
  * 3408 bytes for 64-byte cacheline and 3216 for 256-byte one.
  */
@@ -65,6 +82,11 @@ static int attach_tc_prog(struct bpf_tc_hook *hook, int fd)
 #else
 #define MAX_PKT_SIZE 3408
 #endif
+=======
+ * sizeof(struct skb_shared_info) - XDP_PACKET_HEADROOM = 3368 bytes
+ */
+#define MAX_PKT_SIZE 3368
+>>>>>>> b7ba80a49124 (Commit)
 static void test_max_pkt_size(int fd)
 {
 	char data[MAX_PKT_SIZE + 1] = {};
@@ -87,12 +109,21 @@ static void test_max_pkt_size(int fd)
 void test_xdp_do_redirect(void)
 {
 	int err, xdp_prog_fd, tc_prog_fd, ifindex_src, ifindex_dst;
+<<<<<<< HEAD
 	char data[sizeof(pkt_udp) + sizeof(__u64)];
 	struct test_xdp_do_redirect *skel = NULL;
 	struct nstoken *nstoken = NULL;
 	struct bpf_link *link;
 	LIBBPF_OPTS(bpf_xdp_query_opts, query_opts);
 	struct xdp_md ctx_in = { .data = sizeof(__u64),
+=======
+	char data[sizeof(pkt_udp) + sizeof(__u32)];
+	struct test_xdp_do_redirect *skel = NULL;
+	struct nstoken *nstoken = NULL;
+	struct bpf_link *link;
+
+	struct xdp_md ctx_in = { .data = sizeof(__u32),
+>>>>>>> b7ba80a49124 (Commit)
 				 .data_end = sizeof(data) };
 	DECLARE_LIBBPF_OPTS(bpf_test_run_opts, opts,
 			    .data_in = &data,
@@ -106,9 +137,14 @@ void test_xdp_do_redirect(void)
 	DECLARE_LIBBPF_OPTS(bpf_tc_hook, tc_hook,
 			    .attach_point = BPF_TC_INGRESS);
 
+<<<<<<< HEAD
 	memcpy(&data[sizeof(__u64)], &pkt_udp, sizeof(pkt_udp));
 	*((__u32 *)data) = 0x42; /* metadata test value */
 	*((__u32 *)data + 4) = 0;
+=======
+	memcpy(&data[sizeof(__u32)], &pkt_udp, sizeof(pkt_udp));
+	*((__u32 *)data) = 0x42; /* metadata test value */
+>>>>>>> b7ba80a49124 (Commit)
 
 	skel = test_xdp_do_redirect__open();
 	if (!ASSERT_OK_PTR(skel, "skel"))
@@ -120,11 +156,16 @@ void test_xdp_do_redirect(void)
 	 * iface and NUM_PKTS-2 in the TC hook. We match the packets on the UDP
 	 * payload.
 	 */
+<<<<<<< HEAD
 	SYS(out, "ip netns add testns");
+=======
+	SYS("ip netns add testns");
+>>>>>>> b7ba80a49124 (Commit)
 	nstoken = open_netns("testns");
 	if (!ASSERT_OK_PTR(nstoken, "setns"))
 		goto out;
 
+<<<<<<< HEAD
 	SYS(out, "ip link add veth_src type veth peer name veth_dst");
 	SYS(out, "ip link set dev veth_src address 00:11:22:33:44:55");
 	SYS(out, "ip link set dev veth_dst address 66:77:88:99:aa:bb");
@@ -133,6 +174,16 @@ void test_xdp_do_redirect(void)
 	SYS(out, "ip addr add dev veth_src fc00::1/64");
 	SYS(out, "ip addr add dev veth_dst fc00::2/64");
 	SYS(out, "ip neigh add fc00::2 dev veth_src lladdr 66:77:88:99:aa:bb");
+=======
+	SYS("ip link add veth_src type veth peer name veth_dst");
+	SYS("ip link set dev veth_src address 00:11:22:33:44:55");
+	SYS("ip link set dev veth_dst address 66:77:88:99:aa:bb");
+	SYS("ip link set dev veth_src up");
+	SYS("ip link set dev veth_dst up");
+	SYS("ip addr add dev veth_src fc00::1/64");
+	SYS("ip addr add dev veth_dst fc00::2/64");
+	SYS("ip neigh add fc00::2 dev veth_src lladdr 66:77:88:99:aa:bb");
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* We enable forwarding in the test namespace because that will cause
 	 * the packets that go through the kernel stack (with XDP_PASS) to be
@@ -145,7 +196,11 @@ void test_xdp_do_redirect(void)
 	 * code didn't have this, so we keep the test behaviour to make sure the
 	 * bug doesn't resurface.
 	 */
+<<<<<<< HEAD
 	SYS(out, "sysctl -qw net.ipv6.conf.all.forwarding=1");
+=======
+	SYS("sysctl -qw net.ipv6.conf.all.forwarding=1");
+>>>>>>> b7ba80a49124 (Commit)
 
 	ifindex_src = if_nametoindex("veth_src");
 	ifindex_dst = if_nametoindex("veth_dst");
@@ -153,6 +208,7 @@ void test_xdp_do_redirect(void)
 	    !ASSERT_NEQ(ifindex_dst, 0, "ifindex_dst"))
 		goto out;
 
+<<<<<<< HEAD
 	/* Check xdp features supported by veth driver */
 	err = bpf_xdp_query(ifindex_src, XDP_FLAGS_DRV_MODE, &query_opts);
 	if (!ASSERT_OK(err, "veth_src bpf_xdp_query"))
@@ -176,6 +232,8 @@ void test_xdp_do_redirect(void)
 		       "veth_dst query_opts.feature_flags"))
 		goto out;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(skel->rodata->expect_dst, &pkt_udp.eth.h_dest, ETH_ALEN);
 	skel->rodata->ifindex_out = ifindex_src; /* redirect back to the same iface */
 	skel->rodata->ifindex_in = ifindex_src;
@@ -219,6 +277,10 @@ out_tc:
 out:
 	if (nstoken)
 		close_netns(nstoken);
+<<<<<<< HEAD
 	SYS_NOFAIL("ip netns del testns");
+=======
+	system("ip netns del testns");
+>>>>>>> b7ba80a49124 (Commit)
 	test_xdp_do_redirect__destroy(skel);
 }

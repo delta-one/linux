@@ -60,15 +60,19 @@
 #include <linux/sunrpc/gss_krb5.h>
 #include <linux/sunrpc/xdr.h>
 #include <linux/lcm.h>
+<<<<<<< HEAD
 #include <crypto/hash.h>
 #include <kunit/visibility.h>
 
 #include "gss_krb5_internal.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
 # define RPCDBG_FACILITY        RPCDBG_AUTH
 #endif
 
+<<<<<<< HEAD
 /**
  * krb5_nfold - n-fold function
  * @inbits: number of bits in @in
@@ -81,6 +85,15 @@
  */
 VISIBLE_IF_KUNIT
 void krb5_nfold(u32 inbits, const u8 *in, u32 outbits, u8 *out)
+=======
+/*
+ * This is the n-fold function as described in rfc3961, sec 5.1
+ * Taken from MIT Kerberos and modified.
+ */
+
+static void krb5_nfold(u32 inbits, const u8 *in,
+		       u32 outbits, u8 *out)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long ulcm;
 	int byte, i, msbit;
@@ -141,12 +154,16 @@ void krb5_nfold(u32 inbits, const u8 *in, u32 outbits, u8 *out)
 		}
 	}
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_IF_KUNIT(krb5_nfold);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * This is the DK (derive_key) function as described in rfc3961, sec 5.1
  * Taken from MIT Kerberos and modified.
  */
+<<<<<<< HEAD
 static int krb5_DK(const struct gss_krb5_enctype *gk5e,
 		   const struct xdr_netobj *inkey, u8 *rawkey,
 		   const struct xdr_netobj *in_constant, gfp_t gfp_mask)
@@ -161,16 +178,45 @@ static int krb5_DK(const struct gss_krb5_enctype *gk5e,
 	keylength = gk5e->keylength;
 
 	if (inkey->len != keylength)
+=======
+
+u32 krb5_derive_key(const struct gss_krb5_enctype *gk5e,
+		    const struct xdr_netobj *inkey,
+		    struct xdr_netobj *outkey,
+		    const struct xdr_netobj *in_constant,
+		    gfp_t gfp_mask)
+{
+	size_t blocksize, keybytes, keylength, n;
+	unsigned char *inblockdata, *outblockdata, *rawkey;
+	struct xdr_netobj inblock, outblock;
+	struct crypto_sync_skcipher *cipher;
+	u32 ret = EINVAL;
+
+	blocksize = gk5e->blocksize;
+	keybytes = gk5e->keybytes;
+	keylength = gk5e->keylength;
+
+	if ((inkey->len != keylength) || (outkey->len != keylength))
+>>>>>>> b7ba80a49124 (Commit)
 		goto err_return;
 
 	cipher = crypto_alloc_sync_skcipher(gk5e->encrypt_name, 0, 0);
 	if (IS_ERR(cipher))
 		goto err_return;
+<<<<<<< HEAD
 	blocksize = crypto_sync_skcipher_blocksize(cipher);
 	if (crypto_sync_skcipher_setkey(cipher, inkey->data, inkey->len))
 		goto err_return;
 
 	ret = -ENOMEM;
+=======
+	if (crypto_sync_skcipher_setkey(cipher, inkey->data, inkey->len))
+		goto err_return;
+
+	/* allocate and set up buffers */
+
+	ret = ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 	inblockdata = kmalloc(blocksize, gfp_mask);
 	if (inblockdata == NULL)
 		goto err_free_cipher;
@@ -179,6 +225,13 @@ static int krb5_DK(const struct gss_krb5_enctype *gk5e,
 	if (outblockdata == NULL)
 		goto err_free_in;
 
+<<<<<<< HEAD
+=======
+	rawkey = kmalloc(keybytes, gfp_mask);
+	if (rawkey == NULL)
+		goto err_free_out;
+
+>>>>>>> b7ba80a49124 (Commit)
 	inblock.data = (char *) inblockdata;
 	inblock.len = blocksize;
 
@@ -198,8 +251,13 @@ static int krb5_DK(const struct gss_krb5_enctype *gk5e,
 
 	n = 0;
 	while (n < keybytes) {
+<<<<<<< HEAD
 		krb5_encrypt(cipher, NULL, inblock.data, outblock.data,
 			     inblock.len);
+=======
+		(*(gk5e->encrypt))(cipher, NULL, inblock.data,
+				   outblock.data, inblock.len);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if ((keybytes - n) <= outblock.len) {
 			memcpy(rawkey + n, outblock.data, (keybytes - n));
@@ -211,8 +269,31 @@ static int krb5_DK(const struct gss_krb5_enctype *gk5e,
 		n += outblock.len;
 	}
 
+<<<<<<< HEAD
 	ret = 0;
 
+=======
+	/* postprocess the key */
+
+	inblock.data = (char *) rawkey;
+	inblock.len = keybytes;
+
+	BUG_ON(gk5e->mk_key == NULL);
+	ret = (*(gk5e->mk_key))(gk5e, &inblock, outkey);
+	if (ret) {
+		dprintk("%s: got %d from mk_key function for '%s'\n",
+			__func__, ret, gk5e->encrypt_name);
+		goto err_free_raw;
+	}
+
+	/* clean memory, free resources and exit */
+
+	ret = 0;
+
+err_free_raw:
+	kfree_sensitive(rawkey);
+err_free_out:
+>>>>>>> b7ba80a49124 (Commit)
 	kfree_sensitive(outblockdata);
 err_free_in:
 	kfree_sensitive(inblockdata);
@@ -235,11 +316,23 @@ static void mit_des_fixup_key_parity(u8 key[8])
 	}
 }
 
+<<<<<<< HEAD
 static int krb5_random_to_key_v1(const struct gss_krb5_enctype *gk5e,
 				 struct xdr_netobj *randombits,
 				 struct xdr_netobj *key)
 {
 	int i, ret = -EINVAL;
+=======
+/*
+ * This is the des3 key derivation postprocess function
+ */
+u32 gss_krb5_des3_make_key(const struct gss_krb5_enctype *gk5e,
+			   struct xdr_netobj *randombits,
+			   struct xdr_netobj *key)
+{
+	int i;
+	u32 ret = EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (key->len != 24) {
 		dprintk("%s: key->len is %d\n", __func__, key->len);
@@ -271,6 +364,7 @@ err_out:
 	return ret;
 }
 
+<<<<<<< HEAD
 /**
  * krb5_derive_key_v1 - Derive a subkey for an RFC 3961 enctype
  * @gk5e: Kerberos 5 enctype profile
@@ -314,6 +408,16 @@ static int krb5_random_to_key_v2(const struct gss_krb5_enctype *gk5e,
 				 struct xdr_netobj *key)
 {
 	int ret = -EINVAL;
+=======
+/*
+ * This is the aes key derivation postprocess function
+ */
+u32 gss_krb5_aes_make_key(const struct gss_krb5_enctype *gk5e,
+			  struct xdr_netobj *randombits,
+			  struct xdr_netobj *key)
+{
+	u32 ret = EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (key->len != 16 && key->len != 32) {
 		dprintk("%s: key->len is %d\n", __func__, key->len);
@@ -334,6 +438,7 @@ static int krb5_random_to_key_v2(const struct gss_krb5_enctype *gk5e,
 err_out:
 	return ret;
 }
+<<<<<<< HEAD
 
 /**
  * krb5_derive_key_v2 - Derive a subkey for an RFC 3962 enctype
@@ -628,3 +733,5 @@ out_free_tfm:
 out:
 	return ret;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

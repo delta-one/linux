@@ -40,11 +40,19 @@
 #include "virtual/virtual_stream_encoder.h"
 #include "dpcd_defs.h"
 #include "link_enc_cfg.h"
+<<<<<<< HEAD
 #include "link.h"
 #include "virtual/virtual_link_hwss.h"
 #include "link/hwss/link_hwss_dio.h"
 #include "link/hwss/link_hwss_dpia.h"
 #include "link/hwss/link_hwss_hpo_dp.h"
+=======
+#include "dc_link_dp.h"
+#include "virtual/virtual_link_hwss.h"
+#include "link/link_hwss_dio.h"
+#include "link/link_hwss_dpia.h"
+#include "link/link_hwss_hpo_dp.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #if defined(CONFIG_DRM_AMD_DC_SI)
 #include "dce60/dce60_resource.h"
@@ -232,7 +240,11 @@ struct resource_pool *dc_create_resource_pool(struct dc  *dc,
 				init_data->num_virtual_links, dc);
 		break;
 
+<<<<<<< HEAD
 #if defined(CONFIG_DRM_AMD_DC_FP)
+=======
+#if defined(CONFIG_DRM_AMD_DC_DCN)
+>>>>>>> b7ba80a49124 (Commit)
 	case DCN_VERSION_1_0:
 	case DCN_VERSION_1_01:
 		res_pool = dcn10_create_resource_pool(init_data, dc);
@@ -276,7 +288,11 @@ struct resource_pool *dc_create_resource_pool(struct dc  *dc,
 	case DCN_VERSION_3_21:
 		res_pool = dcn321_create_resource_pool(init_data, dc);
 		break;
+<<<<<<< HEAD
 #endif /* CONFIG_DRM_AMD_DC_FP */
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		break;
 	}
@@ -1747,6 +1763,10 @@ bool dc_remove_plane_from_context(
 
 	for (i = 0; i < stream_status->plane_count; i++) {
 		if (stream_status->plane_states[i] == plane_state) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 			dc_plane_state_release(stream_status->plane_states[i]);
 			break;
 		}
@@ -1768,6 +1788,7 @@ bool dc_remove_plane_from_context(
 	return true;
 }
 
+<<<<<<< HEAD
 /**
  * dc_rem_all_planes_for_stream - Remove planes attached to the target stream.
  *
@@ -1779,6 +1800,8 @@ bool dc_remove_plane_from_context(
  * Return true if DC was able to remove all planes from the target
  * stream, otherwise, return false.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 bool dc_rem_all_planes_for_stream(
 		const struct dc *dc,
 		struct dc_stream_state *stream,
@@ -2213,7 +2236,11 @@ enum dc_status dc_remove_stream_from_ctx(
 			del_pipe->stream_res.stream_enc,
 			false);
 
+<<<<<<< HEAD
 	if (dc->link_srv->dp_is_128b_132b_signal(del_pipe)) {
+=======
+	if (is_dp_128b_132b_signal(del_pipe)) {
+>>>>>>> b7ba80a49124 (Commit)
 		update_hpo_dp_stream_engine_usage(
 			&new_ctx->res_ctx, dc->res_pool,
 			del_pipe->stream_res.hpo_dp_stream_enc,
@@ -2513,10 +2540,16 @@ enum dc_status resource_map_pool_resources(
 	 * and link settings
 	 */
 	if (dc_is_dp_signal(stream->signal)) {
+<<<<<<< HEAD
 		if (!dc->link_srv->dp_decide_link_settings(stream, &pipe_ctx->link_config.dp_link_settings))
 			return DC_FAIL_DP_LINK_BANDWIDTH;
 		if (dc->link_srv->dp_get_encoding_format(
 				&pipe_ctx->link_config.dp_link_settings) == DP_128b_132b_ENCODING) {
+=======
+		if (!decide_link_settings(stream, &pipe_ctx->link_config.dp_link_settings))
+			return DC_FAIL_DP_LINK_BANDWIDTH;
+		if (dp_get_link_encoding_format(&pipe_ctx->link_config.dp_link_settings) == DP_128b_132b_ENCODING) {
+>>>>>>> b7ba80a49124 (Commit)
 			pipe_ctx->stream_res.hpo_dp_stream_enc =
 					find_first_free_match_hpo_dp_stream_enc_for_link(
 							&context->res_ctx, pool, stream);
@@ -2574,12 +2607,18 @@ enum dc_status resource_map_pool_resources(
 
 /**
  * dc_resource_state_copy_construct_current() - Creates a new dc_state from existing state
+<<<<<<< HEAD
  *
  * @dc: copy out of dc->current_state
  * @dst_ctx: copy into this
  *
  * This function makes a shallow copy of the current DC state and increments
  * refcounts on existing streams and planes.
+=======
+ * Is a shallow copy.  Increments refcounts on existing streams and planes.
+ * @dc: copy out of dc->current_state
+ * @dst_ctx: copy into this
+>>>>>>> b7ba80a49124 (Commit)
  */
 void dc_resource_state_copy_construct_current(
 		const struct dc *dc,
@@ -2608,6 +2647,7 @@ bool dc_resource_is_dsc_encoding_supported(const struct dc *dc)
 	return dc->res_pool->res_cap->num_dsc > 0;
 }
 
+<<<<<<< HEAD
 static bool planes_changed_for_existing_stream(struct dc_state *context,
 					       struct dc_stream_state *stream,
 					       const struct dc_validation_set set[],
@@ -2835,14 +2875,24 @@ fail:
 /**
  * dc_validate_global_state() - Determine if hardware can support a given state
  *
+=======
+
+/**
+ * dc_validate_global_state() - Determine if HW can support a given state
+ * Checks HW resource availability and bandwidth requirement.
+>>>>>>> b7ba80a49124 (Commit)
  * @dc: dc struct for this driver
  * @new_ctx: state to be validated
  * @fast_validate: set to true if only yes/no to support matters
  *
+<<<<<<< HEAD
  * Checks hardware resource availability and bandwidth requirement.
  *
  * Return:
  * DC_OK if the result can be programmed. Otherwise, an error code.
+=======
+ * Return: DC_OK if the result can be programmed.  Otherwise, an error code.
+>>>>>>> b7ba80a49124 (Commit)
  */
 enum dc_status dc_validate_global_state(
 		struct dc *dc,
@@ -3030,12 +3080,15 @@ static void set_avi_info_frame(
 		hdmi_info.bits.C0_C1   = COLORIMETRY_EXTENDED;
 	}
 
+<<<<<<< HEAD
 	if (pixel_encoding && color_space == COLOR_SPACE_2020_YCBCR &&
 			stream->out_transfer_func->tf == TRANSFER_FUNCTION_GAMMA22) {
 		hdmi_info.bits.EC0_EC2 = 0;
 		hdmi_info.bits.C0_C1 = COLORIMETRY_ITU709;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* TODO: un-hardcode aspect ratio */
 	aspect = stream->timing.aspect_ratio;
 
@@ -3270,6 +3323,7 @@ static void set_hfvs_info_packet(
 	*info_packet = stream->hfvsif_infopacket;
 }
 
+<<<<<<< HEAD
 static void adaptive_sync_override_dp_info_packets_sdp_line_num(
 		const struct dc_crtc_timing *timing,
 		struct enc_sdp_line_num *sdp_line_num,
@@ -3314,6 +3368,8 @@ static void set_adaptive_sync_info_packet(
 
 	*info_packet = stream->adaptive_sync_infopacket;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static void set_vtem_info_packet(
 		struct dc_info_packet *info_packet,
@@ -3406,7 +3462,10 @@ void resource_build_info_frame(struct pipe_ctx *pipe_ctx)
 	info->vsc.valid = false;
 	info->hfvsif.valid = false;
 	info->vtem.valid = false;
+<<<<<<< HEAD
 	info->adaptive_sync.valid = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	signal = pipe_ctx->stream->signal;
 
 	/* HDMi and DP have different info packets*/
@@ -3427,10 +3486,13 @@ void resource_build_info_frame(struct pipe_ctx *pipe_ctx)
 		set_spd_info_packet(&info->spd, pipe_ctx->stream);
 
 		set_hdr_static_info_packet(&info->hdrsmd, pipe_ctx->stream);
+<<<<<<< HEAD
 		set_adaptive_sync_info_packet(&info->adaptive_sync,
 										pipe_ctx->stream,
 										info,
 										&pipe_ctx->pipe_dlg_param);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	patch_gamut_packet_checksum(&info->gamut);
@@ -3686,7 +3748,11 @@ enum dc_status dc_validate_stream(struct dc *dc, struct dc_stream_state *stream)
 	/* TODO: validate audio ASIC caps, encoder */
 
 	if (res == DC_OK)
+<<<<<<< HEAD
 		res = dc->link_srv->validate_mode_timing(stream,
+=======
+		res = dc_link_validate_mode_timing(stream,
+>>>>>>> b7ba80a49124 (Commit)
 		      link,
 		      &stream->timing);
 
@@ -3813,7 +3879,11 @@ bool get_temp_dp_link_res(struct dc_link *link,
 
 	memset(link_res, 0, sizeof(*link_res));
 
+<<<<<<< HEAD
 	if (dc->link_srv->dp_get_encoding_format(link_settings) == DP_128b_132b_ENCODING) {
+=======
+	if (dp_get_link_encoding_format(link_settings) == DP_128b_132b_ENCODING) {
+>>>>>>> b7ba80a49124 (Commit)
 		link_res->hpo_dp_link_enc = get_temp_hpo_dp_link_enc(res_ctx,
 				dc->res_pool, link);
 		if (!link_res->hpo_dp_link_enc)
@@ -3870,6 +3940,7 @@ void check_syncd_pipes_for_disabled_master_pipe(struct dc *dc,
 		pipe_ctx_check = &context->res_ctx.pipe_ctx[i];
 
 		if ((GET_PIPE_SYNCD_FROM_PIPE(pipe_ctx_check) == disabled_master_pipe_idx) &&
+<<<<<<< HEAD
 		    IS_PIPE_SYNCD_VALID(pipe_ctx_check) && (i != disabled_master_pipe_idx)) {
 			struct pipe_ctx *first_pipe = pipe_ctx_check;
 
@@ -3884,6 +3955,11 @@ void check_syncd_pipes_for_disabled_master_pipe(struct dc *dc,
 			DC_ERR("DC: Failure: pipe_idx[%d] syncd with disabled master pipe_idx[%d]\n",
 				   i, disabled_master_pipe_idx);
 		}
+=======
+			IS_PIPE_SYNCD_VALID(pipe_ctx_check) && (i != disabled_master_pipe_idx))
+			DC_ERR("DC: Failure: pipe_idx[%d] syncd with disabled master pipe_idx[%d]\n",
+				i, disabled_master_pipe_idx);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -3989,6 +4065,7 @@ bool is_h_timing_divisible_by_2(struct dc_stream_state *stream)
 				(stream->timing.h_sync_width % 2 == 0);
 	}
 	return divisible;
+<<<<<<< HEAD
 }
 
 bool dc_resource_acquire_secondary_pipe_for_mpc_odm(
@@ -4081,3 +4158,6 @@ enum dc_status update_dp_encoder_resources_for_test_harness(const struct dc *dc,
 	return DC_OK;
 }
 
+=======
+}
+>>>>>>> b7ba80a49124 (Commit)

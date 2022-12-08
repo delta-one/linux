@@ -84,7 +84,17 @@
 };
 
 &en_pp3300_dx_edp {
+<<<<<<< HEAD
 	pins = "gpio67";
+=======
+	pinmux {
+		pins = "gpio67";
+	};
+
+	pinconf {
+		pins = "gpio67";
+	};
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* PINCTRL - board-specific pinctrl */

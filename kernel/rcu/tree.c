@@ -144,16 +144,24 @@ static int rcu_scheduler_fully_active __read_mostly;
 
 static void rcu_report_qs_rnp(unsigned long mask, struct rcu_node *rnp,
 			      unsigned long gps, unsigned long flags);
+<<<<<<< HEAD
+=======
+static void rcu_init_new_rnp(struct rcu_node *rnp_leaf);
+static void rcu_cleanup_dead_rnp(struct rcu_node *rnp_leaf);
+>>>>>>> b7ba80a49124 (Commit)
 static void rcu_boost_kthread_setaffinity(struct rcu_node *rnp, int outgoingcpu);
 static void invoke_rcu_core(void);
 static void rcu_report_exp_rdp(struct rcu_data *rdp);
 static void sync_sched_exp_online_cleanup(int cpu);
 static void check_cb_ovld_locked(struct rcu_data *rdp, struct rcu_node *rnp);
 static bool rcu_rdp_is_offloaded(struct rcu_data *rdp);
+<<<<<<< HEAD
 static bool rcu_rdp_cpu_online(struct rcu_data *rdp);
 static bool rcu_init_invoked(void);
 static void rcu_cleanup_dead_rnp(struct rcu_node *rnp_leaf);
 static void rcu_init_new_rnp(struct rcu_node *rnp_leaf);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * rcuc/rcub/rcuop kthread realtime priority. The "rcuop"
@@ -217,6 +225,30 @@ EXPORT_SYMBOL_GPL(rcu_get_gp_kthreads_prio);
 #define PER_RCU_NODE_PERIOD 3	/* Number of grace periods between delays for debugging. */
 
 /*
+<<<<<<< HEAD
+=======
+ * Compute the mask of online CPUs for the specified rcu_node structure.
+ * This will not be stable unless the rcu_node structure's ->lock is
+ * held, but the bit corresponding to the current CPU will be stable
+ * in most contexts.
+ */
+static unsigned long rcu_rnp_online_cpus(struct rcu_node *rnp)
+{
+	return READ_ONCE(rnp->qsmaskinitnext);
+}
+
+/*
+ * Is the CPU corresponding to the specified rcu_data structure online
+ * from RCU's perspective?  This perspective is given by that structure's
+ * ->qsmaskinitnext field rather than by the global cpu_online_mask.
+ */
+static bool rcu_rdp_cpu_online(struct rcu_data *rdp)
+{
+	return !!(rdp->grpmask & rcu_rnp_online_cpus(rdp->mynode));
+}
+
+/*
+>>>>>>> b7ba80a49124 (Commit)
  * Return true if an RCU grace period is in progress.  The READ_ONCE()s
  * permit this function to be invoked without holding the root rcu_node
  * structure's ->lock, but of course results can be subject to change.
@@ -282,6 +314,15 @@ static bool rcu_dynticks_in_eqs(int snap)
 	return !(snap & RCU_DYNTICKS_IDX);
 }
 
+<<<<<<< HEAD
+=======
+/* Return true if the specified CPU is currently idle from an RCU viewpoint.  */
+bool rcu_is_idle_cpu(int cpu)
+{
+	return rcu_dynticks_in_eqs(rcu_dynticks_snap(cpu));
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Return true if the CPU corresponding to the specified rcu_data
  * structure has spent some time in an extended quiescent state since
@@ -640,7 +681,10 @@ void __rcu_irq_enter_check_tick(void)
 	}
 	raw_spin_unlock_rcu_node(rdp->mynode);
 }
+<<<<<<< HEAD
 NOKPROBE_SYMBOL(__rcu_irq_enter_check_tick);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_NO_HZ_FULL */
 
 /*
@@ -716,6 +760,49 @@ void rcu_request_urgent_qs_task(struct task_struct *t)
 	smp_store_release(per_cpu_ptr(&rcu_data.rcu_urgent_qs, cpu), true);
 }
 
+<<<<<<< HEAD
+=======
+#if defined(CONFIG_PROVE_RCU) && defined(CONFIG_HOTPLUG_CPU)
+
+/*
+ * Is the current CPU online as far as RCU is concerned?
+ *
+ * Disable preemption to avoid false positives that could otherwise
+ * happen due to the current CPU number being sampled, this task being
+ * preempted, its old CPU being taken offline, resuming on some other CPU,
+ * then determining that its old CPU is now offline.
+ *
+ * Disable checking if in an NMI handler because we cannot safely
+ * report errors from NMI handlers anyway.  In addition, it is OK to use
+ * RCU on an offline processor during initial boot, hence the check for
+ * rcu_scheduler_fully_active.
+ */
+bool rcu_lockdep_current_cpu_online(void)
+{
+	struct rcu_data *rdp;
+	bool ret = false;
+
+	if (in_nmi() || !rcu_scheduler_fully_active)
+		return true;
+	preempt_disable_notrace();
+	rdp = this_cpu_ptr(&rcu_data);
+	/*
+	 * Strictly, we care here about the case where the current CPU is
+	 * in rcu_cpu_starting() and thus has an excuse for rdp->grpmask
+	 * not being up to date. So arch_spin_is_locked() might have a
+	 * false positive if it's held by some *other* CPU, but that's
+	 * OK because that just means a false *negative* on the warning.
+	 */
+	if (rcu_rdp_cpu_online(rdp) || arch_spin_is_locked(&rcu_state.ofl_lock))
+		ret = true;
+	preempt_enable_notrace();
+	return ret;
+}
+EXPORT_SYMBOL_GPL(rcu_lockdep_current_cpu_online);
+
+#endif /* #if defined(CONFIG_PROVE_RCU) && defined(CONFIG_HOTPLUG_CPU) */
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * When trying to report a quiescent state on behalf of some other CPU,
  * it is our responsibility to check for and handle potential overflow
@@ -867,6 +954,7 @@ static int rcu_implicit_dynticks_qs(struct rcu_data *rdp)
 			rdp->rcu_iw_gp_seq = rnp->gp_seq;
 			irq_work_queue_on(&rdp->rcu_iw, rdp->cpu);
 		}
+<<<<<<< HEAD
 
 		if (rcu_cpu_stall_cputime && rdp->snap_record.gp_seq != rdp->gp_seq) {
 			int cpu = rdp->cpu;
@@ -885,6 +973,8 @@ static int rcu_implicit_dynticks_qs(struct rcu_data *rdp)
 			rsrp->jiffies = jiffies;
 			rsrp->gp_seq = rdp->gp_seq;
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -1310,12 +1400,26 @@ static void rcu_strict_gp_boundary(void *unused)
 	invoke_rcu_core();
 }
 
+<<<<<<< HEAD
+=======
+// Has rcu_init() been invoked?  This is used (for example) to determine
+// whether spinlocks may be acquired safely.
+static bool rcu_init_invoked(void)
+{
+	return !!rcu_state.n_online_cpus;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 // Make the polled API aware of the beginning of a grace period.
 static void rcu_poll_gp_seq_start(unsigned long *snap)
 {
 	struct rcu_node *rnp = rcu_get_root();
 
+<<<<<<< HEAD
 	if (rcu_scheduler_active != RCU_SCHEDULER_INACTIVE)
+=======
+	if (rcu_init_invoked())
+>>>>>>> b7ba80a49124 (Commit)
 		raw_lockdep_assert_held_rcu_node(rnp);
 
 	// If RCU was idle, note beginning of GP.
@@ -1331,7 +1435,11 @@ static void rcu_poll_gp_seq_end(unsigned long *snap)
 {
 	struct rcu_node *rnp = rcu_get_root();
 
+<<<<<<< HEAD
 	if (rcu_scheduler_active != RCU_SCHEDULER_INACTIVE)
+=======
+	if (rcu_init_invoked())
+>>>>>>> b7ba80a49124 (Commit)
 		raw_lockdep_assert_held_rcu_node(rnp);
 
 	// If the previously noted GP is still in effect, record the
@@ -1350,6 +1458,7 @@ static void rcu_poll_gp_seq_end(unsigned long *snap)
 // where caller does not hold the root rcu_node structure's lock.
 static void rcu_poll_gp_seq_start_unlocked(unsigned long *snap)
 {
+<<<<<<< HEAD
 	unsigned long flags;
 	struct rcu_node *rnp = rcu_get_root();
 
@@ -1361,12 +1470,24 @@ static void rcu_poll_gp_seq_start_unlocked(unsigned long *snap)
 	rcu_poll_gp_seq_start(snap);
 	if (rcu_init_invoked())
 		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+=======
+	struct rcu_node *rnp = rcu_get_root();
+
+	if (rcu_init_invoked()) {
+		lockdep_assert_irqs_enabled();
+		raw_spin_lock_irq_rcu_node(rnp);
+	}
+	rcu_poll_gp_seq_start(snap);
+	if (rcu_init_invoked())
+		raw_spin_unlock_irq_rcu_node(rnp);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 // Make the polled API aware of the end of a grace period, but where
 // caller does not hold the root rcu_node structure's lock.
 static void rcu_poll_gp_seq_end_unlocked(unsigned long *snap)
 {
+<<<<<<< HEAD
 	unsigned long flags;
 	struct rcu_node *rnp = rcu_get_root();
 
@@ -1378,6 +1499,17 @@ static void rcu_poll_gp_seq_end_unlocked(unsigned long *snap)
 	rcu_poll_gp_seq_end(snap);
 	if (rcu_init_invoked())
 		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+=======
+	struct rcu_node *rnp = rcu_get_root();
+
+	if (rcu_init_invoked()) {
+		lockdep_assert_irqs_enabled();
+		raw_spin_lock_irq_rcu_node(rnp);
+	}
+	rcu_poll_gp_seq_end(snap);
+	if (rcu_init_invoked())
+		raw_spin_unlock_irq_rcu_node(rnp);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1956,6 +2088,10 @@ rcu_report_qs_rdp(struct rcu_data *rdp)
 {
 	unsigned long flags;
 	unsigned long mask;
+<<<<<<< HEAD
+=======
+	bool needwake = false;
+>>>>>>> b7ba80a49124 (Commit)
 	bool needacc = false;
 	struct rcu_node *rnp;
 
@@ -1987,12 +2123,16 @@ rcu_report_qs_rdp(struct rcu_data *rdp)
 		 * NOCB kthreads have their own way to deal with that...
 		 */
 		if (!rcu_rdp_is_offloaded(rdp)) {
+<<<<<<< HEAD
 			/*
 			 * The current GP has not yet ended, so it
 			 * should not be possible for rcu_accelerate_cbs()
 			 * to return true.  So complain, but don't awaken.
 			 */
 			WARN_ON_ONCE(rcu_accelerate_cbs(rnp, rdp));
+=======
+			needwake = rcu_accelerate_cbs(rnp, rdp);
+>>>>>>> b7ba80a49124 (Commit)
 		} else if (!rcu_segcblist_completely_offloaded(&rdp->cblist)) {
 			/*
 			 * ...but NOCB kthreads may miss or delay callbacks acceleration
@@ -2004,6 +2144,11 @@ rcu_report_qs_rdp(struct rcu_data *rdp)
 		rcu_disable_urgency_upon_qs(rdp);
 		rcu_report_qs_rnp(mask, rnp, rnp->gp_seq, flags);
 		/* ^^^ Released rnp->lock */
+<<<<<<< HEAD
+=======
+		if (needwake)
+			rcu_gp_kthread_wake();
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (needacc) {
 			rcu_nocb_lock_irqsave(rdp, flags);
@@ -2046,11 +2191,98 @@ rcu_check_quiescent_state(struct rcu_data *rdp)
 	rcu_report_qs_rdp(rdp);
 }
 
+<<<<<<< HEAD
 /* Return true if callback-invocation time limit exceeded. */
 static bool rcu_do_batch_check_time(long count, long tlimit)
 {
 	// Invoke local_clock() only once per 32 consecutive callbacks.
 	return unlikely(tlimit) && !likely(count & 31) && local_clock() >= tlimit;
+=======
+/*
+ * Near the end of the offline process.  Trace the fact that this CPU
+ * is going offline.
+ */
+int rcutree_dying_cpu(unsigned int cpu)
+{
+	bool blkd;
+	struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
+	struct rcu_node *rnp = rdp->mynode;
+
+	if (!IS_ENABLED(CONFIG_HOTPLUG_CPU))
+		return 0;
+
+	blkd = !!(READ_ONCE(rnp->qsmask) & rdp->grpmask);
+	trace_rcu_grace_period(rcu_state.name, READ_ONCE(rnp->gp_seq),
+			       blkd ? TPS("cpuofl-bgp") : TPS("cpuofl"));
+	return 0;
+}
+
+/*
+ * All CPUs for the specified rcu_node structure have gone offline,
+ * and all tasks that were preempted within an RCU read-side critical
+ * section while running on one of those CPUs have since exited their RCU
+ * read-side critical section.  Some other CPU is reporting this fact with
+ * the specified rcu_node structure's ->lock held and interrupts disabled.
+ * This function therefore goes up the tree of rcu_node structures,
+ * clearing the corresponding bits in the ->qsmaskinit fields.  Note that
+ * the leaf rcu_node structure's ->qsmaskinit field has already been
+ * updated.
+ *
+ * This function does check that the specified rcu_node structure has
+ * all CPUs offline and no blocked tasks, so it is OK to invoke it
+ * prematurely.  That said, invoking it after the fact will cost you
+ * a needless lock acquisition.  So once it has done its work, don't
+ * invoke it again.
+ */
+static void rcu_cleanup_dead_rnp(struct rcu_node *rnp_leaf)
+{
+	long mask;
+	struct rcu_node *rnp = rnp_leaf;
+
+	raw_lockdep_assert_held_rcu_node(rnp_leaf);
+	if (!IS_ENABLED(CONFIG_HOTPLUG_CPU) ||
+	    WARN_ON_ONCE(rnp_leaf->qsmaskinit) ||
+	    WARN_ON_ONCE(rcu_preempt_has_tasks(rnp_leaf)))
+		return;
+	for (;;) {
+		mask = rnp->grpmask;
+		rnp = rnp->parent;
+		if (!rnp)
+			break;
+		raw_spin_lock_rcu_node(rnp); /* irqs already disabled. */
+		rnp->qsmaskinit &= ~mask;
+		/* Between grace periods, so better already be zero! */
+		WARN_ON_ONCE(rnp->qsmask);
+		if (rnp->qsmaskinit) {
+			raw_spin_unlock_rcu_node(rnp);
+			/* irqs remain disabled. */
+			return;
+		}
+		raw_spin_unlock_rcu_node(rnp); /* irqs remain disabled. */
+	}
+}
+
+/*
+ * The CPU has been completely removed, and some other CPU is reporting
+ * this fact from process context.  Do the remainder of the cleanup.
+ * There can only be one CPU hotplug operation at a time, so no need for
+ * explicit locking.
+ */
+int rcutree_dead_cpu(unsigned int cpu)
+{
+	struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
+	struct rcu_node *rnp = rdp->mynode;  /* Outgoing CPU's rdp & rnp. */
+
+	if (!IS_ENABLED(CONFIG_HOTPLUG_CPU))
+		return 0;
+
+	WRITE_ONCE(rcu_state.n_online_cpus, rcu_state.n_online_cpus - 1);
+	/* Adjust any no-longer-needed kthreads. */
+	rcu_boost_kthread_setaffinity(rnp, -1);
+	// Stop-machine done, so allow nohz_full to disable tick.
+	tick_dep_clear(TICK_DEP_BIT_RCU);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -2085,12 +2317,20 @@ static void rcu_do_batch(struct rcu_data *rdp)
 	 */
 	rcu_nocb_lock_irqsave(rdp, flags);
 	WARN_ON_ONCE(cpu_is_offline(smp_processor_id()));
+<<<<<<< HEAD
 	pending = rcu_segcblist_get_seglen(&rdp->cblist, RCU_DONE_TAIL);
 	div = READ_ONCE(rcu_divisor);
 	div = div < 0 ? 7 : div > sizeof(long) * 8 - 2 ? sizeof(long) * 8 - 2 : div;
 	bl = max(rdp->blimit, pending >> div);
 	if ((in_serving_softirq() || rdp->rcu_cpu_kthread_status == RCU_KTHREAD_RUNNING) &&
 	    unlikely(bl > 100)) {
+=======
+	pending = rcu_segcblist_n_cbs(&rdp->cblist);
+	div = READ_ONCE(rcu_divisor);
+	div = div < 0 ? 7 : div > sizeof(long) * 8 - 2 ? sizeof(long) * 8 - 2 : div;
+	bl = max(rdp->blimit, pending >> div);
+	if (in_serving_softirq() && unlikely(bl > 100)) {
+>>>>>>> b7ba80a49124 (Commit)
 		long rrn = READ_ONCE(rcu_resched_ns);
 
 		rrn = rrn < NSEC_PER_MSEC ? NSEC_PER_MSEC : rrn > NSEC_PER_SEC ? NSEC_PER_SEC : rrn;
@@ -2134,16 +2374,28 @@ static void rcu_do_batch(struct rcu_data *rdp)
 			 * Make sure we don't spend too much time here and deprive other
 			 * softirq vectors of CPU cycles.
 			 */
+<<<<<<< HEAD
 			if (rcu_do_batch_check_time(count, tlimit))
 				break;
 		} else {
 			// In rcuc/rcuoc context, so no worries about
 			// depriving other softirq vectors of CPU cycles.
+=======
+			if (unlikely(tlimit)) {
+				/* only call local_clock() every 32 callbacks */
+				if (likely((count & 31) || local_clock() < tlimit))
+					continue;
+				/* Exceeded the time limit, so leave. */
+				break;
+			}
+		} else {
+>>>>>>> b7ba80a49124 (Commit)
 			local_bh_enable();
 			lockdep_assert_irqs_enabled();
 			cond_resched_tasks_rcu_qs();
 			lockdep_assert_irqs_enabled();
 			local_bh_disable();
+<<<<<<< HEAD
 			// But rcuc kthreads can delay quiescent-state
 			// reporting, so check time limits for them.
 			if (rdp->rcu_cpu_kthread_status == RCU_KTHREAD_RUNNING &&
@@ -2151,6 +2403,8 @@ static void rcu_do_batch(struct rcu_data *rdp)
 				rdp->rcu_cpu_has_work = 1;
 				break;
 			}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -2295,7 +2549,11 @@ void rcu_force_quiescent_state(void)
 	struct rcu_node *rnp_old = NULL;
 
 	/* Funnel through hierarchy to reduce memory contention. */
+<<<<<<< HEAD
 	rnp = raw_cpu_read(rcu_data.mynode);
+=======
+	rnp = __this_cpu_read(rcu_data.mynode);
+>>>>>>> b7ba80a49124 (Commit)
 	for (; rnp != NULL; rnp = rnp->parent) {
 		ret = (READ_ONCE(rcu_state.gp_flags) & RCU_GP_FLAG_FQS) ||
 		       !raw_spin_trylock(&rnp->fqslock);
@@ -2607,6 +2865,7 @@ static void check_cb_ovld(struct rcu_data *rdp)
 	raw_spin_unlock_rcu_node(rnp);
 }
 
+<<<<<<< HEAD
 static void
 __call_rcu_common(struct rcu_head *head, rcu_callback_t func, bool lazy_in)
 {
@@ -2708,6 +2967,10 @@ EXPORT_SYMBOL_GPL(call_rcu_hurry);
  * ->cblist to prevent starting of grace periods too soon.
  * If you desire grace periods to start very soon, use call_rcu_hurry().
  *
+=======
+/**
+ * call_rcu() - Queue an RCU callback for invocation after a grace period.
+>>>>>>> b7ba80a49124 (Commit)
  * @head: structure to be used for queueing the RCU updates.
  * @func: actual callback function to be invoked after the grace period
  *
@@ -2748,10 +3011,77 @@ EXPORT_SYMBOL_GPL(call_rcu_hurry);
  */
 void call_rcu(struct rcu_head *head, rcu_callback_t func)
 {
+<<<<<<< HEAD
 	return __call_rcu_common(head, func, IS_ENABLED(CONFIG_RCU_LAZY));
 }
 EXPORT_SYMBOL_GPL(call_rcu);
 
+=======
+	static atomic_t doublefrees;
+	unsigned long flags;
+	struct rcu_data *rdp;
+	bool was_alldone;
+
+	/* Misaligned rcu_head! */
+	WARN_ON_ONCE((unsigned long)head & (sizeof(void *) - 1));
+
+	if (debug_rcu_head_queue(head)) {
+		/*
+		 * Probable double call_rcu(), so leak the callback.
+		 * Use rcu:rcu_callback trace event to find the previous
+		 * time callback was passed to call_rcu().
+		 */
+		if (atomic_inc_return(&doublefrees) < 4) {
+			pr_err("%s(): Double-freed CB %p->%pS()!!!  ", __func__, head, head->func);
+			mem_dump_obj(head);
+		}
+		WRITE_ONCE(head->func, rcu_leak_callback);
+		return;
+	}
+	head->func = func;
+	head->next = NULL;
+	kasan_record_aux_stack_noalloc(head);
+	local_irq_save(flags);
+	rdp = this_cpu_ptr(&rcu_data);
+
+	/* Add the callback to our list. */
+	if (unlikely(!rcu_segcblist_is_enabled(&rdp->cblist))) {
+		// This can trigger due to call_rcu() from offline CPU:
+		WARN_ON_ONCE(rcu_scheduler_active != RCU_SCHEDULER_INACTIVE);
+		WARN_ON_ONCE(!rcu_is_watching());
+		// Very early boot, before rcu_init().  Initialize if needed
+		// and then drop through to queue the callback.
+		if (rcu_segcblist_empty(&rdp->cblist))
+			rcu_segcblist_init(&rdp->cblist);
+	}
+
+	check_cb_ovld(rdp);
+	if (rcu_nocb_try_bypass(rdp, head, &was_alldone, flags))
+		return; // Enqueued onto ->nocb_bypass, so just leave.
+	// If no-CBs CPU gets here, rcu_nocb_try_bypass() acquired ->nocb_lock.
+	rcu_segcblist_enqueue(&rdp->cblist, head);
+	if (__is_kvfree_rcu_offset((unsigned long)func))
+		trace_rcu_kvfree_callback(rcu_state.name, head,
+					 (unsigned long)func,
+					 rcu_segcblist_n_cbs(&rdp->cblist));
+	else
+		trace_rcu_callback(rcu_state.name, head,
+				   rcu_segcblist_n_cbs(&rdp->cblist));
+
+	trace_rcu_segcb_stats(&rdp->cblist, TPS("SegCBQueued"));
+
+	/* Go handle any RCU core processing required. */
+	if (unlikely(rcu_rdp_is_offloaded(rdp))) {
+		__call_rcu_nocb_wake(rdp, was_alldone, flags); /* unlocks */
+	} else {
+		__call_rcu_core(rdp, head, flags);
+		local_irq_restore(flags);
+	}
+}
+EXPORT_SYMBOL_GPL(call_rcu);
+
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Maximum number of jiffies to wait before draining a batch. */
 #define KFREE_DRAIN_JIFFIES (5 * HZ)
 #define KFREE_N_BATCHES 2
@@ -2759,6 +3089,7 @@ EXPORT_SYMBOL_GPL(call_rcu);
 
 /**
  * struct kvfree_rcu_bulk_data - single block to store kvfree_rcu() pointers
+<<<<<<< HEAD
  * @list: List node. All blocks are linked between each other
  * @gp_snap: Snapshot of RCU state for objects placed to this bulk
  * @nr_records: Number of active pointers in the array
@@ -2768,6 +3099,15 @@ struct kvfree_rcu_bulk_data {
 	struct list_head list;
 	unsigned long gp_snap;
 	unsigned long nr_records;
+=======
+ * @nr_records: Number of active pointers in the array
+ * @next: Next bulk object in the block chain
+ * @records: Array of the kvfree_rcu() pointers
+ */
+struct kvfree_rcu_bulk_data {
+	unsigned long nr_records;
+	struct kvfree_rcu_bulk_data *next;
+>>>>>>> b7ba80a49124 (Commit)
 	void *records[];
 };
 
@@ -2783,28 +3123,44 @@ struct kvfree_rcu_bulk_data {
  * struct kfree_rcu_cpu_work - single batch of kfree_rcu() requests
  * @rcu_work: Let queue_rcu_work() invoke workqueue handler after grace period
  * @head_free: List of kfree_rcu() objects waiting for a grace period
+<<<<<<< HEAD
  * @bulk_head_free: Bulk-List of kvfree_rcu() objects waiting for a grace period
+=======
+ * @bkvhead_free: Bulk-List of kvfree_rcu() objects waiting for a grace period
+>>>>>>> b7ba80a49124 (Commit)
  * @krcp: Pointer to @kfree_rcu_cpu structure
  */
 
 struct kfree_rcu_cpu_work {
 	struct rcu_work rcu_work;
 	struct rcu_head *head_free;
+<<<<<<< HEAD
 	struct list_head bulk_head_free[FREE_N_CHANNELS];
+=======
+	struct kvfree_rcu_bulk_data *bkvhead_free[FREE_N_CHANNELS];
+>>>>>>> b7ba80a49124 (Commit)
 	struct kfree_rcu_cpu *krcp;
 };
 
 /**
  * struct kfree_rcu_cpu - batch up kfree_rcu() requests for RCU grace period
  * @head: List of kfree_rcu() objects not yet waiting for a grace period
+<<<<<<< HEAD
  * @head_gp_snap: Snapshot of RCU state for objects placed to "@head"
  * @bulk_head: Bulk-List of kvfree_rcu() objects not yet waiting for a grace period
+=======
+ * @bkvhead: Bulk-List of kvfree_rcu() objects not yet waiting for a grace period
+>>>>>>> b7ba80a49124 (Commit)
  * @krw_arr: Array of batches of kfree_rcu() objects waiting for a grace period
  * @lock: Synchronize access to this structure
  * @monitor_work: Promote @head to @head_free after KFREE_DRAIN_JIFFIES
  * @initialized: The @rcu_work fields have been initialized
+<<<<<<< HEAD
  * @head_count: Number of objects in rcu_head singular list
  * @bulk_count: Number of objects in bulk-list
+=======
+ * @count: Number of objects for which GP not started
+>>>>>>> b7ba80a49124 (Commit)
  * @bkvcache:
  *	A simple cache list that contains objects for reuse purpose.
  *	In order to save some per-cpu space the list is singular.
@@ -2822,6 +3178,7 @@ struct kfree_rcu_cpu_work {
  * the interactions with the slab allocators.
  */
 struct kfree_rcu_cpu {
+<<<<<<< HEAD
 	// Objects queued on a linked list
 	// through their rcu_head structures.
 	struct rcu_head *head;
@@ -2832,10 +3189,18 @@ struct kfree_rcu_cpu {
 	struct list_head bulk_head[FREE_N_CHANNELS];
 	atomic_t bulk_count[FREE_N_CHANNELS];
 
+=======
+	struct rcu_head *head;
+	struct kvfree_rcu_bulk_data *bkvhead[FREE_N_CHANNELS];
+>>>>>>> b7ba80a49124 (Commit)
 	struct kfree_rcu_cpu_work krw_arr[KFREE_N_BATCHES];
 	raw_spinlock_t lock;
 	struct delayed_work monitor_work;
 	bool initialized;
+<<<<<<< HEAD
+=======
+	int count;
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct delayed_work page_cache_work;
 	atomic_t backoff_page_cache_fill;
@@ -2923,6 +3288,7 @@ drain_page_cache(struct kfree_rcu_cpu *krcp)
 	return freed;
 }
 
+<<<<<<< HEAD
 static void
 kvfree_rcu_bulk(struct kfree_rcu_cpu *krcp,
 	struct kvfree_rcu_bulk_data *bnode, int idx)
@@ -2968,6 +3334,84 @@ kvfree_rcu_list(struct rcu_head *head)
 	for (; head; head = next) {
 		void *ptr = (void *) head->func;
 		unsigned long offset = (void *) head - ptr;
+=======
+/*
+ * This function is invoked in workqueue context after a grace period.
+ * It frees all the objects queued on ->bkvhead_free or ->head_free.
+ */
+static void kfree_rcu_work(struct work_struct *work)
+{
+	unsigned long flags;
+	struct kvfree_rcu_bulk_data *bkvhead[FREE_N_CHANNELS], *bnext;
+	struct rcu_head *head, *next;
+	struct kfree_rcu_cpu *krcp;
+	struct kfree_rcu_cpu_work *krwp;
+	int i, j;
+
+	krwp = container_of(to_rcu_work(work),
+			    struct kfree_rcu_cpu_work, rcu_work);
+	krcp = krwp->krcp;
+
+	raw_spin_lock_irqsave(&krcp->lock, flags);
+	// Channels 1 and 2.
+	for (i = 0; i < FREE_N_CHANNELS; i++) {
+		bkvhead[i] = krwp->bkvhead_free[i];
+		krwp->bkvhead_free[i] = NULL;
+	}
+
+	// Channel 3.
+	head = krwp->head_free;
+	krwp->head_free = NULL;
+	raw_spin_unlock_irqrestore(&krcp->lock, flags);
+
+	// Handle the first two channels.
+	for (i = 0; i < FREE_N_CHANNELS; i++) {
+		for (; bkvhead[i]; bkvhead[i] = bnext) {
+			bnext = bkvhead[i]->next;
+			debug_rcu_bhead_unqueue(bkvhead[i]);
+
+			rcu_lock_acquire(&rcu_callback_map);
+			if (i == 0) { // kmalloc() / kfree().
+				trace_rcu_invoke_kfree_bulk_callback(
+					rcu_state.name, bkvhead[i]->nr_records,
+					bkvhead[i]->records);
+
+				kfree_bulk(bkvhead[i]->nr_records,
+					bkvhead[i]->records);
+			} else { // vmalloc() / vfree().
+				for (j = 0; j < bkvhead[i]->nr_records; j++) {
+					trace_rcu_invoke_kvfree_callback(
+						rcu_state.name,
+						bkvhead[i]->records[j], 0);
+
+					vfree(bkvhead[i]->records[j]);
+				}
+			}
+			rcu_lock_release(&rcu_callback_map);
+
+			raw_spin_lock_irqsave(&krcp->lock, flags);
+			if (put_cached_bnode(krcp, bkvhead[i]))
+				bkvhead[i] = NULL;
+			raw_spin_unlock_irqrestore(&krcp->lock, flags);
+
+			if (bkvhead[i])
+				free_page((unsigned long) bkvhead[i]);
+
+			cond_resched_tasks_rcu_qs();
+		}
+	}
+
+	/*
+	 * This is used when the "bulk" path can not be used for the
+	 * double-argument of kvfree_rcu().  This happens when the
+	 * page-cache is empty, which means that objects are instead
+	 * queued on a linked list through their rcu_head structures.
+	 * This list is named "Channel 3".
+	 */
+	for (; head; head = next) {
+		unsigned long offset = (unsigned long)head->func;
+		void *ptr = (void *)head - offset;
+>>>>>>> b7ba80a49124 (Commit)
 
 		next = head->next;
 		debug_rcu_head_unqueue((struct rcu_head *)ptr);
@@ -2982,6 +3426,7 @@ kvfree_rcu_list(struct rcu_head *head)
 	}
 }
 
+<<<<<<< HEAD
 /*
  * This function is invoked in workqueue context after a grace period.
  * It frees all the objects queued on ->bulk_head_free or ->head_free.
@@ -3027,12 +3472,15 @@ static void kfree_rcu_work(struct work_struct *work)
 	kvfree_rcu_list(head);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static bool
 need_offload_krc(struct kfree_rcu_cpu *krcp)
 {
 	int i;
 
 	for (i = 0; i < FREE_N_CHANNELS; i++)
+<<<<<<< HEAD
 		if (!list_empty(&krcp->bulk_head[i]))
 			return true;
 
@@ -3048,6 +3496,12 @@ static int krc_count(struct kfree_rcu_cpu *krcp)
 		sum += atomic_read(&krcp->bulk_count[i]);
 
 	return sum;
+=======
+		if (krcp->bkvhead[i])
+			return true;
+
+	return !!krcp->head;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -3055,7 +3509,11 @@ schedule_delayed_monitor_work(struct kfree_rcu_cpu *krcp)
 {
 	long delay, delay_left;
 
+<<<<<<< HEAD
 	delay = krc_count(krcp) >= KVFREE_BULK_MAX_ENTR ? 1:KFREE_DRAIN_JIFFIES;
+=======
+	delay = READ_ONCE(krcp->count) >= KVFREE_BULK_MAX_ENTR ? 1:KFREE_DRAIN_JIFFIES;
+>>>>>>> b7ba80a49124 (Commit)
 	if (delayed_work_pending(&krcp->monitor_work)) {
 		delay_left = krcp->monitor_work.timer.expires - jiffies;
 		if (delay < delay_left)
@@ -3065,6 +3523,7 @@ schedule_delayed_monitor_work(struct kfree_rcu_cpu *krcp)
 	queue_delayed_work(system_wq, &krcp->monitor_work, delay);
 }
 
+<<<<<<< HEAD
 static void
 kvfree_rcu_drain_ready(struct kfree_rcu_cpu *krcp)
 {
@@ -3103,6 +3562,8 @@ kvfree_rcu_drain_ready(struct kfree_rcu_cpu *krcp)
 		kvfree_rcu_list(head_ready);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * This function is invoked after the KFREE_DRAIN_JIFFIES timeout.
  */
@@ -3113,20 +3574,28 @@ static void kfree_rcu_monitor(struct work_struct *work)
 	unsigned long flags;
 	int i, j;
 
+<<<<<<< HEAD
 	// Drain ready for reclaim.
 	kvfree_rcu_drain_ready(krcp);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	raw_spin_lock_irqsave(&krcp->lock, flags);
 
 	// Attempt to start a new batch.
 	for (i = 0; i < KFREE_N_BATCHES; i++) {
 		struct kfree_rcu_cpu_work *krwp = &(krcp->krw_arr[i]);
 
+<<<<<<< HEAD
 		// Try to detach bulk_head or head and attach it over any
+=======
+		// Try to detach bkvhead or head and attach it over any
+>>>>>>> b7ba80a49124 (Commit)
 		// available corresponding free channel. It can be that
 		// a previous RCU batch is in progress, it means that
 		// immediately to queue another one is not possible so
 		// in that case the monitor work is rearmed.
+<<<<<<< HEAD
 		if ((!list_empty(&krcp->bulk_head[0]) && list_empty(&krwp->bulk_head_free[0])) ||
 			(!list_empty(&krcp->bulk_head[1]) && list_empty(&krwp->bulk_head_free[1])) ||
 				(READ_ONCE(krcp->head) && !krwp->head_free)) {
@@ -3138,6 +3607,17 @@ static void kfree_rcu_monitor(struct work_struct *work)
 					atomic_set(&krcp->bulk_count[j], 0);
 					list_replace_init(&krcp->bulk_head[j],
 						&krwp->bulk_head_free[j]);
+=======
+		if ((krcp->bkvhead[0] && !krwp->bkvhead_free[0]) ||
+			(krcp->bkvhead[1] && !krwp->bkvhead_free[1]) ||
+				(krcp->head && !krwp->head_free)) {
+			// Channel 1 corresponds to the SLAB-pointer bulk path.
+			// Channel 2 corresponds to vmalloc-pointer bulk path.
+			for (j = 0; j < FREE_N_CHANNELS; j++) {
+				if (!krwp->bkvhead_free[j]) {
+					krwp->bkvhead_free[j] = krcp->bkvhead[j];
+					krcp->bkvhead[j] = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 				}
 			}
 
@@ -3145,10 +3625,18 @@ static void kfree_rcu_monitor(struct work_struct *work)
 			// objects queued on the linked list.
 			if (!krwp->head_free) {
 				krwp->head_free = krcp->head;
+<<<<<<< HEAD
 				atomic_set(&krcp->head_count, 0);
 				WRITE_ONCE(krcp->head, NULL);
 			}
 
+=======
+				krcp->head = NULL;
+			}
+
+			WRITE_ONCE(krcp->count, 0);
+
+>>>>>>> b7ba80a49124 (Commit)
 			// One work is per one batch, so there are three
 			// "free channels", the batch can handle. It can
 			// be that the work is in the pending state when
@@ -3158,8 +3646,11 @@ static void kfree_rcu_monitor(struct work_struct *work)
 		}
 	}
 
+<<<<<<< HEAD
 	raw_spin_unlock_irqrestore(&krcp->lock, flags);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	// If there is nothing to detach, it means that our job is
 	// successfully done here. In case of having at least one
 	// of the channels that is still busy we should rearm the
@@ -3167,6 +3658,11 @@ static void kfree_rcu_monitor(struct work_struct *work)
 	// still in progress.
 	if (need_offload_krc(krcp))
 		schedule_delayed_monitor_work(krcp);
+<<<<<<< HEAD
+=======
+
+	raw_spin_unlock_irqrestore(&krcp->lock, flags);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static enum hrtimer_restart
@@ -3249,11 +3745,18 @@ add_ptr_to_bulk_krc_lock(struct kfree_rcu_cpu **krcp,
 		return false;
 
 	idx = !!is_vmalloc_addr(ptr);
+<<<<<<< HEAD
 	bnode = list_first_entry_or_null(&(*krcp)->bulk_head[idx],
 		struct kvfree_rcu_bulk_data, list);
 
 	/* Check if a new block is required. */
 	if (!bnode || bnode->nr_records == KVFREE_BULK_MAX_ENTR) {
+=======
+
+	/* Check if a new block is required. */
+	if (!(*krcp)->bkvhead[idx] ||
+			(*krcp)->bkvhead[idx]->nr_records == KVFREE_BULK_MAX_ENTR) {
+>>>>>>> b7ba80a49124 (Commit)
 		bnode = get_cached_bnode(*krcp);
 		if (!bnode && can_alloc) {
 			krc_this_cpu_unlock(*krcp, *flags);
@@ -3277,6 +3780,7 @@ add_ptr_to_bulk_krc_lock(struct kfree_rcu_cpu **krcp,
 		if (!bnode)
 			return false;
 
+<<<<<<< HEAD
 		// Initialize the new block and attach it.
 		bnode->nr_records = 0;
 		list_add(&bnode->list, &(*krcp)->bulk_head[idx]);
@@ -3286,6 +3790,19 @@ add_ptr_to_bulk_krc_lock(struct kfree_rcu_cpu **krcp,
 	bnode->records[bnode->nr_records++] = ptr;
 	bnode->gp_snap = get_state_synchronize_rcu();
 	atomic_inc(&(*krcp)->bulk_count[idx]);
+=======
+		/* Initialize the new block. */
+		bnode->nr_records = 0;
+		bnode->next = (*krcp)->bkvhead[idx];
+
+		/* Attach it to the head. */
+		(*krcp)->bkvhead[idx] = bnode;
+	}
+
+	/* Finally insert. */
+	(*krcp)->bkvhead[idx]->records
+		[(*krcp)->bkvhead[idx]->nr_records++] = ptr;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return true;
 }
@@ -3302,11 +3819,16 @@ add_ptr_to_bulk_krc_lock(struct kfree_rcu_cpu **krcp,
  * be free'd in workqueue context. This allows us to: batch requests together to
  * reduce the number of grace periods during heavy kfree_rcu()/kvfree_rcu() load.
  */
+<<<<<<< HEAD
 void kvfree_call_rcu(struct rcu_head *head, void *ptr)
+=======
+void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long flags;
 	struct kfree_rcu_cpu *krcp;
 	bool success;
+<<<<<<< HEAD
 
 	/*
 	 * Please note there is a limitation for the head-less
@@ -3317,6 +3839,23 @@ void kvfree_call_rcu(struct rcu_head *head, void *ptr)
 	 */
 	if (!head)
 		might_sleep();
+=======
+	void *ptr;
+
+	if (head) {
+		ptr = (void *) head - (unsigned long) func;
+	} else {
+		/*
+		 * Please note there is a limitation for the head-less
+		 * variant, that is why there is a clear rule for such
+		 * objects: it can be used from might_sleep() context
+		 * only. For other places please embed an rcu_head to
+		 * your data.
+		 */
+		might_sleep();
+		ptr = (unsigned long *) func;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	// Queue the object but don't yet schedule the batch.
 	if (debug_rcu_head_queue(ptr)) {
@@ -3337,6 +3876,7 @@ void kvfree_call_rcu(struct rcu_head *head, void *ptr)
 			// Inline if kvfree_rcu(one_arg) call.
 			goto unlock_return;
 
+<<<<<<< HEAD
 		head->func = ptr;
 		head->next = krcp->head;
 		WRITE_ONCE(krcp->head, head);
@@ -3347,6 +3887,16 @@ void kvfree_call_rcu(struct rcu_head *head, void *ptr)
 		success = true;
 	}
 
+=======
+		head->func = func;
+		head->next = krcp->head;
+		krcp->head = head;
+		success = true;
+	}
+
+	WRITE_ONCE(krcp->count, krcp->count + 1);
+
+>>>>>>> b7ba80a49124 (Commit)
 	// Set timer to drain after KFREE_DRAIN_JIFFIES.
 	if (rcu_scheduler_active == RCU_SCHEDULER_RUNNING)
 		schedule_delayed_monitor_work(krcp);
@@ -3377,7 +3927,11 @@ kfree_rcu_shrink_count(struct shrinker *shrink, struct shrink_control *sc)
 	for_each_possible_cpu(cpu) {
 		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
 
+<<<<<<< HEAD
 		count += krc_count(krcp);
+=======
+		count += READ_ONCE(krcp->count);
+>>>>>>> b7ba80a49124 (Commit)
 		count += READ_ONCE(krcp->nr_bkv_objs);
 		atomic_set(&krcp->backoff_page_cache_fill, 1);
 	}
@@ -3394,7 +3948,11 @@ kfree_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
 		int count;
 		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
 
+<<<<<<< HEAD
 		count = krc_count(krcp);
+=======
+		count = krcp->count;
+>>>>>>> b7ba80a49124 (Commit)
 		count += drain_page_cache(krcp);
 		kfree_rcu_monitor(&krcp->monitor_work.work);
 
@@ -3418,12 +3976,23 @@ static struct shrinker kfree_rcu_shrinker = {
 void __init kfree_rcu_scheduler_running(void)
 {
 	int cpu;
+<<<<<<< HEAD
+=======
+	unsigned long flags;
+>>>>>>> b7ba80a49124 (Commit)
 
 	for_each_possible_cpu(cpu) {
 		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
 
+<<<<<<< HEAD
 		if (need_offload_krc(krcp))
 			schedule_delayed_monitor_work(krcp);
+=======
+		raw_spin_lock_irqsave(&krcp->lock, flags);
+		if (need_offload_krc(krcp))
+			schedule_delayed_monitor_work(krcp);
+		raw_spin_unlock_irqrestore(&krcp->lock, flags);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -3439,10 +4008,16 @@ void __init kfree_rcu_scheduler_running(void)
  */
 static int rcu_blocking_is_gp(void)
 {
+<<<<<<< HEAD
 	if (rcu_scheduler_active != RCU_SCHEDULER_INACTIVE) {
 		might_sleep();
 		return false;
 	}
+=======
+	if (rcu_scheduler_active != RCU_SCHEDULER_INACTIVE)
+		return false;
+	might_sleep();  /* Check for RCU read-side critical section. */
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 
@@ -3497,7 +4072,11 @@ void synchronize_rcu(void)
 		if (rcu_gp_is_expedited())
 			synchronize_rcu_expedited();
 		else
+<<<<<<< HEAD
 			wait_rcu_gp(call_rcu_hurry);
+=======
+			wait_rcu_gp(call_rcu);
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 
@@ -3666,9 +4245,13 @@ EXPORT_SYMBOL_GPL(start_poll_synchronize_rcu_full);
  * If @false is returned, it is the caller's responsibility to invoke this
  * function later on until it does return @true.  Alternatively, the caller
  * can explicitly wait for a grace period, for example, by passing @oldstate
+<<<<<<< HEAD
  * to either cond_synchronize_rcu() or cond_synchronize_rcu_expedited()
  * on the one hand or by directly invoking either synchronize_rcu() or
  * synchronize_rcu_expedited() on the other.
+=======
+ * to cond_synchronize_rcu() or by directly invoking synchronize_rcu().
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Yes, this function does not take counter wrap into account.
  * But counter wrap is harmless.  If the counter wraps, we have waited for
@@ -3679,12 +4262,15 @@ EXPORT_SYMBOL_GPL(start_poll_synchronize_rcu_full);
  * completed.  Alternatively, they can use get_completed_synchronize_rcu()
  * to get a guaranteed-completed grace-period state.
  *
+<<<<<<< HEAD
  * In addition, because oldstate compresses the grace-period state for
  * both normal and expedited grace periods into a single unsigned long,
  * it can miss a grace period when synchronize_rcu() runs concurrently
  * with synchronize_rcu_expedited().  If this is unacceptable, please
  * instead use the _full() variant of these polling APIs.
  *
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * This function provides the same memory-ordering guarantees that
  * would be provided by a synchronize_rcu() that was invoked at the call
  * to the function that provided @oldstate, and that returned at the end
@@ -3892,8 +4478,11 @@ static void rcu_barrier_entrain(struct rcu_data *rdp)
 {
 	unsigned long gseq = READ_ONCE(rcu_state.barrier_sequence);
 	unsigned long lseq = READ_ONCE(rdp->barrier_seq_snap);
+<<<<<<< HEAD
 	bool wake_nocb = false;
 	bool was_alldone = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	lockdep_assert_held(&rcu_state.barrier_lock);
 	if (rcu_seq_state(lseq) || !rcu_seq_state(gseq) || rcu_seq_ctr(lseq) != rcu_seq_ctr(gseq))
@@ -3902,6 +4491,7 @@ static void rcu_barrier_entrain(struct rcu_data *rdp)
 	rdp->barrier_head.func = rcu_barrier_callback;
 	debug_rcu_head_queue(&rdp->barrier_head);
 	rcu_nocb_lock(rdp);
+<<<<<<< HEAD
 	/*
 	 * Flush bypass and wakeup rcuog if we add callbacks to an empty regular
 	 * queue. This way we don't wait for bypass timer that can reach seconds
@@ -3910,6 +4500,9 @@ static void rcu_barrier_entrain(struct rcu_data *rdp)
 	was_alldone = rcu_rdp_is_offloaded(rdp) && !rcu_segcblist_pend_cbs(&rdp->cblist);
 	WARN_ON_ONCE(!rcu_nocb_flush_bypass(rdp, NULL, jiffies, false));
 	wake_nocb = was_alldone && rcu_segcblist_pend_cbs(&rdp->cblist);
+=======
+	WARN_ON_ONCE(!rcu_nocb_flush_bypass(rdp, NULL, jiffies));
+>>>>>>> b7ba80a49124 (Commit)
 	if (rcu_segcblist_entrain(&rdp->cblist, &rdp->barrier_head)) {
 		atomic_inc(&rcu_state.barrier_cpu_count);
 	} else {
@@ -3917,8 +4510,11 @@ static void rcu_barrier_entrain(struct rcu_data *rdp)
 		rcu_barrier_trace(TPS("IRQNQ"), -1, rcu_state.barrier_sequence);
 	}
 	rcu_nocb_unlock(rdp);
+<<<<<<< HEAD
 	if (wake_nocb)
 		wake_nocb_gp(rdp, false);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	smp_store_release(&rdp->barrier_seq_snap, gseq);
 }
 
@@ -4043,6 +4639,7 @@ retry:
 EXPORT_SYMBOL_GPL(rcu_barrier);
 
 /*
+<<<<<<< HEAD
  * Compute the mask of online CPUs for the specified rcu_node structure.
  * This will not be stable unless the rcu_node structure's ->lock is
  * held, but the bit corresponding to the current CPU will be stable
@@ -4192,6 +4789,8 @@ int rcutree_dead_cpu(unsigned int cpu)
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Propagate ->qsinitmask bits up the rcu_node tree to account for the
  * first CPU in a given leaf rcu_node structure coming online.  The caller
  * must hold the corresponding leaf rcu_node ->lock with interrupts
@@ -4481,7 +5080,11 @@ void rcutree_migrate_callbacks(int cpu)
 	my_rdp = this_cpu_ptr(&rcu_data);
 	my_rnp = my_rdp->mynode;
 	rcu_nocb_lock(my_rdp); /* irqs already disabled. */
+<<<<<<< HEAD
 	WARN_ON_ONCE(!rcu_nocb_flush_bypass(my_rdp, NULL, jiffies, false));
+=======
+	WARN_ON_ONCE(!rcu_nocb_flush_bypass(my_rdp, NULL, jiffies));
+>>>>>>> b7ba80a49124 (Commit)
 	raw_spin_lock_rcu_node(my_rnp); /* irqs already disabled. */
 	/* Leverage recent GPs and set GP for new callbacks. */
 	needwake = rcu_advance_cbs(my_rnp, rdp) ||
@@ -4520,13 +5123,19 @@ static int rcu_pm_notify(struct notifier_block *self,
 	switch (action) {
 	case PM_HIBERNATION_PREPARE:
 	case PM_SUSPEND_PREPARE:
+<<<<<<< HEAD
 		rcu_async_hurry();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		rcu_expedite_gp();
 		break;
 	case PM_POST_HIBERNATION:
 	case PM_POST_SUSPEND:
 		rcu_unexpedite_gp();
+<<<<<<< HEAD
 		rcu_async_relax();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	default:
 		break;
@@ -4880,7 +5489,11 @@ struct workqueue_struct *rcu_gp_wq;
 static void __init kfree_rcu_batch_init(void)
 {
 	int cpu;
+<<<<<<< HEAD
 	int i, j;
+=======
+	int i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Clamp it to [0:100] seconds interval. */
 	if (rcu_delay_page_cache_fill_msec < 0 ||
@@ -4900,6 +5513,7 @@ static void __init kfree_rcu_batch_init(void)
 		for (i = 0; i < KFREE_N_BATCHES; i++) {
 			INIT_RCU_WORK(&krcp->krw_arr[i].rcu_work, kfree_rcu_work);
 			krcp->krw_arr[i].krcp = krcp;
+<<<<<<< HEAD
 
 			for (j = 0; j < FREE_N_CHANNELS; j++)
 				INIT_LIST_HEAD(&krcp->krw_arr[i].bulk_head_free[j]);
@@ -4908,6 +5522,10 @@ static void __init kfree_rcu_batch_init(void)
 		for (i = 0; i < FREE_N_CHANNELS; i++)
 			INIT_LIST_HEAD(&krcp->bulk_head[i]);
 
+=======
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 		INIT_DELAYED_WORK(&krcp->monitor_work, kfree_rcu_monitor);
 		INIT_DELAYED_WORK(&krcp->page_cache_work, fill_page_cache_func);
 		krcp->initialized = true;
@@ -4955,10 +5573,16 @@ void __init rcu_init(void)
 	else
 		qovld_calc = qovld;
 
+<<<<<<< HEAD
 	// Kick-start in case any polled grace periods started early.
 	(void)start_poll_synchronize_rcu_expedited();
 
 	rcu_test_sync_prims();
+=======
+	// Kick-start any polled grace periods that started early.
+	if (!(per_cpu_ptr(&rcu_data, cpu)->mynode->exp_seq_poll_rq & 0x1))
+		(void)start_poll_synchronize_rcu_expedited();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #include "tree_stall.h"

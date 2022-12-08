@@ -24,8 +24,11 @@
 		spi0 = &ospi0;
 		ethernet0 = &cpsw_port1;
 		ethernet1 = &cpsw_port2;
+<<<<<<< HEAD
 		usb0 = &usb0;
 		usb1 = &usb1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	chosen {
@@ -33,6 +36,7 @@
 		bootargs = "console=ttyS2,115200n8 earlycon=ns16550a,mmio32,0x02800000";
 	};
 
+<<<<<<< HEAD
 	opp-table {
 		/* Add 1.4GHz OPP for am625-sk board. Requires VDD_CORE to be at 0.85V */
 		opp-1400000000 {
@@ -42,6 +46,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	memory@80000000 {
 		device_type = "memory";
 		/* 2G RAM */
@@ -286,12 +292,15 @@
 			AM62X_IOPAD(0x01d4, PIN_INPUT, 7) /* (B15) UART0_RTSn.GPIO1_23 */
 		>;
 	};
+<<<<<<< HEAD
 
 	main_usb1_pins_default: main-usb1-pins-default {
 		pinctrl-single,pins = <
 			AM62X_IOPAD(0x0258, PIN_OUTPUT, 0) /* (F18) USB1_DRVVBUS */
 		>;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &wkup_uart0 {
@@ -299,8 +308,16 @@
 	status = "reserved";
 };
 
+<<<<<<< HEAD
 &main_uart0 {
 	status = "okay";
+=======
+&mcu_uart0 {
+	status = "disabled";
+};
+
+&main_uart0 {
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_uart0_pins_default>;
 };
@@ -310,15 +327,50 @@
 	status = "reserved";
 };
 
+<<<<<<< HEAD
 &main_i2c0 {
 	status = "okay";
+=======
+&main_uart2 {
+	status = "disabled";
+};
+
+&main_uart3 {
+	status = "disabled";
+};
+
+&main_uart4 {
+	status = "disabled";
+};
+
+&main_uart5 {
+	status = "disabled";
+};
+
+&main_uart6 {
+	status = "disabled";
+};
+
+&mcu_i2c0 {
+	status = "disabled";
+};
+
+&wkup_i2c0 {
+	status = "disabled";
+};
+
+&main_i2c0 {
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_i2c0_pins_default>;
 	clock-frequency = <400000>;
 };
 
 &main_i2c1 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_i2c1_pins_default>;
 	clock-frequency = <400000>;
@@ -351,8 +403,20 @@
 	};
 };
 
+<<<<<<< HEAD
 &sdhci0 {
 	status = "okay";
+=======
+&main_i2c2 {
+	status = "disabled";
+};
+
+&main_i2c3 {
+	status = "disabled";
+};
+
+&sdhci0 {
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_mmc0_pins_default>;
 	ti,driver-strength-ohm = <50>;
@@ -361,7 +425,10 @@
 
 &sdhci1 {
 	/* SD/MMC */
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vmmc-supply = <&vdd_mmc1>;
 	vqmmc-supply = <&vdd_sd_dv>;
 	pinctrl-names = "default";
@@ -372,7 +439,12 @@
 
 &cpsw3g {
 	pinctrl-names = "default";
+<<<<<<< HEAD
 	pinctrl-0 = <&main_rgmii1_pins_default
+=======
+	pinctrl-0 = <&main_mdio1_pins_default
+		     &main_rgmii1_pins_default
+>>>>>>> b7ba80a49124 (Commit)
 		     &main_rgmii2_pins_default>;
 };
 
@@ -387,10 +459,13 @@
 };
 
 &cpsw3g_mdio {
+<<<<<<< HEAD
 	status = "okay";
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_mdio1_pins_default>;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cpsw3g_phy0: ethernet-phy@0 {
 		reg = <0>;
 		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
@@ -414,7 +489,10 @@
 };
 
 &ospi0 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pinctrl-names = "default";
 	pinctrl-0 = <&ospi0_pins_default>;
 
@@ -473,6 +551,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &usbss0 {
 	status = "okay";
 	ti,vbus-divider;
@@ -490,4 +569,32 @@
 	dr_mode = "host";
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_usb1_pins_default>;
+=======
+&ecap0 {
+	status = "disabled";
+};
+
+&ecap1 {
+	status = "disabled";
+};
+
+&ecap2 {
+	status = "disabled";
+};
+
+&main_mcan0 {
+	status = "disabled";
+};
+
+&epwm0 {
+	status = "disabled";
+};
+
+&epwm1 {
+	status = "disabled";
+};
+
+&epwm2 {
+	status = "disabled";
+>>>>>>> b7ba80a49124 (Commit)
 };

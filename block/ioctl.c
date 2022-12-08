@@ -468,8 +468,12 @@ static int blkdev_bszset(struct block_device *bdev, fmode_t mode,
  * to deal with the compat_ptr() conversion.
  */
 static int blkdev_common_ioctl(struct block_device *bdev, fmode_t mode,
+<<<<<<< HEAD
 			       unsigned int cmd, unsigned long arg,
 			       void __user *argp)
+=======
+				unsigned cmd, unsigned long arg, void __user *argp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int max_sectors;
 
@@ -528,7 +532,11 @@ static int blkdev_common_ioctl(struct block_device *bdev, fmode_t mode,
 			return -EACCES;
 		if (bdev_is_partition(bdev))
 			return -EINVAL;
+<<<<<<< HEAD
 		return disk_scan_partitions(bdev->bd_disk, mode);
+=======
+		return disk_scan_partitions(bdev->bd_disk, mode & ~FMODE_EXCL);
+>>>>>>> b7ba80a49124 (Commit)
 	case BLKTRACESTART:
 	case BLKTRACESTOP:
 	case BLKTRACETEARDOWN:

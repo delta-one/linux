@@ -13,7 +13,10 @@
 #include <linux/fs.h>
 #include <linux/splice.h>
 #include <linux/pagemap.h>
+<<<<<<< HEAD
 #include <linux/idr.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/init.h>
 #include <linux/list.h>
 #include <linux/poll.h>
@@ -49,11 +52,30 @@ struct ports_driver_data {
 	/* List of all the devices we're handling */
 	struct list_head portdevs;
 
+<<<<<<< HEAD
 	/* All the console devices handled by this driver */
 	struct list_head consoles;
 };
 
 static struct ports_driver_data pdrvdata;
+=======
+	/*
+	 * This is used to keep track of the number of hvc consoles
+	 * spawned by this driver.  This number is given as the first
+	 * argument to hvc_alloc().  To correctly map an initial
+	 * console spawned via hvc_instantiate to the console being
+	 * hooked up via hvc_alloc, we need to pass the same vtermno.
+	 *
+	 * We also just assume the first console being initialised was
+	 * the first one that got used as the initial console.
+	 */
+	unsigned int next_vtermno;
+
+	/* All the console devices handled by this driver */
+	struct list_head consoles;
+};
+static struct ports_driver_data pdrvdata = { .next_vtermno = 1};
+>>>>>>> b7ba80a49124 (Commit)
 
 static DEFINE_SPINLOCK(pdrvdata_lock);
 static DECLARE_COMPLETION(early_console_added);
@@ -79,8 +101,11 @@ struct console {
 	u32 vtermno;
 };
 
+<<<<<<< HEAD
 static DEFINE_IDA(vtermno_ida);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct port_buffer {
 	char *buf;
 
@@ -1236,21 +1261,33 @@ static int init_port_console(struct port *port)
 	 * pointers.  The final argument is the output buffer size: we
 	 * can do any size, so we put PAGE_SIZE here.
 	 */
+<<<<<<< HEAD
 	ret = ida_alloc_min(&vtermno_ida, 1, GFP_KERNEL);
 	if (ret < 0)
 		return ret;
 
 	port->cons.vtermno = ret;
+=======
+	port->cons.vtermno = pdrvdata.next_vtermno;
+
+>>>>>>> b7ba80a49124 (Commit)
 	port->cons.hvc = hvc_alloc(port->cons.vtermno, 0, &hv_ops, PAGE_SIZE);
 	if (IS_ERR(port->cons.hvc)) {
 		ret = PTR_ERR(port->cons.hvc);
 		dev_err(port->dev,
 			"error %d allocating hvc for port\n", ret);
 		port->cons.hvc = NULL;
+<<<<<<< HEAD
 		ida_free(&vtermno_ida, port->cons.vtermno);
 		return ret;
 	}
 	spin_lock_irq(&pdrvdata_lock);
+=======
+		return ret;
+	}
+	spin_lock_irq(&pdrvdata_lock);
+	pdrvdata.next_vtermno++;
+>>>>>>> b7ba80a49124 (Commit)
 	list_add_tail(&port->cons.list, &pdrvdata.consoles);
 	spin_unlock_irq(&pdrvdata_lock);
 	port->guest_connected = true;
@@ -1527,7 +1564,10 @@ static void unplug_port(struct port *port)
 		list_del(&port->cons.list);
 		spin_unlock_irq(&pdrvdata_lock);
 		hvc_remove(port->cons.hvc);
+<<<<<<< HEAD
 		ida_free(&vtermno_ida, port->cons.vtermno);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	remove_port_data(port);
@@ -1666,8 +1706,14 @@ static void handle_control_message(struct virtio_device *vdev,
 				"Not enough space to store port name\n");
 			break;
 		}
+<<<<<<< HEAD
 		strscpy(port->name, buf->buf + buf->offset + sizeof(*cpkt),
 			name_size);
+=======
+		strncpy(port->name, buf->buf + buf->offset + sizeof(*cpkt),
+			name_size - 1);
+		port->name[name_size - 1] = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/*
 		 * Since we only have one sysfs attribute, 'name',
@@ -2244,7 +2290,11 @@ static int __init virtio_console_init(void)
 {
 	int err;
 
+<<<<<<< HEAD
 	pdrvdata.class = class_create("virtio-ports");
+=======
+	pdrvdata.class = class_create(THIS_MODULE, "virtio-ports");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(pdrvdata.class)) {
 		err = PTR_ERR(pdrvdata.class);
 		pr_err("Error %d creating virtio-ports class\n", err);

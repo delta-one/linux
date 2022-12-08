@@ -5,6 +5,7 @@
 #include <linux/list.h>
 #include <linux/rbtree.h>
 
+<<<<<<< HEAD
 struct lock_filter {
 	int			nr_types;
 	int			nr_addrs;
@@ -14,13 +15,18 @@ struct lock_filter {
 	char			**syms;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct lock_stat {
 	struct hlist_node	hash_entry;
 	struct rb_node		rb;		/* used for sorting */
 
 	u64			addr;		/* address of lockdep_map, used as ID */
 	char			*name;		/* for strcpy(), we cannot use const */
+<<<<<<< HEAD
 	u64			*callstack;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	unsigned int		nr_acquire;
 	unsigned int		nr_acquired;
@@ -65,11 +71,14 @@ struct lock_stat {
  */
 #define MAX_LOCK_DEPTH 48
 
+<<<<<<< HEAD
 struct lock_stat *lock_stat_find(u64 addr);
 struct lock_stat *lock_stat_findnew(u64 addr, const char *name, int flags);
 
 bool match_callstack_filter(struct machine *machine, u64 *callstack);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * struct lock_seq_stat:
  * Place to put on state of one lock sequence
@@ -105,7 +114,11 @@ struct thread_stat {
  * Number of stack trace entries to skip when finding callers.
  * The first few entries belong to the locking implementation itself.
  */
+<<<<<<< HEAD
 #define CONTENTION_STACK_SKIP  4
+=======
+#define CONTENTION_STACK_SKIP  3
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * flags for lock:contention_begin
@@ -127,6 +140,7 @@ struct lock_contention {
 	struct target *target;
 	struct machine *machine;
 	struct hlist_head *result;
+<<<<<<< HEAD
 	struct lock_filter *filters;
 	unsigned long map_nr_entries;
 	int lost;
@@ -135,6 +149,10 @@ struct lock_contention {
 	int aggr_mode;
 	int owner;
 	bool save_callstack;
+=======
+	unsigned long map_nr_entries;
+	unsigned long lost;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #ifdef HAVE_BPF_SKEL
@@ -163,4 +181,9 @@ static inline int lock_contention_read(struct lock_contention *con __maybe_unuse
 
 #endif  /* HAVE_BPF_SKEL */
 
+<<<<<<< HEAD
+=======
+bool is_lock_function(struct machine *machine, u64 addr);
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif  /* PERF_LOCK_CONTENTION_H */

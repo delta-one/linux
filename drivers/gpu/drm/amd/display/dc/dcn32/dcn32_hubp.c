@@ -79,8 +79,11 @@ void hubp32_phantom_hubp_post_enable(struct hubp *hubp)
 	uint32_t reg_val;
 	struct dcn20_hubp *hubp2 = TO_DCN20_HUBP(hubp);
 
+<<<<<<< HEAD
 	/* For phantom pipe enable, disable GSL */
 	REG_UPDATE(DCSURF_FLIP_CONTROL2, SURFACE_GSL_ENABLE, 0);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	REG_UPDATE(DCHUBP_CNTL, HUBP_BLANK_EN, 1);
 	reg_val = REG_READ(DCHUBP_CNTL);
 	if (reg_val) {
@@ -155,11 +158,15 @@ void hubp32_cursor_set_attributes(
 	else
 		REG_UPDATE(DCHUBP_MALL_CONFIG, USE_MALL_FOR_CURSOR, false);
 }
+<<<<<<< HEAD
 void hubp32_init(struct hubp *hubp)
 {
 	struct dcn20_hubp *hubp2 = TO_DCN20_HUBP(hubp);
 	REG_WRITE(HUBPREQ_DEBUG_DB, 1 << 8);
 }
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct hubp_funcs dcn32_hubp_funcs = {
 	.hubp_enable_tripleBuffer = hubp2_enable_triplebuffer,
 	.hubp_is_triplebuffer_enabled = hubp2_is_triplebuffer_enabled,
@@ -185,12 +192,20 @@ static struct hubp_funcs dcn32_hubp_funcs = {
 	.hubp_init = hubp3_init,
 	.set_unbounded_requesting = hubp31_set_unbounded_requesting,
 	.hubp_soft_reset = hubp31_soft_reset,
+<<<<<<< HEAD
 	.hubp_set_flip_int = hubp1_set_flip_int,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.hubp_in_blank = hubp1_in_blank,
 	.hubp_update_force_pstate_disallow = hubp32_update_force_pstate_disallow,
 	.phantom_hubp_post_enable = hubp32_phantom_hubp_post_enable,
 	.hubp_update_mall_sel = hubp32_update_mall_sel,
+<<<<<<< HEAD
 	.hubp_prepare_subvp_buffering = hubp32_prepare_subvp_buffering
+=======
+	.hubp_prepare_subvp_buffering = hubp32_prepare_subvp_buffering,
+	.hubp_set_flip_int = hubp1_set_flip_int
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 bool hubp32_construct(

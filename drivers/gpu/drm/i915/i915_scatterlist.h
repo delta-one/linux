@@ -9,8 +9,12 @@
 
 #include <linux/pfn.h>
 #include <linux/scatterlist.h>
+<<<<<<< HEAD
 #include <linux/dma-mapping.h>
 #include <xen/xen.h>
+=======
+#include <linux/swiotlb.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "i915_gem.h"
 
@@ -128,6 +132,7 @@ static inline unsigned int i915_sg_dma_sizes(struct scatterlist *sg)
 	return page_sizes;
 }
 
+<<<<<<< HEAD
 static inline unsigned int i915_sg_segment_size(struct device *dev)
 {
 	size_t max = min_t(size_t, UINT_MAX, dma_max_mapping_size(dev));
@@ -148,6 +153,21 @@ static inline unsigned int i915_sg_segment_size(struct device *dev)
 	if (xen_pv_domain())
 		max = PAGE_SIZE;
 	return round_down(max, PAGE_SIZE);
+=======
+static inline unsigned int i915_sg_segment_size(void)
+{
+	unsigned int size = swiotlb_max_segment();
+
+	if (size == 0)
+		size = UINT_MAX;
+
+	size = rounddown(size, PAGE_SIZE);
+	/* swiotlb_max_segment_size can return 1 byte when it means one page. */
+	if (size < PAGE_SIZE)
+		size = PAGE_SIZE;
+
+	return size;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 bool i915_sg_trim(struct sg_table *orig_st);

@@ -6,6 +6,7 @@
 #include <linux/sched.h>
 #include <linux/random.h>
 
+<<<<<<< HEAD
 /*
  * On 64-bit architectures, protect against non-terminated C string overflows
  * by zeroing out the first byte of the canary; this leaves 56 bits of entropy.
@@ -25,6 +26,8 @@ static inline unsigned long get_random_canary(void)
 	return get_random_long() & CANARY_MASK;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #if defined(CONFIG_STACKPROTECTOR) || defined(CONFIG_ARM64_PTR_AUTH)
 # include <asm/stackprotector.h>
 #else

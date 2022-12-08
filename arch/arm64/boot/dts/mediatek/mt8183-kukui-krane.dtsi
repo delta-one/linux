@@ -343,12 +343,15 @@
 	};
 };
 
+<<<<<<< HEAD
 &cros_ec {
 	keyboard-controller {
 		compatible = "google,cros-ec-keyb-switches";
 	};
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &qca_wifi {
 	qcom,ath10k-calibration-variant = "LE_Krane";
 };

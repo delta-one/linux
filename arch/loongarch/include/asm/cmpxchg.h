@@ -61,8 +61,13 @@ static inline unsigned int __xchg_small(volatile void *ptr, unsigned int val,
 	return (old32 & mask) >> shift;
 }
 
+<<<<<<< HEAD
 static __always_inline unsigned long
 __arch_xchg(volatile void *ptr, unsigned long x, int size)
+=======
+static inline unsigned long __xchg(volatile void *ptr, unsigned long x,
+				   int size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	switch (size) {
 	case 1:
@@ -87,7 +92,11 @@ __arch_xchg(volatile void *ptr, unsigned long x, int size)
 	__typeof__(*(ptr)) __res;					\
 									\
 	__res = (__typeof__(*(ptr)))					\
+<<<<<<< HEAD
 		__arch_xchg((ptr), (unsigned long)(x), sizeof(*(ptr)));	\
+=======
+		__xchg((ptr), (unsigned long)(x), sizeof(*(ptr)));	\
+>>>>>>> b7ba80a49124 (Commit)
 									\
 	__res;								\
 })
@@ -159,8 +168,13 @@ static inline unsigned int __cmpxchg_small(volatile void *ptr, unsigned int old,
 	return (old32 & mask) >> shift;
 }
 
+<<<<<<< HEAD
 static __always_inline unsigned long
 __cmpxchg(volatile void *ptr, unsigned long old, unsigned long new, unsigned int size)
+=======
+static inline unsigned long __cmpxchg(volatile void *ptr, unsigned long old,
+				      unsigned long new, unsigned int size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	switch (size) {
 	case 1:

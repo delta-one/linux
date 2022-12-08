@@ -829,7 +829,11 @@ static int rt5677_parse_and_load_dsp(struct rt5677_priv *rt5677, const u8 *buf,
 	if (strncmp(elf_hdr->e_ident, ELFMAG, sizeof(ELFMAG) - 1))
 		dev_err(component->dev, "Wrong ELF header prefix\n");
 	if (elf_hdr->e_ehsize != sizeof(Elf32_Ehdr))
+<<<<<<< HEAD
 		dev_err(component->dev, "Wrong ELF header size\n");
+=======
+		dev_err(component->dev, "Wrong Elf header size\n");
+>>>>>>> b7ba80a49124 (Commit)
 	if (elf_hdr->e_machine != EM_XTENSA)
 		dev_err(component->dev, "Wrong DSP code file\n");
 

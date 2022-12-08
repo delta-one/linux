@@ -54,12 +54,15 @@ struct dc_dsc_policy {
 	bool enable_dsc_when_not_needed;
 };
 
+<<<<<<< HEAD
 struct dc_dsc_config_options {
 	uint32_t dsc_min_slice_height_override;
 	uint32_t max_target_bpp_limit_override_x16;
 	uint32_t slice_height_granularity;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 bool dc_dsc_parse_dsc_dpcd(const struct dc *dc,
 		const uint8_t *dpcd_dsc_basic_data,
 		const uint8_t *dpcd_dsc_ext_data,
@@ -77,7 +80,12 @@ bool dc_dsc_compute_bandwidth_range(
 bool dc_dsc_compute_config(
 		const struct display_stream_compressor *dsc,
 		const struct dsc_dec_dpcd_caps *dsc_sink_caps,
+<<<<<<< HEAD
 		const struct dc_dsc_config_options *options,
+=======
+		uint32_t dsc_min_slice_height_override,
+		uint32_t max_target_bpp_limit_override,
+>>>>>>> b7ba80a49124 (Commit)
 		uint32_t target_bandwidth_kbps,
 		const struct dc_crtc_timing *timing,
 		struct dc_dsc_config *dsc_cfg);
@@ -105,6 +113,9 @@ void dc_dsc_policy_set_enable_dsc_when_not_needed(bool enable);
 
 void dc_dsc_policy_set_disable_dsc_stream_overhead(bool disable);
 
+<<<<<<< HEAD
 void dc_dsc_get_default_config_option(const struct dc *dc, struct dc_dsc_config_options *options);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

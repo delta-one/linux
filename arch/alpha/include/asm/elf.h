@@ -120,6 +120,15 @@ extern int dump_elf_task(elf_greg_t *dest, struct task_struct *task);
 #define ELF_CORE_COPY_TASK_REGS(TASK, DEST) \
 	dump_elf_task(*(DEST), TASK)
 
+<<<<<<< HEAD
+=======
+/* Similar, but for the FP registers.  */
+
+extern int dump_elf_task_fp(elf_fpreg_t *dest, struct task_struct *task);
+#define ELF_CORE_COPY_FPREGS(TASK, DEST) \
+	dump_elf_task_fp(*(DEST), TASK)
+
+>>>>>>> b7ba80a49124 (Commit)
 /* This yields a mask that user programs can use to figure out what
    instruction set this CPU supports.  This is trivial on Alpha, 
    but not so on other machines. */

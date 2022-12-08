@@ -40,10 +40,13 @@ COMMON OPTIONS
 --verbose::
         Be more verbose (show symbol address, etc).
 
+<<<<<<< HEAD
 -q::
 --quiet::
 	Do not show any warnings or messages. (Suppress -v)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 -D::
 --dump-raw-trace::
         Dump raw trace in ASCII.
@@ -98,11 +101,14 @@ REPORT OPTIONS
          EventManager_De       1845          1             636
          futex-default-S       1609          0               0
 
+<<<<<<< HEAD
 -E::
 --entries=<value>::
 	Display this many entries.
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 INFO OPTIONS
 ------------
 
@@ -114,7 +120,10 @@ INFO OPTIONS
 --map::
 	dump map of lock instances (address:name table)
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 CONTENTION OPTIONS
 --------------
 
@@ -143,12 +152,17 @@ CONTENTION OPTIONS
         System-wide collection from all CPUs.
 
 -C::
+<<<<<<< HEAD
 --cpu=<value>::
+=======
+--cpu::
+>>>>>>> b7ba80a49124 (Commit)
 	Collect samples only on the list of CPUs provided. Multiple CPUs can be
 	provided as a comma-separated list with no space: 0,1. Ranges of CPUs
 	are specified with -: 0-2.  Default is to monitor all CPUs.
 
 -p::
+<<<<<<< HEAD
 --pid=<value>::
 	Record events on existing process ID (comma separated list).
 
@@ -198,6 +212,17 @@ CONTENTION OPTIONS
 	Note that it matches the substring so 'rq' would match both 'raw_spin_rq_lock'
 	and 'irq_enter_rcu'.
 
+=======
+--pid=::
+	Record events on existing process ID (comma separated list).
+
+--tid=::
+        Record events on existing thread ID (comma separated list).
+
+--map-nr-entries::
+	Maximum number of BPF map entries (default: 10240).
+
+>>>>>>> b7ba80a49124 (Commit)
 
 SEE ALSO
 --------

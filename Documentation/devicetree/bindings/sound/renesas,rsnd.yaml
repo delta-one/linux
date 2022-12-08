@@ -18,7 +18,12 @@ properties:
           - enum:
               - renesas,rcar_sound-r8a7778   # R-Car M1A
               - renesas,rcar_sound-r8a7779   # R-Car H1
+<<<<<<< HEAD
           - const: renesas,rcar_sound-gen1
+=======
+          - enum:
+              - renesas,rcar_sound-gen1
+>>>>>>> b7ba80a49124 (Commit)
       # for Gen2 SoC
       - items:
           - enum:
@@ -31,7 +36,12 @@ properties:
               - renesas,rcar_sound-r8a7791   # R-Car M2-W
               - renesas,rcar_sound-r8a7793   # R-Car M2-N
               - renesas,rcar_sound-r8a7794   # R-Car E2
+<<<<<<< HEAD
           - const: renesas,rcar_sound-gen2
+=======
+          - enum:
+              - renesas,rcar_sound-gen2
+>>>>>>> b7ba80a49124 (Commit)
       # for Gen3 SoC
       - items:
           - enum:
@@ -45,6 +55,7 @@ properties:
               - renesas,rcar_sound-r8a77965  # R-Car M3-N
               - renesas,rcar_sound-r8a77990  # R-Car E3
               - renesas,rcar_sound-r8a77995  # R-Car D3
+<<<<<<< HEAD
           - const: renesas,rcar_sound-gen3
       # for Gen4 SoC
       - items:
@@ -55,6 +66,16 @@ properties:
           - renesas,rcar_sound-gen1
           - renesas,rcar_sound-gen2
           - renesas,rcar_sound-gen3
+=======
+          - enum:
+              - renesas,rcar_sound-gen3
+      # for Generic
+      - items:
+          - enum:
+              - renesas,rcar_sound-gen1
+              - renesas,rcar_sound-gen2
+              - renesas,rcar_sound-gen3
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     minItems: 1
@@ -68,7 +89,10 @@ properties:
     description: |
       it must be 0 if your system is using single DAI
       it must be 1 if your system is using multi  DAIs
+<<<<<<< HEAD
       This is used on simple-audio-card
+=======
+>>>>>>> b7ba80a49124 (Commit)
     enum: [0, 1]
 
   "#clock-cells":
@@ -101,6 +125,7 @@ properties:
 
   clock-names:
     description: List of necessary clock names.
+<<<<<<< HEAD
     # details are defined below
 
   ports:
@@ -132,6 +157,30 @@ properties:
           capture:
             $ref: /schemas/types.yaml#/definitions/phandle-array
         unevaluatedProperties: false
+=======
+    minItems: 1
+    maxItems: 31
+    items:
+      oneOf:
+        - const: ssi-all
+        - pattern: '^ssi\.[0-9]$'
+        - pattern: '^src\.[0-9]$'
+        - pattern: '^mix\.[0-1]$'
+        - pattern: '^ctu\.[0-1]$'
+        - pattern: '^dvc\.[0-1]$'
+        - pattern: '^clk_(a|b|c|i)$'
+
+  ports:
+    $ref: /schemas/graph.yaml#/properties/ports
+    patternProperties:
+      port(@[0-9a-f]+)?:
+        $ref: audio-graph-port.yaml#
+        unevaluatedProperties: false
+
+  port:
+    $ref: audio-graph-port.yaml#
+    unevaluatedProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
   rcar_sound,dvc:
     description: DVC subnode.
@@ -145,7 +194,11 @@ properties:
           dmas:
             maxItems: 1
           dma-names:
+<<<<<<< HEAD
             const: tx
+=======
+            const: "tx"
+>>>>>>> b7ba80a49124 (Commit)
         required:
           - dmas
           - dma-names
@@ -188,6 +241,13 @@ properties:
                   enum:
                     - tx
                     - rx
+<<<<<<< HEAD
+=======
+        required:
+          - interrupts
+          - dmas
+          - dma-names
+>>>>>>> b7ba80a49124 (Commit)
     additionalProperties: false
 
   rcar_sound,ssiu:
@@ -246,6 +306,11 @@ properties:
             $ref: /schemas/types.yaml#/definitions/flag
         required:
           - interrupts
+<<<<<<< HEAD
+=======
+          - dmas
+          - dma-names
+>>>>>>> b7ba80a49124 (Commit)
     additionalProperties: false
 
   # For DAI base
@@ -275,6 +340,7 @@ required:
   - reg-names
   - clocks
   - clock-names
+<<<<<<< HEAD
 
 allOf:
   - $ref: dai-common.yaml#
@@ -283,6 +349,11 @@ allOf:
   # reg/reg-names
   # --------------------
   # for Gen1
+=======
+  - "#sound-dai-cells"
+
+allOf:
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       properties:
         compatible:
@@ -293,11 +364,16 @@ allOf:
         reg:
           maxItems: 3
         reg-names:
+<<<<<<< HEAD
+=======
+          maxItems: 3
+>>>>>>> b7ba80a49124 (Commit)
           items:
             enum:
               - scu
               - ssi
               - adg
+<<<<<<< HEAD
   # for Gen2/Gen3
   - if:
       properties:
@@ -311,6 +387,14 @@ allOf:
         reg:
           minItems: 5
         reg-names:
+=======
+    else:
+      properties:
+        reg:
+          maxItems: 5
+        reg-names:
+          maxItems: 5
+>>>>>>> b7ba80a49124 (Commit)
           items:
             enum:
               - scu
@@ -318,6 +402,7 @@ allOf:
               - ssiu
               - ssi
               - audmapp
+<<<<<<< HEAD
   # for Gen4
   - if:
       properties:
@@ -375,12 +460,20 @@ examples:
     #include <dt-bindings/clock/r8a7790-cpg-mssr.h>
     #include <dt-bindings/interrupt-controller/arm-gic.h>
     #include <dt-bindings/power/r8a7790-sysc.h>
+=======
+
+additionalProperties: false
+
+examples:
+  - |
+>>>>>>> b7ba80a49124 (Commit)
     rcar_sound: sound@ec500000 {
         #sound-dai-cells = <1>;
         compatible = "renesas,rcar_sound-r8a7790", "renesas,rcar_sound-gen2";
         reg = <0xec500000 0x1000>, /* SCU  */
               <0xec5a0000 0x100>,  /* ADG  */
               <0xec540000 0x1000>, /* SSIU */
+<<<<<<< HEAD
               <0xec541000 0x280>,  /* SSI  */
               <0xec740000 0x200>;  /* Audio DMAC peri peri*/
         reg-names = "scu", "adg", "ssiu", "ssi", "audmapp";
@@ -399,6 +492,26 @@ examples:
                  <&cpg CPG_MOD 1020>, <&cpg CPG_MOD 1021>, /* MIX1, MIX0 */
                  <&cpg CPG_MOD 1020>, <&cpg CPG_MOD 1021>, /* CTU1, CTU0 */
                  <&cpg CPG_MOD 1019>, <&cpg CPG_MOD 1018>, /* DVC0, DVC1 */
+=======
+              <0xec541000 0x1280>, /* SSI  */
+              <0xec740000 0x200>;  /* Audio DMAC peri peri*/
+        reg-names = "scu", "adg", "ssiu", "ssi", "audmapp";
+
+        clocks = <&mstp10_clks 1005>,                      /* SSI-ALL    */
+                 <&mstp10_clks 1006>, <&mstp10_clks 1007>, /* SSI9, SSI8 */
+                 <&mstp10_clks 1008>, <&mstp10_clks 1009>, /* SSI7, SSI6 */
+                 <&mstp10_clks 1010>, <&mstp10_clks 1011>, /* SSI5, SSI4 */
+                 <&mstp10_clks 1012>, <&mstp10_clks 1013>, /* SSI3, SSI2 */
+                 <&mstp10_clks 1014>, <&mstp10_clks 1015>, /* SSI1, SSI0 */
+                 <&mstp10_clks 1022>, <&mstp10_clks 1023>, /* SRC9, SRC8 */
+                 <&mstp10_clks 1024>, <&mstp10_clks 1025>, /* SRC7, SRC6 */
+                 <&mstp10_clks 1026>, <&mstp10_clks 1027>, /* SRC5, SRC4 */
+                 <&mstp10_clks 1028>, <&mstp10_clks 1029>, /* SRC3, SRC2 */
+                 <&mstp10_clks 1030>, <&mstp10_clks 1031>, /* SRC1, SRC0 */
+                 <&mstp10_clks 1020>, <&mstp10_clks 1021>, /* MIX1, MIX0 */
+                 <&mstp10_clks 1020>, <&mstp10_clks 1021>, /* CTU1, CTU0 */
+                 <&mstp10_clks 1019>, <&mstp10_clks 1018>, /* DVC0, DVC1 */
+>>>>>>> b7ba80a49124 (Commit)
                  <&audio_clk_a>, <&audio_clk_b>,           /* CLKA, CLKB */
                  <&audio_clk_c>, <&audio_clk_i>;           /* CLKC, CLKI */
 
@@ -419,6 +532,7 @@ examples:
                       "clk_a", "clk_b",
                       "clk_c", "clk_i";
 
+<<<<<<< HEAD
         power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
 
         resets = <&cpg 1005>,
@@ -430,6 +544,8 @@ examples:
                       "ssi.5", "ssi.4", "ssi.3", "ssi.2",
                       "ssi.1", "ssi.0";
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
         rcar_sound,dvc {
                dvc0: dvc-0 {
                     dmas = <&audma0 0xbc>;
@@ -462,7 +578,11 @@ examples:
                 status = "disabled";
             };
             src1: src-1 {
+<<<<<<< HEAD
                 interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
+=======
+                interrupts = <0 353 0>;
+>>>>>>> b7ba80a49124 (Commit)
                 dmas = <&audma0 0x87>, <&audma1 0x9c>;
                 dma-names = "rx", "tx";
             };
@@ -483,12 +603,20 @@ examples:
 
         rcar_sound,ssi {
             ssi0: ssi-0 {
+<<<<<<< HEAD
                 interrupts = <GIC_SPI 370 IRQ_TYPE_LEVEL_HIGH>;
+=======
+                interrupts = <0 370 1>;
+>>>>>>> b7ba80a49124 (Commit)
                 dmas = <&audma0 0x01>, <&audma1 0x02>;
                 dma-names = "rx", "tx";
             };
             ssi1: ssi-1 {
+<<<<<<< HEAD
                 interrupts = <GIC_SPI 371 IRQ_TYPE_LEVEL_HIGH>;
+=======
+                interrupts = <0 371 1>;
+>>>>>>> b7ba80a49124 (Commit)
                 dmas = <&audma0 0x03>, <&audma1 0x04>;
                 dma-names = "rx", "tx";
             };
@@ -530,6 +658,10 @@ examples:
         };
     };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
     /* assume audio-graph */
     codec {
         port {

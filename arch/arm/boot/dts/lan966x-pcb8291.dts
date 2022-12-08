@@ -69,12 +69,15 @@
 		pins = "GPIO_35", "GPIO_36";
 		function = "can0_b";
 	};
+<<<<<<< HEAD
 
 	sgpio_a_pins: sgpio-a-pins {
 		/* SCK, D0, D1, LD */
 		pins = "GPIO_32", "GPIO_33", "GPIO_34", "GPIO_35";
 		function = "sgpio_a";
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &can0 {
@@ -124,6 +127,7 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &sgpio {
 	pinctrl-0 = <&sgpio_a_pins>;
 	pinctrl-names = "default";
@@ -138,6 +142,8 @@
 	};
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &switch {
 	status = "okay";
 };

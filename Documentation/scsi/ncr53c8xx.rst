@@ -906,7 +906,11 @@ burst:#x   burst enabled (1<<#x burst transfers max)
         led:0      disable LED support
         =====      ===================
 
+<<<<<<< HEAD
   Do not enable LED support if your scsi board does not use SDMS BIOS.
+=======
+  Donnot enable LED support if your scsi board does not use SDMS BIOS.
+>>>>>>> b7ba80a49124 (Commit)
   (See 'Configuration parameters')
 
 10.2.13 Max wide
@@ -1222,7 +1226,11 @@ Unfortunately, the following common SCSI BUS problems are not detected:
 - Bad quality terminators.
 
 On the other hand, either bad cabling, broken devices, not conformant
+<<<<<<< HEAD
 devices, ... may cause a SCSI signal to be wrong when the driver reads it.
+=======
+devices, ... may cause a SCSI signal to be wrong when te driver reads it.
+>>>>>>> b7ba80a49124 (Commit)
 
 10.7 IMMEDIATE ARBITRATION boot option
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

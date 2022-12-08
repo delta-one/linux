@@ -27,8 +27,11 @@
 #include "soc15.h"
 #include "soc15d.h"
 #include "jpeg_v2_0.h"
+<<<<<<< HEAD
 #include "jpeg_v4_0.h"
 #include "mmsch_v4_0.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "vcn/vcn_4_0_0_offset.h"
 #include "vcn/vcn_4_0_0_sh_mask.h"
@@ -36,14 +39,20 @@
 
 #define regUVD_JPEG_PITCH_INTERNAL_OFFSET                  0x401f
 
+<<<<<<< HEAD
 static int jpeg_v4_0_start_sriov(struct amdgpu_device *adev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void jpeg_v4_0_set_dec_ring_funcs(struct amdgpu_device *adev);
 static void jpeg_v4_0_set_irq_funcs(struct amdgpu_device *adev);
 static int jpeg_v4_0_set_powergating_state(void *handle,
 				enum amd_powergating_state state);
+<<<<<<< HEAD
 static void jpeg_v4_0_set_ras_funcs(struct amdgpu_device *adev);
 
 static void jpeg_v4_0_dec_ring_set_wptr(struct amdgpu_ring *ring);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * jpeg_v4_0_early_init - set function pointers
@@ -61,7 +70,10 @@ static int jpeg_v4_0_early_init(void *handle)
 
 	jpeg_v4_0_set_dec_ring_funcs(adev);
 	jpeg_v4_0_set_irq_funcs(adev);
+<<<<<<< HEAD
 	jpeg_v4_0_set_ras_funcs(adev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -85,6 +97,7 @@ static int jpeg_v4_0_sw_init(void *handle)
 	if (r)
 		return r;
 
+<<<<<<< HEAD
 	/* JPEG DJPEG POISON EVENT */
 	r = amdgpu_irq_add_id(adev, SOC15_IH_CLIENTID_VCN,
 			VCN_4_0__SRCID_DJPEG0_POISON, &adev->jpeg.inst->irq);
@@ -97,6 +110,8 @@ static int jpeg_v4_0_sw_init(void *handle)
 	if (r)
 		return r;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	r = amdgpu_jpeg_sw_init(adev);
 	if (r)
 		return r;
@@ -107,8 +122,12 @@ static int jpeg_v4_0_sw_init(void *handle)
 
 	ring = &adev->jpeg.inst->ring_dec;
 	ring->use_doorbell = true;
+<<<<<<< HEAD
 	ring->doorbell_index = amdgpu_sriov_vf(adev) ? (((adev->doorbell_index.vcn.vcn_ring0_1) << 1) + 4) : ((adev->doorbell_index.vcn.vcn_ring0_1 << 1) + 1);
 
+=======
+	ring->doorbell_index = (adev->doorbell_index.vcn.vcn_ring0_1 << 1) + 1;
+>>>>>>> b7ba80a49124 (Commit)
 	sprintf(ring->name, "jpeg_dec");
 	r = amdgpu_ring_init(adev, ring, 512, &adev->jpeg.inst->irq, 0,
 			     AMDGPU_RING_PRIO_DEFAULT, NULL);
@@ -118,10 +137,13 @@ static int jpeg_v4_0_sw_init(void *handle)
 	adev->jpeg.internal.jpeg_pitch = regUVD_JPEG_PITCH_INTERNAL_OFFSET;
 	adev->jpeg.inst->external.jpeg_pitch = SOC15_REG_OFFSET(JPEG, 0, regUVD_JPEG_PITCH);
 
+<<<<<<< HEAD
 	r = amdgpu_jpeg_ras_sw_init(adev);
 	if (r)
 		return r;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -158,6 +180,7 @@ static int jpeg_v4_0_hw_init(void *handle)
 	struct amdgpu_ring *ring = &adev->jpeg.inst->ring_dec;
 	int r;
 
+<<<<<<< HEAD
 	if (amdgpu_sriov_vf(adev)) {
 		r = jpeg_v4_0_start_sriov(adev);
 		if (r)
@@ -178,6 +201,18 @@ static int jpeg_v4_0_hw_init(void *handle)
 		if (r)
 			return r;
 	}
+=======
+	adev->nbio.funcs->vcn_doorbell_range(adev, ring->use_doorbell,
+					(adev->doorbell_index.vcn.vcn_ring0_1 << 1), 0);
+
+	WREG32_SOC15(VCN, 0, regVCN_JPEG_DB_CTRL,
+		ring->doorbell_index << VCN_JPEG_DB_CTRL__OFFSET__SHIFT |
+		VCN_JPEG_DB_CTRL__EN_MASK);
+
+	r = amdgpu_ring_test_helper(ring);
+	if (r)
+		return r;
+>>>>>>> b7ba80a49124 (Commit)
 
 	DRM_DEV_INFO(adev->dev, "JPEG decode initialized successfully.\n");
 
@@ -196,12 +231,19 @@ static int jpeg_v4_0_hw_fini(void *handle)
 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
 
 	cancel_delayed_work_sync(&adev->vcn.idle_work);
+<<<<<<< HEAD
 	if (!amdgpu_sriov_vf(adev)) {
 		if (adev->jpeg.cur_state != AMD_PG_STATE_GATE &&
 			RREG32_SOC15(JPEG, 0, regUVD_JRBC_STATUS))
 			jpeg_v4_0_set_powergating_state(adev, AMD_PG_STATE_GATE);
 	}
 	amdgpu_irq_put(adev, &adev->jpeg.inst->irq, 0);
+=======
+
+	if (adev->jpeg.cur_state != AMD_PG_STATE_GATE &&
+	      RREG32_SOC15(JPEG, 0, regUVD_JRBC_STATUS))
+		jpeg_v4_0_set_powergating_state(adev, AMD_PG_STATE_GATE);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -405,6 +447,7 @@ static int jpeg_v4_0_start(struct amdgpu_device *adev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int jpeg_v4_0_start_sriov(struct amdgpu_device *adev)
 {
 	struct amdgpu_ring *ring;
@@ -519,6 +562,8 @@ static int jpeg_v4_0_start_sriov(struct amdgpu_device *adev)
 
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * jpeg_v4_0_stop - stop JPEG block
  *
@@ -642,11 +687,14 @@ static int jpeg_v4_0_set_powergating_state(void *handle,
 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
 	int ret;
 
+<<<<<<< HEAD
 	if (amdgpu_sriov_vf(adev)) {
 		adev->jpeg.cur_state = AMD_PG_STATE_UNGATE;
 		return 0;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (state == adev->jpeg.cur_state)
 		return 0;
 
@@ -679,10 +727,13 @@ static int jpeg_v4_0_process_interrupt(struct amdgpu_device *adev,
 	case VCN_4_0__SRCID__JPEG_DECODE:
 		amdgpu_fence_process(&adev->jpeg.inst->ring_dec);
 		break;
+<<<<<<< HEAD
 	case VCN_4_0__SRCID_DJPEG0_POISON:
 	case VCN_4_0__SRCID_EJPEG0_POISON:
 		amdgpu_jpeg_process_poison_irq(adev, source, entry);
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		DRM_DEV_ERROR(adev->dev, "Unhandled interrupt: %d %d\n",
 			  entry->src_id, entry->src_data[0]);
@@ -766,6 +817,7 @@ const struct amdgpu_ip_block_version jpeg_v4_0_ip_block = {
 	.rev = 0,
 	.funcs = &jpeg_v4_0_ip_funcs,
 };
+<<<<<<< HEAD
 
 static uint32_t jpeg_v4_0_query_poison_by_instance(struct amdgpu_device *adev,
 		uint32_t instance, uint32_t sub_block)
@@ -824,3 +876,5 @@ static void jpeg_v4_0_set_ras_funcs(struct amdgpu_device *adev)
 		break;
 	}
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

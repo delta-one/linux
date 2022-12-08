@@ -19,7 +19,10 @@
 #include <linux/slab.h>
 #include <linux/types.h>
 
+<<<<<<< HEAD
 #include <uapi/asm/fs3270.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/ccwdev.h>
 #include <asm/cio.h>
 #include <asm/ebcdic.h>
@@ -45,12 +48,23 @@ struct fs3270 {
 
 static DEFINE_MUTEX(fs3270_mutex);
 
+<<<<<<< HEAD
 static void fs3270_wake_up(struct raw3270_request *rq, void *data)
 {
 	wake_up((wait_queue_head_t *)data);
 }
 
 static inline int fs3270_working(struct fs3270 *fp)
+=======
+static void
+fs3270_wake_up(struct raw3270_request *rq, void *data)
+{
+	wake_up((wait_queue_head_t *) data);
+}
+
+static inline int
+fs3270_working(struct fs3270 *fp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/*
 	 * The fullscreen view is in working order if the view
@@ -59,12 +73,21 @@ static inline int fs3270_working(struct fs3270 *fp)
 	return fp->active && raw3270_request_final(fp->init);
 }
 
+<<<<<<< HEAD
 static int fs3270_do_io(struct raw3270_view *view, struct raw3270_request *rq)
+=======
+static int
+fs3270_do_io(struct raw3270_view *view, struct raw3270_request *rq)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fs3270 *fp;
 	int rc;
 
+<<<<<<< HEAD
 	fp = (struct fs3270 *)view;
+=======
+	fp = (struct fs3270 *) view;
+>>>>>>> b7ba80a49124 (Commit)
 	rq->callback = fs3270_wake_up;
 	rq->callback_data = &fp->wait;
 
@@ -88,20 +111,38 @@ static int fs3270_do_io(struct raw3270_view *view, struct raw3270_request *rq)
 /*
  * Switch to the fullscreen view.
  */
+<<<<<<< HEAD
 static void fs3270_reset_callback(struct raw3270_request *rq, void *data)
 {
 	struct fs3270 *fp;
 
 	fp = (struct fs3270 *)rq->view;
+=======
+static void
+fs3270_reset_callback(struct raw3270_request *rq, void *data)
+{
+	struct fs3270 *fp;
+
+	fp = (struct fs3270 *) rq->view;
+>>>>>>> b7ba80a49124 (Commit)
 	raw3270_request_reset(rq);
 	wake_up(&fp->wait);
 }
 
+<<<<<<< HEAD
 static void fs3270_restore_callback(struct raw3270_request *rq, void *data)
 {
 	struct fs3270 *fp;
 
 	fp = (struct fs3270 *)rq->view;
+=======
+static void
+fs3270_restore_callback(struct raw3270_request *rq, void *data)
+{
+	struct fs3270 *fp;
+
+	fp = (struct fs3270 *) rq->view;
+>>>>>>> b7ba80a49124 (Commit)
 	if (rq->rc != 0 || rq->rescnt != 0) {
 		if (fp->fs_pid)
 			kill_pid(fp->fs_pid, SIGHUP, 1);
@@ -111,18 +152,28 @@ static void fs3270_restore_callback(struct raw3270_request *rq, void *data)
 	wake_up(&fp->wait);
 }
 
+<<<<<<< HEAD
 static int fs3270_activate(struct raw3270_view *view)
+=======
+static int
+fs3270_activate(struct raw3270_view *view)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fs3270 *fp;
 	char *cp;
 	int rc;
 
+<<<<<<< HEAD
 	fp = (struct fs3270 *)view;
+=======
+	fp = (struct fs3270 *) view;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* If an old init command is still running just return. */
 	if (!raw3270_request_final(fp->init))
 		return 0;
 
+<<<<<<< HEAD
 	raw3270_request_set_cmd(fp->init, TC_EWRITEA);
 	raw3270_request_set_idal(fp->init, fp->rdbuf);
 	fp->init->rescnt = 0;
@@ -136,6 +187,18 @@ static int fs3270_activate(struct raw3270_view *view)
 		/* Restore fullscreen buffer saved by fs3270_deactivate. */
 		fp->init->ccw.count = fp->rdbuf_size;
 		fp->init->callback = fs3270_restore_callback;
+=======
+	if (fp->rdbuf_size == 0) {
+		/* No saved buffer. Just clear the screen. */
+		raw3270_request_set_cmd(fp->init, TC_EWRITEA);
+		fp->init->callback = fs3270_reset_callback;
+	} else {
+		/* Restore fullscreen buffer saved by fs3270_deactivate. */
+		raw3270_request_set_cmd(fp->init, TC_EWRITEA);
+		raw3270_request_set_idal(fp->init, fp->rdbuf);
+		fp->init->ccw.count = fp->rdbuf_size;
+		cp = fp->rdbuf->data[0];
+>>>>>>> b7ba80a49124 (Commit)
 		cp[0] = TW_KR;
 		cp[1] = TO_SBA;
 		cp[2] = cp[6];
@@ -144,9 +207,16 @@ static int fs3270_activate(struct raw3270_view *view)
 		cp[5] = TO_SBA;
 		cp[6] = 0x40;
 		cp[7] = 0x40;
+<<<<<<< HEAD
 	}
 	rc = raw3270_start_locked(view, fp->init);
 	fp->init->rc = rc;
+=======
+		fp->init->rescnt = 0;
+		fp->init->callback = fs3270_restore_callback;
+	}
+	rc = fp->init->rc = raw3270_start_locked(view, fp->init);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		fp->init->callback(fp->init, NULL);
 	else
@@ -157,11 +227,20 @@ static int fs3270_activate(struct raw3270_view *view)
 /*
  * Shutdown fullscreen view.
  */
+<<<<<<< HEAD
 static void fs3270_save_callback(struct raw3270_request *rq, void *data)
 {
 	struct fs3270 *fp;
 
 	fp = (struct fs3270 *)rq->view;
+=======
+static void
+fs3270_save_callback(struct raw3270_request *rq, void *data)
+{
+	struct fs3270 *fp;
+
+	fp = (struct fs3270 *) rq->view;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Correct idal buffer element 0 address. */
 	fp->rdbuf->data[0] -= 5;
@@ -177,18 +256,32 @@ static void fs3270_save_callback(struct raw3270_request *rq, void *data)
 		if (fp->fs_pid)
 			kill_pid(fp->fs_pid, SIGHUP, 1);
 		fp->rdbuf_size = 0;
+<<<<<<< HEAD
 	} else {
 		fp->rdbuf_size = fp->rdbuf->size - rq->rescnt;
 	}
+=======
+	} else
+		fp->rdbuf_size = fp->rdbuf->size - rq->rescnt;
+>>>>>>> b7ba80a49124 (Commit)
 	raw3270_request_reset(rq);
 	wake_up(&fp->wait);
 }
 
+<<<<<<< HEAD
 static void fs3270_deactivate(struct raw3270_view *view)
 {
 	struct fs3270 *fp;
 
 	fp = (struct fs3270 *)view;
+=======
+static void
+fs3270_deactivate(struct raw3270_view *view)
+{
+	struct fs3270 *fp;
+
+	fp = (struct fs3270 *) view;
+>>>>>>> b7ba80a49124 (Commit)
 	fp->active = 0;
 
 	/* If an old init command is still running just return. */
@@ -214,8 +307,13 @@ static void fs3270_deactivate(struct raw3270_view *view)
 		fp->init->callback(fp->init, NULL);
 }
 
+<<<<<<< HEAD
 static void fs3270_irq(struct fs3270 *fp, struct raw3270_request *rq,
 		       struct irb *irb)
+=======
+static void
+fs3270_irq(struct fs3270 *fp, struct raw3270_request *rq, struct irb *irb)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/* Handle ATTN. Set indication and wake waiters for attention. */
 	if (irb->scsw.cmd.dstat & DEV_STAT_ATTENTION) {
@@ -235,14 +333,23 @@ static void fs3270_irq(struct fs3270 *fp, struct raw3270_request *rq,
 /*
  * Process reads from fullscreen 3270.
  */
+<<<<<<< HEAD
 static ssize_t fs3270_read(struct file *filp, char __user *data,
 			   size_t count, loff_t *off)
+=======
+static ssize_t
+fs3270_read(struct file *filp, char __user *data, size_t count, loff_t *off)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fs3270 *fp;
 	struct raw3270_request *rq;
 	struct idal_buffer *ib;
 	ssize_t rc;
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> b7ba80a49124 (Commit)
 	if (count == 0 || count > 65535)
 		return -EINVAL;
 	fp = filp->private_data;
@@ -267,12 +374,21 @@ static ssize_t fs3270_read(struct file *filp, char __user *data,
 					rc = -EFAULT;
 				else
 					rc = count;
+<<<<<<< HEAD
 			}
 		}
 		raw3270_request_free(rq);
 	} else {
 		rc = PTR_ERR(rq);
 	}
+=======
+
+			}
+		}
+		raw3270_request_free(rq);
+	} else
+		rc = PTR_ERR(rq);
+>>>>>>> b7ba80a49124 (Commit)
 	idal_buffer_free(ib);
 	return rc;
 }
@@ -280,8 +396,13 @@ static ssize_t fs3270_read(struct file *filp, char __user *data,
 /*
  * Process writes to fullscreen 3270.
  */
+<<<<<<< HEAD
 static ssize_t fs3270_write(struct file *filp, const char __user *data,
 			    size_t count, loff_t *off)
+=======
+static ssize_t
+fs3270_write(struct file *filp, const char __user *data, size_t count, loff_t *off)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fs3270 *fp;
 	struct raw3270_request *rq;
@@ -306,6 +427,7 @@ static ssize_t fs3270_write(struct file *filp, const char __user *data,
 			rc = fs3270_do_io(&fp->view, rq);
 			if (rc == 0)
 				rc = count - rq->rescnt;
+<<<<<<< HEAD
 		} else {
 			rc = -EFAULT;
 		}
@@ -313,6 +435,13 @@ static ssize_t fs3270_write(struct file *filp, const char __user *data,
 	} else {
 		rc = PTR_ERR(rq);
 	}
+=======
+		} else
+			rc = -EFAULT;
+		raw3270_request_free(rq);
+	} else
+		rc = PTR_ERR(rq);
+>>>>>>> b7ba80a49124 (Commit)
 	idal_buffer_free(ib);
 	return rc;
 }
@@ -320,7 +449,12 @@ static ssize_t fs3270_write(struct file *filp, const char __user *data,
 /*
  * process ioctl commands for the tube driver
  */
+<<<<<<< HEAD
 static long fs3270_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+=======
+static long
+fs3270_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	char __user *argp;
 	struct fs3270 *fp;
@@ -367,11 +501,20 @@ static long fs3270_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 /*
  * Allocate fs3270 structure.
  */
+<<<<<<< HEAD
 static struct fs3270 *fs3270_alloc_view(void)
 {
 	struct fs3270 *fp;
 
 	fp = kzalloc(sizeof(*fp), GFP_KERNEL);
+=======
+static struct fs3270 *
+fs3270_alloc_view(void)
+{
+	struct fs3270 *fp;
+
+	fp = kzalloc(sizeof(struct fs3270),GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!fp)
 		return ERR_PTR(-ENOMEM);
 	fp->init = raw3270_request_alloc(0);
@@ -385,6 +528,7 @@ static struct fs3270 *fs3270_alloc_view(void)
 /*
  * Free fs3270 structure.
  */
+<<<<<<< HEAD
 static void fs3270_free_view(struct raw3270_view *view)
 {
 	struct fs3270 *fp;
@@ -393,17 +537,37 @@ static void fs3270_free_view(struct raw3270_view *view)
 	if (fp->rdbuf)
 		idal_buffer_free(fp->rdbuf);
 	raw3270_request_free(((struct fs3270 *)view)->init);
+=======
+static void
+fs3270_free_view(struct raw3270_view *view)
+{
+	struct fs3270 *fp;
+
+	fp = (struct fs3270 *) view;
+	if (fp->rdbuf)
+		idal_buffer_free(fp->rdbuf);
+	raw3270_request_free(((struct fs3270 *) view)->init);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(view);
 }
 
 /*
  * Unlink fs3270 data structure from filp.
  */
+<<<<<<< HEAD
 static void fs3270_release(struct raw3270_view *view)
 {
 	struct fs3270 *fp;
 
 	fp = (struct fs3270 *)view;
+=======
+static void
+fs3270_release(struct raw3270_view *view)
+{
+	struct fs3270 *fp;
+
+	fp = (struct fs3270 *) view;
+>>>>>>> b7ba80a49124 (Commit)
 	if (fp->fs_pid)
 		kill_pid(fp->fs_pid, SIGHUP, 1);
 }
@@ -412,7 +576,11 @@ static void fs3270_release(struct raw3270_view *view)
 static struct raw3270_fn fs3270_fn = {
 	.activate = fs3270_activate,
 	.deactivate = fs3270_deactivate,
+<<<<<<< HEAD
 	.intv = (void *)fs3270_irq,
+=======
+	.intv = (void *) fs3270_irq,
+>>>>>>> b7ba80a49124 (Commit)
 	.release = fs3270_release,
 	.free = fs3270_free_view
 };
@@ -420,7 +588,12 @@ static struct raw3270_fn fs3270_fn = {
 /*
  * This routine is called whenever a 3270 fullscreen device is opened.
  */
+<<<<<<< HEAD
 static int fs3270_open(struct inode *inode, struct file *filp)
+=======
+static int
+fs3270_open(struct inode *inode, struct file *filp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fs3270 *fp;
 	struct idal_buffer *ib;
@@ -432,7 +605,10 @@ static int fs3270_open(struct inode *inode, struct file *filp)
 	/* Check for minor 0 multiplexer. */
 	if (minor == 0) {
 		struct tty_struct *tty = get_current_tty();
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (!tty || tty->driver->major != IBM_TTY3270_MAJOR) {
 			tty_kref_put(tty);
 			return -ENODEV;
@@ -442,7 +618,11 @@ static int fs3270_open(struct inode *inode, struct file *filp)
 	}
 	mutex_lock(&fs3270_mutex);
 	/* Check if some other program is already using fullscreen mode. */
+<<<<<<< HEAD
 	fp = (struct fs3270 *)raw3270_find_view(&fs3270_fn, minor);
+=======
+	fp = (struct fs3270 *) raw3270_find_view(&fs3270_fn, minor);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!IS_ERR(fp)) {
 		raw3270_put_view(&fp->view);
 		rc = -EBUSY;
@@ -465,7 +645,11 @@ static int fs3270_open(struct inode *inode, struct file *filp)
 	}
 
 	/* Allocate idal-buffer. */
+<<<<<<< HEAD
 	ib = idal_buffer_alloc(2 * fp->view.rows * fp->view.cols + 5, 0);
+=======
+	ib = idal_buffer_alloc(2*fp->view.rows*fp->view.cols + 5, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(ib)) {
 		raw3270_put_view(&fp->view);
 		raw3270_del_view(&fp->view);
@@ -491,7 +675,12 @@ out:
  * This routine is called when the 3270 tty is closed. We wait
  * for the remaining request to be completed. Then we clean up.
  */
+<<<<<<< HEAD
 static int fs3270_close(struct inode *inode, struct file *filp)
+=======
+static int
+fs3270_close(struct inode *inode, struct file *filp)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fs3270 *fp;
 
@@ -531,7 +720,12 @@ static void fs3270_destroy_cb(int minor)
 	__unregister_chrdev(IBM_FS3270_MAJOR, minor, 1, "tub");
 }
 
+<<<<<<< HEAD
 static struct raw3270_notifier fs3270_notifier = {
+=======
+static struct raw3270_notifier fs3270_notifier =
+{
+>>>>>>> b7ba80a49124 (Commit)
 	.create = fs3270_create_cb,
 	.destroy = fs3270_destroy_cb,
 };
@@ -539,7 +733,12 @@ static struct raw3270_notifier fs3270_notifier = {
 /*
  * 3270 fullscreen driver initialization.
  */
+<<<<<<< HEAD
 static int __init fs3270_init(void)
+=======
+static int __init
+fs3270_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int rc;
 
@@ -552,7 +751,12 @@ static int __init fs3270_init(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void __exit fs3270_exit(void)
+=======
+static void __exit
+fs3270_exit(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	raw3270_unregister_notifier(&fs3270_notifier);
 	device_destroy(class3270, MKDEV(IBM_FS3270_MAJOR, 0));

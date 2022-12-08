@@ -1349,11 +1349,20 @@ err_pm_disable:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void sun8i_codec_remove(struct platform_device *pdev)
+=======
+static int sun8i_codec_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	pm_runtime_disable(&pdev->dev);
 	if (!pm_runtime_status_suspended(&pdev->dev))
 		sun8i_codec_runtime_suspend(&pdev->dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct sun8i_codec_quirks sun8i_a33_quirks = {
@@ -1383,7 +1392,11 @@ static struct platform_driver sun8i_codec_driver = {
 		.pm = &sun8i_codec_pm_ops,
 	},
 	.probe = sun8i_codec_probe,
+<<<<<<< HEAD
 	.remove_new = sun8i_codec_remove,
+=======
+	.remove = sun8i_codec_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(sun8i_codec_driver);
 

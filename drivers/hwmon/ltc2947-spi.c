@@ -38,7 +38,11 @@ static struct spi_driver ltc2947_driver = {
 	.driver = {
 		.name = "ltc2947",
 		.of_match_table = ltc2947_of_match,
+<<<<<<< HEAD
 		.pm = pm_sleep_ptr(&ltc2947_pm_ops),
+=======
+		.pm = &ltc2947_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = ltc2947_probe,
 	.id_table = ltc2947_id,

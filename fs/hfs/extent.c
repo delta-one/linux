@@ -486,7 +486,11 @@ void hfs_file_truncate(struct inode *inode)
 		inode->i_size);
 	if (inode->i_size > HFS_I(inode)->phys_size) {
 		struct address_space *mapping = inode->i_mapping;
+<<<<<<< HEAD
 		void *fsdata = NULL;
+=======
+		void *fsdata;
+>>>>>>> b7ba80a49124 (Commit)
 		struct page *page;
 
 		/* XXX: Can use generic_cont_expand? */

@@ -44,7 +44,11 @@
 #include <asm/fs_pd.h>
 
 #ifdef CONFIG_8xx_GPIO
+<<<<<<< HEAD
 #include <linux/gpio/legacy-of-mm-gpiochip.h>
+=======
+#include <linux/of_gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #define CPM_MAP_SIZE    (0x4000)
@@ -94,7 +98,11 @@ int cpm_command(u32 command, u8 opcode)
 	int i, ret;
 	unsigned long flags;
 
+<<<<<<< HEAD
 	if (command & 0xffffff03)
+=======
+	if (command & 0xffffff0f)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	spin_lock_irqsave(&cmd_lock, flags);

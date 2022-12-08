@@ -1164,7 +1164,11 @@ static ssize_t mcdi_logging_show(struct device *dev,
 	struct efx_nic *efx = dev_get_drvdata(dev);
 	struct efx_mcdi_iface *mcdi = efx_mcdi(efx);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", mcdi->logging_enabled);
+=======
+	return scnprintf(buf, PAGE_SIZE, "%d\n", mcdi->logging_enabled);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t mcdi_logging_store(struct device *dev,

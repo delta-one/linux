@@ -11,8 +11,11 @@
  *	Jianhua Li <lijianhua@huawei.com>
  */
 
+<<<<<<< HEAD
 #include <linux/io.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_atomic_helper.h>
 #include <drm/drm_probe_helper.h>
 #include <drm/drm_print.h>

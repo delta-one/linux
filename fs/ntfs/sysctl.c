@@ -31,6 +31,19 @@ static struct ctl_table ntfs_sysctls[] = {
 	{}
 };
 
+<<<<<<< HEAD
+=======
+/* Define the parent directory /proc/sys/fs. */
+static struct ctl_table sysctls_root[] = {
+	{
+		.procname	= "fs",
+		.mode		= 0555,
+		.child		= ntfs_sysctls
+	},
+	{}
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Storage for the sysctls header. */
 static struct ctl_table_header *sysctls_root_table;
 
@@ -44,7 +57,11 @@ int ntfs_sysctl(int add)
 {
 	if (add) {
 		BUG_ON(sysctls_root_table);
+<<<<<<< HEAD
 		sysctls_root_table = register_sysctl("fs", ntfs_sysctls);
+=======
+		sysctls_root_table = register_sysctl_table(sysctls_root);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!sysctls_root_table)
 			return -ENOMEM;
 	} else {

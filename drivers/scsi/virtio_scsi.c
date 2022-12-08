@@ -330,7 +330,11 @@ static void virtscsi_handle_param_change(struct virtio_scsi *vscsi,
 	scsi_device_put(sdev);
 }
 
+<<<<<<< HEAD
 static int virtscsi_rescan_hotunplug(struct virtio_scsi *vscsi)
+=======
+static void virtscsi_rescan_hotunplug(struct virtio_scsi *vscsi)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct scsi_device *sdev;
 	struct Scsi_Host *shost = virtio_scsi_host(vscsi->vdev);
@@ -338,11 +342,14 @@ static int virtscsi_rescan_hotunplug(struct virtio_scsi *vscsi)
 	int result, inquiry_len, inq_result_len = 256;
 	char *inq_result = kmalloc(inq_result_len, GFP_KERNEL);
 
+<<<<<<< HEAD
 	if (!inq_result) {
 		kfree(inq_result);
 		return -ENOMEM;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	shost_for_each_device(sdev, shost) {
 		inquiry_len = sdev->inquiry_len ? sdev->inquiry_len : 36;
 
@@ -352,8 +359,13 @@ static int virtscsi_rescan_hotunplug(struct virtio_scsi *vscsi)
 
 		memset(inq_result, 0, inq_result_len);
 
+<<<<<<< HEAD
 		result = scsi_execute_cmd(sdev, scsi_cmd, REQ_OP_DRV_IN,
 					  inq_result, inquiry_len,
+=======
+		result = scsi_execute_req(sdev, scsi_cmd, DMA_FROM_DEVICE,
+					  inq_result, inquiry_len, NULL,
+>>>>>>> b7ba80a49124 (Commit)
 					  SD_TIMEOUT, SD_MAX_RETRIES, NULL);
 
 		if (result == 0 && inq_result[0] >> 5) {
@@ -371,7 +383,10 @@ static int virtscsi_rescan_hotunplug(struct virtio_scsi *vscsi)
 	}
 
 	kfree(inq_result);
+<<<<<<< HEAD
 	return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void virtscsi_handle_event(struct work_struct *work)
@@ -383,6 +398,7 @@ static void virtscsi_handle_event(struct work_struct *work)
 
 	if (event->event &
 	    cpu_to_virtio32(vscsi->vdev, VIRTIO_SCSI_T_EVENTS_MISSED)) {
+<<<<<<< HEAD
 		int ret;
 
 		event->event &= ~cpu_to_virtio32(vscsi->vdev,
@@ -390,6 +406,11 @@ static void virtscsi_handle_event(struct work_struct *work)
 		ret = virtscsi_rescan_hotunplug(vscsi);
 		if (ret)
 			return;
+=======
+		event->event &= ~cpu_to_virtio32(vscsi->vdev,
+						   VIRTIO_SCSI_T_EVENTS_MISSED);
+		virtscsi_rescan_hotunplug(vscsi);
+>>>>>>> b7ba80a49124 (Commit)
 		scsi_scan_host(virtio_scsi_host(vscsi->vdev));
 	}
 
@@ -741,9 +762,15 @@ static void virtscsi_commit_rqs(struct Scsi_Host *shost, u16 hwq)
  * latencies might be higher than on bare metal.  Reset the timer
  * unconditionally to give the host a chance to perform EH.
  */
+<<<<<<< HEAD
 static enum scsi_timeout_action virtscsi_eh_timed_out(struct scsi_cmnd *scmnd)
 {
 	return SCSI_EH_RESET_TIMER;
+=======
+static enum blk_eh_timer_return virtscsi_eh_timed_out(struct scsi_cmnd *scmnd)
+{
+	return BLK_EH_RESET_TIMER;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct scsi_host_template virtscsi_host_template = {

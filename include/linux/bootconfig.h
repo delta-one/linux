@@ -59,7 +59,11 @@ struct xbc_node {
 /* Maximum size of boot config is 32KB - 1 */
 #define XBC_DATA_MAX	(XBC_VALUE - 1)
 
+<<<<<<< HEAD
 #define XBC_NODE_MAX	8192
+=======
+#define XBC_NODE_MAX	1024
+>>>>>>> b7ba80a49124 (Commit)
 #define XBC_KEYLEN_MAX	256
 #define XBC_DEPTH_MAX	16
 

@@ -13,7 +13,10 @@
 #include <ftw.h>
 
 #include "cgroup_helpers.h"
+<<<<<<< HEAD
 #include "bpf_util.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * To avoid relying on the system setup, when setup_cgroup_env is called
@@ -78,7 +81,11 @@ static int __enable_controllers(const char *cgroup_path, const char *controllers
 		enable[len] = 0;
 		close(fd);
 	} else {
+<<<<<<< HEAD
 		bpf_strlcpy(enable, controllers, sizeof(enable));
+=======
+		strncpy(enable, controllers, sizeof(enable));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	snprintf(path, sizeof(path), "%s/cgroup.subtree_control", cgroup_path);
@@ -333,6 +340,7 @@ int get_root_cgroup(void)
 	return fd;
 }
 
+<<<<<<< HEAD
 /*
  * remove_cgroup() - Remove a cgroup
  * @relative_path: The cgroup path, relative to the workdir, to remove
@@ -352,6 +360,8 @@ void remove_cgroup(const char *relative_path)
 		log_err("rmdiring cgroup %s .. %s", relative_path, cgroup_path);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * create_and_get_cgroup() - Create a cgroup, relative to workdir, and get the FD
  * @relative_path: The cgroup path, relative to the workdir, to join

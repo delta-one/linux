@@ -42,6 +42,13 @@
 #define sata_dwc_writel(a, v)	writel_relaxed(v, a)
 #define sata_dwc_readl(a)	readl_relaxed(a)
 
+<<<<<<< HEAD
+=======
+#ifndef NO_IRQ
+#define NO_IRQ		0
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 #define AHB_DMA_BRST_DFLT	64	/* 16 data items burst length */
 
 enum {
@@ -238,7 +245,11 @@ static int sata_dwc_dma_init_old(struct platform_device *pdev,
 
 	/* Get SATA DMA interrupt number */
 	hsdev->dma->irq = irq_of_parse_and_map(np, 1);
+<<<<<<< HEAD
 	if (!hsdev->dma->irq) {
+=======
+	if (hsdev->dma->irq == NO_IRQ) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(dev, "no SATA DMA irq\n");
 		return -ENODEV;
 	}
@@ -468,7 +479,11 @@ static irqreturn_t sata_dwc_isr(int irq, void *dev_instance)
 	struct ata_queued_cmd *qc;
 	unsigned long flags;
 	u8 status, tag;
+<<<<<<< HEAD
 	int handled, port = 0;
+=======
+	int handled, num_processed, port = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	uint intpr, sactive, sactive2, tag_mask;
 	struct sata_dwc_device_port *hsdevp;
 	hsdev->sactive_issued = 0;
@@ -614,7 +629,13 @@ DRVSTILLBUSY:
 	dev_dbg(ap->dev, "%s ATA status register=0x%x\n", __func__, status);
 
 	tag = 0;
+<<<<<<< HEAD
 	while (tag_mask) {
+=======
+	num_processed = 0;
+	while (tag_mask) {
+		num_processed++;
+>>>>>>> b7ba80a49124 (Commit)
 		while (!(tag_mask & 0x00000001)) {
 			tag++;
 			tag_mask <<= 1;
@@ -810,7 +831,11 @@ static int sata_dwc_dma_get_channel(struct sata_dwc_device_port *hsdevp)
 	struct device *dev = hsdev->dev;
 
 #ifdef CONFIG_SATA_DWC_OLD_DMA
+<<<<<<< HEAD
 	if (!of_property_present(dev->of_node, "dmas"))
+=======
+	if (!of_find_property(dev->of_node, "dmas", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		return sata_dwc_dma_get_channel_old(hsdevp);
 #endif
 
@@ -1174,13 +1199,21 @@ static int sata_dwc_probe(struct platform_device *ofdev)
 
 	/* Get SATA interrupt number */
 	irq = irq_of_parse_and_map(np, 0);
+<<<<<<< HEAD
 	if (!irq) {
+=======
+	if (irq == NO_IRQ) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(dev, "no SATA DMA irq\n");
 		return -ENODEV;
 	}
 
 #ifdef CONFIG_SATA_DWC_OLD_DMA
+<<<<<<< HEAD
 	if (!of_property_present(np, "dmas")) {
+=======
+	if (!of_find_property(np, "dmas", NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = sata_dwc_dma_init_old(ofdev, hsdev);
 		if (err)
 			return err;

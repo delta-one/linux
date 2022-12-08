@@ -241,10 +241,15 @@ static void rtw_watch_dog_work(struct work_struct *work)
 	rtw_phy_dynamic_mechanism(rtwdev);
 
 	data.rtwdev = rtwdev;
+<<<<<<< HEAD
 	/* rtw_iterate_vifs internally uses an atomic iterator which is needed
 	 * to avoid taking local->iflist_mtx mutex
 	 */
 	rtw_iterate_vifs(rtwdev, rtw_vif_watch_dog_iter, &data);
+=======
+	/* use atomic version to avoid taking local->iflist_mtx mutex */
+	rtw_iterate_vifs_atomic(rtwdev, rtw_vif_watch_dog_iter, &data);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* fw supports only one station associated to enter lps, if there are
 	 * more than two stations associated to the AP, then we can not enter
@@ -1733,8 +1738,12 @@ static void rtw_load_firmware_cb(const struct firmware *firmware, void *context)
 	update_firmware_info(rtwdev, fw);
 	complete_all(&fw->completion);
 
+<<<<<<< HEAD
 	rtw_info(rtwdev, "%sFirmware version %u.%u.%u, H2C version %u\n",
 		 fw->type == RTW_WOWLAN_FW ? "WOW " : "",
+=======
+	rtw_info(rtwdev, "Firmware version %u.%u.%u, H2C version %u\n",
+>>>>>>> b7ba80a49124 (Commit)
 		 fw->version, fw->sub_version, fw->sub_index, fw->h2c_version);
 }
 
@@ -1760,7 +1769,10 @@ static int rtw_load_firmware(struct rtw_dev *rtwdev, enum rtw_fw_type type)
 		return -ENOENT;
 	}
 
+<<<<<<< HEAD
 	fw->type = type;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	fw->rtwdev = rtwdev;
 	init_completion(&fw->completion);
 
@@ -1785,10 +1797,13 @@ static int rtw_chip_parameter_setup(struct rtw_dev *rtwdev)
 		rtwdev->hci.rpwm_addr = 0x03d9;
 		rtwdev->hci.cpwm_addr = 0x03da;
 		break;
+<<<<<<< HEAD
 	case RTW_HCI_TYPE_USB:
 		rtwdev->hci.rpwm_addr = 0xfe58;
 		rtwdev->hci.cpwm_addr = 0xfe57;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		rtw_err(rtwdev, "unsupported hci type\n");
 		return -EINVAL;
@@ -2073,10 +2088,19 @@ int rtw_core_init(struct rtw_dev *rtwdev)
 	skb_queue_head_init(&rtwdev->coex.queue);
 	skb_queue_head_init(&rtwdev->tx_report.queue);
 
+<<<<<<< HEAD
+=======
+	spin_lock_init(&rtwdev->rf_lock);
+	spin_lock_init(&rtwdev->h2c.lock);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_init(&rtwdev->txq_lock);
 	spin_lock_init(&rtwdev->tx_report.q_lock);
 
 	mutex_init(&rtwdev->mutex);
+<<<<<<< HEAD
+=======
+	mutex_init(&rtwdev->coex.mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_init(&rtwdev->hal.tx_power_mutex);
 
 	init_waitqueue_head(&rtwdev->coex.wait);
@@ -2148,6 +2172,10 @@ void rtw_core_deinit(struct rtw_dev *rtwdev)
 	}
 
 	mutex_destroy(&rtwdev->mutex);
+<<<<<<< HEAD
+=======
+	mutex_destroy(&rtwdev->coex.mutex);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_destroy(&rtwdev->hal.tx_power_mutex);
 }
 EXPORT_SYMBOL(rtw_core_deinit);

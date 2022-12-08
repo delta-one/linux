@@ -34,6 +34,10 @@
 #include "sh_css_legacy.h"
 
 #include "atomisp_csi2.h"
+<<<<<<< HEAD
+=======
+#include "atomisp_file.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "atomisp_subdev.h"
 #include "atomisp_tpg.h"
 #include "atomisp_compat.h"
@@ -85,12 +89,20 @@
 #define ATOM_ISP_POWER_DOWN	0
 #define ATOM_ISP_POWER_UP	1
 
+<<<<<<< HEAD
 #define ATOM_ISP_MAX_INPUTS	3
+=======
+#define ATOM_ISP_MAX_INPUTS	4
+>>>>>>> b7ba80a49124 (Commit)
 
 #define ATOMISP_SC_TYPE_SIZE	2
 
 #define ATOMISP_ISP_TIMEOUT_DURATION		(2 * HZ)
 #define ATOMISP_EXT_ISP_TIMEOUT_DURATION        (6 * HZ)
+<<<<<<< HEAD
+=======
+#define ATOMISP_ISP_FILE_TIMEOUT_DURATION	(60 * HZ)
+>>>>>>> b7ba80a49124 (Commit)
 #define ATOMISP_WDT_KEEP_CURRENT_DELAY          0
 #define ATOMISP_ISP_MAX_TIMEOUT_COUNT	2
 #define ATOMISP_CSS_STOP_TIMEOUT_US	200000
@@ -105,6 +117,12 @@
 #define ATOMISP_DELAYED_INIT_QUEUED	1
 #define ATOMISP_DELAYED_INIT_DONE	2
 
+<<<<<<< HEAD
+=======
+#define ATOMISP_CALC_CSS_PREV_OVERLAP(lines) \
+	((lines) * 38 / 100 & 0xfffffe)
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Define how fast CPU should be able to serve ISP interrupts.
  * The bigger the value, the higher risk that the ISP is not
@@ -127,7 +145,13 @@
  * Moorefield/Baytrail platform.
  */
 #define ATOMISP_SOC_CAMERA(asd)  \
+<<<<<<< HEAD
 	(asd->isp->inputs[asd->input_curr].type == SOC_CAMERA)
+=======
+	(asd->isp->inputs[asd->input_curr].type == SOC_CAMERA \
+	&& asd->isp->inputs[asd->input_curr].camera_caps-> \
+	   sensor[asd->sensor_curr].stream_num == 1)
+>>>>>>> b7ba80a49124 (Commit)
 
 #define ATOMISP_USE_YUVPP(asd)  \
 	(ATOMISP_SOC_CAMERA(asd) && ATOMISP_CSS_SUPPORT_YUVPP && \
@@ -160,6 +184,10 @@ struct atomisp_input_subdev {
 	 */
 	struct atomisp_sub_device *asd;
 
+<<<<<<< HEAD
+=======
+	const struct atomisp_camera_caps *camera_caps;
+>>>>>>> b7ba80a49124 (Commit)
 	int sensor_index;
 };
 
@@ -194,6 +222,15 @@ struct atomisp_regs {
 	u32 csi_access_viol;
 };
 
+<<<<<<< HEAD
+=======
+struct atomisp_sw_contex {
+	bool file_input;
+	int power_state;
+	int running_freq;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 #define ATOMISP_DEVICE_STREAMING_DISABLED	0
 #define ATOMISP_DEVICE_STREAMING_ENABLED	1
 #define ATOMISP_DEVICE_STREAMING_STOPPING	2
@@ -210,7 +247,10 @@ struct atomisp_device {
 	void __iomem *base;
 	const struct firmware *firmware;
 
+<<<<<<< HEAD
 	struct dev_pm_domain pm_domain;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct pm_qos_request pm_qos;
 	s32 max_isr_latency;
 
@@ -228,10 +268,31 @@ struct atomisp_device {
 
 	struct atomisp_mipi_csi2_device csi2_port[ATOMISP_CAMERA_NR_PORTS];
 	struct atomisp_tpg_device tpg;
+<<<<<<< HEAD
 
 	/* Purpose of mutex is to protect and serialize use of isp data
 	 * structures and css API calls. */
 	struct mutex mutex;
+=======
+	struct atomisp_file_device file_dev;
+
+	/* Purpose of mutex is to protect and serialize use of isp data
+	 * structures and css API calls. */
+	struct rt_mutex mutex;
+	/*
+	 * This mutex ensures that we don't allow an open to succeed while
+	 * the initialization process is incomplete
+	 */
+	struct rt_mutex loading;
+	/* Set once the ISP is ready to allow opens */
+	bool ready;
+	/*
+	 * Serialise streamoff: mutex is dropped during streamoff to
+	 * cancel the watchdog queue. MUST be acquired BEFORE
+	 * "mutex".
+	 */
+	struct mutex streamoff_mutex;
+>>>>>>> b7ba80a49124 (Commit)
 
 	unsigned int input_cnt;
 	struct atomisp_input_subdev inputs[ATOM_ISP_MAX_INPUTS];
@@ -239,21 +300,40 @@ struct atomisp_device {
 	struct v4l2_subdev *motor;
 
 	struct atomisp_regs saved_regs;
+<<<<<<< HEAD
+=======
+	struct atomisp_sw_contex sw_contex;
+>>>>>>> b7ba80a49124 (Commit)
 	struct atomisp_css_env css_env;
 
 	/* isp timeout status flag */
 	bool isp_timeout;
 	bool isp_fatal_error;
+<<<<<<< HEAD
 	struct work_struct assert_recovery_work;
 
 	spinlock_t lock; /* Protects asd[i].streaming */
+=======
+	struct workqueue_struct *wdt_work_queue;
+	struct work_struct wdt_work;
+
+	/* ISP2400 */
+	atomic_t wdt_count;
+
+	atomic_t wdt_work_queued;
+
+	spinlock_t lock; /* Just for streaming below */
+>>>>>>> b7ba80a49124 (Commit)
 
 	bool need_gfx_throttle;
 
 	unsigned int mipi_frame_size;
 	const struct atomisp_dfs_config *dfs;
 	unsigned int hpll_freq;
+<<<<<<< HEAD
 	unsigned int running_freq;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	bool css_initialized;
 };
@@ -263,4 +343,23 @@ struct atomisp_device {
 
 extern struct device *atomisp_dev;
 
+<<<<<<< HEAD
+=======
+#define atomisp_is_wdt_running(a) timer_pending(&(a)->wdt)
+
+/* ISP2401 */
+void atomisp_wdt_refresh_pipe(struct atomisp_video_pipe *pipe,
+			      unsigned int delay);
+void atomisp_wdt_refresh(struct atomisp_sub_device *asd, unsigned int delay);
+
+/* ISP2400 */
+void atomisp_wdt_start(struct atomisp_sub_device *asd);
+
+/* ISP2401 */
+void atomisp_wdt_start_pipe(struct atomisp_video_pipe *pipe);
+void atomisp_wdt_stop_pipe(struct atomisp_video_pipe *pipe, bool sync);
+
+void atomisp_wdt_stop(struct atomisp_sub_device *asd, bool sync);
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __ATOMISP_INTERNAL_H__ */

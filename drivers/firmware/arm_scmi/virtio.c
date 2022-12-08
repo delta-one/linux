@@ -148,6 +148,10 @@ static void scmi_vio_channel_cleanup_sync(struct scmi_vio_channel *vioch)
 {
 	unsigned long flags;
 	DECLARE_COMPLETION_ONSTACK(vioch_shutdown_done);
+<<<<<<< HEAD
+=======
+	void *deferred_wq = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Prepare to wait for the last release if not already released
@@ -160,11 +164,25 @@ static void scmi_vio_channel_cleanup_sync(struct scmi_vio_channel *vioch)
 	}
 
 	vioch->shutdown_done = &vioch_shutdown_done;
+<<<<<<< HEAD
 	if (!vioch->is_rx && vioch->deferred_tx_wq)
 		/* Cannot be kicked anymore after this...*/
 		vioch->deferred_tx_wq = NULL;
 	spin_unlock_irqrestore(&vioch->lock, flags);
 
+=======
+	virtio_break_device(vioch->vqueue->vdev);
+	if (!vioch->is_rx && vioch->deferred_tx_wq) {
+		deferred_wq = vioch->deferred_tx_wq;
+		/* Cannot be kicked anymore after this...*/
+		vioch->deferred_tx_wq = NULL;
+	}
+	spin_unlock_irqrestore(&vioch->lock, flags);
+
+	if (deferred_wq)
+		destroy_workqueue(deferred_wq);
+
+>>>>>>> b7ba80a49124 (Commit)
 	scmi_vio_channel_release(vioch);
 
 	/* Let any possibly concurrent RX path release the channel */
@@ -385,7 +403,11 @@ static int virtio_link_supplier(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static bool virtio_chan_available(struct device_node *of_node, int idx)
+=======
+static bool virtio_chan_available(struct device *dev, int idx)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct scmi_vio_channel *channels, *vioch = NULL;
 
@@ -409,11 +431,14 @@ static bool virtio_chan_available(struct device_node *of_node, int idx)
 	return vioch && !vioch->cinfo;
 }
 
+<<<<<<< HEAD
 static void scmi_destroy_tx_workqueue(void *deferred_tx_wq)
 {
 	destroy_workqueue(deferred_tx_wq);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int virtio_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
 			     bool tx)
 {
@@ -428,8 +453,11 @@ static int virtio_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
 
 	/* Setup a deferred worker for polling. */
 	if (tx && !vioch->deferred_tx_wq) {
+<<<<<<< HEAD
 		int ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		vioch->deferred_tx_wq =
 			alloc_workqueue(dev_name(&scmi_vdev->dev),
 					WQ_UNBOUND | WQ_FREEZABLE | WQ_SYSFS,
@@ -437,11 +465,14 @@ static int virtio_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
 		if (!vioch->deferred_tx_wq)
 			return -ENOMEM;
 
+<<<<<<< HEAD
 		ret = devm_add_action_or_reset(dev, scmi_destroy_tx_workqueue,
 					       vioch->deferred_tx_wq);
 		if (ret)
 			return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		INIT_WORK(&vioch->deferred_tx_work,
 			  scmi_vio_deferred_tx_worker);
 	}
@@ -449,12 +480,20 @@ static int virtio_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
 	for (i = 0; i < vioch->max_msg; i++) {
 		struct scmi_vio_msg *msg;
 
+<<<<<<< HEAD
 		msg = devm_kzalloc(dev, sizeof(*msg), GFP_KERNEL);
+=======
+		msg = devm_kzalloc(cinfo->dev, sizeof(*msg), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!msg)
 			return -ENOMEM;
 
 		if (tx) {
+<<<<<<< HEAD
 			msg->request = devm_kzalloc(dev,
+=======
+			msg->request = devm_kzalloc(cinfo->dev,
+>>>>>>> b7ba80a49124 (Commit)
 						    VIRTIO_SCMI_MAX_PDU_SIZE,
 						    GFP_KERNEL);
 			if (!msg->request)
@@ -463,7 +502,11 @@ static int virtio_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
 			refcount_set(&msg->users, 1);
 		}
 
+<<<<<<< HEAD
 		msg->input = devm_kzalloc(dev, VIRTIO_SCMI_MAX_PDU_SIZE,
+=======
+		msg->input = devm_kzalloc(cinfo->dev, VIRTIO_SCMI_MAX_PDU_SIZE,
+>>>>>>> b7ba80a49124 (Commit)
 					  GFP_KERNEL);
 		if (!msg->input)
 			return -ENOMEM;
@@ -481,6 +524,7 @@ static int virtio_chan_free(int id, void *p, void *data)
 	struct scmi_chan_info *cinfo = p;
 	struct scmi_vio_channel *vioch = cinfo->transport_info;
 
+<<<<<<< HEAD
 	/*
 	 * Break device to inhibit further traffic flowing while shutting down
 	 * the channels: doing it later holding vioch->lock creates unsafe
@@ -489,6 +533,12 @@ static int virtio_chan_free(int id, void *p, void *data)
 	virtio_break_device(vioch->vqueue->vdev);
 	scmi_vio_channel_cleanup_sync(vioch);
 
+=======
+	scmi_vio_channel_cleanup_sync(vioch);
+
+	scmi_free_channel(cinfo, data, id);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

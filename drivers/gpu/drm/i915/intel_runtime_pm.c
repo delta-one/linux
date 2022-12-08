@@ -591,6 +591,7 @@ void intel_runtime_pm_enable(struct intel_runtime_pm *rpm)
 		pm_runtime_use_autosuspend(kdev);
 	}
 
+<<<<<<< HEAD
 	/*
 	 *  FIXME: Temp hammer to keep autosupend disable on lmem supported platforms.
 	 *  As per PCIe specs 5.3.1.4.1, all iomem read write request over a PCIe
@@ -600,6 +601,10 @@ void intel_runtime_pm_enable(struct intel_runtime_pm *rpm)
 	 */
 	if (!IS_DGFX(i915))
 		pm_runtime_allow(kdev);
+=======
+	/* Enable by default */
+	pm_runtime_allow(kdev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * The core calls the driver load handler with an RPM reference held.
@@ -633,8 +638,11 @@ void intel_runtime_pm_driver_release(struct intel_runtime_pm *rpm)
 						     runtime_pm);
 	int count = atomic_read(&rpm->wakeref_count);
 
+<<<<<<< HEAD
 	intel_wakeref_auto_fini(&rpm->userfault_wakeref);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	drm_WARN(&i915->drm, count,
 		 "i915 raw-wakerefs=%d wakelocks=%d on cleanup\n",
 		 intel_rpm_raw_wakeref_count(count),
@@ -652,6 +660,7 @@ void intel_runtime_pm_init_early(struct intel_runtime_pm *rpm)
 
 	rpm->kdev = kdev;
 	rpm->available = HAS_RUNTIME_PM(i915);
+<<<<<<< HEAD
 	rpm->suspended = false;
 	atomic_set(&rpm->wakeref_count, 0);
 
@@ -659,4 +668,8 @@ void intel_runtime_pm_init_early(struct intel_runtime_pm *rpm)
 	INIT_LIST_HEAD(&rpm->lmem_userfault_list);
 	spin_lock_init(&rpm->lmem_userfault_lock);
 	intel_wakeref_auto_init(&rpm->userfault_wakeref, rpm);
+=======
+
+	init_intel_runtime_pm_wakeref(rpm);
+>>>>>>> b7ba80a49124 (Commit)
 }

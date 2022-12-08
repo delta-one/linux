@@ -18,7 +18,10 @@
 #include <linux/delay.h>
 #include <linux/device.h>
 #include <linux/gpio.h>
+<<<<<<< HEAD
 #include <linux/gpio/consumer.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/gpio/machine.h>
 #include <linux/i2c.h>
 #include <linux/init.h>
@@ -412,16 +415,28 @@ static int __init ap325rxa_devices_setup(void)
 	/* LD3 and LD4 LEDs */
 	gpio_request(GPIO_PTX5, NULL); /* RUN */
 	gpio_direction_output(GPIO_PTX5, 1);
+<<<<<<< HEAD
 	gpiod_export(gpio_to_desc(GPIO_PTX5), 0);
 
 	gpio_request(GPIO_PTX4, NULL); /* INDICATOR */
 	gpio_direction_output(GPIO_PTX4, 0);
 	gpiod_export(gpio_to_desc(GPIO_PTX4), 0);
+=======
+	gpio_export(GPIO_PTX5, 0);
+
+	gpio_request(GPIO_PTX4, NULL); /* INDICATOR */
+	gpio_direction_output(GPIO_PTX4, 0);
+	gpio_export(GPIO_PTX4, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* SW1 input */
 	gpio_request(GPIO_PTF7, NULL); /* MODE */
 	gpio_direction_input(GPIO_PTF7);
+<<<<<<< HEAD
 	gpiod_export(gpio_to_desc(GPIO_PTF7), 0);
+=======
+	gpio_export(GPIO_PTF7, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* LCDC */
 	gpio_request(GPIO_FN_LCDD15, NULL);

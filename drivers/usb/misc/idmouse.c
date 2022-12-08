@@ -177,6 +177,13 @@ static int idmouse_create_image(struct usb_idmouse *dev)
 		bytes_read += bulk_read;
 	}
 
+<<<<<<< HEAD
+=======
+	/* reset the device */
+reset:
+	ftip_command(dev, FTIP_RELEASE, 0, 0);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* check for valid image */
 	/* right border should be black (0x00) */
 	for (bytes_read = sizeof(HEADER)-1 + WIDTH-1; bytes_read < IMGSIZE; bytes_read += WIDTH)
@@ -188,10 +195,13 @@ static int idmouse_create_image(struct usb_idmouse *dev)
 		if (dev->bulk_in_buffer[bytes_read] != 0xFF)
 			return -EAGAIN;
 
+<<<<<<< HEAD
 	/* reset the device */
 reset:
 	ftip_command(dev, FTIP_RELEASE, 0, 0);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* should be IMGSIZE == 65040 */
 	dev_dbg(&dev->interface->dev, "read %d bytes fingerprint data\n",
 		bytes_read);

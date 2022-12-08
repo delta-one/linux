@@ -276,6 +276,7 @@ static const struct sof_topology_token acpdmic_tokens[] = {
 		offsetof(struct sof_ipc_dai_acpdmic_params, pdm_ch)},
 };
 
+<<<<<<< HEAD
 /* ACPI2S */
 static const struct sof_topology_token acpi2s_tokens[] = {
 	{SOF_TKN_AMD_ACPI2S_RATE, SND_SOC_TPLG_TUPLE_TYPE_WORD, get_token_u32,
@@ -286,6 +287,8 @@ static const struct sof_topology_token acpi2s_tokens[] = {
 		offsetof(struct sof_ipc_dai_acp_params, tdm_mode)},
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Core tokens */
 static const struct sof_topology_token core_tokens[] = {
 	{SOF_TKN_COMP_CORE_ID, SND_SOC_TPLG_TUPLE_TYPE_WORD, get_token_u32,
@@ -321,7 +324,10 @@ static const struct sof_token_info ipc3_token_list[SOF_TOKEN_COUNT] = {
 	[SOF_SAI_TOKENS] = {"SAI tokens", sai_tokens, ARRAY_SIZE(sai_tokens)},
 	[SOF_AFE_TOKENS] = {"AFE tokens", afe_tokens, ARRAY_SIZE(afe_tokens)},
 	[SOF_ACPDMIC_TOKENS] = {"ACPDMIC tokens", acpdmic_tokens, ARRAY_SIZE(acpdmic_tokens)},
+<<<<<<< HEAD
 	[SOF_ACPI2S_TOKENS]   = {"ACPI2S tokens", acpi2s_tokens, ARRAY_SIZE(acpi2s_tokens)},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -1204,7 +1210,10 @@ static int sof_link_acp_sp_load(struct snd_soc_component *scomp, struct snd_sof_
 	struct snd_soc_tplg_hw_config *hw_config = slink->hw_configs;
 	struct sof_dai_private_data *private = dai->private;
 	u32 size = sizeof(*config);
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* handle master/slave and inverted clocks */
 	sof_dai_set_format(hw_config, config);
@@ -1213,6 +1222,7 @@ static int sof_link_acp_sp_load(struct snd_soc_component *scomp, struct snd_sof_
 	memset(&config->acpsp, 0, sizeof(config->acpsp));
 	config->hdr.size = size;
 
+<<<<<<< HEAD
 	ret = sof_update_ipc_object(scomp, &config->acpsp, SOF_ACPI2S_TOKENS, slink->tuples,
 				    slink->num_tuples, size, slink->num_hw_configs);
 	if (ret < 0)
@@ -1222,6 +1232,14 @@ static int sof_link_acp_sp_load(struct snd_soc_component *scomp, struct snd_sof_
 	dev_info(scomp->dev, "ACP_SP config ACP%d channel %d rate %d tdm_mode %d\n",
 		 config->dai_index, config->acpsp.tdm_slots,
 		 config->acpsp.fsync_rate, config->acpsp.tdm_mode);
+=======
+	config->acpsp.fsync_rate = le32_to_cpu(hw_config->fsync_rate);
+	config->acpsp.tdm_slots = le32_to_cpu(hw_config->tdm_slots);
+
+	dev_info(scomp->dev, "ACP_SP config ACP%d channel %d rate %d\n",
+		 config->dai_index, config->acpsp.tdm_slots,
+		 config->acpsp.fsync_rate);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dai->number_configs = 1;
 	dai->current_config = 0;
@@ -1238,7 +1256,10 @@ static int sof_link_acp_hs_load(struct snd_soc_component *scomp, struct snd_sof_
 	struct snd_soc_tplg_hw_config *hw_config = slink->hw_configs;
 	struct sof_dai_private_data *private = dai->private;
 	u32 size = sizeof(*config);
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Configures the DAI hardware format and inverted clocks */
 	sof_dai_set_format(hw_config, config);
@@ -1247,6 +1268,7 @@ static int sof_link_acp_hs_load(struct snd_soc_component *scomp, struct snd_sof_
 	memset(&config->acphs, 0, sizeof(config->acphs));
 	config->hdr.size = size;
 
+<<<<<<< HEAD
 	ret = sof_update_ipc_object(scomp, &config->acphs, SOF_ACPI2S_TOKENS, slink->tuples,
 				    slink->num_tuples, size, slink->num_hw_configs);
 	if (ret < 0)
@@ -1255,6 +1277,14 @@ static int sof_link_acp_hs_load(struct snd_soc_component *scomp, struct snd_sof_
 	dev_info(scomp->dev, "ACP_HS config ACP%d channel %d rate %d tdm_mode %d\n",
 		 config->dai_index, config->acphs.tdm_slots,
 		 config->acphs.fsync_rate, config->acphs.tdm_mode);
+=======
+	config->acphs.fsync_rate = le32_to_cpu(hw_config->fsync_rate);
+	config->acphs.tdm_slots = le32_to_cpu(hw_config->tdm_slots);
+
+	dev_info(scomp->dev, "ACP_HS config ACP%d channel %d rate %d\n",
+		 config->dai_index, config->acphs.tdm_slots,
+		 config->acphs.fsync_rate);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dai->number_configs = 1;
 	dai->current_config = 0;
@@ -1563,11 +1593,17 @@ static int sof_ipc3_widget_setup_comp_dai(struct snd_sof_widget *swidget)
 			ret = sof_link_acp_bt_load(scomp, slink, config, dai);
 			break;
 		case SOF_DAI_AMD_SP:
+<<<<<<< HEAD
 		case SOF_DAI_AMD_SP_VIRTUAL:
 			ret = sof_link_acp_sp_load(scomp, slink, config, dai);
 			break;
 		case SOF_DAI_AMD_HS:
 		case SOF_DAI_AMD_HS_VIRTUAL:
+=======
+			ret = sof_link_acp_sp_load(scomp, slink, config, dai);
+			break;
+		case SOF_DAI_AMD_HS:
+>>>>>>> b7ba80a49124 (Commit)
 			ret = sof_link_acp_hs_load(scomp, slink, config, dai);
 			break;
 		case SOF_DAI_AMD_DMIC:
@@ -1651,7 +1687,10 @@ static int sof_ipc3_route_setup(struct snd_sof_dev *sdev, struct snd_sof_route *
 static int sof_ipc3_control_load_bytes(struct snd_sof_dev *sdev, struct snd_sof_control *scontrol)
 {
 	struct sof_ipc_ctrl_data *cdata;
+<<<<<<< HEAD
 	size_t priv_size_check;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	if (scontrol->max_size < (sizeof(*cdata) + sizeof(struct sof_abi_hdr))) {
@@ -1695,10 +1734,15 @@ static int sof_ipc3_control_load_bytes(struct snd_sof_dev *sdev, struct snd_sof_
 			goto err;
 		}
 
+<<<<<<< HEAD
 		priv_size_check = cdata->data->size + sizeof(struct sof_abi_hdr);
 		if (priv_size_check != scontrol->priv_size) {
 			dev_err(sdev->dev, "Conflict in bytes (%zu) vs. priv size (%zu).\n",
 				priv_size_check, scontrol->priv_size);
+=======
+		if (cdata->data->size + sizeof(struct sof_abi_hdr) != scontrol->priv_size) {
+			dev_err(sdev->dev, "Conflict in bytes vs. priv size.\n");
+>>>>>>> b7ba80a49124 (Commit)
 			ret = -EINVAL;
 			goto err;
 		}
@@ -2081,9 +2125,13 @@ static int sof_ipc3_dai_config(struct snd_sof_dev *sdev, struct snd_sof_widget *
 		break;
 	case SOF_DAI_INTEL_ALH:
 		if (data) {
+<<<<<<< HEAD
 			/* save the dai_index during hw_params and reuse it for hw_free */
 			if (flags & SOF_DAI_CONFIG_FLAGS_HW_PARAMS)
 				config->dai_index = data->dai_index;
+=======
+			config->dai_index = data->dai_index;
+>>>>>>> b7ba80a49124 (Commit)
 			config->alh.stream_id = data->dai_data;
 		}
 		break;
@@ -2091,6 +2139,7 @@ static int sof_ipc3_dai_config(struct snd_sof_dev *sdev, struct snd_sof_widget *
 		break;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * The dai_config op is invoked several times and the flags argument varies as below:
 	 * BE DAI hw_params: When the op is invoked during the BE DAI hw_params, flags contains
@@ -2115,6 +2164,9 @@ static int sof_ipc3_dai_config(struct snd_sof_dev *sdev, struct snd_sof_widget *
 		config->flags |= flags;
 	else
 		config->flags = flags;
+=======
+	config->flags = flags;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* only send the IPC if the widget is set up in the DSP */
 	if (swidget->use_count > 0) {
@@ -2122,9 +2174,12 @@ static int sof_ipc3_dai_config(struct snd_sof_dev *sdev, struct snd_sof_widget *
 					 &reply, sizeof(reply));
 		if (ret < 0)
 			dev_err(sdev->dev, "Failed to set dai config for %s\n", dai->name);
+<<<<<<< HEAD
 
 		/* clear the flags once the IPC has been sent even if it fails */
 		config->flags = SOF_DAI_CONFIG_FLAGS_NONE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return ret;
@@ -2261,9 +2316,15 @@ static int sof_ipc3_set_up_all_pipelines(struct snd_sof_dev *sdev, bool verify)
 					return ret;
 			}
 
+<<<<<<< HEAD
 			swidget->spipe->complete = sof_ipc3_complete_pipeline(sdev, swidget);
 			if (swidget->spipe->complete < 0)
 				return swidget->spipe->complete;
+=======
+			swidget->complete = sof_ipc3_complete_pipeline(sdev, swidget);
+			if (swidget->complete < 0)
+				return swidget->complete;
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		default:
 			break;
@@ -2292,7 +2353,11 @@ static int sof_tear_down_left_over_pipelines(struct snd_sof_dev *sdev)
 		for_each_pcm_streams(dir) {
 			struct snd_pcm_substream *substream = spcm->stream[dir].substream;
 
+<<<<<<< HEAD
 			if (!substream || !substream->runtime || spcm->stream[dir].suspend_ignored)
+=======
+			if (!substream || !substream->runtime)
+>>>>>>> b7ba80a49124 (Commit)
 				continue;
 
 			if (spcm->stream[dir].list) {
@@ -2326,7 +2391,10 @@ static int sof_ipc3_tear_down_all_pipelines(struct snd_sof_dev *sdev, bool verif
 	struct sof_ipc_fw_version *v = &sdev->fw_ready.version;
 	struct snd_sof_widget *swidget;
 	struct snd_sof_route *sroute;
+<<<<<<< HEAD
 	bool dyn_widgets = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	/*
@@ -2336,6 +2404,7 @@ static int sof_ipc3_tear_down_all_pipelines(struct snd_sof_dev *sdev, bool verif
 	 * topology loading the sound card unavailable to open PCMs.
 	 */
 	list_for_each_entry(swidget, &sdev->widget_list, list) {
+<<<<<<< HEAD
 		if (swidget->dynamic_pipeline_widget) {
 			dyn_widgets = true;
 			continue;
@@ -2349,6 +2418,16 @@ static int sof_ipc3_tear_down_all_pipelines(struct snd_sof_dev *sdev, bool verif
 			mutex_unlock(&swidget->setup_mutex);
 			if (swidget->spipe)
 				swidget->spipe->complete = 0;
+=======
+		if (swidget->dynamic_pipeline_widget)
+			continue;
+
+		/* Do not free widgets for static pipelines with FW ABI older than 3.19 */
+		if (!verify && !swidget->dynamic_pipeline_widget &&
+		    v->abi_version < SOF_ABI_VER(3, 19, 0)) {
+			swidget->use_count = 0;
+			swidget->complete = 0;
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		}
 
@@ -2360,11 +2439,17 @@ static int sof_ipc3_tear_down_all_pipelines(struct snd_sof_dev *sdev, bool verif
 	/*
 	 * Tear down all pipelines associated with PCMs that did not get suspended
 	 * and unset the prepare flag so that they can be set up again during resume.
+<<<<<<< HEAD
 	 * Skip this step for older firmware unless topology has any
 	 * dynamic pipeline (in which case the step is mandatory).
 	 */
 	if (!verify && (dyn_widgets || SOF_FW_VER(v->major, v->minor, v->micro) >=
 	    SOF_FW_VER(2, 2, 0))) {
+=======
+	 * Skip this step for older firmware.
+	 */
+	if (!verify && v->abi_version >= SOF_ABI_VER(3, 19, 0)) {
+>>>>>>> b7ba80a49124 (Commit)
 		ret = sof_tear_down_left_over_pipelines(sdev);
 		if (ret < 0) {
 			dev_err(sdev->dev, "failed to tear down paused pipelines\n");
@@ -2457,6 +2542,7 @@ static int sof_ipc3_parse_manifest(struct snd_soc_component *scomp, int index,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int sof_ipc3_link_setup(struct snd_sof_dev *sdev, struct snd_soc_dai_link *link)
 {
 	if (link->no_pcm)
@@ -2475,6 +2561,8 @@ static int sof_ipc3_link_setup(struct snd_sof_dev *sdev, struct snd_soc_dai_link
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* token list for each topology object */
 static enum sof_tokens host_token_list[] = {
 	SOF_CORE_TOKENS,
@@ -2586,5 +2674,8 @@ const struct sof_ipc_tplg_ops ipc3_tplg_ops = {
 	.set_up_all_pipelines = sof_ipc3_set_up_all_pipelines,
 	.tear_down_all_pipelines = sof_ipc3_tear_down_all_pipelines,
 	.parse_manifest = sof_ipc3_parse_manifest,
+<<<<<<< HEAD
 	.link_setup = sof_ipc3_link_setup,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };

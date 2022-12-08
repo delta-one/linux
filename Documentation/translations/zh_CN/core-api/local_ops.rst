@@ -185,7 +185,11 @@ UP之间没有不同的行为，在你的架构的 ``local.h`` 中包括 ``asm-g
 
     static void __exit test_exit(void)
     {
+<<<<<<< HEAD
             timer_shutdown_sync(&test_timer);
+=======
+            del_timer_sync(&test_timer);
+>>>>>>> b7ba80a49124 (Commit)
     }
 
     module_init(test_init);

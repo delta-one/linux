@@ -79,8 +79,13 @@ static const struct v3d_reg_def v3d_csd_reg_defs[] = {
 
 static int v3d_v3d_debugfs_regs(struct seq_file *m, void *unused)
 {
+<<<<<<< HEAD
 	struct drm_debugfs_entry *entry = m->private;
 	struct drm_device *dev = entry->dev;
+=======
+	struct drm_info_node *node = (struct drm_info_node *)m->private;
+	struct drm_device *dev = node->minor->dev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct v3d_dev *v3d = to_v3d_dev(dev);
 	int i, core;
 
@@ -126,8 +131,13 @@ static int v3d_v3d_debugfs_regs(struct seq_file *m, void *unused)
 
 static int v3d_v3d_debugfs_ident(struct seq_file *m, void *unused)
 {
+<<<<<<< HEAD
 	struct drm_debugfs_entry *entry = m->private;
 	struct drm_device *dev = entry->dev;
+=======
+	struct drm_info_node *node = (struct drm_info_node *)m->private;
+	struct drm_device *dev = node->minor->dev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct v3d_dev *v3d = to_v3d_dev(dev);
 	u32 ident0, ident1, ident2, ident3, cores;
 	int core;
@@ -188,8 +198,13 @@ static int v3d_v3d_debugfs_ident(struct seq_file *m, void *unused)
 
 static int v3d_debugfs_bo_stats(struct seq_file *m, void *unused)
 {
+<<<<<<< HEAD
 	struct drm_debugfs_entry *entry = m->private;
 	struct drm_device *dev = entry->dev;
+=======
+	struct drm_info_node *node = (struct drm_info_node *)m->private;
+	struct drm_device *dev = node->minor->dev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct v3d_dev *v3d = to_v3d_dev(dev);
 
 	mutex_lock(&v3d->bo_lock);
@@ -204,8 +219,13 @@ static int v3d_debugfs_bo_stats(struct seq_file *m, void *unused)
 
 static int v3d_measure_clock(struct seq_file *m, void *unused)
 {
+<<<<<<< HEAD
 	struct drm_debugfs_entry *entry = m->private;
 	struct drm_device *dev = entry->dev;
+=======
+	struct drm_info_node *node = (struct drm_info_node *)m->private;
+	struct drm_device *dev = node->minor->dev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct v3d_dev *v3d = to_v3d_dev(dev);
 	uint32_t cycles;
 	int core = 0;
@@ -236,7 +256,11 @@ static int v3d_measure_clock(struct seq_file *m, void *unused)
 	return 0;
 }
 
+<<<<<<< HEAD
 static const struct drm_debugfs_info v3d_debugfs_list[] = {
+=======
+static const struct drm_info_list v3d_debugfs_list[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{"v3d_ident", v3d_v3d_debugfs_ident, 0},
 	{"v3d_regs", v3d_v3d_debugfs_regs, 0},
 	{"measure_clock", v3d_measure_clock, 0},
@@ -246,5 +270,11 @@ static const struct drm_debugfs_info v3d_debugfs_list[] = {
 void
 v3d_debugfs_init(struct drm_minor *minor)
 {
+<<<<<<< HEAD
 	drm_debugfs_add_files(minor->dev, v3d_debugfs_list, ARRAY_SIZE(v3d_debugfs_list));
+=======
+	drm_debugfs_create_files(v3d_debugfs_list,
+				 ARRAY_SIZE(v3d_debugfs_list),
+				 minor->debugfs_root, minor);
+>>>>>>> b7ba80a49124 (Commit)
 }

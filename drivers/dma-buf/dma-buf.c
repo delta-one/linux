@@ -15,7 +15,10 @@
 #include <linux/slab.h>
 #include <linux/dma-buf.h>
 #include <linux/dma-fence.h>
+<<<<<<< HEAD
 #include <linux/dma-fence-unwrap.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/anon_inodes.h>
 #include <linux/export.h>
 #include <linux/debugfs.h>
@@ -95,11 +98,18 @@ static int dma_buf_file_release(struct inode *inode, struct file *file)
 		return -EINVAL;
 
 	dmabuf = file->private_data;
+<<<<<<< HEAD
 	if (dmabuf) {
 		mutex_lock(&db_list.lock);
 		list_del(&dmabuf->list_node);
 		mutex_unlock(&db_list.lock);
 	}
+=======
+
+	mutex_lock(&db_list.lock);
+	list_del(&dmabuf->list_node);
+	mutex_unlock(&db_list.lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -131,7 +141,10 @@ static struct file_system_type dma_buf_fs_type = {
 static int dma_buf_mmap_internal(struct file *file, struct vm_area_struct *vma)
 {
 	struct dma_buf *dmabuf;
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!is_dma_buf_file(file))
 		return -EINVAL;
@@ -147,11 +160,15 @@ static int dma_buf_mmap_internal(struct file *file, struct vm_area_struct *vma)
 	    dmabuf->size >> PAGE_SHIFT)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	dma_resv_lock(dmabuf->resv, NULL);
 	ret = dmabuf->ops->mmap(dmabuf, vma);
 	dma_resv_unlock(dmabuf->resv);
 
 	return ret;
+=======
+	return dmabuf->ops->mmap(dmabuf, vma);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static loff_t dma_buf_llseek(struct file *file, loff_t offset, int whence)
@@ -398,10 +415,15 @@ static long dma_buf_import_sync_file(struct dma_buf *dmabuf,
 				     const void __user *user_data)
 {
 	struct dma_buf_import_sync_file arg;
+<<<<<<< HEAD
 	struct dma_fence *fence, *f;
 	enum dma_resv_usage usage;
 	struct dma_fence_unwrap iter;
 	unsigned int num_fences;
+=======
+	struct dma_fence *fence;
+	enum dma_resv_usage usage;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = 0;
 
 	if (copy_from_user(&arg, user_data, sizeof(arg)))
@@ -420,6 +442,7 @@ static long dma_buf_import_sync_file(struct dma_buf *dmabuf,
 	usage = (arg.flags & DMA_BUF_SYNC_WRITE) ? DMA_RESV_USAGE_WRITE :
 						   DMA_RESV_USAGE_READ;
 
+<<<<<<< HEAD
 	num_fences = 0;
 	dma_fence_unwrap_for_each(f, &iter, fence)
 		++num_fences;
@@ -435,6 +458,15 @@ static long dma_buf_import_sync_file(struct dma_buf *dmabuf,
 
 		dma_resv_unlock(dmabuf->resv);
 	}
+=======
+	dma_resv_lock(dmabuf->resv, NULL);
+
+	ret = dma_resv_reserve_fences(dmabuf->resv, 1);
+	if (!ret)
+		dma_resv_add_fence(dmabuf->resv, fence, usage);
+
+	dma_resv_unlock(dmabuf->resv);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dma_fence_put(fence);
 
@@ -529,17 +561,30 @@ static inline int is_dma_buf_file(struct file *file)
 	return file->f_op == &dma_buf_fops;
 }
 
+<<<<<<< HEAD
 static struct file *dma_buf_getfile(size_t size, int flags)
 {
 	static atomic64_t dmabuf_inode = ATOMIC64_INIT(0);
 	struct inode *inode = alloc_anon_inode(dma_buf_mnt->mnt_sb);
 	struct file *file;
+=======
+static struct file *dma_buf_getfile(struct dma_buf *dmabuf, int flags)
+{
+	static atomic64_t dmabuf_inode = ATOMIC64_INIT(0);
+	struct file *file;
+	struct inode *inode = alloc_anon_inode(dma_buf_mnt->mnt_sb);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (IS_ERR(inode))
 		return ERR_CAST(inode);
 
+<<<<<<< HEAD
 	inode->i_size = size;
 	inode_set_bytes(inode, size);
+=======
+	inode->i_size = dmabuf->size;
+	inode_set_bytes(inode, dmabuf->size);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * The ->i_ino acquired from get_next_ino() is not unique thus
@@ -553,6 +598,11 @@ static struct file *dma_buf_getfile(size_t size, int flags)
 				 flags, &dma_buf_fops);
 	if (IS_ERR(file))
 		goto err_alloc_file;
+<<<<<<< HEAD
+=======
+	file->private_data = dmabuf;
+	file->f_path.dentry->d_fsdata = dmabuf;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return file;
 
@@ -618,11 +668,27 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
 	size_t alloc_size = sizeof(struct dma_buf);
 	int ret;
 
+<<<<<<< HEAD
 	if (WARN_ON(!exp_info->priv || !exp_info->ops
 		    || !exp_info->ops->map_dma_buf
 		    || !exp_info->ops->unmap_dma_buf
 		    || !exp_info->ops->release))
 		return ERR_PTR(-EINVAL);
+=======
+	if (!exp_info->resv)
+		alloc_size += sizeof(struct dma_resv);
+	else
+		/* prevent &dma_buf[1] == dma_buf->resv */
+		alloc_size += 1;
+
+	if (WARN_ON(!exp_info->priv
+			  || !exp_info->ops
+			  || !exp_info->ops->map_dma_buf
+			  || !exp_info->ops->unmap_dma_buf
+			  || !exp_info->ops->release)) {
+		return ERR_PTR(-EINVAL);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (WARN_ON(exp_info->ops->cache_sgt_mapping &&
 		    (exp_info->ops->pin || exp_info->ops->unpin)))
@@ -634,6 +700,7 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
 	if (!try_module_get(exp_info->owner))
 		return ERR_PTR(-ENOENT);
 
+<<<<<<< HEAD
 	file = dma_buf_getfile(exp_info->size, exp_info->flags);
 	if (IS_ERR(file)) {
 		ret = PTR_ERR(file);
@@ -649,6 +716,12 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
 	if (!dmabuf) {
 		ret = -ENOMEM;
 		goto err_file;
+=======
+	dmabuf = kzalloc(alloc_size, GFP_KERNEL);
+	if (!dmabuf) {
+		ret = -ENOMEM;
+		goto err_module;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	dmabuf->priv = exp_info->priv;
@@ -660,6 +733,7 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
 	init_waitqueue_head(&dmabuf->poll);
 	dmabuf->cb_in.poll = dmabuf->cb_out.poll = &dmabuf->poll;
 	dmabuf->cb_in.active = dmabuf->cb_out.active = 0;
+<<<<<<< HEAD
 	INIT_LIST_HEAD(&dmabuf->attachments);
 
 	if (!resv) {
@@ -677,10 +751,31 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
 	file->f_path.dentry->d_fsdata = dmabuf;
 	dmabuf->file = file;
 
+=======
+
+	if (!resv) {
+		resv = (struct dma_resv *)&dmabuf[1];
+		dma_resv_init(resv);
+	}
+	dmabuf->resv = resv;
+
+	file = dma_buf_getfile(dmabuf, exp_info->flags);
+	if (IS_ERR(file)) {
+		ret = PTR_ERR(file);
+		goto err_dmabuf;
+	}
+
+	dmabuf->file = file;
+
+	mutex_init(&dmabuf->lock);
+	INIT_LIST_HEAD(&dmabuf->attachments);
+
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&db_list.lock);
 	list_add(&dmabuf->list_node, &db_list.head);
 	mutex_unlock(&db_list.lock);
 
+<<<<<<< HEAD
 	return dmabuf;
 
 err_dmabuf:
@@ -689,6 +784,24 @@ err_dmabuf:
 	kfree(dmabuf);
 err_file:
 	fput(file);
+=======
+	ret = dma_buf_stats_setup(dmabuf);
+	if (ret)
+		goto err_sysfs;
+
+	return dmabuf;
+
+err_sysfs:
+	/*
+	 * Set file->f_path.dentry->d_fsdata to NULL so that when
+	 * dma_buf_release() gets invoked by dentry_ops, it exits
+	 * early before calling the release() dma_buf op.
+	 */
+	file->f_path.dentry->d_fsdata = NULL;
+	fput(file);
+err_dmabuf:
+	kfree(dmabuf);
+>>>>>>> b7ba80a49124 (Commit)
 err_module:
 	module_put(exp_info->owner);
 	return ERR_PTR(ret);
@@ -805,6 +918,7 @@ static struct sg_table * __map_dma_buf(struct dma_buf_attachment *attach,
 }
 
 /**
+<<<<<<< HEAD
  * DOC: locking convention
  *
  * In order to avoid deadlock situations between dma-buf exports and importers,
@@ -869,6 +983,8 @@ static struct sg_table * __map_dma_buf(struct dma_buf_attachment *attach,
  */
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * dma_buf_dynamic_attach - Add the device to dma_buf's attachments list
  * @dmabuf:		[in]	buffer to attach device to.
  * @dev:		[in]	device to be attached.
@@ -932,8 +1048,13 @@ dma_buf_dynamic_attach(struct dma_buf *dmabuf, struct device *dev,
 	    dma_buf_is_dynamic(dmabuf)) {
 		struct sg_table *sgt;
 
+<<<<<<< HEAD
 		dma_resv_lock(attach->dmabuf->resv, NULL);
 		if (dma_buf_is_dynamic(attach->dmabuf)) {
+=======
+		if (dma_buf_is_dynamic(attach->dmabuf)) {
+			dma_resv_lock(attach->dmabuf->resv, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 			ret = dmabuf->ops->pin(attach);
 			if (ret)
 				goto err_unlock;
@@ -946,7 +1067,12 @@ dma_buf_dynamic_attach(struct dma_buf *dmabuf, struct device *dev,
 			ret = PTR_ERR(sgt);
 			goto err_unpin;
 		}
+<<<<<<< HEAD
 		dma_resv_unlock(attach->dmabuf->resv);
+=======
+		if (dma_buf_is_dynamic(attach->dmabuf))
+			dma_resv_unlock(attach->dmabuf->resv);
+>>>>>>> b7ba80a49124 (Commit)
 		attach->sgt = sgt;
 		attach->dir = DMA_BIDIRECTIONAL;
 	}
@@ -962,7 +1088,12 @@ err_unpin:
 		dmabuf->ops->unpin(attach);
 
 err_unlock:
+<<<<<<< HEAD
 	dma_resv_unlock(attach->dmabuf->resv);
+=======
+	if (dma_buf_is_dynamic(attach->dmabuf))
+		dma_resv_unlock(attach->dmabuf->resv);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dma_buf_detach(dmabuf, attach);
 	return ERR_PTR(ret);
@@ -1005,6 +1136,7 @@ static void __unmap_dma_buf(struct dma_buf_attachment *attach,
  */
 void dma_buf_detach(struct dma_buf *dmabuf, struct dma_buf_attachment *attach)
 {
+<<<<<<< HEAD
 	if (WARN_ON(!dmabuf || !attach || dmabuf != attach->dmabuf))
 		return;
 
@@ -1021,6 +1153,26 @@ void dma_buf_detach(struct dma_buf *dmabuf, struct dma_buf_attachment *attach)
 
 	dma_resv_unlock(dmabuf->resv);
 
+=======
+	if (WARN_ON(!dmabuf || !attach))
+		return;
+
+	if (attach->sgt) {
+		if (dma_buf_is_dynamic(attach->dmabuf))
+			dma_resv_lock(attach->dmabuf->resv, NULL);
+
+		__unmap_dma_buf(attach, attach->sgt, attach->dir);
+
+		if (dma_buf_is_dynamic(attach->dmabuf)) {
+			dmabuf->ops->unpin(attach);
+			dma_resv_unlock(attach->dmabuf->resv);
+		}
+	}
+
+	dma_resv_lock(dmabuf->resv, NULL);
+	list_del(&attach->node);
+	dma_resv_unlock(dmabuf->resv);
+>>>>>>> b7ba80a49124 (Commit)
 	if (dmabuf->ops->detach)
 		dmabuf->ops->detach(dmabuf, attach);
 
@@ -1111,7 +1263,12 @@ struct sg_table *dma_buf_map_attachment(struct dma_buf_attachment *attach,
 	if (WARN_ON(!attach || !attach->dmabuf))
 		return ERR_PTR(-EINVAL);
 
+<<<<<<< HEAD
 	dma_resv_assert_held(attach->dmabuf->resv);
+=======
+	if (dma_buf_attachment_is_dynamic(attach))
+		dma_resv_assert_held(attach->dmabuf->resv);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (attach->sgt) {
 		/*
@@ -1126,6 +1283,10 @@ struct sg_table *dma_buf_map_attachment(struct dma_buf_attachment *attach,
 	}
 
 	if (dma_buf_is_dynamic(attach->dmabuf)) {
+<<<<<<< HEAD
+=======
+		dma_resv_assert_held(attach->dmabuf->resv);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!IS_ENABLED(CONFIG_DMABUF_MOVE_NOTIFY)) {
 			r = attach->dmabuf->ops->pin(attach);
 			if (r)
@@ -1168,6 +1329,7 @@ struct sg_table *dma_buf_map_attachment(struct dma_buf_attachment *attach,
 EXPORT_SYMBOL_NS_GPL(dma_buf_map_attachment, DMA_BUF);
 
 /**
+<<<<<<< HEAD
  * dma_buf_map_attachment_unlocked - Returns the scatterlist table of the attachment;
  * mapped into _device_ address space. Is a wrapper for map_dma_buf() of the
  * dma_buf_ops.
@@ -1196,6 +1358,8 @@ dma_buf_map_attachment_unlocked(struct dma_buf_attachment *attach,
 EXPORT_SYMBOL_NS_GPL(dma_buf_map_attachment_unlocked, DMA_BUF);
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * dma_buf_unmap_attachment - unmaps and decreases usecount of the buffer;might
  * deallocate the scatterlist associated. Is a wrapper for unmap_dma_buf() of
  * dma_buf_ops.
@@ -1214,11 +1378,22 @@ void dma_buf_unmap_attachment(struct dma_buf_attachment *attach,
 	if (WARN_ON(!attach || !attach->dmabuf || !sg_table))
 		return;
 
+<<<<<<< HEAD
 	dma_resv_assert_held(attach->dmabuf->resv);
+=======
+	if (dma_buf_attachment_is_dynamic(attach))
+		dma_resv_assert_held(attach->dmabuf->resv);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (attach->sgt == sg_table)
 		return;
 
+<<<<<<< HEAD
+=======
+	if (dma_buf_is_dynamic(attach->dmabuf))
+		dma_resv_assert_held(attach->dmabuf->resv);
+
+>>>>>>> b7ba80a49124 (Commit)
 	__unmap_dma_buf(attach, sg_table, direction);
 
 	if (dma_buf_is_dynamic(attach->dmabuf) &&
@@ -1228,6 +1403,7 @@ void dma_buf_unmap_attachment(struct dma_buf_attachment *attach,
 EXPORT_SYMBOL_NS_GPL(dma_buf_unmap_attachment, DMA_BUF);
 
 /**
+<<<<<<< HEAD
  * dma_buf_unmap_attachment_unlocked - unmaps and decreases usecount of the buffer;might
  * deallocate the scatterlist associated. Is a wrapper for unmap_dma_buf() of
  * dma_buf_ops.
@@ -1253,11 +1429,17 @@ void dma_buf_unmap_attachment_unlocked(struct dma_buf_attachment *attach,
 EXPORT_SYMBOL_NS_GPL(dma_buf_unmap_attachment_unlocked, DMA_BUF);
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * dma_buf_move_notify - notify attachments that DMA-buf is moving
  *
  * @dmabuf:	[in]	buffer which is moving
  *
+<<<<<<< HEAD
  * Informs all attachments that they need to destroy and recreate all their
+=======
+ * Informs all attachmenst that they need to destroy and recreated all their
+>>>>>>> b7ba80a49124 (Commit)
  * mappings.
  */
 void dma_buf_move_notify(struct dma_buf *dmabuf)
@@ -1275,11 +1457,19 @@ EXPORT_SYMBOL_NS_GPL(dma_buf_move_notify, DMA_BUF);
 /**
  * DOC: cpu access
  *
+<<<<<<< HEAD
  * There are multiple reasons for supporting CPU access to a dma buffer object:
  *
  * - Fallback operations in the kernel, for example when a device is connected
  *   over USB and the kernel needs to shuffle the data around first before
  *   sending it away. Cache coherency is handled by bracketing any transactions
+=======
+ * There are mutliple reasons for supporting CPU access to a dma buffer object:
+ *
+ * - Fallback operations in the kernel, for example when a device is connected
+ *   over USB and the kernel needs to shuffle the data around first before
+ *   sending it away. Cache coherency is handled by braketing any transactions
+>>>>>>> b7ba80a49124 (Commit)
  *   with calls to dma_buf_begin_cpu_access() and dma_buf_end_cpu_access()
  *   access.
  *
@@ -1306,7 +1496,11 @@ EXPORT_SYMBOL_NS_GPL(dma_buf_move_notify, DMA_BUF);
  *   replace ION buffers mmap support was needed.
  *
  *   There is no special interfaces, userspace simply calls mmap on the dma-buf
+<<<<<<< HEAD
  *   fd. But like for CPU access there's a need to bracket the actual access,
+=======
+ *   fd. But like for CPU access there's a need to braket the actual access,
+>>>>>>> b7ba80a49124 (Commit)
  *   which is handled by the ioctl (DMA_BUF_IOCTL_SYNC). Note that
  *   DMA_BUF_IOCTL_SYNC can fail with -EAGAIN or -EINTR, in which case it must
  *   be restarted.
@@ -1380,10 +1574,17 @@ static int __dma_buf_begin_cpu_access(struct dma_buf *dmabuf,
  * preparations. Coherency is only guaranteed in the specified range for the
  * specified access direction.
  * @dmabuf:	[in]	buffer to prepare cpu access for.
+<<<<<<< HEAD
  * @direction:	[in]	direction of access.
  *
  * After the cpu access is complete the caller should call
  * dma_buf_end_cpu_access(). Only when cpu access is bracketed by both calls is
+=======
+ * @direction:	[in]	length of range for cpu access.
+ *
+ * After the cpu access is complete the caller should call
+ * dma_buf_end_cpu_access(). Only when cpu access is braketed by both calls is
+>>>>>>> b7ba80a49124 (Commit)
  * it guaranteed to be coherent with other DMA access.
  *
  * This function will also wait for any DMA transactions tracked through
@@ -1423,7 +1624,11 @@ EXPORT_SYMBOL_NS_GPL(dma_buf_begin_cpu_access, DMA_BUF);
  * actions. Coherency is only guaranteed in the specified range for the
  * specified access direction.
  * @dmabuf:	[in]	buffer to complete cpu access for.
+<<<<<<< HEAD
  * @direction:	[in]	direction of access.
+=======
+ * @direction:	[in]	length of range for cpu access.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This terminates CPU access started with dma_buf_begin_cpu_access().
  *
@@ -1463,8 +1668,11 @@ EXPORT_SYMBOL_NS_GPL(dma_buf_end_cpu_access, DMA_BUF);
 int dma_buf_mmap(struct dma_buf *dmabuf, struct vm_area_struct *vma,
 		 unsigned long pgoff)
 {
+<<<<<<< HEAD
 	int ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (WARN_ON(!dmabuf || !vma))
 		return -EINVAL;
 
@@ -1485,11 +1693,15 @@ int dma_buf_mmap(struct dma_buf *dmabuf, struct vm_area_struct *vma,
 	vma_set_file(vma, dmabuf->file);
 	vma->vm_pgoff = pgoff;
 
+<<<<<<< HEAD
 	dma_resv_lock(dmabuf->resv, NULL);
 	ret = dmabuf->ops->mmap(dmabuf, vma);
 	dma_resv_unlock(dmabuf->resv);
 
 	return ret;
+=======
+	return dmabuf->ops->mmap(dmabuf, vma);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_NS_GPL(dma_buf_mmap, DMA_BUF);
 
@@ -1512,36 +1724,56 @@ EXPORT_SYMBOL_NS_GPL(dma_buf_mmap, DMA_BUF);
 int dma_buf_vmap(struct dma_buf *dmabuf, struct iosys_map *map)
 {
 	struct iosys_map ptr;
+<<<<<<< HEAD
 	int ret;
+=======
+	int ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	iosys_map_clear(map);
 
 	if (WARN_ON(!dmabuf))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	dma_resv_assert_held(dmabuf->resv);
 
 	if (!dmabuf->ops->vmap)
 		return -EINVAL;
 
+=======
+	if (!dmabuf->ops->vmap)
+		return -EINVAL;
+
+	mutex_lock(&dmabuf->lock);
+>>>>>>> b7ba80a49124 (Commit)
 	if (dmabuf->vmapping_counter) {
 		dmabuf->vmapping_counter++;
 		BUG_ON(iosys_map_is_null(&dmabuf->vmap_ptr));
 		*map = dmabuf->vmap_ptr;
+<<<<<<< HEAD
 		return 0;
+=======
+		goto out_unlock;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	BUG_ON(iosys_map_is_set(&dmabuf->vmap_ptr));
 
 	ret = dmabuf->ops->vmap(dmabuf, &ptr);
 	if (WARN_ON_ONCE(ret))
+<<<<<<< HEAD
 		return ret;
+=======
+		goto out_unlock;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dmabuf->vmap_ptr = ptr;
 	dmabuf->vmapping_counter = 1;
 
 	*map = dmabuf->vmap_ptr;
 
+<<<<<<< HEAD
 	return 0;
 }
 EXPORT_SYMBOL_NS_GPL(dma_buf_vmap, DMA_BUF);
@@ -1572,6 +1804,13 @@ int dma_buf_vmap_unlocked(struct dma_buf *dmabuf, struct iosys_map *map)
 	return ret;
 }
 EXPORT_SYMBOL_NS_GPL(dma_buf_vmap_unlocked, DMA_BUF);
+=======
+out_unlock:
+	mutex_unlock(&dmabuf->lock);
+	return ret;
+}
+EXPORT_SYMBOL_NS_GPL(dma_buf_vmap, DMA_BUF);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * dma_buf_vunmap - Unmap a vmap obtained by dma_buf_vmap.
@@ -1583,17 +1822,25 @@ void dma_buf_vunmap(struct dma_buf *dmabuf, struct iosys_map *map)
 	if (WARN_ON(!dmabuf))
 		return;
 
+<<<<<<< HEAD
 	dma_resv_assert_held(dmabuf->resv);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	BUG_ON(iosys_map_is_null(&dmabuf->vmap_ptr));
 	BUG_ON(dmabuf->vmapping_counter == 0);
 	BUG_ON(!iosys_map_is_equal(&dmabuf->vmap_ptr, map));
 
+<<<<<<< HEAD
+=======
+	mutex_lock(&dmabuf->lock);
+>>>>>>> b7ba80a49124 (Commit)
 	if (--dmabuf->vmapping_counter == 0) {
 		if (dmabuf->ops->vunmap)
 			dmabuf->ops->vunmap(dmabuf, map);
 		iosys_map_clear(&dmabuf->vmap_ptr);
 	}
+<<<<<<< HEAD
 }
 EXPORT_SYMBOL_NS_GPL(dma_buf_vunmap, DMA_BUF);
 
@@ -1613,6 +1860,12 @@ void dma_buf_vunmap_unlocked(struct dma_buf *dmabuf, struct iosys_map *map)
 }
 EXPORT_SYMBOL_NS_GPL(dma_buf_vunmap_unlocked, DMA_BUF);
 
+=======
+	mutex_unlock(&dmabuf->lock);
+}
+EXPORT_SYMBOL_NS_GPL(dma_buf_vunmap, DMA_BUF);
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_DEBUG_FS
 static int dma_buf_debug_show(struct seq_file *s, void *unused)
 {

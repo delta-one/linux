@@ -3,7 +3,10 @@
  * Copyright (c) 2019 MediaTek Inc.
  * Author: James Liao <jamesjj.liao@mediatek.com>
  *         Fabien Parent <fparent@baylibre.com>
+<<<<<<< HEAD
  * Copyright (c) 2023 Collabora Ltd.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include <linux/clk-provider.h>
@@ -23,10 +26,23 @@ static const struct mtk_gate_regs aud_cg_regs = {
 	.sta_ofs = 0x0,
 };
 
+<<<<<<< HEAD
 #define GATE_AUD(_id, _name, _parent, _shift)			\
 	GATE_MTK(_id, _name, _parent, &aud_cg_regs, _shift, &mtk_clk_gate_ops_no_setclr)
 
 static const struct mtk_gate aud_clks[] = {
+=======
+#define GATE_AUD(_id, _name, _parent, _shift) {	\
+		.id = _id,			\
+		.name = _name,			\
+		.parent_name = _parent,		\
+		.regs = &aud_cg_regs,		\
+		.shift = _shift,		\
+		.ops = &mtk_clk_gate_ops_no_setclr,		\
+	}
+
+static const struct mtk_gate aud_clks[] __initconst = {
+>>>>>>> b7ba80a49124 (Commit)
 	GATE_AUD(CLK_AUD_AFE, "aud_afe", "clk26m_ck", 2),
 	GATE_AUD(CLK_AUD_I2S, "aud_i2s", "i2s_infra_bck", 6),
 	GATE_AUD(CLK_AUD_22M, "aud_22m", "rg_aud_engen1", 8),
@@ -42,6 +58,7 @@ static const struct mtk_gate aud_clks[] = {
 	GATE_AUD(CLK_AUD_TML, "aud_tml", "aud_afe", 27),
 };
 
+<<<<<<< HEAD
 static const struct mtk_clk_desc aud_desc = {
 	.clks = aud_clks,
 	.num_clks = ARRAY_SIZE(aud_clks),
@@ -65,3 +82,21 @@ module_platform_driver(clk_mt8516_aud_drv);
 
 MODULE_DESCRIPTION("MediaTek MT8516 audiosys clocks driver");
 MODULE_LICENSE("GPL");
+=======
+static void __init mtk_audsys_init(struct device_node *node)
+{
+	struct clk_hw_onecell_data *clk_data;
+	int r;
+
+	clk_data = mtk_alloc_clk_data(CLK_AUD_NR_CLK);
+
+	mtk_clk_register_gates(node, aud_clks, ARRAY_SIZE(aud_clks), clk_data);
+
+	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+	if (r)
+		pr_err("%s(): could not register clock provider: %d\n",
+			__func__, r);
+
+}
+CLK_OF_DECLARE(mtk_audsys, "mediatek,mt8516-audsys", mtk_audsys_init);
+>>>>>>> b7ba80a49124 (Commit)

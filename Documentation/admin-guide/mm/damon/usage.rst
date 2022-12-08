@@ -25,12 +25,19 @@ DAMON provides below interfaces for different users.
   interface provides only simple :ref:`statistics <damos_stats>` for the
   monitoring results.  For detailed monitoring results, DAMON provides a
   :ref:`tracepoint <tracepoint>`.
+<<<<<<< HEAD
 - *debugfs interface. (DEPRECATED!)*
   :ref:`This <debugfs_interface>` is almost identical to :ref:`sysfs interface
   <sysfs_interface>`.  This is deprecated, so users should move to the
   :ref:`sysfs interface <sysfs_interface>`.  If you depend on this and cannot
   move, please report your usecase to damon@lists.linux.dev and
   linux-mm@kvack.org.
+=======
+- *debugfs interface.*
+  :ref:`This <debugfs_interface>` is almost identical to :ref:`sysfs interface
+  <sysfs_interface>`.  This will be removed after next LTS kernel is released,
+  so users should move to the :ref:`sysfs interface <sysfs_interface>`.
+>>>>>>> b7ba80a49124 (Commit)
 - *Kernel Space Programming Interface.*
   :doc:`This </mm/damon/api>` is for kernel space programmers.  Using this,
   users can utilize every feature of DAMON most flexibly and efficiently by
@@ -89,12 +96,16 @@ comma (","). ::
     │ │ │ │ │ │ │ quotas/ms,bytes,reset_interval_ms
     │ │ │ │ │ │ │ │ weights/sz_permil,nr_accesses_permil,age_permil
     │ │ │ │ │ │ │ watermarks/metric,interval_us,high,mid,low
+<<<<<<< HEAD
     │ │ │ │ │ │ │ filters/nr_filters
     │ │ │ │ │ │ │ │ 0/type,matching,memcg_id
     │ │ │ │ │ │ │ stats/nr_tried,sz_tried,nr_applied,sz_applied,qt_exceeds
     │ │ │ │ │ │ │ tried_regions/
     │ │ │ │ │ │ │ │ 0/start,end,nr_accesses,age
     │ │ │ │ │ │ │ │ ...
+=======
+    │ │ │ │ │ │ │ stats/nr_tried,sz_tried,nr_applied,sz_applied,qt_exceeds
+>>>>>>> b7ba80a49124 (Commit)
     │ │ │ │ │ │ ...
     │ │ │ │ ...
     │ │ ...
@@ -132,6 +143,7 @@ in the state.  Writing ``commit`` to the ``state`` file makes kdamond reads the
 user inputs in the sysfs files except ``state`` file again.  Writing
 ``update_schemes_stats`` to ``state`` file updates the contents of stats files
 for each DAMON-based operation scheme of the kdamond.  For details of the
+<<<<<<< HEAD
 stats, please refer to :ref:`stats section <sysfs_schemes_stats>`.  Writing
 ``update_schemes_tried_regions`` to ``state`` file updates the DAMON-based
 operation scheme action tried regions directory for each DAMON-based operation
@@ -140,6 +152,9 @@ file clears the DAMON-based operating scheme action tried regions directory for
 each DAMON-based operation scheme of the kdamond.  For details of the
 DAMON-based operation scheme action tried regions directory, please refer to
 :ref:tried_regions section <sysfs_schemes_tried_regions>`.
+=======
+stats, please refer to :ref:`stats section <sysfs_schemes_stats>`.
+>>>>>>> b7ba80a49124 (Commit)
 
 If the state is ``on``, reading ``pid`` shows the pid of the kdamond thread.
 
@@ -155,8 +170,11 @@ number (``N``) to the file creates the number of child directories named as
 moment, only one context per kdamond is supported, so only ``0`` or ``1`` can
 be written to the file.
 
+<<<<<<< HEAD
 .. _sysfs_contexts:
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 contexts/<N>/
 -------------
 
@@ -182,8 +200,11 @@ You can set and get what type of monitoring operations DAMON will use for the
 context by writing one of the keywords listed in ``avail_operations`` file and
 reading from the ``operations`` file.
 
+<<<<<<< HEAD
 .. _sysfs_monitoring_attrs:
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 contexts/<N>/monitoring_attrs/
 ------------------------------
 
@@ -253,9 +274,12 @@ In each region directory, you will find two files (``start`` and ``end``).  You
 can set and get the start and end addresses of the initial monitoring target
 region by writing to and reading from the files, respectively.
 
+<<<<<<< HEAD
 Each region should not overlap with others.  ``end`` of directory ``N`` should
 be equal or smaller than ``start`` of directory ``N+1``.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 contexts/<N>/schemes/
 ---------------------
 
@@ -273,14 +297,20 @@ to ``N-1``.  Each directory represents each DAMON-based operation scheme.
 schemes/<N>/
 ------------
 
+<<<<<<< HEAD
 In each scheme directory, five directories (``access_pattern``, ``quotas``,
 ``watermarks``, ``filters``, ``stats``, and ``tried_regions``) and one file
 (``action``) exist.
+=======
+In each scheme directory, four directories (``access_pattern``, ``quotas``,
+``watermarks``, and ``stats``) and one file (``action``) exist.
+>>>>>>> b7ba80a49124 (Commit)
 
 The ``action`` file is for setting and getting what action you want to apply to
 memory regions having specific access pattern of the interest.  The keywords
 that can be written to and read from the file and their meaning are as below.
 
+<<<<<<< HEAD
 Note that support of each action depends on the running DAMON operations set
 `implementation <sysfs_contexts>`.
 
@@ -300,6 +330,16 @@ Note that support of each action depends on the running DAMON operations set
    Supported by ``paddr`` operations set.
  - ``stat``: Do nothing but count the statistics.
    Supported by all operations sets.
+=======
+ - ``willneed``: Call ``madvise()`` for the region with ``MADV_WILLNEED``
+ - ``cold``: Call ``madvise()`` for the region with ``MADV_COLD``
+ - ``pageout``: Call ``madvise()`` for the region with ``MADV_PAGEOUT``
+ - ``hugepage``: Call ``madvise()`` for the region with ``MADV_HUGEPAGE``
+ - ``nohugepage``: Call ``madvise()`` for the region with ``MADV_NOHUGEPAGE``
+ - ``lru_prio``: Prioritize the region on its LRU lists.
+ - ``lru_deprio``: Deprioritize the region on its LRU lists.
+ - ``stat``: Do nothing but count the statistics
+>>>>>>> b7ba80a49124 (Commit)
 
 schemes/<N>/access_pattern/
 ---------------------------
@@ -364,6 +404,7 @@ as below.
 
 The ``interval`` should written in microseconds unit.
 
+<<<<<<< HEAD
 schemes/<N>/filters/
 --------------------
 
@@ -404,6 +445,8 @@ pages of all memory cgroups except ``/having_care_already``.::
 Note that filters are currently supported only when ``paddr``
 `implementation <sysfs_contexts>` is being used.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 .. _sysfs_schemes_stats:
 
 schemes/<N>/stats/
@@ -421,6 +464,7 @@ should ask DAMON sysfs interface to updte the content of the files for the
 stats by writing a special keyword, ``update_schemes_stats`` to the relevant
 ``kdamonds/<N>/state`` file.
 
+<<<<<<< HEAD
 .. _sysfs_schemes_tried_regions:
 
 schemes/<N>/tried_regions/
@@ -447,6 +491,8 @@ In each region directory, you will find four files (``start``, ``end``,
 addresses, ``nr_accesses``, and ``age`` of the region that corresponding
 DAMON-based operation scheme ``action`` has tried to be applied.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Example
 ~~~~~~~
 
@@ -489,6 +535,7 @@ the files as above.  Above is only for an example.
 
 .. _debugfs_interface:
 
+<<<<<<< HEAD
 debugfs Interface (DEPRECATED!)
 ===============================
 
@@ -500,6 +547,15 @@ debugfs Interface (DEPRECATED!)
   :ref:`sysfs interface <sysfs_interface>`.  If you depend on this and cannot
   move, please report your usecase to damon@lists.linux.dev and
   linux-mm@kvack.org.
+=======
+debugfs Interface
+=================
+
+.. note::
+
+  DAMON debugfs interface will be removed after next LTS kernel is released, so
+  users should move to the :ref:`sysfs interface <sysfs_interface>`.
+>>>>>>> b7ba80a49124 (Commit)
 
 DAMON exports eight files, ``attrs``, ``target_ids``, ``init_regions``,
 ``schemes``, ``monitor_on``, ``kdamond_pid``, ``mk_contexts`` and
@@ -568,9 +624,14 @@ regions in case of physical memory monitoring.  Therefore, users should set the
 monitoring target regions by themselves.
 
 In such cases, users can explicitly set the initial monitoring target regions
+<<<<<<< HEAD
 as they want, by writing proper values to the ``init_regions`` file.  The input
 should be a sequence of three integers separated by white spaces that represent
 one region in below form.::
+=======
+as they want, by writing proper values to the ``init_regions`` file.  Each line
+of the input should represent one region in below form.::
+>>>>>>> b7ba80a49124 (Commit)
 
     <target idx> <start address> <end address>
 
@@ -585,9 +646,15 @@ ranges, ``20-40`` and ``50-100`` as that of pid 4242, which is the second one
     # cd <debugfs>/damon
     # cat target_ids
     42 4242
+<<<<<<< HEAD
     # echo "0   1       100 \
             0   100     200 \
             1   20      40  \
+=======
+    # echo "0   1       100
+            0   100     200
+            1   20      40
+>>>>>>> b7ba80a49124 (Commit)
             1   50      100" > init_regions
 
 Note that this sets the initial monitoring target regions only.  In case of
@@ -635,6 +702,7 @@ The ``<action>`` is a predefined integer for memory management actions, which
 DAMON will apply to the regions having the target access pattern.  The
 supported numbers and their meanings are as below.
 
+<<<<<<< HEAD
  - 0: Call ``madvise()`` for the region with ``MADV_WILLNEED``.  Ignored if
    ``target`` is ``paddr``.
  - 1: Call ``madvise()`` for the region with ``MADV_COLD``.  Ignored if
@@ -644,6 +712,13 @@ supported numbers and their meanings are as below.
    ``target`` is ``paddr``.
  - 4: Call ``madvise()`` for the region with ``MADV_NOHUGEPAGE``.  Ignored if
    ``target`` is ``paddr``.
+=======
+ - 0: Call ``madvise()`` for the region with ``MADV_WILLNEED``
+ - 1: Call ``madvise()`` for the region with ``MADV_COLD``
+ - 2: Call ``madvise()`` for the region with ``MADV_PAGEOUT``
+ - 3: Call ``madvise()`` for the region with ``MADV_HUGEPAGE``
+ - 4: Call ``madvise()`` for the region with ``MADV_NOHUGEPAGE``
+>>>>>>> b7ba80a49124 (Commit)
  - 5: Do nothing but count the statistics
 
 Quota

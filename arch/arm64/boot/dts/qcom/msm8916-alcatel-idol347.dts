@@ -5,7 +5,10 @@
 #include "msm8916-pm8916.dtsi"
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/input/input.h>
+<<<<<<< HEAD
 #include <dt-bindings/leds/common.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 / {
 	model = "Alcatel OneTouch Idol 3 (4.7)";
@@ -35,6 +38,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	gpio-leds {
 		compatible = "gpio-leds";
 
@@ -48,6 +52,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	usb_id: usb-id {
 		compatible = "linux,extcon-usb-gpio";
 		id-gpio = <&msmgpio 69 GPIO_ACTIVE_HIGH>;
@@ -130,6 +136,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &blsp_i2c6 {
 	status = "okay";
 
@@ -151,6 +158,8 @@
 	};
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &pm8916_resin {
 	status = "okay";
 	linux,code = <KEY_VOLUMEDOWN>;
@@ -295,7 +304,11 @@
 };
 
 &msmgpio {
+<<<<<<< HEAD
 	accel_int_default: accel-int-default-state {
+=======
+	accel_int_default: accel-int-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio31";
 		function = "gpio";
 
@@ -303,7 +316,11 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	gpio_keys_default: gpio-keys-default-state {
+=======
+	gpio_keys_default: gpio-keys-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio107";
 		function = "gpio";
 
@@ -311,6 +328,7 @@
 		bias-pull-up;
 	};
 
+<<<<<<< HEAD
 	gpio_leds_default: gpio-leds-default-state {
 		pins = "gpio32";
 		function = "gpio";
@@ -320,6 +338,9 @@
 	};
 
 	gyro_int_default: gyro-int-default-state {
+=======
+	gyro_int_default: gyro-int-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio97", "gpio98";
 		function = "gpio";
 
@@ -327,6 +348,7 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	/*
 	 * The OEM wired an additional GPIO to be asserted so that
 	 * the si-en,sn3190 LED IC works. Since this GPIO is not
@@ -351,6 +373,9 @@
 	};
 
 	mag_reset_default: mag-reset-default-state {
+=======
+	mag_reset_default: mag-reset-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio8";
 		function = "gpio";
 
@@ -358,7 +383,11 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	proximity_int_default: proximity-int-default-state {
+=======
+	proximity_int_default: proximity-int-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio12";
 		function = "gpio";
 
@@ -366,7 +395,11 @@
 		bias-pull-up;
 	};
 
+<<<<<<< HEAD
 	ts_int_reset_default: ts-int-reset-default-state {
+=======
+	ts_int_reset_default: ts-int-reset-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio13", "gpio100";
 		function = "gpio";
 
@@ -374,7 +407,11 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	usb_id_default: usb-id-default-state {
+=======
+	usb_id_default: usb-id-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio69";
 		function = "gpio";
 

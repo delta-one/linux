@@ -37,10 +37,34 @@ static struct ctl_table nfs4_cb_sysctls[] = {
 	{ }
 };
 
+<<<<<<< HEAD
 int nfs4_register_sysctl(void)
 {
 	nfs4_callback_sysctl_table = register_sysctl("fs/nfs",
 						     nfs4_cb_sysctls);
+=======
+static struct ctl_table nfs4_cb_sysctl_dir[] = {
+	{
+		.procname = "nfs",
+		.mode = 0555,
+		.child = nfs4_cb_sysctls,
+	},
+	{ }
+};
+
+static struct ctl_table nfs4_cb_sysctl_root[] = {
+	{
+		.procname = "fs",
+		.mode = 0555,
+		.child = nfs4_cb_sysctl_dir,
+	},
+	{ }
+};
+
+int nfs4_register_sysctl(void)
+{
+	nfs4_callback_sysctl_table = register_sysctl_table(nfs4_cb_sysctl_root);
+>>>>>>> b7ba80a49124 (Commit)
 	if (nfs4_callback_sysctl_table == NULL)
 		return -ENOMEM;
 	return 0;

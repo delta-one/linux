@@ -27,7 +27,11 @@
 // *** IMPORTANT ***
 // SMU TEAM: Always increment the interface version if
 // any structure is changed in this file
+<<<<<<< HEAD
 #define PMFW_DRIVER_IF_VERSION 8
+=======
+#define PMFW_DRIVER_IF_VERSION 5
+>>>>>>> b7ba80a49124 (Commit)
 
 typedef struct {
   int32_t value;
@@ -163,8 +167,13 @@ typedef struct {
   uint16_t DclkFrequency;               //[MHz]
   uint16_t MemclkFrequency;             //[MHz]
   uint16_t spare;                       //[centi]
+<<<<<<< HEAD
   uint16_t GfxActivity;                 //[centi]
   uint16_t UvdActivity;                 //[centi]
+=======
+  uint16_t UvdActivity;                 //[centi]
+  uint16_t GfxActivity;                 //[centi]
+>>>>>>> b7ba80a49124 (Commit)
 
   uint16_t Voltage[2];                  //[mV] indices: VDDCR_VDD, VDDCR_SOC
   uint16_t Current[2];                  //[mA] indices: VDDCR_VDD, VDDCR_SOC
@@ -198,6 +207,7 @@ typedef struct {
   uint16_t SkinTemp;
   uint16_t DeviceState;
   uint16_t CurTemp;                     //[centi-Celsius]
+<<<<<<< HEAD
   uint16_t FilterAlphaValue;
 
   uint16_t AverageGfxclkFrequency;
@@ -212,6 +222,9 @@ typedef struct {
   uint16_t AverageCorePower;          //Filtered of [sum of CorePower[8]])
   uint16_t AverageCoreC0Residency[8]; //Filtered of [average C0 residency %  per core]
   uint32_t MetricsCounter;            //Counts the # of metrics table parameter reads per update to the metrics table, i.e. if the metrics table update happens every 1 second, this value could be up to 1000 if the smu collected metrics data every cycle, or as low as 0 if the smu was asleep the whole time. Reset to 0 after writing.
+=======
+  uint16_t spare2;
+>>>>>>> b7ba80a49124 (Commit)
 } SmuMetrics_t;
 
 typedef struct {

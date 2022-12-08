@@ -26,6 +26,10 @@ SEC("cgroup/skb")
 int bpf_nextcnt(struct __sk_buff *skb)
 {
 	union percpu_net_cnt *percpu_cnt;
+<<<<<<< HEAD
+=======
+	char fmt[] = "%d %llu %llu\n";
+>>>>>>> b7ba80a49124 (Commit)
 	union net_cnt *cnt;
 	__u64 ts, dt;
 	int ret;

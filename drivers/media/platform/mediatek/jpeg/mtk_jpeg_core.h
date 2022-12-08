@@ -9,17 +9,28 @@
 #ifndef _MTK_JPEG_CORE_H
 #define _MTK_JPEG_CORE_H
 
+<<<<<<< HEAD
 #include <linux/clk.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/interrupt.h>
 #include <media/v4l2-ctrls.h>
 #include <media/v4l2-device.h>
 #include <media/v4l2-fh.h>
+<<<<<<< HEAD
 #include <media/videobuf2-v4l2.h>
 
 #include "mtk_jpeg_dec_hw.h"
 
 #define MTK_JPEG_NAME		"mtk-jpeg"
 
+=======
+
+#define MTK_JPEG_NAME		"mtk-jpeg"
+
+#define MTK_JPEG_COMP_MAX		3
+
+>>>>>>> b7ba80a49124 (Commit)
 #define MTK_JPEG_FMT_FLAG_OUTPUT	BIT(0)
 #define MTK_JPEG_FMT_FLAG_CAPTURE	BIT(1)
 
@@ -76,6 +87,7 @@ struct mtk_jpeg_variant {
 	u32 cap_q_default_fourcc;
 };
 
+<<<<<<< HEAD
 struct mtk_jpeg_src_buf {
 	u32 frame_num;
 	struct vb2_v4l2_buffer b;
@@ -185,6 +197,8 @@ struct mtk_jpegdec_comp_dev {
 	spinlock_t hw_lock;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct mtk_jpeg_dev - JPEG IP abstraction
  * @lock:		the mutex protecting this structure
@@ -198,6 +212,7 @@ struct mtk_jpegdec_comp_dev {
  * @reg_base:		JPEG registers mapping
  * @job_timeout_work:	IRQ timeout structure
  * @variant:		driver variant to be used
+<<<<<<< HEAD
  * @reg_encbase:	jpg encode register base addr
  * @enc_hw_dev:		jpg encode hardware device
  * @is_jpgenc_multihw:	the flag of multi-hw core
@@ -209,6 +224,8 @@ struct mtk_jpegdec_comp_dev {
  * @dec_hw_wq:		jpg decode wait queue
  * @dec_workqueue:	jpg decode work queue
  * @dechw_rdy:		jpg decode hw ready flag
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct mtk_jpeg_dev {
 	struct mutex		lock;
@@ -222,6 +239,7 @@ struct mtk_jpeg_dev {
 	void __iomem		*reg_base;
 	struct delayed_work job_timeout_work;
 	const struct mtk_jpeg_variant *variant;
+<<<<<<< HEAD
 
 	void __iomem *reg_encbase[MTK_JPEGENC_HW_MAX];
 	struct mtk_jpegenc_comp_dev *enc_hw_dev[MTK_JPEGENC_HW_MAX];
@@ -235,6 +253,8 @@ struct mtk_jpeg_dev {
 	wait_queue_head_t dec_hw_wq;
 	struct workqueue_struct	*dec_workqueue;
 	atomic_t dechw_rdy;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -273,6 +293,7 @@ struct mtk_jpeg_q_data {
 
 /**
  * struct mtk_jpeg_ctx - the device context data
+<<<<<<< HEAD
  * @jpeg:			JPEG IP device for this context
  * @out_q:			source (output) queue information
  * @cap_q:			destination queue information
@@ -287,6 +308,17 @@ struct mtk_jpeg_q_data {
  * @dst_done_queue:		encoded frame buffer queue
  * @done_queue_lock:		encoded frame operation spinlock
  * @last_done_frame_num:	the last encoded frame number
+=======
+ * @jpeg:		JPEG IP device for this context
+ * @out_q:		source (output) queue information
+ * @cap_q:		destination (capture) queue queue information
+ * @fh:			V4L2 file handle
+ * @state:		state of the context
+ * @enable_exif:	enable exif mode of jpeg encoder
+ * @enc_quality:	jpeg encoder quality
+ * @restart_interval:	jpeg encoder restart interval
+ * @ctrl_hdl:		controls handler
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct mtk_jpeg_ctx {
 	struct mtk_jpeg_dev		*jpeg;
@@ -298,6 +330,7 @@ struct mtk_jpeg_ctx {
 	u8 enc_quality;
 	u8 restart_interval;
 	struct v4l2_ctrl_handler ctrl_hdl;
+<<<<<<< HEAD
 
 	struct work_struct jpeg_work;
 	u32 total_frame_num;
@@ -305,6 +338,8 @@ struct mtk_jpeg_ctx {
 	/* spinlock protecting the encode done buffer */
 	spinlock_t done_queue_lock;
 	u32 last_done_frame_num;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #endif /* _MTK_JPEG_CORE_H */

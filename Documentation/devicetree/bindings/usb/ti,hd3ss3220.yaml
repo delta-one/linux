@@ -46,12 +46,20 @@ properties:
 required:
   - compatible
   - reg
+<<<<<<< HEAD
+=======
+  - interrupts
+>>>>>>> b7ba80a49124 (Commit)
 
 additionalProperties: false
 
 examples:
   - |
+<<<<<<< HEAD
     i2c {
+=======
+    i2c0 {
+>>>>>>> b7ba80a49124 (Commit)
         #address-cells = <1>;
         #size-cells = <0>;
 

@@ -67,12 +67,15 @@ properties:
   power-domains:
     maxItems: 1
 
+<<<<<<< HEAD
   "#address-cells":
     const: 2
 
   "#size-cells":
     const: 2
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg
@@ -90,9 +93,13 @@ allOf:
           contains:
             enum:
               - mediatek,mt8183-vcodec-enc
+<<<<<<< HEAD
               - mediatek,mt8188-vcodec-enc
               - mediatek,mt8192-vcodec-enc
               - mediatek,mt8195-vcodec-enc
+=======
+              - mediatek,mt8192-vcodec-enc
+>>>>>>> b7ba80a49124 (Commit)
 
     then:
       required:
@@ -115,9 +122,13 @@ allOf:
         compatible:
           enum:
             - mediatek,mt8173-vcodec-enc
+<<<<<<< HEAD
             - mediatek,mt8188-vcodec-enc
             - mediatek,mt8192-vcodec-enc
             - mediatek,mt8195-vcodec-enc
+=======
+            - mediatek,mt8192-vcodec-enc
+>>>>>>> b7ba80a49124 (Commit)
 
     then:
       properties:
@@ -128,7 +139,11 @@ allOf:
         clock-names:
           items:
             - const: venc_sel
+<<<<<<< HEAD
     else:  # for vp8 hw encoder
+=======
+    else:  # for vp8 hw decoder
+>>>>>>> b7ba80a49124 (Commit)
       properties:
         clock:
           items:

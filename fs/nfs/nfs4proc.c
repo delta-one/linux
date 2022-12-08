@@ -122,11 +122,14 @@ nfs4_label_init_security(struct inode *dir, struct dentry *dentry,
 	if (nfs_server_capable(dir, NFS_CAP_SECURITY_LABEL) == 0)
 		return NULL;
 
+<<<<<<< HEAD
 	label->lfs = 0;
 	label->pi = 0;
 	label->len = 0;
 	label->label = NULL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = security_dentry_init_security(dentry, sattr->ia_mode,
 				&dentry->d_name, NULL,
 				(void **)&label->label, &label->len);
@@ -1980,7 +1983,12 @@ _nfs4_opendata_reclaim_to_nfs4_state(struct nfs4_opendata *data)
 	if (!data->rpc_done) {
 		if (data->rpc_status)
 			return ERR_PTR(data->rpc_status);
+<<<<<<< HEAD
 		return nfs4_try_open_cached(data);
+=======
+		/* cached opens have already been processed */
+		goto update;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret = nfs_refresh_inode(inode, &data->f_attr);
@@ -1989,7 +1997,11 @@ _nfs4_opendata_reclaim_to_nfs4_state(struct nfs4_opendata *data)
 
 	if (data->o_res.delegation_type != 0)
 		nfs4_opendata_check_deleg(data, state);
+<<<<<<< HEAD
 
+=======
+update:
+>>>>>>> b7ba80a49124 (Commit)
 	if (!update_open_stateid(state, &data->o_res.stateid,
 				NULL, data->o_arg.fmode))
 		return ERR_PTR(-EAGAIN);
@@ -2130,18 +2142,32 @@ static struct nfs4_opendata *nfs4_open_recoverdata_alloc(struct nfs_open_context
 }
 
 static int nfs4_open_recover_helper(struct nfs4_opendata *opendata,
+<<<<<<< HEAD
 				    fmode_t fmode)
 {
 	struct nfs4_state *newstate;
 	struct nfs_server *server = NFS_SB(opendata->dentry->d_sb);
 	int openflags = opendata->o_arg.open_flags;
+=======
+		fmode_t fmode)
+{
+	struct nfs4_state *newstate;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	if (!nfs4_mode_match_open_stateid(opendata->state, fmode))
 		return 0;
+<<<<<<< HEAD
 	opendata->o_arg.fmode = fmode;
 	opendata->o_arg.share_access =
 		nfs4_map_atomic_open_share(server, fmode, openflags);
+=======
+	opendata->o_arg.open_flags = 0;
+	opendata->o_arg.fmode = fmode;
+	opendata->o_arg.share_access = nfs4_map_atomic_open_share(
+			NFS_SB(opendata->dentry->d_sb),
+			fmode, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	memset(&opendata->o_res, 0, sizeof(opendata->o_res));
 	memset(&opendata->c_res, 0, sizeof(opendata->c_res));
 	nfs4_init_opendata_res(opendata);
@@ -2629,7 +2655,12 @@ static int _nfs4_recover_proc_open(struct nfs4_opendata *data)
  */
 static int nfs4_opendata_access(const struct cred *cred,
 				struct nfs4_opendata *opendata,
+<<<<<<< HEAD
 				struct nfs4_state *state, fmode_t fmode)
+=======
+				struct nfs4_state *state, fmode_t fmode,
+				int openflags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nfs_access_entry cache;
 	u32 mask, flags;
@@ -2640,7 +2671,15 @@ static int nfs4_opendata_access(const struct cred *cred,
 		return 0;
 
 	mask = 0;
+<<<<<<< HEAD
 	if (fmode & FMODE_EXEC) {
+=======
+	/*
+	 * Use openflags to check for exec, because fmode won't
+	 * always have FMODE_EXEC set when file open for exec.
+	 */
+	if (openflags & __FMODE_EXEC) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* ONLY check for exec rights */
 		if (S_ISDIR(state->inode->i_mode))
 			mask = NFS4_ACCESS_LOOKUP;
@@ -2718,6 +2757,7 @@ static int _nfs4_open_expired(struct nfs_open_context *ctx, struct nfs4_state *s
 	struct nfs4_opendata *opendata;
 	int ret;
 
+<<<<<<< HEAD
 	opendata = nfs4_open_recoverdata_alloc(ctx, state, NFS4_OPEN_CLAIM_FH);
 	if (IS_ERR(opendata))
 		return PTR_ERR(opendata);
@@ -2727,6 +2767,12 @@ static int _nfs4_open_expired(struct nfs_open_context *ctx, struct nfs4_state *s
 	 * delegation return.
 	 */
 	opendata->o_arg.open_flags = O_DIRECT;
+=======
+	opendata = nfs4_open_recoverdata_alloc(ctx, state,
+			NFS4_OPEN_CLAIM_FH);
+	if (IS_ERR(opendata))
+		return PTR_ERR(opendata);
+>>>>>>> b7ba80a49124 (Commit)
 	ret = nfs4_open_recover(opendata, state);
 	if (ret == -ESTALE)
 		d_drop(ctx->dentry);
@@ -3028,7 +3074,11 @@ static unsigned nfs4_exclusive_attrset(struct nfs4_opendata *opendata,
 }
 
 static int _nfs4_open_and_get_state(struct nfs4_opendata *opendata,
+<<<<<<< HEAD
 		struct nfs_open_context *ctx)
+=======
+		int flags, struct nfs_open_context *ctx)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nfs4_state_owner *sp = opendata->owner;
 	struct nfs_server *server = sp->so_server;
@@ -3089,7 +3139,12 @@ static int _nfs4_open_and_get_state(struct nfs4_opendata *opendata,
 	/* Parse layoutget results before we check for access */
 	pnfs_parse_lgopen(state->inode, opendata->lgp, ctx);
 
+<<<<<<< HEAD
 	ret = nfs4_opendata_access(sp->so_cred, opendata, state, acc_mode);
+=======
+	ret = nfs4_opendata_access(sp->so_cred, opendata, state,
+			acc_mode, flags);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret != 0)
 		goto out;
 
@@ -3163,7 +3218,11 @@ static int _nfs4_do_open(struct inode *dir,
 	if (d_really_is_positive(dentry))
 		opendata->state = nfs4_get_open_state(d_inode(dentry), sp);
 
+<<<<<<< HEAD
 	status = _nfs4_open_and_get_state(opendata, ctx);
+=======
+	status = _nfs4_open_and_get_state(opendata, flags, ctx);
+>>>>>>> b7ba80a49124 (Commit)
 	if (status != 0)
 		goto err_opendata_put;
 	state = ctx->state;
@@ -3799,7 +3858,11 @@ nfs4_atomic_open(struct inode *dir, struct nfs_open_context *ctx,
 		int open_flags, struct iattr *attr, int *opened)
 {
 	struct nfs4_state *state;
+<<<<<<< HEAD
 	struct nfs4_label l, *label;
+=======
+	struct nfs4_label l = {0, 0, 0, NULL}, *label = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	label = nfs4_label_init_security(dir, ctx->dentry, attr, &l);
 
@@ -3954,7 +4017,11 @@ static void test_fs_location_for_trunking(struct nfs4_fs_location *location,
 
 	for (i = 0; i < location->nservers; i++) {
 		struct nfs4_string *srv_loc = &location->servers[i];
+<<<<<<< HEAD
 		struct sockaddr_storage addr;
+=======
+		struct sockaddr addr;
+>>>>>>> b7ba80a49124 (Commit)
 		size_t addrlen;
 		struct xprt_create xprt_args = {
 			.ident = 0,
@@ -3977,7 +4044,11 @@ static void test_fs_location_for_trunking(struct nfs4_fs_location *location,
 						clp->cl_net, server->port);
 		if (!addrlen)
 			return;
+<<<<<<< HEAD
 		xprt_args.dstaddr = (struct sockaddr *)&addr;
+=======
+		xprt_args.dstaddr = &addr;
+>>>>>>> b7ba80a49124 (Commit)
 		xprt_args.addrlen = addrlen;
 		servername = kmalloc(srv_loc->len + 1, GFP_KERNEL);
 		if (!servername)
@@ -4016,7 +4087,11 @@ static int _nfs4_discover_trunking(struct nfs_server *server,
 
 	page = alloc_page(GFP_KERNEL);
 	if (!page)
+<<<<<<< HEAD
 		goto out_put_cred;
+=======
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 	locations = kmalloc(sizeof(struct nfs4_fs_locations), GFP_KERNEL);
 	if (!locations)
 		goto out_free;
@@ -4038,8 +4113,11 @@ out_free_2:
 	kfree(locations);
 out_free:
 	__free_page(page);
+<<<<<<< HEAD
 out_put_cred:
 	put_cred(cred);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return status;
 }
 
@@ -4687,7 +4765,11 @@ nfs4_proc_create(struct inode *dir, struct dentry *dentry, struct iattr *sattr,
 		 int flags)
 {
 	struct nfs_server *server = NFS_SERVER(dir);
+<<<<<<< HEAD
 	struct nfs4_label l, *ilabel;
+=======
+	struct nfs4_label l, *ilabel = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	struct nfs_open_context *ctx;
 	struct nfs4_state *state;
 	int status = 0;
@@ -5038,7 +5120,11 @@ static int nfs4_proc_symlink(struct inode *dir, struct dentry *dentry,
 	struct nfs4_exception exception = {
 		.interruptible = true,
 	};
+<<<<<<< HEAD
 	struct nfs4_label l, *label;
+=======
+	struct nfs4_label l, *label = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	label = nfs4_label_init_security(dir, dentry, sattr, &l);
@@ -5079,7 +5165,11 @@ static int nfs4_proc_mkdir(struct inode *dir, struct dentry *dentry,
 	struct nfs4_exception exception = {
 		.interruptible = true,
 	};
+<<<<<<< HEAD
 	struct nfs4_label l, *label;
+=======
+	struct nfs4_label l, *label = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	label = nfs4_label_init_security(dir, dentry, sattr, &l);
@@ -5198,7 +5288,11 @@ static int nfs4_proc_mknod(struct inode *dir, struct dentry *dentry,
 	struct nfs4_exception exception = {
 		.interruptible = true,
 	};
+<<<<<<< HEAD
 	struct nfs4_label l, *label;
+=======
+	struct nfs4_label l, *label = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	label = nfs4_label_init_security(dir, dentry, sattr, &l);
@@ -6613,7 +6707,11 @@ static void nfs4_delegreturn_prepare(struct rpc_task *task, void *data)
 	struct nfs4_delegreturndata *d_data;
 	struct pnfs_layout_hdr *lo;
 
+<<<<<<< HEAD
 	d_data = data;
+=======
+	d_data = (struct nfs4_delegreturndata *)data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!d_data->lr.roc && nfs4_wait_on_layoutreturn(d_data->inode, task)) {
 		nfs4_sequence_done(task, &d_data->res.seq_res);
@@ -7022,13 +7120,20 @@ static int nfs4_proc_unlck(struct nfs4_state *state, int cmd, struct file_lock *
 		mutex_unlock(&sp->so_delegreturn_mutex);
 		goto out;
 	}
+<<<<<<< HEAD
 	lsp = request->fl_u.nfs4_fl.owner;
 	set_bit(NFS_LOCK_UNLOCKING, &lsp->ls_flags);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	up_read(&nfsi->rwsem);
 	mutex_unlock(&sp->so_delegreturn_mutex);
 	if (status != 0)
 		goto out;
 	/* Is this a delegated lock? */
+<<<<<<< HEAD
+=======
+	lsp = request->fl_u.nfs4_fl.owner;
+>>>>>>> b7ba80a49124 (Commit)
 	if (test_bit(NFS_LOCK_INITIALIZED, &lsp->ls_flags) == 0)
 		goto out;
 	alloc_seqid = NFS_SERVER(inode)->nfs_client->cl_mvops->alloc_seqid;
@@ -7144,7 +7249,10 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
 {
 	struct nfs4_lockdata *data = calldata;
 	struct nfs4_lock_state *lsp = data->lsp;
+<<<<<<< HEAD
 	struct nfs_server *server = NFS_SERVER(d_inode(data->ctx->dentry));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!nfs4_sequence_done(task, &data->res.seq_res))
 		return;
@@ -7152,7 +7260,12 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
 	data->rpc_status = task->tk_status;
 	switch (task->tk_status) {
 	case 0:
+<<<<<<< HEAD
 		renew_lease(server, data->timestamp);
+=======
+		renew_lease(NFS_SERVER(d_inode(data->ctx->dentry)),
+				data->timestamp);
+>>>>>>> b7ba80a49124 (Commit)
 		if (data->arg.new_lock && !data->cancelled) {
 			data->fl.fl_flags &= ~(FL_SLEEP | FL_ACCESS);
 			if (locks_lock_inode_wait(lsp->ls_state->inode, &data->fl) < 0)
@@ -7173,8 +7286,11 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
 			if (!nfs4_stateid_match(&data->arg.open_stateid,
 						&lsp->ls_state->open_stateid))
 				goto out_restart;
+<<<<<<< HEAD
 			else if (nfs4_async_handle_error(task, server, lsp->ls_state, NULL) == -EAGAIN)
 				goto out_restart;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		} else if (!nfs4_stateid_match(&data->arg.lock_stateid,
 						&lsp->ls_stateid))
 				goto out_restart;
@@ -7691,7 +7807,11 @@ nfs4_release_lockowner(struct nfs_server *server, struct nfs4_lock_state *lsp)
 #define XATTR_NAME_NFSV4_ACL "system.nfs4_acl"
 
 static int nfs4_xattr_set_nfs4_acl(const struct xattr_handler *handler,
+<<<<<<< HEAD
 				   struct mnt_idmap *idmap,
+=======
+				   struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 				   struct dentry *unused, struct inode *inode,
 				   const char *key, const void *buf,
 				   size_t buflen, int flags)
@@ -7715,7 +7835,11 @@ static bool nfs4_xattr_list_nfs4_acl(struct dentry *dentry)
 #define XATTR_NAME_NFSV4_DACL "system.nfs4_dacl"
 
 static int nfs4_xattr_set_nfs4_dacl(const struct xattr_handler *handler,
+<<<<<<< HEAD
 				    struct mnt_idmap *idmap,
+=======
+				    struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 				    struct dentry *unused, struct inode *inode,
 				    const char *key, const void *buf,
 				    size_t buflen, int flags)
@@ -7738,7 +7862,11 @@ static bool nfs4_xattr_list_nfs4_dacl(struct dentry *dentry)
 #define XATTR_NAME_NFSV4_SACL "system.nfs4_sacl"
 
 static int nfs4_xattr_set_nfs4_sacl(const struct xattr_handler *handler,
+<<<<<<< HEAD
 				    struct mnt_idmap *idmap,
+=======
+				    struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 				    struct dentry *unused, struct inode *inode,
 				    const char *key, const void *buf,
 				    size_t buflen, int flags)
@@ -7763,7 +7891,11 @@ static bool nfs4_xattr_list_nfs4_sacl(struct dentry *dentry)
 #ifdef CONFIG_NFS_V4_SECURITY_LABEL
 
 static int nfs4_xattr_set_nfs4_label(const struct xattr_handler *handler,
+<<<<<<< HEAD
 				     struct mnt_idmap *idmap,
+=======
+				     struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 				     struct dentry *unused, struct inode *inode,
 				     const char *key, const void *buf,
 				     size_t buflen, int flags)
@@ -7814,7 +7946,11 @@ nfs4_listxattr_nfs4_label(struct inode *inode, char *list, size_t list_len)
 
 #ifdef CONFIG_NFS_V4_2
 static int nfs4_xattr_set_nfs4_user(const struct xattr_handler *handler,
+<<<<<<< HEAD
 				    struct mnt_idmap *idmap,
+=======
+				    struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 				    struct dentry *unused, struct inode *inode,
 				    const char *key, const void *buf,
 				    size_t buflen, int flags)
@@ -8908,7 +9044,11 @@ int nfs4_proc_exchange_id(struct nfs_client *clp, const struct cred *cred)
 void nfs4_test_session_trunk(struct rpc_clnt *clnt, struct rpc_xprt *xprt,
 			    void *data)
 {
+<<<<<<< HEAD
 	struct nfs4_add_xprt_data *adata = data;
+=======
+	struct nfs4_add_xprt_data *adata = (struct nfs4_add_xprt_data *)data;
+>>>>>>> b7ba80a49124 (Commit)
 	struct rpc_task *task;
 	int status;
 
@@ -10603,9 +10743,13 @@ static void nfs4_disable_swap(struct inode *inode)
 	/* The state manager thread will now exit once it is
 	 * woken.
 	 */
+<<<<<<< HEAD
 	struct nfs_client *clp = NFS_SERVER(inode)->nfs_client;
 
 	nfs4_schedule_state_manager(clp);
+=======
+	wake_up_var(&NFS_SERVER(inode)->nfs_client->cl_state);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct inode_operations nfs4_dir_inode_operations = {

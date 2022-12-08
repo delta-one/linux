@@ -77,7 +77,11 @@ patternProperties:
       regulator-initial-mode: false
 
     patternProperties:
+<<<<<<< HEAD
       "^regulator-state-(standby|mem|disk)$":
+=======
+      regulator-state-(standby|mem|disk):
+>>>>>>> b7ba80a49124 (Commit)
         type: object
         additionalProperties: true
         properties:

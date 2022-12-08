@@ -1640,6 +1640,7 @@ static bool aldebaran_is_baco_supported(struct smu_context *smu)
 static int aldebaran_set_df_cstate(struct smu_context *smu,
 				   enum pp_df_cstate state)
 {
+<<<<<<< HEAD
 	struct amdgpu_device *adev = smu->adev;
 
 	/*
@@ -1649,6 +1650,8 @@ static int aldebaran_set_df_cstate(struct smu_context *smu,
 	if (amdgpu_in_reset(adev) || adev->in_suspend)
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return smu_cmn_send_smc_msg_with_param(smu, SMU_MSG_DFCstateControl, state, NULL);
 }
 

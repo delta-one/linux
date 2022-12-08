@@ -29,8 +29,13 @@ void flush_thread(void)
 
 	ret = unmap(&current->mm->context.id, 0, TASK_SIZE, 1, &data);
 	if (ret) {
+<<<<<<< HEAD
 		printk(KERN_ERR "%s - clearing address space failed, err = %d\n",
 		       __func__, ret);
+=======
+		printk(KERN_ERR "flush_thread - clearing address space failed, "
+		       "err = %d\n", ret);
+>>>>>>> b7ba80a49124 (Commit)
 		force_sig(SIGKILL);
 	}
 	get_safe_registers(current_pt_regs()->regs.gp,

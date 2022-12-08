@@ -30,8 +30,11 @@
 #define MAX_STRERR_LEN 256
 #define MAX_TEST_NAME 80
 
+<<<<<<< HEAD
 #define __always_unused	__attribute__((__unused__))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define _FAIL(errnum, fmt...)                                                  \
 	({                                                                     \
 		error_at_line(0, (errnum), __func__, __LINE__, fmt);           \
@@ -323,8 +326,12 @@ static int socket_loopback(int family, int sotype)
 	return socket_loopback_reuseport(family, sotype, -1);
 }
 
+<<<<<<< HEAD
 static void test_insert_invalid(struct test_sockmap_listen *skel __always_unused,
 				int family, int sotype, int mapfd)
+=======
+static void test_insert_invalid(int family, int sotype, int mapfd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 key = 0;
 	u64 value;
@@ -341,8 +348,12 @@ static void test_insert_invalid(struct test_sockmap_listen *skel __always_unused
 		FAIL_ERRNO("map_update: expected EBADF");
 }
 
+<<<<<<< HEAD
 static void test_insert_opened(struct test_sockmap_listen *skel __always_unused,
 			       int family, int sotype, int mapfd)
+=======
+static void test_insert_opened(int family, int sotype, int mapfd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 key = 0;
 	u64 value;
@@ -363,8 +374,12 @@ static void test_insert_opened(struct test_sockmap_listen *skel __always_unused,
 	xclose(s);
 }
 
+<<<<<<< HEAD
 static void test_insert_bound(struct test_sockmap_listen *skel __always_unused,
 			      int family, int sotype, int mapfd)
+=======
+static void test_insert_bound(int family, int sotype, int mapfd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sockaddr_storage addr;
 	socklen_t len;
@@ -391,8 +406,12 @@ close:
 	xclose(s);
 }
 
+<<<<<<< HEAD
 static void test_insert(struct test_sockmap_listen *skel __always_unused,
 			int family, int sotype, int mapfd)
+=======
+static void test_insert(int family, int sotype, int mapfd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u64 value;
 	u32 key;
@@ -408,8 +427,12 @@ static void test_insert(struct test_sockmap_listen *skel __always_unused,
 	xclose(s);
 }
 
+<<<<<<< HEAD
 static void test_delete_after_insert(struct test_sockmap_listen *skel __always_unused,
 				     int family, int sotype, int mapfd)
+=======
+static void test_delete_after_insert(int family, int sotype, int mapfd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u64 value;
 	u32 key;
@@ -426,8 +449,12 @@ static void test_delete_after_insert(struct test_sockmap_listen *skel __always_u
 	xclose(s);
 }
 
+<<<<<<< HEAD
 static void test_delete_after_close(struct test_sockmap_listen *skel __always_unused,
 				    int family, int sotype, int mapfd)
+=======
+static void test_delete_after_close(int family, int sotype, int mapfd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int err, s;
 	u64 value;
@@ -450,8 +477,12 @@ static void test_delete_after_close(struct test_sockmap_listen *skel __always_un
 		FAIL_ERRNO("map_delete: expected EINVAL/EINVAL");
 }
 
+<<<<<<< HEAD
 static void test_lookup_after_insert(struct test_sockmap_listen *skel __always_unused,
 				     int family, int sotype, int mapfd)
+=======
+static void test_lookup_after_insert(int family, int sotype, int mapfd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u64 cookie, value;
 	socklen_t len;
@@ -479,8 +510,12 @@ static void test_lookup_after_insert(struct test_sockmap_listen *skel __always_u
 	xclose(s);
 }
 
+<<<<<<< HEAD
 static void test_lookup_after_delete(struct test_sockmap_listen *skel __always_unused,
 				     int family, int sotype, int mapfd)
+=======
+static void test_lookup_after_delete(int family, int sotype, int mapfd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int err, s;
 	u64 value;
@@ -503,8 +538,12 @@ static void test_lookup_after_delete(struct test_sockmap_listen *skel __always_u
 	xclose(s);
 }
 
+<<<<<<< HEAD
 static void test_lookup_32_bit_value(struct test_sockmap_listen *skel __always_unused,
 				     int family, int sotype, int mapfd)
+=======
+static void test_lookup_32_bit_value(int family, int sotype, int mapfd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 key, value32;
 	int err, s;
@@ -534,8 +573,12 @@ close:
 	xclose(s);
 }
 
+<<<<<<< HEAD
 static void test_update_existing(struct test_sockmap_listen *skel __always_unused,
 				 int family, int sotype, int mapfd)
+=======
+static void test_update_existing(int family, int sotype, int mapfd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int s1, s2;
 	u64 value;
@@ -563,7 +606,11 @@ close_s1:
 /* Exercise the code path where we destroy child sockets that never
  * got accept()'ed, aka orphans, when parent socket gets closed.
  */
+<<<<<<< HEAD
 static void do_destroy_orphan_child(int family, int sotype, int mapfd)
+=======
+static void test_destroy_orphan_child(int family, int sotype, int mapfd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sockaddr_storage addr;
 	socklen_t len;
@@ -594,6 +641,7 @@ close_srv:
 	xclose(s);
 }
 
+<<<<<<< HEAD
 static void test_destroy_orphan_child(struct test_sockmap_listen *skel,
 				      int family, int sotype, int mapfd)
 {
@@ -626,6 +674,12 @@ static void test_destroy_orphan_child(struct test_sockmap_listen *skel,
  */
 static void test_clone_after_delete(struct test_sockmap_listen *skel __always_unused,
 				    int family, int sotype, int mapfd)
+=======
+/* Perform a passive open after removing listening socket from SOCKMAP
+ * to ensure that callbacks get restored properly.
+ */
+static void test_clone_after_delete(int family, int sotype, int mapfd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sockaddr_storage addr;
 	socklen_t len;
@@ -661,8 +715,12 @@ close_srv:
  * SOCKMAP, but got accept()'ed only after the parent has been removed
  * from SOCKMAP, gets cloned without parent psock state or callbacks.
  */
+<<<<<<< HEAD
 static void test_accept_after_delete(struct test_sockmap_listen *skel __always_unused,
 				     int family, int sotype, int mapfd)
+=======
+static void test_accept_after_delete(int family, int sotype, int mapfd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sockaddr_storage addr;
 	const u32 zero = 0;
@@ -716,8 +774,12 @@ close_srv:
 /* Check that child socket that got created and accepted while parent
  * was in a SOCKMAP is cloned without parent psock state or callbacks.
  */
+<<<<<<< HEAD
 static void test_accept_before_delete(struct test_sockmap_listen *skel __always_unused,
 				      int family, int sotype, int mapfd)
+=======
+static void test_accept_before_delete(int family, int sotype, int mapfd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sockaddr_storage addr;
 	const u32 zero = 0, one = 1;
@@ -826,8 +888,12 @@ done:
 	return NULL;
 }
 
+<<<<<<< HEAD
 static void test_syn_recv_insert_delete(struct test_sockmap_listen *skel __always_unused,
 					int family, int sotype, int mapfd)
+=======
+static void test_syn_recv_insert_delete(int family, int sotype, int mapfd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct connect_accept_ctx ctx = { 0 };
 	struct sockaddr_storage addr;
@@ -890,8 +956,12 @@ static void *listen_thread(void *arg)
 	return NULL;
 }
 
+<<<<<<< HEAD
 static void test_race_insert_listen(struct test_sockmap_listen *skel __always_unused,
 				    int family, int socktype, int mapfd)
+=======
+static void test_race_insert_listen(int family, int socktype, int mapfd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct connect_accept_ctx ctx = { 0 };
 	const u32 zero = 0;
@@ -1517,8 +1587,12 @@ static void test_ops(struct test_sockmap_listen *skel, struct bpf_map *map,
 		     int family, int sotype)
 {
 	const struct op_test {
+<<<<<<< HEAD
 		void (*fn)(struct test_sockmap_listen *skel,
 			   int family, int sotype, int mapfd);
+=======
+		void (*fn)(int family, int sotype, int mapfd);
+>>>>>>> b7ba80a49124 (Commit)
 		const char *name;
 		int sotype;
 	} tests[] = {
@@ -1565,7 +1639,11 @@ static void test_ops(struct test_sockmap_listen *skel, struct bpf_map *map,
 		if (!test__start_subtest(s))
 			continue;
 
+<<<<<<< HEAD
 		t->fn(skel, family, sotype, map_fd);
+=======
+		t->fn(family, sotype, map_fd);
+>>>>>>> b7ba80a49124 (Commit)
 		test_ops_cleanup(map);
 	}
 }

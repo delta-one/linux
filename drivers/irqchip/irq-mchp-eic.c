@@ -276,4 +276,8 @@ IRQCHIP_MATCH("microchip,sama7g5-eic", mchp_eic_init)
 IRQCHIP_PLATFORM_DRIVER_END(mchp_eic)
 
 MODULE_DESCRIPTION("Microchip External Interrupt Controller");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_AUTHOR("Claudiu Beznea <claudiu.beznea@microchip.com>");

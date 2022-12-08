@@ -169,4 +169,8 @@ module_platform_driver(rsctrl_driver);
 
 MODULE_AUTHOR("Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>");
 MODULE_DESCRIPTION("Texas Instruments keystone reset driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_ALIAS("platform:" KBUILD_MODNAME);

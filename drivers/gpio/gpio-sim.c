@@ -31,7 +31,10 @@
 
 #include "gpiolib.h"
 
+<<<<<<< HEAD
 #define GPIO_SIM_NGPIO_MAX	1024
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define GPIO_SIM_PROP_MAX	4 /* Max 3 properties + sentinel. */
 #define GPIO_SIM_NUM_ATTRS	3 /* value, pull and sentinel */
 
@@ -372,6 +375,7 @@ static int gpio_sim_add_bank(struct fwnode_handle *swnode, struct device *dev)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (num_lines > GPIO_SIM_NGPIO_MAX)
 		return -ERANGE;
 
@@ -379,6 +383,12 @@ static int gpio_sim_add_bank(struct fwnode_handle *swnode, struct device *dev)
 	if (ret) {
 		label = devm_kasprintf(dev, GFP_KERNEL, "%s-%pfwP",
 				       dev_name(dev), swnode);
+=======
+	ret = fwnode_property_read_string(swnode, "gpio-sim,label", &label);
+	if (ret) {
+		label = devm_kasprintf(dev, GFP_KERNEL, "%s-%s",
+				       dev_name(dev), fwnode_get_name(swnode));
+>>>>>>> b7ba80a49124 (Commit)
 		if (!label)
 			return -ENOMEM;
 	}
@@ -736,7 +746,11 @@ static void gpio_sim_remove_hogs(struct gpio_sim_device *dev)
 
 	gpiod_remove_hogs(dev->hogs);
 
+<<<<<<< HEAD
 	for (hog = dev->hogs; hog->chip_label; hog++) {
+=======
+	for (hog = dev->hogs; !hog->chip_label; hog++) {
+>>>>>>> b7ba80a49124 (Commit)
 		kfree(hog->chip_label);
 		kfree(hog->line_name);
 	}
@@ -784,9 +798,16 @@ static int gpio_sim_add_hogs(struct gpio_sim_device *dev)
 							  GFP_KERNEL);
 			else
 				hog->chip_label = kasprintf(GFP_KERNEL,
+<<<<<<< HEAD
 							"gpio-sim.%u-%pfwP",
 							dev->id,
 							bank->swnode);
+=======
+							"gpio-sim.%u-%s",
+							dev->id,
+							fwnode_get_name(
+								bank->swnode));
+>>>>>>> b7ba80a49124 (Commit)
 			if (!hog->chip_label) {
 				gpio_sim_remove_hogs(dev);
 				return -ENOMEM;
@@ -953,9 +974,15 @@ static void gpio_sim_device_deactivate_unlocked(struct gpio_sim_device *dev)
 
 	swnode = dev_fwnode(&dev->pdev->dev);
 	platform_device_unregister(dev->pdev);
+<<<<<<< HEAD
 	gpio_sim_remove_hogs(dev);
 	gpio_sim_remove_swnode_recursive(swnode);
 	dev->pdev = NULL;
+=======
+	gpio_sim_remove_swnode_recursive(swnode);
+	dev->pdev = NULL;
+	gpio_sim_remove_hogs(dev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t

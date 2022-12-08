@@ -23,7 +23,10 @@ it.
    printk-formats
    printk-index
    symbol-namespaces
+<<<<<<< HEAD
    asm-annotations
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 Data structures and low-level utilities
 =======================================
@@ -46,8 +49,11 @@ Library functionality that is used throughout the kernel.
    this_cpu_ops
    timekeeping
    errseq
+<<<<<<< HEAD
    wrappers/atomic_t
    wrappers/atomic_bitops
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 Low level entry and exit
 ========================
@@ -71,7 +77,10 @@ Documentation/locking/index.rst for more related documentation.
    local_ops
    padata
    ../RCU/index
+<<<<<<< HEAD
    wrappers/memory-barriers.rst
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 Low-level hardware management
 =============================
@@ -127,7 +136,10 @@ Documents that don't fit elsewhere or which have yet to be categorized.
    :maxdepth: 1
 
    librs
+<<<<<<< HEAD
    netlink
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 .. only:: subproject and html
 

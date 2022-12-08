@@ -279,8 +279,13 @@ static inline int snd_motu_protocol_cache_packet_formats(struct snd_motu *motu)
 
 int snd_motu_register_dsp_message_parser_new(struct snd_motu *motu);
 int snd_motu_register_dsp_message_parser_init(struct snd_motu *motu);
+<<<<<<< HEAD
 void snd_motu_register_dsp_message_parser_parse(const struct amdtp_stream *s,
 					const struct pkt_desc *descs, unsigned int count);
+=======
+void snd_motu_register_dsp_message_parser_parse(struct snd_motu *motu, const struct pkt_desc *descs,
+					unsigned int desc_count, unsigned int data_block_quadlets);
+>>>>>>> b7ba80a49124 (Commit)
 void snd_motu_register_dsp_message_parser_copy_meter(struct snd_motu *motu,
 					struct snd_firewire_motu_register_dsp_meter *meter);
 void snd_motu_register_dsp_message_parser_copy_parameter(struct snd_motu *motu,
@@ -290,8 +295,13 @@ bool snd_motu_register_dsp_message_parser_copy_event(struct snd_motu *motu, u32 
 
 int snd_motu_command_dsp_message_parser_new(struct snd_motu *motu);
 int snd_motu_command_dsp_message_parser_init(struct snd_motu *motu, enum cip_sfc sfc);
+<<<<<<< HEAD
 void snd_motu_command_dsp_message_parser_parse(const struct amdtp_stream *s,
 					const struct pkt_desc *descs, unsigned int count);
+=======
+void snd_motu_command_dsp_message_parser_parse(struct snd_motu *motu, const struct pkt_desc *descs,
+					unsigned int desc_count, unsigned int data_block_quadlets);
+>>>>>>> b7ba80a49124 (Commit)
 void snd_motu_command_dsp_message_parser_copy_meter(struct snd_motu *motu,
 					struct snd_firewire_motu_command_dsp_meter *meter);
 

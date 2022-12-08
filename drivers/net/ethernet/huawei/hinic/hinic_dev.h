@@ -22,10 +22,13 @@
 
 #define LP_PKT_CNT		64
 
+<<<<<<< HEAD
 #define HINIC_MAX_JUMBO_FRAME_SIZE      15872
 #define HINIC_MAX_MTU_SIZE      (HINIC_MAX_JUMBO_FRAME_SIZE - ETH_HLEN - ETH_FCS_LEN)
 #define HINIC_MIN_MTU_SIZE      256
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 enum hinic_flags {
 	HINIC_LINK_UP = BIT(0),
 	HINIC_INTF_UP = BIT(1),

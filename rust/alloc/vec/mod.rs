@@ -72,7 +72,10 @@ use core::ptr::{self, NonNull};
 use core::slice::{self, SliceIndex};
 
 use crate::alloc::{Allocator, Global};
+<<<<<<< HEAD
 #[cfg(not(no_borrow))]
+=======
+>>>>>>> b7ba80a49124 (Commit)
 use crate::borrow::{Cow, ToOwned};
 use crate::boxed::Box;
 use crate::collections::TryReserveError;
@@ -95,7 +98,10 @@ pub use self::drain::Drain;
 
 mod drain;
 
+<<<<<<< HEAD
 #[cfg(not(no_borrow))]
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #[cfg(not(no_global_oom_handling))]
 mod cow;
 
@@ -474,6 +480,7 @@ impl<T> Vec<T> {
         Self::with_capacity_in(capacity, Global)
     }
 
+<<<<<<< HEAD
     /// Tries to construct a new, empty `Vec<T>` with the specified capacity.
     ///
     /// The vector will be able to hold exactly `capacity` elements without
@@ -516,6 +523,8 @@ impl<T> Vec<T> {
         Self::try_with_capacity_in(capacity, Global)
     }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
     /// Creates a `Vec<T>` directly from the raw components of another vector.
     ///
     /// # Safety
@@ -661,6 +670,7 @@ impl<T, A: Allocator> Vec<T, A> {
         Vec { buf: RawVec::with_capacity_in(capacity, alloc), len: 0 }
     }
 
+<<<<<<< HEAD
     /// Tries to construct a new, empty `Vec<T, A>` with the specified capacity
     /// with the provided allocator.
     ///
@@ -708,6 +718,8 @@ impl<T, A: Allocator> Vec<T, A> {
         Ok(Vec { buf: RawVec::try_with_capacity_in(capacity, alloc)?, len: 0 })
     }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
     /// Creates a `Vec<T, A>` directly from the raw components of another vector.
     ///
     /// # Safety
@@ -3105,7 +3117,10 @@ impl<T, const N: usize> From<[T; N]> for Vec<T> {
     }
 }
 
+<<<<<<< HEAD
 #[cfg(not(no_borrow))]
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #[stable(feature = "vec_from_cow_slice", since = "1.14.0")]
 impl<'a, T> From<Cow<'a, [T]>> for Vec<T>
 where

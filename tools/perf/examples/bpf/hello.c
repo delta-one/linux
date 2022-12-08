@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0
 #include <linux/bpf.h>
 #include <bpf/bpf_helpers.h>
@@ -19,9 +20,18 @@ struct syscall_enter_args;
 
 SEC("raw_syscalls:sys_enter")
 int sys_enter(struct syscall_enter_args *args)
+=======
+#include <stdio.h>
+
+int syscall_enter(openat)(void *args)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	puts("Hello, world\n");
 	return 0;
 }
 
+<<<<<<< HEAD
 char _license[] SEC("license") = "GPL";
+=======
+license(GPL);
+>>>>>>> b7ba80a49124 (Commit)

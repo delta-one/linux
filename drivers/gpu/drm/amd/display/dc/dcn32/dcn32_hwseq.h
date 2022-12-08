@@ -54,9 +54,12 @@ bool dcn32_set_input_transfer_func(struct dc *dc,
 				struct pipe_ctx *pipe_ctx,
 				const struct dc_plane_state *plane_state);
 
+<<<<<<< HEAD
 bool dcn32_set_mpc_shaper_3dlut(
 	struct pipe_ctx *pipe_ctx, const struct dc_stream_state *stream);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 bool dcn32_set_output_transfer_func(struct dc *dc,
 				struct pipe_ctx *pipe_ctx,
 				const struct dc_stream_state *stream);
@@ -95,6 +98,7 @@ void dcn32_update_phantom_vp_position(struct dc *dc,
 		struct dc_state *context,
 		struct pipe_ctx *phantom_pipe);
 
+<<<<<<< HEAD
 void dcn32_apply_update_flags_for_phantom(struct pipe_ctx *phantom_pipe);
 
 bool dcn32_dsc_pg_status(
@@ -111,4 +115,6 @@ void dcn32_init_blank(
 		struct dc *dc,
 		struct timing_generator *tg);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __DC_HWSS_DCN32_H__ */

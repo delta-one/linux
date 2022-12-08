@@ -97,6 +97,27 @@ static struct ctl_table balloon_table[] = {
 	{ }
 };
 
+<<<<<<< HEAD
+=======
+static struct ctl_table balloon_root[] = {
+	{
+		.procname	= "balloon",
+		.mode		= 0555,
+		.child		= balloon_table,
+	},
+	{ }
+};
+
+static struct ctl_table xen_root[] = {
+	{
+		.procname	= "xen",
+		.mode		= 0555,
+		.child		= balloon_root,
+	},
+	{ }
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 #else
 #define xen_hotplug_unpopulated 0
 #endif
@@ -729,7 +750,11 @@ static int __init balloon_init(void)
 #ifdef CONFIG_XEN_BALLOON_MEMORY_HOTPLUG
 	set_online_page_callback(&xen_online_page);
 	register_memory_notifier(&xen_memory_nb);
+<<<<<<< HEAD
 	register_sysctl_init("xen/balloon", balloon_table);
+=======
+	register_sysctl_table(xen_root);
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 	balloon_add_regions();

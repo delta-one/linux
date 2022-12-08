@@ -93,11 +93,14 @@ disas() {
 		${CROSS_COMPILE}strip $t.o
 	fi
 
+<<<<<<< HEAD
 	if [ "$ARCH" = "riscv" ]; then
 		OBJDUMPFLAGS="-M no-aliases --section=.text -D"
 		${CROSS_COMPILE}strip $t.o
 	fi
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if [ $pc_sub -ne 0 ]; then
 		if [ $PC ]; then
 			adj_vma=$(( $PC - $pc_sub ))
@@ -131,6 +134,7 @@ get_substr_opcode_bytes_num()
 	do
 		substr+="$opc"
 
+<<<<<<< HEAD
 		opcode="$substr"
 		if [ "$ARCH" = "riscv" ]; then
 			opcode=$(echo $opcode | tr ' ' '\n' | tac | tr -d '\n')
@@ -138,6 +142,10 @@ get_substr_opcode_bytes_num()
 
 		# return if opcode bytes do not match @opline anymore
 		if ! echo $opline | grep -q "$opcode";
+=======
+		# return if opcode bytes do not match @opline anymore
+		if ! echo $opline | grep -q "$substr";
+>>>>>>> b7ba80a49124 (Commit)
 		then
 			break
 		fi

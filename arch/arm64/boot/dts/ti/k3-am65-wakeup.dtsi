@@ -54,7 +54,10 @@
 		clock-frequency = <48000000>;
 		current-speed = <115200>;
 		power-domains = <&k3_pds 150 TI_SCI_PD_EXCLUSIVE>;
+<<<<<<< HEAD
 		status = "disabled";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	wkup_i2c0: i2c@42120000 {
@@ -66,7 +69,10 @@
 		clock-names = "fck";
 		clocks = <&k3_clks 115 1>;
 		power-domains = <&k3_pds 115 TI_SCI_PD_EXCLUSIVE>;
+<<<<<<< HEAD
 		status = "disabled";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	intr_wkup_gpio: interrupt-controller@42200000 {

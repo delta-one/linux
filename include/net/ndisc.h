@@ -395,11 +395,19 @@ static inline struct neighbour *__ipv6_neigh_lookup(struct net_device *dev, cons
 {
 	struct neighbour *n;
 
+<<<<<<< HEAD
 	rcu_read_lock();
 	n = __ipv6_neigh_lookup_noref(dev, pkey);
 	if (n && !refcount_inc_not_zero(&n->refcnt))
 		n = NULL;
 	rcu_read_unlock();
+=======
+	rcu_read_lock_bh();
+	n = __ipv6_neigh_lookup_noref(dev, pkey);
+	if (n && !refcount_inc_not_zero(&n->refcnt))
+		n = NULL;
+	rcu_read_unlock_bh();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return n;
 }
@@ -409,10 +417,17 @@ static inline void __ipv6_confirm_neigh(struct net_device *dev,
 {
 	struct neighbour *n;
 
+<<<<<<< HEAD
 	rcu_read_lock();
 	n = __ipv6_neigh_lookup_noref(dev, pkey);
 	neigh_confirm(n);
 	rcu_read_unlock();
+=======
+	rcu_read_lock_bh();
+	n = __ipv6_neigh_lookup_noref(dev, pkey);
+	neigh_confirm(n);
+	rcu_read_unlock_bh();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void __ipv6_confirm_neigh_stub(struct net_device *dev,
@@ -420,10 +435,17 @@ static inline void __ipv6_confirm_neigh_stub(struct net_device *dev,
 {
 	struct neighbour *n;
 
+<<<<<<< HEAD
 	rcu_read_lock();
 	n = __ipv6_neigh_lookup_noref_stub(dev, pkey);
 	neigh_confirm(n);
 	rcu_read_unlock();
+=======
+	rcu_read_lock_bh();
+	n = __ipv6_neigh_lookup_noref_stub(dev, pkey);
+	neigh_confirm(n);
+	rcu_read_unlock_bh();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* uses ipv6_stub and is meant for use outside of IPv6 core */
@@ -445,7 +467,11 @@ int ndisc_late_init(void);
 void ndisc_late_cleanup(void);
 void ndisc_cleanup(void);
 
+<<<<<<< HEAD
 enum skb_drop_reason ndisc_rcv(struct sk_buff *skb);
+=======
+int ndisc_rcv(struct sk_buff *skb);
+>>>>>>> b7ba80a49124 (Commit)
 
 struct sk_buff *ndisc_ns_create(struct net_device *dev, const struct in6_addr *solicit,
 				const struct in6_addr *saddr, u64 nonce);

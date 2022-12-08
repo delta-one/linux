@@ -9,6 +9,7 @@
 
 #include "sparx5_main.h"
 
+<<<<<<< HEAD
 /* Port PCP rewrite mode */
 #define SPARX5_PORT_REW_TAG_CTRL_CLASSIFIED 0
 #define SPARX5_PORT_REW_TAG_CTRL_DEFAULT 1
@@ -20,6 +21,8 @@
 #define SPARX5_PORT_REW_DSCP_SELECTED  2
 #define SPARX5_PORT_REW_DSCP_ALL 3
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool sparx5_port_is_2g5(int portno)
 {
 	return portno >= 16 && portno <= 47;
@@ -102,6 +105,7 @@ int sparx5_get_port_status(struct sparx5 *sparx5,
 void sparx5_port_enable(struct sparx5_port *port, bool enable);
 int sparx5_port_fwd_urg(struct sparx5 *sparx5, u32 speed);
 
+<<<<<<< HEAD
 #define SPARX5_PORT_QOS_PCP_COUNT 8
 #define SPARX5_PORT_QOS_DEI_COUNT 8
 #define SPARX5_PORT_QOS_PCP_DEI_COUNT \
@@ -174,4 +178,6 @@ int sparx5_port_qos_dscp_rewr_set(const struct sparx5_port *port,
 int sparx5_port_qos_default_set(const struct sparx5_port *port,
 				const struct sparx5_port_qos *qos);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif	/* __SPARX5_PORT_H__ */

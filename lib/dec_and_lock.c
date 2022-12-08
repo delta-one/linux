@@ -49,6 +49,7 @@ int _atomic_dec_and_lock_irqsave(atomic_t *atomic, spinlock_t *lock,
 	return 0;
 }
 EXPORT_SYMBOL(_atomic_dec_and_lock_irqsave);
+<<<<<<< HEAD
 
 int _atomic_dec_and_raw_lock(atomic_t *atomic, raw_spinlock_t *lock)
 {
@@ -80,3 +81,5 @@ int _atomic_dec_and_raw_lock_irqsave(atomic_t *atomic, raw_spinlock_t *lock,
 	return 0;
 }
 EXPORT_SYMBOL(_atomic_dec_and_raw_lock_irqsave);
+=======
+>>>>>>> b7ba80a49124 (Commit)

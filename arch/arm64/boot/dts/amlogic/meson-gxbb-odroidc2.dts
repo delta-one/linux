@@ -250,6 +250,24 @@
 	};
 };
 
+<<<<<<< HEAD
+=======
+&gpio_ao {
+	/*
+	 * WARNING: The USB Hub on the Odroid-C2 needs a reset signal
+	 * to be turned high in order to be detected by the USB Controller
+	 * This signal should be handled by a USB specific power sequence
+	 * in order to reset the Hub when USB bus is powered down.
+	 */
+	hog-0 {
+		gpio-hog;
+		gpios = <GPIOAO_4 GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "usb-hub-reset";
+	};
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &hdmi_tx {
 	status = "okay";
 	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
@@ -399,6 +417,7 @@
 };
 
 &usb1 {
+<<<<<<< HEAD
 	dr_mode = "host";
 	#address-cells = <1>;
 	#size-cells = <0>;
@@ -411,4 +430,7 @@
 		vdd-supply = <&p5v0>;
 		reset-gpio = <&gpio_ao GPIOAO_4 GPIO_ACTIVE_LOW>;
 	};
+=======
+	status = "okay";
+>>>>>>> b7ba80a49124 (Commit)
 };

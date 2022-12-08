@@ -6,6 +6,10 @@
 #include <linux/spinlock.h>
 #include <linux/gpio/driver.h>
 #include <linux/bio.h>
+<<<<<<< HEAD
+=======
+#include <linux/spinlock.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mutex.h>
 #include <linux/kthread.h>
 #include <linux/interrupt.h>
@@ -175,6 +179,7 @@ static void pci1xxxx_gpio_irq_set_mask(struct irq_data *data, bool set)
 	unsigned int gpio = irqd_to_hwirq(data);
 	unsigned long flags;
 
+<<<<<<< HEAD
 	if (!set)
 		gpiochip_enable_irq(chip, gpio);
 	spin_lock_irqsave(&priv->lock, flags);
@@ -182,6 +187,11 @@ static void pci1xxxx_gpio_irq_set_mask(struct irq_data *data, bool set)
 	spin_unlock_irqrestore(&priv->lock, flags);
 	if (set)
 		gpiochip_disable_irq(chip, gpio);
+=======
+	spin_lock_irqsave(&priv->lock, flags);
+	pci1xxx_assign_bit(priv->reg_base, INTR_MASK_OFFSET(gpio), (gpio % 32), set);
+	spin_unlock_irqrestore(&priv->lock, flags);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void pci1xxxx_gpio_irq_mask(struct irq_data *data)
@@ -287,14 +297,21 @@ static irqreturn_t pci1xxxx_gpio_irq_handler(int irq, void *dev_id)
 	return IRQ_HANDLED;
 }
 
+<<<<<<< HEAD
 static const struct irq_chip pci1xxxx_gpio_irqchip = {
+=======
+static struct irq_chip pci1xxxx_gpio_irqchip = {
+>>>>>>> b7ba80a49124 (Commit)
 	.name = "pci1xxxx_gpio",
 	.irq_ack = pci1xxxx_gpio_irq_ack,
 	.irq_mask = pci1xxxx_gpio_irq_mask,
 	.irq_unmask = pci1xxxx_gpio_irq_unmask,
 	.irq_set_type = pci1xxxx_gpio_set_type,
+<<<<<<< HEAD
 	.flags = IRQCHIP_IMMUTABLE,
 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int pci1xxxx_gpio_suspend(struct device *dev)
@@ -357,7 +374,11 @@ static int pci1xxxx_gpio_setup(struct pci1xxxx_gpio *priv, int irq)
 		return retval;
 
 	girq = &priv->gpio.irq;
+<<<<<<< HEAD
 	gpio_irq_chip_set_chip(girq, &pci1xxxx_gpio_irqchip);
+=======
+	girq->chip = &pci1xxxx_gpio_irqchip;
+>>>>>>> b7ba80a49124 (Commit)
 	girq->parent_handler = NULL;
 	girq->num_parents = 0;
 	girq->parents = NULL;
@@ -410,7 +431,11 @@ static int pci1xxxx_gpio_probe(struct auxiliary_device *aux_dev,
 	return devm_gpiochip_add_data(&aux_dev->dev, &priv->gpio, priv);
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(pci1xxxx_gpio_pm_ops, pci1xxxx_gpio_suspend, pci1xxxx_gpio_resume);
+=======
+static SIMPLE_DEV_PM_OPS(pci1xxxx_gpio_pm_ops, pci1xxxx_gpio_suspend, pci1xxxx_gpio_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct auxiliary_device_id pci1xxxx_gpio_auxiliary_id_table[] = {
 	{.name = "mchp_pci1xxxx_gp.gp_gpio"},

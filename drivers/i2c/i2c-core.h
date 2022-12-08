@@ -61,11 +61,19 @@ static inline int __i2c_check_suspended(struct i2c_adapter *adap)
 #ifdef CONFIG_ACPI
 void i2c_acpi_register_devices(struct i2c_adapter *adap);
 
+<<<<<<< HEAD
 int i2c_acpi_get_irq(struct i2c_client *client, bool *wake_capable);
 #else /* CONFIG_ACPI */
 static inline void i2c_acpi_register_devices(struct i2c_adapter *adap) { }
 
 static inline int i2c_acpi_get_irq(struct i2c_client *client, bool *wake_capable)
+=======
+int i2c_acpi_get_irq(struct i2c_client *client);
+#else /* CONFIG_ACPI */
+static inline void i2c_acpi_register_devices(struct i2c_adapter *adap) { }
+
+static inline int i2c_acpi_get_irq(struct i2c_client *client)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return 0;
 }

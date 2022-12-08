@@ -2,13 +2,20 @@
 
 #include "../zlib_deflate/defutil.h"
 #include "dfltcc_util.h"
+<<<<<<< HEAD
 #include "dfltcc_deflate.h"
+=======
+#include "dfltcc.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/setup.h>
 #include <linux/export.h>
 #include <linux/zutil.h>
 
+<<<<<<< HEAD
 #define GET_DFLTCC_DEFLATE_STATE(state) ((struct dfltcc_deflate_state *)GET_DFLTCC_STATE(state))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Compress.
  */
@@ -17,7 +24,11 @@ int dfltcc_can_deflate(
 )
 {
     deflate_state *state = (deflate_state *)strm->state;
+<<<<<<< HEAD
     struct dfltcc_deflate_state *dfltcc_state = GET_DFLTCC_DEFLATE_STATE(state);
+=======
+    struct dfltcc_state *dfltcc_state = GET_DFLTCC_STATE(state);
+>>>>>>> b7ba80a49124 (Commit)
 
     /* Check for kernel dfltcc command line parameter */
     if (zlib_dfltcc_support == ZLIB_DFLTCC_DISABLED ||
@@ -30,15 +41,22 @@ int dfltcc_can_deflate(
         return 0;
 
     /* Unsupported hardware */
+<<<<<<< HEAD
     if (!is_bit_set(dfltcc_state->common.af.fns, DFLTCC_GDHT) ||
             !is_bit_set(dfltcc_state->common.af.fns, DFLTCC_CMPR) ||
             !is_bit_set(dfltcc_state->common.af.fmts, DFLTCC_FMT0))
+=======
+    if (!is_bit_set(dfltcc_state->af.fns, DFLTCC_GDHT) ||
+            !is_bit_set(dfltcc_state->af.fns, DFLTCC_CMPR) ||
+            !is_bit_set(dfltcc_state->af.fmts, DFLTCC_FMT0))
+>>>>>>> b7ba80a49124 (Commit)
         return 0;
 
     return 1;
 }
 EXPORT_SYMBOL(dfltcc_can_deflate);
 
+<<<<<<< HEAD
 void dfltcc_reset_deflate_state(z_streamp strm) {
     deflate_state *state = (deflate_state *)strm->state;
     struct dfltcc_deflate_state *dfltcc_state = GET_DFLTCC_DEFLATE_STATE(state);
@@ -56,13 +74,19 @@ void dfltcc_reset_deflate_state(z_streamp strm) {
 }
 EXPORT_SYMBOL(dfltcc_reset_deflate_state);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void dfltcc_gdht(
     z_streamp strm
 )
 {
     deflate_state *state = (deflate_state *)strm->state;
     struct dfltcc_param_v0 *param = &GET_DFLTCC_STATE(state)->param;
+<<<<<<< HEAD
     size_t avail_in = strm->avail_in;
+=======
+    size_t avail_in = avail_in = strm->avail_in;
+>>>>>>> b7ba80a49124 (Commit)
 
     dfltcc(DFLTCC_GDHT,
            param, NULL, NULL,
@@ -123,26 +147,37 @@ int dfltcc_deflate(
 )
 {
     deflate_state *state = (deflate_state *)strm->state;
+<<<<<<< HEAD
     struct dfltcc_deflate_state *dfltcc_state = GET_DFLTCC_DEFLATE_STATE(state);
     struct dfltcc_param_v0 *param = &dfltcc_state->common.param;
+=======
+    struct dfltcc_state *dfltcc_state = GET_DFLTCC_STATE(state);
+    struct dfltcc_param_v0 *param = &dfltcc_state->param;
+>>>>>>> b7ba80a49124 (Commit)
     uInt masked_avail_in;
     dfltcc_cc cc;
     int need_empty_block;
     int soft_bcc;
     int no_flush;
 
+<<<<<<< HEAD
     if (!dfltcc_can_deflate(strm)) {
         /* Clear history. */
         if (flush == Z_FULL_FLUSH)
             param->hl = 0;
         return 0;
     }
+=======
+    if (!dfltcc_can_deflate(strm))
+        return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 again:
     masked_avail_in = 0;
     soft_bcc = 0;
     no_flush = flush == Z_NO_FLUSH;
 
+<<<<<<< HEAD
     /* No input data. Return, except when Continuation Flag is set, which means
      * that DFLTCC has buffered some output in the parameter block and needs to
      * be called again in order to flush it.
@@ -163,6 +198,25 @@ again:
             param->hl = 0;
         /* Trigger block post-processing if necessary. */
         *result = no_flush ? need_more : block_done;
+=======
+    /* Trailing empty block. Switch to software, except when Continuation Flag
+     * is set, which means that DFLTCC has buffered some output in the
+     * parameter block and needs to be called again in order to flush it.
+     */
+    if (flush == Z_FINISH && strm->avail_in == 0 && !param->cf) {
+        if (param->bcf) {
+            /* A block is still open, and the hardware does not support closing
+             * blocks without adding data. Thus, close it manually.
+             */
+            send_eobs(strm, param);
+            param->bcf = 0;
+        }
+        return 0;
+    }
+
+    if (strm->avail_in == 0 && !param->cf) {
+        *result = need_more;
+>>>>>>> b7ba80a49124 (Commit)
         return 1;
     }
 
@@ -189,6 +243,7 @@ again:
             param->bcf = 0;
             dfltcc_state->block_threshold =
                 strm->total_in + dfltcc_state->block_size;
+<<<<<<< HEAD
         }
     }
 
@@ -201,6 +256,15 @@ again:
         return 1;
     }
 
+=======
+            if (strm->avail_out == 0) {
+                *result = need_more;
+                return 1;
+            }
+        }
+    }
+
+>>>>>>> b7ba80a49124 (Commit)
     /* The caller gave us too much data. Pass only one block worth of
      * uncompressed data to DFLTCC and mask the rest, so that on the next
      * iteration we start a new block.
@@ -220,7 +284,11 @@ again:
     param->cvt = CVT_ADLER32;
     if (!no_flush)
         /* We need to close a block. Always do this in software - when there is
+<<<<<<< HEAD
          * no input data, the hardware will not hohor BCC. */
+=======
+         * no input data, the hardware will not nohor BCC. */
+>>>>>>> b7ba80a49124 (Commit)
         soft_bcc = 1;
     if (flush == Z_FINISH && !param->bcf)
         /* We are about to open a BFINAL block, set Block Header Final bit
@@ -235,8 +303,13 @@ again:
     param->sbb = (unsigned int)state->bi_valid;
     if (param->sbb > 0)
         *strm->next_out = (Byte)state->bi_buf;
+<<<<<<< HEAD
     /* Honor history and check value */
     param->nt = 0;
+=======
+    if (param->hl)
+        param->nt = 0; /* Honor history */
+>>>>>>> b7ba80a49124 (Commit)
     param->cv = strm->adler;
 
     /* When opening a block, choose a Huffman-Table Type */
@@ -263,7 +336,11 @@ again:
     } while (cc == DFLTCC_CC_AGAIN);
 
     /* Translate parameter block to stream */
+<<<<<<< HEAD
     strm->msg = oesc_msg(dfltcc_state->common.msg, param->oesc);
+=======
+    strm->msg = oesc_msg(dfltcc_state->msg, param->oesc);
+>>>>>>> b7ba80a49124 (Commit)
     state->bi_valid = param->sbb;
     if (state->bi_valid == 0)
         state->bi_buf = 0; /* Avoid accessing next_out */

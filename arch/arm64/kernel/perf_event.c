@@ -806,6 +806,7 @@ static void armv8pmu_disable_event(struct perf_event *event)
 
 static void armv8pmu_start(struct arm_pmu *cpu_pmu)
 {
+<<<<<<< HEAD
 	struct perf_event_context *ctx;
 	int nr_user = 0;
 
@@ -814,6 +815,12 @@ static void armv8pmu_start(struct arm_pmu *cpu_pmu)
 		nr_user = ctx->nr_user;
 
 	if (sysctl_perf_user_access && nr_user)
+=======
+	struct perf_event_context *task_ctx =
+		this_cpu_ptr(cpu_pmu->pmu.pmu_cpu_context)->task_ctx;
+
+	if (sysctl_perf_user_access && task_ctx && task_ctx->nr_user)
+>>>>>>> b7ba80a49124 (Commit)
 		armv8pmu_enable_user_access(cpu_pmu);
 	else
 		armv8pmu_disable_user_access();
@@ -1023,6 +1030,15 @@ static int armv8pmu_set_event_filter(struct hw_perf_event *event,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int armv8pmu_filter_match(struct perf_event *event)
+{
+	unsigned long evtype = event->hw.config_base & ARMV8_PMU_EVTYPE_EVENT;
+	return evtype != ARMV8_PMUV3_PERFCTR_CHAIN;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void armv8pmu_reset(void *info)
 {
 	struct arm_pmu *cpu_pmu = (struct arm_pmu *)info;
@@ -1063,6 +1079,7 @@ static int __armv8_pmuv3_map_event(struct perf_event *event,
 				       &armv8_pmuv3_perf_cache_map,
 				       ARMV8_PMU_EVTYPE_EVENT);
 
+<<<<<<< HEAD
 	/*
 	 * CHAIN events only work when paired with an adjacent counter, and it
 	 * never makes sense for a user to open one in isolation, as they'll be
@@ -1071,6 +1088,8 @@ static int __armv8_pmuv3_map_event(struct perf_event *event,
 	if (hw_event_id == ARMV8_PMUV3_PERFCTR_CHAIN)
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (armv8pmu_event_is_64bit(event))
 		event->hw.flags |= ARMPMU_EVT_64BIT;
 
@@ -1152,8 +1171,12 @@ static void __armv8pmu_probe_pmu(void *info)
 	dfr0 = read_sysreg(id_aa64dfr0_el1);
 	pmuver = cpuid_feature_extract_unsigned_field(dfr0,
 			ID_AA64DFR0_EL1_PMUVer_SHIFT);
+<<<<<<< HEAD
 	if (pmuver == ID_AA64DFR0_EL1_PMUVer_IMP_DEF ||
 	    pmuver == ID_AA64DFR0_EL1_PMUVer_NI)
+=======
+	if (pmuver == ID_AA64DFR0_EL1_PMUVer_IMP_DEF || pmuver == 0)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	cpu_pmu->pmuver = pmuver;
@@ -1260,6 +1283,10 @@ static int armv8_pmu_init(struct arm_pmu *cpu_pmu, char *name,
 	cpu_pmu->stop			= armv8pmu_stop;
 	cpu_pmu->reset			= armv8pmu_reset;
 	cpu_pmu->set_event_filter	= armv8pmu_set_event_filter;
+<<<<<<< HEAD
+=======
+	cpu_pmu->filter_match		= armv8pmu_filter_match;
+>>>>>>> b7ba80a49124 (Commit)
 
 	cpu_pmu->pmu.event_idx		= armv8pmu_user_event_idx;
 

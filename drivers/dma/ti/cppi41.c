@@ -1039,6 +1039,10 @@ static int cppi41_dma_probe(struct platform_device *pdev)
 	struct cppi41_dd *cdd;
 	struct device *dev = &pdev->dev;
 	const struct cppi_glue_infos *glue_info;
+<<<<<<< HEAD
+=======
+	struct resource *mem;
+>>>>>>> b7ba80a49124 (Commit)
 	int index;
 	int irq;
 	int ret;
@@ -1071,6 +1075,7 @@ static int cppi41_dma_probe(struct platform_device *pdev)
 	if (index < 0)
 		return index;
 
+<<<<<<< HEAD
 	cdd->ctrl_mem = devm_platform_ioremap_resource(pdev, index);
 	if (IS_ERR(cdd->ctrl_mem))
 		return PTR_ERR(cdd->ctrl_mem);
@@ -1080,6 +1085,20 @@ static int cppi41_dma_probe(struct platform_device *pdev)
 		return PTR_ERR(cdd->sched_mem);
 
 	cdd->qmgr_mem = devm_platform_ioremap_resource(pdev, index + 2);
+=======
+	mem = platform_get_resource(pdev, IORESOURCE_MEM, index);
+	cdd->ctrl_mem = devm_ioremap_resource(dev, mem);
+	if (IS_ERR(cdd->ctrl_mem))
+		return PTR_ERR(cdd->ctrl_mem);
+
+	mem = platform_get_resource(pdev, IORESOURCE_MEM, index + 1);
+	cdd->sched_mem = devm_ioremap_resource(dev, mem);
+	if (IS_ERR(cdd->sched_mem))
+		return PTR_ERR(cdd->sched_mem);
+
+	mem = platform_get_resource(pdev, IORESOURCE_MEM, index + 2);
+	cdd->qmgr_mem = devm_ioremap_resource(dev, mem);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(cdd->qmgr_mem))
 		return PTR_ERR(cdd->qmgr_mem);
 

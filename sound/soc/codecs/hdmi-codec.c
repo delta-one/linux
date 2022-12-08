@@ -428,6 +428,7 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
 {
 	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
+<<<<<<< HEAD
 	bool has_capture = !hcp->hcd.no_i2s_capture;
 	bool has_playback = !hcp->hcd.no_i2s_playback;
 	int ret = 0;
@@ -435,6 +436,10 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
 	if (!((has_playback && tx) || (has_capture && !tx)))
 		return 0;
 
+=======
+	int ret = 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&hcp->lock);
 	if (hcp->busy) {
 		dev_err(dai->dev, "Only one simultaneous stream supported!\n");
@@ -473,12 +478,15 @@ static void hdmi_codec_shutdown(struct snd_pcm_substream *substream,
 				struct snd_soc_dai *dai)
 {
 	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
+<<<<<<< HEAD
 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
 	bool has_capture = !hcp->hcd.no_i2s_capture;
 	bool has_playback = !hcp->hcd.no_i2s_playback;
 
 	if (!((has_playback && tx) || (has_capture && !tx)))
 		return;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	hcp->chmap_idx = HDMI_CODEC_CHMAP_IDX_UNKNOWN;
 	hcp->hcd.ops->audio_shutdown(dai->dev->parent, hcp->hcd.data);
@@ -529,7 +537,11 @@ static int hdmi_codec_hw_params(struct snd_pcm_substream *substream,
 				struct snd_soc_dai *dai)
 {
 	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
+<<<<<<< HEAD
 	struct hdmi_codec_daifmt *cf = snd_soc_dai_dma_data_get_playback(dai);
+=======
+	struct hdmi_codec_daifmt *cf = dai->playback_dma_data;
+>>>>>>> b7ba80a49124 (Commit)
 	struct hdmi_codec_params hp = {
 		.iec = {
 			.status = { 0 },
@@ -573,7 +585,11 @@ static int hdmi_codec_prepare(struct snd_pcm_substream *substream,
 			      struct snd_soc_dai *dai)
 {
 	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
+<<<<<<< HEAD
 	struct hdmi_codec_daifmt *cf = snd_soc_dai_dma_data_get_playback(dai);
+=======
+	struct hdmi_codec_daifmt *cf = dai->playback_dma_data;
+>>>>>>> b7ba80a49124 (Commit)
 	struct snd_pcm_runtime *runtime = substream->runtime;
 	unsigned int channels = runtime->channels;
 	unsigned int width = snd_pcm_format_width(runtime->format);
@@ -608,7 +624,11 @@ static int hdmi_codec_prepare(struct snd_pcm_substream *substream,
 static int hdmi_codec_i2s_set_fmt(struct snd_soc_dai *dai,
 				  unsigned int fmt)
 {
+<<<<<<< HEAD
 	struct hdmi_codec_daifmt *cf = snd_soc_dai_dma_data_get_playback(dai);
+=======
+	struct hdmi_codec_daifmt *cf = dai->playback_dma_data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Reset daifmt */
 	memset(cf, 0, sizeof(*cf));
@@ -827,6 +847,7 @@ static int hdmi_dai_probe(struct snd_soc_dai *dai)
 			.source = "RX",
 		},
 	};
+<<<<<<< HEAD
 	int ret, i;
 
 	dapm = snd_soc_component_get_dapm(dai->component);
@@ -840,13 +861,25 @@ static int hdmi_dai_probe(struct snd_soc_dai *dai)
 		if (ret)
 			return ret;
 	}
+=======
+	int ret;
+
+	dapm = snd_soc_component_get_dapm(dai->component);
+	ret = snd_soc_dapm_add_routes(dapm, route, 2);
+	if (ret)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	daifmt = devm_kzalloc(dai->dev, sizeof(*daifmt), GFP_KERNEL);
 	if (!daifmt)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	snd_soc_dai_dma_data_set_playback(dai, daifmt);
 
+=======
+	dai->playback_dma_data = daifmt;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -903,7 +936,11 @@ static int hdmi_dai_spdif_probe(struct snd_soc_dai *dai)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	cf = snd_soc_dai_dma_data_get_playback(dai);
+=======
+	cf = dai->playback_dma_data;
+>>>>>>> b7ba80a49124 (Commit)
 	cf->fmt = HDMI_SPDIF;
 
 	return 0;
@@ -1028,6 +1065,7 @@ static int hdmi_codec_probe(struct platform_device *pdev)
 	if (hcd->i2s) {
 		daidrv[i] = hdmi_i2s_dai;
 		daidrv[i].playback.channels_max = hcd->max_i2s_channels;
+<<<<<<< HEAD
 		if (hcd->no_i2s_playback)
 			memset(&daidrv[i].playback, 0,
 			       sizeof(daidrv[i].playback));
@@ -1046,6 +1084,13 @@ static int hdmi_codec_probe(struct platform_device *pdev)
 			memset(&daidrv[i].capture, 0,
 			       sizeof(daidrv[i].capture));
 	}
+=======
+		i++;
+	}
+
+	if (hcd->spdif)
+		daidrv[i] = hdmi_spdif_dai;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_set_drvdata(dev, hcp);
 

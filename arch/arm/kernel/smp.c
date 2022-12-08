@@ -320,7 +320,11 @@ void __cpu_die(unsigned int cpu)
  * of the other hotplug-cpu capable cores, so presumably coming
  * out of idle fixes this.
  */
+<<<<<<< HEAD
 void __noreturn arch_cpu_idle_dead(void)
+=======
+void arch_cpu_idle_dead(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int cpu = smp_processor_id();
 
@@ -382,8 +386,11 @@ void __noreturn arch_cpu_idle_dead(void)
 		: "r" (task_stack_page(current) + THREAD_SIZE - 8),
 		  "r" (current)
 		: "r0");
+<<<<<<< HEAD
 
 	unreachable();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 #endif /* CONFIG_HOTPLUG_CPU */
 
@@ -602,8 +609,11 @@ static DEFINE_RAW_SPINLOCK(stop_lock);
  */
 static void ipi_cpu_stop(unsigned int cpu)
 {
+<<<<<<< HEAD
 	local_fiq_disable();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (system_state <= SYSTEM_RUNNING) {
 		raw_spin_lock(&stop_lock);
 		pr_crit("CPU%u: stopping\n", cpu);
@@ -613,6 +623,12 @@ static void ipi_cpu_stop(unsigned int cpu)
 
 	set_cpu_online(cpu, false);
 
+<<<<<<< HEAD
+=======
+	local_fiq_disable();
+	local_irq_disable();
+
+>>>>>>> b7ba80a49124 (Commit)
 	while (1) {
 		cpu_relax();
 		wfe();
@@ -640,7 +656,11 @@ static void do_handle_IPI(int ipinr)
 	unsigned int cpu = smp_processor_id();
 
 	if ((unsigned)ipinr < NR_IPI)
+<<<<<<< HEAD
 		trace_ipi_entry(ipi_types[ipinr]);
+=======
+		trace_ipi_entry_rcuidle(ipi_types[ipinr]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (ipinr) {
 	case IPI_WAKEUP:
@@ -687,7 +707,11 @@ static void do_handle_IPI(int ipinr)
 	}
 
 	if ((unsigned)ipinr < NR_IPI)
+<<<<<<< HEAD
 		trace_ipi_exit(ipi_types[ipinr]);
+=======
+		trace_ipi_exit_rcuidle(ipi_types[ipinr]);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Legacy version, should go away once all irqchips have been converted */
@@ -710,7 +734,11 @@ static irqreturn_t ipi_handler(int irq, void *data)
 
 static void smp_cross_call(const struct cpumask *target, unsigned int ipinr)
 {
+<<<<<<< HEAD
 	trace_ipi_raise(target, ipi_types[ipinr]);
+=======
+	trace_ipi_raise_rcuidle(target, ipi_types[ipinr]);
+>>>>>>> b7ba80a49124 (Commit)
 	__ipi_send_mask(ipi_desc[ipinr], target);
 }
 

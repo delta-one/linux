@@ -5,7 +5,10 @@
 
 #include "ctree.h"
 #include "disk-io.h"
+<<<<<<< HEAD
 #include "orphan.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 int btrfs_insert_orphan_item(struct btrfs_trans_handle *trans,
 			     struct btrfs_root *root, u64 offset)

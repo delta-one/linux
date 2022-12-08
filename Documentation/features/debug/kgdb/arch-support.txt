@@ -13,7 +13,11 @@
     |        csky: | TODO |
     |     hexagon: |  ok  |
     |        ia64: | TODO |
+<<<<<<< HEAD
     |   loongarch: | TODO |
+=======
+    |       loong: | TODO |
+>>>>>>> b7ba80a49124 (Commit)
     |        m68k: | TODO |
     |  microblaze: |  ok  |
     |        mips: |  ok  |

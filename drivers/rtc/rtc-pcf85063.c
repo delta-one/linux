@@ -169,10 +169,17 @@ static int pcf85063_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	alrm->time.tm_sec = bcd2bin(buf[0] & 0x7f);
 	alrm->time.tm_min = bcd2bin(buf[1] & 0x7f);
 	alrm->time.tm_hour = bcd2bin(buf[2] & 0x3f);
 	alrm->time.tm_mday = bcd2bin(buf[3] & 0x3f);
+=======
+	alrm->time.tm_sec = bcd2bin(buf[0]);
+	alrm->time.tm_min = bcd2bin(buf[1]);
+	alrm->time.tm_hour = bcd2bin(buf[2]);
+	alrm->time.tm_mday = bcd2bin(buf[3]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = regmap_read(pcf85063->regmap, PCF85063_REG_CTRL2, &val);
 	if (ret)
@@ -424,7 +431,11 @@ static int pcf85063_clkout_control(struct clk_hw *hw, bool enable)
 	unsigned int buf;
 	int ret;
 
+<<<<<<< HEAD
 	ret = regmap_read(pcf85063->regmap, PCF85063_REG_CTRL2, &buf);
+=======
+	ret = regmap_read(pcf85063->regmap, PCF85063_REG_OFFSET, &buf);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 	buf &= PCF85063_REG_CLKO_F_MASK;
@@ -621,6 +632,7 @@ static int pcf85063_probe(struct i2c_client *client)
 	clear_bit(RTC_FEATURE_ALARM, pcf85063->rtc->features);
 
 	if (config->has_alarms && client->irq > 0) {
+<<<<<<< HEAD
 		unsigned long irqflags = IRQF_TRIGGER_LOW;
 
 		if (dev_fwnode(&client->dev))
@@ -629,6 +641,11 @@ static int pcf85063_probe(struct i2c_client *client)
 		err = devm_request_threaded_irq(&client->dev, client->irq,
 						NULL, pcf85063_rtc_handle_irq,
 						irqflags | IRQF_ONESHOT,
+=======
+		err = devm_request_threaded_irq(&client->dev, client->irq,
+						NULL, pcf85063_rtc_handle_irq,
+						IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+>>>>>>> b7ba80a49124 (Commit)
 						"pcf85063", pcf85063);
 		if (err) {
 			dev_warn(&pcf85063->rtc->dev,

@@ -41,6 +41,12 @@ EXPORT_SYMBOL_GPL(setup_fault_attr);
 
 static void fail_dump(struct fault_attr *attr)
 {
+<<<<<<< HEAD
+=======
+	if (attr->no_warn)
+		return;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (attr->verbose > 0 && __ratelimit(&attr->ratelimit_state)) {
 		printk(KERN_NOTICE "FAULT_INJECTION: forcing a failure.\n"
 		       "name %pd, interval %lu, probability %lu, "
@@ -100,7 +106,11 @@ static inline bool fail_stacktrace(struct fault_attr *attr)
  * http://www.nongnu.org/failmalloc/
  */
 
+<<<<<<< HEAD
 bool should_fail_ex(struct fault_attr *attr, ssize_t size, int flags)
+=======
+bool should_fail(struct fault_attr *attr, ssize_t size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	bool stack_checked = false;
 
@@ -145,23 +155,34 @@ bool should_fail_ex(struct fault_attr *attr, ssize_t size, int flags)
 			return false;
 	}
 
+<<<<<<< HEAD
 	if (attr->probability <= get_random_u32_below(100))
 		return false;
 
 fail:
 	if (!(flags & FAULT_NOWARN))
 		fail_dump(attr);
+=======
+	if (attr->probability <= prandom_u32() % 100)
+		return false;
+
+fail:
+	fail_dump(attr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (atomic_read(&attr->times) != -1)
 		atomic_dec_not_zero(&attr->times);
 
 	return true;
 }
+<<<<<<< HEAD
 
 bool should_fail(struct fault_attr *attr, ssize_t size)
 {
 	return should_fail_ex(attr, size, 0);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 EXPORT_SYMBOL_GPL(should_fail);
 
 #ifdef CONFIG_FAULT_INJECTION_DEBUG_FS
@@ -188,6 +209,17 @@ static void debugfs_create_ul(const char *name, umode_t mode,
 
 #ifdef CONFIG_FAULT_INJECTION_STACKTRACE_FILTER
 
+<<<<<<< HEAD
+=======
+DEFINE_SIMPLE_ATTRIBUTE(fops_xl, debugfs_ul_get, debugfs_ul_set, "0x%llx\n");
+
+static void debugfs_create_xl(const char *name, umode_t mode,
+			      struct dentry *parent, unsigned long *value)
+{
+	debugfs_create_file(name, mode, parent, value, &fops_xl);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int debugfs_stacktrace_depth_set(void *data, u64 val)
 {
 	*(unsigned long *)data =
@@ -232,10 +264,17 @@ struct dentry *fault_create_debugfs_attr(const char *name,
 #ifdef CONFIG_FAULT_INJECTION_STACKTRACE_FILTER
 	debugfs_create_stacktrace_depth("stacktrace-depth", mode, dir,
 					&attr->stacktrace_depth);
+<<<<<<< HEAD
 	debugfs_create_xul("require-start", mode, dir, &attr->require_start);
 	debugfs_create_xul("require-end", mode, dir, &attr->require_end);
 	debugfs_create_xul("reject-start", mode, dir, &attr->reject_start);
 	debugfs_create_xul("reject-end", mode, dir, &attr->reject_end);
+=======
+	debugfs_create_xl("require-start", mode, dir, &attr->require_start);
+	debugfs_create_xl("require-end", mode, dir, &attr->require_end);
+	debugfs_create_xl("reject-start", mode, dir, &attr->reject_start);
+	debugfs_create_xl("reject-end", mode, dir, &attr->reject_end);
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_FAULT_INJECTION_STACKTRACE_FILTER */
 
 	attr->dname = dget(dir);

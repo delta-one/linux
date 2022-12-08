@@ -142,6 +142,7 @@ msi_set_affinity(struct irq_data *irqd, const struct cpumask *mask, bool force)
 	return ret;
 }
 
+<<<<<<< HEAD
 /**
  * pci_dev_has_default_msi_parent_domain - Check whether the device has the default
  *					   MSI parent domain associated
@@ -265,16 +266,81 @@ static bool x86_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
 static const struct msi_parent_ops x86_vector_msi_parent_ops = {
 	.supported_flags	= X86_VECTOR_MSI_FLAGS_SUPPORTED,
 	.init_dev_msi_info	= x86_init_dev_msi_info,
+=======
+/*
+ * IRQ Chip for MSI PCI/PCI-X/PCI-Express Devices,
+ * which implement the MSI or MSI-X Capability Structure.
+ */
+static struct irq_chip pci_msi_controller = {
+	.name			= "PCI-MSI",
+	.irq_unmask		= pci_msi_unmask_irq,
+	.irq_mask		= pci_msi_mask_irq,
+	.irq_ack		= irq_chip_ack_parent,
+	.irq_retrigger		= irq_chip_retrigger_hierarchy,
+	.irq_set_affinity	= msi_set_affinity,
+	.flags			= IRQCHIP_SKIP_SET_WAKE |
+				  IRQCHIP_AFFINITY_PRE_STARTUP,
+};
+
+int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+		    msi_alloc_info_t *arg)
+{
+	init_irq_alloc_info(arg, NULL);
+	if (to_pci_dev(dev)->msix_enabled) {
+		arg->type = X86_IRQ_ALLOC_TYPE_PCI_MSIX;
+	} else {
+		arg->type = X86_IRQ_ALLOC_TYPE_PCI_MSI;
+		arg->flags |= X86_IRQ_ALLOC_CONTIGUOUS_VECTORS;
+	}
+
+	return 0;
+}
+EXPORT_SYMBOL_GPL(pci_msi_prepare);
+
+static struct msi_domain_ops pci_msi_domain_ops = {
+	.msi_prepare	= pci_msi_prepare,
+};
+
+static struct msi_domain_info pci_msi_domain_info = {
+	.flags		= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+			  MSI_FLAG_PCI_MSIX,
+	.ops		= &pci_msi_domain_ops,
+	.chip		= &pci_msi_controller,
+	.handler	= handle_edge_irq,
+	.handler_name	= "edge",
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct irq_domain * __init native_create_pci_msi_domain(void)
 {
+<<<<<<< HEAD
 	if (disable_apic)
 		return NULL;
 
 	x86_vector_domain->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT;
 	x86_vector_domain->msi_parent_ops = &x86_vector_msi_parent_ops;
 	return x86_vector_domain;
+=======
+	struct fwnode_handle *fn;
+	struct irq_domain *d;
+
+	if (disable_apic)
+		return NULL;
+
+	fn = irq_domain_alloc_named_fwnode("PCI-MSI");
+	if (!fn)
+		return NULL;
+
+	d = pci_msi_create_irq_domain(fn, &pci_msi_domain_info,
+				      x86_vector_domain);
+	if (!d) {
+		irq_domain_free_fwnode(fn);
+		pr_warn("Failed to initialize PCI-MSI irqdomain.\n");
+	} else {
+		d->flags |= IRQ_DOMAIN_MSI_NOMASK_QUIRK;
+	}
+	return d;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void __init x86_create_pci_msi_domain(void)
@@ -282,6 +348,7 @@ void __init x86_create_pci_msi_domain(void)
 	x86_pci_msi_default_domain = x86_init.irqs.create_pci_msi_domain();
 }
 
+<<<<<<< HEAD
 /* Keep around for hyperV */
 int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
 		    msi_alloc_info_t *arg)
@@ -295,6 +362,43 @@ int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
 	return 0;
 }
 EXPORT_SYMBOL_GPL(pci_msi_prepare);
+=======
+#ifdef CONFIG_IRQ_REMAP
+static struct irq_chip pci_msi_ir_controller = {
+	.name			= "IR-PCI-MSI",
+	.irq_unmask		= pci_msi_unmask_irq,
+	.irq_mask		= pci_msi_mask_irq,
+	.irq_ack		= irq_chip_ack_parent,
+	.irq_retrigger		= irq_chip_retrigger_hierarchy,
+	.flags			= IRQCHIP_SKIP_SET_WAKE |
+				  IRQCHIP_AFFINITY_PRE_STARTUP,
+};
+
+static struct msi_domain_info pci_msi_ir_domain_info = {
+	.flags		= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+			  MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
+	.ops		= &pci_msi_domain_ops,
+	.chip		= &pci_msi_ir_controller,
+	.handler	= handle_edge_irq,
+	.handler_name	= "edge",
+};
+
+struct irq_domain *arch_create_remap_msi_irq_domain(struct irq_domain *parent,
+						    const char *name, int id)
+{
+	struct fwnode_handle *fn;
+	struct irq_domain *d;
+
+	fn = irq_domain_alloc_named_id_fwnode(name, id);
+	if (!fn)
+		return NULL;
+	d = pci_msi_create_irq_domain(fn, &pci_msi_ir_domain_info, parent);
+	if (!d)
+		irq_domain_free_fwnode(fn);
+	return d;
+}
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_DMAR_TABLE
 /*

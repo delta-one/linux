@@ -170,7 +170,11 @@ static int __init hugetlb_setup_sz(char *str)
 	size = memparse(str, &str);
 	if (*str || !is_power_of_2(size) || !(tr_pages & size) ||
 		size <= PAGE_SIZE ||
+<<<<<<< HEAD
 		size > (1UL << PAGE_SHIFT << MAX_ORDER)) {
+=======
+		size >= (1UL << PAGE_SHIFT << MAX_ORDER)) {
+>>>>>>> b7ba80a49124 (Commit)
 		printk(KERN_WARNING "Invalid huge page size specified\n");
 		return 1;
 	}

@@ -87,6 +87,7 @@ struct drm_device {
 	 */
 	void *dev_private;
 
+<<<<<<< HEAD
 	/**
 	 * @primary:
 	 *
@@ -109,6 +110,14 @@ struct drm_device {
 	/** @accel: Compute Acceleration node */
 	struct drm_minor *accel;
 
+=======
+	/** @primary: Primary node */
+	struct drm_minor *primary;
+
+	/** @render: Render node */
+	struct drm_minor *render;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/**
 	 * @registered:
 	 *
@@ -311,6 +320,7 @@ struct drm_device {
 	 */
 	struct drm_fb_helper *fb_helper;
 
+<<<<<<< HEAD
 	/**
 	 * @debugfs_mutex:
 	 *
@@ -326,6 +336,8 @@ struct drm_device {
 	 */
 	struct list_head debugfs_list;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Everything below here is for legacy driver, never use! */
 	/* private: */
 #if IS_ENABLED(CONFIG_DRM_LEGACY)

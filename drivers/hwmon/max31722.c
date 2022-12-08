@@ -113,7 +113,11 @@ static void max31722_remove(struct spi_device *spi)
 		dev_warn(&spi->dev, "Failed to put device in stand-by mode\n");
 }
 
+<<<<<<< HEAD
 static int max31722_suspend(struct device *dev)
+=======
+static int __maybe_unused max31722_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_device *spi_device = to_spi_device(dev);
 	struct max31722_data *data = spi_get_drvdata(spi_device);
@@ -121,7 +125,11 @@ static int max31722_suspend(struct device *dev)
 	return max31722_set_mode(data, MAX31722_MODE_STANDBY);
 }
 
+<<<<<<< HEAD
 static int max31722_resume(struct device *dev)
+=======
+static int __maybe_unused max31722_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_device *spi_device = to_spi_device(dev);
 	struct max31722_data *data = spi_get_drvdata(spi_device);
@@ -129,7 +137,11 @@ static int max31722_resume(struct device *dev)
 	return max31722_set_mode(data, MAX31722_MODE_CONTINUOUS);
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(max31722_pm_ops, max31722_suspend, max31722_resume);
+=======
+static SIMPLE_DEV_PM_OPS(max31722_pm_ops, max31722_suspend, max31722_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct spi_device_id max31722_spi_id[] = {
 	{"max31722", 0},
@@ -141,7 +153,11 @@ MODULE_DEVICE_TABLE(spi, max31722_spi_id);
 static struct spi_driver max31722_driver = {
 	.driver = {
 		.name = "max31722",
+<<<<<<< HEAD
 		.pm = pm_sleep_ptr(&max31722_pm_ops),
+=======
+		.pm = &max31722_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe =            max31722_probe,
 	.remove =           max31722_remove,

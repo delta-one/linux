@@ -159,9 +159,12 @@ identify_boot_image () {
 		qemu-system-aarch64)
 			echo arch/arm64/boot/Image
 			;;
+<<<<<<< HEAD
 		qemu-system-s390x)
 			echo arch/s390/boot/bzImage
 			;;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		*)
 			echo vmlinux
 			;;
@@ -187,9 +190,12 @@ identify_qemu () {
 	elif echo $u | grep -q aarch64
 	then
 		echo qemu-system-aarch64
+<<<<<<< HEAD
 	elif echo $u | grep -q 'IBM S/390'
 	then
 		echo qemu-system-s390x
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	elif uname -a | grep -q ppc64
 	then
 		echo qemu-system-ppc64

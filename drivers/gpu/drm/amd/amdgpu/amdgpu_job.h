@@ -47,14 +47,22 @@ enum amdgpu_ib_pool_type;
 struct amdgpu_job {
 	struct drm_sched_job    base;
 	struct amdgpu_vm	*vm;
+<<<<<<< HEAD
 	struct amdgpu_sync	explicit_sync;
+=======
+	struct amdgpu_sync	sync;
+	struct amdgpu_sync	sched_sync;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dma_fence	hw_fence;
 	struct dma_fence	*gang_submit;
 	uint32_t		preamble_status;
 	uint32_t                preemption_status;
 	bool                    vm_needs_flush;
+<<<<<<< HEAD
 	bool			gds_switch_needed;
 	bool			spm_update_needed;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	uint64_t		vm_pd_addr;
 	unsigned		vmid;
 	unsigned		pasid;
@@ -79,6 +87,7 @@ static inline struct amdgpu_ring *amdgpu_job_ring(struct amdgpu_job *job)
 	return to_amdgpu_ring(job->base.entity->rq->sched);
 }
 
+<<<<<<< HEAD
 int amdgpu_job_alloc(struct amdgpu_device *adev, struct amdgpu_vm *vm,
 		     struct drm_sched_entity *entity, void *owner,
 		     unsigned int num_ibs, struct amdgpu_job **job);
@@ -86,13 +95,24 @@ int amdgpu_job_alloc_with_ib(struct amdgpu_device *adev,
 			     struct drm_sched_entity *entity, void *owner,
 			     size_t size, enum amdgpu_ib_pool_type pool_type,
 			     struct amdgpu_job **job);
+=======
+int amdgpu_job_alloc(struct amdgpu_device *adev, unsigned num_ibs,
+		     struct amdgpu_job **job, struct amdgpu_vm *vm);
+int amdgpu_job_alloc_with_ib(struct amdgpu_device *adev, unsigned size,
+		enum amdgpu_ib_pool_type pool, struct amdgpu_job **job);
+>>>>>>> b7ba80a49124 (Commit)
 void amdgpu_job_set_resources(struct amdgpu_job *job, struct amdgpu_bo *gds,
 			      struct amdgpu_bo *gws, struct amdgpu_bo *oa);
 void amdgpu_job_free_resources(struct amdgpu_job *job);
 void amdgpu_job_set_gang_leader(struct amdgpu_job *job,
 				struct amdgpu_job *leader);
 void amdgpu_job_free(struct amdgpu_job *job);
+<<<<<<< HEAD
 struct dma_fence *amdgpu_job_submit(struct amdgpu_job *job);
+=======
+int amdgpu_job_submit(struct amdgpu_job *job, struct drm_sched_entity *entity,
+		      void *owner, struct dma_fence **f);
+>>>>>>> b7ba80a49124 (Commit)
 int amdgpu_job_submit_direct(struct amdgpu_job *job, struct amdgpu_ring *ring,
 			     struct dma_fence **fence);
 

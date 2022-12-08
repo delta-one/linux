@@ -24,8 +24,12 @@ tegra-drm-y := \
 	gr3d.o \
 	falcon.o \
 	vic.o \
+<<<<<<< HEAD
 	nvdec.o \
 	riscv.o
+=======
+	nvdec.o
+>>>>>>> b7ba80a49124 (Commit)
 
 tegra-drm-y += trace.o
 

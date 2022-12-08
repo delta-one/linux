@@ -124,9 +124,15 @@ void kvmppc_set_hpt(struct kvm *kvm, struct kvm_hpt_info *info)
 		 info->virt, (long)info->order, kvm->arch.lpid);
 }
 
+<<<<<<< HEAD
 int kvmppc_alloc_reset_hpt(struct kvm *kvm, int order)
 {
 	int err = -EBUSY;
+=======
+long kvmppc_alloc_reset_hpt(struct kvm *kvm, int order)
+{
+	long err = -EBUSY;
+>>>>>>> b7ba80a49124 (Commit)
 	struct kvm_hpt_info info;
 
 	mutex_lock(&kvm->arch.mmu_setup_lock);
@@ -598,7 +604,11 @@ int kvmppc_book3s_hv_page_fault(struct kvm_vcpu *vcpu,
 		write_ok = true;
 	} else {
 		/* Call KVM generic code to do the slow-path check */
+<<<<<<< HEAD
 		pfn = __gfn_to_pfn_memslot(memslot, gfn, false, false, NULL,
+=======
+		pfn = __gfn_to_pfn_memslot(memslot, gfn, false, NULL,
+>>>>>>> b7ba80a49124 (Commit)
 					   writing, &write_ok, NULL);
 		if (is_error_noslot_pfn(pfn))
 			return -EFAULT;
@@ -1202,7 +1212,11 @@ static int resize_hpt_allocate(struct kvm_resize_hpt *resize)
 	if (rc < 0)
 		return rc;
 
+<<<<<<< HEAD
 	resize_hpt_debug(resize, "%s(): HPT @ 0x%lx\n", __func__,
+=======
+	resize_hpt_debug(resize, "resize_hpt_allocate(): HPT @ 0x%lx\n",
+>>>>>>> b7ba80a49124 (Commit)
 			 resize->hpt.virt);
 
 	return 0;
@@ -1443,7 +1457,11 @@ static void resize_hpt_prepare_work(struct work_struct *work)
 		 */
 		mutex_unlock(&kvm->arch.mmu_setup_lock);
 
+<<<<<<< HEAD
 		resize_hpt_debug(resize, "%s(): order = %d\n", __func__,
+=======
+		resize_hpt_debug(resize, "resize_hpt_prepare_work(): order = %d\n",
+>>>>>>> b7ba80a49124 (Commit)
 				 resize->order);
 
 		err = resize_hpt_allocate(resize);
@@ -1468,8 +1486,13 @@ static void resize_hpt_prepare_work(struct work_struct *work)
 	mutex_unlock(&kvm->arch.mmu_setup_lock);
 }
 
+<<<<<<< HEAD
 int kvm_vm_ioctl_resize_hpt_prepare(struct kvm *kvm,
 				    struct kvm_ppc_resize_hpt *rhpt)
+=======
+long kvm_vm_ioctl_resize_hpt_prepare(struct kvm *kvm,
+				     struct kvm_ppc_resize_hpt *rhpt)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long flags = rhpt->flags;
 	unsigned long shift = rhpt->shift;
@@ -1534,13 +1557,22 @@ static void resize_hpt_boot_vcpu(void *opaque)
 	/* Nothing to do, just force a KVM exit */
 }
 
+<<<<<<< HEAD
 int kvm_vm_ioctl_resize_hpt_commit(struct kvm *kvm,
 				   struct kvm_ppc_resize_hpt *rhpt)
+=======
+long kvm_vm_ioctl_resize_hpt_commit(struct kvm *kvm,
+				    struct kvm_ppc_resize_hpt *rhpt)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long flags = rhpt->flags;
 	unsigned long shift = rhpt->shift;
 	struct kvm_resize_hpt *resize;
+<<<<<<< HEAD
 	int ret;
+=======
+	long ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (flags != 0 || kvm_is_radix(kvm))
 		return -EINVAL;
@@ -1887,7 +1919,12 @@ static ssize_t kvm_htab_write(struct file *file, const char __user *buf,
 			ret = kvmppc_virtmode_do_h_enter(kvm, H_EXACT, i, v, r,
 							 tmp);
 			if (ret != H_SUCCESS) {
+<<<<<<< HEAD
 				pr_err("%s ret %ld i=%ld v=%lx r=%lx\n", __func__, ret, i, v, r);
+=======
+				pr_err("kvm_htab_write ret %ld i=%ld v=%lx "
+				       "r=%lx\n", ret, i, v, r);
+>>>>>>> b7ba80a49124 (Commit)
 				goto out;
 			}
 			if (!mmu_ready && is_vrma_hpte(v)) {

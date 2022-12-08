@@ -122,7 +122,11 @@ void mlx5_mpfs_cleanup(struct mlx5_core_dev *dev)
 {
 	struct mlx5_mpfs *mpfs = dev->priv.mpfs;
 
+<<<<<<< HEAD
 	if (!mpfs)
+=======
+	if (!MLX5_ESWITCH_MANAGER(dev))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	WARN_ON(!hlist_empty(mpfs->hash));
@@ -137,7 +141,11 @@ int mlx5_mpfs_add_mac(struct mlx5_core_dev *dev, u8 *mac)
 	int err = 0;
 	u32 index;
 
+<<<<<<< HEAD
 	if (!mpfs)
+=======
+	if (!MLX5_ESWITCH_MANAGER(dev))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	mutex_lock(&mpfs->lock);
@@ -185,7 +193,11 @@ int mlx5_mpfs_del_mac(struct mlx5_core_dev *dev, u8 *mac)
 	int err = 0;
 	u32 index;
 
+<<<<<<< HEAD
 	if (!mpfs)
+=======
+	if (!MLX5_ESWITCH_MANAGER(dev))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	mutex_lock(&mpfs->lock);

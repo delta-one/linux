@@ -13,7 +13,10 @@
 #include <linux/slab.h>
 #include <linux/sched/signal.h>
 #include <net/sock.h>
+<<<<<<< HEAD
 #include <trace/events/sock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <scsi/iscsi_proto.h>
 #include <target/target_core_base.h>
 #include <target/target_core_fabric.h>
@@ -385,7 +388,10 @@ static void iscsi_target_sk_data_ready(struct sock *sk)
 	struct iscsit_conn *conn = sk->sk_user_data;
 	bool rc;
 
+<<<<<<< HEAD
 	trace_sk_data_ready(sk);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pr_debug("Entering iscsi_target_sk_data_ready: conn: %p\n", conn);
 
 	write_lock_bh(&sk->sk_callback_lock);
@@ -1020,6 +1026,7 @@ static int iscsi_target_handle_csg_one(struct iscsit_conn *conn, struct iscsi_lo
 	return 0;
 }
 
+<<<<<<< HEAD
 /*
  * RETURN VALUE:
  *
@@ -1027,6 +1034,8 @@ static int iscsi_target_handle_csg_one(struct iscsit_conn *conn, struct iscsi_lo
  * -1 = Login failed
  *  0 = More PDU exchanges required
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int iscsi_target_do_login(struct iscsit_conn *conn, struct iscsi_login *login)
 {
 	int pdu_count = 0;
@@ -1372,6 +1381,7 @@ int iscsi_target_start_negotiation(
 		ret = -1;
 
 	if (ret < 0) {
+<<<<<<< HEAD
 		iscsi_target_restore_sock_callbacks(conn);
 		iscsi_remove_failed_auth_entry(conn);
 	}
@@ -1379,6 +1389,14 @@ int iscsi_target_start_negotiation(
 		cancel_delayed_work_sync(&conn->login_work);
 		iscsi_target_nego_release(conn);
 	}
+=======
+		cancel_delayed_work_sync(&conn->login_work);
+		iscsi_target_restore_sock_callbacks(conn);
+		iscsi_remove_failed_auth_entry(conn);
+	}
+	if (ret != 0)
+		iscsi_target_nego_release(conn);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }

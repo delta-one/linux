@@ -39,10 +39,15 @@ void sd_dif_config_host(struct scsi_disk *sdkp)
 		dif = 0; dix = 1;
 	}
 
+<<<<<<< HEAD
 	if (!dix) {
 		blk_integrity_unregister(disk);
 		return;
 	}
+=======
+	if (!dix)
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(&bi, 0, sizeof(bi));
 
@@ -74,9 +79,15 @@ void sd_dif_config_host(struct scsi_disk *sdkp)
 			bi.tag_size = sizeof(u16);
 	}
 
+<<<<<<< HEAD
 	sd_first_printk(KERN_NOTICE, sdkp,
 			"Enabling DIX %s, application tag size %u bytes\n",
 			bi.profile->name, bi.tag_size);
+=======
+	sd_printk(KERN_NOTICE, sdkp,
+		  "Enabling DIX %s, application tag size %u bytes\n",
+		  bi.profile->name, bi.tag_size);
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	blk_integrity_register(disk, &bi);
 }

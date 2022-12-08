@@ -4,7 +4,11 @@
 #include <bpf/bpf_helpers.h>
 
 struct map_value {
+<<<<<<< HEAD
 	struct prog_test_ref_kfunc __kptr *ptr;
+=======
+	struct prog_test_ref_kfunc __kptr_ref *ptr;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct {
@@ -52,6 +56,10 @@ int leak_prog(void *ctx)
 {
 	struct prog_test_ref_kfunc *p;
 	struct map_value *v;
+<<<<<<< HEAD
+=======
+	unsigned long sl;
+>>>>>>> b7ba80a49124 (Commit)
 
 	v = bpf_map_lookup_elem(&array_map, &(int){0});
 	if (!v)

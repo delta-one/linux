@@ -3,7 +3,10 @@ config ALPHA
 	bool
 	default y
 	select ARCH_32BIT_USTAT_F_TINODE
+<<<<<<< HEAD
 	select ARCH_HAS_CURRENT_STACK_POINTER
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select ARCH_MIGHT_HAVE_PC_PARPORT
 	select ARCH_MIGHT_HAVE_PC_SERIO
 	select ARCH_NO_PREEMPT

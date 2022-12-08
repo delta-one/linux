@@ -158,7 +158,11 @@ TRACE_EVENT(inet_sock_set_state,
 	),
 
 	TP_fast_assign(
+<<<<<<< HEAD
 		const struct inet_sock *inet = inet_sk(sk);
+=======
+		struct inet_sock *inet = inet_sk(sk);
+>>>>>>> b7ba80a49124 (Commit)
 		struct in6_addr *pin6;
 		__be32 *p32;
 
@@ -222,7 +226,11 @@ TRACE_EVENT(inet_sk_error_report,
 	),
 
 	TP_fast_assign(
+<<<<<<< HEAD
 		const struct inet_sock *inet = inet_sk(sk);
+=======
+		struct inet_sock *inet = inet_sk(sk);
+>>>>>>> b7ba80a49124 (Commit)
 		struct in6_addr *pin6;
 		__be32 *p32;
 
@@ -263,6 +271,7 @@ TRACE_EVENT(inet_sk_error_report,
 		  __entry->error)
 );
 
+<<<<<<< HEAD
 TRACE_EVENT(sk_data_ready,
 
 	TP_PROTO(const struct sock *sk),
@@ -332,6 +341,8 @@ DEFINE_EVENT(sock_msg_length, sock_recv_length,
 
 	TP_ARGS(sk, ret, flags)
 );
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _TRACE_SOCK_H */
 
 /* This part must be outside protection */

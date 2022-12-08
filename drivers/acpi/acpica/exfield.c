@@ -141,9 +141,13 @@ acpi_ex_read_data_from_field(struct acpi_walk_state *walk_state,
 		    || obj_desc->field.region_obj->region.space_id ==
 		    ACPI_ADR_SPACE_IPMI
 		    || obj_desc->field.region_obj->region.space_id ==
+<<<<<<< HEAD
 		    ACPI_ADR_SPACE_PLATFORM_RT
 		    || obj_desc->field.region_obj->region.space_id ==
 		    ACPI_ADR_SPACE_FIXED_HARDWARE)) {
+=======
+		    ACPI_ADR_SPACE_PLATFORM_RT)) {
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* SMBus, GSBus, IPMI serial */
 
@@ -307,9 +311,13 @@ acpi_ex_write_data_to_field(union acpi_operand_object *source_desc,
 		    || obj_desc->field.region_obj->region.space_id ==
 		    ACPI_ADR_SPACE_IPMI
 		    || obj_desc->field.region_obj->region.space_id ==
+<<<<<<< HEAD
 		    ACPI_ADR_SPACE_PLATFORM_RT
 		    || obj_desc->field.region_obj->region.space_id ==
 		    ACPI_ADR_SPACE_FIXED_HARDWARE)) {
+=======
+		    ACPI_ADR_SPACE_PLATFORM_RT)) {
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* SMBus, GSBus, IPMI serial */
 

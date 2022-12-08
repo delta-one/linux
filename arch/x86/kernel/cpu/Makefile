@@ -17,6 +17,12 @@ KMSAN_SANITIZE_common.o := n
 # As above, instrumenting secondary CPU boot code causes boot hangs.
 KCSAN_SANITIZE_common.o := n
 
+<<<<<<< HEAD
+=======
+# Make sure load_percpu_segment has no stackprotector
+CFLAGS_common.o		:= -fno-stack-protector
+
+>>>>>>> b7ba80a49124 (Commit)
 obj-y			:= cacheinfo.o scattered.o topology.o
 obj-y			+= common.o
 obj-y			+= rdrand.o

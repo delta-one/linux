@@ -177,7 +177,11 @@ bool bnxt_xdp_attached(struct bnxt *bp, struct bnxt_rx_ring_info *rxr)
 }
 
 void bnxt_xdp_buff_init(struct bnxt *bp, struct bnxt_rx_ring_info *rxr,
+<<<<<<< HEAD
 			u16 cons, u8 *data_ptr, unsigned int len,
+=======
+			u16 cons, u8 **data_ptr, unsigned int *len,
+>>>>>>> b7ba80a49124 (Commit)
 			struct xdp_buff *xdp)
 {
 	struct bnxt_sw_rx_bd *rx_buf;
@@ -191,10 +195,20 @@ void bnxt_xdp_buff_init(struct bnxt *bp, struct bnxt_rx_ring_info *rxr,
 	offset = bp->rx_offset;
 
 	mapping = rx_buf->mapping - bp->rx_dma_offset;
+<<<<<<< HEAD
 	dma_sync_single_for_cpu(&pdev->dev, mapping + offset, len, bp->rx_dir);
 
 	xdp_init_buff(xdp, buflen, &rxr->xdp_rxq);
 	xdp_prepare_buff(xdp, data_ptr - offset, offset, len, false);
+=======
+	dma_sync_single_for_cpu(&pdev->dev, mapping + offset, *len, bp->rx_dir);
+
+	if (bp->xdp_has_frags)
+		buflen = BNXT_PAGE_MODE_BUF_SIZE + offset;
+
+	xdp_init_buff(xdp, buflen, &rxr->xdp_rxq);
+	xdp_prepare_buff(xdp, *data_ptr - offset, offset, *len, false);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void bnxt_xdp_buff_frags_free(struct bnxt_rx_ring_info *rxr,
@@ -219,8 +233,12 @@ void bnxt_xdp_buff_frags_free(struct bnxt_rx_ring_info *rxr,
  * false   - packet should be passed to the stack.
  */
 bool bnxt_rx_xdp(struct bnxt *bp, struct bnxt_rx_ring_info *rxr, u16 cons,
+<<<<<<< HEAD
 		 struct xdp_buff xdp, struct page *page, u8 **data_ptr,
 		 unsigned int *len, u8 *event)
+=======
+		 struct xdp_buff xdp, struct page *page, unsigned int *len, u8 *event)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bpf_prog *xdp_prog = READ_ONCE(rxr->xdp_prog);
 	struct bnxt_tx_ring_info *txr;
@@ -253,10 +271,15 @@ bool bnxt_rx_xdp(struct bnxt *bp, struct bnxt_rx_ring_info *rxr, u16 cons,
 		*event &= ~BNXT_RX_EVENT;
 
 	*len = xdp.data_end - xdp.data;
+<<<<<<< HEAD
 	if (orig_data != xdp.data) {
 		offset = xdp.data - xdp.data_hard_start;
 		*data_ptr = xdp.data_hard_start + offset;
 	}
+=======
+	if (orig_data != xdp.data)
+		offset = xdp.data - xdp.data_hard_start;
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (act) {
 	case XDP_PASS:
@@ -401,8 +424,15 @@ static int bnxt_xdp_set(struct bnxt *bp, struct bpf_prog *prog)
 		netdev_warn(dev, "ethtool rx/tx channels must be combined to support XDP.\n");
 		return -EOPNOTSUPP;
 	}
+<<<<<<< HEAD
 	if (prog)
 		tx_xdp = bp->rx_nr_rings;
+=======
+	if (prog) {
+		tx_xdp = bp->rx_nr_rings;
+		bp->xdp_has_frags = prog->aux->xdp_has_frags;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	tc = netdev_get_num_tc(dev);
 	if (!tc)
@@ -422,11 +452,17 @@ static int bnxt_xdp_set(struct bnxt *bp, struct bpf_prog *prog)
 
 	if (prog) {
 		bnxt_set_rx_skb_mode(bp, true);
+<<<<<<< HEAD
 		xdp_features_set_redirect_target(dev, true);
 	} else {
 		int rx, tx;
 
 		xdp_features_clear_redirect_target(dev);
+=======
+	} else {
+		int rx, tx;
+
+>>>>>>> b7ba80a49124 (Commit)
 		bnxt_set_rx_skb_mode(bp, false);
 		bnxt_get_max_rings(bp, &rx, &tx, true);
 		if (rx > 1) {

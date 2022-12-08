@@ -2395,7 +2395,10 @@ static bool mt8186_is_volatile_reg(struct device *dev, unsigned int reg)
 	case AUDIO_TOP_CON1:	/* reg bit controlled by CCF */
 	case AUDIO_TOP_CON2:
 	case AUDIO_TOP_CON3:
+<<<<<<< HEAD
 	case AFE_DAC_CON0:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case AFE_DL1_CUR_MSB:
 	case AFE_DL1_CUR:
 	case AFE_DL1_END:

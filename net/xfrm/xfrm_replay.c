@@ -714,7 +714,11 @@ static int xfrm_replay_overflow_offload_esn(struct xfrm_state *x, struct sk_buff
 			oseq += skb_shinfo(skb)->gso_segs;
 		}
 
+<<<<<<< HEAD
 		if (unlikely(xo->seq.low < replay_esn->oseq)) {
+=======
+		if (unlikely(oseq < replay_esn->oseq)) {
+>>>>>>> b7ba80a49124 (Commit)
 			XFRM_SKB_CB(skb)->seq.output.hi = ++oseq_hi;
 			xo->seq.hi = oseq_hi;
 			replay_esn->oseq_hi = oseq_hi;
@@ -766,12 +770,17 @@ int xfrm_replay_overflow(struct xfrm_state *x, struct sk_buff *skb)
 }
 #endif
 
+<<<<<<< HEAD
 int xfrm_init_replay(struct xfrm_state *x, struct netlink_ext_ack *extack)
+=======
+int xfrm_init_replay(struct xfrm_state *x)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct xfrm_replay_state_esn *replay_esn = x->replay_esn;
 
 	if (replay_esn) {
 		if (replay_esn->replay_window >
+<<<<<<< HEAD
 		    replay_esn->bmp_len * sizeof(__u32) * 8) {
 			NL_SET_ERR_MSG(extack, "ESN replay window is too large for the chosen bitmap size");
 			return -EINVAL;
@@ -782,6 +791,14 @@ int xfrm_init_replay(struct xfrm_state *x, struct netlink_ext_ack *extack)
 				NL_SET_ERR_MSG(extack, "ESN replay window must be > 0");
 				return -EINVAL;
 			}
+=======
+		    replay_esn->bmp_len * sizeof(__u32) * 8)
+			return -EINVAL;
+
+		if (x->props.flags & XFRM_STATE_ESN) {
+			if (replay_esn->replay_window == 0)
+				return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 			x->repl_mode = XFRM_REPLAY_MODE_ESN;
 		} else {
 			x->repl_mode = XFRM_REPLAY_MODE_BMP;

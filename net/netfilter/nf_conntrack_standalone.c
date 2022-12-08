@@ -275,7 +275,11 @@ static const char* l4proto_name(u16 proto)
 	return "unknown";
 }
 
+<<<<<<< HEAD
 static void
+=======
+static unsigned int
+>>>>>>> b7ba80a49124 (Commit)
 seq_print_acct(struct seq_file *s, const struct nf_conn *ct, int dir)
 {
 	struct nf_conn_acct *acct;
@@ -283,12 +287,21 @@ seq_print_acct(struct seq_file *s, const struct nf_conn *ct, int dir)
 
 	acct = nf_conn_acct_find(ct);
 	if (!acct)
+<<<<<<< HEAD
 		return;
+=======
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	counter = acct->counter;
 	seq_printf(s, "packets=%llu bytes=%llu ",
 		   (unsigned long long)atomic64_read(&counter[dir].packets),
 		   (unsigned long long)atomic64_read(&counter[dir].bytes));
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* return 0 on success, 1 in case of error */
@@ -340,7 +353,12 @@ static int ct_seq_show(struct seq_file *s, void *v)
 	if (seq_has_overflowed(s))
 		goto release;
 
+<<<<<<< HEAD
 	seq_print_acct(s, ct, IP_CT_DIR_ORIGINAL);
+=======
+	if (seq_print_acct(s, ct, IP_CT_DIR_ORIGINAL))
+		goto release;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!(test_bit(IPS_SEEN_REPLY_BIT, &ct->status)))
 		seq_puts(s, "[UNREPLIED] ");
@@ -349,7 +367,12 @@ static int ct_seq_show(struct seq_file *s, void *v)
 
 	ct_show_zone(s, ct, NF_CT_ZONE_DIR_REPL);
 
+<<<<<<< HEAD
 	seq_print_acct(s, ct, IP_CT_DIR_REPLY);
+=======
+	if (seq_print_acct(s, ct, IP_CT_DIR_REPLY))
+		goto release;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (test_bit(IPS_HW_OFFLOAD_BIT, &ct->status))
 		seq_puts(s, "[HW_OFFLOAD] ");
@@ -362,7 +385,11 @@ static int ct_seq_show(struct seq_file *s, void *v)
 		goto release;
 
 #if defined(CONFIG_NF_CONNTRACK_MARK)
+<<<<<<< HEAD
 	seq_printf(s, "mark=%u ", READ_ONCE(ct->mark));
+=======
+	seq_printf(s, "mark=%u ", ct->mark);
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 	ct_show_secctx(s, ct);
@@ -597,6 +624,10 @@ enum nf_ct_sysctl_index {
 	NF_SYSCTL_CT_PROTO_TIMEOUT_SCTP_SHUTDOWN_RECD,
 	NF_SYSCTL_CT_PROTO_TIMEOUT_SCTP_SHUTDOWN_ACK_SENT,
 	NF_SYSCTL_CT_PROTO_TIMEOUT_SCTP_HEARTBEAT_SENT,
+<<<<<<< HEAD
+=======
+	NF_SYSCTL_CT_PROTO_TIMEOUT_SCTP_HEARTBEAT_ACKED,
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 #ifdef CONFIG_NF_CT_PROTO_DCCP
 	NF_SYSCTL_CT_PROTO_TIMEOUT_DCCP_REQUEST,
@@ -881,6 +912,15 @@ static struct ctl_table nf_ct_sysctl_table[] = {
 		.mode		= 0644,
 		.proc_handler	= proc_dointvec_jiffies,
 	},
+<<<<<<< HEAD
+=======
+	[NF_SYSCTL_CT_PROTO_TIMEOUT_SCTP_HEARTBEAT_ACKED] = {
+		.procname       = "nf_conntrack_sctp_timeout_heartbeat_acked",
+		.maxlen         = sizeof(unsigned int),
+		.mode           = 0644,
+		.proc_handler   = proc_dointvec_jiffies,
+	},
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 #ifdef CONFIG_NF_CT_PROTO_DCCP
 	[NF_SYSCTL_CT_PROTO_TIMEOUT_DCCP_REQUEST] = {
@@ -1024,6 +1064,10 @@ static void nf_conntrack_standalone_init_sctp_sysctl(struct net *net,
 	XASSIGN(SHUTDOWN_RECD, sn);
 	XASSIGN(SHUTDOWN_ACK_SENT, sn);
 	XASSIGN(HEARTBEAT_SENT, sn);
+<<<<<<< HEAD
+=======
+	XASSIGN(HEARTBEAT_ACKED, sn);
+>>>>>>> b7ba80a49124 (Commit)
 #undef XASSIGN
 #endif
 }

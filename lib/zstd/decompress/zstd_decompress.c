@@ -53,6 +53,10 @@
 *  Dependencies
 *********************************************************/
 #include "../common/zstd_deps.h"   /* ZSTD_memcpy, ZSTD_memmove, ZSTD_memset */
+<<<<<<< HEAD
+=======
+#include "../common/cpu.h"         /* bmi2 */
+>>>>>>> b7ba80a49124 (Commit)
 #include "../common/mem.h"         /* low level memory routines */
 #define FSE_STATIC_LINKING_ONLY
 #include "../common/fse.h"
@@ -251,11 +255,19 @@ static void ZSTD_initDCtx_internal(ZSTD_DCtx* dctx)
     dctx->inBuffSize  = 0;
     dctx->outBuffSize = 0;
     dctx->streamStage = zdss_init;
+<<<<<<< HEAD
     dctx->noForwardProgress = 0;
     dctx->oversizedDuration = 0;
 #if DYNAMIC_BMI2
     dctx->bmi2 = ZSTD_cpuSupportsBmi2();
 #endif
+=======
+    dctx->legacyContext = NULL;
+    dctx->previousLegacyVersion = 0;
+    dctx->noForwardProgress = 0;
+    dctx->oversizedDuration = 0;
+    dctx->bmi2 = ZSTD_cpuid_bmi2(ZSTD_cpuid());
+>>>>>>> b7ba80a49124 (Commit)
     dctx->ddictSet = NULL;
     ZSTD_DCtx_resetParameters(dctx);
 #ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
@@ -276,7 +288,12 @@ ZSTD_DCtx* ZSTD_initStaticDCtx(void *workspace, size_t workspaceSize)
     return dctx;
 }
 
+<<<<<<< HEAD
 static ZSTD_DCtx* ZSTD_createDCtx_internal(ZSTD_customMem customMem) {
+=======
+ZSTD_DCtx* ZSTD_createDCtx_advanced(ZSTD_customMem customMem)
+{
+>>>>>>> b7ba80a49124 (Commit)
     if ((!customMem.customAlloc) ^ (!customMem.customFree)) return NULL;
 
     {   ZSTD_DCtx* const dctx = (ZSTD_DCtx*)ZSTD_customMalloc(sizeof(*dctx), customMem);
@@ -287,6 +304,7 @@ static ZSTD_DCtx* ZSTD_createDCtx_internal(ZSTD_customMem customMem) {
     }
 }
 
+<<<<<<< HEAD
 ZSTD_DCtx* ZSTD_createDCtx_advanced(ZSTD_customMem customMem)
 {
     return ZSTD_createDCtx_internal(customMem);
@@ -296,6 +314,12 @@ ZSTD_DCtx* ZSTD_createDCtx(void)
 {
     DEBUGLOG(3, "ZSTD_createDCtx");
     return ZSTD_createDCtx_internal(ZSTD_defaultCMem);
+=======
+ZSTD_DCtx* ZSTD_createDCtx(void)
+{
+    DEBUGLOG(3, "ZSTD_createDCtx");
+    return ZSTD_createDCtx_advanced(ZSTD_defaultCMem);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ZSTD_clearDict(ZSTD_DCtx* dctx)
@@ -373,6 +397,7 @@ unsigned ZSTD_isFrame(const void* buffer, size_t size)
     return 0;
 }
 
+<<<<<<< HEAD
 /*! ZSTD_isSkippableFrame() :
  *  Tells if the content of `buffer` starts with a valid Frame Identifier for a skippable frame.
  *  Note : Frame Identifier is 4 bytes. If `size < 4`, @return will always be 0.
@@ -386,6 +411,8 @@ unsigned ZSTD_isSkippableFrame(const void* buffer, size_t size)
     return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* ZSTD_frameHeaderSize_internal() :
  *  srcSize must be large enough to reach header size fields.
  *  note : only works for formats ZSTD_f_zstd1 and ZSTD_f_zstd1_magicless.
@@ -513,6 +540,10 @@ size_t ZSTD_getFrameHeader(ZSTD_frameHeader* zfhPtr, const void* src, size_t src
     return ZSTD_getFrameHeader_advanced(zfhPtr, src, srcSize, ZSTD_f_zstd1);
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 /* ZSTD_getFrameContentSize() :
  *  compatible with legacy mode
  * @return : decompressed size of the single frame pointed to be `src` if known, otherwise
@@ -547,6 +578,7 @@ static size_t readSkippableFrameSize(void const* src, size_t srcSize)
     }
 }
 
+<<<<<<< HEAD
 /*! ZSTD_readSkippableFrame() :
  * Retrieves a zstd skippable frame containing data given by src, and writes it to dst buffer.
  *
@@ -578,6 +610,8 @@ ZSTDLIB_API size_t ZSTD_readSkippableFrame(void* dst, size_t dstCapacity, unsign
     return skippableContentSize;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* ZSTD_findDecompressedSize() :
  *  compatible with legacy mode
  *  `srcSize` must be the exact length of some number of ZSTD compressed and/or
@@ -798,7 +832,11 @@ static size_t ZSTD_copyRawBlock(void* dst, size_t dstCapacity,
         if (srcSize == 0) return 0;
         RETURN_ERROR(dstBuffer_null, "");
     }
+<<<<<<< HEAD
     ZSTD_memmove(dst, src, srcSize);
+=======
+    ZSTD_memcpy(dst, src, srcSize);
+>>>>>>> b7ba80a49124 (Commit)
     return srcSize;
 }
 
@@ -858,7 +896,10 @@ static size_t ZSTD_decompressFrame(ZSTD_DCtx* dctx,
 
     /* Loop on each block */
     while (1) {
+<<<<<<< HEAD
         BYTE* oBlockEnd = oend;
+=======
+>>>>>>> b7ba80a49124 (Commit)
         size_t decodedSize;
         blockProperties_t blockProperties;
         size_t const cBlockSize = ZSTD_getcBlockSize(ip, remainingSrcSize, &blockProperties);
@@ -868,6 +909,7 @@ static size_t ZSTD_decompressFrame(ZSTD_DCtx* dctx,
         remainingSrcSize -= ZSTD_blockHeaderSize;
         RETURN_ERROR_IF(cBlockSize > remainingSrcSize, srcSize_wrong, "");
 
+<<<<<<< HEAD
         if (ip >= op && ip < oBlockEnd) {
             /* We are decompressing in-place. Limit the output pointer so that we
              * don't overwrite the block that we are currently reading. This will
@@ -896,6 +938,18 @@ static size_t ZSTD_decompressFrame(ZSTD_DCtx* dctx,
             break;
         case bt_rle :
             decodedSize = ZSTD_setRleBlock(op, (size_t)(oBlockEnd-op), *ip, blockProperties.origSize);
+=======
+        switch(blockProperties.blockType)
+        {
+        case bt_compressed:
+            decodedSize = ZSTD_decompressBlock_internal(dctx, op, (size_t)(oend-op), ip, cBlockSize, /* frame */ 1);
+            break;
+        case bt_raw :
+            decodedSize = ZSTD_copyRawBlock(op, (size_t)(oend-op), ip, cBlockSize);
+            break;
+        case bt_rle :
+            decodedSize = ZSTD_setRleBlock(op, (size_t)(oend-op), *ip, blockProperties.origSize);
+>>>>>>> b7ba80a49124 (Commit)
             break;
         case bt_reserved :
         default:
@@ -1041,7 +1095,11 @@ size_t ZSTD_decompress(void* dst, size_t dstCapacity, const void* src, size_t sr
 {
 #if defined(ZSTD_HEAPMODE) && (ZSTD_HEAPMODE>=1)
     size_t regenSize;
+<<<<<<< HEAD
     ZSTD_DCtx* const dctx =  ZSTD_createDCtx_internal(ZSTD_defaultCMem);
+=======
+    ZSTD_DCtx* const dctx = ZSTD_createDCtx();
+>>>>>>> b7ba80a49124 (Commit)
     RETURN_ERROR_IF(dctx==NULL, memory_allocation, "NULL pointer!");
     regenSize = ZSTD_decompressDCtx(dctx, dst, dstCapacity, src, srcSize);
     ZSTD_freeDCtx(dctx);
@@ -1061,7 +1119,11 @@ size_t ZSTD_decompress(void* dst, size_t dstCapacity, const void* src, size_t sr
 size_t ZSTD_nextSrcSizeToDecompress(ZSTD_DCtx* dctx) { return dctx->expected; }
 
 /*
+<<<<<<< HEAD
  * Similar to ZSTD_nextSrcSizeToDecompress(), but when a block input can be streamed,
+=======
+ * Similar to ZSTD_nextSrcSizeToDecompress(), but when when a block input can be streamed,
+>>>>>>> b7ba80a49124 (Commit)
  * we allow taking a partial block as the input. Currently only raw uncompressed blocks can
  * be streamed.
  *
@@ -1075,7 +1137,11 @@ static size_t ZSTD_nextSrcSizeToDecompressWithInputSize(ZSTD_DCtx* dctx, size_t 
         return dctx->expected;
     if (dctx->bType != bt_raw)
         return dctx->expected;
+<<<<<<< HEAD
     return BOUNDED(1, inputSize, dctx->expected);
+=======
+    return MIN(MAX(inputSize, 1), dctx->expected);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 ZSTD_nextInputType_e ZSTD_nextInputType(ZSTD_DCtx* dctx) {
@@ -1181,7 +1247,11 @@ size_t ZSTD_decompressContinue(ZSTD_DCtx* dctx, void* dst, size_t dstCapacity, c
             {
             case bt_compressed:
                 DEBUGLOG(5, "ZSTD_decompressContinue: case bt_compressed");
+<<<<<<< HEAD
                 rSize = ZSTD_decompressBlock_internal(dctx, dst, dstCapacity, src, srcSize, /* frame */ 1, is_streaming);
+=======
+                rSize = ZSTD_decompressBlock_internal(dctx, dst, dstCapacity, src, srcSize, /* frame */ 1);
+>>>>>>> b7ba80a49124 (Commit)
                 dctx->expected = 0;  /* Streaming not supported */
                 break;
             case bt_raw :
@@ -1503,7 +1573,11 @@ size_t ZSTD_decompress_usingDDict(ZSTD_DCtx* dctx,
 ZSTD_DStream* ZSTD_createDStream(void)
 {
     DEBUGLOG(3, "ZSTD_createDStream");
+<<<<<<< HEAD
     return ZSTD_createDCtx_internal(ZSTD_defaultCMem);
+=======
+    return ZSTD_createDStream_advanced(ZSTD_defaultCMem);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 ZSTD_DStream* ZSTD_initStaticDStream(void *workspace, size_t workspaceSize)
@@ -1513,7 +1587,11 @@ ZSTD_DStream* ZSTD_initStaticDStream(void *workspace, size_t workspaceSize)
 
 ZSTD_DStream* ZSTD_createDStream_advanced(ZSTD_customMem customMem)
 {
+<<<<<<< HEAD
     return ZSTD_createDCtx_internal(customMem);
+=======
+    return ZSTD_createDCtx_advanced(customMem);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 size_t ZSTD_freeDStream(ZSTD_DStream* zds)
@@ -1773,8 +1851,12 @@ size_t ZSTD_sizeof_DStream(const ZSTD_DStream* dctx)
 size_t ZSTD_decodingBufferSize_min(unsigned long long windowSize, unsigned long long frameContentSize)
 {
     size_t const blockSize = (size_t) MIN(windowSize, ZSTD_BLOCKSIZE_MAX);
+<<<<<<< HEAD
     /* space is needed to store the litbuffer after the output of a given block without stomping the extDict of a previous run, as well as to cover both windows against wildcopy*/
     unsigned long long const neededRBSize = windowSize + blockSize + ZSTD_BLOCKSIZE_MAX + (WILDCOPY_OVERLENGTH * 2);
+=======
+    unsigned long long const neededRBSize = windowSize + blockSize + (WILDCOPY_OVERLENGTH * 2);
+>>>>>>> b7ba80a49124 (Commit)
     unsigned long long const neededSize = MIN(frameContentSize, neededRBSize);
     size_t const minRBSize = (size_t) neededSize;
     RETURN_ERROR_IF((unsigned long long)minRBSize != neededSize,
@@ -1908,6 +1990,10 @@ size_t ZSTD_decompressStream(ZSTD_DStream* zds, ZSTD_outBuffer* output, ZSTD_inB
             DEBUGLOG(5, "stage zdss_init => transparent reset ");
             zds->streamStage = zdss_loadHeader;
             zds->lhSize = zds->inPos = zds->outStart = zds->outEnd = 0;
+<<<<<<< HEAD
+=======
+            zds->legacyVersion = 0;
+>>>>>>> b7ba80a49124 (Commit)
             zds->hostageByte = 0;
             zds->expectedOutBuffer = *output;
             ZSTD_FALLTHROUGH;

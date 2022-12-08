@@ -455,7 +455,11 @@ static int alloc_mhop_hem(struct hns_roce_dev *hr_dev,
 	 * alloc bt space chunk for MTT/CQE.
 	 */
 	size = table->type < HEM_TYPE_MTT ? mhop->buf_chunk_size : bt_size;
+<<<<<<< HEAD
 	flag = GFP_KERNEL | __GFP_NOWARN;
+=======
+	flag = (table->lowmem ? GFP_KERNEL : GFP_HIGHUSER) | __GFP_NOWARN;
+>>>>>>> b7ba80a49124 (Commit)
 	table->hem[index->buf] = hns_roce_alloc_hem(hr_dev, size >> PAGE_SHIFT,
 						    size, flag);
 	if (!table->hem[index->buf]) {
@@ -588,7 +592,12 @@ int hns_roce_table_get(struct hns_roce_dev *hr_dev,
 	table->hem[i] = hns_roce_alloc_hem(hr_dev,
 				       table->table_chunk_size >> PAGE_SHIFT,
 				       table->table_chunk_size,
+<<<<<<< HEAD
 				       GFP_KERNEL | __GFP_NOWARN);
+=======
+				       (table->lowmem ? GFP_KERNEL :
+					GFP_HIGHUSER) | __GFP_NOWARN);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!table->hem[i]) {
 		ret = -ENOMEM;
 		goto out;
@@ -724,6 +733,12 @@ void *hns_roce_table_find(struct hns_roce_dev *hr_dev,
 	int length;
 	int i, j;
 
+<<<<<<< HEAD
+=======
+	if (!table->lowmem)
+		return NULL;
+
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&table->mutex);
 
 	if (!hns_roce_check_whether_mhop(hr_dev, table->type)) {
@@ -779,7 +794,12 @@ out:
 
 int hns_roce_init_hem_table(struct hns_roce_dev *hr_dev,
 			    struct hns_roce_hem_table *table, u32 type,
+<<<<<<< HEAD
 			    unsigned long obj_size, unsigned long nobj)
+=======
+			    unsigned long obj_size, unsigned long nobj,
+			    int use_lowmem)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long obj_per_chunk;
 	unsigned long num_hem;
@@ -856,6 +876,10 @@ int hns_roce_init_hem_table(struct hns_roce_dev *hr_dev,
 	table->type = type;
 	table->num_hem = num_hem;
 	table->obj_size = obj_size;
+<<<<<<< HEAD
+=======
+	table->lowmem = use_lowmem;
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_init(&table->mutex);
 
 	return 0;
@@ -926,7 +950,11 @@ void hns_roce_cleanup_hem_table(struct hns_roce_dev *hr_dev,
 		if (table->hem[i]) {
 			if (hr_dev->hw->clear_hem(hr_dev, table,
 			    i * table->table_chunk_size / table->obj_size, 0))
+<<<<<<< HEAD
 				dev_err(dev, "clear HEM base address failed.\n");
+=======
+				dev_err(dev, "Clear HEM base address failed.\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 			hns_roce_free_hem(hr_dev, table->hem[i]);
 		}
@@ -980,7 +1008,11 @@ struct hns_roce_hem_head {
 
 static struct hns_roce_hem_item *
 hem_list_alloc_item(struct hns_roce_dev *hr_dev, int start, int end, int count,
+<<<<<<< HEAD
 		    bool exist_bt)
+=======
+		    bool exist_bt, int bt_level)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hns_roce_hem_item *hem;
 
@@ -1189,7 +1221,11 @@ static int hem_list_alloc_mid_bt(struct hns_roce_dev *hr_dev,
 		start_aligned = (distance / step) * step + r->offset;
 		end = min_t(int, start_aligned + step - 1, max_ofs);
 		cur = hem_list_alloc_item(hr_dev, start_aligned, end, unit,
+<<<<<<< HEAD
 					  true);
+=======
+					  true, level);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!cur) {
 			ret = -ENOMEM;
 			goto err_exit;
@@ -1241,7 +1277,11 @@ alloc_root_hem(struct hns_roce_dev *hr_dev, int unit, int *max_ba_num,
 	/* indicate to last region */
 	r = &regions[region_cnt - 1];
 	hem = hem_list_alloc_item(hr_dev, offset, r->offset + r->count - 1,
+<<<<<<< HEAD
 				  ba_num, true);
+=======
+				  ba_num, true, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!hem)
 		return ERR_PTR(-ENOMEM);
 
@@ -1258,7 +1298,11 @@ static int alloc_fake_root_bt(struct hns_roce_dev *hr_dev, void *cpu_base,
 	struct hns_roce_hem_item *hem;
 
 	hem = hem_list_alloc_item(hr_dev, r->offset, r->offset + r->count - 1,
+<<<<<<< HEAD
 				  r->count, false);
+=======
+				  r->count, false, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!hem)
 		return -ENOMEM;
 
@@ -1415,7 +1459,11 @@ int hns_roce_hem_list_request(struct hns_roce_dev *hr_dev,
 						    &hem_list->btm_bt);
 			if (ret) {
 				dev_err(hr_dev->dev,
+<<<<<<< HEAD
 					"alloc hem trunk fail ret = %d!\n", ret);
+=======
+					"alloc hem trunk fail ret=%d!\n", ret);
+>>>>>>> b7ba80a49124 (Commit)
 				goto err_alloc;
 			}
 		}
@@ -1424,7 +1472,11 @@ int hns_roce_hem_list_request(struct hns_roce_dev *hr_dev,
 	ret = hem_list_alloc_root_bt(hr_dev, hem_list, unit, regions,
 				     region_cnt);
 	if (ret)
+<<<<<<< HEAD
 		dev_err(hr_dev->dev, "alloc hem root fail ret = %d!\n", ret);
+=======
+		dev_err(hr_dev->dev, "alloc hem root fail ret=%d!\n", ret);
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		return 0;
 
@@ -1462,17 +1514,29 @@ void hns_roce_hem_list_init(struct hns_roce_hem_list *hem_list)
 
 void *hns_roce_hem_list_find_mtt(struct hns_roce_dev *hr_dev,
 				 struct hns_roce_hem_list *hem_list,
+<<<<<<< HEAD
 				 int offset, int *mtt_cnt)
+=======
+				 int offset, int *mtt_cnt, u64 *phy_addr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct list_head *head = &hem_list->btm_bt;
 	struct hns_roce_hem_item *hem, *temp_hem;
 	void *cpu_base = NULL;
+<<<<<<< HEAD
+=======
+	u64 phy_base = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int nr = 0;
 
 	list_for_each_entry_safe(hem, temp_hem, head, sibling) {
 		if (hem_list_page_is_in_range(hem, offset)) {
 			nr = offset - hem->start;
 			cpu_base = hem->addr + nr * BA_BYTE_LEN;
+<<<<<<< HEAD
+=======
+			phy_base = hem->dma_addr + nr * BA_BYTE_LEN;
+>>>>>>> b7ba80a49124 (Commit)
 			nr = hem->end + 1 - offset;
 			break;
 		}
@@ -1481,5 +1545,11 @@ void *hns_roce_hem_list_find_mtt(struct hns_roce_dev *hr_dev,
 	if (mtt_cnt)
 		*mtt_cnt = nr;
 
+<<<<<<< HEAD
+=======
+	if (phy_addr)
+		*phy_addr = phy_base;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return cpu_base;
 }

@@ -202,7 +202,11 @@ SiS310SubsequentScreenToScreenCopy(struct sis_video_info *ivideo, int src_x, int
 	 * and destination blitting areas overlap and
 	 * adapt the bitmap addresses synchronously
 	 * if the coordinates exceed the valid range.
+<<<<<<< HEAD
 	 * The areas do not overlap, we do our
+=======
+	 * The the areas do not overlap, we do our
+>>>>>>> b7ba80a49124 (Commit)
 	 * normal check.
 	 */
 	if((mymax - mymin) < height) {

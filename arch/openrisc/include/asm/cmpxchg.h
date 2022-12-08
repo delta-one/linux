@@ -147,8 +147,13 @@ static inline unsigned long __cmpxchg(volatile void *ptr, unsigned long old,
 extern unsigned long __xchg_called_with_bad_pointer(void)
 	__compiletime_error("Bad argument size for xchg");
 
+<<<<<<< HEAD
 static inline unsigned long
 __arch_xchg(volatile void *ptr, unsigned long with, int size)
+=======
+static inline unsigned long __xchg(volatile void *ptr, unsigned long with,
+		int size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	switch (size) {
 	case 1:
@@ -163,9 +168,15 @@ __arch_xchg(volatile void *ptr, unsigned long with, int size)
 
 #define arch_xchg(ptr, with) 						\
 	({								\
+<<<<<<< HEAD
 		(__typeof__(*(ptr))) __arch_xchg((ptr),			\
 						 (unsigned long)(with),	\
 						 sizeof(*(ptr)));	\
+=======
+		(__typeof__(*(ptr))) __xchg((ptr),			\
+					    (unsigned long)(with),	\
+					    sizeof(*(ptr)));		\
+>>>>>>> b7ba80a49124 (Commit)
 	})
 
 #endif /* __ASM_OPENRISC_CMPXCHG_H */

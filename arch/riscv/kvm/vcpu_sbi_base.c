@@ -10,6 +10,7 @@
 #include <linux/err.h>
 #include <linux/kvm_host.h>
 #include <linux/version.h>
+<<<<<<< HEAD
 #include <asm/sbi.h>
 #include <asm/kvm_vcpu_sbi.h>
 
@@ -19,6 +20,20 @@ static int kvm_sbi_ext_base_handler(struct kvm_vcpu *vcpu, struct kvm_run *run,
 	struct kvm_cpu_context *cp = &vcpu->arch.guest_context;
 	const struct kvm_vcpu_sbi_extension *sbi_ext;
 	unsigned long *out_val = &retdata->out_val;
+=======
+#include <asm/csr.h>
+#include <asm/sbi.h>
+#include <asm/kvm_vcpu_timer.h>
+#include <asm/kvm_vcpu_sbi.h>
+
+static int kvm_sbi_ext_base_handler(struct kvm_vcpu *vcpu, struct kvm_run *run,
+				    unsigned long *out_val,
+				    struct kvm_cpu_trap *trap, bool *exit)
+{
+	int ret = 0;
+	struct kvm_cpu_context *cp = &vcpu->arch.guest_context;
+	struct sbiret ecall_ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (cp->a6) {
 	case SBI_EXT_BASE_GET_SPEC_VERSION:
@@ -42,6 +57,7 @@ static int kvm_sbi_ext_base_handler(struct kvm_vcpu *vcpu, struct kvm_run *run,
 			 * forward it to the userspace
 			 */
 			kvm_riscv_vcpu_sbi_forward(vcpu, run);
+<<<<<<< HEAD
 			retdata->uexit = true;
 		} else {
 			sbi_ext = kvm_vcpu_sbi_find_ext(cp->a0);
@@ -64,6 +80,27 @@ static int kvm_sbi_ext_base_handler(struct kvm_vcpu *vcpu, struct kvm_run *run,
 	}
 
 	return 0;
+=======
+			*exit = true;
+		} else
+			*out_val = kvm_vcpu_sbi_find_ext(cp->a0) ? 1 : 0;
+		break;
+	case SBI_EXT_BASE_GET_MVENDORID:
+	case SBI_EXT_BASE_GET_MARCHID:
+	case SBI_EXT_BASE_GET_MIMPID:
+		ecall_ret = sbi_ecall(SBI_EXT_BASE, cp->a6, 0, 0, 0, 0, 0, 0);
+		if (!ecall_ret.error)
+			*out_val = ecall_ret.value;
+		/*TODO: We are unnecessarily converting the error twice */
+		ret = sbi_err_map_linux_errno(ecall_ret.error);
+		break;
+	default:
+		ret = -EOPNOTSUPP;
+		break;
+	}
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_base = {
@@ -73,15 +110,26 @@ const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_base = {
 };
 
 static int kvm_sbi_ext_forward_handler(struct kvm_vcpu *vcpu,
+<<<<<<< HEAD
 				       struct kvm_run *run,
 				       struct kvm_vcpu_sbi_return *retdata)
+=======
+					struct kvm_run *run,
+					unsigned long *out_val,
+					struct kvm_cpu_trap *utrap,
+					bool *exit)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/*
 	 * Both SBI experimental and vendor extensions are
 	 * unconditionally forwarded to userspace.
 	 */
 	kvm_riscv_vcpu_sbi_forward(vcpu, run);
+<<<<<<< HEAD
 	retdata->uexit = true;
+=======
+	*exit = true;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

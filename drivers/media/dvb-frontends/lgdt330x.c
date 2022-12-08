@@ -857,7 +857,12 @@ static struct dvb_frontend *lgdt330x_get_dvb_frontend(struct i2c_client *client)
 static const struct dvb_frontend_ops lgdt3302_ops;
 static const struct dvb_frontend_ops lgdt3303_ops;
 
+<<<<<<< HEAD
 static int lgdt330x_probe(struct i2c_client *client)
+=======
+static int lgdt330x_probe(struct i2c_client *client,
+			  const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lgdt330x_state *state = NULL;
 	u8 buf[1];
@@ -993,7 +998,11 @@ static struct i2c_driver lgdt330x_driver = {
 		.name	= "lgdt330x",
 		.suppress_bind_attrs = true,
 	},
+<<<<<<< HEAD
 	.probe_new	= lgdt330x_probe,
+=======
+	.probe		= lgdt330x_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= lgdt330x_remove,
 	.id_table	= lgdt330x_id_table,
 };

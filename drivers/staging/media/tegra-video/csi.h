@@ -56,7 +56,11 @@ struct tegra_csi;
  * @framerate: active framerate for TPG
  * @h_blank: horizontal blanking for TPG active format
  * @v_blank: vertical blanking for TPG active format
+<<<<<<< HEAD
  * @mipi: mipi device for corresponding csi channel pads, or NULL if not applicable (TPG, error)
+=======
+ * @mipi: mipi device for corresponding csi channel pads
+>>>>>>> b7ba80a49124 (Commit)
  * @pixel_rate: active pixel rate from the sensor on this channel
  */
 struct tegra_csi_channel {

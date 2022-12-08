@@ -267,7 +267,11 @@ static int pic32_sqi_one_transfer(struct pic32_sqi *sqi,
 	u32 nbits;
 
 	/* Device selection */
+<<<<<<< HEAD
 	bd_ctrl = spi_get_chipselect(spi, 0) << BD_DEVSEL_SHIFT;
+=======
+	bd_ctrl = spi->chip_select << BD_DEVSEL_SHIFT;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* half-duplex: select transfer buffer, direction and lane */
 	if (xfer->rx_buf) {
@@ -678,7 +682,11 @@ err_free_master:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void pic32_sqi_remove(struct platform_device *pdev)
+=======
+static int pic32_sqi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pic32_sqi *sqi = platform_get_drvdata(pdev);
 
@@ -689,6 +697,11 @@ static void pic32_sqi_remove(struct platform_device *pdev)
 	/* disable clk */
 	clk_disable_unprepare(sqi->base_clk);
 	clk_disable_unprepare(sqi->sys_clk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id pic32_sqi_of_ids[] = {
@@ -703,7 +716,11 @@ static struct platform_driver pic32_sqi_driver = {
 		.of_match_table = of_match_ptr(pic32_sqi_of_ids),
 	},
 	.probe = pic32_sqi_probe,
+<<<<<<< HEAD
 	.remove_new = pic32_sqi_remove,
+=======
+	.remove = pic32_sqi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(pic32_sqi_driver);

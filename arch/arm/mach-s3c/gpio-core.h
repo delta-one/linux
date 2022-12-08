@@ -93,6 +93,12 @@ static inline struct samsung_gpio_chip *to_samsung_gpio(struct gpio_chip *gpc)
  */
 extern int samsung_gpiolib_to_irq(struct gpio_chip *chip, unsigned int offset);
 
+<<<<<<< HEAD
+=======
+/* exported for core SoC support to change */
+extern struct samsung_gpio_cfg s3c24xx_gpiocfg_default;
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_S3C_GPIO_TRACK
 extern struct samsung_gpio_chip *s3c_gpios[S3C_GPIO_END];
 

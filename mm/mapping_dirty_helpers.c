@@ -126,7 +126,11 @@ static int clean_record_pte(pte_t *pte, unsigned long addr,
 static int wp_clean_pmd_entry(pmd_t *pmd, unsigned long addr, unsigned long end,
 			      struct mm_walk *walk)
 {
+<<<<<<< HEAD
 	pmd_t pmdval = pmdp_get_lockless(pmd);
+=======
+	pmd_t pmdval = pmd_read_atomic(pmd);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!pmd_trans_unstable(&pmdval))
 		return 0;
@@ -191,7 +195,11 @@ static int wp_clean_pre_vma(unsigned long start, unsigned long end,
 	wpwalk->tlbflush_end = start;
 
 	mmu_notifier_range_init(&wpwalk->range, MMU_NOTIFY_PROTECTION_PAGE, 0,
+<<<<<<< HEAD
 				walk->mm, start, end);
+=======
+				walk->vma, walk->mm, start, end);
+>>>>>>> b7ba80a49124 (Commit)
 	mmu_notifier_invalidate_range_start(&wpwalk->range);
 	flush_cache_range(walk->vma, start, end);
 

@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: BSD-3-Clause-Clear
 /*
  * Copyright (c) 2020 The Linux Foundation. All rights reserved.
+<<<<<<< HEAD
  * Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include <linux/delay.h>
@@ -68,6 +71,7 @@ int ath11k_wow_wakeup(struct ath11k_base *ab)
 	struct ath11k *ar = ath11k_ab_to_ar(ab, 0);
 	int ret;
 
+<<<<<<< HEAD
 	/* In the case of WCN6750, WoW wakeup is done
 	 * by sending SMP2P power save exit message
 	 * to the target processor.
@@ -75,6 +79,8 @@ int ath11k_wow_wakeup(struct ath11k_base *ab)
 	if (ab->hw_params.smp2p_wow_exit)
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	reinit_completion(&ab->wow.wakeup_completed);
 
 	ret = ath11k_wmi_wow_host_wakeup_ind(ar);
@@ -672,12 +678,15 @@ int ath11k_wow_op_suspend(struct ieee80211_hw *hw,
 	struct ath11k *ar = hw->priv;
 	int ret;
 
+<<<<<<< HEAD
 	ret = ath11k_mac_wait_tx_complete(ar);
 	if (ret) {
 		ath11k_warn(ar->ab, "failed to wait tx complete: %d\n", ret);
 		return ret;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_lock(&ar->conf_mutex);
 
 	ret = ath11k_dp_rx_pktlog_stop(ar->ab, true);
@@ -709,6 +718,16 @@ int ath11k_wow_op_suspend(struct ieee80211_hw *hw,
 		goto cleanup;
 	}
 
+<<<<<<< HEAD
+=======
+	ath11k_mac_drain_tx(ar);
+	ret = ath11k_mac_wait_tx_complete(ar);
+	if (ret) {
+		ath11k_warn(ar->ab, "failed to wait tx complete: %d\n", ret);
+		goto cleanup;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = ath11k_wow_set_hw_filter(ar);
 	if (ret) {
 		ath11k_warn(ar->ab, "failed to set hw filter: %d\n",

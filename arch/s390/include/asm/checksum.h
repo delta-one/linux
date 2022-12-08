@@ -12,12 +12,15 @@
 #ifndef _S390_CHECKSUM_H
 #define _S390_CHECKSUM_H
 
+<<<<<<< HEAD
 #ifdef CONFIG_GENERIC_CSUM
 
 #include <asm-generic/checksum.h>
 
 #else /* CONFIG_GENERIC_CSUM */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/uaccess.h>
 #include <linux/in6.h>
 
@@ -135,5 +138,8 @@ static inline __sum16 csum_ipv6_magic(const struct in6_addr *saddr,
 	return csum_fold((__force __wsum)(sum >> 32));
 }
 
+<<<<<<< HEAD
 #endif /* CONFIG_GENERIC_CSUM */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _S390_CHECKSUM_H */

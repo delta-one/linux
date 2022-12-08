@@ -9,7 +9,10 @@
 #include <linux/kernel.h>
 #include <linux/types.h>
 #include <linux/string.h>
+<<<<<<< HEAD
 #include <linux/io.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/errno.h>
 #include <linux/err.h>
 #include <linux/module.h>
@@ -188,7 +191,11 @@ struct itcw *itcw_init(void *buffer, size_t size, int op, int intrg,
 	/* Check for 2G limit. */
 	start = (addr_t) buffer;
 	end = start + size;
+<<<<<<< HEAD
 	if ((virt_to_phys(buffer) + size) > (1 << 31))
+=======
+	if (end > (1 << 31))
+>>>>>>> b7ba80a49124 (Commit)
 		return ERR_PTR(-EINVAL);
 	memset(buffer, 0, size);
 	/* ITCW. */

@@ -22,9 +22,12 @@ int try_add_tainted_module(struct module *mod)
 
 	module_assert_mutex_or_preempt();
 
+<<<<<<< HEAD
 	if (!mod->taints)
 		goto out;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	list_for_each_entry_rcu(mod_taint, &unloaded_tainted_modules, list,
 				lockdep_is_held(&module_mutex)) {
 		if (!strcmp(mod_taint->name, mod->name) &&

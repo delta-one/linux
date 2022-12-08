@@ -9,6 +9,10 @@ extern struct platform_device pxa3xx_device_mci2;
 extern struct platform_device pxa3xx_device_mci3;
 extern struct platform_device pxa25x_device_udc;
 extern struct platform_device pxa27x_device_udc;
+<<<<<<< HEAD
+=======
+extern struct platform_device pxa3xx_device_u2d;
+>>>>>>> b7ba80a49124 (Commit)
 extern struct platform_device pxa_device_fb;
 extern struct platform_device pxa_device_ffuart;
 extern struct platform_device pxa_device_btuart;
@@ -16,6 +20,10 @@ extern struct platform_device pxa_device_stuart;
 extern struct platform_device pxa_device_hwuart;
 extern struct platform_device pxa_device_i2c;
 extern struct platform_device pxa_device_i2s;
+<<<<<<< HEAD
+=======
+extern struct platform_device pxa_device_ficp;
+>>>>>>> b7ba80a49124 (Commit)
 extern struct platform_device sa1100_device_rtc;
 extern struct platform_device pxa_device_rtc;
 extern struct platform_device pxa_device_ac97;

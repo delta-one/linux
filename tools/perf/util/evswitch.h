@@ -22,9 +22,15 @@ bool evswitch__discard(struct evswitch *evswitch, struct evsel *evsel);
 
 #define OPTS_EVSWITCH(evswitch)								  \
 	OPT_STRING(0, "switch-on", &(evswitch)->on_name,				  \
+<<<<<<< HEAD
 		   "event", "Consider events after the occurrence of this event"),	  \
 	OPT_STRING(0, "switch-off", &(evswitch)->off_name,				  \
 		   "event", "Stop considering events after the occurrence of this event"), \
+=======
+		   "event", "Consider events after the ocurrence of this event"),	  \
+	OPT_STRING(0, "switch-off", &(evswitch)->off_name,				  \
+		   "event", "Stop considering events after the ocurrence of this event"), \
+>>>>>>> b7ba80a49124 (Commit)
 	OPT_BOOLEAN(0, "show-on-off-events", &(evswitch)->show_on_off_events,		  \
 		    "Show the on/off switch events, used with --switch-on and --switch-off")
 

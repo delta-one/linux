@@ -45,6 +45,7 @@ def init(l, a):
 
 def run_analysis(entry):
     # Disable all checks, then re-enable the ones we want
+<<<<<<< HEAD
     checks = []
     checks.append("-checks=-*")
     if args.type == "clang-tidy":
@@ -53,6 +54,15 @@ def run_analysis(entry):
         checks.append("clang-analyzer-*")
         checks.append("-clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling")
     p = subprocess.run(["clang-tidy", "-p", args.path, ",".join(checks), entry["file"]],
+=======
+    checks = "-checks=-*,"
+    if args.type == "clang-tidy":
+        checks += "linuxkernel-*"
+    else:
+        checks += "clang-analyzer-*"
+        checks += ",-clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling"
+    p = subprocess.run(["clang-tidy", "-p", args.path, checks, entry["file"]],
+>>>>>>> b7ba80a49124 (Commit)
                        stdout=subprocess.PIPE,
                        stderr=subprocess.STDOUT,
                        cwd=entry["directory"])
@@ -61,6 +71,7 @@ def run_analysis(entry):
 
 
 def main():
+<<<<<<< HEAD
     try:
         args = parse_arguments()
 
@@ -76,6 +87,16 @@ def main():
         devnull = os.open(os.devnull, os.O_WRONLY)
         os.dup2(devnull, sys.stdout.fileno())
         sys.exit(1)  # Python exits with error code 1 on EPIPE
+=======
+    args = parse_arguments()
+
+    lock = multiprocessing.Lock()
+    pool = multiprocessing.Pool(initializer=init, initargs=(lock, args))
+    # Read JSON data into the datastore variable
+    with open(args.path, "r") as f:
+        datastore = json.load(f)
+        pool.map(run_analysis, datastore)
+>>>>>>> b7ba80a49124 (Commit)
 
 
 if __name__ == "__main__":

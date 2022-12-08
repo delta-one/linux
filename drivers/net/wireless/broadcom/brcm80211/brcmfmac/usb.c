@@ -1240,8 +1240,12 @@ brcmf_usb_prepare_fw_request(struct brcmf_usbdev_info *devinfo)
 	return fwreq;
 }
 
+<<<<<<< HEAD
 static int brcmf_usb_probe_cb(struct brcmf_usbdev_info *devinfo,
 			      enum brcmf_fwvendor fwvid)
+=======
+static int brcmf_usb_probe_cb(struct brcmf_usbdev_info *devinfo)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct brcmf_bus *bus = NULL;
 	struct brcmf_usbdev *bus_pub = NULL;
@@ -1266,7 +1270,10 @@ static int brcmf_usb_probe_cb(struct brcmf_usbdev_info *devinfo,
 	dev_set_drvdata(dev, bus);
 	bus->ops = &brcmf_usb_bus_ops;
 	bus->proto_type = BRCMF_PROTO_BCDC;
+<<<<<<< HEAD
 	bus->fwvid = fwvid;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bus->always_use_fws_queue = true;
 #ifdef CONFIG_PM
 	bus->wowl_supported = true;
@@ -1425,7 +1432,11 @@ brcmf_usb_probe(struct usb_interface *intf, const struct usb_device_id *id)
 	else
 		brcmf_dbg(USB, "Broadcom full speed USB WLAN interface detected\n");
 
+<<<<<<< HEAD
 	ret = brcmf_usb_probe_cb(devinfo, id->driver_info);
+=======
+	ret = brcmf_usb_probe_cb(devinfo);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto fail;
 
@@ -1513,6 +1524,7 @@ static int brcmf_usb_reset_resume(struct usb_interface *intf)
 	return ret;
 }
 
+<<<<<<< HEAD
 #define BRCMF_USB_DEVICE(dev_id) \
 	{ \
 		USB_DEVICE(BRCM_USB_VENDOR_ID_BROADCOM, dev_id), \
@@ -1530,6 +1542,16 @@ static int brcmf_usb_reset_resume(struct usb_interface *intf)
 		USB_DEVICE(CY_USB_VENDOR_ID_CYPRESS, dev_id), \
 		.driver_info = BRCMF_FWVENDOR_WCC \
 	}
+=======
+#define BRCMF_USB_DEVICE(dev_id)	\
+	{ USB_DEVICE(BRCM_USB_VENDOR_ID_BROADCOM, dev_id) }
+
+#define LINKSYS_USB_DEVICE(dev_id)	\
+	{ USB_DEVICE(BRCM_USB_VENDOR_ID_LINKSYS, dev_id) }
+
+#define CYPRESS_USB_DEVICE(dev_id)	\
+	{ USB_DEVICE(CY_USB_VENDOR_ID_CYPRESS, dev_id) }
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct usb_device_id brcmf_usb_devid_table[] = {
 	BRCMF_USB_DEVICE(BRCM_USB_43143_DEVICE_ID),

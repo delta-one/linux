@@ -3300,6 +3300,14 @@ static int srpt_check_true(struct se_portal_group *se_tpg)
 	return 1;
 }
 
+<<<<<<< HEAD
+=======
+static int srpt_check_false(struct se_portal_group *se_tpg)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct srpt_port *srpt_tpg_to_sport(struct se_portal_group *tpg)
 {
 	return tpg->se_tpg_wwn->priv;
@@ -3329,6 +3337,14 @@ static u16 srpt_get_tag(struct se_portal_group *tpg)
 	return 1;
 }
 
+<<<<<<< HEAD
+=======
+static u32 srpt_tpg_get_inst_index(struct se_portal_group *se_tpg)
+{
+	return 1;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void srpt_release_cmd(struct se_cmd *se_cmd)
 {
 	struct srpt_send_ioctx *ioctx = container_of(se_cmd,
@@ -3368,6 +3384,27 @@ static void srpt_close_session(struct se_session *se_sess)
 	srpt_disconnect_ch_sync(ch);
 }
 
+<<<<<<< HEAD
+=======
+/**
+ * srpt_sess_get_index - return the value of scsiAttIntrPortIndex (SCSI-MIB)
+ * @se_sess: SCSI target session.
+ *
+ * A quote from RFC 4455 (SCSI-MIB) about this MIB object:
+ * This object represents an arbitrary integer used to uniquely identify a
+ * particular attached remote initiator port to a particular SCSI target port
+ * within a particular SCSI target device within a particular SCSI instance.
+ */
+static u32 srpt_sess_get_index(struct se_session *se_sess)
+{
+	return 0;
+}
+
+static void srpt_set_default_node_attrs(struct se_node_acl *nacl)
+{
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Note: only used from inside debug printk's by the TCM core. */
 static int srpt_get_tcm_cmd_state(struct se_cmd *se_cmd)
 {
@@ -3838,6 +3875,7 @@ static const struct target_core_fabric_ops srpt_template = {
 	.fabric_name			= "srpt",
 	.tpg_get_wwn			= srpt_get_fabric_wwn,
 	.tpg_get_tag			= srpt_get_tag,
+<<<<<<< HEAD
 	.tpg_check_demo_mode_cache	= srpt_check_true,
 	.tpg_check_demo_mode_write_protect = srpt_check_true,
 	.release_cmd			= srpt_release_cmd,
@@ -3845,6 +3883,20 @@ static const struct target_core_fabric_ops srpt_template = {
 	.close_session			= srpt_close_session,
 	.sess_get_initiator_sid		= NULL,
 	.write_pending			= srpt_write_pending,
+=======
+	.tpg_check_demo_mode		= srpt_check_false,
+	.tpg_check_demo_mode_cache	= srpt_check_true,
+	.tpg_check_demo_mode_write_protect = srpt_check_true,
+	.tpg_check_prod_mode_write_protect = srpt_check_false,
+	.tpg_get_inst_index		= srpt_tpg_get_inst_index,
+	.release_cmd			= srpt_release_cmd,
+	.check_stop_free		= srpt_check_stop_free,
+	.close_session			= srpt_close_session,
+	.sess_get_index			= srpt_sess_get_index,
+	.sess_get_initiator_sid		= NULL,
+	.write_pending			= srpt_write_pending,
+	.set_default_node_attributes	= srpt_set_default_node_attrs,
+>>>>>>> b7ba80a49124 (Commit)
 	.get_cmd_state			= srpt_get_tcm_cmd_state,
 	.queue_data_in			= srpt_queue_data_in,
 	.queue_status			= srpt_queue_status,

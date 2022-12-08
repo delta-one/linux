@@ -356,6 +356,11 @@ static void b53_mdio_remove(struct mdio_device *mdiodev)
 		return;
 
 	b53_switch_remove(dev);
+<<<<<<< HEAD
+=======
+
+	dev_set_drvdata(&mdiodev->dev, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void b53_mdio_shutdown(struct mdio_device *mdiodev)

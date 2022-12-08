@@ -423,10 +423,17 @@ void isst_ctdp_display_information(struct isst_id *id, FILE *outf, int tdp_level
 			format_and_print(outf, level + 2, header, value);
 		}
 
+<<<<<<< HEAD
 		if (ctdp_level->uncore_pm) {
 			snprintf(header, sizeof(header), "uncore-frequency-min(MHz)");
 			snprintf(value, sizeof(value), "%d",
 				 ctdp_level->uncore_pm * DISP_FREQ_MULTIPLIER);
+=======
+		if (ctdp_level->uncore_p1) {
+			snprintf(header, sizeof(header), "uncore-frequency-min(MHz)");
+			snprintf(value, sizeof(value), "%d",
+				 ctdp_level->uncore_p1 * DISP_FREQ_MULTIPLIER);
+>>>>>>> b7ba80a49124 (Commit)
 			format_and_print(outf, level + 2, header, value);
 		}
 
@@ -437,6 +444,7 @@ void isst_ctdp_display_information(struct isst_id *id, FILE *outf, int tdp_level
 			format_and_print(outf, level + 2, header, value);
 		}
 
+<<<<<<< HEAD
 		if (ctdp_level->uncore_p1) {
 			snprintf(header, sizeof(header), "uncore-frequency-base(MHz)");
 			snprintf(value, sizeof(value), "%d",
@@ -444,6 +452,8 @@ void isst_ctdp_display_information(struct isst_id *id, FILE *outf, int tdp_level
 			format_and_print(outf, level + 2, header, value);
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (ctdp_level->mem_freq) {
 			snprintf(header, sizeof(header), "mem-frequency(MHz)");
 			snprintf(value, sizeof(value), "%d",

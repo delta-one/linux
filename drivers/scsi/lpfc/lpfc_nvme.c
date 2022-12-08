@@ -1,7 +1,11 @@
 /*******************************************************************
  * This file is part of the Emulex Linux Device Driver for         *
  * Fibre Channel Host Bus Adapters.                                *
+<<<<<<< HEAD
  * Copyright (C) 2017-2023 Broadcom. All Rights Reserved. The term *
+=======
+ * Copyright (C) 2017-2022 Broadcom. All Rights Reserved. The term *
+>>>>>>> b7ba80a49124 (Commit)
  * “Broadcom” refers to Broadcom Inc. and/or its subsidiaries.  *
  * Copyright (C) 2004-2016 Emulex.  All rights reserved.           *
  * EMULEX and SLI are trademarks of Emulex.                        *
@@ -2265,7 +2269,10 @@ lpfc_nvme_lport_unreg_wait(struct lpfc_vport *vport,
 			}
 			if (!vport->localport ||
 			    test_bit(HBA_PCI_ERR, &vport->phba->bit_flags) ||
+<<<<<<< HEAD
 			    phba->link_state == LPFC_HBA_ERROR ||
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			    vport->load_flag & FC_UNLOADING)
 				return;
 
@@ -2631,8 +2638,12 @@ lpfc_nvme_unregister_port(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp)
 		 * return values is ignored.  The upcall is a courtesy to the
 		 * transport.
 		 */
+<<<<<<< HEAD
 		if (vport->load_flag & FC_UNLOADING ||
 		    unlikely(vport->phba->link_state == LPFC_HBA_ERROR))
+=======
+		if (vport->load_flag & FC_UNLOADING)
+>>>>>>> b7ba80a49124 (Commit)
 			(void)nvme_fc_set_remoteport_devloss(remoteport, 0);
 
 		ret = nvme_fc_unregister_remoteport(remoteport);

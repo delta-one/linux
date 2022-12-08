@@ -97,6 +97,16 @@ enum direction_value {
 	DIR_BI_DIR		= 3,
 };
 
+<<<<<<< HEAD
+=======
+enum acm_method {
+	eAcmWay0_SwAndHw		= 0,
+	eAcmWay1_HW			= 1,
+	eAcmWay2_SW			= 2,
+};
+
+
+>>>>>>> b7ba80a49124 (Commit)
 struct acm {
 	u64		UsedTime;
 	u64		MediumTime;

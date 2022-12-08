@@ -132,13 +132,19 @@ ip_vs_in_stats(struct ip_vs_conn *cp, struct sk_buff *skb)
 
 		s = this_cpu_ptr(dest->stats.cpustats);
 		u64_stats_update_begin(&s->syncp);
+<<<<<<< HEAD
 		u64_stats_inc(&s->cnt.inpkts);
 		u64_stats_add(&s->cnt.inbytes, skb->len);
+=======
+		s->cnt.inpkts++;
+		s->cnt.inbytes += skb->len;
+>>>>>>> b7ba80a49124 (Commit)
 		u64_stats_update_end(&s->syncp);
 
 		svc = rcu_dereference(dest->svc);
 		s = this_cpu_ptr(svc->stats.cpustats);
 		u64_stats_update_begin(&s->syncp);
+<<<<<<< HEAD
 		u64_stats_inc(&s->cnt.inpkts);
 		u64_stats_add(&s->cnt.inbytes, skb->len);
 		u64_stats_update_end(&s->syncp);
@@ -147,6 +153,16 @@ ip_vs_in_stats(struct ip_vs_conn *cp, struct sk_buff *skb)
 		u64_stats_update_begin(&s->syncp);
 		u64_stats_inc(&s->cnt.inpkts);
 		u64_stats_add(&s->cnt.inbytes, skb->len);
+=======
+		s->cnt.inpkts++;
+		s->cnt.inbytes += skb->len;
+		u64_stats_update_end(&s->syncp);
+
+		s = this_cpu_ptr(ipvs->tot_stats.cpustats);
+		u64_stats_update_begin(&s->syncp);
+		s->cnt.inpkts++;
+		s->cnt.inbytes += skb->len;
+>>>>>>> b7ba80a49124 (Commit)
 		u64_stats_update_end(&s->syncp);
 
 		local_bh_enable();
@@ -168,13 +184,19 @@ ip_vs_out_stats(struct ip_vs_conn *cp, struct sk_buff *skb)
 
 		s = this_cpu_ptr(dest->stats.cpustats);
 		u64_stats_update_begin(&s->syncp);
+<<<<<<< HEAD
 		u64_stats_inc(&s->cnt.outpkts);
 		u64_stats_add(&s->cnt.outbytes, skb->len);
+=======
+		s->cnt.outpkts++;
+		s->cnt.outbytes += skb->len;
+>>>>>>> b7ba80a49124 (Commit)
 		u64_stats_update_end(&s->syncp);
 
 		svc = rcu_dereference(dest->svc);
 		s = this_cpu_ptr(svc->stats.cpustats);
 		u64_stats_update_begin(&s->syncp);
+<<<<<<< HEAD
 		u64_stats_inc(&s->cnt.outpkts);
 		u64_stats_add(&s->cnt.outbytes, skb->len);
 		u64_stats_update_end(&s->syncp);
@@ -183,6 +205,16 @@ ip_vs_out_stats(struct ip_vs_conn *cp, struct sk_buff *skb)
 		u64_stats_update_begin(&s->syncp);
 		u64_stats_inc(&s->cnt.outpkts);
 		u64_stats_add(&s->cnt.outbytes, skb->len);
+=======
+		s->cnt.outpkts++;
+		s->cnt.outbytes += skb->len;
+		u64_stats_update_end(&s->syncp);
+
+		s = this_cpu_ptr(ipvs->tot_stats.cpustats);
+		u64_stats_update_begin(&s->syncp);
+		s->cnt.outpkts++;
+		s->cnt.outbytes += skb->len;
+>>>>>>> b7ba80a49124 (Commit)
 		u64_stats_update_end(&s->syncp);
 
 		local_bh_enable();
@@ -200,17 +232,30 @@ ip_vs_conn_stats(struct ip_vs_conn *cp, struct ip_vs_service *svc)
 
 	s = this_cpu_ptr(cp->dest->stats.cpustats);
 	u64_stats_update_begin(&s->syncp);
+<<<<<<< HEAD
 	u64_stats_inc(&s->cnt.conns);
+=======
+	s->cnt.conns++;
+>>>>>>> b7ba80a49124 (Commit)
 	u64_stats_update_end(&s->syncp);
 
 	s = this_cpu_ptr(svc->stats.cpustats);
 	u64_stats_update_begin(&s->syncp);
+<<<<<<< HEAD
 	u64_stats_inc(&s->cnt.conns);
 	u64_stats_update_end(&s->syncp);
 
 	s = this_cpu_ptr(ipvs->tot_stats->s.cpustats);
 	u64_stats_update_begin(&s->syncp);
 	u64_stats_inc(&s->cnt.conns);
+=======
+	s->cnt.conns++;
+	u64_stats_update_end(&s->syncp);
+
+	s = this_cpu_ptr(ipvs->tot_stats.cpustats);
+	u64_stats_update_begin(&s->syncp);
+	s->cnt.conns++;
+>>>>>>> b7ba80a49124 (Commit)
 	u64_stats_update_end(&s->syncp);
 
 	local_bh_enable();
@@ -2448,10 +2493,13 @@ static void __exit ip_vs_cleanup(void)
 	ip_vs_conn_cleanup();
 	ip_vs_protocol_cleanup();
 	ip_vs_control_cleanup();
+<<<<<<< HEAD
 	/* common rcu_barrier() used by:
 	 * - ip_vs_control_cleanup()
 	 */
 	rcu_barrier();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pr_info("ipvs unloaded.\n");
 }
 

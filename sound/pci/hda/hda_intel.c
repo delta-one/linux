@@ -50,7 +50,10 @@
 #include <sound/intel-dsp-config.h>
 #include <linux/vgaarb.h>
 #include <linux/vga_switcheroo.h>
+<<<<<<< HEAD
 #include <linux/apple-gmux.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/firmware.h>
 #include <sound/hda_codec.h>
 #include "hda_controller.h"
@@ -120,7 +123,10 @@ static bool beep_mode[SNDRV_CARDS] = {[0 ... (SNDRV_CARDS-1)] =
 					CONFIG_SND_HDA_INPUT_BEEP_MODE};
 #endif
 static bool dmic_detect = 1;
+<<<<<<< HEAD
 static bool ctl_dev_id = IS_ENABLED(CONFIG_SND_HDA_CTL_DEV_ID) ? 1 : 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 module_param_array(index, int, NULL, 0444);
 MODULE_PARM_DESC(index, "Index value for Intel HD audio interface.");
@@ -159,8 +165,11 @@ module_param(dmic_detect, bool, 0444);
 MODULE_PARM_DESC(dmic_detect, "Allow DSP driver selection (bypass this driver) "
 			     "(0=off, 1=on) (default=1); "
 		 "deprecated, use snd-intel-dspcfg.dsp_driver option instead");
+<<<<<<< HEAD
 module_param(ctl_dev_id, bool, 0444);
 MODULE_PARM_DESC(ctl_dev_id, "Use control device identifier (based on codec address).");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_PM
 static int param_set_xint(const char *val, const struct kernel_param *kp);
@@ -328,15 +337,23 @@ enum {
 #define needs_eld_notify_link(chip)	false
 #endif
 
+<<<<<<< HEAD
 #define CONTROLLER_IN_GPU(pci) (((pci)->vendor == 0x8086) &&         \
 				       (((pci)->device == 0x0a0c) || \
+=======
+#define CONTROLLER_IN_GPU(pci) (((pci)->device == 0x0a0c) || \
+>>>>>>> b7ba80a49124 (Commit)
 					((pci)->device == 0x0c0c) || \
 					((pci)->device == 0x0d0c) || \
 					((pci)->device == 0x160c) || \
 					((pci)->device == 0x490d) || \
 					((pci)->device == 0x4f90) || \
 					((pci)->device == 0x4f91) || \
+<<<<<<< HEAD
 					((pci)->device == 0x4f92)))
+=======
+					((pci)->device == 0x4f92))
+>>>>>>> b7ba80a49124 (Commit)
 
 #define IS_BXT(pci) ((pci)->vendor == 0x8086 && (pci)->device == 0x5a98)
 
@@ -490,8 +507,13 @@ static int intel_ml_lctl_set_power(struct azx *chip, int state)
 	int timeout;
 
 	/*
+<<<<<<< HEAD
 	 * Changes to LCTL.SCF are only needed for the first multi-link dealing
 	 * with external codecs
+=======
+	 * the codecs are sharing the first link setting by default
+	 * If other links are enabled for stream, they need similar fix
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	val = readl(bus->mlcap + AZX_ML_BASE + AZX_REG_ML_LCTL);
 	val &= ~AZX_ML_LCTL_SPA;
@@ -518,7 +540,11 @@ static void intel_init_lctl(struct azx *chip)
 
 	/* 0. check lctl register value is correct or not */
 	val = readl(bus->mlcap + AZX_ML_BASE + AZX_REG_ML_LCTL);
+<<<<<<< HEAD
 	/* only perform additional configurations if the SCF is initially based on 6MHz */
+=======
+	/* if SCF is already set, let's use it */
+>>>>>>> b7ba80a49124 (Commit)
 	if ((val & AZX_ML_LCTL_SCF) != 0)
 		return;
 
@@ -536,7 +562,11 @@ static void intel_init_lctl(struct azx *chip)
 	if (ret)
 		goto set_spa;
 
+<<<<<<< HEAD
 	/* 2. update SCF to select an audio clock different from 6MHz */
+=======
+	/* 2. update SCF to select a properly audio clock*/
+>>>>>>> b7ba80a49124 (Commit)
 	val &= ~AZX_ML_LCTL_SCF;
 	val |= intel_get_lctl_scf(chip);
 	writel(val, bus->mlcap + AZX_ML_BASE + AZX_REG_ML_LCTL);
@@ -1468,7 +1498,11 @@ static struct pci_dev *get_bound_vga(struct pci_dev *pci)
 				 * vgaswitcheroo.
 				 */
 				if (((p->class >> 16) == PCI_BASE_CLASS_DISPLAY) &&
+<<<<<<< HEAD
 				    (atpx_present() || apple_gmux_detect(NULL, NULL)))
+=======
+				    atpx_present())
+>>>>>>> b7ba80a49124 (Commit)
 					return p;
 				pci_dev_put(p);
 			}
@@ -2283,8 +2317,11 @@ static int azx_probe_continue(struct azx *chip)
 	chip->beep_mode = beep_mode[dev];
 #endif
 
+<<<<<<< HEAD
 	chip->ctl_dev_id = ctl_dev_id;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* create codec instances */
 	if (bus->codec_mask) {
 		err = azx_probe_codecs(chip, azx_max_codecs[chip->driver_type]);
@@ -2554,8 +2591,12 @@ static const struct pci_device_id azx_ids[] = {
 	  .driver_data = AZX_DRIVER_SCH | AZX_DCAPS_INTEL_PCH_NOPM },
 	/* Poulsbo */
 	{ PCI_DEVICE(0x8086, 0x811b),
+<<<<<<< HEAD
 	  .driver_data = AZX_DRIVER_SCH | AZX_DCAPS_INTEL_PCH_BASE |
 	  AZX_DCAPS_POSFIX_LPIB },
+=======
+	  .driver_data = AZX_DRIVER_SCH | AZX_DCAPS_INTEL_PCH_BASE },
+>>>>>>> b7ba80a49124 (Commit)
 	/* Oaktrail */
 	{ PCI_DEVICE(0x8086, 0x080a),
 	  .driver_data = AZX_DRIVER_SCH | AZX_DCAPS_INTEL_PCH_BASE },
@@ -2718,9 +2759,12 @@ static const struct pci_device_id azx_ids[] = {
 	{ PCI_DEVICE(0x1002, 0xab28),
 	  .driver_data = AZX_DRIVER_ATIHDMI_NS | AZX_DCAPS_PRESET_ATI_HDMI_NS |
 	  AZX_DCAPS_PM_RUNTIME },
+<<<<<<< HEAD
 	{ PCI_DEVICE(0x1002, 0xab30),
 	  .driver_data = AZX_DRIVER_ATIHDMI_NS | AZX_DCAPS_PRESET_ATI_HDMI_NS |
 	  AZX_DCAPS_PM_RUNTIME },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ PCI_DEVICE(0x1002, 0xab38),
 	  .driver_data = AZX_DRIVER_ATIHDMI_NS | AZX_DCAPS_PRESET_ATI_HDMI_NS |
 	  AZX_DCAPS_PM_RUNTIME },

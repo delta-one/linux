@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+.. _userfaultfd:
+
+>>>>>>> b7ba80a49124 (Commit)
 ===========
 Userfaultfd
 ===========
@@ -219,6 +224,7 @@ former will have ``UFFD_PAGEFAULT_FLAG_WP`` set, the latter
 you still need to supply a page when ``UFFDIO_REGISTER_MODE_MISSING`` was
 used.
 
+<<<<<<< HEAD
 Userfaultfd write-protect mode currently behave differently on none ptes
 (when e.g. page is missing) over different types of memories.
 
@@ -244,6 +250,8 @@ write-protected (so future writes will also result in a WP fault). These ioctls
 support a mode flag (``UFFDIO_COPY_MODE_WP`` or ``UFFDIO_CONTINUE_MODE_WP``
 respectively) to configure the mapping this way.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 QEMU/KVM
 ========
 

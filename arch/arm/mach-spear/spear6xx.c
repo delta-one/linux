@@ -12,7 +12,10 @@
 
 #include <linux/amba/pl08x.h>
 #include <linux/clk.h>
+<<<<<<< HEAD
 #include <linux/clk/spear.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/err.h>
 #include <linux/of.h>
 #include <linux/of_address.h>
@@ -340,7 +343,11 @@ static struct pl08x_platform_data spear6xx_pl080_plat_data = {
  * 0xD0000000		0xFD000000
  * 0xFC000000		0xFC000000
  */
+<<<<<<< HEAD
 static struct map_desc spear6xx_io_desc[] __initdata = {
+=======
+struct map_desc spear6xx_io_desc[] __initdata = {
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.virtual	= (unsigned long)VA_SPEAR6XX_ML_CPU_BASE,
 		.pfn		= __phys_to_pfn(SPEAR_ICM3_ML1_2_BASE),
@@ -360,12 +367,20 @@ static struct map_desc spear6xx_io_desc[] __initdata = {
 };
 
 /* This will create static memory mapping for selected devices */
+<<<<<<< HEAD
 static void __init spear6xx_map_io(void)
+=======
+void __init spear6xx_map_io(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	iotable_init(spear6xx_io_desc, ARRAY_SIZE(spear6xx_io_desc));
 }
 
+<<<<<<< HEAD
 static void __init spear6xx_timer_init(void)
+=======
+void __init spear6xx_timer_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	char pclk_name[] = "pll3_clk";
 	struct clk *gpt_clk, *pclk;
@@ -395,7 +410,11 @@ static void __init spear6xx_timer_init(void)
 }
 
 /* Add auxdata to pass platform data */
+<<<<<<< HEAD
 static struct of_dev_auxdata spear6xx_auxdata_lookup[] __initdata = {
+=======
+struct of_dev_auxdata spear6xx_auxdata_lookup[] __initdata = {
+>>>>>>> b7ba80a49124 (Commit)
 	OF_DEV_AUXDATA("arm,pl080", SPEAR_ICM3_DMA_BASE, NULL,
 			&spear6xx_pl080_plat_data),
 	{}

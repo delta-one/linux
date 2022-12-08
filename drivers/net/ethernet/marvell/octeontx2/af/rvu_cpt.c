@@ -17,7 +17,11 @@
 #define	PCI_DEVID_OTX2_CPT10K_PF 0xA0F2
 
 /* Length of initial context fetch in 128 byte words */
+<<<<<<< HEAD
 #define CPT_CTX_ILEN    1ULL
+=======
+#define CPT_CTX_ILEN    2ULL
+>>>>>>> b7ba80a49124 (Commit)
 
 #define cpt_get_eng_sts(e_min, e_max, rsp, etype)                   \
 ({                                                                  \
@@ -37,11 +41,16 @@
 	(_rsp)->free_sts_##etype = free_sts;                        \
 })
 
+<<<<<<< HEAD
 static irqreturn_t cpt_af_flt_intr_handler(int vec, void *ptr)
+=======
+static irqreturn_t rvu_cpt_af_flt_intr_handler(int irq, void *ptr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rvu_block *block = ptr;
 	struct rvu *rvu = block->rvu;
 	int blkaddr = block->addr;
+<<<<<<< HEAD
 	u64 reg, val;
 	int i, eng;
 	u8 grp;
@@ -80,10 +89,32 @@ static irqreturn_t cpt_af_flt_intr_handler(int vec, void *ptr)
 		spin_unlock(&rvu->cpt_intr_lock);
 	}
 	rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT(vec), reg);
+=======
+	u64 reg0, reg1, reg2;
+
+	reg0 = rvu_read64(rvu, blkaddr, CPT_AF_FLTX_INT(0));
+	reg1 = rvu_read64(rvu, blkaddr, CPT_AF_FLTX_INT(1));
+	if (!is_rvu_otx2(rvu)) {
+		reg2 = rvu_read64(rvu, blkaddr, CPT_AF_FLTX_INT(2));
+		dev_err_ratelimited(rvu->dev,
+				    "Received CPTAF FLT irq : 0x%llx, 0x%llx, 0x%llx",
+				     reg0, reg1, reg2);
+	} else {
+		dev_err_ratelimited(rvu->dev,
+				    "Received CPTAF FLT irq : 0x%llx, 0x%llx",
+				     reg0, reg1);
+	}
+
+	rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT(0), reg0);
+	rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT(1), reg1);
+	if (!is_rvu_otx2(rvu))
+		rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT(2), reg2);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return IRQ_HANDLED;
 }
 
+<<<<<<< HEAD
 static irqreturn_t rvu_cpt_af_flt0_intr_handler(int irq, void *ptr)
 {
 	return cpt_af_flt_intr_handler(CPT_AF_INT_VEC_FLT0, ptr);
@@ -99,6 +130,8 @@ static irqreturn_t rvu_cpt_af_flt2_intr_handler(int irq, void *ptr)
 	return cpt_af_flt_intr_handler(CPT_10K_AF_INT_VEC_FLT2, ptr);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static irqreturn_t rvu_cpt_af_rvu_intr_handler(int irq, void *ptr)
 {
 	struct rvu_block *block = ptr;
@@ -153,10 +186,15 @@ static void cpt_10k_unregister_interrupts(struct rvu_block *block, int off)
 	int i;
 
 	/* Disable all CPT AF interrupts */
+<<<<<<< HEAD
 	rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1C(0), ~0ULL);
 	rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1C(1), ~0ULL);
 	rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1C(2), 0xFFFF);
 
+=======
+	for (i = 0; i < CPT_10K_AF_INT_VEC_RVU; i++)
+		rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1C(i), 0x1);
+>>>>>>> b7ba80a49124 (Commit)
 	rvu_write64(rvu, blkaddr, CPT_AF_RVU_INT_ENA_W1C, 0x1);
 	rvu_write64(rvu, blkaddr, CPT_AF_RAS_INT_ENA_W1C, 0x1);
 
@@ -187,7 +225,11 @@ static void cpt_unregister_interrupts(struct rvu *rvu, int blkaddr)
 
 	/* Disable all CPT AF interrupts */
 	for (i = 0; i < CPT_AF_INT_VEC_RVU; i++)
+<<<<<<< HEAD
 		rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1C(i), ~0ULL);
+=======
+		rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1C(i), 0x1);
+>>>>>>> b7ba80a49124 (Commit)
 	rvu_write64(rvu, blkaddr, CPT_AF_RVU_INT_ENA_W1C, 0x1);
 	rvu_write64(rvu, blkaddr, CPT_AF_RAS_INT_ENA_W1C, 0x1);
 
@@ -208,11 +250,15 @@ static int cpt_10k_register_interrupts(struct rvu_block *block, int off)
 {
 	struct rvu *rvu = block->rvu;
 	int blkaddr = block->addr;
+<<<<<<< HEAD
 	irq_handler_t flt_fn;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int i, ret;
 
 	for (i = CPT_10K_AF_INT_VEC_FLT0; i < CPT_10K_AF_INT_VEC_RVU; i++) {
 		sprintf(&rvu->irq_name[(off + i) * NAME_SIZE], "CPTAF FLT%d", i);
+<<<<<<< HEAD
 
 		switch (i) {
 		case CPT_10K_AF_INT_VEC_FLT0:
@@ -233,6 +279,14 @@ static int cpt_10k_register_interrupts(struct rvu_block *block, int off)
 			rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1S(i), 0xFFFF);
 		else
 			rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1S(i), ~0ULL);
+=======
+		ret = rvu_cpt_do_register_interrupt(block, off + i,
+						    rvu_cpt_af_flt_intr_handler,
+						    &rvu->irq_name[(off + i) * NAME_SIZE]);
+		if (ret)
+			goto err;
+		rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1S(i), 0x1);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret = rvu_cpt_do_register_interrupt(block, off + CPT_10K_AF_INT_VEC_RVU,
@@ -259,8 +313,13 @@ static int cpt_register_interrupts(struct rvu *rvu, int blkaddr)
 {
 	struct rvu_hwinfo *hw = rvu->hw;
 	struct rvu_block *block;
+<<<<<<< HEAD
 	irq_handler_t flt_fn;
 	int i, offs, ret = 0;
+=======
+	int i, offs, ret = 0;
+	char irq_name[16];
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!is_block_implemented(rvu->hw, blkaddr))
 		return 0;
@@ -277,6 +336,7 @@ static int cpt_register_interrupts(struct rvu *rvu, int blkaddr)
 		return cpt_10k_register_interrupts(block, offs);
 
 	for (i = CPT_AF_INT_VEC_FLT0; i < CPT_AF_INT_VEC_RVU; i++) {
+<<<<<<< HEAD
 		sprintf(&rvu->irq_name[(offs + i) * NAME_SIZE], "CPTAF FLT%d", i);
 		switch (i) {
 		case CPT_AF_INT_VEC_FLT0:
@@ -291,6 +351,15 @@ static int cpt_register_interrupts(struct rvu *rvu, int blkaddr)
 		if (ret)
 			goto err;
 		rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1S(i), ~0ULL);
+=======
+		snprintf(irq_name, sizeof(irq_name), "CPTAF FLT%d", i);
+		ret = rvu_cpt_do_register_interrupt(block, offs + i,
+						    rvu_cpt_af_flt_intr_handler,
+						    irq_name);
+		if (ret)
+			goto err;
+		rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1S(i), 0x1);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret = rvu_cpt_do_register_interrupt(block, offs + CPT_AF_INT_VEC_RVU,
@@ -348,7 +417,11 @@ static int get_cpt_pf_num(struct rvu *rvu)
 
 static bool is_cpt_pf(struct rvu *rvu, u16 pcifunc)
 {
+<<<<<<< HEAD
 	int cpt_pf_num = rvu->cpt_pf_num;
+=======
+	int cpt_pf_num = get_cpt_pf_num(rvu);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (rvu_get_pf(pcifunc) != cpt_pf_num)
 		return false;
@@ -360,7 +433,11 @@ static bool is_cpt_pf(struct rvu *rvu, u16 pcifunc)
 
 static bool is_cpt_vf(struct rvu *rvu, u16 pcifunc)
 {
+<<<<<<< HEAD
 	int cpt_pf_num = rvu->cpt_pf_num;
+=======
+	int cpt_pf_num = get_cpt_pf_num(rvu);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (rvu_get_pf(pcifunc) != cpt_pf_num)
 		return false;
@@ -429,12 +506,17 @@ int rvu_mbox_handler_cpt_lf_alloc(struct rvu *rvu,
 
 		/* Set CPT LF group and priority */
 		val = (u64)req->eng_grpmsk << 48 | 1;
+<<<<<<< HEAD
 		if (!is_rvu_otx2(rvu)) {
 			if (req->ctx_ilen_valid)
 				val |= (req->ctx_ilen << 17);
 			else
 				val |= (CPT_CTX_ILEN << 17);
 		}
+=======
+		if (!is_rvu_otx2(rvu))
+			val |= (CPT_CTX_ILEN << 17);
+>>>>>>> b7ba80a49124 (Commit)
 
 		rvu_write64(rvu, blkaddr, CPT_AF_LFX_CTL(cptlf), val);
 
@@ -824,6 +906,7 @@ int rvu_mbox_handler_cpt_sts(struct rvu *rvu, struct cpt_sts_req *req,
 #define RXC_ZOMBIE_COUNT  GENMASK_ULL(60, 48)
 
 static void cpt_rxc_time_cfg(struct rvu *rvu, struct cpt_rxc_time_cfg_req *req,
+<<<<<<< HEAD
 			     int blkaddr, struct cpt_rxc_time_cfg_req *save)
 {
 	u64 dfrg_reg;
@@ -839,6 +922,12 @@ static void cpt_rxc_time_cfg(struct rvu *rvu, struct cpt_rxc_time_cfg_req *req,
 		save->step = rvu_read64(rvu, blkaddr, CPT_AF_RXC_TIME_CFG);
 	}
 
+=======
+			     int blkaddr)
+{
+	u64 dfrg_reg;
+
+>>>>>>> b7ba80a49124 (Commit)
 	dfrg_reg = FIELD_PREP(RXC_ZOMBIE_THRES, req->zombie_thres);
 	dfrg_reg |= FIELD_PREP(RXC_ZOMBIE_LIMIT, req->zombie_limit);
 	dfrg_reg |= FIELD_PREP(RXC_ACTIVE_THRES, req->active_thres);
@@ -863,7 +952,11 @@ int rvu_mbox_handler_cpt_rxc_time_cfg(struct rvu *rvu,
 	    !is_cpt_vf(rvu, req->hdr.pcifunc))
 		return CPT_AF_ERR_ACCESS_DENIED;
 
+<<<<<<< HEAD
 	cpt_rxc_time_cfg(rvu, req, blkaddr, NULL);
+=======
+	cpt_rxc_time_cfg(rvu, req, blkaddr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -874,6 +967,7 @@ int rvu_mbox_handler_cpt_ctx_cache_sync(struct rvu *rvu, struct msg_req *req,
 	return rvu_cpt_ctx_flush(rvu, req->hdr.pcifunc);
 }
 
+<<<<<<< HEAD
 int rvu_mbox_handler_cpt_lf_reset(struct rvu *rvu, struct cpt_lf_rst_req *req,
 				  struct msg_rsp *rsp)
 {
@@ -935,6 +1029,11 @@ int rvu_mbox_handler_cpt_flt_eng_info(struct rvu *rvu, struct cpt_flt_eng_info_r
 static void cpt_rxc_teardown(struct rvu *rvu, int blkaddr)
 {
 	struct cpt_rxc_time_cfg_req req, prev;
+=======
+static void cpt_rxc_teardown(struct rvu *rvu, int blkaddr)
+{
+	struct cpt_rxc_time_cfg_req req;
+>>>>>>> b7ba80a49124 (Commit)
 	int timeout = 2000;
 	u64 reg;
 
@@ -950,7 +1049,11 @@ static void cpt_rxc_teardown(struct rvu *rvu, int blkaddr)
 	req.active_thres = 1;
 	req.active_limit = 1;
 
+<<<<<<< HEAD
 	cpt_rxc_time_cfg(rvu, &req, blkaddr, &prev);
+=======
+	cpt_rxc_time_cfg(rvu, &req, blkaddr);
+>>>>>>> b7ba80a49124 (Commit)
 
 	do {
 		reg = rvu_read64(rvu, blkaddr, CPT_AF_RXC_ACTIVE_STS);
@@ -976,6 +1079,7 @@ static void cpt_rxc_teardown(struct rvu *rvu, int blkaddr)
 
 	if (timeout == 0)
 		dev_warn(rvu->dev, "Poll for RXC zombie count hits hard loop counter\n");
+<<<<<<< HEAD
 
 	/* Restore config */
 	cpt_rxc_time_cfg(rvu, &prev, blkaddr, NULL);
@@ -994,10 +1098,25 @@ static void cpt_lf_disable_iqueue(struct rvu *rvu, int blkaddr, int slot)
 	u64 inprog, inst_ptr;
 	u64 qsize, pending;
 	int i = 0;
+=======
+}
+
+#define INPROG_INFLIGHT(reg)    ((reg) & 0x1FF)
+#define INPROG_GRB_PARTIAL(reg) ((reg) & BIT_ULL(31))
+#define INPROG_GRB(reg)         (((reg) >> 32) & 0xFF)
+#define INPROG_GWB(reg)         (((reg) >> 40) & 0xFF)
+
+static void cpt_lf_disable_iqueue(struct rvu *rvu, int blkaddr, int slot)
+{
+	int i = 0, hard_lp_ctr = 100000;
+	u64 inprog, grp_ptr;
+	u16 nq_ptr, dq_ptr;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Disable instructions enqueuing */
 	rvu_write64(rvu, blkaddr, CPT_AF_BAR2_ALIASX(slot, CPT_LF_CTL), 0x0);
 
+<<<<<<< HEAD
 	inprog = rvu_read64(rvu, blkaddr,
 			    CPT_AF_BAR2_ALIASX(slot, CPT_LF_INPROG));
 	inprog |= BIT_ULL(16);
@@ -1020,10 +1139,20 @@ static void cpt_lf_disable_iqueue(struct rvu *rvu, int blkaddr, int slot)
 		dev_warn(rvu->dev, "TIMEOUT: CPT poll on pending instructions\n");
 
 	timeout = 1000000;
+=======
+	/* Disable executions in the LF's queue */
+	inprog = rvu_read64(rvu, blkaddr,
+			    CPT_AF_BAR2_ALIASX(slot, CPT_LF_INPROG));
+	inprog &= ~BIT_ULL(16);
+	rvu_write64(rvu, blkaddr,
+		    CPT_AF_BAR2_ALIASX(slot, CPT_LF_INPROG), inprog);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Wait for CPT queue to become execution-quiescent */
 	do {
 		inprog = rvu_read64(rvu, blkaddr,
 				    CPT_AF_BAR2_ALIASX(slot, CPT_LF_INPROG));
+<<<<<<< HEAD
 
 		if ((FIELD_GET(INFLIGHT, inprog) == 0) &&
 		    (FIELD_GET(GRB_CNT, inprog) == 0)) {
@@ -1038,6 +1167,45 @@ static void cpt_lf_disable_iqueue(struct rvu *rvu, int blkaddr, int slot)
 		dev_warn(rvu->dev, "TIMEOUT: CPT poll on inflight count\n");
 	/* Wait for 2 us to flush all queue writes to memory */
 	udelay(2);
+=======
+		if (INPROG_GRB_PARTIAL(inprog)) {
+			i = 0;
+			hard_lp_ctr--;
+		} else {
+			i++;
+		}
+
+		grp_ptr = rvu_read64(rvu, blkaddr,
+				     CPT_AF_BAR2_ALIASX(slot,
+							CPT_LF_Q_GRP_PTR));
+		nq_ptr = (grp_ptr >> 32) & 0x7FFF;
+		dq_ptr = grp_ptr & 0x7FFF;
+
+	} while (hard_lp_ctr && (i < 10) && (nq_ptr != dq_ptr));
+
+	if (hard_lp_ctr == 0)
+		dev_warn(rvu->dev, "CPT FLR hits hard loop counter\n");
+
+	i = 0;
+	hard_lp_ctr = 100000;
+	do {
+		inprog = rvu_read64(rvu, blkaddr,
+				    CPT_AF_BAR2_ALIASX(slot, CPT_LF_INPROG));
+
+		if ((INPROG_INFLIGHT(inprog) == 0) &&
+		    (INPROG_GWB(inprog) < 40) &&
+		    ((INPROG_GRB(inprog) == 0) ||
+		     (INPROG_GRB((inprog)) == 40))) {
+			i++;
+		} else {
+			i = 0;
+			hard_lp_ctr--;
+		}
+	} while (hard_lp_ctr && (i < 10));
+
+	if (hard_lp_ctr == 0)
+		dev_warn(rvu->dev, "CPT FLR hits hard loop counter\n");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int rvu_cpt_lf_teardown(struct rvu *rvu, u16 pcifunc, int blkaddr, int lf, int slot)
@@ -1047,6 +1215,7 @@ int rvu_cpt_lf_teardown(struct rvu *rvu, u16 pcifunc, int blkaddr, int lf, int s
 	if (is_cpt_pf(rvu, pcifunc) || is_cpt_vf(rvu, pcifunc))
 		cpt_rxc_teardown(rvu, blkaddr);
 
+<<<<<<< HEAD
 	mutex_lock(&rvu->alias_lock);
 	/* Enable BAR2 ALIAS for this pcifunc. */
 	reg = BIT_ULL(16) | pcifunc;
@@ -1056,6 +1225,20 @@ int rvu_cpt_lf_teardown(struct rvu *rvu, u16 pcifunc, int blkaddr, int lf, int s
 
 	rvu_bar2_sel_write64(rvu, blkaddr, CPT_AF_BAR2_SEL, 0);
 	mutex_unlock(&rvu->alias_lock);
+=======
+	/* Enable BAR2 ALIAS for this pcifunc. */
+	reg = BIT_ULL(16) | pcifunc;
+	rvu_write64(rvu, blkaddr, CPT_AF_BAR2_SEL, reg);
+
+	cpt_lf_disable_iqueue(rvu, blkaddr, slot);
+
+	/* Set group drop to help clear out hardware */
+	reg = rvu_read64(rvu, blkaddr, CPT_AF_BAR2_ALIASX(slot, CPT_LF_INPROG));
+	reg |= BIT_ULL(17);
+	rvu_write64(rvu, blkaddr, CPT_AF_BAR2_ALIASX(slot, CPT_LF_INPROG), reg);
+
+	rvu_write64(rvu, blkaddr, CPT_AF_BAR2_SEL, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1066,7 +1249,11 @@ int rvu_cpt_lf_teardown(struct rvu *rvu, u16 pcifunc, int blkaddr, int lf, int s
 static int cpt_inline_inb_lf_cmd_send(struct rvu *rvu, int blkaddr,
 				      int nix_blkaddr)
 {
+<<<<<<< HEAD
 	int cpt_pf_num = rvu->cpt_pf_num;
+=======
+	int cpt_pf_num = get_cpt_pf_num(rvu);
+>>>>>>> b7ba80a49124 (Commit)
 	struct cpt_inst_lmtst_req *req;
 	dma_addr_t res_daddr;
 	int timeout = 3000;
@@ -1190,7 +1377,11 @@ int rvu_cpt_ctx_flush(struct rvu *rvu, u16 pcifunc)
 
 	/* Enable BAR2 ALIAS for this pcifunc. */
 	reg = BIT_ULL(16) | pcifunc;
+<<<<<<< HEAD
 	rvu_bar2_sel_write64(rvu, blkaddr, CPT_AF_BAR2_SEL, reg);
+=======
+	rvu_write64(rvu, blkaddr, CPT_AF_BAR2_SEL, reg);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < max_ctx_entries; i++) {
 		cam_data = rvu_read64(rvu, blkaddr, CPT_AF_CTX_CAM_DATA(i));
@@ -1203,13 +1394,18 @@ int rvu_cpt_ctx_flush(struct rvu *rvu, u16 pcifunc)
 				    reg);
 		}
 	}
+<<<<<<< HEAD
 	rvu_bar2_sel_write64(rvu, blkaddr, CPT_AF_BAR2_SEL, 0);
+=======
+	rvu_write64(rvu, blkaddr, CPT_AF_BAR2_SEL, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 unlock:
 	mutex_unlock(&rvu->rsrc_lock);
 
 	return 0;
 }
+<<<<<<< HEAD
 
 int rvu_cpt_init(struct rvu *rvu)
 {
@@ -1219,3 +1415,5 @@ int rvu_cpt_init(struct rvu *rvu)
 
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

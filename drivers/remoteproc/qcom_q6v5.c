@@ -205,8 +205,13 @@ int qcom_q6v5_request_stop(struct qcom_q6v5 *q6v5, struct qcom_sysmon *sysmon)
 
 	q6v5->running = false;
 
+<<<<<<< HEAD
 	/* Don't perform SMP2P dance if remote isn't running */
 	if (q6v5->rproc->state != RPROC_RUNNING || qcom_sysmon_shutdown_acked(sysmon))
+=======
+	/* Don't perform SMP2P dance if sysmon already shut down the remote */
+	if (qcom_sysmon_shutdown_acked(sysmon))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	qcom_smem_state_update_bits(q6v5->state,

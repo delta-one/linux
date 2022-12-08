@@ -22,7 +22,11 @@ struct xfrm_state;
 int ipcomp_input(struct xfrm_state *x, struct sk_buff *skb);
 int ipcomp_output(struct xfrm_state *x, struct sk_buff *skb);
 void ipcomp_destroy(struct xfrm_state *x);
+<<<<<<< HEAD
 int ipcomp_init_state(struct xfrm_state *x, struct netlink_ext_ack *extack);
+=======
+int ipcomp_init_state(struct xfrm_state *x);
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline struct ip_comp_hdr *ip_comp_hdr(const struct sk_buff *skb)
 {

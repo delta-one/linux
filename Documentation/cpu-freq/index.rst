@@ -1,8 +1,14 @@
 .. SPDX-License-Identifier: GPL-2.0
 
+<<<<<<< HEAD
 ========================================================================
 CPUFreq - CPU frequency and voltage scaling code in the Linux(TM) kernel
 ========================================================================
+=======
+==============================================================================
+Linux CPUFreq - CPU frequency and voltage scaling code in the Linux(TM) kernel
+==============================================================================
+>>>>>>> b7ba80a49124 (Commit)
 
 Author: Dominik Brodowski  <linux@brodo.de>
 
@@ -20,15 +26,27 @@ Author: Dominik Brodowski  <linux@brodo.de>
 
 Mailing List
 ------------
+<<<<<<< HEAD
 There is a CPU frequency general list where you can report bugs,
 problems or submit patches. To post a message, send an email to
 linux-pm@vger.kernel.org.
+=======
+There is a CPU frequency changing CVS commit and general list where
+you can report bugs, problems or submit patches. To post a message,
+send an email to linux-pm@vger.kernel.org.
+>>>>>>> b7ba80a49124 (Commit)
 
 Links
 -----
 the FTP archives:
 * ftp://ftp.linux.org.uk/pub/linux/cpufreq/
 
+<<<<<<< HEAD
+=======
+how to access the CVS repository:
+* http://cvs.arm.linux.org.uk/
+
+>>>>>>> b7ba80a49124 (Commit)
 the CPUFreq Mailing list:
 * http://vger.kernel.org/vger-lists.html#linux-pm
 

@@ -106,8 +106,12 @@ static inline unsigned long bkey_bytes(const struct bkey *k)
 	return bkey_u64s(k) * sizeof(__u64);
 }
 
+<<<<<<< HEAD
 #define bkey_copy(_dest, _src)	unsafe_memcpy(_dest, _src, bkey_bytes(_src), \
 					/* bkey is always padded */)
+=======
+#define bkey_copy(_dest, _src)	memcpy(_dest, _src, bkey_bytes(_src))
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline void bkey_copy_key(struct bkey *dest, const struct bkey *src)
 {
@@ -360,8 +364,13 @@ struct jset {
 	__u64			prio_bucket[MAX_CACHES_PER_SET];
 
 	union {
+<<<<<<< HEAD
 		DECLARE_FLEX_ARRAY(struct bkey, start);
 		DECLARE_FLEX_ARRAY(__u64, d);
+=======
+		struct bkey	start[0];
+		__u64		d[0];
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
@@ -425,8 +434,13 @@ struct bset {
 	__u32			keys;
 
 	union {
+<<<<<<< HEAD
 		DECLARE_FLEX_ARRAY(struct bkey, start);
 		DECLARE_FLEX_ARRAY(__u64, d);
+=======
+		struct bkey	start[0];
+		__u64		d[0];
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 

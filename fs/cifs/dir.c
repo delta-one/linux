@@ -78,13 +78,23 @@ build_path_from_dentry(struct dentry *direntry, void *page)
 						      prefix);
 }
 
+<<<<<<< HEAD
 char *__build_path_from_dentry_optional_prefix(struct dentry *direntry, void *page,
 					       const char *tree, int tree_len,
 					       bool prefix)
+=======
+char *
+build_path_from_dentry_optional_prefix(struct dentry *direntry, void *page,
+				       bool prefix)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int dfsplen;
 	int pplen = 0;
 	struct cifs_sb_info *cifs_sb = CIFS_SB(direntry->d_sb);
+<<<<<<< HEAD
+=======
+	struct cifs_tcon *tcon = cifs_sb_master_tcon(cifs_sb);
+>>>>>>> b7ba80a49124 (Commit)
 	char dirsep = CIFS_DIR_SEP(cifs_sb);
 	char *s;
 
@@ -92,7 +102,11 @@ char *__build_path_from_dentry_optional_prefix(struct dentry *direntry, void *pa
 		return ERR_PTR(-ENOMEM);
 
 	if (prefix)
+<<<<<<< HEAD
 		dfsplen = strnlen(tree, tree_len + 1);
+=======
+		dfsplen = strnlen(tcon->tree_name, MAX_TREE_SIZE + 1);
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		dfsplen = 0;
 
@@ -122,7 +136,11 @@ char *__build_path_from_dentry_optional_prefix(struct dentry *direntry, void *pa
 	}
 	if (dfsplen) {
 		s -= dfsplen;
+<<<<<<< HEAD
 		memcpy(s, tree, dfsplen);
+=======
+		memcpy(s, tcon->tree_name, dfsplen);
+>>>>>>> b7ba80a49124 (Commit)
 		if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_POSIX_PATHS) {
 			int i;
 			for (i = 0; i < dfsplen; i++) {
@@ -134,6 +152,7 @@ char *__build_path_from_dentry_optional_prefix(struct dentry *direntry, void *pa
 	return s;
 }
 
+<<<<<<< HEAD
 char *build_path_from_dentry_optional_prefix(struct dentry *direntry, void *page,
 					     bool prefix)
 {
@@ -144,6 +163,8 @@ char *build_path_from_dentry_optional_prefix(struct dentry *direntry, void *page
 							MAX_TREE_SIZE, prefix);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Don't allow path components longer than the server max.
  * Don't allow the separator character in a path component.
@@ -174,9 +195,16 @@ check_name(struct dentry *direntry, struct cifs_tcon *tcon)
 
 /* Inode operations in similar order to how they appear in Linux file fs.h */
 
+<<<<<<< HEAD
 static int cifs_do_create(struct inode *inode, struct dentry *direntry, unsigned int xid,
 			  struct tcon_link *tlink, unsigned int oflags, umode_t mode, __u32 *oplock,
 			  struct cifs_fid *fid, struct cifs_open_info_data *buf)
+=======
+static int
+cifs_do_create(struct inode *inode, struct dentry *direntry, unsigned int xid,
+	       struct tcon_link *tlink, unsigned oflags, umode_t mode,
+	       __u32 *oplock, struct cifs_fid *fid)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int rc = -ENOENT;
 	int create_options = CREATE_NOT_DIR;
@@ -185,6 +213,10 @@ static int cifs_do_create(struct inode *inode, struct dentry *direntry, unsigned
 	struct cifs_tcon *tcon = tlink_tcon(tlink);
 	const char *full_path;
 	void *page = alloc_dentry_path();
+<<<<<<< HEAD
+=======
+	FILE_ALL_INFO *buf = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	struct inode *newinode = NULL;
 	int disposition;
 	struct TCP_Server_Info *server = tcon->ses->server;
@@ -297,6 +329,15 @@ static int cifs_do_create(struct inode *inode, struct dentry *direntry, unsigned
 		goto out;
 	}
 
+<<<<<<< HEAD
+=======
+	buf = kmalloc(sizeof(FILE_ALL_INFO), GFP_KERNEL);
+	if (buf == NULL) {
+		rc = -ENOMEM;
+		goto out;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * if we're not using unix extensions, see if we need to set
 	 * ATTR_READONLY on the create call
@@ -304,6 +345,7 @@ static int cifs_do_create(struct inode *inode, struct dentry *direntry, unsigned
 	if (!tcon->unix_ext && (mode & S_IWUGO) == 0)
 		create_options |= CREATE_OPTION_READONLY;
 
+<<<<<<< HEAD
 	oparms = (struct cifs_open_parms) {
 		.tcon = tcon,
 		.cifs_sb = cifs_sb,
@@ -314,6 +356,17 @@ static int cifs_do_create(struct inode *inode, struct dentry *direntry, unsigned
 		.fid = fid,
 		.mode = mode,
 	};
+=======
+	oparms.tcon = tcon;
+	oparms.cifs_sb = cifs_sb;
+	oparms.desired_access = desired_access;
+	oparms.create_options = cifs_create_options(cifs_sb, create_options);
+	oparms.disposition = disposition;
+	oparms.path = full_path;
+	oparms.fid = fid;
+	oparms.reconnect = false;
+	oparms.mode = mode;
+>>>>>>> b7ba80a49124 (Commit)
 	rc = server->ops->open(xid, &oparms, oplock, buf);
 	if (rc) {
 		cifs_dbg(FYI, "cifs_create returned 0x%x\n", rc);
@@ -366,7 +419,12 @@ cifs_create_get_file_info:
 	{
 #endif /* CONFIG_CIFS_ALLOW_INSECURE_LEGACY */
 		/* TODO: Add support for calling POSIX query info here, but passing in fid */
+<<<<<<< HEAD
 		rc = cifs_get_inode_info(&newinode, full_path, buf, inode->i_sb, xid, fid);
+=======
+		rc = cifs_get_inode_info(&newinode, full_path, buf, inode->i_sb,
+					 xid, fid);
+>>>>>>> b7ba80a49124 (Commit)
 		if (newinode) {
 			if (server->ops->set_lease_key)
 				server->ops->set_lease_key(newinode, fid);
@@ -403,6 +461,10 @@ cifs_create_set_dentry:
 	d_add(direntry, newinode);
 
 out:
+<<<<<<< HEAD
+=======
+	kfree(buf);
+>>>>>>> b7ba80a49124 (Commit)
 	free_dentry_path(page);
 	return rc;
 
@@ -423,11 +485,18 @@ cifs_atomic_open(struct inode *inode, struct dentry *direntry,
 	struct tcon_link *tlink;
 	struct cifs_tcon *tcon;
 	struct TCP_Server_Info *server;
+<<<<<<< HEAD
 	struct cifs_fid fid = {};
 	struct cifs_pending_open open;
 	__u32 oplock;
 	struct cifsFileInfo *file_info;
 	struct cifs_open_info_data buf = {};
+=======
+	struct cifs_fid fid;
+	struct cifs_pending_open open;
+	__u32 oplock;
+	struct cifsFileInfo *file_info;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (unlikely(cifs_forced_shutdown(CIFS_SB(inode->i_sb))))
 		return -EIO;
@@ -485,7 +554,12 @@ cifs_atomic_open(struct inode *inode, struct dentry *direntry,
 	cifs_add_pending_open(&fid, tlink, &open);
 
 	rc = cifs_do_create(inode, direntry, xid, tlink, oflags, mode,
+<<<<<<< HEAD
 			    &oplock, &fid, &buf);
+=======
+			    &oplock, &fid);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc) {
 		cifs_del_pending_open(&open);
 		goto out;
@@ -510,7 +584,11 @@ cifs_atomic_open(struct inode *inode, struct dentry *direntry,
 			file->f_op = &cifs_file_direct_ops;
 		}
 
+<<<<<<< HEAD
 	file_info = cifs_new_fileinfo(&fid, file, tlink, oplock, buf.symlink_target);
+=======
+	file_info = cifs_new_fileinfo(&fid, file, tlink, oplock);
+>>>>>>> b7ba80a49124 (Commit)
 	if (file_info == NULL) {
 		if (server->ops->close)
 			server->ops->close(xid, tcon, &fid);
@@ -526,11 +604,18 @@ out:
 	cifs_put_tlink(tlink);
 out_free_xid:
 	free_xid(xid);
+<<<<<<< HEAD
 	cifs_free_open_info(&buf);
 	return rc;
 }
 
 int cifs_create(struct mnt_idmap *idmap, struct inode *inode,
+=======
+	return rc;
+}
+
+int cifs_create(struct user_namespace *mnt_userns, struct inode *inode,
+>>>>>>> b7ba80a49124 (Commit)
 		struct dentry *direntry, umode_t mode, bool excl)
 {
 	int rc;
@@ -548,15 +633,23 @@ int cifs_create(struct mnt_idmap *idmap, struct inode *inode,
 	struct TCP_Server_Info *server;
 	struct cifs_fid fid;
 	__u32 oplock;
+<<<<<<< HEAD
 	struct cifs_open_info_data buf = {};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	cifs_dbg(FYI, "cifs_create parent inode = 0x%p name is: %pd and dentry = 0x%p\n",
 		 inode, direntry, direntry);
 
+<<<<<<< HEAD
 	if (unlikely(cifs_forced_shutdown(CIFS_SB(inode->i_sb)))) {
 		rc = -EIO;
 		goto out_free_xid;
 	}
+=======
+	if (unlikely(cifs_forced_shutdown(CIFS_SB(inode->i_sb))))
+		return -EIO;
+>>>>>>> b7ba80a49124 (Commit)
 
 	tlink = cifs_sb_tlink(CIFS_SB(inode->i_sb));
 	rc = PTR_ERR(tlink);
@@ -569,18 +662,30 @@ int cifs_create(struct mnt_idmap *idmap, struct inode *inode,
 	if (server->ops->new_lease_key)
 		server->ops->new_lease_key(&fid);
 
+<<<<<<< HEAD
 	rc = cifs_do_create(inode, direntry, xid, tlink, oflags, mode, &oplock, &fid, &buf);
 	if (!rc && server->ops->close)
 		server->ops->close(xid, tcon, &fid);
 
 	cifs_free_open_info(&buf);
+=======
+	rc = cifs_do_create(inode, direntry, xid, tlink, oflags, mode,
+			    &oplock, &fid);
+	if (!rc && server->ops->close)
+		server->ops->close(xid, tcon, &fid);
+
+>>>>>>> b7ba80a49124 (Commit)
 	cifs_put_tlink(tlink);
 out_free_xid:
 	free_xid(xid);
 	return rc;
 }
 
+<<<<<<< HEAD
 int cifs_mknod(struct mnt_idmap *idmap, struct inode *inode,
+=======
+int cifs_mknod(struct user_namespace *mnt_userns, struct inode *inode,
+>>>>>>> b7ba80a49124 (Commit)
 	       struct dentry *direntry, umode_t mode, dev_t device_number)
 {
 	int rc = -EPERM;

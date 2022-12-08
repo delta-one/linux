@@ -4990,7 +4990,12 @@ static struct dvb_frontend *stv090x_get_dvb_frontend(struct i2c_client *client)
 	return &state->frontend;
 }
 
+<<<<<<< HEAD
 static int stv090x_probe(struct i2c_client *client)
+=======
+static int stv090x_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret = 0;
 	struct stv090x_config *config = client->dev.platform_data;
@@ -5084,7 +5089,11 @@ static struct i2c_driver stv090x_driver = {
 		.name	= "stv090x",
 		.suppress_bind_attrs = true,
 	},
+<<<<<<< HEAD
 	.probe_new	= stv090x_probe,
+=======
+	.probe		= stv090x_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove		= stv090x_remove,
 	.id_table	= stv090x_id_table,
 };

@@ -74,6 +74,13 @@
 
 struct zbud_pool;
 
+<<<<<<< HEAD
+=======
+struct zbud_ops {
+	int (*evict)(struct zbud_pool *pool, unsigned long handle);
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct zbud_pool - stores metadata for each zbud pool
  * @lock:	protects all pool fields and first|last_chunk fields of any
@@ -86,6 +93,11 @@ struct zbud_pool;
  * @lru:	list tracking the zbud pages in LRU order by most recently
  *		added buddy.
  * @pages_nr:	number of zbud pages in the pool.
+<<<<<<< HEAD
+=======
+ * @ops:	pointer to a structure of user defined operations specified at
+ *		pool creation time.
+>>>>>>> b7ba80a49124 (Commit)
  * @zpool:	zpool driver
  * @zpool_ops:	zpool operations structure with an evict callback
  *
@@ -104,6 +116,10 @@ struct zbud_pool {
 	};
 	struct list_head lru;
 	u64 pages_nr;
+<<<<<<< HEAD
+=======
+	const struct zbud_ops *ops;
+>>>>>>> b7ba80a49124 (Commit)
 	struct zpool *zpool;
 	const struct zpool_ops *zpool_ops;
 };
@@ -205,11 +221,19 @@ static int num_free_chunks(struct zbud_header *zhdr)
 /**
  * zbud_create_pool() - create a new zbud pool
  * @gfp:	gfp flags when allocating the zbud pool structure
+<<<<<<< HEAD
+=======
+ * @ops:	user-defined operations for the zbud pool
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Return: pointer to the new zbud pool or NULL if the metadata allocation
  * failed.
  */
+<<<<<<< HEAD
 static struct zbud_pool *zbud_create_pool(gfp_t gfp)
+=======
+static struct zbud_pool *zbud_create_pool(gfp_t gfp, const struct zbud_ops *ops)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct zbud_pool *pool;
 	int i;
@@ -223,6 +247,10 @@ static struct zbud_pool *zbud_create_pool(gfp_t gfp)
 	INIT_LIST_HEAD(&pool->buddied);
 	INIT_LIST_HEAD(&pool->lru);
 	pool->pages_nr = 0;
+<<<<<<< HEAD
+=======
+	pool->ops = ops;
+>>>>>>> b7ba80a49124 (Commit)
 	return pool;
 }
 
@@ -410,7 +438,12 @@ static int zbud_reclaim_page(struct zbud_pool *pool, unsigned int retries)
 	unsigned long first_handle = 0, last_handle = 0;
 
 	spin_lock(&pool->lock);
+<<<<<<< HEAD
 	if (list_empty(&pool->lru)) {
+=======
+	if (!pool->ops || !pool->ops->evict || list_empty(&pool->lru) ||
+			retries == 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		spin_unlock(&pool->lock);
 		return -EINVAL;
 	}
@@ -434,12 +467,20 @@ static int zbud_reclaim_page(struct zbud_pool *pool, unsigned int retries)
 
 		/* Issue the eviction callback(s) */
 		if (first_handle) {
+<<<<<<< HEAD
 			ret = pool->zpool_ops->evict(pool->zpool, first_handle);
+=======
+			ret = pool->ops->evict(pool, first_handle);
+>>>>>>> b7ba80a49124 (Commit)
 			if (ret)
 				goto next;
 		}
 		if (last_handle) {
+<<<<<<< HEAD
 			ret = pool->zpool_ops->evict(pool->zpool, last_handle);
+=======
+			ret = pool->ops->evict(pool, last_handle);
+>>>>>>> b7ba80a49124 (Commit)
 			if (ret)
 				goto next;
 		}
@@ -514,13 +555,32 @@ static u64 zbud_get_pool_size(struct zbud_pool *pool)
  * zpool
  ****************/
 
+<<<<<<< HEAD
+=======
+static int zbud_zpool_evict(struct zbud_pool *pool, unsigned long handle)
+{
+	if (pool->zpool && pool->zpool_ops && pool->zpool_ops->evict)
+		return pool->zpool_ops->evict(pool->zpool, handle);
+	else
+		return -ENOENT;
+}
+
+static const struct zbud_ops zbud_zpool_ops = {
+	.evict =	zbud_zpool_evict
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static void *zbud_zpool_create(const char *name, gfp_t gfp,
 			       const struct zpool_ops *zpool_ops,
 			       struct zpool *zpool)
 {
 	struct zbud_pool *pool;
 
+<<<<<<< HEAD
 	pool = zbud_create_pool(gfp);
+=======
+	pool = zbud_create_pool(gfp, zpool_ops ? &zbud_zpool_ops : NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (pool) {
 		pool->zpool = zpool;
 		pool->zpool_ops = zpool_ops;

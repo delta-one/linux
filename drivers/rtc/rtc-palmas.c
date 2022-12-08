@@ -308,9 +308,16 @@ static int palmas_rtc_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void palmas_rtc_remove(struct platform_device *pdev)
 {
 	palmas_rtc_alarm_irq_enable(&pdev->dev, 0);
+=======
+static int palmas_rtc_remove(struct platform_device *pdev)
+{
+	palmas_rtc_alarm_irq_enable(&pdev->dev, 0);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -346,7 +353,11 @@ MODULE_DEVICE_TABLE(of, of_palmas_rtc_match);
 
 static struct platform_driver palmas_rtc_driver = {
 	.probe		= palmas_rtc_probe,
+<<<<<<< HEAD
 	.remove_new	= palmas_rtc_remove,
+=======
+	.remove		= palmas_rtc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= "palmas-rtc",
 		.pm	= &palmas_rtc_pm_ops,

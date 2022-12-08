@@ -76,10 +76,13 @@ config THERMAL_OF
 	  Say 'Y' here if you need to build thermal infrastructure
 	  based on device tree.
 
+<<<<<<< HEAD
 config THERMAL_ACPI
        depends on ACPI
        bool
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config THERMAL_WRITABLE_TRIPS
 	bool "Enable writable trip points"
 	help
@@ -416,10 +419,23 @@ config DA9062_THERMAL
 	  zone.
 	  Compatible with the DA9062 and DA9061 PMICs.
 
+<<<<<<< HEAD
 menu "Mediatek thermal drivers"
 depends on ARCH_MEDIATEK || COMPILE_TEST
 source "drivers/thermal/mediatek/Kconfig"
 endmenu
+=======
+config MTK_THERMAL
+	tristate "Temperature sensor driver for mediatek SoCs"
+	depends on ARCH_MEDIATEK || COMPILE_TEST
+	depends on HAS_IOMEM
+	depends on NVMEM || NVMEM=n
+	depends on RESET_CONTROLLER
+	default y
+	help
+	  Enable this option if you want to have support for thermal management
+	  controller present in Mediatek SoCs
+>>>>>>> b7ba80a49124 (Commit)
 
 config AMLOGIC_THERMAL
 	tristate "Amlogic Thermal Support"

@@ -10,10 +10,17 @@
     |         arc: | TODO |
     |         arm: | TODO |
     |       arm64: |  ok  |
+<<<<<<< HEAD
     |        csky: |  ok  |
     |     hexagon: | TODO |
     |        ia64: | TODO |
     |   loongarch: |  ok  |
+=======
+    |        csky: | TODO |
+    |     hexagon: | TODO |
+    |        ia64: | TODO |
+    |       loong: | TODO |
+>>>>>>> b7ba80a49124 (Commit)
     |        m68k: | TODO |
     |  microblaze: | TODO |
     |        mips: |  ok  |

@@ -17,7 +17,10 @@
 #include <linux/err.h>
 #include <linux/init.h>
 #include <linux/io.h>
+<<<<<<< HEAD
 #include <linux/iopoll.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 
 #include "renesas-cpg-mssr.h"
@@ -28,6 +31,7 @@ static const struct rcar_gen4_cpg_pll_config *cpg_pll_config __initdata;
 static unsigned int cpg_clk_extalr __initdata;
 static u32 cpg_mode __initdata;
 
+<<<<<<< HEAD
 #define CPG_PLLECR		0x0820	/* PLL Enable Control Register */
 
 #define CPG_PLLECR_PLLST(n)	BIT(8 + ((n) < 3 ? (n) - 1 : \
@@ -174,6 +178,8 @@ static struct clk * __init cpg_pll_clk_register(const char *name,
 
 	return clk;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Z0 Clock & Z1 Clock
  */
@@ -352,6 +358,7 @@ struct clk * __init rcar_gen4_cpg_clk_register(struct device *dev,
 		div = cpg_pll_config->pll1_div;
 		break;
 
+<<<<<<< HEAD
 	case CLK_TYPE_GEN4_PLL2_VAR:
 		/*
 		 * PLL2 is implemented as a custom clock, to change the
@@ -361,6 +368,8 @@ struct clk * __init rcar_gen4_cpg_clk_register(struct device *dev,
 		return cpg_pll_clk_register(core->name, __clk_get_name(parent),
 					    base, CPG_PLL2CR0, CPG_PLL2CR1, 2);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case CLK_TYPE_GEN4_PLL2:
 		mult = cpg_pll_config->pll2_mult;
 		div = cpg_pll_config->pll2_div;

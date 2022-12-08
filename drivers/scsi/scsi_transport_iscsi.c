@@ -231,7 +231,11 @@ iscsi_create_endpoint(int dd_size)
 	dev_set_name(&ep->dev, "ep-%d", id);
 	err = device_register(&ep->dev);
         if (err)
+<<<<<<< HEAD
 		goto put_dev;
+=======
+		goto free_id;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = sysfs_create_group(&ep->dev.kobj, &iscsi_endpoint_group);
 	if (err)
@@ -245,12 +249,19 @@ unregister_dev:
 	device_unregister(&ep->dev);
 	return NULL;
 
+<<<<<<< HEAD
 put_dev:
 	mutex_lock(&iscsi_ep_idr_mutex);
 	idr_remove(&iscsi_ep_idr, id);
 	mutex_unlock(&iscsi_ep_idr_mutex);
 	put_device(&ep->dev);
 	return NULL;
+=======
+free_id:
+	mutex_lock(&iscsi_ep_idr_mutex);
+	idr_remove(&iscsi_ep_idr, id);
+	mutex_unlock(&iscsi_ep_idr_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 free_ep:
 	kfree(ep);
 	return NULL;
@@ -768,7 +779,11 @@ iscsi_create_iface(struct Scsi_Host *shost, struct iscsi_transport *transport,
 
 	err = device_register(&iface->dev);
 	if (err)
+<<<<<<< HEAD
 		goto put_dev;
+=======
+		goto free_iface;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = sysfs_create_group(&iface->dev.kobj, &iscsi_iface_group);
 	if (err)
@@ -782,8 +797,14 @@ unreg_iface:
 	device_unregister(&iface->dev);
 	return NULL;
 
+<<<<<<< HEAD
 put_dev:
 	put_device(&iface->dev);
+=======
+free_iface:
+	put_device(iface->dev.parent);
+	kfree(iface);
+>>>>>>> b7ba80a49124 (Commit)
 	return NULL;
 }
 EXPORT_SYMBOL_GPL(iscsi_create_iface);
@@ -1252,15 +1273,24 @@ iscsi_create_flashnode_sess(struct Scsi_Host *shost, int index,
 
 	err = device_register(&fnode_sess->dev);
 	if (err)
+<<<<<<< HEAD
 		goto put_dev;
+=======
+		goto free_fnode_sess;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (dd_size)
 		fnode_sess->dd_data = &fnode_sess[1];
 
 	return fnode_sess;
 
+<<<<<<< HEAD
 put_dev:
 	put_device(&fnode_sess->dev);
+=======
+free_fnode_sess:
+	kfree(fnode_sess);
+>>>>>>> b7ba80a49124 (Commit)
 	return NULL;
 }
 EXPORT_SYMBOL_GPL(iscsi_create_flashnode_sess);
@@ -1300,15 +1330,24 @@ iscsi_create_flashnode_conn(struct Scsi_Host *shost,
 
 	err = device_register(&fnode_conn->dev);
 	if (err)
+<<<<<<< HEAD
 		goto put_dev;
+=======
+		goto free_fnode_conn;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (dd_size)
 		fnode_conn->dd_data = &fnode_conn[1];
 
 	return fnode_conn;
 
+<<<<<<< HEAD
 put_dev:
 	put_device(&fnode_conn->dev);
+=======
+free_fnode_conn:
+	kfree(fnode_conn);
+>>>>>>> b7ba80a49124 (Commit)
 	return NULL;
 }
 EXPORT_SYMBOL_GPL(iscsi_create_flashnode_conn);
@@ -1677,6 +1716,7 @@ static const char *iscsi_session_state_name(int state)
 	return name;
 }
 
+<<<<<<< HEAD
 static char *iscsi_session_target_state_name[] = {
 	[ISCSI_SESSION_TARGET_UNBOUND]   = "UNBOUND",
 	[ISCSI_SESSION_TARGET_ALLOCATED] = "ALLOCATED",
@@ -1684,6 +1724,8 @@ static char *iscsi_session_target_state_name[] = {
 	[ISCSI_SESSION_TARGET_UNBINDING] = "UNBINDING",
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int iscsi_session_chkready(struct iscsi_cls_session *session)
 {
 	int err;
@@ -1793,6 +1835,7 @@ static int iscsi_user_scan_session(struct device *dev, void *data)
 		if ((scan_data->channel == SCAN_WILD_CARD ||
 		     scan_data->channel == 0) &&
 		    (scan_data->id == SCAN_WILD_CARD ||
+<<<<<<< HEAD
 		     scan_data->id == id)) {
 			scsi_scan_target(&session->dev, 0, id,
 					 scan_data->lun, scan_data->rescan);
@@ -1800,6 +1843,11 @@ static int iscsi_user_scan_session(struct device *dev, void *data)
 			session->target_state = ISCSI_SESSION_TARGET_SCANNED;
 			spin_unlock_irqrestore(&session->lock, flags);
 		}
+=======
+		     scan_data->id == id))
+			scsi_scan_target(&session->dev, 0, id,
+					 scan_data->lun, scan_data->rescan);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 user_scan_exit:
@@ -1972,13 +2020,17 @@ static void __iscsi_unbind_session(struct work_struct *work)
 	struct iscsi_cls_host *ihost = shost->shost_data;
 	unsigned long flags;
 	unsigned int target_id;
+<<<<<<< HEAD
 	bool remove_target = true;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ISCSI_DBG_TRANS_SESSION(session, "Unbinding session\n");
 
 	/* Prevent new scans and make sure scanning is not in progress */
 	mutex_lock(&ihost->mutex);
 	spin_lock_irqsave(&session->lock, flags);
+<<<<<<< HEAD
 	if (session->target_state == ISCSI_SESSION_TARGET_ALLOCATED) {
 		remove_target = false;
 	} else if (session->target_state != ISCSI_SESSION_TARGET_SCANNED) {
@@ -1990,23 +2042,41 @@ static void __iscsi_unbind_session(struct work_struct *work)
 	}
 
 	session->target_state = ISCSI_SESSION_TARGET_UNBINDING;
+=======
+	if (session->target_id == ISCSI_MAX_TARGET) {
+		spin_unlock_irqrestore(&session->lock, flags);
+		mutex_unlock(&ihost->mutex);
+		goto unbind_session_exit;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	target_id = session->target_id;
 	session->target_id = ISCSI_MAX_TARGET;
 	spin_unlock_irqrestore(&session->lock, flags);
 	mutex_unlock(&ihost->mutex);
 
+<<<<<<< HEAD
 	if (remove_target)
 		scsi_remove_target(&session->dev);
+=======
+	scsi_remove_target(&session->dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (session->ida_used)
 		ida_free(&iscsi_sess_ida, target_id);
 
+<<<<<<< HEAD
 	iscsi_session_event(session, ISCSI_KEVENT_UNBIND_SESSION);
 	ISCSI_DBG_TRANS_SESSION(session, "Completed target removal\n");
 
 	spin_lock_irqsave(&session->lock, flags);
 	session->target_state = ISCSI_SESSION_TARGET_UNBOUND;
 	spin_unlock_irqrestore(&session->lock, flags);
+=======
+unbind_session_exit:
+	iscsi_session_event(session, ISCSI_KEVENT_UNBIND_SESSION);
+	ISCSI_DBG_TRANS_SESSION(session, "Completed target removal\n");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __iscsi_destroy_session(struct work_struct *work)
@@ -2083,9 +2153,12 @@ int iscsi_add_session(struct iscsi_cls_session *session, unsigned int target_id)
 		session->ida_used = true;
 	} else
 		session->target_id = target_id;
+<<<<<<< HEAD
 	spin_lock_irqsave(&session->lock, flags);
 	session->target_state = ISCSI_SESSION_TARGET_ALLOCATED;
 	spin_unlock_irqrestore(&session->lock, flags);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_set_name(&session->dev, "session%u", session->sid);
 	err = device_add(&session->dev);
@@ -3013,7 +3086,11 @@ iscsi_if_destroy_conn(struct iscsi_transport *transport, struct iscsi_uevent *ev
 }
 
 static int
+<<<<<<< HEAD
 iscsi_if_set_param(struct iscsi_transport *transport, struct iscsi_uevent *ev)
+=======
+iscsi_set_param(struct iscsi_transport *transport, struct iscsi_uevent *ev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	char *data = (char*)ev + sizeof(*ev);
 	struct iscsi_cls_conn *conn;
@@ -3966,7 +4043,11 @@ iscsi_if_recv_msg(struct sk_buff *skb, struct nlmsghdr *nlh, uint32_t *group)
 			err = -EINVAL;
 		break;
 	case ISCSI_UEVENT_SET_PARAM:
+<<<<<<< HEAD
 		err = iscsi_if_set_param(transport, ev);
+=======
+		err = iscsi_set_param(transport, ev);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case ISCSI_UEVENT_CREATE_CONN:
 	case ISCSI_UEVENT_DESTROY_CONN:
@@ -4394,6 +4475,7 @@ iscsi_session_attr(discovery_parent_idx, ISCSI_PARAM_DISCOVERY_PARENT_IDX, 0);
 iscsi_session_attr(discovery_parent_type, ISCSI_PARAM_DISCOVERY_PARENT_TYPE, 0);
 
 static ssize_t
+<<<<<<< HEAD
 show_priv_session_target_state(struct device *dev, struct device_attribute *attr,
 			char *buf)
 {
@@ -4407,6 +4489,8 @@ static ISCSI_CLASS_ATTR(priv_sess, target_state, S_IRUGO,
 			show_priv_session_target_state, NULL);
 
 static ssize_t
+=======
+>>>>>>> b7ba80a49124 (Commit)
 show_priv_session_state(struct device *dev, struct device_attribute *attr,
 			char *buf)
 {
@@ -4508,7 +4592,10 @@ static struct attribute *iscsi_session_attrs[] = {
 	&dev_attr_sess_boot_target.attr,
 	&dev_attr_priv_sess_recovery_tmo.attr,
 	&dev_attr_priv_sess_state.attr,
+<<<<<<< HEAD
 	&dev_attr_priv_sess_target_state.attr,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	&dev_attr_priv_sess_creator.attr,
 	&dev_attr_sess_chap_out_idx.attr,
 	&dev_attr_sess_chap_in_idx.attr,
@@ -4622,8 +4709,11 @@ static umode_t iscsi_session_attr_is_visible(struct kobject *kobj,
 		return S_IRUGO | S_IWUSR;
 	else if (attr == &dev_attr_priv_sess_state.attr)
 		return S_IRUGO;
+<<<<<<< HEAD
 	else if (attr == &dev_attr_priv_sess_target_state.attr)
 		return S_IRUGO;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	else if (attr == &dev_attr_priv_sess_creator.attr)
 		return S_IRUGO;
 	else if (attr == &dev_attr_priv_sess_target_id.attr)
@@ -4856,7 +4946,11 @@ iscsi_register_transport(struct iscsi_transport *tt)
 	dev_set_name(&priv->dev, "%s", tt->name);
 	err = device_register(&priv->dev);
 	if (err)
+<<<<<<< HEAD
 		goto put_dev;
+=======
+		goto free_priv;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = sysfs_create_group(&priv->dev.kobj, &iscsi_transport_group);
 	if (err)
@@ -4891,8 +4985,13 @@ iscsi_register_transport(struct iscsi_transport *tt)
 unregister_dev:
 	device_unregister(&priv->dev);
 	return NULL;
+<<<<<<< HEAD
 put_dev:
 	put_device(&priv->dev);
+=======
+free_priv:
+	kfree(priv);
+>>>>>>> b7ba80a49124 (Commit)
 	return NULL;
 }
 EXPORT_SYMBOL_GPL(iscsi_register_transport);

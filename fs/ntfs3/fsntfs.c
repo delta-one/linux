@@ -98,6 +98,7 @@ const __le16 WOF_NAME[17] = {
 };
 #endif
 
+<<<<<<< HEAD
 static const __le16 CON_NAME[3] = {
 	cpu_to_le16('C'), cpu_to_le16('O'), cpu_to_le16('N'),
 };
@@ -122,6 +123,8 @@ static const __le16 LPT_NAME[3] = {
 	cpu_to_le16('L'), cpu_to_le16('P'), cpu_to_le16('T'),
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 // clang-format on
 
 /*
@@ -172,8 +175,13 @@ int ntfs_fix_post_read(struct NTFS_RECORD_HEADER *rhdr, size_t bytes,
 	u16 sample, fo, fn;
 
 	fo = le16_to_cpu(rhdr->fix_off);
+<<<<<<< HEAD
 	fn = simple ? ((bytes >> SECTOR_SHIFT) + 1) :
 			    le16_to_cpu(rhdr->fix_num);
+=======
+	fn = simple ? ((bytes >> SECTOR_SHIFT) + 1)
+		    : le16_to_cpu(rhdr->fix_num);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Check errors. */
 	if ((fo & 1) || fo + fn * sizeof(short) > SECTOR_SIZE || !fn-- ||
@@ -223,7 +231,11 @@ int ntfs_extend_init(struct ntfs_sb_info *sbi)
 	inode = ntfs_iget5(sb, &ref, &NAME_EXTEND);
 	if (IS_ERR(inode)) {
 		err = PTR_ERR(inode);
+<<<<<<< HEAD
 		ntfs_err(sb, "Failed to load $Extend (%d).", err);
+=======
+		ntfs_err(sb, "Failed to load $Extend.");
+>>>>>>> b7ba80a49124 (Commit)
 		inode = NULL;
 		goto out;
 	}
@@ -282,7 +294,11 @@ int ntfs_loadlog_and_replay(struct ntfs_inode *ni, struct ntfs_sb_info *sbi)
 
 	/* Check for 4GB. */
 	if (ni->vfs_inode.i_size >= 0x100000000ull) {
+<<<<<<< HEAD
 		ntfs_err(sb, "\x24LogFile is large than 4G.");
+=======
+		ntfs_err(sb, "\x24LogFile is too big");
+>>>>>>> b7ba80a49124 (Commit)
 		err = -EINVAL;
 		goto out;
 	}
@@ -346,6 +362,38 @@ out:
 }
 
 /*
+<<<<<<< HEAD
+=======
+ * ntfs_query_def
+ *
+ * Return: Current ATTR_DEF_ENTRY for given attribute type.
+ */
+const struct ATTR_DEF_ENTRY *ntfs_query_def(struct ntfs_sb_info *sbi,
+					    enum ATTR_TYPE type)
+{
+	int type_in = le32_to_cpu(type);
+	size_t min_idx = 0;
+	size_t max_idx = sbi->def_entries - 1;
+
+	while (min_idx <= max_idx) {
+		size_t i = min_idx + ((max_idx - min_idx) >> 1);
+		const struct ATTR_DEF_ENTRY *entry = sbi->def_table + i;
+		int diff = le32_to_cpu(entry->type) - type_in;
+
+		if (!diff)
+			return entry;
+		if (diff < 0)
+			min_idx = i + 1;
+		else if (i)
+			max_idx = i - 1;
+		else
+			return NULL;
+	}
+	return NULL;
+}
+
+/*
+>>>>>>> b7ba80a49124 (Commit)
  * ntfs_look_for_free_space - Look for a free space in bitmap.
  */
 int ntfs_look_for_free_space(struct ntfs_sb_info *sbi, CLST lcn, CLST len,
@@ -444,6 +492,7 @@ up_write:
 }
 
 /*
+<<<<<<< HEAD
  * ntfs_check_for_free_space
  *
  * Check if it is possible to allocate 'clen' clusters and 'mlen' Mft records
@@ -477,6 +526,8 @@ bool ntfs_check_for_free_space(struct ntfs_sb_info *sbi, CLST clen, CLST mlen)
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * ntfs_extend_mft - Allocate additional MFT records.
  *
  * sbi->mft.bitmap is locked for write.
@@ -503,7 +554,11 @@ static int ntfs_extend_mft(struct ntfs_sb_info *sbi)
 	struct ATTRIB *attr;
 	struct wnd_bitmap *wnd = &sbi->mft.bitmap;
 
+<<<<<<< HEAD
 	new_mft_total = ALIGN(wnd->nbits + NTFS_MFT_INCREASE_STEP, 128);
+=======
+	new_mft_total = (wnd->nbits + MFT_INCREASE_CHUNK + 127) & (CLST)~127;
+>>>>>>> b7ba80a49124 (Commit)
 	new_mft_bytes = (u64)new_mft_total << sbi->record_bits;
 
 	/* Step 1: Resize $MFT::DATA. */
@@ -846,6 +901,7 @@ void ntfs_update_mftmirr(struct ntfs_sb_info *sbi, int wait)
 {
 	int err;
 	struct super_block *sb = sbi->sb;
+<<<<<<< HEAD
 	u32 blocksize, bytes;
 	sector_t block1, block2;
 
@@ -856,6 +912,21 @@ void ntfs_update_mftmirr(struct ntfs_sb_info *sbi, int wait)
 		return;
 
 	blocksize = sb->s_blocksize;
+=======
+	u32 blocksize;
+	sector_t block1, block2;
+	u32 bytes;
+
+	if (!sb)
+		return;
+
+	blocksize = sb->s_blocksize;
+
+	if (!(sbi->flags & NTFS_FLAGS_MFTMIRR))
+		return;
+
+	err = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	bytes = sbi->mft.recs_mirr << sbi->record_bits;
 	block1 = sbi->mft.lbo >> sb->s_blocksize_bits;
 	block2 = sbi->mft.lbo2 >> sb->s_blocksize_bits;
@@ -885,7 +956,12 @@ void ntfs_update_mftmirr(struct ntfs_sb_info *sbi, int wait)
 		put_bh(bh1);
 		bh1 = NULL;
 
+<<<<<<< HEAD
 		err = wait ? sync_dirty_buffer(bh2) : 0;
+=======
+		if (wait)
+			err = sync_dirty_buffer(bh2);
+>>>>>>> b7ba80a49124 (Commit)
 
 		put_bh(bh2);
 		if (err)
@@ -923,7 +999,10 @@ int ntfs_set_state(struct ntfs_sb_info *sbi, enum NTFS_DIRTY_FLAGS dirty)
 	struct VOLUME_INFO *info;
 	struct mft_inode *mi;
 	struct ntfs_inode *ni;
+<<<<<<< HEAD
 	__le16 info_flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Do not change state if fs was real_dirty.
@@ -956,8 +1035,11 @@ int ntfs_set_state(struct ntfs_sb_info *sbi, enum NTFS_DIRTY_FLAGS dirty)
 		goto out;
 	}
 
+<<<<<<< HEAD
 	info_flags = info->flags;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	switch (dirty) {
 	case NTFS_DIRTY_ERROR:
 		ntfs_notice(sbi->sb, "Mark volume as dirty due to NTFS errors");
@@ -971,10 +1053,15 @@ int ntfs_set_state(struct ntfs_sb_info *sbi, enum NTFS_DIRTY_FLAGS dirty)
 		break;
 	}
 	/* Cache current volume flags. */
+<<<<<<< HEAD
 	if (info_flags != info->flags) {
 		sbi->volume.flags = info->flags;
 		mi->dirty = true;
 	}
+=======
+	sbi->volume.flags = info->flags;
+	mi->dirty = true;
+>>>>>>> b7ba80a49124 (Commit)
 	err = 0;
 
 out:
@@ -1686,7 +1773,10 @@ struct ntfs_inode *ntfs_new_inode(struct ntfs_sb_info *sbi, CLST rno, bool dir)
 
 out:
 	if (err) {
+<<<<<<< HEAD
 		make_bad_inode(inode);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		iput(inode);
 		ni = ERR_PTR(err);
 	}
@@ -1863,7 +1953,11 @@ int ntfs_security_init(struct ntfs_sb_info *sbi)
 	inode = ntfs_iget5(sb, &ref, &NAME_SECURE);
 	if (IS_ERR(inode)) {
 		err = PTR_ERR(inode);
+<<<<<<< HEAD
 		ntfs_err(sb, "Failed to load $Secure (%d).", err);
+=======
+		ntfs_err(sb, "Failed to load $Secure.");
+>>>>>>> b7ba80a49124 (Commit)
 		inode = NULL;
 		goto out;
 	}
@@ -1874,6 +1968,7 @@ int ntfs_security_init(struct ntfs_sb_info *sbi)
 
 	attr = ni_find_attr(ni, NULL, &le, ATTR_ROOT, SDH_NAME,
 			    ARRAY_SIZE(SDH_NAME), NULL, NULL);
+<<<<<<< HEAD
 	if (!attr ||
 	    !(root_sdh = resident_data_ex(attr, sizeof(struct INDEX_ROOT))) ||
 	    root_sdh->type != ATTR_ZERO ||
@@ -1882,11 +1977,22 @@ int ntfs_security_init(struct ntfs_sb_info *sbi)
 			    le32_to_cpu(root_sdh->ihdr.used) >
 		    le32_to_cpu(attr->res.data_size)) {
 		ntfs_err(sb, "$Secure::$SDH is corrupted.");
+=======
+	if (!attr) {
+		err = -EINVAL;
+		goto out;
+	}
+
+	root_sdh = resident_data(attr);
+	if (root_sdh->type != ATTR_ZERO ||
+	    root_sdh->rule != NTFS_COLLATION_TYPE_SECURITY_HASH) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = -EINVAL;
 		goto out;
 	}
 
 	err = indx_init(indx_sdh, sbi, attr, INDEX_MUTEX_SDH);
+<<<<<<< HEAD
 	if (err) {
 		ntfs_err(sb, "Failed to initialize $Secure::$SDH (%d).", err);
 		goto out;
@@ -1902,15 +2008,35 @@ int ntfs_security_init(struct ntfs_sb_info *sbi)
 			    le32_to_cpu(root_sii->ihdr.used) >
 		    le32_to_cpu(attr->res.data_size)) {
 		ntfs_err(sb, "$Secure::$SII is corrupted.");
+=======
+	if (err)
+		goto out;
+
+	attr = ni_find_attr(ni, attr, &le, ATTR_ROOT, SII_NAME,
+			    ARRAY_SIZE(SII_NAME), NULL, NULL);
+	if (!attr) {
+		err = -EINVAL;
+		goto out;
+	}
+
+	root_sii = resident_data(attr);
+	if (root_sii->type != ATTR_ZERO ||
+	    root_sii->rule != NTFS_COLLATION_TYPE_UINT) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = -EINVAL;
 		goto out;
 	}
 
 	err = indx_init(indx_sii, sbi, attr, INDEX_MUTEX_SII);
+<<<<<<< HEAD
 	if (err) {
 		ntfs_err(sb, "Failed to initialize $Secure::$SII (%d).", err);
 		goto out;
 	}
+=======
+	if (err)
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 
 	fnd_sii = fnd_get();
 	if (!fnd_sii) {
@@ -2536,6 +2662,7 @@ int run_deallocate(struct ntfs_sb_info *sbi, struct runs_tree *run, bool trim)
 
 	return 0;
 }
+<<<<<<< HEAD
 
 static inline bool name_has_forbidden_chars(const struct le_str *fname)
 {
@@ -2618,3 +2745,5 @@ bool valid_windows_name(struct ntfs_sb_info *sbi, const struct le_str *fname)
 	return !name_has_forbidden_chars(fname) &&
 	       !is_reserved_name(sbi, fname);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

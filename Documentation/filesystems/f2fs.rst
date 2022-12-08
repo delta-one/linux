@@ -25,6 +25,7 @@ a consistency checking tool (fsck.f2fs), and a debugging tool (dump.f2fs).
 
 - git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs-tools.git
 
+<<<<<<< HEAD
 For sending patches, please use the following mailing list:
 
 - linux-f2fs-devel@lists.sourceforge.net
@@ -33,6 +34,12 @@ For reporting bugs, please use the following f2fs bug tracker link:
 
 - https://bugzilla.kernel.org/enter_bug.cgi?product=File%20System&component=f2fs
 
+=======
+For reporting bugs and sending patches, please use the following mailing list:
+
+- linux-f2fs-devel@lists.sourceforge.net
+
+>>>>>>> b7ba80a49124 (Commit)
 Background and Design issues
 ============================
 
@@ -158,8 +165,11 @@ nobarrier		 This option can be used if underlying storage guarantees
 			 If this option is set, no cache_flush commands are issued
 			 but f2fs still guarantees the write ordering of all the
 			 data writes.
+<<<<<<< HEAD
 barrier			 If this option is set, cache_flush commands are allowed to be
 			 issued.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 fastboot		 This option is used when a system wants to reduce mount
 			 time as much as possible, even though normal performance
 			 can be sacrificed.
@@ -205,7 +215,10 @@ fault_type=%d		 Support configuring fault injection type, should be
 			 FAULT_SLAB_ALLOC	  0x000008000
 			 FAULT_DQUOT_INIT	  0x000010000
 			 FAULT_LOCK_OP		  0x000020000
+<<<<<<< HEAD
 			 FAULT_BLKADDR		  0x000040000
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			 ===================	  ===========
 mode=%s			 Control block allocation mode which supports "adaptive"
 			 and "lfs". In "lfs" mode, there should be no random
@@ -347,10 +360,13 @@ memory=%s		 Control memory mode. This supports "normal" and "low" modes.
 			 Because of the nature of low memory devices, in this mode, f2fs
 			 will try to save memory sometimes by sacrificing performance.
 			 "normal" mode is the default mode and same as before.
+<<<<<<< HEAD
 age_extent_cache	 Enable an age extent cache based on rb-tree. It records
 			 data block update frequency of the extent per inode, in
 			 order to provide better temperature hints for data block
 			 allocation.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 ======================== ============================================================
 
 Debugfs Entries

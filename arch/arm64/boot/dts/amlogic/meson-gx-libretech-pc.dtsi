@@ -17,7 +17,11 @@
 		io-channel-names = "buttons";
 		keyup-threshold-microvolt = <1800000>;
 
+<<<<<<< HEAD
 		button-update {
+=======
+		update-button {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "update";
 			linux,code = <KEY_VENDOR>;
 			press-threshold-microvolt = <1300000>;

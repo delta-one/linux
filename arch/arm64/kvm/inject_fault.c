@@ -12,6 +12,7 @@
 
 #include <linux/kvm_host.h>
 #include <asm/kvm_emulate.h>
+<<<<<<< HEAD
 #include <asm/kvm_nested.h>
 #include <asm/esr.h>
 
@@ -54,13 +55,23 @@ static bool match_target_el(struct kvm_vcpu *vcpu, unsigned long target)
 	return (vcpu_get_flag(vcpu, EXCEPT_MASK) == target);
 }
 
+=======
+#include <asm/esr.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 static void inject_abt64(struct kvm_vcpu *vcpu, bool is_iabt, unsigned long addr)
 {
 	unsigned long cpsr = *vcpu_cpsr(vcpu);
 	bool is_aarch32 = vcpu_mode_is_32bit(vcpu);
 	u64 esr = 0;
 
+<<<<<<< HEAD
 	pend_sync_exception(vcpu);
+=======
+	kvm_pend_exception(vcpu, EXCEPT_AA64_EL1_SYNC);
+
+	vcpu_write_sys_reg(vcpu, addr, FAR_EL1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Build an {i,d}abort, depending on the level and the
@@ -81,6 +92,7 @@ static void inject_abt64(struct kvm_vcpu *vcpu, bool is_iabt, unsigned long addr
 	if (!is_iabt)
 		esr |= ESR_ELx_EC_DABT_LOW << ESR_ELx_EC_SHIFT;
 
+<<<<<<< HEAD
 	esr |= ESR_ELx_FSC_EXTABT;
 
 	if (match_target_el(vcpu, unpack_vcpu_flag(EXCEPT_AA64_EL1_SYNC))) {
@@ -90,13 +102,20 @@ static void inject_abt64(struct kvm_vcpu *vcpu, bool is_iabt, unsigned long addr
 		vcpu_write_sys_reg(vcpu, addr, FAR_EL2);
 		vcpu_write_sys_reg(vcpu, esr, ESR_EL2);
 	}
+=======
+	vcpu_write_sys_reg(vcpu, esr | ESR_ELx_FSC_EXTABT, ESR_EL1);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void inject_undef64(struct kvm_vcpu *vcpu)
 {
 	u64 esr = (ESR_ELx_EC_UNKNOWN << ESR_ELx_EC_SHIFT);
 
+<<<<<<< HEAD
 	pend_sync_exception(vcpu);
+=======
+	kvm_pend_exception(vcpu, EXCEPT_AA64_EL1_SYNC);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Build an unknown exception, depending on the instruction
@@ -105,10 +124,14 @@ static void inject_undef64(struct kvm_vcpu *vcpu)
 	if (kvm_vcpu_trap_il_is32bit(vcpu))
 		esr |= ESR_ELx_IL;
 
+<<<<<<< HEAD
 	if (match_target_el(vcpu, unpack_vcpu_flag(EXCEPT_AA64_EL1_SYNC)))
 		vcpu_write_sys_reg(vcpu, esr, ESR_EL1);
 	else
 		vcpu_write_sys_reg(vcpu, esr, ESR_EL2);
+=======
+	vcpu_write_sys_reg(vcpu, esr, ESR_EL1);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define DFSR_FSC_EXTABT_LPAE	0x10

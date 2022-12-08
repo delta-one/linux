@@ -164,6 +164,7 @@ out:
 
 static void nvmet_get_cmd_effects_nvm(struct nvme_effects_log *log)
 {
+<<<<<<< HEAD
 	log->acs[nvme_admin_get_log_page] =
 	log->acs[nvme_admin_identify] =
 	log->acs[nvme_admin_abort_cmd] =
@@ -180,15 +181,36 @@ static void nvmet_get_cmd_effects_nvm(struct nvme_effects_log *log)
 	log->iocs[nvme_cmd_write] =
 	log->iocs[nvme_cmd_write_zeroes] =
 		cpu_to_le32(NVME_CMD_EFFECTS_CSUPP | NVME_CMD_EFFECTS_LBCC);
+=======
+	log->acs[nvme_admin_get_log_page]	= cpu_to_le32(1 << 0);
+	log->acs[nvme_admin_identify]		= cpu_to_le32(1 << 0);
+	log->acs[nvme_admin_abort_cmd]		= cpu_to_le32(1 << 0);
+	log->acs[nvme_admin_set_features]	= cpu_to_le32(1 << 0);
+	log->acs[nvme_admin_get_features]	= cpu_to_le32(1 << 0);
+	log->acs[nvme_admin_async_event]	= cpu_to_le32(1 << 0);
+	log->acs[nvme_admin_keep_alive]		= cpu_to_le32(1 << 0);
+
+	log->iocs[nvme_cmd_read]		= cpu_to_le32(1 << 0);
+	log->iocs[nvme_cmd_write]		= cpu_to_le32(1 << 0);
+	log->iocs[nvme_cmd_flush]		= cpu_to_le32(1 << 0);
+	log->iocs[nvme_cmd_dsm]			= cpu_to_le32(1 << 0);
+	log->iocs[nvme_cmd_write_zeroes]	= cpu_to_le32(1 << 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void nvmet_get_cmd_effects_zns(struct nvme_effects_log *log)
 {
+<<<<<<< HEAD
 	log->iocs[nvme_cmd_zone_append] =
 	log->iocs[nvme_cmd_zone_mgmt_send] =
 		cpu_to_le32(NVME_CMD_EFFECTS_CSUPP | NVME_CMD_EFFECTS_LBCC);
 	log->iocs[nvme_cmd_zone_mgmt_recv] =
 		cpu_to_le32(NVME_CMD_EFFECTS_CSUPP);
+=======
+	log->iocs[nvme_cmd_zone_append]		= cpu_to_le32(1 << 0);
+	log->iocs[nvme_cmd_zone_mgmt_send]	= cpu_to_le32(1 << 0);
+	log->iocs[nvme_cmd_zone_mgmt_recv]	= cpu_to_le32(1 << 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void nvmet_execute_get_log_cmd_effects_ns(struct nvmet_req *req)
@@ -375,9 +397,13 @@ static void nvmet_execute_identify_ctrl(struct nvmet_req *req)
 	memcpy_and_pad(id->mn, sizeof(id->mn), subsys->model_number,
 		       strlen(subsys->model_number), ' ');
 	memcpy_and_pad(id->fr, sizeof(id->fr),
+<<<<<<< HEAD
 		       subsys->firmware_rev, strlen(subsys->firmware_rev), ' ');
 
 	put_unaligned_le24(subsys->ieee_oui, id->ieee);
+=======
+		       UTS_RELEASE, strlen(UTS_RELEASE), ' ');
+>>>>>>> b7ba80a49124 (Commit)
 
 	id->rab = 6;
 
@@ -386,6 +412,14 @@ static void nvmet_execute_identify_ctrl(struct nvmet_req *req)
 	else
 		id->cntrltype = NVME_CTRL_IO;
 
+<<<<<<< HEAD
+=======
+	/*
+	 * XXX: figure out how we can assign a IEEE OUI, but until then
+	 * the safest is to leave it as zeroes.
+	 */
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* we support multiple ports, multiples hosts and ANA: */
 	id->cmic = NVME_CTRL_CMIC_MULTI_PORT | NVME_CTRL_CMIC_MULTI_CTRL |
 		NVME_CTRL_CMIC_ANA;
@@ -566,7 +600,11 @@ static void nvmet_execute_identify_ns(struct nvmet_req *req)
 	}
 
 	if (req->ns->readonly)
+<<<<<<< HEAD
 		id->nsattr |= NVME_NS_ATTR_RO;
+=======
+		id->nsattr |= (1 << 0);
+>>>>>>> b7ba80a49124 (Commit)
 done:
 	if (!status)
 		status = nvmet_copy_to_sgl(req, 0, id, sizeof(*id));
@@ -840,7 +878,11 @@ void nvmet_execute_set_features(struct nvmet_req *req)
 	u16 nsqr;
 	u16 ncqr;
 
+<<<<<<< HEAD
 	if (!nvmet_check_data_len_lte(req, 0))
+=======
+	if (!nvmet_check_transfer_len(req, 0))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	switch (cdw10 & 0xff) {

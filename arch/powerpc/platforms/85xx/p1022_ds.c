@@ -549,9 +549,23 @@ static void __init p1022_ds_setup_arch(void)
 
 machine_arch_initcall(p1022_ds, mpc85xx_common_publish_devices);
 
+<<<<<<< HEAD
 define_machine(p1022_ds) {
 	.name			= "P1022 DS",
 	.compatible		= "fsl,p1022ds",
+=======
+/*
+ * Called very early, device-tree isn't unflattened
+ */
+static int __init p1022_ds_probe(void)
+{
+	return of_machine_is_compatible("fsl,p1022ds");
+}
+
+define_machine(p1022_ds) {
+	.name			= "P1022 DS",
+	.probe			= p1022_ds_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.setup_arch		= p1022_ds_setup_arch,
 	.init_IRQ		= p1022_ds_pic_init,
 #ifdef CONFIG_PCI
@@ -559,5 +573,9 @@ define_machine(p1022_ds) {
 	.pcibios_fixup_phb	= fsl_pcibios_fixup_phb,
 #endif
 	.get_irq		= mpic_get_irq,
+<<<<<<< HEAD
+=======
+	.calibrate_decr		= generic_calibrate_decr,
+>>>>>>> b7ba80a49124 (Commit)
 	.progress		= udbg_progress,
 };

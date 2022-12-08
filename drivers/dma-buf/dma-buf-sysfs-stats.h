@@ -13,7 +13,11 @@
 int dma_buf_init_sysfs_statistics(void);
 void dma_buf_uninit_sysfs_statistics(void);
 
+<<<<<<< HEAD
 int dma_buf_stats_setup(struct dma_buf *dmabuf, struct file *file);
+=======
+int dma_buf_stats_setup(struct dma_buf *dmabuf);
+>>>>>>> b7ba80a49124 (Commit)
 
 void dma_buf_stats_teardown(struct dma_buf *dmabuf);
 #else
@@ -25,7 +29,11 @@ static inline int dma_buf_init_sysfs_statistics(void)
 
 static inline void dma_buf_uninit_sysfs_statistics(void) {}
 
+<<<<<<< HEAD
 static inline int dma_buf_stats_setup(struct dma_buf *dmabuf, struct file *file)
+=======
+static inline int dma_buf_stats_setup(struct dma_buf *dmabuf)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return 0;
 }

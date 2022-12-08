@@ -153,7 +153,11 @@ show_chgmode(struct device *dev, struct device_attribute *attr, char *buf)
 	u8 mbcs2 = pcf50633_reg_read(mbc->pcf, PCF50633_REG_MBCS2);
 	u8 chgmod = (mbcs2 & PCF50633_MBCS2_MBC_MASK);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", chgmod);
+=======
+	return sprintf(buf, "%d\n", chgmod);
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR(chgmode, S_IRUGO, show_chgmode, NULL);
 
@@ -174,7 +178,11 @@ show_usblim(struct device *dev, struct device_attribute *attr, char *buf)
 	else
 		ma = 0;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n", ma);
+=======
+	return sprintf(buf, "%u\n", ma);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t set_usblim(struct device *dev,
@@ -207,7 +215,11 @@ show_chglim(struct device *dev, struct device_attribute *attr, char *buf)
 
 	ma = (mbc->pcf->pdata->charger_reference_current_ma *  mbcc5) >> 8;
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n", ma);
+=======
+	return sprintf(buf, "%u\n", ma);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t set_chglim(struct device *dev,

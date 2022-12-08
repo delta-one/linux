@@ -148,7 +148,11 @@ xen_pv_trap asm_exc_page_fault
 xen_pv_trap asm_exc_spurious_interrupt_bug
 xen_pv_trap asm_exc_coprocessor_error
 xen_pv_trap asm_exc_alignment_check
+<<<<<<< HEAD
 #ifdef CONFIG_X86_CET
+=======
+#ifdef CONFIG_X86_KERNEL_IBT
+>>>>>>> b7ba80a49124 (Commit)
 xen_pv_trap asm_exc_control_protection
 #endif
 #ifdef CONFIG_X86_MCE
@@ -262,10 +266,17 @@ SYM_CODE_START(xen_entry_SYSCALL_compat)
 
 	/*
 	 * Neither Xen nor the kernel really knows what the old SS and
+<<<<<<< HEAD
 	 * CS were.  The kernel expects __USER_DS and __USER32_CS, so
 	 * report those values even though Xen will guess its own values.
 	 */
 	movq $__USER_DS, 4*8(%rsp)
+=======
+	 * CS were.  The kernel expects __USER32_DS and __USER32_CS, so
+	 * report those values even though Xen will guess its own values.
+	 */
+	movq $__USER32_DS, 4*8(%rsp)
+>>>>>>> b7ba80a49124 (Commit)
 	movq $__USER32_CS, 1*8(%rsp)
 
 	jmp entry_SYSCALL_compat_after_hwframe
@@ -284,10 +295,17 @@ SYM_CODE_START(xen_entry_SYSENTER_compat)
 
 	/*
 	 * Neither Xen nor the kernel really knows what the old SS and
+<<<<<<< HEAD
 	 * CS were.  The kernel expects __USER_DS and __USER32_CS, so
 	 * report those values even though Xen will guess its own values.
 	 */
 	movq $__USER_DS, 4*8(%rsp)
+=======
+	 * CS were.  The kernel expects __USER32_DS and __USER32_CS, so
+	 * report those values even though Xen will guess its own values.
+	 */
+	movq $__USER32_DS, 4*8(%rsp)
+>>>>>>> b7ba80a49124 (Commit)
 	movq $__USER32_CS, 1*8(%rsp)
 
 	jmp entry_SYSENTER_compat_after_hwframe

@@ -645,7 +645,11 @@ static void power_down(void)
 	int error;
 
 	if (hibernation_mode == HIBERNATION_SUSPEND) {
+<<<<<<< HEAD
 		error = suspend_devices_and_enter(mem_sleep_current);
+=======
+		error = suspend_devices_and_enter(PM_SUSPEND_MEM);
+>>>>>>> b7ba80a49124 (Commit)
 		if (error) {
 			hibernation_mode = hibernation_ops ?
 						HIBERNATION_PLATFORM :

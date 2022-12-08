@@ -308,6 +308,10 @@ smb3_fs_context_dup(struct smb3_fs_context *new_ctx, struct smb3_fs_context *ctx
 {
 	memcpy(new_ctx, ctx, sizeof(*ctx));
 	new_ctx->prepath = NULL;
+<<<<<<< HEAD
+=======
+	new_ctx->mount_options = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	new_ctx->nodename = NULL;
 	new_ctx->username = NULL;
 	new_ctx->password = NULL;
@@ -316,11 +320,18 @@ smb3_fs_context_dup(struct smb3_fs_context *new_ctx, struct smb3_fs_context *ctx
 	new_ctx->UNC = NULL;
 	new_ctx->source = NULL;
 	new_ctx->iocharset = NULL;
+<<<<<<< HEAD
 	new_ctx->leaf_fullpath = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Make sure to stay in sync with smb3_cleanup_fs_context_contents()
 	 */
 	DUP_CTX_STR(prepath);
+<<<<<<< HEAD
+=======
+	DUP_CTX_STR(mount_options);
+>>>>>>> b7ba80a49124 (Commit)
 	DUP_CTX_STR(username);
 	DUP_CTX_STR(password);
 	DUP_CTX_STR(server_hostname);
@@ -329,7 +340,10 @@ smb3_fs_context_dup(struct smb3_fs_context *new_ctx, struct smb3_fs_context *ctx
 	DUP_CTX_STR(domainname);
 	DUP_CTX_STR(nodename);
 	DUP_CTX_STR(iocharset);
+<<<<<<< HEAD
 	DUP_CTX_STR(leaf_fullpath);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -569,12 +583,23 @@ static const struct fs_context_operations smb3_fs_context_ops = {
 static int smb3_fs_context_parse_monolithic(struct fs_context *fc,
 					   void *data)
 {
+<<<<<<< HEAD
+=======
+	struct smb3_fs_context *ctx = smb3_fc2context(fc);
+>>>>>>> b7ba80a49124 (Commit)
 	char *options = data, *key;
 	int ret = 0;
 
 	if (!options)
 		return 0;
 
+<<<<<<< HEAD
+=======
+	ctx->mount_options = kstrdup(data, GFP_KERNEL);
+	if (ctx->mount_options == NULL)
+		return -ENOMEM;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = security_sb_eat_lsm_opts(options, &fc->security);
 	if (ret)
 		return ret;
@@ -786,6 +811,7 @@ do {									\
 	cifs_sb->ctx->field = NULL;					\
 } while (0)
 
+<<<<<<< HEAD
 #define STEAL_STRING_SENSITIVE(cifs_sb, ctx, field)			\
 do {									\
 	kfree_sensitive(ctx->field);					\
@@ -793,6 +819,8 @@ do {									\
 	cifs_sb->ctx->field = NULL;					\
 } while (0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int smb3_reconfigure(struct fs_context *fc)
 {
 	struct smb3_fs_context *ctx = smb3_fc2context(fc);
@@ -813,7 +841,11 @@ static int smb3_reconfigure(struct fs_context *fc)
 	STEAL_STRING(cifs_sb, ctx, UNC);
 	STEAL_STRING(cifs_sb, ctx, source);
 	STEAL_STRING(cifs_sb, ctx, username);
+<<<<<<< HEAD
 	STEAL_STRING_SENSITIVE(cifs_sb, ctx, password);
+=======
+	STEAL_STRING(cifs_sb, ctx, password);
+>>>>>>> b7ba80a49124 (Commit)
 	STEAL_STRING(cifs_sb, ctx, domainname);
 	STEAL_STRING(cifs_sb, ctx, nodename);
 	STEAL_STRING(cifs_sb, ctx, iocharset);
@@ -879,21 +911,32 @@ static int smb3_fs_context_parse_param(struct fs_context *fc,
 		ctx->nodfs = 1;
 		break;
 	case Opt_hard:
+<<<<<<< HEAD
 		if (result.negated) {
 			if (ctx->retry == 1)
 				cifs_dbg(VFS, "conflicting hard vs. soft mount options\n");
 			ctx->retry = 0;
 		} else
+=======
+		if (result.negated)
+			ctx->retry = 0;
+		else
+>>>>>>> b7ba80a49124 (Commit)
 			ctx->retry = 1;
 		break;
 	case Opt_soft:
 		if (result.negated)
 			ctx->retry = 1;
+<<<<<<< HEAD
 		else {
 			if (ctx->retry == 1)
 				cifs_dbg(VFS, "conflicting hard vs soft mount options\n");
 			ctx->retry = 0;
 		}
+=======
+		else
+			ctx->retry = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case Opt_mapposix:
 		if (result.negated)
@@ -1169,7 +1212,11 @@ static int smb3_fs_context_parse_param(struct fs_context *fc,
 		}
 		break;
 	case Opt_pass:
+<<<<<<< HEAD
 		kfree_sensitive(ctx->password);
+=======
+		kfree(ctx->password);
+>>>>>>> b7ba80a49124 (Commit)
 		ctx->password = NULL;
 		if (strlen(param->string) == 0)
 			break;
@@ -1477,7 +1524,10 @@ static int smb3_fs_context_parse_param(struct fs_context *fc,
 	return 0;
 
  cifs_parse_mount_err:
+<<<<<<< HEAD
 	kfree_sensitive(ctx->password);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return -EINVAL;
 }
 
@@ -1576,6 +1626,11 @@ smb3_cleanup_fs_context_contents(struct smb3_fs_context *ctx)
 	/*
 	 * Make sure this stays in sync with smb3_fs_context_dup()
 	 */
+<<<<<<< HEAD
+=======
+	kfree(ctx->mount_options);
+	ctx->mount_options = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(ctx->username);
 	ctx->username = NULL;
 	kfree_sensitive(ctx->password);
@@ -1594,8 +1649,11 @@ smb3_cleanup_fs_context_contents(struct smb3_fs_context *ctx)
 	ctx->iocharset = NULL;
 	kfree(ctx->prepath);
 	ctx->prepath = NULL;
+<<<<<<< HEAD
 	kfree(ctx->leaf_fullpath);
 	ctx->leaf_fullpath = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void

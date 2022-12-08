@@ -113,7 +113,11 @@ show_uncore_perf_status(current_freq_khz);
 		struct uncore_data *data = container_of(attr, struct uncore_data,\
 							  member_name##_dev_attr);\
 									\
+<<<<<<< HEAD
 		return sysfs_emit(buf, "%u\n",				\
+=======
+		return scnprintf(buf, PAGE_SIZE, "%u\n",		\
+>>>>>>> b7ba80a49124 (Commit)
 				 data->member_name);			\
 	}								\
 
@@ -224,6 +228,7 @@ int uncore_freq_common_init(int (*read_control_freq)(struct uncore_data *data, u
 	uncore_write = write_control_freq;
 	uncore_read_freq = read_freq;
 
+<<<<<<< HEAD
 	if (!uncore_root_kobj) {
 		struct device *dev_root = bus_get_dev_root(&cpu_subsys);
 
@@ -233,6 +238,11 @@ int uncore_freq_common_init(int (*read_control_freq)(struct uncore_data *data, u
 			put_device(dev_root);
 		}
 	}
+=======
+	if (!uncore_root_kobj)
+		uncore_root_kobj = kobject_create_and_add("intel_uncore_frequency",
+							    &cpu_subsys.dev_root->kobj);
+>>>>>>> b7ba80a49124 (Commit)
 	if (uncore_root_kobj)
 		++uncore_instance_count;
 	mutex_unlock(&uncore_lock);

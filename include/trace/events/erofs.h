@@ -19,6 +19,7 @@ struct erofs_map_blocks;
 		{ 1,		"DIR" })
 
 #define show_map_flags(flags) __print_flags(flags, "|",	\
+<<<<<<< HEAD
 	{ EROFS_GET_BLOCKS_FIEMAP,	"FIEMAP" },	\
 	{ EROFS_GET_BLOCKS_READMORE,	"READMORE" },	\
 	{ EROFS_GET_BLOCKS_FINDTAIL,	"FINDTAIL" })
@@ -30,6 +31,14 @@ struct erofs_map_blocks;
 	{ EROFS_MAP_FULL_MAPPED,	"F" },		\
 	{ EROFS_MAP_FRAGMENT,		"R" },		\
 	{ EROFS_MAP_PARTIAL_REF,	"P" })
+=======
+	{ EROFS_GET_BLOCKS_RAW,	"RAW" })
+
+#define show_mflags(flags) __print_flags(flags, "",	\
+	{ EROFS_MAP_MAPPED,	"M" },			\
+	{ EROFS_MAP_META,	"I" },			\
+	{ EROFS_MAP_ENCODED,	"E" })
+>>>>>>> b7ba80a49124 (Commit)
 
 TRACE_EVENT(erofs_lookup,
 
@@ -58,19 +67,29 @@ TRACE_EVENT(erofs_lookup,
 );
 
 TRACE_EVENT(erofs_fill_inode,
+<<<<<<< HEAD
 	TP_PROTO(struct inode *inode),
 	TP_ARGS(inode),
+=======
+	TP_PROTO(struct inode *inode, int isdir),
+	TP_ARGS(inode, isdir),
+>>>>>>> b7ba80a49124 (Commit)
 
 	TP_STRUCT__entry(
 		__field(dev_t,		dev	)
 		__field(erofs_nid_t,	nid	)
 		__field(erofs_blk_t,	blkaddr )
 		__field(unsigned int,	ofs	)
+<<<<<<< HEAD
+=======
+		__field(int,		isdir	)
+>>>>>>> b7ba80a49124 (Commit)
 	),
 
 	TP_fast_assign(
 		__entry->dev		= inode->i_sb->s_dev;
 		__entry->nid		= EROFS_I(inode)->nid;
+<<<<<<< HEAD
 		__entry->blkaddr	= erofs_blknr(inode->i_sb, erofs_iloc(inode));
 		__entry->ofs		= erofs_blkoff(inode->i_sb, erofs_iloc(inode));
 	),
@@ -78,6 +97,17 @@ TRACE_EVENT(erofs_fill_inode,
 	TP_printk("dev = (%d,%d), nid = %llu, blkaddr %u ofs %u",
 		  show_dev_nid(__entry),
 		  __entry->blkaddr, __entry->ofs)
+=======
+		__entry->blkaddr	= erofs_blknr(iloc(EROFS_I_SB(inode), __entry->nid));
+		__entry->ofs		= erofs_blkoff(iloc(EROFS_I_SB(inode), __entry->nid));
+		__entry->isdir		= isdir;
+	),
+
+	TP_printk("dev = (%d,%d), nid = %llu, blkaddr %u ofs %u, isdir %d",
+		  show_dev_nid(__entry),
+		  __entry->blkaddr, __entry->ofs,
+		  __entry->isdir)
+>>>>>>> b7ba80a49124 (Commit)
 );
 
 TRACE_EVENT(erofs_readpage,

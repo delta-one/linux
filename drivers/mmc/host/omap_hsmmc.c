@@ -1736,18 +1736,32 @@ static struct omap_hsmmc_platform_data *of_get_hsmmc_pdata(struct device *dev)
 	if (legacy && legacy->name)
 		pdata->name = legacy->name;
 
+<<<<<<< HEAD
 	if (of_property_read_bool(np, "ti,dual-volt"))
 		pdata->controller_flags |= OMAP_HSMMC_SUPPORTS_DUAL_VOLT;
 
 	if (of_property_read_bool(np, "ti,non-removable")) {
+=======
+	if (of_find_property(np, "ti,dual-volt", NULL))
+		pdata->controller_flags |= OMAP_HSMMC_SUPPORTS_DUAL_VOLT;
+
+	if (of_find_property(np, "ti,non-removable", NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 		pdata->nonremovable = true;
 		pdata->no_regulator_off_init = true;
 	}
 
+<<<<<<< HEAD
 	if (of_property_read_bool(np, "ti,needs-special-reset"))
 		pdata->features |= HSMMC_HAS_UPDATED_RESET;
 
 	if (of_property_read_bool(np, "ti,needs-special-hs-handling"))
+=======
+	if (of_find_property(np, "ti,needs-special-reset", NULL))
+		pdata->features |= HSMMC_HAS_UPDATED_RESET;
+
+	if (of_find_property(np, "ti,needs-special-hs-handling", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		pdata->features |= HSMMC_HAS_HSPE_SUPPORT;
 
 	return pdata;
@@ -1946,9 +1960,13 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
 	if (!ret)
 		mmc->caps |= MMC_CAP_SDIO_IRQ;
 
+<<<<<<< HEAD
 	ret = mmc_add_host(mmc);
 	if (ret)
 		goto err_irq;
+=======
+	mmc_add_host(mmc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (mmc_pdata(host)->name != NULL) {
 		ret = device_create_file(&mmc->class_dev, &dev_attr_slot_name);

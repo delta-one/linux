@@ -100,12 +100,20 @@ examples:
                 compatible = "maxim,max77650-regulator";
 
                 max77650_ldo: regulator-ldo {
+<<<<<<< HEAD
+=======
+                    regulator-compatible = "ldo";
+>>>>>>> b7ba80a49124 (Commit)
                     regulator-name = "max77650-ldo";
                     regulator-min-microvolt = <1350000>;
                     regulator-max-microvolt = <2937500>;
                 };
 
                 max77650_sbb0: regulator-sbb0 {
+<<<<<<< HEAD
+=======
+                    regulator-compatible = "sbb0";
+>>>>>>> b7ba80a49124 (Commit)
                     regulator-name = "max77650-sbb0";
                     regulator-min-microvolt = <800000>;
                     regulator-max-microvolt = <1587500>;

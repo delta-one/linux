@@ -33,11 +33,19 @@
 #define BUILD_TIMESTAMP
 #endif
 
+<<<<<<< HEAD
 #define DRIVER_VERSION		"2.1.20-035"
 #define DRIVER_MAJOR		2
 #define DRIVER_MINOR		1
 #define DRIVER_RELEASE		20
 #define DRIVER_REVISION		35
+=======
+#define DRIVER_VERSION		"2.1.18-045"
+#define DRIVER_MAJOR		2
+#define DRIVER_MINOR		1
+#define DRIVER_RELEASE		18
+#define DRIVER_REVISION		45
+>>>>>>> b7ba80a49124 (Commit)
 
 #define DRIVER_NAME		"Microchip SmartPQI Driver (v" \
 				DRIVER_VERSION BUILD_TIMESTAMP ")"
@@ -678,6 +686,7 @@ static inline void pqi_reinit_io_request(struct pqi_io_request *io_request)
 	io_request->raid_bypass = false;
 }
 
+<<<<<<< HEAD
 static inline struct pqi_io_request *pqi_alloc_io_request(struct pqi_ctrl_info *ctrl_info, struct scsi_cmnd *scmd)
 {
 	struct pqi_io_request *io_request;
@@ -708,6 +717,25 @@ static inline struct pqi_io_request *pqi_alloc_io_request(struct pqi_ctrl_info *
 		}
 	}
 
+=======
+static struct pqi_io_request *pqi_alloc_io_request(
+	struct pqi_ctrl_info *ctrl_info)
+{
+	struct pqi_io_request *io_request;
+	u16 i = ctrl_info->next_io_request_slot;	/* benignly racy */
+
+	while (1) {
+		io_request = &ctrl_info->io_request_pool[i];
+		if (atomic_inc_return(&io_request->refcount) == 1)
+			break;
+		atomic_dec(&io_request->refcount);
+		i = (i + 1) % ctrl_info->max_io_slots;
+	}
+
+	/* benignly racy */
+	ctrl_info->next_io_request_slot = (i + 1) % ctrl_info->max_io_slots;
+
+>>>>>>> b7ba80a49124 (Commit)
 	pqi_reinit_io_request(io_request);
 
 	return io_request;
@@ -1259,8 +1287,12 @@ static int pqi_get_device_lists(struct pqi_ctrl_info *ctrl_info,
 			"report logical LUNs failed\n");
 
 	/*
+<<<<<<< HEAD
 	 * Tack the controller itself onto the end of the logical device list
 	 * by adding a list entry that is all zeros.
+=======
+	 * Tack the controller itself onto the end of the logical device list.
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 
 	logdev_data = *logdev_list;
@@ -1624,7 +1656,13 @@ static int pqi_get_physical_device_info(struct pqi_ctrl_info *ctrl_info,
 		&id_phys->alternate_paths_phys_connector,
 		sizeof(device->phys_connector));
 	device->bay = id_phys->phys_bay_in_box;
+<<<<<<< HEAD
 	device->lun_count = id_phys->multi_lun_device_lun_count;
+=======
+	device->multi_lun_device_lun_count = id_phys->multi_lun_device_lun_count;
+	if (!device->multi_lun_device_lun_count)
+		device->multi_lun_device_lun_count = 1;
+>>>>>>> b7ba80a49124 (Commit)
 	if ((id_phys->even_more_flags & PQI_DEVICE_PHY_MAP_SUPPORTED) &&
 		id_phys->phy_count)
 		device->phy_id =
@@ -1758,7 +1796,11 @@ out:
 	return offline;
 }
 
+<<<<<<< HEAD
 static int pqi_get_device_info_phys_logical(struct pqi_ctrl_info *ctrl_info,
+=======
+static int pqi_get_device_info(struct pqi_ctrl_info *ctrl_info,
+>>>>>>> b7ba80a49124 (Commit)
 	struct pqi_scsi_dev *device,
 	struct bmic_identify_physical_device *id_phys)
 {
@@ -1775,6 +1817,7 @@ static int pqi_get_device_info_phys_logical(struct pqi_ctrl_info *ctrl_info,
 	return rc;
 }
 
+<<<<<<< HEAD
 static int pqi_get_device_info(struct pqi_ctrl_info *ctrl_info,
 	struct pqi_scsi_dev *device,
 	struct bmic_identify_physical_device *id_phys)
@@ -1789,6 +1832,8 @@ static int pqi_get_device_info(struct pqi_ctrl_info *ctrl_info,
 	return rc;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void pqi_show_volume_status(struct pqi_ctrl_info *ctrl_info,
 	struct pqi_scsi_dev *device)
 {
@@ -1923,7 +1968,11 @@ static inline void pqi_remove_device(struct pqi_ctrl_info *ctrl_info, struct pqi
 	int rc;
 	int lun;
 
+<<<<<<< HEAD
 	for (lun = 0; lun < device->lun_count; lun++) {
+=======
+	for (lun = 0; lun < device->multi_lun_device_lun_count; lun++) {
+>>>>>>> b7ba80a49124 (Commit)
 		rc = pqi_device_wait_for_pending_io(ctrl_info, device, lun,
 			PQI_REMOVE_DEVICE_PENDING_IO_TIMEOUT_MSECS);
 		if (rc)
@@ -2102,7 +2151,10 @@ static void pqi_scsi_update_device(struct pqi_ctrl_info *ctrl_info,
 	existing_device->sas_address = new_device->sas_address;
 	existing_device->queue_depth = new_device->queue_depth;
 	existing_device->device_offline = false;
+<<<<<<< HEAD
 	existing_device->lun_count = new_device->lun_count;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (pqi_is_logical_device(existing_device)) {
 		existing_device->is_external_raid_device = new_device->is_external_raid_device;
@@ -2135,6 +2187,13 @@ static void pqi_scsi_update_device(struct pqi_ctrl_info *ctrl_info,
 		existing_device->phy_connected_dev_type = new_device->phy_connected_dev_type;
 		memcpy(existing_device->box, new_device->box, sizeof(existing_device->box));
 		memcpy(existing_device->phys_connector, new_device->phys_connector, sizeof(existing_device->phys_connector));
+<<<<<<< HEAD
+=======
+
+		existing_device->multi_lun_device_lun_count = new_device->multi_lun_device_lun_count;
+		if (existing_device->multi_lun_device_lun_count == 0)
+			existing_device->multi_lun_device_lun_count = 1;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -4609,7 +4668,11 @@ static int pqi_submit_raid_request_synchronous(struct pqi_ctrl_info *ctrl_info,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	io_request = pqi_alloc_io_request(ctrl_info, NULL);
+=======
+	io_request = pqi_alloc_io_request(ctrl_info);
+>>>>>>> b7ba80a49124 (Commit)
 
 	put_unaligned_le16(io_request->index,
 		&(((struct pqi_raid_path_request *)request)->request_id));
@@ -5256,6 +5319,10 @@ static void pqi_calculate_queue_resources(struct pqi_ctrl_info *ctrl_info)
 	}
 
 	ctrl_info->num_queue_groups = num_queue_groups;
+<<<<<<< HEAD
+=======
+	ctrl_info->max_hw_queue_index = num_queue_groups - 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Make sure that the max. inbound IU length is an even multiple
@@ -5589,9 +5656,13 @@ static inline int pqi_raid_submit_scsi_cmd(struct pqi_ctrl_info *ctrl_info,
 {
 	struct pqi_io_request *io_request;
 
+<<<<<<< HEAD
 	io_request = pqi_alloc_io_request(ctrl_info, scmd);
 	if (!io_request)
 		return SCSI_MLQUEUE_HOST_BUSY;
+=======
+	io_request = pqi_alloc_io_request(ctrl_info);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return pqi_raid_submit_scsi_cmd_with_io_request(ctrl_info, io_request,
 		device, scmd, queue_group);
@@ -5695,9 +5766,13 @@ static int pqi_aio_submit_io(struct pqi_ctrl_info *ctrl_info,
 	struct pqi_scsi_dev *device;
 
 	device = scmd->device->hostdata;
+<<<<<<< HEAD
 	io_request = pqi_alloc_io_request(ctrl_info, scmd);
 	if (!io_request)
 		return SCSI_MLQUEUE_HOST_BUSY;
+=======
+	io_request = pqi_alloc_io_request(ctrl_info);
+>>>>>>> b7ba80a49124 (Commit)
 	io_request->io_complete_callback = pqi_aio_io_complete;
 	io_request->scmd = scmd;
 	io_request->raid_bypass = raid_bypass;
@@ -5769,10 +5844,14 @@ static  int pqi_aio_submit_r1_write_io(struct pqi_ctrl_info *ctrl_info,
 	struct pqi_io_request *io_request;
 	struct pqi_aio_r1_path_request *r1_request;
 
+<<<<<<< HEAD
 	io_request = pqi_alloc_io_request(ctrl_info, scmd);
 	if (!io_request)
 		return SCSI_MLQUEUE_HOST_BUSY;
 
+=======
+	io_request = pqi_alloc_io_request(ctrl_info);
+>>>>>>> b7ba80a49124 (Commit)
 	io_request->io_complete_callback = pqi_aio_io_complete;
 	io_request->scmd = scmd;
 	io_request->raid_bypass = true;
@@ -5830,9 +5909,13 @@ static int pqi_aio_submit_r56_write_io(struct pqi_ctrl_info *ctrl_info,
 	struct pqi_io_request *io_request;
 	struct pqi_aio_r56_path_request *r56_request;
 
+<<<<<<< HEAD
 	io_request = pqi_alloc_io_request(ctrl_info, scmd);
 	if (!io_request)
 		return SCSI_MLQUEUE_HOST_BUSY;
+=======
+	io_request = pqi_alloc_io_request(ctrl_info);
+>>>>>>> b7ba80a49124 (Commit)
 	io_request->io_complete_callback = pqi_aio_io_complete;
 	io_request->scmd = scmd;
 	io_request->raid_bypass = true;
@@ -5891,10 +5974,20 @@ static int pqi_aio_submit_r56_write_io(struct pqi_ctrl_info *ctrl_info,
 static inline u16 pqi_get_hw_queue(struct pqi_ctrl_info *ctrl_info,
 	struct scsi_cmnd *scmd)
 {
+<<<<<<< HEAD
 	/*
 	 * We are setting host_tagset = 1 during init.
 	 */
 	return blk_mq_unique_tag_to_hwq(blk_mq_unique_tag(scsi_cmd_to_rq(scmd)));
+=======
+	u16 hw_queue;
+
+	hw_queue = blk_mq_unique_tag_to_hwq(blk_mq_unique_tag(scsi_cmd_to_rq(scmd)));
+	if (hw_queue > ctrl_info->max_hw_queue_index)
+		hw_queue = 0;
+
+	return hw_queue;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline bool pqi_is_bypass_eligible_request(struct scsi_cmnd *scmd)
@@ -6296,7 +6389,11 @@ static int pqi_lun_reset(struct pqi_ctrl_info *ctrl_info, struct scsi_cmnd *scmd
 	struct pqi_scsi_dev *device;
 
 	device = scmd->device->hostdata;
+<<<<<<< HEAD
 	io_request = pqi_alloc_io_request(ctrl_info, NULL);
+=======
+	io_request = pqi_alloc_io_request(ctrl_info);
+>>>>>>> b7ba80a49124 (Commit)
 	io_request->io_complete_callback = pqi_lun_reset_complete;
 	io_request->context = &wait;
 
@@ -6512,12 +6609,15 @@ static void pqi_slave_destroy(struct scsi_device *sdev)
 		return;
 	}
 
+<<<<<<< HEAD
 	device->lun_count--;
 	if (device->lun_count > 0) {
 		mutex_unlock(&ctrl_info->scan_mutex);
 		return;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_irqsave(&ctrl_info->scsi_device_list_lock, flags);
 	list_del(&device->scsi_device_list_entry);
 	spin_unlock_irqrestore(&ctrl_info->scsi_device_list_lock, flags);
@@ -7271,7 +7371,11 @@ static ssize_t pqi_raid_level_show(struct device *dev,
 		return -ENODEV;
 	}
 
+<<<<<<< HEAD
 	if (pqi_is_logical_device(device) && device->devtype == TYPE_DISK)
+=======
+	if (pqi_is_logical_device(device))
+>>>>>>> b7ba80a49124 (Commit)
 		raid_level = pqi_raid_level_to_string(device->raid_level);
 	else
 		raid_level = "N/A";
@@ -7439,6 +7543,10 @@ static int pqi_register_scsi(struct pqi_ctrl_info *ctrl_info)
 	shost->max_channel = PQI_MAX_BUS;
 	shost->max_cmd_len = MAX_COMMAND_SIZE;
 	shost->max_lun = PQI_MAX_LUNS_PER_DEVICE;
+<<<<<<< HEAD
+=======
+	shost->max_lun = ~0;
+>>>>>>> b7ba80a49124 (Commit)
 	shost->max_id = ~0;
 	shost->max_sectors = ctrl_info->max_sectors;
 	shost->can_queue = ctrl_info->scsi_ml_can_queue;
@@ -8005,7 +8113,11 @@ static int pqi_process_config_table(struct pqi_ctrl_info *ctrl_info)
 	struct pqi_config_table *config_table;
 	struct pqi_config_table_section_header *section;
 	struct pqi_config_table_section_info section_info;
+<<<<<<< HEAD
 	struct pqi_config_table_section_info feature_section_info = {0};
+=======
+	struct pqi_config_table_section_info feature_section_info;
+>>>>>>> b7ba80a49124 (Commit)
 
 	table_length = ctrl_info->config_table_length;
 	if (table_length == 0)
@@ -9041,7 +9153,10 @@ static void pqi_pci_remove(struct pci_dev *pci_dev)
 {
 	struct pqi_ctrl_info *ctrl_info;
 	u16 vendor_id;
+<<<<<<< HEAD
 	int rc;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	ctrl_info = pci_get_drvdata(pci_dev);
 	if (!ctrl_info)
@@ -9053,6 +9168,7 @@ static void pqi_pci_remove(struct pci_dev *pci_dev)
 	else
 		ctrl_info->ctrl_removal_state = PQI_CTRL_GRACEFUL_REMOVAL;
 
+<<<<<<< HEAD
 	if (ctrl_info->ctrl_removal_state == PQI_CTRL_GRACEFUL_REMOVAL) {
 		rc = pqi_flush_cache(ctrl_info, RESTART);
 		if (rc)
@@ -9060,6 +9176,8 @@ static void pqi_pci_remove(struct pci_dev *pci_dev)
 				"unable to flush controller cache during remove\n");
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pqi_remove_ctrl(ctrl_info);
 }
 
@@ -9345,10 +9463,13 @@ static const struct pci_device_id pqi_pci_id_table[] = {
 	},
 	{
 		PCI_DEVICE_SUB(PCI_VENDOR_ID_ADAPTEC2, 0x028f,
+<<<<<<< HEAD
 			       0x193d, 0x110b)
 	},
 	{
 		PCI_DEVICE_SUB(PCI_VENDOR_ID_ADAPTEC2, 0x028f,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			       0x193d, 0x8460)
 	},
 	{
@@ -9449,6 +9570,7 @@ static const struct pci_device_id pqi_pci_id_table[] = {
 	},
 	{
 		PCI_DEVICE_SUB(PCI_VENDOR_ID_ADAPTEC2, 0x028f,
+<<<<<<< HEAD
 			       0x1bd4, 0x0086)
 	},
 	{
@@ -9465,6 +9587,8 @@ static const struct pci_device_id pqi_pci_id_table[] = {
 	},
 	{
 		PCI_DEVICE_SUB(PCI_VENDOR_ID_ADAPTEC2, 0x028f,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			       0x19e5, 0xd227)
 	},
 	{
@@ -9713,10 +9837,13 @@ static const struct pci_device_id pqi_pci_id_table[] = {
 	},
 	{
 		PCI_DEVICE_SUB(PCI_VENDOR_ID_ADAPTEC2, 0x028f,
+<<<<<<< HEAD
 			       PCI_VENDOR_ID_ADAPTEC2, 0x1475)
 	},
 	{
 		PCI_DEVICE_SUB(PCI_VENDOR_ID_ADAPTEC2, 0x028f,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			       PCI_VENDOR_ID_ADAPTEC2, 0x1480)
 	},
 	{
@@ -9773,6 +9900,7 @@ static const struct pci_device_id pqi_pci_id_table[] = {
 	},
 	{
 		PCI_DEVICE_SUB(PCI_VENDOR_ID_ADAPTEC2, 0x028f,
+<<<<<<< HEAD
 			       PCI_VENDOR_ID_ADAPTEC2, 0x14c3)
 	},
 	{
@@ -9781,6 +9909,8 @@ static const struct pci_device_id pqi_pci_id_table[] = {
 	},
 	{
 		PCI_DEVICE_SUB(PCI_VENDOR_ID_ADAPTEC2, 0x028f,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			       PCI_VENDOR_ID_ADAPTEC2, 0x14d0)
 	},
 	{
@@ -10017,6 +10147,7 @@ static const struct pci_device_id pqi_pci_id_table[] = {
 	},
 	{
 		PCI_DEVICE_SUB(PCI_VENDOR_ID_ADAPTEC2, 0x028f,
+<<<<<<< HEAD
 				0x1e93, 0x1000)
 	},
 	{
@@ -10029,6 +10160,8 @@ static const struct pci_device_id pqi_pci_id_table[] = {
 	},
 	{
 		PCI_DEVICE_SUB(PCI_VENDOR_ID_ADAPTEC2, 0x028f,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			       PCI_ANY_ID, PCI_ANY_ID)
 	},
 	{ 0 }

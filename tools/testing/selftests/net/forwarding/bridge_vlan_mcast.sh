@@ -59,9 +59,12 @@ switch_create()
 
 switch_destroy()
 {
+<<<<<<< HEAD
 	tc qdisc del dev $swp2 clsact
 	tc qdisc del dev $swp1 clsact
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ip link set dev $swp2 down
 	ip link set dev $swp1 down
 

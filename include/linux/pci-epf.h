@@ -17,6 +17,14 @@
 struct pci_epf;
 enum pci_epc_interface_type;
 
+<<<<<<< HEAD
+=======
+enum pci_notify_event {
+	CORE_INIT,
+	LINK_UP,
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 enum pci_barno {
 	NO_BAR = -1,
 	BAR_0,
@@ -68,6 +76,7 @@ struct pci_epf_ops {
 };
 
 /**
+<<<<<<< HEAD
  * struct pci_epf_event_ops - Callbacks for capturing the EPC events
  * @core_init: Callback for the EPC initialization complete event
  * @link_up: Callback for the EPC link up event
@@ -78,6 +87,8 @@ struct pci_epc_event_ops {
 };
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * struct pci_epf_driver - represents the PCI EPF driver
  * @probe: ops to perform when a new EPF device has been bound to the EPF driver
  * @remove: ops to perform when the binding between the EPF device and EPF
@@ -132,6 +143,10 @@ struct pci_epf_bar {
  * @epf_pf: the physical EPF device to which this virtual EPF device is bound
  * @driver: the EPF driver to which this EPF device is bound
  * @list: to add pci_epf as a list of PCI endpoint functions to pci_epc
+<<<<<<< HEAD
+=======
+ * @nb: notifier block to notify EPF of any EPC events (like linkup)
+>>>>>>> b7ba80a49124 (Commit)
  * @lock: mutex to protect pci_epf_ops
  * @sec_epc: the secondary EPC device to which this EPF device is bound
  * @sec_epc_list: to add pci_epf as list of PCI endpoint functions to secondary
@@ -143,7 +158,10 @@ struct pci_epf_bar {
  * @is_vf: true - virtual function, false - physical function
  * @vfunction_num_map: bitmap to manage virtual function number
  * @pci_vepf: list of virtual endpoint functions associated with this function
+<<<<<<< HEAD
  * @event_ops: Callbacks for capturing the EPC events
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct pci_epf {
 	struct device		dev;
@@ -159,6 +177,10 @@ struct pci_epf {
 	struct pci_epf		*epf_pf;
 	struct pci_epf_driver	*driver;
 	struct list_head	list;
+<<<<<<< HEAD
+=======
+	struct notifier_block   nb;
+>>>>>>> b7ba80a49124 (Commit)
 	/* mutex to protect against concurrent access of pci_epf_ops */
 	struct mutex		lock;
 
@@ -172,7 +194,10 @@ struct pci_epf {
 	unsigned int		is_vf;
 	unsigned long		vfunction_num_map;
 	struct list_head	pci_vepf;
+<<<<<<< HEAD
 	const struct pci_epc_event_ops *event_ops;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**

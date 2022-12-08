@@ -1268,11 +1268,15 @@ static int mon_bin_mmap(struct file *filp, struct vm_area_struct *vma)
 {
 	/* don't do anything here: "fault" will set up page table entries */
 	vma->vm_ops = &mon_bin_vm_ops;
+<<<<<<< HEAD
 
 	if (vma->vm_flags & VM_WRITE)
 		return -EPERM;
 
 	vm_flags_mod(vma, VM_DONTEXPAND | VM_DONTDUMP, VM_MAYWRITE);
+=======
+	vma->vm_flags |= VM_DONTEXPAND | VM_DONTDUMP;
+>>>>>>> b7ba80a49124 (Commit)
 	vma->vm_private_data = filp->private_data;
 	mon_bin_vma_open(vma);
 	return 0;
@@ -1379,7 +1383,11 @@ int __init mon_bin_init(void)
 {
 	int rc;
 
+<<<<<<< HEAD
 	mon_bin_class = class_create("usbmon");
+=======
+	mon_bin_class = class_create(THIS_MODULE, "usbmon");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(mon_bin_class)) {
 		rc = PTR_ERR(mon_bin_class);
 		goto err_class;

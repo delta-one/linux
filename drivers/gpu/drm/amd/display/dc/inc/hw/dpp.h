@@ -28,7 +28,10 @@
 #define __DAL_DPP_H__
 
 #include "transform.h"
+<<<<<<< HEAD
 #include "cursor_reg_cache.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 union defer_reg_writes {
 	struct {
@@ -59,9 +62,12 @@ struct dpp {
 
 	struct pwl_params shaper_params;
 	bool cm_bypass_mode;
+<<<<<<< HEAD
 
 	struct cursor_position_cache_dpp  pos;
 	struct cursor_attribute_cache_dpp att;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct dpp_input_csc_matrix {
@@ -70,6 +76,7 @@ struct dpp_input_csc_matrix {
 };
 
 static const struct dpp_input_csc_matrix __maybe_unused dpp_input_csc_matrix[] = {
+<<<<<<< HEAD
 	{ COLOR_SPACE_SRGB,
 		{ 0x2000, 0,      0,      0,
 		  0,      0x2000, 0,      0,
@@ -102,6 +109,25 @@ static const struct dpp_input_csc_matrix __maybe_unused dpp_input_csc_matrix[] =
 		{ 0x35E0, 0x255F, 0,      0xE2B3,
 		  0xEB20, 0x255F, 0xF9FD, 0xB1E,
 		  0,      0x255F, 0x44BD, 0xDB43 } }
+=======
+	{COLOR_SPACE_SRGB,
+		{0x2000, 0, 0, 0, 0, 0x2000, 0, 0, 0, 0, 0x2000, 0} },
+	{COLOR_SPACE_SRGB_LIMITED,
+		{0x2000, 0, 0, 0, 0, 0x2000, 0, 0, 0, 0, 0x2000, 0} },
+	{COLOR_SPACE_YCBCR601,
+		{0x2cdd, 0x2000, 0, 0xe991, 0xe926, 0x2000, 0xf4fd, 0x10ef,
+						0, 0x2000, 0x38b4, 0xe3a6} },
+	{COLOR_SPACE_YCBCR601_LIMITED,
+		{0x3353, 0x2568, 0, 0xe400, 0xe5dc, 0x2568, 0xf367, 0x1108,
+						0, 0x2568, 0x40de, 0xdd3a} },
+	{COLOR_SPACE_YCBCR709,
+		{0x3265, 0x2000, 0, 0xe6ce, 0xf105, 0x2000, 0xfa01, 0xa7d, 0,
+						0x2000, 0x3b61, 0xe24f} },
+
+	{COLOR_SPACE_YCBCR709_LIMITED,
+		{0x39a6, 0x2568, 0, 0xe0d6, 0xeedd, 0x2568, 0xf925, 0x9a8, 0,
+						0x2568, 0x43ee, 0xdbb2} }
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct dpp_grph_csc_adjustment {

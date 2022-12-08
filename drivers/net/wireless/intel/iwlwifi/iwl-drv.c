@@ -163,6 +163,10 @@ static void iwl_req_fw_callback(const struct firmware *ucode_raw,
 static int iwl_request_firmware(struct iwl_drv *drv, bool first)
 {
 	const struct iwl_cfg *cfg = drv->trans->cfg;
+<<<<<<< HEAD
+=======
+	char tag[8];
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (drv->trans->trans_cfg->device_family == IWL_DEVICE_FAMILY_9000 &&
 	    (drv->trans->hw_rev_step != SILICON_B_STEP &&
@@ -173,10 +177,20 @@ static int iwl_request_firmware(struct iwl_drv *drv, bool first)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	if (first)
 		drv->fw_index = cfg->ucode_api_max;
 	else
 		drv->fw_index--;
+=======
+	if (first) {
+		drv->fw_index = cfg->ucode_api_max;
+		sprintf(tag, "%d", drv->fw_index);
+	} else {
+		drv->fw_index--;
+		sprintf(tag, "%d", drv->fw_index);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (drv->fw_index < cfg->ucode_api_min) {
 		IWL_ERR(drv, "no suitable firmware found!\n");
@@ -196,8 +210,13 @@ static int iwl_request_firmware(struct iwl_drv *drv, bool first)
 		return -ENOENT;
 	}
 
+<<<<<<< HEAD
 	snprintf(drv->firmware_name, sizeof(drv->firmware_name), "%s%d.ucode",
 		 cfg->fw_name_pre, drv->fw_index);
+=======
+	snprintf(drv->firmware_name, sizeof(drv->firmware_name), "%s%s.ucode",
+		 cfg->fw_name_pre, tag);
+>>>>>>> b7ba80a49124 (Commit)
 
 	IWL_DEBUG_FW_INFO(drv, "attempting to load firmware '%s'\n",
 			  drv->firmware_name);
@@ -1967,6 +1986,9 @@ MODULE_PARM_DESC(remove_when_gone,
 module_param_named(disable_11ax, iwlwifi_mod_params.disable_11ax, bool,
 		   S_IRUGO);
 MODULE_PARM_DESC(disable_11ax, "Disable HE capabilities (default: false)");
+<<<<<<< HEAD
 
 module_param_named(disable_11be, iwlwifi_mod_params.disable_11be, bool, 0444);
 MODULE_PARM_DESC(disable_11be, "Disable EHT capabilities (default: false)");
+=======
+>>>>>>> b7ba80a49124 (Commit)

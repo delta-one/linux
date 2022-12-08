@@ -17,7 +17,10 @@
 #include <linux/nvmem-provider.h>
 #include <linux/gpio/consumer.h>
 #include <linux/of.h>
+<<<<<<< HEAD
 #include <linux/of_device.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 
 struct nvmem_device {
@@ -39,8 +42,13 @@ struct nvmem_device {
 	unsigned int		nkeepout;
 	nvmem_reg_read_t	reg_read;
 	nvmem_reg_write_t	reg_write;
+<<<<<<< HEAD
 	struct gpio_desc	*wp_gpio;
 	struct nvmem_layout	*layout;
+=======
+	nvmem_cell_post_process_t cell_post_process;
+	struct gpio_desc	*wp_gpio;
+>>>>>>> b7ba80a49124 (Commit)
 	void *priv;
 };
 
@@ -50,12 +58,18 @@ struct nvmem_device {
 struct nvmem_cell_entry {
 	const char		*name;
 	int			offset;
+<<<<<<< HEAD
 	size_t			raw_len;
 	int			bytes;
 	int			bit_offset;
 	int			nbits;
 	nvmem_cell_post_process_t read_post_process;
 	void			*priv;
+=======
+	int			bytes;
+	int			bit_offset;
+	int			nbits;
+>>>>>>> b7ba80a49124 (Commit)
 	struct device_node	*np;
 	struct nvmem_device	*nvmem;
 	struct list_head	node;
@@ -64,7 +78,10 @@ struct nvmem_cell_entry {
 struct nvmem_cell {
 	struct nvmem_cell_entry *entry;
 	const char		*id;
+<<<<<<< HEAD
 	int			index;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static DEFINE_MUTEX(nvmem_mutex);
@@ -78,9 +95,12 @@ static LIST_HEAD(nvmem_lookup_list);
 
 static BLOCKING_NOTIFIER_HEAD(nvmem_notifier);
 
+<<<<<<< HEAD
 static DEFINE_SPINLOCK(nvmem_layout_lock);
 static LIST_HEAD(nvmem_layouts);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __nvmem_reg_read(struct nvmem_device *nvmem, unsigned int offset,
 			    void *val, size_t bytes)
 {
@@ -470,11 +490,16 @@ static int nvmem_cell_info_to_nvmem_cell_entry_nodup(struct nvmem_device *nvmem,
 {
 	cell->nvmem = nvmem;
 	cell->offset = info->offset;
+<<<<<<< HEAD
 	cell->raw_len = info->raw_len ?: info->bytes;
 	cell->bytes = info->bytes;
 	cell->name = info->name;
 	cell->read_post_process = info->read_post_process;
 	cell->priv = info->priv;
+=======
+	cell->bytes = info->bytes;
+	cell->name = info->name;
+>>>>>>> b7ba80a49124 (Commit)
 
 	cell->bit_offset = info->bit_offset;
 	cell->nbits = info->nbits;
@@ -512,6 +537,7 @@ static int nvmem_cell_info_to_nvmem_cell_entry(struct nvmem_device *nvmem,
 }
 
 /**
+<<<<<<< HEAD
  * nvmem_add_one_cell() - Add one cell information to an nvmem device
  *
  * @nvmem: nvmem device to add cells to.
@@ -542,6 +568,8 @@ int nvmem_add_one_cell(struct nvmem_device *nvmem,
 EXPORT_SYMBOL_GPL(nvmem_add_one_cell);
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * nvmem_add_cells() - Add cell information to an nvmem device
  *
  * @nvmem: nvmem device to add cells to.
@@ -554,6 +582,7 @@ static int nvmem_add_cells(struct nvmem_device *nvmem,
 		    const struct nvmem_cell_info *info,
 		    int ncells)
 {
+<<<<<<< HEAD
 	int i, rval;
 
 	for (i = 0; i < ncells; i++) {
@@ -563,6 +592,42 @@ static int nvmem_add_cells(struct nvmem_device *nvmem,
 	}
 
 	return 0;
+=======
+	struct nvmem_cell_entry **cells;
+	int i, rval;
+
+	cells = kcalloc(ncells, sizeof(*cells), GFP_KERNEL);
+	if (!cells)
+		return -ENOMEM;
+
+	for (i = 0; i < ncells; i++) {
+		cells[i] = kzalloc(sizeof(**cells), GFP_KERNEL);
+		if (!cells[i]) {
+			rval = -ENOMEM;
+			goto err;
+		}
+
+		rval = nvmem_cell_info_to_nvmem_cell_entry(nvmem, &info[i], cells[i]);
+		if (rval) {
+			kfree(cells[i]);
+			goto err;
+		}
+
+		nvmem_cell_entry_add(cells[i]);
+	}
+
+	/* remove tmp array */
+	kfree(cells);
+
+	return 0;
+err:
+	while (i--)
+		nvmem_cell_entry_drop(cells[i]);
+
+	kfree(cells);
+
+	return rval;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -698,6 +763,7 @@ static int nvmem_validate_keepouts(struct nvmem_device *nvmem)
 
 static int nvmem_add_cells_from_of(struct nvmem_device *nvmem)
 {
+<<<<<<< HEAD
 	struct nvmem_layout *layout = nvmem->layout;
 	struct device *dev = &nvmem->dev;
 	struct device_node *child;
@@ -707,6 +773,17 @@ static int nvmem_add_cells_from_of(struct nvmem_device *nvmem)
 	for_each_child_of_node(dev->of_node, child) {
 		struct nvmem_cell_info info = {0};
 
+=======
+	struct device_node *parent, *child;
+	struct device *dev = &nvmem->dev;
+	struct nvmem_cell_entry *cell;
+	const __be32 *addr;
+	int len;
+
+	parent = dev->of_node;
+
+	for_each_child_of_node(parent, child) {
+>>>>>>> b7ba80a49124 (Commit)
 		addr = of_get_property(child, "reg", &len);
 		if (!addr)
 			continue;
@@ -716,6 +793,7 @@ static int nvmem_add_cells_from_of(struct nvmem_device *nvmem)
 			return -EINVAL;
 		}
 
+<<<<<<< HEAD
 		info.offset = be32_to_cpup(addr++);
 		info.bytes = be32_to_cpup(addr);
 		info.name = kasprintf(GFP_KERNEL, "%pOFn", child);
@@ -737,11 +815,48 @@ static int nvmem_add_cells_from_of(struct nvmem_device *nvmem)
 			of_node_put(child);
 			return ret;
 		}
+=======
+		cell = kzalloc(sizeof(*cell), GFP_KERNEL);
+		if (!cell) {
+			of_node_put(child);
+			return -ENOMEM;
+		}
+
+		cell->nvmem = nvmem;
+		cell->offset = be32_to_cpup(addr++);
+		cell->bytes = be32_to_cpup(addr);
+		cell->name = kasprintf(GFP_KERNEL, "%pOFn", child);
+
+		addr = of_get_property(child, "bits", &len);
+		if (addr && len == (2 * sizeof(u32))) {
+			cell->bit_offset = be32_to_cpup(addr++);
+			cell->nbits = be32_to_cpup(addr);
+		}
+
+		if (cell->nbits)
+			cell->bytes = DIV_ROUND_UP(
+					cell->nbits + cell->bit_offset,
+					BITS_PER_BYTE);
+
+		if (!IS_ALIGNED(cell->offset, nvmem->stride)) {
+			dev_err(dev, "cell %s unaligned to nvmem stride %d\n",
+				cell->name, nvmem->stride);
+			/* Cells already added will be freed later. */
+			kfree_const(cell->name);
+			kfree(cell);
+			of_node_put(child);
+			return -EINVAL;
+		}
+
+		cell->np = of_node_get(child);
+		nvmem_cell_entry_add(cell);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
 }
 
+<<<<<<< HEAD
 int __nvmem_layout_register(struct nvmem_layout *layout, struct module *owner)
 {
 	layout->owner = owner;
@@ -844,6 +959,8 @@ const void *nvmem_layout_get_match_data(struct nvmem_device *nvmem,
 }
 EXPORT_SYMBOL_GPL(nvmem_layout_get_match_data);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * nvmem_register() - Register a nvmem device for given nvmem_config.
  * Also creates a binary entry in /sys/bus/nvmem/devices/dev-name/nvmem
@@ -869,12 +986,17 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
 	if (!nvmem)
 		return ERR_PTR(-ENOMEM);
 
+<<<<<<< HEAD
 	rval = ida_alloc(&nvmem_ida, GFP_KERNEL);
+=======
+	rval  = ida_alloc(&nvmem_ida, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rval < 0) {
 		kfree(nvmem);
 		return ERR_PTR(rval);
 	}
 
+<<<<<<< HEAD
 	nvmem->id = rval;
 
 	nvmem->dev.type = &nvmem_provider_type;
@@ -890,22 +1012,48 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
 		rval = PTR_ERR(nvmem->wp_gpio);
 		nvmem->wp_gpio = NULL;
 		goto err_put_device;
+=======
+	if (config->wp_gpio)
+		nvmem->wp_gpio = config->wp_gpio;
+	else if (!config->ignore_wp)
+		nvmem->wp_gpio = gpiod_get_optional(config->dev, "wp",
+						    GPIOD_OUT_HIGH);
+	if (IS_ERR(nvmem->wp_gpio)) {
+		ida_free(&nvmem_ida, nvmem->id);
+		rval = PTR_ERR(nvmem->wp_gpio);
+		kfree(nvmem);
+		return ERR_PTR(rval);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	kref_init(&nvmem->refcnt);
 	INIT_LIST_HEAD(&nvmem->cells);
 
+<<<<<<< HEAD
+=======
+	nvmem->id = rval;
+>>>>>>> b7ba80a49124 (Commit)
 	nvmem->owner = config->owner;
 	if (!nvmem->owner && config->dev->driver)
 		nvmem->owner = config->dev->driver->owner;
 	nvmem->stride = config->stride ?: 1;
 	nvmem->word_size = config->word_size ?: 1;
 	nvmem->size = config->size;
+<<<<<<< HEAD
+=======
+	nvmem->dev.type = &nvmem_provider_type;
+	nvmem->dev.bus = &nvmem_bus_type;
+	nvmem->dev.parent = config->dev;
+>>>>>>> b7ba80a49124 (Commit)
 	nvmem->root_only = config->root_only;
 	nvmem->priv = config->priv;
 	nvmem->type = config->type;
 	nvmem->reg_read = config->reg_read;
 	nvmem->reg_write = config->reg_write;
+<<<<<<< HEAD
+=======
+	nvmem->cell_post_process = config->cell_post_process;
+>>>>>>> b7ba80a49124 (Commit)
 	nvmem->keepout = config->keepout;
 	nvmem->nkeepout = config->nkeepout;
 	if (config->of_node)
@@ -927,8 +1075,16 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
 		break;
 	}
 
+<<<<<<< HEAD
 	if (rval)
 		goto err_put_device;
+=======
+	if (rval) {
+		ida_free(&nvmem_ida, nvmem->id);
+		kfree(nvmem);
+		return ERR_PTR(rval);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	nvmem->read_only = device_property_present(config->dev, "read-only") ||
 			   config->read_only || !nvmem->reg_write;
@@ -937,15 +1093,29 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
 	nvmem->dev.groups = nvmem_dev_groups;
 #endif
 
+<<<<<<< HEAD
 	if (nvmem->nkeepout) {
 		rval = nvmem_validate_keepouts(nvmem);
 		if (rval)
 			goto err_put_device;
+=======
+	dev_dbg(&nvmem->dev, "Registering nvmem device %s\n", config->name);
+
+	rval = device_register(&nvmem->dev);
+	if (rval)
+		goto err_put_device;
+
+	if (nvmem->nkeepout) {
+		rval = nvmem_validate_keepouts(nvmem);
+		if (rval)
+			goto err_device_del;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (config->compat) {
 		rval = nvmem_sysfs_setup_compat(nvmem, config);
 		if (rval)
+<<<<<<< HEAD
 			goto err_put_device;
 	}
 
@@ -960,12 +1130,19 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
 
 		if (rval == -EPROBE_DEFER)
 			goto err_teardown_compat;
+=======
+			goto err_device_del;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (config->cells) {
 		rval = nvmem_add_cells(nvmem, config->cells, config->ncells);
 		if (rval)
+<<<<<<< HEAD
 			goto err_remove_cells;
+=======
+			goto err_teardown_compat;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	rval = nvmem_add_cells_from_table(nvmem);
@@ -976,6 +1153,7 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
 	if (rval)
 		goto err_remove_cells;
 
+<<<<<<< HEAD
 	dev_dbg(&nvmem->dev, "Registering nvmem device %s\n", config->name);
 
 	rval = device_add(&nvmem->dev);
@@ -986,16 +1164,26 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
 	if (rval)
 		goto err_remove_cells;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	blocking_notifier_call_chain(&nvmem_notifier, NVMEM_ADD, nvmem);
 
 	return nvmem;
 
 err_remove_cells:
 	nvmem_device_remove_all_cells(nvmem);
+<<<<<<< HEAD
 	nvmem_layout_put(nvmem->layout);
 err_teardown_compat:
 	if (config->compat)
 		nvmem_sysfs_remove_compat(nvmem, config);
+=======
+err_teardown_compat:
+	if (config->compat)
+		nvmem_sysfs_remove_compat(nvmem, config);
+err_device_del:
+	device_del(&nvmem->dev);
+>>>>>>> b7ba80a49124 (Commit)
 err_put_device:
 	put_device(&nvmem->dev);
 
@@ -1015,7 +1203,10 @@ static void nvmem_device_release(struct kref *kref)
 		device_remove_bin_file(nvmem->base_dev, &nvmem->eeprom);
 
 	nvmem_device_remove_all_cells(nvmem);
+<<<<<<< HEAD
 	nvmem_layout_put(nvmem->layout);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	device_unregister(&nvmem->dev);
 }
 
@@ -1246,8 +1437,12 @@ struct nvmem_device *devm_nvmem_device_get(struct device *dev, const char *id)
 }
 EXPORT_SYMBOL_GPL(devm_nvmem_device_get);
 
+<<<<<<< HEAD
 static struct nvmem_cell *nvmem_create_cell(struct nvmem_cell_entry *entry,
 					    const char *id, int index)
+=======
+static struct nvmem_cell *nvmem_create_cell(struct nvmem_cell_entry *entry, const char *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nvmem_cell *cell;
 	const char *name = NULL;
@@ -1266,7 +1461,10 @@ static struct nvmem_cell *nvmem_create_cell(struct nvmem_cell_entry *entry,
 
 	cell->id = name;
 	cell->entry = entry;
+<<<<<<< HEAD
 	cell->index = index;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return cell;
 }
@@ -1305,7 +1503,11 @@ nvmem_cell_get_from_lookup(struct device *dev, const char *con_id)
 				__nvmem_device_put(nvmem);
 				cell = ERR_PTR(-ENOENT);
 			} else {
+<<<<<<< HEAD
 				cell = nvmem_create_cell(cell_entry, con_id, 0);
+=======
+				cell = nvmem_create_cell(cell_entry, con_id);
+>>>>>>> b7ba80a49124 (Commit)
 				if (IS_ERR(cell))
 					__nvmem_device_put(nvmem);
 			}
@@ -1353,15 +1555,20 @@ struct nvmem_cell *of_nvmem_cell_get(struct device_node *np, const char *id)
 	struct nvmem_device *nvmem;
 	struct nvmem_cell_entry *cell_entry;
 	struct nvmem_cell *cell;
+<<<<<<< HEAD
 	struct of_phandle_args cell_spec;
 	int index = 0;
 	int cell_index = 0;
 	int ret;
+=======
+	int index = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* if cell name exists, find index to the name */
 	if (id)
 		index = of_property_match_string(np, "nvmem-cell-names", id);
 
+<<<<<<< HEAD
 	ret = of_parse_phandle_with_optional_args(np, "nvmem-cells",
 						  "#nvmem-cell-cells",
 						  index, &cell_spec);
@@ -1399,12 +1606,32 @@ struct nvmem_cell *of_nvmem_cell_get(struct device_node *np, const char *id)
 
 	cell_entry = nvmem_find_cell_entry_by_node(nvmem, cell_np);
 	of_node_put(cell_np);
+=======
+	cell_np = of_parse_phandle(np, "nvmem-cells", index);
+	if (!cell_np)
+		return ERR_PTR(-ENOENT);
+
+	nvmem_np = of_get_next_parent(cell_np);
+	if (!nvmem_np)
+		return ERR_PTR(-EINVAL);
+
+	nvmem = __nvmem_device_get(nvmem_np, device_match_of_node);
+	of_node_put(nvmem_np);
+	if (IS_ERR(nvmem))
+		return ERR_CAST(nvmem);
+
+	cell_entry = nvmem_find_cell_entry_by_node(nvmem, cell_np);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!cell_entry) {
 		__nvmem_device_put(nvmem);
 		return ERR_PTR(-ENOENT);
 	}
 
+<<<<<<< HEAD
 	cell = nvmem_create_cell(cell_entry, id, cell_index);
+=======
+	cell = nvmem_create_cell(cell_entry, id);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(cell))
 		__nvmem_device_put(nvmem);
 
@@ -1557,12 +1784,21 @@ static void nvmem_shift_read_buffer_in_place(struct nvmem_cell_entry *cell, void
 }
 
 static int __nvmem_cell_read(struct nvmem_device *nvmem,
+<<<<<<< HEAD
 			     struct nvmem_cell_entry *cell,
 			     void *buf, size_t *len, const char *id, int index)
 {
 	int rc;
 
 	rc = nvmem_reg_read(nvmem, cell->offset, buf, cell->raw_len);
+=======
+		      struct nvmem_cell_entry *cell,
+		      void *buf, size_t *len, const char *id)
+{
+	int rc;
+
+	rc = nvmem_reg_read(nvmem, cell->offset, buf, cell->bytes);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (rc)
 		return rc;
@@ -1571,9 +1807,15 @@ static int __nvmem_cell_read(struct nvmem_device *nvmem,
 	if (cell->bit_offset || cell->nbits)
 		nvmem_shift_read_buffer_in_place(cell, buf);
 
+<<<<<<< HEAD
 	if (cell->read_post_process) {
 		rc = cell->read_post_process(cell->priv, id, index,
 					     cell->offset, buf, cell->raw_len);
+=======
+	if (nvmem->cell_post_process) {
+		rc = nvmem->cell_post_process(nvmem->priv, id,
+					      cell->offset, buf, cell->bytes);
+>>>>>>> b7ba80a49124 (Commit)
 		if (rc)
 			return rc;
 	}
@@ -1596,19 +1838,31 @@ static int __nvmem_cell_read(struct nvmem_device *nvmem,
  */
 void *nvmem_cell_read(struct nvmem_cell *cell, size_t *len)
 {
+<<<<<<< HEAD
 	struct nvmem_cell_entry *entry = cell->entry;
 	struct nvmem_device *nvmem = entry->nvmem;
+=======
+	struct nvmem_device *nvmem = cell->entry->nvmem;
+>>>>>>> b7ba80a49124 (Commit)
 	u8 *buf;
 	int rc;
 
 	if (!nvmem)
 		return ERR_PTR(-EINVAL);
 
+<<<<<<< HEAD
 	buf = kzalloc(max_t(size_t, entry->raw_len, entry->bytes), GFP_KERNEL);
 	if (!buf)
 		return ERR_PTR(-ENOMEM);
 
 	rc = __nvmem_cell_read(nvmem, cell->entry, buf, len, cell->id, cell->index);
+=======
+	buf = kzalloc(cell->entry->bytes, GFP_KERNEL);
+	if (!buf)
+		return ERR_PTR(-ENOMEM);
+
+	rc = __nvmem_cell_read(nvmem, cell->entry, buf, len, cell->id);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc) {
 		kfree(buf);
 		return ERR_PTR(rc);
@@ -1680,6 +1934,7 @@ static int __nvmem_cell_entry_write(struct nvmem_cell_entry *cell, void *buf, si
 	    (cell->bit_offset == 0 && len != cell->bytes))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	/*
 	 * Any cells which have a read_post_process hook are read-only because
 	 * we cannot reverse the operation and it might affect other cells,
@@ -1688,6 +1943,8 @@ static int __nvmem_cell_entry_write(struct nvmem_cell_entry *cell, void *buf, si
 	if (cell->read_post_process)
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (cell->bit_offset || cell->nbits) {
 		buf = nvmem_cell_prepare_write_buffer(cell, buf, len);
 		if (IS_ERR(buf))
@@ -1929,7 +2186,11 @@ ssize_t nvmem_device_cell_read(struct nvmem_device *nvmem,
 	if (rc)
 		return rc;
 
+<<<<<<< HEAD
 	rc = __nvmem_cell_read(nvmem, &cell, buf, &len, NULL, 0);
+=======
+	rc = __nvmem_cell_read(nvmem, &cell, buf, &len, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		return rc;
 
@@ -2111,3 +2372,7 @@ module_exit(nvmem_exit);
 MODULE_AUTHOR("Srinivas Kandagatla <srinivas.kandagatla@linaro.org");
 MODULE_AUTHOR("Maxime Ripard <maxime.ripard@free-electrons.com");
 MODULE_DESCRIPTION("nvmem Driver Core");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

@@ -191,6 +191,10 @@ int otx2_cptvf_send_kvf_limits_msg(struct otx2_cptvf_dev *cptvf)
 	struct otx2_mbox *mbox = &cptvf->pfvf_mbox;
 	struct pci_dev *pdev = cptvf->pdev;
 	struct mbox_msghdr *req;
+<<<<<<< HEAD
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	req = (struct mbox_msghdr *)
 	      otx2_mbox_alloc_msg_rsp(mbox, 0, sizeof(*req),
@@ -203,5 +207,11 @@ int otx2_cptvf_send_kvf_limits_msg(struct otx2_cptvf_dev *cptvf)
 	req->sig = OTX2_MBOX_REQ_SIG;
 	req->pcifunc = OTX2_CPT_RVU_PFFUNC(cptvf->vf_id, 0);
 
+<<<<<<< HEAD
 	return otx2_cpt_send_mbox_msg(mbox, pdev);
+=======
+	ret = otx2_cpt_send_mbox_msg(mbox, pdev);
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }

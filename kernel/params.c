@@ -4,7 +4,10 @@
 
 */
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/string.h>
 #include <linux/errno.h>
 #include <linux/module.h>
@@ -311,7 +314,11 @@ int param_set_bool(const char *val, const struct kernel_param *kp)
 	if (!val) val = "1";
 
 	/* One of =[yYnN01] */
+<<<<<<< HEAD
 	return kstrtobool(val, kp->arg);
+=======
+	return strtobool(val, kp->arg);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(param_set_bool);
 
@@ -927,7 +934,11 @@ static const struct sysfs_ops module_sysfs_ops = {
 	.store = module_attr_store,
 };
 
+<<<<<<< HEAD
 static int uevent_filter(const struct kobject *kobj)
+=======
+static int uevent_filter(struct kobject *kobj)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct kobj_type *ktype = get_ktype(kobj);
 
@@ -941,6 +952,10 @@ static const struct kset_uevent_ops module_uevent_ops = {
 };
 
 struct kset *module_kset;
+<<<<<<< HEAD
+=======
+int module_sysfs_initialized;
+>>>>>>> b7ba80a49124 (Commit)
 
 static void module_kobj_release(struct kobject *kobj)
 {
@@ -948,17 +963,25 @@ static void module_kobj_release(struct kobject *kobj)
 	complete(mk->kobj_completion);
 }
 
+<<<<<<< HEAD
 const struct kobj_type module_ktype = {
+=======
+struct kobj_type module_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release   =	module_kobj_release,
 	.sysfs_ops =	&module_sysfs_ops,
 };
 
 /*
+<<<<<<< HEAD
  * param_sysfs_init - create "module" kset
  *
  * This must be done before the initramfs is unpacked and
  * request_module() thus becomes possible, because otherwise the
  * module load would fail in mod_sysfs_init.
+=======
+ * param_sysfs_init - wrapper for built-in params support
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int __init param_sysfs_init(void)
 {
@@ -968,6 +991,7 @@ static int __init param_sysfs_init(void)
 			__FILE__, __LINE__);
 		return -ENOMEM;
 	}
+<<<<<<< HEAD
 
 	return 0;
 }
@@ -981,12 +1005,19 @@ static int __init param_sysfs_builtin_init(void)
 {
 	if (!module_kset)
 		return -ENOMEM;
+=======
+	module_sysfs_initialized = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	version_sysfs_builtin();
 	param_sysfs_builtin();
 
 	return 0;
 }
+<<<<<<< HEAD
 late_initcall(param_sysfs_builtin_init);
+=======
+subsys_initcall(param_sysfs_init);
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* CONFIG_SYSFS */

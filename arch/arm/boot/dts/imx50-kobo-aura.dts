@@ -26,7 +26,11 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_leds>;
 
+<<<<<<< HEAD
 		led-on {
+=======
+		on {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "kobo_aura:orange:on";
 			gpios = <&gpio6 24 GPIO_ACTIVE_LOW>;
 			panic-indicator;

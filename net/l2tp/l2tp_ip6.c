@@ -257,6 +257,11 @@ static void l2tp_ip6_destroy_sock(struct sock *sk)
 
 	if (tunnel)
 		l2tp_tunnel_delete(tunnel);
+<<<<<<< HEAD
+=======
+
+	inet6_destroy_sock(sk);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int l2tp_ip6_bind(struct sock *sk, struct sockaddr *uaddr, int addr_len)

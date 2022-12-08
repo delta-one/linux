@@ -13,6 +13,7 @@ static const struct {
 } mana_eth_stats[] = {
 	{"stop_queue", offsetof(struct mana_ethtool_stats, stop_queue)},
 	{"wake_queue", offsetof(struct mana_ethtool_stats, wake_queue)},
+<<<<<<< HEAD
 	{"tx_cqes", offsetof(struct mana_ethtool_stats, tx_cqes)},
 	{"tx_cq_err", offsetof(struct mana_ethtool_stats, tx_cqe_err)},
 	{"tx_cqe_unknown_type", offsetof(struct mana_ethtool_stats,
@@ -22,6 +23,8 @@ static const struct {
 					rx_coalesced_err)},
 	{"rx_cqe_unknown_type", offsetof(struct mana_ethtool_stats,
 					rx_cqe_unknown_type)},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int mana_get_sset_count(struct net_device *ndev, int stringset)
@@ -32,8 +35,12 @@ static int mana_get_sset_count(struct net_device *ndev, int stringset)
 	if (stringset != ETH_SS_STATS)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	return ARRAY_SIZE(mana_eth_stats) + num_queues *
 				(MANA_STATS_RX_COUNT + MANA_STATS_TX_COUNT);
+=======
+	return ARRAY_SIZE(mana_eth_stats) + num_queues * 8;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
@@ -71,6 +78,7 @@ static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
 		p += ETH_GSTRING_LEN;
 		sprintf(p, "tx_%d_xdp_xmit", i);
 		p += ETH_GSTRING_LEN;
+<<<<<<< HEAD
 		sprintf(p, "tx_%d_tso_packets", i);
 		p += ETH_GSTRING_LEN;
 		sprintf(p, "tx_%d_tso_bytes", i);
@@ -87,6 +95,8 @@ static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
 		p += ETH_GSTRING_LEN;
 		sprintf(p, "tx_%d_mana_map_err", i);
 		p += ETH_GSTRING_LEN;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -104,6 +114,7 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
 	u64 xdp_xmit;
 	u64 xdp_drop;
 	u64 xdp_tx;
+<<<<<<< HEAD
 	u64 tso_packets;
 	u64 tso_bytes;
 	u64 tso_inner_packets;
@@ -112,6 +123,8 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
 	u64 short_pkt_fmt;
 	u64 csum_partial;
 	u64 mana_map_err;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int q, i = 0;
 
 	if (!apc->port_is_up)
@@ -124,13 +137,21 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
 		rx_stats = &apc->rxqs[q]->stats;
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&rx_stats->syncp);
+=======
+			start = u64_stats_fetch_begin_irq(&rx_stats->syncp);
+>>>>>>> b7ba80a49124 (Commit)
 			packets = rx_stats->packets;
 			bytes = rx_stats->bytes;
 			xdp_drop = rx_stats->xdp_drop;
 			xdp_tx = rx_stats->xdp_tx;
 			xdp_redirect = rx_stats->xdp_redirect;
+<<<<<<< HEAD
 		} while (u64_stats_fetch_retry(&rx_stats->syncp, start));
+=======
+		} while (u64_stats_fetch_retry_irq(&rx_stats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		data[i++] = packets;
 		data[i++] = bytes;
@@ -143,6 +164,7 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
 		tx_stats = &apc->tx_qp[q].txq.stats;
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&tx_stats->syncp);
 			packets = tx_stats->packets;
 			bytes = tx_stats->bytes;
@@ -156,10 +178,18 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
 			csum_partial = tx_stats->csum_partial;
 			mana_map_err = tx_stats->mana_map_err;
 		} while (u64_stats_fetch_retry(&tx_stats->syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&tx_stats->syncp);
+			packets = tx_stats->packets;
+			bytes = tx_stats->bytes;
+			xdp_xmit = tx_stats->xdp_xmit;
+		} while (u64_stats_fetch_retry_irq(&tx_stats->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		data[i++] = packets;
 		data[i++] = bytes;
 		data[i++] = xdp_xmit;
+<<<<<<< HEAD
 		data[i++] = tso_packets;
 		data[i++] = tso_bytes;
 		data[i++] = tso_inner_packets;
@@ -168,6 +198,8 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
 		data[i++] = short_pkt_fmt;
 		data[i++] = csum_partial;
 		data[i++] = mana_map_err;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 

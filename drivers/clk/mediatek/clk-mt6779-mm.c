@@ -85,6 +85,7 @@ static const struct mtk_gate mm_clks[] = {
 	GATE_MM1(CLK_MM_DISP_OVL_FBDC, "mm_disp_ovl_fbdc", "mm_sel", 16),
 };
 
+<<<<<<< HEAD
 static const struct mtk_clk_desc mm_desc = {
 	.clks = mm_clks,
 	.num_clks = ARRAY_SIZE(mm_clks),
@@ -103,6 +104,27 @@ static struct platform_driver clk_mt6779_mm_drv = {
 		.name = "clk-mt6779-mm",
 	},
 	.id_table = clk_mt6779_mm_id_table,
+=======
+static int clk_mt6779_mm_probe(struct platform_device *pdev)
+{
+	struct device *dev = &pdev->dev;
+	struct device_node *node = dev->parent->of_node;
+	struct clk_hw_onecell_data *clk_data;
+
+	clk_data = mtk_alloc_clk_data(CLK_MM_NR_CLK);
+
+	mtk_clk_register_gates(node, mm_clks, ARRAY_SIZE(mm_clks),
+			       clk_data);
+
+	return of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+}
+
+static struct platform_driver clk_mt6779_mm_drv = {
+	.probe = clk_mt6779_mm_probe,
+	.driver = {
+		.name = "clk-mt6779-mm",
+	},
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(clk_mt6779_mm_drv);

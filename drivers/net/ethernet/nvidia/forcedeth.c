@@ -1734,12 +1734,20 @@ static void nv_get_stats(int cpu, struct fe_priv *np,
 	u64 tx_packets, tx_bytes, tx_dropped;
 
 	do {
+<<<<<<< HEAD
 		syncp_start = u64_stats_fetch_begin(&np->swstats_rx_syncp);
+=======
+		syncp_start = u64_stats_fetch_begin_irq(&np->swstats_rx_syncp);
+>>>>>>> b7ba80a49124 (Commit)
 		rx_packets       = src->stat_rx_packets;
 		rx_bytes         = src->stat_rx_bytes;
 		rx_dropped       = src->stat_rx_dropped;
 		rx_missed_errors = src->stat_rx_missed_errors;
+<<<<<<< HEAD
 	} while (u64_stats_fetch_retry(&np->swstats_rx_syncp, syncp_start));
+=======
+	} while (u64_stats_fetch_retry_irq(&np->swstats_rx_syncp, syncp_start));
+>>>>>>> b7ba80a49124 (Commit)
 
 	storage->rx_packets       += rx_packets;
 	storage->rx_bytes         += rx_bytes;
@@ -1747,11 +1755,19 @@ static void nv_get_stats(int cpu, struct fe_priv *np,
 	storage->rx_missed_errors += rx_missed_errors;
 
 	do {
+<<<<<<< HEAD
 		syncp_start = u64_stats_fetch_begin(&np->swstats_tx_syncp);
 		tx_packets  = src->stat_tx_packets;
 		tx_bytes    = src->stat_tx_bytes;
 		tx_dropped  = src->stat_tx_dropped;
 	} while (u64_stats_fetch_retry(&np->swstats_tx_syncp, syncp_start));
+=======
+		syncp_start = u64_stats_fetch_begin_irq(&np->swstats_tx_syncp);
+		tx_packets  = src->stat_tx_packets;
+		tx_bytes    = src->stat_tx_bytes;
+		tx_dropped  = src->stat_tx_dropped;
+	} while (u64_stats_fetch_retry_irq(&np->swstats_tx_syncp, syncp_start));
+>>>>>>> b7ba80a49124 (Commit)
 
 	storage->tx_packets += tx_packets;
 	storage->tx_bytes   += tx_bytes;
@@ -5876,7 +5892,11 @@ static int nv_probe(struct pci_dev *pci_dev, const struct pci_device_id *id)
 	else
 		dev->netdev_ops = &nv_netdev_ops_optimized;
 
+<<<<<<< HEAD
 	netif_napi_add(dev, &np->napi, nv_napi_poll);
+=======
+	netif_napi_add(dev, &np->napi, nv_napi_poll, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 	dev->ethtool_ops = &ops;
 	dev->watchdog_timeo = NV_WATCHDOG_TIMEO;
 

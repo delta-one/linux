@@ -52,6 +52,7 @@ struct subsys_private {
 
 	struct kset glue_dirs;
 	struct class *class;
+<<<<<<< HEAD
 
 	struct lock_class_key lock_key;
 };
@@ -69,6 +70,10 @@ static inline void subsys_put(struct subsys_private *sp)
 	if (sp)
 		kset_put(&sp->subsys);
 }
+=======
+};
+#define to_subsys_private(obj) container_of(obj, struct subsys_private, subsys.kobj)
+>>>>>>> b7ba80a49124 (Commit)
 
 struct driver_private {
 	struct kobject kobj;
@@ -145,8 +150,11 @@ struct kobject *virtual_device_parent(struct device *dev);
 extern int bus_add_device(struct device *dev);
 extern void bus_probe_device(struct device *dev);
 extern void bus_remove_device(struct device *dev);
+<<<<<<< HEAD
 void bus_notify(struct device *dev, enum bus_notifier_event value);
 bool bus_is_registered(const struct bus_type *bus);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 extern int bus_add_driver(struct device_driver *drv);
 extern void bus_remove_driver(struct device_driver *drv);
@@ -163,6 +171,7 @@ static inline int driver_match_device(struct device_driver *drv,
 {
 	return drv->bus->match ? drv->bus->match(dev, drv) : 1;
 }
+<<<<<<< HEAD
 
 static inline void dev_sync_state(struct device *dev)
 {
@@ -171,6 +180,9 @@ static inline void dev_sync_state(struct device *dev)
 	else if (dev->driver && dev->driver->sync_state)
 		dev->driver->sync_state(dev);
 }
+=======
+extern bool driver_allows_async_probing(struct device_driver *drv);
+>>>>>>> b7ba80a49124 (Commit)
 
 extern int driver_add_groups(struct device_driver *drv,
 			     const struct attribute_group **groups);
@@ -183,8 +195,11 @@ extern void device_block_probing(void);
 extern void device_unblock_probing(void);
 extern void deferred_probe_extend_timeout(void);
 extern void driver_deferred_probe_trigger(void);
+<<<<<<< HEAD
 const char *device_get_devnode(const struct device *dev, umode_t *mode,
 			       kuid_t *uid, kgid_t *gid, const char **tmp);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* /sys/devices directory */
 extern struct kset *devices_kset;
@@ -217,7 +232,10 @@ extern void device_links_no_driver(struct device *dev);
 extern bool device_links_busy(struct device *dev);
 extern void device_links_unbind_consumers(struct device *dev);
 extern void fw_devlink_drivers_done(void);
+<<<<<<< HEAD
 extern void fw_devlink_probing_done(void);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* device pm support */
 void device_pm_move_to_tail(struct device *dev);

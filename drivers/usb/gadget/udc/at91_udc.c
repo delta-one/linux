@@ -1628,7 +1628,14 @@ static int at91rm9200_udc_init(struct at91_udc *udc)
 
 static void at91rm9200_udc_pullup(struct at91_udc *udc, int is_on)
 {
+<<<<<<< HEAD
 	gpiod_set_value(udc->board.pullup_pin, is_on);
+=======
+	if (is_on)
+		gpiod_set_value(udc->board.pullup_pin, 1);
+	else
+		gpiod_set_value(udc->board.pullup_pin, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct at91_udc_caps at91rm9200_udc_caps = {

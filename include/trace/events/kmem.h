@@ -346,9 +346,16 @@ TRACE_MM_PAGES
 TRACE_EVENT(rss_stat,
 
 	TP_PROTO(struct mm_struct *mm,
+<<<<<<< HEAD
 		int member),
 
 	TP_ARGS(mm, member),
+=======
+		int member,
+		long count),
+
+	TP_ARGS(mm, member, count),
+>>>>>>> b7ba80a49124 (Commit)
 
 	TP_STRUCT__entry(
 		__field(unsigned int, mm_id)
@@ -361,8 +368,12 @@ TRACE_EVENT(rss_stat,
 		__entry->mm_id = mm_ptr_to_hash(mm);
 		__entry->curr = !!(current->mm == mm);
 		__entry->member = member;
+<<<<<<< HEAD
 		__entry->size = (percpu_counter_sum_positive(&mm->rss_stat[member])
 							    << PAGE_SHIFT);
+=======
+		__entry->size = (count << PAGE_SHIFT);
+>>>>>>> b7ba80a49124 (Commit)
 	),
 
 	TP_printk("mm_id=%u curr=%d type=%s size=%ldB",

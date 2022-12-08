@@ -57,6 +57,10 @@
 #include <linux/timer.h>
 #include <linux/slab.h>
 #include <linux/pci.h>
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/circ_buf.h>
 #include <asm/dma.h>
 #include <asm/io.h>

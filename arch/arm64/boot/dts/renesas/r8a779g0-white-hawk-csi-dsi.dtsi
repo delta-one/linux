@@ -5,6 +5,7 @@
  * Copyright (C) 2022 Glider bv
  */
 
+<<<<<<< HEAD
 #include <dt-bindings/media/video-interfaces.h>
 
 &csi40 {
@@ -62,6 +63,9 @@
 		#gpio-cells = <2>;
 	};
 
+=======
+&i2c0 {
+>>>>>>> b7ba80a49124 (Commit)
 	eeprom@52 {
 		compatible = "rohm,br24g01", "atmel,24c01";
 		label = "csi-dsi-sub-board-id";
@@ -69,6 +73,7 @@
 		pagesize = <8>;
 	};
 };
+<<<<<<< HEAD
 
 &i2c1 {
 	gmsl0: gmsl-deserializer@49 {
@@ -185,3 +190,5 @@
 &vin15 {
 	status = "okay";
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

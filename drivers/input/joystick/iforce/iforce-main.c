@@ -273,22 +273,38 @@ int iforce_init_device(struct device *parent, u16 bustype,
  * Get device info.
  */
 
+<<<<<<< HEAD
 	if (!iforce_get_id_packet(iforce, 'M', buf, &len) && len >= 3)
+=======
+	if (!iforce_get_id_packet(iforce, 'M', buf, &len) || len < 3)
+>>>>>>> b7ba80a49124 (Commit)
 		input_dev->id.vendor = get_unaligned_le16(buf + 1);
 	else
 		dev_warn(&iforce->dev->dev, "Device does not respond to id packet M\n");
 
+<<<<<<< HEAD
 	if (!iforce_get_id_packet(iforce, 'P', buf, &len) && len >= 3)
+=======
+	if (!iforce_get_id_packet(iforce, 'P', buf, &len) || len < 3)
+>>>>>>> b7ba80a49124 (Commit)
 		input_dev->id.product = get_unaligned_le16(buf + 1);
 	else
 		dev_warn(&iforce->dev->dev, "Device does not respond to id packet P\n");
 
+<<<<<<< HEAD
 	if (!iforce_get_id_packet(iforce, 'B', buf, &len) && len >= 3)
+=======
+	if (!iforce_get_id_packet(iforce, 'B', buf, &len) || len < 3)
+>>>>>>> b7ba80a49124 (Commit)
 		iforce->device_memory.end = get_unaligned_le16(buf + 1);
 	else
 		dev_warn(&iforce->dev->dev, "Device does not respond to id packet B\n");
 
+<<<<<<< HEAD
 	if (!iforce_get_id_packet(iforce, 'N', buf, &len) && len >= 2)
+=======
+	if (!iforce_get_id_packet(iforce, 'N', buf, &len) || len < 2)
+>>>>>>> b7ba80a49124 (Commit)
 		ff_effects = buf[1];
 	else
 		dev_warn(&iforce->dev->dev, "Device does not respond to id packet N\n");

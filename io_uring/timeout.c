@@ -50,6 +50,10 @@ static inline void io_put_req(struct io_kiocb *req)
 }
 
 static bool io_kill_timeout(struct io_kiocb *req, int status)
+<<<<<<< HEAD
+=======
+	__must_hold(&req->ctx->completion_lock)
+>>>>>>> b7ba80a49124 (Commit)
 	__must_hold(&req->ctx->timeout_lock)
 {
 	struct io_timeout_data *io = req->async_data;
@@ -62,13 +66,18 @@ static bool io_kill_timeout(struct io_kiocb *req, int status)
 		atomic_set(&req->ctx->cq_timeouts,
 			atomic_read(&req->ctx->cq_timeouts) + 1);
 		list_del_init(&timeout->list);
+<<<<<<< HEAD
 		io_req_queue_tw_complete(req, status);
+=======
+		io_req_tw_post_queue(req, status, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 	}
 	return false;
 }
 
 __cold void io_flush_timeouts(struct io_ring_ctx *ctx)
+<<<<<<< HEAD
 {
 	u32 seq;
 	struct io_timeout *timeout, *tmp;
@@ -76,6 +85,14 @@ __cold void io_flush_timeouts(struct io_ring_ctx *ctx)
 	spin_lock_irq(&ctx->timeout_lock);
 	seq = ctx->cached_cq_tail - atomic_read(&ctx->cq_timeouts);
 
+=======
+	__must_hold(&ctx->completion_lock)
+{
+	u32 seq = ctx->cached_cq_tail - atomic_read(&ctx->cq_timeouts);
+	struct io_timeout *timeout, *tmp;
+
+	spin_lock_irq(&ctx->timeout_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	list_for_each_entry_safe(timeout, tmp, &ctx->timeout_list, list) {
 		struct io_kiocb *req = cmd_to_io_kiocb(timeout);
 		u32 events_needed, events_got;
@@ -159,7 +176,11 @@ void io_disarm_next(struct io_kiocb *req)
 		req->flags &= ~REQ_F_ARM_LTIMEOUT;
 		if (link && link->opcode == IORING_OP_LINK_TIMEOUT) {
 			io_remove_next_linked(req);
+<<<<<<< HEAD
 			io_req_queue_tw_complete(link, -ECANCELED);
+=======
+			io_req_tw_post_queue(link, -ECANCELED, 0);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	} else if (req->flags & REQ_F_LINK_TIMEOUT) {
 		struct io_ring_ctx *ctx = req->ctx;
@@ -168,7 +189,11 @@ void io_disarm_next(struct io_kiocb *req)
 		link = io_disarm_linked_timeout(req);
 		spin_unlock_irq(&ctx->timeout_lock);
 		if (link)
+<<<<<<< HEAD
 			io_req_queue_tw_complete(link, -ECANCELED);
+=======
+			io_req_tw_post_queue(link, -ECANCELED, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (unlikely((req->flags & REQ_F_FAIL) &&
 		     !(req->flags & REQ_F_HARDLINK)))
@@ -282,11 +307,19 @@ static void io_req_task_link_timeout(struct io_kiocb *req, bool *locked)
 			ret = io_try_cancel(req->task->io_uring, &cd, issue_flags);
 		}
 		io_req_set_res(req, ret ?: -ETIME, 0);
+<<<<<<< HEAD
 		io_req_task_complete(req, locked);
 		io_put_req(prev);
 	} else {
 		io_req_set_res(req, -ETIME, 0);
 		io_req_task_complete(req, locked);
+=======
+		io_req_complete_post(req);
+		io_put_req(prev);
+	} else {
+		io_req_set_res(req, -ETIME, 0);
+		io_req_complete_post(req);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -622,11 +655,15 @@ __cold bool io_kill_timeouts(struct io_ring_ctx *ctx, struct task_struct *tsk,
 	struct io_timeout *timeout, *tmp;
 	int canceled = 0;
 
+<<<<<<< HEAD
 	/*
 	 * completion_lock is needed for io_match_task(). Take it before
 	 * timeout_lockfirst to keep locking ordering.
 	 */
 	spin_lock(&ctx->completion_lock);
+=======
+	io_cq_lock(ctx);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_irq(&ctx->timeout_lock);
 	list_for_each_entry_safe(timeout, tmp, &ctx->timeout_list, list) {
 		struct io_kiocb *req = cmd_to_io_kiocb(timeout);
@@ -636,6 +673,10 @@ __cold bool io_kill_timeouts(struct io_ring_ctx *ctx, struct task_struct *tsk,
 			canceled++;
 	}
 	spin_unlock_irq(&ctx->timeout_lock);
+<<<<<<< HEAD
 	spin_unlock(&ctx->completion_lock);
+=======
+	io_cq_unlock_post(ctx);
+>>>>>>> b7ba80a49124 (Commit)
 	return canceled != 0;
 }

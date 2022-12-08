@@ -11,6 +11,7 @@
  * - Pin pad configuration (pull up/down, strength)
  */
 
+<<<<<<< HEAD
 #include <linux/gpio/driver.h>
 #include <linux/init.h>
 #include <linux/io.h>
@@ -18,12 +19,24 @@
 #include <linux/platform_device.h>
 #include <linux/spinlock.h>
 
+=======
+#include <linux/init.h>
+#include <linux/platform_device.h>
+#include <linux/of.h>
+#include <linux/of_device.h>
+#include <linux/io.h>
+#include <linux/gpio/driver.h>
+#include <linux/spinlock.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/pinctrl/machine.h>
 #include <linux/pinctrl/pinconf.h>
 #include <linux/pinctrl/pinconf-generic.h>
 #include <linux/pinctrl/pinctrl.h>
 #include <linux/pinctrl/pinmux.h>
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "pinctrl-utils.h"
 
 #define DRIVER_NAME	"pinctrl-digicolor"
@@ -249,6 +262,10 @@ static int dc_gpiochip_add(struct dc_pinmap *pmap)
 	chip->set		= dc_gpio_set;
 	chip->base		= -1;
 	chip->ngpio		= PINS_COUNT;
+<<<<<<< HEAD
+=======
+	chip->of_gpio_n_cells	= 2;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_init(&pmap->lock);
 

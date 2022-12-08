@@ -71,12 +71,20 @@
 		pinctrl-0 = <&gpio_leds_pins>;
 		pinctrl-names = "default";
 
+<<<<<<< HEAD
 		led-power {
+=======
+		power {
+>>>>>>> b7ba80a49124 (Commit)
 			gpios = <&gpio1 23 GPIO_ACTIVE_HIGH>;
 			default-state = "on";
 		};
 
+<<<<<<< HEAD
 		led-sata {
+=======
+		sata {
+>>>>>>> b7ba80a49124 (Commit)
 			gpios = <&gpio1 22 GPIO_ACTIVE_LOW>;
 			default-state = "off";
 			linux,default-trigger = "disk-activity";

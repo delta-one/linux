@@ -440,6 +440,13 @@ static int kvaser_usb_open(struct net_device *netdev)
 	if (err)
 		return err;
 
+<<<<<<< HEAD
+=======
+	err = kvaser_usb_setup_rx_urbs(dev);
+	if (err)
+		goto error;
+
+>>>>>>> b7ba80a49124 (Commit)
 	err = ops->dev_set_opt_mode(priv);
 	if (err)
 		goto error;
@@ -473,7 +480,11 @@ static void kvaser_usb_reset_tx_urb_contexts(struct kvaser_usb_net_priv *priv)
 /* This method might sleep. Do not call it in the atomic context
  * of URB completions.
  */
+<<<<<<< HEAD
 void kvaser_usb_unlink_tx_urbs(struct kvaser_usb_net_priv *priv)
+=======
+static void kvaser_usb_unlink_tx_urbs(struct kvaser_usb_net_priv *priv)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	usb_kill_anchored_urbs(&priv->tx_submitted);
 	kvaser_usb_reset_tx_urb_contexts(priv);
@@ -530,6 +541,7 @@ static int kvaser_usb_close(struct net_device *netdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int kvaser_usb_set_bittiming(struct net_device *netdev)
 {
 	struct kvaser_usb_net_priv *priv = netdev_priv(netdev);
@@ -615,6 +627,8 @@ static int kvaser_usb_set_data_bittiming(struct net_device *netdev)
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void kvaser_usb_write_bulk_callback(struct urb *urb)
 {
 	struct kvaser_usb_tx_urb_context *context = urb->context;
@@ -651,7 +665,11 @@ static netdev_tx_t kvaser_usb_start_xmit(struct sk_buff *skb,
 	unsigned int i;
 	unsigned long flags;
 
+<<<<<<< HEAD
 	if (can_dev_dropped_skb(netdev, skb))
+=======
+	if (can_dropped_invalid_skb(netdev, skb))
+>>>>>>> b7ba80a49124 (Commit)
 		return NETDEV_TX_OK;
 
 	urb = usb_alloc_urb(0, GFP_ATOMIC);
@@ -765,7 +783,10 @@ static const struct ethtool_ops kvaser_usb_ethtool_ops_hwts = {
 
 static void kvaser_usb_remove_interfaces(struct kvaser_usb *dev)
 {
+<<<<<<< HEAD
 	const struct kvaser_usb_dev_ops *ops = dev->driver_info->ops;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	for (i = 0; i < dev->nchannels; i++) {
@@ -781,9 +802,12 @@ static void kvaser_usb_remove_interfaces(struct kvaser_usb *dev)
 		if (!dev->nets[i])
 			continue;
 
+<<<<<<< HEAD
 		if (ops->dev_remove_channel)
 			ops->dev_remove_channel(dev->nets[i]);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		free_candev(dev->nets[i]->netdev);
 	}
 }
@@ -814,8 +838,11 @@ static int kvaser_usb_init_one(struct kvaser_usb *dev, int channel)
 	init_usb_anchor(&priv->tx_submitted);
 	init_completion(&priv->start_comp);
 	init_completion(&priv->stop_comp);
+<<<<<<< HEAD
 	init_completion(&priv->flush_comp);
 	init_completion(&priv->get_busparams_comp);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	priv->can.ctrlmode_supported = 0;
 
 	priv->dev = dev;
@@ -828,7 +855,11 @@ static int kvaser_usb_init_one(struct kvaser_usb *dev, int channel)
 	priv->can.state = CAN_STATE_STOPPED;
 	priv->can.clock.freq = dev->cfg->clock.freq;
 	priv->can.bittiming_const = dev->cfg->bittiming_const;
+<<<<<<< HEAD
 	priv->can.do_set_bittiming = kvaser_usb_set_bittiming;
+=======
+	priv->can.do_set_bittiming = ops->dev_set_bittiming;
+>>>>>>> b7ba80a49124 (Commit)
 	priv->can.do_set_mode = ops->dev_set_mode;
 	if ((driver_info->quirks & KVASER_USB_QUIRK_HAS_TXRX_ERRORS) ||
 	    (priv->dev->card_data.capabilities & KVASER_USB_CAP_BERR_CAP))
@@ -840,7 +871,11 @@ static int kvaser_usb_init_one(struct kvaser_usb *dev, int channel)
 
 	if (priv->can.ctrlmode_supported & CAN_CTRLMODE_FD) {
 		priv->can.data_bittiming_const = dev->cfg->data_bittiming_const;
+<<<<<<< HEAD
 		priv->can.do_set_data_bittiming = kvaser_usb_set_data_bittiming;
+=======
+		priv->can.do_set_data_bittiming = ops->dev_set_data_bittiming;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	netdev->flags |= IFF_ECHO;
@@ -858,6 +893,7 @@ static int kvaser_usb_init_one(struct kvaser_usb *dev, int channel)
 
 	dev->nets[channel] = priv;
 
+<<<<<<< HEAD
 	if (ops->dev_init_channel) {
 		err = ops->dev_init_channel(priv);
 		if (err)
@@ -868,16 +904,27 @@ static int kvaser_usb_init_one(struct kvaser_usb *dev, int channel)
 	if (err) {
 		dev_err(&dev->intf->dev, "Failed to register CAN device\n");
 		goto err;
+=======
+	err = register_candev(netdev);
+	if (err) {
+		dev_err(&dev->intf->dev, "Failed to register CAN device\n");
+		free_candev(netdev);
+		dev->nets[channel] = NULL;
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	netdev_dbg(netdev, "device registered\n");
 
 	return 0;
+<<<<<<< HEAD
 
 err:
 	free_candev(netdev);
 	dev->nets[channel] = NULL;
 	return err;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int kvaser_usb_probe(struct usb_interface *intf,

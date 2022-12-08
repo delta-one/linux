@@ -173,12 +173,19 @@ const struct address_space_operations hfs_aops = {
 	.dirty_folio	= block_dirty_folio,
 	.invalidate_folio = block_invalidate_folio,
 	.read_folio	= hfs_read_folio,
+<<<<<<< HEAD
+=======
+	.writepage	= hfs_writepage,
+>>>>>>> b7ba80a49124 (Commit)
 	.write_begin	= hfs_write_begin,
 	.write_end	= generic_write_end,
 	.bmap		= hfs_bmap,
 	.direct_IO	= hfs_direct_IO,
 	.writepages	= hfs_writepages,
+<<<<<<< HEAD
 	.migrate_folio	= buffer_migrate_folio,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
@@ -458,6 +465,7 @@ int hfs_write_inode(struct inode *inode, struct writeback_control *wbc)
 		/* panic? */
 		return -EIO;
 
+<<<<<<< HEAD
 	res = -EIO;
 	if (HFS_I(main_inode)->cat_key.CName.len > HFS_NAMELEN)
 		goto out;
@@ -468,6 +476,15 @@ int hfs_write_inode(struct inode *inode, struct writeback_control *wbc)
 	if (S_ISDIR(main_inode->i_mode)) {
 		if (fd.entrylength < sizeof(struct hfs_cat_dir))
 			goto out;
+=======
+	fd.search_key->cat = HFS_I(main_inode)->cat_key;
+	if (hfs_brec_find(&fd))
+		/* panic? */
+		goto out;
+
+	if (S_ISDIR(main_inode->i_mode)) {
+		WARN_ON(fd.entrylength < sizeof(struct hfs_cat_dir));
+>>>>>>> b7ba80a49124 (Commit)
 		hfs_bnode_read(fd.bnode, &rec, fd.entryoffset,
 			   sizeof(struct hfs_cat_dir));
 		if (rec.type != HFS_CDR_DIR ||
@@ -480,8 +497,11 @@ int hfs_write_inode(struct inode *inode, struct writeback_control *wbc)
 		hfs_bnode_write(fd.bnode, &rec, fd.entryoffset,
 			    sizeof(struct hfs_cat_dir));
 	} else if (HFS_IS_RSRC(inode)) {
+<<<<<<< HEAD
 		if (fd.entrylength < sizeof(struct hfs_cat_file))
 			goto out;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		hfs_bnode_read(fd.bnode, &rec, fd.entryoffset,
 			       sizeof(struct hfs_cat_file));
 		hfs_inode_write_fork(inode, rec.file.RExtRec,
@@ -489,8 +509,12 @@ int hfs_write_inode(struct inode *inode, struct writeback_control *wbc)
 		hfs_bnode_write(fd.bnode, &rec, fd.entryoffset,
 				sizeof(struct hfs_cat_file));
 	} else {
+<<<<<<< HEAD
 		if (fd.entrylength < sizeof(struct hfs_cat_file))
 			goto out;
+=======
+		WARN_ON(fd.entrylength < sizeof(struct hfs_cat_file));
+>>>>>>> b7ba80a49124 (Commit)
 		hfs_bnode_read(fd.bnode, &rec, fd.entryoffset,
 			   sizeof(struct hfs_cat_file));
 		if (rec.type != HFS_CDR_FIL ||
@@ -507,10 +531,16 @@ int hfs_write_inode(struct inode *inode, struct writeback_control *wbc)
 		hfs_bnode_write(fd.bnode, &rec, fd.entryoffset,
 			    sizeof(struct hfs_cat_file));
 	}
+<<<<<<< HEAD
 	res = 0;
 out:
 	hfs_find_exit(&fd);
 	return res;
+=======
+out:
+	hfs_find_exit(&fd);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct dentry *hfs_file_lookup(struct inode *dir, struct dentry *dentry,
@@ -611,14 +641,22 @@ static int hfs_file_release(struct inode *inode, struct file *file)
  *     correspond to the same HFS file.
  */
 
+<<<<<<< HEAD
 int hfs_inode_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+=======
+int hfs_inode_setattr(struct user_namespace *mnt_userns, struct dentry *dentry,
+>>>>>>> b7ba80a49124 (Commit)
 		      struct iattr *attr)
 {
 	struct inode *inode = d_inode(dentry);
 	struct hfs_sb_info *hsb = HFS_SB(inode->i_sb);
 	int error;
 
+<<<<<<< HEAD
 	error = setattr_prepare(&nop_mnt_idmap, dentry,
+=======
+	error = setattr_prepare(&init_user_ns, dentry,
+>>>>>>> b7ba80a49124 (Commit)
 				attr); /* basic permission checks */
 	if (error)
 		return error;
@@ -658,7 +696,11 @@ int hfs_inode_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
 						  current_time(inode);
 	}
 
+<<<<<<< HEAD
 	setattr_copy(&nop_mnt_idmap, inode, attr);
+=======
+	setattr_copy(&init_user_ns, inode, attr);
+>>>>>>> b7ba80a49124 (Commit)
 	mark_inode_dirty(inode);
 	return 0;
 }

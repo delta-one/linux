@@ -45,6 +45,7 @@
 };
 
 &pcie0clk {
+<<<<<<< HEAD
 	status = "okay";
 };
 
@@ -70,11 +71,42 @@
 
 &xgenet {
 	status = "okay";
+=======
+	status = "ok";
+};
+
+&pcie0 {
+	status = "ok";
+};
+
+&serial0 {
+	status = "ok";
+};
+
+&menet {
+	status = "ok";
+};
+
+&sgenet0 {
+	status = "ok";
+};
+
+&sgenet1 {
+	status = "ok";
+};
+
+&xgenet {
+	status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 	rxlos-gpios = <&sbgpio 12 1>;
 };
 
 &mmc0 {
+<<<<<<< HEAD
 	status = "okay";
+=======
+	status = "ok";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &mdio {

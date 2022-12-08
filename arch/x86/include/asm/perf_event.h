@@ -160,6 +160,7 @@ union cpuid10_edx {
 };
 
 /*
+<<<<<<< HEAD
  * Intel "Architectural Performance Monitoring extension" CPUID
  * detection/enumeration details:
  */
@@ -168,6 +169,8 @@ union cpuid10_edx {
 #define ARCH_PERFMON_NUM_COUNTER_LEAF		0x1
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Intel Architectural LBR CPUID detection/enumeration details:
  */
 union cpuid28_eax {
@@ -551,12 +554,21 @@ static inline void perf_check_microcode(void) { }
 
 #if defined(CONFIG_PERF_EVENTS) && defined(CONFIG_CPU_SUP_INTEL)
 extern struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data);
+<<<<<<< HEAD
 extern void x86_perf_get_lbr(struct x86_pmu_lbr *lbr);
 #else
 struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data);
 static inline void x86_perf_get_lbr(struct x86_pmu_lbr *lbr)
 {
 	memset(lbr, 0, sizeof(*lbr));
+=======
+extern int x86_perf_get_lbr(struct x86_pmu_lbr *lbr);
+#else
+struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data);
+static inline int x86_perf_get_lbr(struct x86_pmu_lbr *lbr)
+{
+	return -1;
+>>>>>>> b7ba80a49124 (Commit)
 }
 #endif
 
@@ -586,7 +598,11 @@ extern void perf_amd_brs_lopwr_cb(bool lopwr_in);
 
 DECLARE_STATIC_CALL(perf_lopwr_cb, perf_amd_brs_lopwr_cb);
 
+<<<<<<< HEAD
 static __always_inline void perf_lopwr_cb(bool lopwr_in)
+=======
+static inline void perf_lopwr_cb(bool lopwr_in)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	static_call_mod(perf_lopwr_cb)(lopwr_in);
 }

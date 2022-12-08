@@ -93,7 +93,11 @@ int kfd_chardev_init(void)
 	if (err < 0)
 		goto err_register_chrdev;
 
+<<<<<<< HEAD
 	kfd_class = class_create(kfd_dev_name);
+=======
+	kfd_class = class_create(THIS_MODULE, kfd_dev_name);
+>>>>>>> b7ba80a49124 (Commit)
 	err = PTR_ERR(kfd_class);
 	if (IS_ERR(kfd_class))
 		goto err_class_create;
@@ -1065,6 +1069,7 @@ static int kfd_ioctl_alloc_memory_of_gpu(struct file *filep,
 		mutex_unlock(&p->svms.lock);
 		return -EADDRINUSE;
 	}
+<<<<<<< HEAD
 
 	/* When register user buffer check if it has been registered by svm by
 	 * buffer cpu virtual address.
@@ -1079,6 +1084,8 @@ static int kfd_ioctl_alloc_memory_of_gpu(struct file *filep,
 		return -EADDRINUSE;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&p->svms.lock);
 #endif
 	mutex_lock(&p->mutex);
@@ -1141,6 +1148,7 @@ static int kfd_ioctl_alloc_memory_of_gpu(struct file *filep,
 	}
 
 	/* Update the VRAM usage count */
+<<<<<<< HEAD
 	if (flags & KFD_IOC_ALLOC_MEM_FLAGS_VRAM) {
 		uint64_t size = args->size;
 
@@ -1148,6 +1156,10 @@ static int kfd_ioctl_alloc_memory_of_gpu(struct file *filep,
 			size >>= 1;
 		WRITE_ONCE(pdd->vram_usage, pdd->vram_usage + PAGE_ALIGN(size));
 	}
+=======
+	if (flags & KFD_IOC_ALLOC_MEM_FLAGS_VRAM)
+		WRITE_ONCE(pdd->vram_usage, pdd->vram_usage + args->size);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_unlock(&p->mutex);
 
@@ -1312,14 +1324,22 @@ static int kfd_ioctl_map_memory_to_gpu(struct file *filep,
 		args->n_success = i+1;
 	}
 
+<<<<<<< HEAD
+=======
+	mutex_unlock(&p->mutex);
+
+>>>>>>> b7ba80a49124 (Commit)
 	err = amdgpu_amdkfd_gpuvm_sync_memory(dev->adev, (struct kgd_mem *) mem, true);
 	if (err) {
 		pr_debug("Sync memory failed, wait interrupted by user signal\n");
 		goto sync_memory_failed;
 	}
 
+<<<<<<< HEAD
 	mutex_unlock(&p->mutex);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Flush TLBs after waiting for the page table updates to complete */
 	for (i = 0; i < args->n_devices; i++) {
 		peer_pdd = kfd_process_device_data_by_id(p, devices_arr[i]);
@@ -1335,9 +1355,15 @@ get_process_device_data_failed:
 bind_process_to_device_failed:
 get_mem_obj_from_handle_failed:
 map_memory_to_gpu_failed:
+<<<<<<< HEAD
 sync_memory_failed:
 	mutex_unlock(&p->mutex);
 copy_from_user_failed:
+=======
+	mutex_unlock(&p->mutex);
+copy_from_user_failed:
+sync_memory_failed:
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(devices_arr);
 
 	return err;
@@ -1351,7 +1377,10 @@ static int kfd_ioctl_unmap_memory_from_gpu(struct file *filep,
 	void *mem;
 	long err = 0;
 	uint32_t *devices_arr = NULL, i;
+<<<<<<< HEAD
 	bool flush_tlb;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!args->n_devices) {
 		pr_debug("Device IDs array empty\n");
@@ -1404,19 +1433,29 @@ static int kfd_ioctl_unmap_memory_from_gpu(struct file *filep,
 		}
 		args->n_success = i+1;
 	}
+<<<<<<< HEAD
 
 	flush_tlb = kfd_flush_tlb_after_unmap(pdd->dev);
 	if (flush_tlb) {
+=======
+	mutex_unlock(&p->mutex);
+
+	if (kfd_flush_tlb_after_unmap(pdd->dev)) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = amdgpu_amdkfd_gpuvm_sync_memory(pdd->dev->adev,
 				(struct kgd_mem *) mem, true);
 		if (err) {
 			pr_debug("Sync memory failed, wait interrupted by user signal\n");
 			goto sync_memory_failed;
 		}
+<<<<<<< HEAD
 	}
 	mutex_unlock(&p->mutex);
 
 	if (flush_tlb) {
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 		/* Flush TLBs after waiting for the page table updates to complete */
 		for (i = 0; i < args->n_devices; i++) {
 			peer_pdd = kfd_process_device_data_by_id(p, devices_arr[i]);
@@ -1432,9 +1471,15 @@ static int kfd_ioctl_unmap_memory_from_gpu(struct file *filep,
 bind_process_to_device_failed:
 get_mem_obj_from_handle_failed:
 unmap_memory_from_gpu_failed:
+<<<<<<< HEAD
 sync_memory_failed:
 	mutex_unlock(&p->mutex);
 copy_from_user_failed:
+=======
+	mutex_unlock(&p->mutex);
+copy_from_user_failed:
+sync_memory_failed:
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(devices_arr);
 	return err;
 }
@@ -1590,6 +1635,7 @@ err_unlock:
 	return r;
 }
 
+<<<<<<< HEAD
 static int kfd_ioctl_export_dmabuf(struct file *filep,
 				   struct kfd_process *p, void *data)
 {
@@ -1642,6 +1688,8 @@ err_out:
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Handle requests for watching SMI events */
 static int kfd_ioctl_smi_events(struct file *filep,
 				struct kfd_process *p, void *data)
@@ -1659,8 +1707,11 @@ static int kfd_ioctl_smi_events(struct file *filep,
 	return kfd_smi_event_open(pdd->dev, &args->anon_fd);
 }
 
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_HSA_AMD_SVM)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int kfd_ioctl_set_xnack_mode(struct file *filep,
 				    struct kfd_process *p, void *data)
 {
@@ -1671,6 +1722,7 @@ static int kfd_ioctl_set_xnack_mode(struct file *filep,
 	if (args->xnack_enabled >= 0) {
 		if (!list_empty(&p->pqm.queues)) {
 			pr_debug("Process has user queues running\n");
+<<<<<<< HEAD
 			r = -EBUSY;
 			goto out_unlock;
 		}
@@ -1689,11 +1741,27 @@ static int kfd_ioctl_set_xnack_mode(struct file *filep,
 	}
 
 out_unlock:
+=======
+			mutex_unlock(&p->mutex);
+			return -EBUSY;
+		}
+		if (args->xnack_enabled && !kfd_process_xnack_mode(p, true))
+			r = -EPERM;
+		else
+			p->xnack_enabled = args->xnack_enabled;
+	} else {
+		args->xnack_enabled = p->xnack_enabled;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&p->mutex);
 
 	return r;
 }
 
+<<<<<<< HEAD
+=======
+#if IS_ENABLED(CONFIG_HSA_AMD_SVM)
+>>>>>>> b7ba80a49124 (Commit)
 static int kfd_ioctl_svm(struct file *filep, struct kfd_process *p, void *data)
 {
 	struct kfd_ioctl_svm_args *args = data;
@@ -1713,11 +1781,14 @@ static int kfd_ioctl_svm(struct file *filep, struct kfd_process *p, void *data)
 	return r;
 }
 #else
+<<<<<<< HEAD
 static int kfd_ioctl_set_xnack_mode(struct file *filep,
 				    struct kfd_process *p, void *data)
 {
 	return -EPERM;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int kfd_ioctl_svm(struct file *filep, struct kfd_process *p, void *data)
 {
 	return -EPERM;
@@ -2025,7 +2096,11 @@ static int criu_checkpoint(struct file *filep,
 {
 	int ret;
 	uint32_t num_devices, num_bos, num_objects;
+<<<<<<< HEAD
 	uint64_t priv_size, priv_offset = 0, bo_priv_offset;
+=======
+	uint64_t priv_size, priv_offset = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!args->devices || !args->bos || !args->priv_data)
 		return -EINVAL;
@@ -2069,22 +2144,34 @@ static int criu_checkpoint(struct file *filep,
 	if (ret)
 		goto exit_unlock;
 
+<<<<<<< HEAD
 	/* Leave room for BOs in the private data. They need to be restored
 	 * before events, but we checkpoint them last to simplify the error
 	 * handling.
 	 */
 	bo_priv_offset = priv_offset;
 	priv_offset += num_bos * sizeof(struct kfd_criu_bo_priv_data);
+=======
+	ret = criu_checkpoint_bos(p, num_bos, (uint8_t __user *)args->bos,
+			    (uint8_t __user *)args->priv_data, &priv_offset);
+	if (ret)
+		goto exit_unlock;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (num_objects) {
 		ret = kfd_criu_checkpoint_queues(p, (uint8_t __user *)args->priv_data,
 						 &priv_offset);
 		if (ret)
+<<<<<<< HEAD
 			goto exit_unlock;
+=======
+			goto close_bo_fds;
+>>>>>>> b7ba80a49124 (Commit)
 
 		ret = kfd_criu_checkpoint_events(p, (uint8_t __user *)args->priv_data,
 						 &priv_offset);
 		if (ret)
+<<<<<<< HEAD
 			goto exit_unlock;
 
 		ret = kfd_criu_checkpoint_svm(p, (uint8_t __user *)args->priv_data, &priv_offset);
@@ -2097,6 +2184,26 @@ static int criu_checkpoint(struct file *filep,
 	 */
 	ret = criu_checkpoint_bos(p, num_bos, (uint8_t __user *)args->bos,
 			   (uint8_t __user *)args->priv_data, &bo_priv_offset);
+=======
+			goto close_bo_fds;
+
+		ret = kfd_criu_checkpoint_svm(p, (uint8_t __user *)args->priv_data, &priv_offset);
+		if (ret)
+			goto close_bo_fds;
+	}
+
+close_bo_fds:
+	if (ret) {
+		/* If IOCTL returns err, user assumes all FDs opened in criu_dump_bos are closed */
+		uint32_t i;
+		struct kfd_criu_bo_bucket *bo_buckets = (struct kfd_criu_bo_bucket *) args->bos;
+
+		for (i = 0; i < num_bos; i++) {
+			if (bo_buckets[i].alloc_flags & KFD_IOC_ALLOC_MEM_FLAGS_VRAM)
+				close_fd(bo_buckets[i].dmabuf_fd);
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 exit_unlock:
 	mutex_unlock(&p->mutex);
@@ -2824,9 +2931,12 @@ static const struct amdkfd_ioctl_desc amdkfd_ioctls[] = {
 
 	AMDKFD_IOCTL_DEF(AMDKFD_IOC_AVAILABLE_MEMORY,
 			kfd_ioctl_get_available_memory, 0),
+<<<<<<< HEAD
 
 	AMDKFD_IOCTL_DEF(AMDKFD_IOC_EXPORT_DMABUF,
 				kfd_ioctl_export_dmabuf, 0),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define AMDKFD_CORE_IOCTL_COUNT	ARRAY_SIZE(amdkfd_ioctls)
@@ -2957,8 +3067,13 @@ static int kfd_mmio_mmap(struct kfd_dev *dev, struct kfd_process *process,
 
 	address = dev->adev->rmmio_remap.bus_addr;
 
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_IO | VM_DONTCOPY | VM_DONTEXPAND | VM_NORESERVE |
 				VM_DONTDUMP | VM_PFNMAP);
+=======
+	vma->vm_flags |= VM_IO | VM_DONTCOPY | VM_DONTEXPAND | VM_NORESERVE |
+				VM_DONTDUMP | VM_PFNMAP;
+>>>>>>> b7ba80a49124 (Commit)
 
 	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
 

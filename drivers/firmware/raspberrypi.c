@@ -228,6 +228,7 @@ static void rpi_register_clk_driver(struct device *dev)
 						-1, NULL, 0);
 }
 
+<<<<<<< HEAD
 unsigned int rpi_firmware_clk_get_max_rate(struct rpi_firmware *fw, unsigned int id)
 {
 	struct rpi_firmware_clk_rate_request msg =
@@ -248,6 +249,8 @@ unsigned int rpi_firmware_clk_get_max_rate(struct rpi_firmware *fw, unsigned int
 }
 EXPORT_SYMBOL_GPL(rpi_firmware_clk_get_max_rate);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void rpi_firmware_delete(struct kref *kref)
 {
 	struct rpi_firmware *fw = container_of(kref, struct rpi_firmware,
@@ -290,8 +293,14 @@ static int rpi_firmware_probe(struct platform_device *pdev)
 	fw->chan = mbox_request_channel(&fw->cl, 0);
 	if (IS_ERR(fw->chan)) {
 		int ret = PTR_ERR(fw->chan);
+<<<<<<< HEAD
 		kfree(fw);
 		return dev_err_probe(dev, ret, "Failed to get mbox channel\n");
+=======
+		if (ret != -EPROBE_DEFER)
+			dev_err(dev, "Failed to get mbox channel: %d\n", ret);
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	init_completion(&fw->c);
@@ -330,6 +339,7 @@ static int rpi_firmware_remove(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static const struct of_device_id rpi_firmware_of_match[] = {
 	{ .compatible = "raspberrypi,bcm2835-firmware", },
 	{},
@@ -342,6 +352,8 @@ struct device_node *rpi_firmware_find_node(void)
 }
 EXPORT_SYMBOL_GPL(rpi_firmware_find_node);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * rpi_firmware_get - Get pointer to rpi_firmware structure.
  * @firmware_node:    Pointer to the firmware Device Tree node.
@@ -397,6 +409,15 @@ struct rpi_firmware *devm_rpi_firmware_get(struct device *dev,
 }
 EXPORT_SYMBOL_GPL(devm_rpi_firmware_get);
 
+<<<<<<< HEAD
+=======
+static const struct of_device_id rpi_firmware_of_match[] = {
+	{ .compatible = "raspberrypi,bcm2835-firmware", },
+	{},
+};
+MODULE_DEVICE_TABLE(of, rpi_firmware_of_match);
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct platform_driver rpi_firmware_driver = {
 	.driver = {
 		.name = "raspberrypi-firmware",

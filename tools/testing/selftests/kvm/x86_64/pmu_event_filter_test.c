@@ -21,6 +21,32 @@
 #define ARCH_PERFMON_EVENTSEL_OS			(1ULL << 17)
 #define ARCH_PERFMON_EVENTSEL_ENABLE			(1ULL << 22)
 
+<<<<<<< HEAD
+=======
+union cpuid10_eax {
+	struct {
+		unsigned int version_id:8;
+		unsigned int num_counters:8;
+		unsigned int bit_width:8;
+		unsigned int mask_length:8;
+	} split;
+	unsigned int full;
+};
+
+union cpuid10_ebx {
+	struct {
+		unsigned int no_unhalted_core_cycles:1;
+		unsigned int no_instructions_retired:1;
+		unsigned int no_unhalted_reference_cycles:1;
+		unsigned int no_llc_reference:1;
+		unsigned int no_llc_misses:1;
+		unsigned int no_branch_instruction_retired:1;
+		unsigned int no_branch_misses_retired:1;
+	} split;
+	unsigned int full;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /* End of stuff taken from perf_event.h. */
 
 /* Oddly, this isn't in perf_event.h. */
@@ -151,10 +177,21 @@ static void amd_guest_code(void)
  */
 static uint64_t run_vcpu_to_sync(struct kvm_vcpu *vcpu)
 {
+<<<<<<< HEAD
 	struct ucall uc;
 
 	vcpu_run(vcpu);
 	TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_IO);
+=======
+	struct kvm_run *run = vcpu->run;
+	struct ucall uc;
+
+	vcpu_run(vcpu);
+	TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
+		    "Exit_reason other than KVM_EXIT_IO: %u (%s)\n",
+		    run->exit_reason,
+		    exit_reason_str(run->exit_reason));
+>>>>>>> b7ba80a49124 (Commit)
 	get_ucall(vcpu, &uc);
 	TEST_ASSERT(uc.cmd == UCALL_SYNC,
 		    "Received ucall other than UCALL_SYNC: %lu", uc.cmd);
@@ -194,15 +231,23 @@ static struct kvm_pmu_event_filter *alloc_pmu_event_filter(uint32_t nevents)
 
 
 static struct kvm_pmu_event_filter *
+<<<<<<< HEAD
 create_pmu_event_filter(const uint64_t event_list[], int nevents,
 			uint32_t action, uint32_t flags)
+=======
+create_pmu_event_filter(const uint64_t event_list[],
+			int nevents, uint32_t action)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct kvm_pmu_event_filter *f;
 	int i;
 
 	f = alloc_pmu_event_filter(nevents);
 	f->action = action;
+<<<<<<< HEAD
 	f->flags = flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < nevents; i++)
 		f->events[i] = event_list[i];
 
@@ -213,7 +258,11 @@ static struct kvm_pmu_event_filter *event_filter(uint32_t action)
 {
 	return create_pmu_event_filter(event_list,
 				       ARRAY_SIZE(event_list),
+<<<<<<< HEAD
 				       action, 0);
+=======
+				       action);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -260,7 +309,11 @@ static void test_amd_deny_list(struct kvm_vcpu *vcpu)
 	struct kvm_pmu_event_filter *f;
 	uint64_t count;
 
+<<<<<<< HEAD
 	f = create_pmu_event_filter(&event, 1, KVM_PMU_EVENT_DENY, 0);
+=======
+	f = create_pmu_event_filter(&event, 1, KVM_PMU_EVENT_DENY);
+>>>>>>> b7ba80a49124 (Commit)
 	count = test_with_filter(vcpu, f);
 
 	free(f);
@@ -354,6 +407,7 @@ static void test_pmu_config_disable(void (*guest_code)(void))
 }
 
 /*
+<<<<<<< HEAD
  * On Intel, check for a non-zero PMU version, at least one general-purpose
  * counter per logical processor, and support for counting the number of branch
  * instructions retired.
@@ -379,6 +433,48 @@ static bool is_zen2(uint32_t family, uint32_t model)
 static bool is_zen3(uint32_t family, uint32_t model)
 {
 	return family == 0x19 && model <= 0x0f;
+=======
+ * Check for a non-zero PMU version, at least one general-purpose
+ * counter per logical processor, an EBX bit vector of length greater
+ * than 5, and EBX[5] clear.
+ */
+static bool check_intel_pmu_leaf(const struct kvm_cpuid_entry2 *entry)
+{
+	union cpuid10_eax eax = { .full = entry->eax };
+	union cpuid10_ebx ebx = { .full = entry->ebx };
+
+	return eax.split.version_id && eax.split.num_counters > 0 &&
+		eax.split.mask_length > ARCH_PERFMON_BRANCHES_RETIRED &&
+		!ebx.split.no_branch_instruction_retired;
+}
+
+/*
+ * Note that CPUID leaf 0xa is Intel-specific. This leaf should be
+ * clear on AMD hardware.
+ */
+static bool use_intel_pmu(void)
+{
+	const struct kvm_cpuid_entry2 *entry;
+
+	entry = kvm_get_supported_cpuid_entry(0xa);
+	return is_intel_cpu() && check_intel_pmu_leaf(entry);
+}
+
+static bool is_zen1(uint32_t eax)
+{
+	return x86_family(eax) == 0x17 && x86_model(eax) <= 0x0f;
+}
+
+static bool is_zen2(uint32_t eax)
+{
+	return x86_family(eax) == 0x17 &&
+		x86_model(eax) >= 0x30 && x86_model(eax) <= 0x3f;
+}
+
+static bool is_zen3(uint32_t eax)
+{
+	return x86_family(eax) == 0x19 && x86_model(eax) <= 0x0f;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -391,6 +487,7 @@ static bool is_zen3(uint32_t family, uint32_t model)
  */
 static bool use_amd_pmu(void)
 {
+<<<<<<< HEAD
 	uint32_t family = kvm_cpu_family();
 	uint32_t model = kvm_cpu_model();
 
@@ -756,16 +853,35 @@ static void test_filter_ioctl(struct kvm_vcpu *vcpu)
 	e = KVM_PMU_ENCODE_MASKED_ENTRY(0xff, 0xff, 0xff, 0xf);
 	r = run_filter_test(vcpu, &e, 1, KVM_PMU_EVENT_FLAG_MASKED_EVENTS);
 	TEST_ASSERT(r == 0, "Valid PMU Event Filter is failing");
+=======
+	const struct kvm_cpuid_entry2 *entry;
+
+	entry = kvm_get_supported_cpuid_entry(1);
+	return is_amd_cpu() &&
+		(is_zen1(entry->eax) ||
+		 is_zen2(entry->eax) ||
+		 is_zen3(entry->eax));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int main(int argc, char *argv[])
 {
 	void (*guest_code)(void);
+<<<<<<< HEAD
 	struct kvm_vcpu *vcpu, *vcpu2 = NULL;
 	struct kvm_vm *vm;
 
 	TEST_REQUIRE(kvm_has_cap(KVM_CAP_PMU_EVENT_FILTER));
 	TEST_REQUIRE(kvm_has_cap(KVM_CAP_PMU_EVENT_MASKED_EVENTS));
+=======
+	struct kvm_vcpu *vcpu;
+	struct kvm_vm *vm;
+
+	/* Tell stdout not to buffer its content */
+	setbuf(stdout, NULL);
+
+	TEST_REQUIRE(kvm_has_cap(KVM_CAP_PMU_EVENT_FILTER));
+>>>>>>> b7ba80a49124 (Commit)
 
 	TEST_REQUIRE(use_intel_pmu() || use_amd_pmu());
 	guest_code = use_intel_pmu() ? intel_guest_code : amd_guest_code;
@@ -786,6 +902,7 @@ int main(int argc, char *argv[])
 	test_not_member_deny_list(vcpu);
 	test_not_member_allow_list(vcpu);
 
+<<<<<<< HEAD
 	if (use_intel_pmu() &&
 	    supports_event_mem_inst_retired() &&
 	    kvm_cpu_property(X86_PROPERTY_PMU_NR_GP_COUNTERS) >= 3)
@@ -797,6 +914,8 @@ int main(int argc, char *argv[])
 		test_masked_events(vcpu2);
 	test_filter_ioctl(vcpu);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kvm_vm_free(vm);
 
 	test_pmu_config_disable(guest_code);

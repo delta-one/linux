@@ -31,7 +31,11 @@
 #include <linux/init.h>
 #include <linux/kernel.h>
 #include <linux/types.h>
+<<<<<<< HEAD
 #include <linux/gpio/driver.h>
+=======
+#include <linux/gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/mach-au1x00/gpio-au1000.h>
 #include <asm/mach-au1x00/gpio-au1300.h>
 

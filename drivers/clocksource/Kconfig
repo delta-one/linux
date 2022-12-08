@@ -441,7 +441,11 @@ config CLKSRC_EXYNOS_MCT
 config CLKSRC_SAMSUNG_PWM
 	bool "PWM timer driver for Samsung S3C, S5P" if COMPILE_TEST
 	depends on HAS_IOMEM
+<<<<<<< HEAD
 	depends on ARCH_EXYNOS || ARCH_S3C64XX || ARCH_S5PV210 || COMPILE_TEST
+=======
+	depends on ARCH_EXYNOS || ARCH_S3C24XX || ARCH_S3C64XX || ARCH_S5PV210 || COMPILE_TEST
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  This is a new clocksource driver for the PWM timer found in
 	  Samsung S3C, S5P and Exynos SoCs, replacing an earlier driver
@@ -706,7 +710,11 @@ config INGENIC_OST
 
 config MICROCHIP_PIT64B
 	bool "Microchip PIT64B support"
+<<<<<<< HEAD
 	depends on OF && ARM
+=======
+	depends on OF || COMPILE_TEST
+>>>>>>> b7ba80a49124 (Commit)
 	select TIMER_OF
 	help
 	  This option enables Microchip PIT64B timer for Atmel

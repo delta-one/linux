@@ -280,7 +280,11 @@ EXPORT_SYMBOL_GPL(nfs_put_client);
 static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *data)
 {
 	struct nfs_client *clp;
+<<<<<<< HEAD
 	const struct sockaddr *sap = (struct sockaddr *)data->addr;
+=======
+	const struct sockaddr *sap = data->addr;
+>>>>>>> b7ba80a49124 (Commit)
 	struct nfs_net *nn = net_generic(data->net, nfs_net_id);
 	int error;
 
@@ -666,7 +670,11 @@ static int nfs_init_server(struct nfs_server *server,
 	struct rpc_timeout timeparms;
 	struct nfs_client_initdata cl_init = {
 		.hostname = ctx->nfs_server.hostname,
+<<<<<<< HEAD
 		.addr = &ctx->nfs_server._address,
+=======
+		.addr = (const struct sockaddr *)&ctx->nfs_server.address,
+>>>>>>> b7ba80a49124 (Commit)
 		.addrlen = ctx->nfs_server.addrlen,
 		.nfs_mod = ctx->nfs_mod,
 		.proto = ctx->nfs_server.protocol,

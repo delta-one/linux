@@ -4,7 +4,10 @@
 #include <linux/bpf.h>
 #include <linux/btf.h>
 #include <linux/bpf-cgroup.h>
+<<<<<<< HEAD
 #include <linux/cgroup.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/rcupdate.h>
 #include <linux/random.h>
 #include <linux/smp.h>
@@ -20,7 +23,10 @@
 #include <linux/proc_ns.h>
 #include <linux/security.h>
 #include <linux/btf_ids.h>
+<<<<<<< HEAD
 #include <linux/bpf_mem_alloc.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "../../lib/kstrtox.h"
 
@@ -338,7 +344,10 @@ const struct bpf_func_proto bpf_spin_lock_proto = {
 	.gpl_only	= false,
 	.ret_type	= RET_VOID,
 	.arg1_type	= ARG_PTR_TO_SPIN_LOCK,
+<<<<<<< HEAD
 	.arg1_btf_id    = BPF_PTR_POISON,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static inline void __bpf_spin_unlock_irqrestore(struct bpf_spin_lock *lock)
@@ -361,7 +370,10 @@ const struct bpf_func_proto bpf_spin_unlock_proto = {
 	.gpl_only	= false,
 	.ret_type	= RET_VOID,
 	.arg1_type	= ARG_PTR_TO_SPIN_LOCK,
+<<<<<<< HEAD
 	.arg1_btf_id    = BPF_PTR_POISON,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 void copy_map_value_locked(struct bpf_map *map, void *dst, void *src,
@@ -370,9 +382,15 @@ void copy_map_value_locked(struct bpf_map *map, void *dst, void *src,
 	struct bpf_spin_lock *lock;
 
 	if (lock_src)
+<<<<<<< HEAD
 		lock = src + map->record->spin_lock_off;
 	else
 		lock = dst + map->record->spin_lock_off;
+=======
+		lock = src + map->spin_lock_off;
+	else
+		lock = dst + map->spin_lock_off;
+>>>>>>> b7ba80a49124 (Commit)
 	preempt_disable();
 	__bpf_spin_lock_irqsave(lock);
 	copy_map_value(map, dst, src);
@@ -571,7 +589,11 @@ static const struct bpf_func_proto bpf_strncmp_proto = {
 	.func		= bpf_strncmp,
 	.gpl_only	= false,
 	.ret_type	= RET_INTEGER,
+<<<<<<< HEAD
 	.arg1_type	= ARG_PTR_TO_MEM | MEM_RDONLY,
+=======
+	.arg1_type	= ARG_PTR_TO_MEM,
+>>>>>>> b7ba80a49124 (Commit)
 	.arg2_type	= ARG_CONST_SIZE,
 	.arg3_type	= ARG_PTR_TO_CONST_STR,
 };
@@ -661,7 +683,10 @@ BPF_CALL_3(bpf_copy_from_user, void *, dst, u32, size,
 const struct bpf_func_proto bpf_copy_from_user_proto = {
 	.func		= bpf_copy_from_user,
 	.gpl_only	= false,
+<<<<<<< HEAD
 	.might_sleep	= true,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.ret_type	= RET_INTEGER,
 	.arg1_type	= ARG_PTR_TO_UNINIT_MEM,
 	.arg2_type	= ARG_CONST_SIZE_OR_ZERO,
@@ -692,7 +717,10 @@ BPF_CALL_5(bpf_copy_from_user_task, void *, dst, u32, size,
 const struct bpf_func_proto bpf_copy_from_user_task_proto = {
 	.func		= bpf_copy_from_user_task,
 	.gpl_only	= true,
+<<<<<<< HEAD
 	.might_sleep	= true,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.ret_type	= RET_INTEGER,
 	.arg1_type	= ARG_PTR_TO_UNINIT_MEM,
 	.arg2_type	= ARG_CONST_SIZE_OR_ZERO,
@@ -756,11 +784,16 @@ static int bpf_trace_copy_string(char *buf, void *unsafe_ptr, char fmt_ptype,
 /* Per-cpu temp buffers used by printf-like helpers to store the bprintf binary
  * arguments representation.
  */
+<<<<<<< HEAD
 #define MAX_BPRINTF_BIN_ARGS	512
+=======
+#define MAX_BPRINTF_BUF_LEN	512
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Support executing three nested bprintf helper calls on a given CPU */
 #define MAX_BPRINTF_NEST_LEVEL	3
 struct bpf_bprintf_buffers {
+<<<<<<< HEAD
 	char bin_args[MAX_BPRINTF_BIN_ARGS];
 	char buf[MAX_BPRINTF_BUF];
 };
@@ -770,6 +803,16 @@ static DEFINE_PER_CPU(int, bpf_bprintf_nest_level);
 
 static int try_get_buffers(struct bpf_bprintf_buffers **bufs)
 {
+=======
+	char tmp_bufs[MAX_BPRINTF_NEST_LEVEL][MAX_BPRINTF_BUF_LEN];
+};
+static DEFINE_PER_CPU(struct bpf_bprintf_buffers, bpf_bprintf_bufs);
+static DEFINE_PER_CPU(int, bpf_bprintf_nest_level);
+
+static int try_get_fmt_tmp_buf(char **tmp_buf)
+{
+	struct bpf_bprintf_buffers *bufs;
+>>>>>>> b7ba80a49124 (Commit)
 	int nest_level;
 
 	preempt_disable();
@@ -779,11 +822,17 @@ static int try_get_buffers(struct bpf_bprintf_buffers **bufs)
 		preempt_enable();
 		return -EBUSY;
 	}
+<<<<<<< HEAD
 	*bufs = this_cpu_ptr(&bpf_bprintf_bufs[nest_level - 1]);
+=======
+	bufs = this_cpu_ptr(&bpf_bprintf_bufs);
+	*tmp_buf = bufs->tmp_bufs[nest_level - 1];
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 void bpf_bprintf_cleanup(struct bpf_bprintf_data *data)
 {
 	if (!data->bin_args && !data->buf)
@@ -792,6 +841,14 @@ void bpf_bprintf_cleanup(struct bpf_bprintf_data *data)
 		return;
 	this_cpu_dec(bpf_bprintf_nest_level);
 	preempt_enable();
+=======
+void bpf_bprintf_cleanup(void)
+{
+	if (this_cpu_read(bpf_bprintf_nest_level)) {
+		this_cpu_dec(bpf_bprintf_nest_level);
+		preempt_enable();
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -800,20 +857,33 @@ void bpf_bprintf_cleanup(struct bpf_bprintf_data *data)
  * Returns a negative value if fmt is an invalid format string or 0 otherwise.
  *
  * This can be used in two ways:
+<<<<<<< HEAD
  * - Format string verification only: when data->get_bin_args is false
  * - Arguments preparation: in addition to the above verification, it writes in
  *   data->bin_args a binary representation of arguments usable by bstr_printf
  *   where pointers from BPF have been sanitized.
+=======
+ * - Format string verification only: when bin_args is NULL
+ * - Arguments preparation: in addition to the above verification, it writes in
+ *   bin_args a binary representation of arguments usable by bstr_printf where
+ *   pointers from BPF have been sanitized.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * In argument preparation mode, if 0 is returned, safe temporary buffers are
  * allocated and bpf_bprintf_cleanup should be called to free them after use.
  */
 int bpf_bprintf_prepare(char *fmt, u32 fmt_size, const u64 *raw_args,
+<<<<<<< HEAD
 			u32 num_args, struct bpf_bprintf_data *data)
 {
 	bool get_buffers = (data->get_bin_args && num_args) || data->get_buf;
 	char *unsafe_ptr = NULL, *tmp_buf = NULL, *tmp_buf_end, *fmt_end;
 	struct bpf_bprintf_buffers *buffers = NULL;
+=======
+			u32 **bin_args, u32 num_args)
+{
+	char *unsafe_ptr = NULL, *tmp_buf = NULL, *tmp_buf_end, *fmt_end;
+>>>>>>> b7ba80a49124 (Commit)
 	size_t sizeof_cur_arg, sizeof_cur_ip;
 	int err, i, num_spec = 0;
 	u64 cur_arg;
@@ -824,6 +894,7 @@ int bpf_bprintf_prepare(char *fmt, u32 fmt_size, const u64 *raw_args,
 		return -EINVAL;
 	fmt_size = fmt_end - fmt;
 
+<<<<<<< HEAD
 	if (get_buffers && try_get_buffers(&buffers))
 		return -EBUSY;
 
@@ -837,6 +908,16 @@ int bpf_bprintf_prepare(char *fmt, u32 fmt_size, const u64 *raw_args,
 	if (data->get_buf)
 		data->buf = buffers->buf;
 
+=======
+	if (bin_args) {
+		if (num_args && try_get_fmt_tmp_buf(&tmp_buf))
+			return -EBUSY;
+
+		tmp_buf_end = tmp_buf + MAX_BPRINTF_BUF_LEN;
+		*bin_args = (u32 *)tmp_buf;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < fmt_size; i++) {
 		if ((!isprint(fmt[i]) && !isspace(fmt[i])) || !isascii(fmt[i])) {
 			err = -EINVAL;
@@ -1030,11 +1111,16 @@ nocopy_fmt:
 	err = 0;
 out:
 	if (err)
+<<<<<<< HEAD
 		bpf_bprintf_cleanup(data);
+=======
+		bpf_bprintf_cleanup();
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
 BPF_CALL_5(bpf_snprintf, char *, str, u32, str_size, char *, fmt,
+<<<<<<< HEAD
 	   const void *, args, u32, data_len)
 {
 	struct bpf_bprintf_data data = {
@@ -1044,12 +1130,22 @@ BPF_CALL_5(bpf_snprintf, char *, str, u32, str_size, char *, fmt,
 
 	if (data_len % 8 || data_len > MAX_BPRINTF_VARARGS * 8 ||
 	    (data_len && !args))
+=======
+	   const void *, data, u32, data_len)
+{
+	int err, num_args;
+	u32 *bin_args;
+
+	if (data_len % 8 || data_len > MAX_BPRINTF_VARARGS * 8 ||
+	    (data_len && !data))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	num_args = data_len / 8;
 
 	/* ARG_PTR_TO_CONST_STR guarantees that fmt is zero-terminated so we
 	 * can safely give an unbounded size.
 	 */
+<<<<<<< HEAD
 	err = bpf_bprintf_prepare(fmt, UINT_MAX, args, num_args, &data);
 	if (err < 0)
 		return err;
@@ -1057,6 +1153,15 @@ BPF_CALL_5(bpf_snprintf, char *, str, u32, str_size, char *, fmt,
 	err = bstr_printf(str, str_size, fmt, data.bin_args);
 
 	bpf_bprintf_cleanup(&data);
+=======
+	err = bpf_bprintf_prepare(fmt, UINT_MAX, data, &bin_args, num_args);
+	if (err < 0)
+		return err;
+
+	err = bstr_printf(str, str_size, fmt, bin_args);
+
+	bpf_bprintf_cleanup();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return err + 1;
 }
@@ -1186,7 +1291,11 @@ BPF_CALL_3(bpf_timer_init, struct bpf_timer_kern *, timer, struct bpf_map *, map
 		ret = -ENOMEM;
 		goto out;
 	}
+<<<<<<< HEAD
 	t->value = (void *)timer - map->record->timer_off;
+=======
+	t->value = (void *)timer - map->timer_off;
+>>>>>>> b7ba80a49124 (Commit)
 	t->map = map;
 	t->prog = NULL;
 	rcu_assign_pointer(t->callback_fn, NULL);
@@ -1264,11 +1373,18 @@ BPF_CALL_3(bpf_timer_start, struct bpf_timer_kern *, timer, u64, nsecs, u64, fla
 {
 	struct bpf_hrtimer *t;
 	int ret = 0;
+<<<<<<< HEAD
 	enum hrtimer_mode mode;
 
 	if (in_nmi())
 		return -EOPNOTSUPP;
 	if (flags > BPF_F_TIMER_ABS)
+=======
+
+	if (in_nmi())
+		return -EOPNOTSUPP;
+	if (flags)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	__bpf_spin_lock_irqsave(&timer->lock);
 	t = timer->timer;
@@ -1276,6 +1392,7 @@ BPF_CALL_3(bpf_timer_start, struct bpf_timer_kern *, timer, u64, nsecs, u64, fla
 		ret = -EINVAL;
 		goto out;
 	}
+<<<<<<< HEAD
 
 	if (flags & BPF_F_TIMER_ABS)
 		mode = HRTIMER_MODE_ABS_SOFT;
@@ -1283,6 +1400,9 @@ BPF_CALL_3(bpf_timer_start, struct bpf_timer_kern *, timer, u64, nsecs, u64, fla
 		mode = HRTIMER_MODE_REL_SOFT;
 
 	hrtimer_start(&t->timer, ns_to_ktime(nsecs), mode);
+=======
+	hrtimer_start(&t->timer, ns_to_ktime(nsecs), HRTIMER_MODE_REL_SOFT);
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	__bpf_spin_unlock_irqrestore(&timer->lock);
 	return ret;
@@ -1422,27 +1542,38 @@ static const struct bpf_func_proto bpf_kptr_xchg_proto = {
 #define DYNPTR_SIZE_MASK	0xFFFFFF
 #define DYNPTR_RDONLY_BIT	BIT(31)
 
+<<<<<<< HEAD
 static bool bpf_dynptr_is_rdonly(const struct bpf_dynptr_kern *ptr)
+=======
+static bool bpf_dynptr_is_rdonly(struct bpf_dynptr_kern *ptr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return ptr->size & DYNPTR_RDONLY_BIT;
 }
 
+<<<<<<< HEAD
 void bpf_dynptr_set_rdonly(struct bpf_dynptr_kern *ptr)
 {
 	ptr->size |= DYNPTR_RDONLY_BIT;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void bpf_dynptr_set_type(struct bpf_dynptr_kern *ptr, enum bpf_dynptr_type type)
 {
 	ptr->size |= type << DYNPTR_TYPE_SHIFT;
 }
 
+<<<<<<< HEAD
 static enum bpf_dynptr_type bpf_dynptr_get_type(const struct bpf_dynptr_kern *ptr)
 {
 	return (ptr->size & ~(DYNPTR_RDONLY_BIT)) >> DYNPTR_TYPE_SHIFT;
 }
 
 u32 bpf_dynptr_get_size(const struct bpf_dynptr_kern *ptr)
+=======
+u32 bpf_dynptr_get_size(struct bpf_dynptr_kern *ptr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return ptr->size & DYNPTR_SIZE_MASK;
 }
@@ -1466,7 +1597,11 @@ void bpf_dynptr_set_null(struct bpf_dynptr_kern *ptr)
 	memset(ptr, 0, sizeof(*ptr));
 }
 
+<<<<<<< HEAD
 static int bpf_dynptr_check_off_len(const struct bpf_dynptr_kern *ptr, u32 offset, u32 len)
+=======
+static int bpf_dynptr_check_off_len(struct bpf_dynptr_kern *ptr, u32 offset, u32 len)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	u32 size = bpf_dynptr_get_size(ptr);
 
@@ -1511,10 +1646,16 @@ static const struct bpf_func_proto bpf_dynptr_from_mem_proto = {
 	.arg4_type	= ARG_PTR_TO_DYNPTR | DYNPTR_TYPE_LOCAL | MEM_UNINIT,
 };
 
+<<<<<<< HEAD
 BPF_CALL_5(bpf_dynptr_read, void *, dst, u32, len, const struct bpf_dynptr_kern *, src,
 	   u32, offset, u64, flags)
 {
 	enum bpf_dynptr_type type;
+=======
+BPF_CALL_5(bpf_dynptr_read, void *, dst, u32, len, struct bpf_dynptr_kern *, src,
+	   u32, offset, u64, flags)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	if (!src->data || flags)
@@ -1524,6 +1665,7 @@ BPF_CALL_5(bpf_dynptr_read, void *, dst, u32, len, const struct bpf_dynptr_kern 
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	type = bpf_dynptr_get_type(src);
 
 	switch (type) {
@@ -1543,6 +1685,11 @@ BPF_CALL_5(bpf_dynptr_read, void *, dst, u32, len, const struct bpf_dynptr_kern 
 		WARN_ONCE(true, "bpf_dynptr_read: unknown dynptr type %d\n", type);
 		return -EFAULT;
 	}
+=======
+	memcpy(dst, src->data + src->offset + offset, len);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct bpf_func_proto bpf_dynptr_read_proto = {
@@ -1551,11 +1698,16 @@ static const struct bpf_func_proto bpf_dynptr_read_proto = {
 	.ret_type	= RET_INTEGER,
 	.arg1_type	= ARG_PTR_TO_UNINIT_MEM,
 	.arg2_type	= ARG_CONST_SIZE_OR_ZERO,
+<<<<<<< HEAD
 	.arg3_type	= ARG_PTR_TO_DYNPTR | MEM_RDONLY,
+=======
+	.arg3_type	= ARG_PTR_TO_DYNPTR,
+>>>>>>> b7ba80a49124 (Commit)
 	.arg4_type	= ARG_ANYTHING,
 	.arg5_type	= ARG_ANYTHING,
 };
 
+<<<<<<< HEAD
 BPF_CALL_5(bpf_dynptr_write, const struct bpf_dynptr_kern *, dst, u32, offset, void *, src,
 	   u32, len, u64, flags)
 {
@@ -1563,12 +1715,21 @@ BPF_CALL_5(bpf_dynptr_write, const struct bpf_dynptr_kern *, dst, u32, offset, v
 	int err;
 
 	if (!dst->data || bpf_dynptr_is_rdonly(dst))
+=======
+BPF_CALL_5(bpf_dynptr_write, struct bpf_dynptr_kern *, dst, u32, offset, void *, src,
+	   u32, len, u64, flags)
+{
+	int err;
+
+	if (!dst->data || flags || bpf_dynptr_is_rdonly(dst))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	err = bpf_dynptr_check_off_len(dst, offset, len);
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	type = bpf_dynptr_get_type(dst);
 
 	switch (type) {
@@ -1593,22 +1754,36 @@ BPF_CALL_5(bpf_dynptr_write, const struct bpf_dynptr_kern *, dst, u32, offset, v
 		WARN_ONCE(true, "bpf_dynptr_write: unknown dynptr type %d\n", type);
 		return -EFAULT;
 	}
+=======
+	memcpy(dst->data + dst->offset + offset, src, len);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct bpf_func_proto bpf_dynptr_write_proto = {
 	.func		= bpf_dynptr_write,
 	.gpl_only	= false,
 	.ret_type	= RET_INTEGER,
+<<<<<<< HEAD
 	.arg1_type	= ARG_PTR_TO_DYNPTR | MEM_RDONLY,
+=======
+	.arg1_type	= ARG_PTR_TO_DYNPTR,
+>>>>>>> b7ba80a49124 (Commit)
 	.arg2_type	= ARG_ANYTHING,
 	.arg3_type	= ARG_PTR_TO_MEM | MEM_RDONLY,
 	.arg4_type	= ARG_CONST_SIZE_OR_ZERO,
 	.arg5_type	= ARG_ANYTHING,
 };
 
+<<<<<<< HEAD
 BPF_CALL_3(bpf_dynptr_data, const struct bpf_dynptr_kern *, ptr, u32, offset, u32, len)
 {
 	enum bpf_dynptr_type type;
+=======
+BPF_CALL_3(bpf_dynptr_data, struct bpf_dynptr_kern *, ptr, u32, offset, u32, len)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	if (!ptr->data)
@@ -1621,6 +1796,7 @@ BPF_CALL_3(bpf_dynptr_data, const struct bpf_dynptr_kern *, ptr, u32, offset, u3
 	if (bpf_dynptr_is_rdonly(ptr))
 		return 0;
 
+<<<<<<< HEAD
 	type = bpf_dynptr_get_type(ptr);
 
 	switch (type) {
@@ -1635,13 +1811,20 @@ BPF_CALL_3(bpf_dynptr_data, const struct bpf_dynptr_kern *, ptr, u32, offset, u3
 		WARN_ONCE(true, "bpf_dynptr_data: unknown dynptr type %d\n", type);
 		return 0;
 	}
+=======
+	return (unsigned long)(ptr->data + ptr->offset + offset);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct bpf_func_proto bpf_dynptr_data_proto = {
 	.func		= bpf_dynptr_data,
 	.gpl_only	= false,
 	.ret_type	= RET_PTR_TO_DYNPTR_MEM_OR_NULL,
+<<<<<<< HEAD
 	.arg1_type	= ARG_PTR_TO_DYNPTR | MEM_RDONLY,
+=======
+	.arg1_type	= ARG_PTR_TO_DYNPTR,
+>>>>>>> b7ba80a49124 (Commit)
 	.arg2_type	= ARG_ANYTHING,
 	.arg3_type	= ARG_CONST_ALLOC_SIZE_OR_ZERO,
 };
@@ -1730,12 +1913,15 @@ bpf_base_func_proto(enum bpf_func_id func_id)
 		return &bpf_timer_cancel_proto;
 	case BPF_FUNC_kptr_xchg:
 		return &bpf_kptr_xchg_proto;
+<<<<<<< HEAD
 	case BPF_FUNC_for_each_map_elem:
 		return &bpf_for_each_map_elem_proto;
 	case BPF_FUNC_loop:
 		return &bpf_loop_proto;
 	case BPF_FUNC_user_ringbuf_drain:
 		return &bpf_user_ringbuf_drain_proto;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case BPF_FUNC_ringbuf_reserve_dynptr:
 		return &bpf_ringbuf_reserve_dynptr_proto;
 	case BPF_FUNC_ringbuf_submit_dynptr:
@@ -1750,6 +1936,7 @@ bpf_base_func_proto(enum bpf_func_id func_id)
 		return &bpf_dynptr_write_proto;
 	case BPF_FUNC_dynptr_data:
 		return &bpf_dynptr_data_proto;
+<<<<<<< HEAD
 #ifdef CONFIG_CGROUPS
 	case BPF_FUNC_cgrp_storage_get:
 		return &bpf_cgrp_storage_get_proto;
@@ -1760,6 +1947,14 @@ bpf_base_func_proto(enum bpf_func_id func_id)
 	case BPF_FUNC_get_current_ancestor_cgroup_id:
 		return &bpf_get_current_ancestor_cgroup_id_proto;
 #endif
+=======
+	case BPF_FUNC_for_each_map_elem:
+		return &bpf_for_each_map_elem_proto;
+	case BPF_FUNC_loop:
+		return &bpf_loop_proto;
+	case BPF_FUNC_user_ringbuf_drain:
+		return &bpf_user_ringbuf_drain_proto;
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		break;
 	}
@@ -1797,6 +1992,7 @@ bpf_base_func_proto(enum bpf_func_id func_id)
 	}
 }
 
+<<<<<<< HEAD
 void bpf_list_head_free(const struct btf_field *field, void *list_head,
 			struct bpf_spin_lock *spin_lock)
 {
@@ -2424,10 +2620,22 @@ BTF_SET8_END(common_btf_ids)
 static const struct btf_kfunc_id_set common_kfunc_set = {
 	.owner = THIS_MODULE,
 	.set   = &common_btf_ids,
+=======
+BTF_SET8_START(tracing_btf_ids)
+#ifdef CONFIG_KEXEC_CORE
+BTF_ID_FLAGS(func, crash_kexec, KF_DESTRUCTIVE)
+#endif
+BTF_SET8_END(tracing_btf_ids)
+
+static const struct btf_kfunc_id_set tracing_kfunc_set = {
+	.owner = THIS_MODULE,
+	.set   = &tracing_btf_ids,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int __init kfunc_init(void)
 {
+<<<<<<< HEAD
 	int ret;
 	const struct btf_id_dtor_kfunc generic_dtors[] = {
 		{
@@ -2449,6 +2657,9 @@ static int __init kfunc_init(void)
 						  ARRAY_SIZE(generic_dtors),
 						  THIS_MODULE);
 	return ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_UNSPEC, &common_kfunc_set);
+=======
+	return register_btf_kfunc_id_set(BPF_PROG_TYPE_TRACING, &tracing_kfunc_set);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 late_initcall(kfunc_init);

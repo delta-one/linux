@@ -41,6 +41,21 @@ static void guest_code(void)
 		GUEST_SYNC(0);
 }
 
+<<<<<<< HEAD
+=======
+/*
+ * We have to perform direct system call for getcpu() because it's
+ * not available until glic 2.29.
+ */
+static void sys_getcpu(unsigned *cpu)
+{
+	int r;
+
+	r = syscall(__NR_getcpu, cpu, NULL, NULL);
+	TEST_ASSERT(!r, "getcpu failed, errno = %d (%s)", errno, strerror(errno));
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int next_cpu(int cpu)
 {
 	/*
@@ -193,6 +208,12 @@ int main(int argc, char *argv[])
 	struct kvm_vcpu *vcpu;
 	u32 cpu, rseq_cpu;
 
+<<<<<<< HEAD
+=======
+	/* Tell stdout not to buffer its content */
+	setbuf(stdout, NULL);
+
+>>>>>>> b7ba80a49124 (Commit)
 	r = sched_getaffinity(0, sizeof(possible_mask), &possible_mask);
 	TEST_ASSERT(!r, "sched_getaffinity failed, errno = %d (%s)", errno,
 		    strerror(errno));
@@ -209,6 +230,10 @@ int main(int argc, char *argv[])
 	 * CPU affinity.
 	 */
 	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
+<<<<<<< HEAD
+=======
+	ucall_init(vm, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pthread_create(&migration_thread, NULL, migration_worker,
 		       (void *)(unsigned long)syscall(SYS_gettid));
@@ -237,9 +262,13 @@ int main(int argc, char *argv[])
 			 * across the seq_cnt reads.
 			 */
 			smp_rmb();
+<<<<<<< HEAD
 			r = sys_getcpu(&cpu, NULL);
 			TEST_ASSERT(!r, "getcpu failed, errno = %d (%s)",
 				    errno, strerror(errno));
+=======
+			sys_getcpu(&cpu);
+>>>>>>> b7ba80a49124 (Commit)
 			rseq_cpu = rseq_current_cpu_raw();
 			smp_rmb();
 		} while (snapshot != atomic_read(&seq_cnt));

@@ -50,10 +50,16 @@ static int i915_ttm_backup(struct i915_gem_apply_to_region *apply,
 		container_of(bo->bdev, typeof(*i915), bdev);
 	struct drm_i915_gem_object *backup;
 	struct ttm_operation_ctx ctx = {};
+<<<<<<< HEAD
 	unsigned int flags;
 	int err = 0;
 
 	if (!i915_ttm_cpu_maps_iomem(bo->resource) || obj->ttm.backup)
+=======
+	int err = 0;
+
+	if (bo->resource->mem_type == I915_PL_SYSTEM || obj->ttm.backup)
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	if (pm_apply->allow_gpu && i915_gem_object_evictable(obj))
@@ -66,6 +72,7 @@ static int i915_ttm_backup(struct i915_gem_apply_to_region *apply,
 	if (obj->flags & I915_BO_ALLOC_PM_VOLATILE)
 		return 0;
 
+<<<<<<< HEAD
 	/*
 	 * It seems that we might have some framebuffers still pinned at this
 	 * stage, but for such objects we might also need to deal with the CCS
@@ -82,6 +89,9 @@ static int i915_ttm_backup(struct i915_gem_apply_to_region *apply,
 	}
 	backup = i915_gem_object_create_region(i915->mm.regions[INTEL_REGION_SMEM],
 					       obj->base.size, 0, flags);
+=======
+	backup = i915_gem_object_create_shmem(i915, obj->base.size);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(backup))
 		return PTR_ERR(backup);
 
@@ -187,10 +197,14 @@ static int i915_ttm_restore(struct i915_gem_apply_to_region *apply,
 		return err;
 
 	/* Content may have been swapped. */
+<<<<<<< HEAD
 	if (!backup_bo->resource)
 		err = ttm_bo_validate(backup_bo, i915_ttm_sys_placement(), &ctx);
 	if (!err)
 		err = ttm_tt_populate(backup_bo->bdev, backup_bo->ttm, &ctx);
+=======
+	err = ttm_tt_populate(backup_bo->bdev, backup_bo->ttm, &ctx);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!err) {
 		err = i915_gem_obj_copy_ttm(obj, backup, pm_apply->allow_gpu,
 					    false);

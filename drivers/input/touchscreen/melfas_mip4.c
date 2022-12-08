@@ -1424,7 +1424,11 @@ static const struct attribute_group mip4_attr_group = {
 	.attrs = mip4_attrs,
 };
 
+<<<<<<< HEAD
 static int mip4_probe(struct i2c_client *client)
+=======
+static int mip4_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mip4_ts *ts;
 	struct input_dev *input;
@@ -1453,7 +1457,11 @@ static int mip4_probe(struct i2c_client *client)
 					      "ce", GPIOD_OUT_LOW);
 	if (IS_ERR(ts->gpio_ce)) {
 		error = PTR_ERR(ts->gpio_ce);
+<<<<<<< HEAD
 		if (error != -EPROBE_DEFER)
+=======
+		if (error != EPROBE_DEFER)
+>>>>>>> b7ba80a49124 (Commit)
 			dev_err(&client->dev,
 				"Failed to get gpio: %d\n", error);
 		return error;
@@ -1528,7 +1536,11 @@ static int mip4_probe(struct i2c_client *client)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int mip4_suspend(struct device *dev)
+=======
+static int __maybe_unused mip4_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct mip4_ts *ts = i2c_get_clientdata(client);
@@ -1546,7 +1558,11 @@ static int mip4_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int mip4_resume(struct device *dev)
+=======
+static int __maybe_unused mip4_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct mip4_ts *ts = i2c_get_clientdata(client);
@@ -1564,7 +1580,11 @@ static int mip4_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(mip4_pm_ops, mip4_suspend, mip4_resume);
+=======
+static SIMPLE_DEV_PM_OPS(mip4_pm_ops, mip4_suspend, mip4_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_OF
 static const struct of_device_id mip4_of_match[] = {
@@ -1590,12 +1610,20 @@ MODULE_DEVICE_TABLE(i2c, mip4_i2c_ids);
 
 static struct i2c_driver mip4_driver = {
 	.id_table = mip4_i2c_ids,
+<<<<<<< HEAD
 	.probe_new = mip4_probe,
+=======
+	.probe = mip4_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = MIP4_DEVICE_NAME,
 		.of_match_table = of_match_ptr(mip4_of_match),
 		.acpi_match_table = ACPI_PTR(mip4_acpi_match),
+<<<<<<< HEAD
 		.pm = pm_sleep_ptr(&mip4_pm_ops),
+=======
+		.pm = &mip4_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 module_i2c_driver(mip4_driver);

@@ -94,8 +94,12 @@ Inorder to dereference the private data (in phy_ops), the phy provider driver
 can use phy_set_drvdata() after creating the PHY and use phy_get_drvdata() in
 phy_ops to get back the private data.
 
+<<<<<<< HEAD
 Getting a reference to the PHY
 ==============================
+=======
+4. Getting a reference to the PHY
+>>>>>>> b7ba80a49124 (Commit)
 
 Before the controller can make use of the PHY, it has to get a reference to
 it. This framework provides the following APIs to get a reference to the PHY.
@@ -103,6 +107,7 @@ it. This framework provides the following APIs to get a reference to the PHY.
 ::
 
 	struct phy *phy_get(struct device *dev, const char *string);
+<<<<<<< HEAD
 	struct phy *devm_phy_get(struct device *dev, const char *string);
 	struct phy *devm_phy_optional_get(struct device *dev,
 					  const char *string);
@@ -111,16 +116,28 @@ it. This framework provides the following APIs to get a reference to the PHY.
 	struct phy *devm_of_phy_optional_get(struct device *dev,
 					     struct device_node *np,
 					     const char *con_id);
+=======
+	struct phy *phy_optional_get(struct device *dev, const char *string);
+	struct phy *devm_phy_get(struct device *dev, const char *string);
+	struct phy *devm_phy_optional_get(struct device *dev,
+					  const char *string);
+>>>>>>> b7ba80a49124 (Commit)
 	struct phy *devm_of_phy_get_by_index(struct device *dev,
 					     struct device_node *np,
 					     int index);
 
+<<<<<<< HEAD
 phy_get, devm_phy_get and devm_phy_optional_get can be used to get the PHY.
 In the case of dt boot, the string arguments
+=======
+phy_get, phy_optional_get, devm_phy_get and devm_phy_optional_get can
+be used to get the PHY. In the case of dt boot, the string arguments
+>>>>>>> b7ba80a49124 (Commit)
 should contain the phy name as given in the dt data and in the case of
 non-dt boot, it should contain the label of the PHY.  The two
 devm_phy_get associates the device with the PHY using devres on
 successful PHY get. On driver detach, release function is invoked on
+<<<<<<< HEAD
 the devres data and devres data is freed.
 The _optional_get variants should be used when the phy is optional. These
 functions will never return -ENODEV, but instead return NULL when
@@ -128,6 +145,15 @@ the phy cannot be found.
 Some generic drivers, such as ehci, may use multiple phys. In this case,
 devm_of_phy_get or devm_of_phy_get_by_index can be used to get a phy
 reference based on name or index.
+=======
+the devres data and devres data is freed. phy_optional_get and
+devm_phy_optional_get should be used when the phy is optional. These
+two functions will never return -ENODEV, but instead returns NULL when
+the phy cannot be found.Some generic drivers, such as ehci, may use multiple
+phys and for such drivers referencing phy(s) by name(s) does not make sense. In
+this case, devm_of_phy_get_by_index can be used to get a phy reference based on
+the index.
+>>>>>>> b7ba80a49124 (Commit)
 
 It should be noted that NULL is a valid phy reference. All phy
 consumer calls on the NULL phy become NOPs. That is the release calls,
@@ -135,6 +161,7 @@ the phy_init() and phy_exit() calls, and phy_power_on() and
 phy_power_off() calls are all NOP when applied to a NULL phy. The NULL
 phy is useful in devices for handling optional phy devices.
 
+<<<<<<< HEAD
 Order of API calls
 ==================
 
@@ -157,6 +184,8 @@ firmware). For compatibility, you should always call this function if you know
 what mode you will be using. Generally, this function should be called after
 :c:func:`phy_power_on`, although some PHY drivers may allow it at any time.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Releasing a reference to the PHY
 ================================
 

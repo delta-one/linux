@@ -9,7 +9,10 @@
 
 #include <linux/clk.h>
 #include <linux/delay.h>
+<<<<<<< HEAD
 #include <linux/dma-mapping.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/dmaengine.h>
 #include <linux/dmapool.h>
 #include <linux/interrupt.h>
@@ -1284,6 +1287,10 @@ static int sun6i_dma_probe(struct platform_device *pdev)
 {
 	struct device_node *np = pdev->dev.of_node;
 	struct sun6i_dma_dev *sdc;
+<<<<<<< HEAD
+=======
+	struct resource *res;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret, i;
 
 	sdc = devm_kzalloc(&pdev->dev, sizeof(*sdc), GFP_KERNEL);
@@ -1294,7 +1301,12 @@ static int sun6i_dma_probe(struct platform_device *pdev)
 	if (!sdc->cfg)
 		return -ENODEV;
 
+<<<<<<< HEAD
 	sdc->base = devm_platform_ioremap_resource(pdev, 0);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	sdc->base = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(sdc->base))
 		return PTR_ERR(sdc->base);
 
@@ -1333,8 +1345,11 @@ static int sun6i_dma_probe(struct platform_device *pdev)
 	INIT_LIST_HEAD(&sdc->pending);
 	spin_lock_init(&sdc->lock);
 
+<<<<<<< HEAD
 	dma_set_max_seg_size(&pdev->dev, SZ_32M - 1);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dma_cap_set(DMA_PRIVATE, sdc->slave.cap_mask);
 	dma_cap_set(DMA_MEMCPY, sdc->slave.cap_mask);
 	dma_cap_set(DMA_SLAVE, sdc->slave.cap_mask);

@@ -148,12 +148,22 @@
  *
  *****************************************************************************/
 
+<<<<<<< HEAD
 #if defined(__GNUC__)
+=======
+#if defined(__GNUC__) && !defined(__INTEL_COMPILER)
+>>>>>>> b7ba80a49124 (Commit)
 #include <acpi/platform/acgcc.h>
 
 #elif defined(_MSC_VER)
 #include "acmsvc.h"
 
+<<<<<<< HEAD
+=======
+#elif defined(__INTEL_COMPILER)
+#include <acpi/platform/acintel.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #if defined(_LINUX) || defined(__linux__)

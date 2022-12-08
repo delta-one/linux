@@ -59,7 +59,10 @@ static int kfd_gtt_sa_init(struct kfd_dev *kfd, unsigned int buf_size,
 				unsigned int chunk_size);
 static void kfd_gtt_sa_fini(struct kfd_dev *kfd);
 
+<<<<<<< HEAD
 static int kfd_resume_iommu(struct kfd_dev *kfd);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int kfd_resume(struct kfd_dev *kfd);
 
 static void kfd_device_info_set_sdma_info(struct kfd_dev *kfd)
@@ -154,7 +157,10 @@ static void kfd_device_info_set_event_interrupt_class(struct kfd_dev *kfd)
 	case IP_VERSION(11, 0, 1):
 	case IP_VERSION(11, 0, 2):
 	case IP_VERSION(11, 0, 3):
+<<<<<<< HEAD
 	case IP_VERSION(11, 0, 4):
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		kfd->device_info.event_interrupt_class = &event_interrupt_class_v11;
 		break;
 	default:
@@ -229,6 +235,10 @@ struct kfd_dev *kgd2kfd_probe(struct amdgpu_device *adev, bool vf)
 {
 	struct kfd_dev *kfd = NULL;
 	const struct kfd2kgd_calls *f2g = NULL;
+<<<<<<< HEAD
+=======
+	struct pci_dev *pdev = adev->pdev;
+>>>>>>> b7ba80a49124 (Commit)
 	uint32_t gfx_target_version = 0;
 
 	switch (adev->asic_type) {
@@ -263,12 +273,30 @@ struct kfd_dev *kgd2kfd_probe(struct amdgpu_device *adev, bool vf)
 			f2g = &gfx_v8_kfd2kgd;
 		break;
 	case CHIP_FIJI:
+<<<<<<< HEAD
+=======
+		gfx_target_version = 80003;
+		f2g = &gfx_v8_kfd2kgd;
+		break;
+>>>>>>> b7ba80a49124 (Commit)
 	case CHIP_POLARIS10:
 		gfx_target_version = 80003;
 		f2g = &gfx_v8_kfd2kgd;
 		break;
 	case CHIP_POLARIS11:
+<<<<<<< HEAD
 	case CHIP_POLARIS12:
+=======
+		gfx_target_version = 80003;
+		if (!vf)
+			f2g = &gfx_v8_kfd2kgd;
+		break;
+	case CHIP_POLARIS12:
+		gfx_target_version = 80003;
+		if (!vf)
+			f2g = &gfx_v8_kfd2kgd;
+		break;
+>>>>>>> b7ba80a49124 (Commit)
 	case CHIP_VEGAM:
 		gfx_target_version = 80003;
 		if (!vf)
@@ -385,7 +413,10 @@ struct kfd_dev *kgd2kfd_probe(struct amdgpu_device *adev, bool vf)
 			f2g = &gfx_v11_kfd2kgd;
 			break;
 		case IP_VERSION(11, 0, 1):
+<<<<<<< HEAD
 		case IP_VERSION(11, 0, 4):
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			gfx_target_version = 110003;
 			f2g = &gfx_v11_kfd2kgd;
 			break;
@@ -420,6 +451,10 @@ struct kfd_dev *kgd2kfd_probe(struct amdgpu_device *adev, bool vf)
 
 	kfd->adev = adev;
 	kfd_device_info_init(kfd, vf, gfx_target_version);
+<<<<<<< HEAD
+=======
+	kfd->pdev = pdev;
+>>>>>>> b7ba80a49124 (Commit)
 	kfd->init_complete = false;
 	kfd->kfd2kgd = f2g;
 	atomic_set(&kfd->compute_profile, 0);
@@ -487,10 +522,14 @@ static int kfd_gws_init(struct kfd_dev *kfd)
 		(KFD_GC_VERSION(kfd) == IP_VERSION(9, 4, 1)
 			&& kfd->mec2_fw_version >= 0x30)   ||
 		(KFD_GC_VERSION(kfd) == IP_VERSION(9, 4, 2)
+<<<<<<< HEAD
 			&& kfd->mec2_fw_version >= 0x28) ||
 		(KFD_GC_VERSION(kfd) >= IP_VERSION(10, 3, 0)
 			&& KFD_GC_VERSION(kfd) < IP_VERSION(11, 0, 0)
 			&& kfd->mec2_fw_version >= 0x6b))))
+=======
+			&& kfd->mec2_fw_version >= 0x28))))
+>>>>>>> b7ba80a49124 (Commit)
 		ret = amdgpu_amdkfd_alloc_gws(kfd->adev,
 				kfd->adev->gds.gws_size, &kfd->gws);
 
@@ -504,10 +543,18 @@ static void kfd_smi_init(struct kfd_dev *dev)
 }
 
 bool kgd2kfd_device_init(struct kfd_dev *kfd,
+<<<<<<< HEAD
+=======
+			 struct drm_device *ddev,
+>>>>>>> b7ba80a49124 (Commit)
 			 const struct kgd2kfd_shared_resources *gpu_resources)
 {
 	unsigned int size, map_process_packet_size;
 
+<<<<<<< HEAD
+=======
+	kfd->ddev = ddev;
+>>>>>>> b7ba80a49124 (Commit)
 	kfd->mec_fw_version = amdgpu_amdkfd_get_fw_version(kfd->adev,
 			KGD_ENGINE_MEC1);
 	kfd->mec2_fw_version = amdgpu_amdkfd_get_fw_version(kfd->adev,
@@ -532,7 +579,11 @@ bool kgd2kfd_device_init(struct kfd_dev *kfd,
 	     kfd->mec_fw_version < kfd->device_info.no_atomic_fw_version)) {
 		dev_info(kfd_device,
 			 "skipped device %x:%x, PCI rejects atomics %d<%d\n",
+<<<<<<< HEAD
 			 kfd->adev->pdev->vendor, kfd->adev->pdev->device,
+=======
+			 kfd->pdev->vendor, kfd->pdev->device,
+>>>>>>> b7ba80a49124 (Commit)
 			 kfd->mec_fw_version,
 			 kfd->device_info.no_atomic_fw_version);
 		return false;
@@ -625,7 +676,11 @@ bool kgd2kfd_device_init(struct kfd_dev *kfd,
 
 	svm_migrate_init(kfd->adev);
 
+<<<<<<< HEAD
 	if (kfd_resume_iommu(kfd))
+=======
+	if (kgd2kfd_resume_iommu(kfd))
+>>>>>>> b7ba80a49124 (Commit)
 		goto device_iommu_error;
 
 	if (kfd_resume(kfd))
@@ -641,8 +696,13 @@ bool kgd2kfd_device_init(struct kfd_dev *kfd,
 	kfd_smi_init(kfd);
 
 	kfd->init_complete = true;
+<<<<<<< HEAD
 	dev_info(kfd_device, "added device %x:%x\n", kfd->adev->pdev->vendor,
 		 kfd->adev->pdev->device);
+=======
+	dev_info(kfd_device, "added device %x:%x\n", kfd->pdev->vendor,
+		 kfd->pdev->device);
+>>>>>>> b7ba80a49124 (Commit)
 
 	pr_debug("Starting kfd with the following scheduling policy %d\n",
 		kfd->dqm->sched_policy);
@@ -667,7 +727,11 @@ alloc_gtt_mem_failure:
 		amdgpu_amdkfd_free_gws(kfd->adev, kfd->gws);
 	dev_err(kfd_device,
 		"device %x:%x NOT added due to errors\n",
+<<<<<<< HEAD
 		kfd->adev->pdev->vendor, kfd->adev->pdev->device);
+=======
+		kfd->pdev->vendor, kfd->pdev->device);
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	return kfd->init_complete;
 }
@@ -774,6 +838,7 @@ int kgd2kfd_resume(struct kfd_dev *kfd, bool run_pm)
 
 int kgd2kfd_resume_iommu(struct kfd_dev *kfd)
 {
+<<<<<<< HEAD
 	if (!kfd->init_complete)
 		return 0;
 
@@ -782,13 +847,19 @@ int kgd2kfd_resume_iommu(struct kfd_dev *kfd)
 
 static int kfd_resume_iommu(struct kfd_dev *kfd)
 {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int err = 0;
 
 	err = kfd_iommu_resume(kfd);
 	if (err)
 		dev_err(kfd_device,
 			"Failed to resume IOMMU for device %x:%x\n",
+<<<<<<< HEAD
 			kfd->adev->pdev->vendor, kfd->adev->pdev->device);
+=======
+			kfd->pdev->vendor, kfd->pdev->device);
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -800,7 +871,11 @@ static int kfd_resume(struct kfd_dev *kfd)
 	if (err)
 		dev_err(kfd_device,
 			"Error starting queue manager for device %x:%x\n",
+<<<<<<< HEAD
 			kfd->adev->pdev->vendor, kfd->adev->pdev->device);
+=======
+			kfd->pdev->vendor, kfd->pdev->device);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return err;
 }

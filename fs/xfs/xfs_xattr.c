@@ -133,7 +133,11 @@ xfs_xattr_get(const struct xattr_handler *handler, struct dentry *unused,
 
 static int
 xfs_xattr_set(const struct xattr_handler *handler,
+<<<<<<< HEAD
 	      struct mnt_idmap *idmap, struct dentry *unused,
+=======
+	      struct user_namespace *mnt_userns, struct dentry *unused,
+>>>>>>> b7ba80a49124 (Commit)
 	      struct inode *inode, const char *name, const void *value,
 	      size_t size, int flags)
 {
@@ -179,6 +183,13 @@ const struct xattr_handler *xfs_xattr_handlers[] = {
 	&xfs_xattr_user_handler,
 	&xfs_xattr_trusted_handler,
 	&xfs_xattr_security_handler,
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_XFS_POSIX_ACL
+	&posix_acl_access_xattr_handler,
+	&posix_acl_default_xattr_handler,
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	NULL
 };
 
@@ -206,7 +217,11 @@ __xfs_xattr_put_listent(
 		return;
 	}
 	offset = context->buffer + context->count;
+<<<<<<< HEAD
 	memcpy(offset, prefix, prefix_len);
+=======
+	strncpy(offset, prefix, prefix_len);
+>>>>>>> b7ba80a49124 (Commit)
 	offset += prefix_len;
 	strncpy(offset, (char *)name, namelen);			/* real name */
 	offset += namelen;

@@ -459,6 +459,7 @@ fail_dmx_conn:
 	for (j = j - 1; j >= 0; --j)
 		dvb->demux.dmx.remove_frontend(&dvb->demux.dmx,
 					       &dvb->dmx_fe[j]);
+<<<<<<< HEAD
 	dvb_dmxdev_release(&dvb->dmx_dev);
 fail_dmx_dev:
 	dvb_dmx_release(&dvb->demux);
@@ -473,6 +474,28 @@ fail_tuner_probe:
 	}
 fail_adapter:
 	dvb_unregister_adapter(&dvb->adapter);
+=======
+fail_dmx_dev:
+	dvb_dmxdev_release(&dvb->dmx_dev);
+fail_dmx:
+	dvb_dmx_release(&dvb->demux);
+fail_fe:
+	for (j = i; j >= 0; --j)
+		dvb_unregister_frontend(dvb->fe[j]);
+fail_tuner_probe:
+	for (j = i; j >= 0; --j)
+		if (dvb->i2c_client_tuner[j])
+			dvb_module_release(dvb->i2c_client_tuner[j]);
+
+fail_demod_probe:
+	for (j = i; j >= 0; --j)
+		if (dvb->i2c_client_demod[j])
+			dvb_module_release(dvb->i2c_client_demod[j]);
+
+fail_adapter:
+	dvb_unregister_adapter(&dvb->adapter);
+
+>>>>>>> b7ba80a49124 (Commit)
 fail_i2c:
 	i2c_del_adapter(&dvb->i2c_adapter);
 

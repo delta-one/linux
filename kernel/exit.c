@@ -67,12 +67,16 @@
 #include <linux/io_uring.h>
 #include <linux/kprobes.h>
 #include <linux/rethook.h>
+<<<<<<< HEAD
 #include <linux/sysfs.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/uaccess.h>
 #include <asm/unistd.h>
 #include <asm/mmu_context.h>
 
+<<<<<<< HEAD
 /*
  * The default value should be high enough to not crash a system that randomly
  * crashes its kernel from time to time, but low enough to at least not permit
@@ -119,6 +123,8 @@ static __init int kernel_exit_sysfs_init(void)
 late_initcall(kernel_exit_sysfs_init);
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void __unhash_process(struct task_struct *p, bool group_dead)
 {
 	nr_threads--;
@@ -537,7 +543,11 @@ static void exit_mm(void)
 		return;
 	sync_mm_rss(mm);
 	mmap_read_lock(mm);
+<<<<<<< HEAD
 	mmgrab_lazy_tlb(mm);
+=======
+	mmgrab(mm);
+>>>>>>> b7ba80a49124 (Commit)
 	BUG_ON(mm != current->active_mm);
 	/* more a memory barrier than a real lock */
 	task_lock(current);
@@ -807,8 +817,11 @@ void __noreturn do_exit(long code)
 	struct task_struct *tsk = current;
 	int group_dead;
 
+<<<<<<< HEAD
 	WARN_ON(irqs_disabled());
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	synchronize_group_exit(tsk, code);
 
 	WARN_ON(tsk->plug);
@@ -933,18 +946,24 @@ void __noreturn make_task_dead(int signr)
 	 * Then do everything else.
 	 */
 	struct task_struct *tsk = current;
+<<<<<<< HEAD
 	unsigned int limit;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (unlikely(in_interrupt()))
 		panic("Aiee, killing interrupt handler!");
 	if (unlikely(!tsk->pid))
 		panic("Attempted to kill the idle task!");
 
+<<<<<<< HEAD
 	if (unlikely(irqs_disabled())) {
 		pr_info("note: %s[%d] exited with irqs disabled\n",
 			current->comm, task_pid_nr(current));
 		local_irq_enable();
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(in_atomic())) {
 		pr_info("note: %s[%d] exited with preempt_count %d\n",
 			current->comm, task_pid_nr(current),
@@ -953,6 +972,7 @@ void __noreturn make_task_dead(int signr)
 	}
 
 	/*
+<<<<<<< HEAD
 	 * Every time the system oopses, if the oops happens while a reference
 	 * to an object was held, the reference leaks.
 	 * If the oops doesn't also leak memory, repeated oopsing can cause
@@ -967,6 +987,8 @@ void __noreturn make_task_dead(int signr)
 		panic("Oopsed too often (kernel.oops_limit is %d)", limit);
 
 	/*
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * We're taking recursive faults here in make_task_dead. Safest is to just
 	 * leave this task alone and wait for reboot.
 	 */
@@ -1905,6 +1927,7 @@ bool thread_group_exited(struct pid *pid)
 }
 EXPORT_SYMBOL(thread_group_exited);
 
+<<<<<<< HEAD
 /*
  * This needs to be __function_aligned as GCC implicitly makes any
  * implementation of abort() cold and drops alignment specified by
@@ -1913,6 +1936,9 @@ EXPORT_SYMBOL(thread_group_exited);
  * See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=88345#c11
  */
 __weak __function_aligned void abort(void)
+=======
+__weak void abort(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	BUG();
 

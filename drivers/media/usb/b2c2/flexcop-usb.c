@@ -425,6 +425,7 @@ static void flexcop_usb_transfer_exit(struct flexcop_usb *fc_usb)
 
 static int flexcop_usb_transfer_init(struct flexcop_usb *fc_usb)
 {
+<<<<<<< HEAD
 	struct usb_host_interface *alt = fc_usb->uintf->cur_altsetting;
 	u16 frame_size;
 	int bufsize, i, j, ret;
@@ -433,6 +434,14 @@ static int flexcop_usb_transfer_init(struct flexcop_usb *fc_usb)
 	frame_size = usb_endpoint_maxp(&alt->endpoint[0].desc);
 	bufsize = B2C2_USB_NUM_ISO_URB * B2C2_USB_FRAMES_PER_ISO * frame_size;
 
+=======
+	u16 frame_size = le16_to_cpu(
+		fc_usb->uintf->cur_altsetting->endpoint[0].desc.wMaxPacketSize);
+	int bufsize = B2C2_USB_NUM_ISO_URB * B2C2_USB_FRAMES_PER_ISO *
+		frame_size, i, j, ret;
+	int buffer_offset = 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	deb_ts("creating %d iso-urbs with %d frames each of %d bytes size = %d.\n",
 	       B2C2_USB_NUM_ISO_URB,
 			B2C2_USB_FRAMES_PER_ISO, frame_size, bufsize);
@@ -503,21 +512,33 @@ urb_error:
 
 static int flexcop_usb_init(struct flexcop_usb *fc_usb)
 {
+<<<<<<< HEAD
 	struct usb_host_interface *alt;
 	int ret;
 
 	/* use the alternate setting with the largest buffer */
 	ret = usb_set_interface(fc_usb->udev, 0, 1);
+=======
+	/* use the alternate setting with the larges buffer */
+	int ret = usb_set_interface(fc_usb->udev, 0, 1);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret) {
 		err("set interface failed.");
 		return ret;
 	}
 
+<<<<<<< HEAD
 	alt = fc_usb->uintf->cur_altsetting;
 
 	if (alt->desc.bNumEndpoints < 1)
 		return -ENODEV;
 	if (!usb_endpoint_is_isoc_in(&alt->endpoint[0].desc))
+=======
+	if (fc_usb->uintf->cur_altsetting->desc.bNumEndpoints < 1)
+		return -ENODEV;
+	if (!usb_endpoint_is_isoc_in(&fc_usb->uintf->cur_altsetting->endpoint[0].desc))
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENODEV;
 
 	switch (fc_usb->udev->speed) {

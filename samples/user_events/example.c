@@ -12,6 +12,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <unistd.h>
+<<<<<<< HEAD
 #include <asm/bitsperlong.h>
 #include <endian.h>
 #include <linux/user_events.h>
@@ -27,6 +28,15 @@ const char *data_file = "/sys/kernel/tracing/user_events_data";
 const char *status_file = "/sys/kernel/tracing/user_events_status";
 
 static int event_status(long **status)
+=======
+#include <linux/user_events.h>
+
+/* Assumes debugfs is mounted */
+const char *data_file = "/sys/kernel/debug/tracing/user_events_data";
+const char *status_file = "/sys/kernel/debug/tracing/user_events_status";
+
+static int event_status(char **status)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int fd = open(status_file, O_RDONLY);
 
@@ -41,8 +51,12 @@ static int event_status(long **status)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int event_reg(int fd, const char *command, long *index, long *mask,
 		     int *write)
+=======
+static int event_reg(int fd, const char *command, int *status, int *write)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct user_reg reg = {0};
 
@@ -52,8 +66,12 @@ static int event_reg(int fd, const char *command, long *index, long *mask,
 	if (ioctl(fd, DIAG_IOCSREG, &reg) == -1)
 		return -1;
 
+<<<<<<< HEAD
 	*index = reg.status_bit / __BITS_PER_LONG;
 	*mask = endian_swap(1L << (reg.status_bit % __BITS_PER_LONG));
+=======
+	*status = reg.status_index;
+>>>>>>> b7ba80a49124 (Commit)
 	*write = reg.write_index;
 
 	return 0;
@@ -61,9 +79,14 @@ static int event_reg(int fd, const char *command, long *index, long *mask,
 
 int main(int argc, char **argv)
 {
+<<<<<<< HEAD
 	int data_fd, write;
 	long index, mask;
 	long *status_page;
+=======
+	int data_fd, status, write;
+	char *status_page;
+>>>>>>> b7ba80a49124 (Commit)
 	struct iovec io[2];
 	__u32 count = 0;
 
@@ -72,7 +95,11 @@ int main(int argc, char **argv)
 
 	data_fd = open(data_file, O_RDWR);
 
+<<<<<<< HEAD
 	if (event_reg(data_fd, "test u32 count", &index, &mask, &write) == -1)
+=======
+	if (event_reg(data_fd, "test u32 count", &status, &write) == -1)
+>>>>>>> b7ba80a49124 (Commit)
 		return errno;
 
 	/* Setup iovec */
@@ -86,7 +113,11 @@ ask:
 	getchar();
 
 	/* Check if anyone is listening */
+<<<<<<< HEAD
 	if (status_page[index] & mask) {
+=======
+	if (status_page[status]) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Yep, trace out our data */
 		writev(data_fd, (const struct iovec *)io, 2);
 

@@ -12,7 +12,10 @@
 #include <net/bluetooth/mgmt.h>
 
 #include "hci_request.h"
+<<<<<<< HEAD
 #include "hci_codec.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "hci_debugfs.h"
 #include "smp.h"
 #include "eir.h"
@@ -643,7 +646,10 @@ void hci_cmd_sync_clear(struct hci_dev *hdev)
 	cancel_work_sync(&hdev->cmd_sync_work);
 	cancel_work_sync(&hdev->reenable_adv_work);
 
+<<<<<<< HEAD
 	mutex_lock(&hdev->cmd_sync_work_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	list_for_each_entry_safe(entry, tmp, &hdev->cmd_sync_work_list, list) {
 		if (entry->destroy)
 			entry->destroy(hdev, entry->data, -ECANCELED);
@@ -651,7 +657,10 @@ void hci_cmd_sync_clear(struct hci_dev *hdev)
 		list_del(&entry->list);
 		kfree(entry);
 	}
+<<<<<<< HEAD
 	mutex_unlock(&hdev->cmd_sync_work_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void __hci_cmd_sync_cancel(struct hci_dev *hdev, int err)
@@ -2369,6 +2378,7 @@ static int hci_resume_advertising_sync(struct hci_dev *hdev)
 	return err;
 }
 
+<<<<<<< HEAD
 static int hci_pause_addr_resolution(struct hci_dev *hdev)
 {
 	int err;
@@ -2408,6 +2418,8 @@ static int hci_pause_addr_resolution(struct hci_dev *hdev)
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct sk_buff *hci_read_local_oob_data_sync(struct hci_dev *hdev,
 					     bool extended, struct sock *sk)
 {
@@ -2443,7 +2455,11 @@ static u8 hci_update_accept_list_sync(struct hci_dev *hdev)
 	u8 filter_policy;
 	int err;
 
+<<<<<<< HEAD
 	/* Pause advertising if resolving list can be used as controllers
+=======
+	/* Pause advertising if resolving list can be used as controllers are
+>>>>>>> b7ba80a49124 (Commit)
 	 * cannot accept resolving list modifications while advertising.
 	 */
 	if (use_ll_privacy(hdev)) {
@@ -3096,7 +3112,10 @@ int hci_update_name_sync(struct hci_dev *hdev)
  * Enable Authentication
  * lmp_bredr_capable(Set Fast Connectable -> Set Scan Type -> Set Class ->
  * Set Name -> Set EIR)
+<<<<<<< HEAD
  * HCI_FORCE_STATIC_ADDR | BDADDR_ANY && !HCI_BREDR_ENABLED (Set Static Address)
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 int hci_powered_update_sync(struct hci_dev *hdev)
 {
@@ -3136,6 +3155,7 @@ int hci_powered_update_sync(struct hci_dev *hdev)
 		hci_update_eir_sync(hdev);
 	}
 
+<<<<<<< HEAD
 	/* If forcing static address is in use or there is no public
 	 * address use the static address as random address (but skip
 	 * the HCI command if the current random address is already the
@@ -3153,6 +3173,8 @@ int hci_powered_update_sync(struct hci_dev *hdev)
 							&hdev->static_addr);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -3360,7 +3382,10 @@ static const struct hci_init_stage amp_init1[] = {
 	HCI_INIT(hci_read_flow_control_mode_sync),
 	/* HCI_OP_READ_LOCATION_DATA */
 	HCI_INIT(hci_read_location_data_sync),
+<<<<<<< HEAD
 	{}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int hci_init1_sync(struct hci_dev *hdev)
@@ -3395,7 +3420,10 @@ static int hci_init1_sync(struct hci_dev *hdev)
 static const struct hci_init_stage amp_init2[] = {
 	/* HCI_OP_READ_LOCAL_FEATURES */
 	HCI_INIT(hci_read_local_features_sync),
+<<<<<<< HEAD
 	{}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Read Buffer Size (ACL mtu, max pkt, etc.) */
@@ -3615,7 +3643,11 @@ static const struct hci_init_stage hci_init2[] = {
 static int hci_le_read_buffer_size_sync(struct hci_dev *hdev)
 {
 	/* Use Read LE Buffer Size V2 if supported */
+<<<<<<< HEAD
 	if (iso_capable(hdev) && hdev->commands[41] & 0x20)
+=======
+	if (hdev->commands[41] & 0x20)
+>>>>>>> b7ba80a49124 (Commit)
 		return __hci_cmd_sync_status(hdev,
 					     HCI_OP_LE_READ_BUFFER_SIZE_V2,
 					     0, NULL, HCI_CMD_TIMEOUT);
@@ -3640,10 +3672,17 @@ static int hci_le_read_supported_states_sync(struct hci_dev *hdev)
 
 /* LE Controller init stage 2 command sequence */
 static const struct hci_init_stage le_init2[] = {
+<<<<<<< HEAD
 	/* HCI_OP_LE_READ_LOCAL_FEATURES */
 	HCI_INIT(hci_le_read_local_features_sync),
 	/* HCI_OP_LE_READ_BUFFER_SIZE */
 	HCI_INIT(hci_le_read_buffer_size_sync),
+=======
+	/* HCI_OP_LE_READ_BUFFER_SIZE */
+	HCI_INIT(hci_le_read_buffer_size_sync),
+	/* HCI_OP_LE_READ_LOCAL_FEATURES */
+	HCI_INIT(hci_le_read_local_features_sync),
+>>>>>>> b7ba80a49124 (Commit)
 	/* HCI_OP_LE_READ_SUPPORTED_STATES */
 	HCI_INIT(hci_le_read_supported_states_sync),
 	{}
@@ -3842,8 +3881,12 @@ static int hci_read_page_scan_activity_sync(struct hci_dev *hdev)
 static int hci_read_def_err_data_reporting_sync(struct hci_dev *hdev)
 {
 	if (!(hdev->commands[18] & 0x04) ||
+<<<<<<< HEAD
 	    !(hdev->features[0][6] & LMP_ERR_DATA_REPORTING) ||
 	    test_bit(HCI_QUIRK_BROKEN_ERR_DATA_REPORTING, &hdev->quirks))
+=======
+	    !(hdev->features[0][6] & LMP_ERR_DATA_REPORTING))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	return __hci_cmd_sync_status(hdev, HCI_OP_READ_DEF_ERR_DATA_REPORTING,
@@ -4301,12 +4344,20 @@ static int hci_set_event_mask_page_2_sync(struct hci_dev *hdev)
 /* Read local codec list if the HCI command is supported */
 static int hci_read_local_codecs_sync(struct hci_dev *hdev)
 {
+<<<<<<< HEAD
 	if (hdev->commands[45] & 0x04)
 		hci_read_supported_codecs_v2(hdev);
 	else if (hdev->commands[29] & 0x20)
 		hci_read_supported_codecs(hdev);
 
 	return 0;
+=======
+	if (!(hdev->commands[29] & 0x20))
+		return 0;
+
+	return __hci_cmd_sync_status(hdev, HCI_OP_READ_LOCAL_CODECS, 0, NULL,
+				     HCI_CMD_TIMEOUT);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Read local pairing options if the HCI command is supported */
@@ -4322,7 +4373,11 @@ static int hci_read_local_pairing_opts_sync(struct hci_dev *hdev)
 /* Get MWS transport configuration if the HCI command is supported */
 static int hci_get_mws_transport_config_sync(struct hci_dev *hdev)
 {
+<<<<<<< HEAD
 	if (!mws_transport_config_capable(hdev))
+=======
+	if (!(hdev->commands[30] & 0x08))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	return __hci_cmd_sync_status(hdev, HCI_OP_GET_MWS_TRANSPORT_CONFIG,
@@ -4362,8 +4417,12 @@ static int hci_set_err_data_report_sync(struct hci_dev *hdev)
 	bool enabled = hci_dev_test_flag(hdev, HCI_WIDEBAND_SPEECH_ENABLED);
 
 	if (!(hdev->commands[18] & 0x08) ||
+<<<<<<< HEAD
 	    !(hdev->features[0][6] & LMP_ERR_DATA_REPORTING) ||
 	    test_bit(HCI_QUIRK_BROKEN_ERR_DATA_REPORTING, &hdev->quirks))
+=======
+	    !(hdev->features[0][6] & LMP_ERR_DATA_REPORTING))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 
 	if (enabled == hdev->err_data_reporting)
@@ -4522,9 +4581,12 @@ static const struct {
 	HCI_QUIRK_BROKEN(STORED_LINK_KEY,
 			 "HCI Delete Stored Link Key command is advertised, "
 			 "but not supported."),
+<<<<<<< HEAD
 	HCI_QUIRK_BROKEN(ERR_DATA_REPORTING,
 			 "HCI Read Default Erroneous Data Reporting command is "
 			 "advertised, but not supported."),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	HCI_QUIRK_BROKEN(READ_TRANSMIT_POWER,
 			 "HCI Read Transmit Power Level command is advertised, "
 			 "but not supported."),
@@ -4744,7 +4806,10 @@ int hci_dev_open_sync(struct hci_dev *hdev)
 		    hci_dev_test_flag(hdev, HCI_MGMT) &&
 		    hdev->dev_type == HCI_PRIMARY) {
 			ret = hci_powered_update_sync(hdev);
+<<<<<<< HEAD
 			mgmt_power_on(hdev, ret);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	} else {
 		/* Init failed, cleanup */
@@ -4764,7 +4829,10 @@ int hci_dev_open_sync(struct hci_dev *hdev)
 			hdev->flush(hdev);
 
 		if (hdev->sent_cmd) {
+<<<<<<< HEAD
 			cancel_delayed_work_sync(&hdev->cmd_timer);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			kfree_skb(hdev->sent_cmd);
 			hdev->sent_cmd = NULL;
 		}
@@ -4797,6 +4865,7 @@ static void hci_pend_le_actions_clear(struct hci_dev *hdev)
 	BT_DBG("All LE pending actions cleared");
 }
 
+<<<<<<< HEAD
 static int hci_dev_shutdown(struct hci_dev *hdev)
 {
 	int err = 0;
@@ -4822,6 +4891,8 @@ static int hci_dev_shutdown(struct hci_dev *hdev)
 	return err;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int hci_dev_close_sync(struct hci_dev *hdev)
 {
 	bool auto_off;
@@ -4841,7 +4912,17 @@ int hci_dev_close_sync(struct hci_dev *hdev)
 		hdev->adv_instance_timeout = 0;
 	}
 
+<<<<<<< HEAD
 	err = hci_dev_shutdown(hdev);
+=======
+	if (!hci_dev_test_flag(hdev, HCI_UNREGISTER) &&
+	    !hci_dev_test_flag(hdev, HCI_USER_CHANNEL) &&
+	    test_bit(HCI_UP, &hdev->flags)) {
+		/* Execute vendor specific shutdown routine */
+		if (hdev->shutdown)
+			err = hdev->shutdown(hdev);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!test_and_clear_bit(HCI_UP, &hdev->flags)) {
 		cancel_delayed_work_sync(&hdev->cmd_timer);
@@ -5107,12 +5188,19 @@ static int hci_disconnect_sync(struct hci_dev *hdev, struct hci_conn *conn,
 	cp.handle = cpu_to_le16(conn->handle);
 	cp.reason = reason;
 
+<<<<<<< HEAD
 	/* Wait for HCI_EV_DISCONN_COMPLETE, not HCI_EV_CMD_STATUS, when the
 	 * reason is anything but HCI_ERROR_REMOTE_POWER_OFF. This reason is
 	 * used when suspending or powering off, where we don't want to wait
 	 * for the peer's response.
 	 */
 	if (reason != HCI_ERROR_REMOTE_POWER_OFF)
+=======
+	/* Wait for HCI_EV_DISCONN_COMPLETE not HCI_EV_CMD_STATUS when not
+	 * suspending.
+	 */
+	if (!hdev->suspended)
+>>>>>>> b7ba80a49124 (Commit)
 		return __hci_cmd_sync_status_sk(hdev, HCI_OP_DISCONNECT,
 						sizeof(cp), &cp,
 						HCI_EV_DISCONN_COMPLETE,
@@ -5439,12 +5527,36 @@ static int hci_active_scan_sync(struct hci_dev *hdev, uint16_t interval)
 
 	cancel_interleave_scan(hdev);
 
+<<<<<<< HEAD
 	/* Pause address resolution for active scan and stop advertising if
 	 * privacy is enabled.
 	 */
 	err = hci_pause_addr_resolution(hdev);
 	if (err)
 		goto failed;
+=======
+	/* Pause advertising since active scanning disables address resolution
+	 * which advertising depend on in order to generate its RPAs.
+	 */
+	if (use_ll_privacy(hdev) && hci_dev_test_flag(hdev, HCI_PRIVACY)) {
+		err = hci_pause_advertising_sync(hdev);
+		if (err) {
+			bt_dev_err(hdev, "pause advertising failed: %d", err);
+			goto failed;
+		}
+	}
+
+	/* Disable address resolution while doing active scanning since the
+	 * accept list shall not be used and all reports shall reach the host
+	 * anyway.
+	 */
+	err = hci_le_set_addr_resolution_enable_sync(hdev, 0x00);
+	if (err) {
+		bt_dev_err(hdev, "Unable to disable Address Resolution: %d",
+			   err);
+		goto failed;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* All active scans will be done with either a resolvable private
 	 * address (when privacy feature has been enabled) or non-resolvable
@@ -5851,6 +5963,10 @@ static int hci_le_ext_directed_advertising_sync(struct hci_dev *hdev,
 	memset(&cp, 0, sizeof(cp));
 
 	cp.evt_properties = cpu_to_le16(LE_LEGACY_ADV_DIRECT_IND);
+<<<<<<< HEAD
+=======
+	cp.own_addr_type = own_addr_type;
+>>>>>>> b7ba80a49124 (Commit)
 	cp.channel_map = hdev->le_adv_channel_map;
 	cp.tx_power = HCI_TX_POWER_INVALID;
 	cp.primary_phy = HCI_ADV_PHY_1M;
@@ -6216,13 +6332,29 @@ int hci_get_random_address(struct hci_dev *hdev, bool require_privacy,
 
 static int _update_adv_data_sync(struct hci_dev *hdev, void *data)
 {
+<<<<<<< HEAD
 	u8 instance = PTR_ERR(data);
+=======
+	u8 instance = *(u8 *)data;
+
+	kfree(data);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return hci_update_adv_data_sync(hdev, instance);
 }
 
 int hci_update_adv_data(struct hci_dev *hdev, u8 instance)
 {
+<<<<<<< HEAD
 	return hci_cmd_sync_queue(hdev, _update_adv_data_sync,
 				  ERR_PTR(instance), NULL);
+=======
+	u8 *inst_ptr = kmalloc(1, GFP_KERNEL);
+
+	if (!inst_ptr)
+		return -ENOMEM;
+
+	*inst_ptr = instance;
+	return hci_cmd_sync_queue(hdev, _update_adv_data_sync, inst_ptr, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }

@@ -663,7 +663,12 @@ child_out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int lm3532_probe(struct i2c_client *client)
+=======
+static int lm3532_probe(struct i2c_client *client,
+			   const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lm3532_data *drvdata;
 	int ret = 0;
@@ -726,7 +731,11 @@ static const struct i2c_device_id lm3532_id[] = {
 MODULE_DEVICE_TABLE(i2c, lm3532_id);
 
 static struct i2c_driver lm3532_i2c_driver = {
+<<<<<<< HEAD
 	.probe_new = lm3532_probe,
+=======
+	.probe = lm3532_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = lm3532_remove,
 	.id_table = lm3532_id,
 	.driver = {

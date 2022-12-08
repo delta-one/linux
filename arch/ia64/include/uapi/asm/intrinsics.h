@@ -14,7 +14,15 @@
 #include <linux/types.h>
 /* include compiler specific intrinsics */
 #include <asm/ia64regs.h>
+<<<<<<< HEAD
 #include <asm/gcc_intrin.h>
+=======
+#ifdef __INTEL_COMPILER
+# include <asm/intel_intrin.h>
+#else
+# include <asm/gcc_intrin.h>
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/cmpxchg.h>
 
 #define ia64_set_rr0_to_rr4(val0, val1, val2, val3, val4)		\

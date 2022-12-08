@@ -262,11 +262,19 @@ static int rc5t583_rtc_probe(struct platform_device *pdev)
  * Disable rc5t583 RTC interrupts.
  * Sets status flag to free.
  */
+<<<<<<< HEAD
 static void rc5t583_rtc_remove(struct platform_device *pdev)
+=======
+static int rc5t583_rtc_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct rc5t583_rtc *rc5t583_rtc = platform_get_drvdata(pdev);
 
 	rc5t583_rtc_alarm_irq_enable(&rc5t583_rtc->rtc->dev, 0);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -298,7 +306,11 @@ static SIMPLE_DEV_PM_OPS(rc5t583_rtc_pm_ops, rc5t583_rtc_suspend,
 
 static struct platform_driver rc5t583_rtc_driver = {
 	.probe		= rc5t583_rtc_probe,
+<<<<<<< HEAD
 	.remove_new	= rc5t583_rtc_remove,
+=======
+	.remove		= rc5t583_rtc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= "rtc-rc5t583",
 		.pm	= &rc5t583_rtc_pm_ops,

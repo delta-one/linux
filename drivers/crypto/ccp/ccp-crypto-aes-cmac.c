@@ -25,7 +25,11 @@ static int ccp_aes_cmac_complete(struct crypto_async_request *async_req,
 {
 	struct ahash_request *req = ahash_request_cast(async_req);
 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
+<<<<<<< HEAD
 	struct ccp_aes_cmac_req_ctx *rctx = ahash_request_ctx_dma(req);
+=======
+	struct ccp_aes_cmac_req_ctx *rctx = ahash_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int digest_size = crypto_ahash_digestsize(tfm);
 
 	if (ret)
@@ -56,8 +60,13 @@ static int ccp_do_cmac_update(struct ahash_request *req, unsigned int nbytes,
 			      unsigned int final)
 {
 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
+<<<<<<< HEAD
 	struct ccp_ctx *ctx = crypto_ahash_ctx_dma(tfm);
 	struct ccp_aes_cmac_req_ctx *rctx = ahash_request_ctx_dma(req);
+=======
+	struct ccp_ctx *ctx = crypto_ahash_ctx(tfm);
+	struct ccp_aes_cmac_req_ctx *rctx = ahash_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	struct scatterlist *sg, *cmac_key_sg = NULL;
 	unsigned int block_size =
 		crypto_tfm_alg_blocksize(crypto_ahash_tfm(tfm));
@@ -182,7 +191,11 @@ e_free:
 
 static int ccp_aes_cmac_init(struct ahash_request *req)
 {
+<<<<<<< HEAD
 	struct ccp_aes_cmac_req_ctx *rctx = ahash_request_ctx_dma(req);
+=======
+	struct ccp_aes_cmac_req_ctx *rctx = ahash_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	memset(rctx, 0, sizeof(*rctx));
 
@@ -219,7 +232,11 @@ static int ccp_aes_cmac_digest(struct ahash_request *req)
 
 static int ccp_aes_cmac_export(struct ahash_request *req, void *out)
 {
+<<<<<<< HEAD
 	struct ccp_aes_cmac_req_ctx *rctx = ahash_request_ctx_dma(req);
+=======
+	struct ccp_aes_cmac_req_ctx *rctx = ahash_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	struct ccp_aes_cmac_exp_ctx state;
 
 	/* Don't let anything leak to 'out' */
@@ -238,7 +255,11 @@ static int ccp_aes_cmac_export(struct ahash_request *req, void *out)
 
 static int ccp_aes_cmac_import(struct ahash_request *req, const void *in)
 {
+<<<<<<< HEAD
 	struct ccp_aes_cmac_req_ctx *rctx = ahash_request_ctx_dma(req);
+=======
+	struct ccp_aes_cmac_req_ctx *rctx = ahash_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	struct ccp_aes_cmac_exp_ctx state;
 
 	/* 'in' may not be aligned so memcpy to local variable */
@@ -256,7 +277,11 @@ static int ccp_aes_cmac_import(struct ahash_request *req, const void *in)
 static int ccp_aes_cmac_setkey(struct crypto_ahash *tfm, const u8 *key,
 			       unsigned int key_len)
 {
+<<<<<<< HEAD
 	struct ccp_ctx *ctx = crypto_ahash_ctx_dma(tfm);
+=======
+	struct ccp_ctx *ctx = crypto_tfm_ctx(crypto_ahash_tfm(tfm));
+>>>>>>> b7ba80a49124 (Commit)
 	struct ccp_crypto_ahash_alg *alg =
 		ccp_crypto_ahash_alg(crypto_ahash_tfm(tfm));
 	u64 k0_hi, k0_lo, k1_hi, k1_lo, k2_hi, k2_lo;
@@ -334,14 +359,22 @@ static int ccp_aes_cmac_setkey(struct crypto_ahash *tfm, const u8 *key,
 
 static int ccp_aes_cmac_cra_init(struct crypto_tfm *tfm)
 {
+<<<<<<< HEAD
 	struct ccp_ctx *ctx = crypto_tfm_ctx_dma(tfm);
+=======
+	struct ccp_ctx *ctx = crypto_tfm_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	struct crypto_ahash *ahash = __crypto_ahash_cast(tfm);
 
 	ctx->complete = ccp_aes_cmac_complete;
 	ctx->u.aes.key_len = 0;
 
+<<<<<<< HEAD
 	crypto_ahash_set_reqsize_dma(ahash,
 				     sizeof(struct ccp_aes_cmac_req_ctx));
+=======
+	crypto_ahash_set_reqsize(ahash, sizeof(struct ccp_aes_cmac_req_ctx));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -383,7 +416,11 @@ int ccp_register_aes_cmac_algs(struct list_head *head)
 			  CRYPTO_ALG_KERN_DRIVER_ONLY |
 			  CRYPTO_ALG_NEED_FALLBACK;
 	base->cra_blocksize = AES_BLOCK_SIZE;
+<<<<<<< HEAD
 	base->cra_ctxsize = sizeof(struct ccp_ctx) + crypto_dma_padding();
+=======
+	base->cra_ctxsize = sizeof(struct ccp_ctx);
+>>>>>>> b7ba80a49124 (Commit)
 	base->cra_priority = CCP_CRA_PRIORITY;
 	base->cra_init = ccp_aes_cmac_cra_init;
 	base->cra_module = THIS_MODULE;

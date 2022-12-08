@@ -605,6 +605,7 @@ again:
 			set_bit(FSCACHE_COOKIE_DO_PREP_TO_WRITE, &cookie->flags);
 			queue = true;
 		}
+<<<<<<< HEAD
 		/*
 		 * We could race with cookie_lru which may set LRU_DISCARD bit
 		 * but has yet to run the cookie state machine.  If this happens
@@ -613,6 +614,8 @@ again:
 		 */
 		if (test_and_clear_bit(FSCACHE_COOKIE_DO_LRU_DISCARD, &cookie->flags))
 			fscache_see_cookie(cookie, fscache_cookie_see_lru_discard_clear);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	case FSCACHE_COOKIE_STATE_FAILED:

@@ -19,7 +19,11 @@
 #include "callchain.h"
 
 #ifdef CONFIG_PPC64
+<<<<<<< HEAD
 #include <asm/syscalls_32.h>
+=======
+#include "../kernel/ppc32.h"
+>>>>>>> b7ba80a49124 (Commit)
 #else  /* CONFIG_PPC64 */
 
 #define __SIGNAL_FRAMESIZE32	__SIGNAL_FRAMESIZE

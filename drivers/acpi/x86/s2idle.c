@@ -17,7 +17,10 @@
 
 #include <linux/acpi.h>
 #include <linux/device.h>
+<<<<<<< HEAD
 #include <linux/dmi.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/suspend.h>
 
 #include "../sleep.h"
@@ -364,6 +367,7 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 struct amd_lps0_hid_device_data {
 	const bool check_off_by_one;
 };
@@ -384,12 +388,15 @@ static const struct acpi_device_id amd_hid_ids[] = {
 	{}
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int lps0_device_attach(struct acpi_device *adev,
 			      const struct acpi_device_id *not_used)
 {
 	if (lps0_device_handle)
 		return 0;
 
+<<<<<<< HEAD
 	lps0_dsm_func_mask_microsoft = validate_dsm(adev->handle,
 						    ACPI_LPS0_DSM_UUID_MICROSOFT, 0,
 						    &lps0_dsm_guid_microsoft);
@@ -411,6 +418,36 @@ static int lps0_device_attach(struct acpi_device *adev,
 			acpi_handle_debug(adev->handle, "_DSM UUID %s: Adjusted function mask: 0x%x\n",
 					  ACPI_LPS0_DSM_UUID_AMD, lps0_dsm_func_mask);
 		} else if (lps0_dsm_func_mask_microsoft > 0 && rev_id) {
+=======
+	if (acpi_s2idle_vendor_amd()) {
+		/* AMD0004, AMD0005, AMDI0005:
+		 * - Should use rev_id 0x0
+		 * - function mask > 0x3: Should use AMD method, but has off by one bug
+		 * - function mask = 0x3: Should use Microsoft method
+		 * AMDI0006:
+		 * - should use rev_id 0x0
+		 * - function mask = 0x3: Should use Microsoft method
+		 * AMDI0007:
+		 * - Should use rev_id 0x2
+		 * - Should only use AMD method
+		 */
+		const char *hid = acpi_device_hid(adev);
+		rev_id = strcmp(hid, "AMDI0007") ? 0 : 2;
+		lps0_dsm_func_mask = validate_dsm(adev->handle,
+					ACPI_LPS0_DSM_UUID_AMD, rev_id, &lps0_dsm_guid);
+		lps0_dsm_func_mask_microsoft = validate_dsm(adev->handle,
+					ACPI_LPS0_DSM_UUID_MICROSOFT, 0,
+					&lps0_dsm_guid_microsoft);
+		if (lps0_dsm_func_mask > 0x3 && (!strcmp(hid, "AMD0004") ||
+						 !strcmp(hid, "AMD0005") ||
+						 !strcmp(hid, "AMDI0005"))) {
+			lps0_dsm_func_mask = (lps0_dsm_func_mask << 1) | 0x1;
+			acpi_handle_debug(adev->handle, "_DSM UUID %s: Adjusted function mask: 0x%x\n",
+					  ACPI_LPS0_DSM_UUID_AMD, lps0_dsm_func_mask);
+		} else if (lps0_dsm_func_mask_microsoft > 0 &&
+				(!strcmp(hid, "AMDI0007") ||
+				 !strcmp(hid, "AMDI0008"))) {
+>>>>>>> b7ba80a49124 (Commit)
 			lps0_dsm_func_mask_microsoft = -EINVAL;
 			acpi_handle_debug(adev->handle, "_DSM Using AMD method\n");
 		}
@@ -561,7 +598,11 @@ static const struct platform_s2idle_ops acpi_s2idle_ops_lps0 = {
 	.end = acpi_s2idle_end,
 };
 
+<<<<<<< HEAD
 void __init acpi_s2idle_setup(void)
+=======
+void acpi_s2idle_setup(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	acpi_scan_add_handler(&lps0_handler);
 	s2idle_set_ops(&acpi_s2idle_ops_lps0);

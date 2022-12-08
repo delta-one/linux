@@ -35,7 +35,11 @@ static irqreturn_t e3x0_button_press_handler(int irq, void *data)
 	return IRQ_HANDLED;
 }
 
+<<<<<<< HEAD
 static int e3x0_button_suspend(struct device *dev)
+=======
+static int __maybe_unused e3x0_button_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct platform_device *pdev = to_platform_device(dev);
 
@@ -45,7 +49,11 @@ static int e3x0_button_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int e3x0_button_resume(struct device *dev)
+=======
+static int __maybe_unused e3x0_button_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct platform_device *pdev = to_platform_device(dev);
 
@@ -55,8 +63,13 @@ static int e3x0_button_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(e3x0_button_pm_ops,
 				e3x0_button_suspend, e3x0_button_resume);
+=======
+static SIMPLE_DEV_PM_OPS(e3x0_button_pm_ops,
+			 e3x0_button_suspend, e3x0_button_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static int e3x0_button_probe(struct platform_device *pdev)
 {
@@ -122,7 +135,11 @@ static struct platform_driver e3x0_button_driver = {
 	.driver		= {
 		.name	= "e3x0-button",
 		.of_match_table = of_match_ptr(e3x0_button_match),
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&e3x0_button_pm_ops),
+=======
+		.pm	= &e3x0_button_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe		= e3x0_button_probe,
 };

@@ -238,6 +238,14 @@ static int max8997_led_probe(struct platform_device *pdev)
 	char name[20];
 	int ret = 0;
 
+<<<<<<< HEAD
+=======
+	if (pdata == NULL) {
+		dev_err(&pdev->dev, "no platform data\n");
+		return -ENODEV;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	led = devm_kzalloc(&pdev->dev, sizeof(*led), GFP_KERNEL);
 	if (led == NULL)
 		return -ENOMEM;
@@ -253,7 +261,11 @@ static int max8997_led_probe(struct platform_device *pdev)
 	led->iodev = iodev;
 
 	/* initialize mode and brightness according to platform_data */
+<<<<<<< HEAD
 	if (pdata && pdata->led_pdata) {
+=======
+	if (pdata->led_pdata) {
+>>>>>>> b7ba80a49124 (Commit)
 		u8 mode = 0, brightness = 0;
 
 		mode = pdata->led_pdata->mode[led->id];

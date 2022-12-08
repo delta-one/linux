@@ -3,6 +3,7 @@
     "BriefDescription": "Transaction count",
     "MetricName": "transaction",
     "MetricExpr": "TX_C_TEND + TX_NC_TEND + TX_NC_TABORT + TX_C_TABORT_SPECIAL + TX_C_TABORT_NO_SPECIAL"
+<<<<<<< HEAD
   },
   {
     "BriefDescription": "Cycles per Instruction",
@@ -68,5 +69,7 @@
     "BriefDescription": "Estimated Cycles per TLB Miss",
     "MetricName": "tlb_miss",
     "MetricExpr": "((DTLB2_MISSES + ITLB2_MISSES) / (DTLB2_WRITES + ITLB2_WRITES)) * (L1C_TLB2_MISSES / (L1I_PENALTY_CYCLES + L1D_PENALTY_CYCLES))"
+=======
+>>>>>>> b7ba80a49124 (Commit)
   }
 ]

@@ -51,7 +51,12 @@
 #include <drm/drm_drv.h>
 #include <drm/drm_file.h>
 
+<<<<<<< HEAD
 #include <drm/ttm/ttm_bo.h>
+=======
+#include <drm/ttm/ttm_bo_api.h>
+#include <drm/ttm/ttm_bo_driver.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/ttm/ttm_placement.h>
 
 #include <drm/drm_audio_component.h>
@@ -77,6 +82,14 @@ enum nouveau_drm_object_route {
 	NVDRM_OBJECT_ANY = NVIF_IOCTL_V0_OWNER_ANY,
 };
 
+<<<<<<< HEAD
+=======
+enum nouveau_drm_notify_route {
+	NVDRM_NOTIFY_NVIF = 0,
+	NVDRM_NOTIFY_USIF
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 enum nouveau_drm_handle {
 	NVDRM_CHAN    = 0xcccc0000, /* |= client chid */
 	NVDRM_NVSW    = 0x55550000,
@@ -173,6 +186,7 @@ struct nouveau_drm {
 	void *fence;
 
 	/* Global channel management. */
+<<<<<<< HEAD
 	int chan_total; /* Number of channels across all runlists. */
 	int chan_nr;	/* 0 if per-runlist CHIDs. */
 	int runl_nr;
@@ -181,11 +195,21 @@ struct nouveau_drm {
 		int chan_id_base;
 		u64 context_base;
 	} *runl;
+=======
+	struct {
+		int nr;
+		u64 context_base;
+	} chan;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* context for accelerated drm-internal operations */
 	struct nouveau_channel *cechan;
 	struct nouveau_channel *channel;
 	struct nvkm_gpuobj *notify;
+<<<<<<< HEAD
+=======
+	struct nouveau_fbdev *fbcon;
+>>>>>>> b7ba80a49124 (Commit)
 	struct nvif_object ntfy;
 
 	/* nv10-nv40 tiling regions */
@@ -198,8 +222,15 @@ struct nouveau_drm {
 	struct nvbios vbios;
 	struct nouveau_display *display;
 	struct work_struct hpd_work;
+<<<<<<< HEAD
 	spinlock_t hpd_lock;
 	u32 hpd_pending;
+=======
+	struct mutex hpd_lock;
+	u32 hpd_pending;
+	struct work_struct fbcon_work;
+	int fbcon_new_state;
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_ACPI
 	struct notifier_block acpi_nb;
 #endif

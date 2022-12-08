@@ -22,9 +22,14 @@
 static int ccp_aes_complete(struct crypto_async_request *async_req, int ret)
 {
 	struct skcipher_request *req = skcipher_request_cast(async_req);
+<<<<<<< HEAD
 	struct ccp_ctx *ctx = crypto_skcipher_ctx_dma(
 		crypto_skcipher_reqtfm(req));
 	struct ccp_aes_req_ctx *rctx = skcipher_request_ctx_dma(req);
+=======
+	struct ccp_ctx *ctx = crypto_tfm_ctx(req->base.tfm);
+	struct ccp_aes_req_ctx *rctx = skcipher_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ret)
 		return ret;
@@ -39,7 +44,11 @@ static int ccp_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
 			  unsigned int key_len)
 {
 	struct ccp_crypto_skcipher_alg *alg = ccp_crypto_skcipher_alg(tfm);
+<<<<<<< HEAD
 	struct ccp_ctx *ctx = crypto_skcipher_ctx_dma(tfm);
+=======
+	struct ccp_ctx *ctx = crypto_skcipher_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (key_len) {
 	case AES_KEYSIZE_128:
@@ -66,8 +75,13 @@ static int ccp_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
 static int ccp_aes_crypt(struct skcipher_request *req, bool encrypt)
 {
 	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
+<<<<<<< HEAD
 	struct ccp_ctx *ctx = crypto_skcipher_ctx_dma(tfm);
 	struct ccp_aes_req_ctx *rctx = skcipher_request_ctx_dma(req);
+=======
+	struct ccp_ctx *ctx = crypto_skcipher_ctx(tfm);
+	struct ccp_aes_req_ctx *rctx = skcipher_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	struct scatterlist *iv_sg = NULL;
 	unsigned int iv_len = 0;
 
@@ -119,7 +133,11 @@ static int ccp_aes_decrypt(struct skcipher_request *req)
 
 static int ccp_aes_init_tfm(struct crypto_skcipher *tfm)
 {
+<<<<<<< HEAD
 	struct ccp_ctx *ctx = crypto_skcipher_ctx_dma(tfm);
+=======
+	struct ccp_ctx *ctx = crypto_skcipher_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ctx->complete = ccp_aes_complete;
 	ctx->u.aes.key_len = 0;
@@ -133,7 +151,11 @@ static int ccp_aes_rfc3686_complete(struct crypto_async_request *async_req,
 				    int ret)
 {
 	struct skcipher_request *req = skcipher_request_cast(async_req);
+<<<<<<< HEAD
 	struct ccp_aes_req_ctx *rctx = skcipher_request_ctx_dma(req);
+=======
+	struct ccp_aes_req_ctx *rctx = skcipher_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Restore the original pointer */
 	req->iv = rctx->rfc3686_info;
@@ -144,7 +166,11 @@ static int ccp_aes_rfc3686_complete(struct crypto_async_request *async_req,
 static int ccp_aes_rfc3686_setkey(struct crypto_skcipher *tfm, const u8 *key,
 				  unsigned int key_len)
 {
+<<<<<<< HEAD
 	struct ccp_ctx *ctx = crypto_skcipher_ctx_dma(tfm);
+=======
+	struct ccp_ctx *ctx = crypto_skcipher_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (key_len < CTR_RFC3686_NONCE_SIZE)
 		return -EINVAL;
@@ -158,8 +184,13 @@ static int ccp_aes_rfc3686_setkey(struct crypto_skcipher *tfm, const u8 *key,
 static int ccp_aes_rfc3686_crypt(struct skcipher_request *req, bool encrypt)
 {
 	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
+<<<<<<< HEAD
 	struct ccp_ctx *ctx = crypto_skcipher_ctx_dma(tfm);
 	struct ccp_aes_req_ctx *rctx = skcipher_request_ctx_dma(req);
+=======
+	struct ccp_ctx *ctx = crypto_skcipher_ctx(tfm);
+	struct ccp_aes_req_ctx *rctx = skcipher_request_ctx(req);
+>>>>>>> b7ba80a49124 (Commit)
 	u8 *iv;
 
 	/* Initialize the CTR block */
@@ -191,12 +222,20 @@ static int ccp_aes_rfc3686_decrypt(struct skcipher_request *req)
 
 static int ccp_aes_rfc3686_init_tfm(struct crypto_skcipher *tfm)
 {
+<<<<<<< HEAD
 	struct ccp_ctx *ctx = crypto_skcipher_ctx_dma(tfm);
+=======
+	struct ccp_ctx *ctx = crypto_skcipher_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 
 	ctx->complete = ccp_aes_rfc3686_complete;
 	ctx->u.aes.key_len = 0;
 
+<<<<<<< HEAD
 	crypto_skcipher_set_reqsize_dma(tfm, sizeof(struct ccp_aes_req_ctx));
+=======
+	crypto_skcipher_set_reqsize(tfm, sizeof(struct ccp_aes_req_ctx));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -214,7 +253,11 @@ static const struct skcipher_alg ccp_aes_defaults = {
 				  CRYPTO_ALG_KERN_DRIVER_ONLY |
 				  CRYPTO_ALG_NEED_FALLBACK,
 	.base.cra_blocksize	= AES_BLOCK_SIZE,
+<<<<<<< HEAD
 	.base.cra_ctxsize	= sizeof(struct ccp_ctx) + CRYPTO_DMA_PADDING,
+=======
+	.base.cra_ctxsize	= sizeof(struct ccp_ctx),
+>>>>>>> b7ba80a49124 (Commit)
 	.base.cra_priority	= CCP_CRA_PRIORITY,
 	.base.cra_module	= THIS_MODULE,
 };
@@ -232,7 +275,11 @@ static const struct skcipher_alg ccp_aes_rfc3686_defaults = {
 				  CRYPTO_ALG_KERN_DRIVER_ONLY |
 				  CRYPTO_ALG_NEED_FALLBACK,
 	.base.cra_blocksize	= CTR_RFC3686_BLOCK_SIZE,
+<<<<<<< HEAD
 	.base.cra_ctxsize	= sizeof(struct ccp_ctx) + CRYPTO_DMA_PADDING,
+=======
+	.base.cra_ctxsize	= sizeof(struct ccp_ctx),
+>>>>>>> b7ba80a49124 (Commit)
 	.base.cra_priority	= CCP_CRA_PRIORITY,
 	.base.cra_module	= THIS_MODULE,
 };

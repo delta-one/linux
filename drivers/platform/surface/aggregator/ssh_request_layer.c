@@ -916,6 +916,7 @@ static void ssh_rtl_rx_command(struct ssh_ptl *p, const struct ssam_span *data)
 	if (sshp_parse_command(dev, data, &command, &command_data))
 		return;
 
+<<<<<<< HEAD
 	/*
 	 * Check if the message was intended for us. If not, drop it.
 	 *
@@ -931,6 +932,8 @@ static void ssh_rtl_rx_command(struct ssh_ptl *p, const struct ssam_span *data)
 		return;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (ssh_rqid_is_event(get_unaligned_le16(&command->rqid)))
 		ssh_rtl_rx_event(rtl, command, &command_data);
 	else

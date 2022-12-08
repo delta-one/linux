@@ -85,6 +85,7 @@ struct hns_roce_ib_create_qp_resp {
 	__aligned_u64 dwqe_mmap_key;
 };
 
+<<<<<<< HEAD
 enum {
 	HNS_ROCE_EXSGE_FLAGS = 1 << 0,
 	HNS_ROCE_RQ_INLINE_FLAGS = 1 << 1,
@@ -97,11 +98,14 @@ enum {
 	HNS_ROCE_RSP_CQE_INLINE_FLAGS = 1 << 2,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct hns_roce_ib_alloc_ucontext_resp {
 	__u32	qp_tab_size;
 	__u32	cqe_size;
 	__u32	srq_tab_size;
 	__u32	reserved;
+<<<<<<< HEAD
 	__u32	config;
 	__u32	max_inline_data;
 };
@@ -109,6 +113,8 @@ struct hns_roce_ib_alloc_ucontext_resp {
 struct hns_roce_ib_alloc_ucontext {
 	__u32 config;
 	__u32 reserved;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct hns_roce_ib_alloc_pd_resp {

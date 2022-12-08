@@ -90,7 +90,10 @@ obj-y			+= crypto/
 obj-$(CONFIG_BLOCK)	+= block/
 obj-$(CONFIG_IO_URING)	+= io_uring/
 obj-$(CONFIG_RUST)	+= rust/
+<<<<<<< HEAD
 obj-y			+= $(ARCH_LIB)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 obj-y			+= drivers/
 obj-y			+= sound/
 obj-$(CONFIG_SAMPLES)	+= samples/

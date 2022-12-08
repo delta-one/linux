@@ -98,7 +98,11 @@ static struct i2c_driver adt7410_driver = {
 	.class		= I2C_CLASS_HWMON,
 	.driver = {
 		.name	= "adt7410",
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&adt7x10_dev_pm_ops),
+=======
+		.pm	= ADT7X10_DEV_PM_OPS,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe_new	= adt7410_i2c_probe,
 	.id_table	= adt7410_ids,

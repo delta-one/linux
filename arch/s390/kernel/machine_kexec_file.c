@@ -187,6 +187,11 @@ static int kexec_file_add_ipl_report(struct kimage *image,
 
 	data->memsz = ALIGN(data->memsz, PAGE_SIZE);
 	buf.mem = data->memsz;
+<<<<<<< HEAD
+=======
+	if (image->type == KEXEC_TYPE_CRASH)
+		buf.mem += crashk_res.start;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ptr = (void *)ipl_cert_list_addr;
 	end = ptr + ipl_cert_list_size;
@@ -223,9 +228,12 @@ static int kexec_file_add_ipl_report(struct kimage *image,
 		data->kernel_buf + offsetof(struct lowcore, ipl_parmblock_ptr);
 	*lc_ipl_parmblock_ptr = (__u32)buf.mem;
 
+<<<<<<< HEAD
 	if (image->type == KEXEC_TYPE_CRASH)
 		buf.mem += crashk_res.start;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = kexec_add_buffer(&buf);
 out:
 	return ret;

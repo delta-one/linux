@@ -118,25 +118,41 @@ ap_ts_pen_1v8: &i2c13 {
 };
 
 &tlmm {
+<<<<<<< HEAD
 	tp_int_odl: tp-int-odl-state {
+=======
+	tp_int_odl: tp-int-odl {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio7";
 		function = "gpio";
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	ts_int_l: ts-int-l-state {
+=======
+	ts_int_l: ts-int-l {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio55";
 		function = "gpio";
 		bias-pull-up;
 	};
 
+<<<<<<< HEAD
 	ts_reset_l: ts-reset-l-state {
+=======
+	ts_reset_l: ts-reset-l {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio54";
 		function = "gpio";
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	us_euro_hs_sel: us-euro-hs-sel-state {
+=======
+	us_euro_hs_sel: us-euro-hs-sel {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio81";
 		function = "gpio";
 		bias-pull-down;

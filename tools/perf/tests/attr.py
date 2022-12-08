@@ -6,12 +6,18 @@ import os
 import sys
 import glob
 import optparse
+<<<<<<< HEAD
 import platform
 import tempfile
 import logging
 import re
 import shutil
 import subprocess
+=======
+import tempfile
+import logging
+import shutil
+>>>>>>> b7ba80a49124 (Commit)
 
 try:
     import configparser
@@ -126,17 +132,21 @@ class Event(dict):
             if not data_equal(self[t], other[t]):
                 log.warning("expected %s=%s, got %s" % (t, self[t], other[t]))
 
+<<<<<<< HEAD
 def parse_version(version):
     if not version:
         return None
     return [int(v) for v in version.split(".")[0:2]]
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 # Test file description needs to have following sections:
 # [config]
 #   - just single instance in file
 #   - needs to specify:
 #     'command' - perf command name
 #     'args'    - special command arguments
+<<<<<<< HEAD
 #     'ret'     - Skip test if Perf doesn't exit with this value (0 by default)
 #     'test_ret'- If set to 'true', fail test instead of skipping for 'ret' argument
 #     'arch'    - architecture specific test (optional)
@@ -147,6 +157,13 @@ def parse_version(version):
 #     'kernel_since' - Inclusive kernel version from which the test will start running. Only the
 #                      first two values are supported, for example "6.1" (optional)
 #     'kernel_until' - Exclusive kernel version from which the test will stop running. (optional)
+=======
+#     'ret'     - expected command return value (0 by default)
+#     'arch'    - architecture specific test (optional)
+#                 comma separated list, ! at the beginning
+#                 negates it.
+#
+>>>>>>> b7ba80a49124 (Commit)
 # [eventX:base]
 #   - one or multiple instances in file
 #   - expected values assignments
@@ -168,17 +185,23 @@ class Test(object):
         except:
             self.ret  = 0
 
+<<<<<<< HEAD
         self.test_ret = parser.getboolean('config', 'test_ret', fallback=False)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
         try:
             self.arch  = parser.get('config', 'arch')
             log.warning("test limitation '%s'" % self.arch)
         except:
             self.arch  = ''
 
+<<<<<<< HEAD
         self.auxv = parser.get('config', 'auxv', fallback=None)
         self.kernel_since = parse_version(parser.get('config', 'kernel_since', fallback=None))
         self.kernel_until = parse_version(parser.get('config', 'kernel_until', fallback=None))
+=======
+>>>>>>> b7ba80a49124 (Commit)
         self.expect   = {}
         self.result   = {}
         log.debug("  loading expected events");
@@ -190,6 +213,7 @@ class Test(object):
         else:
             return True
 
+<<<<<<< HEAD
     def skip_test_kernel_since(self):
         if not self.kernel_since:
             return False
@@ -222,6 +246,9 @@ class Test(object):
         return not eval(self.auxv)
 
     def skip_test_arch(self, myarch):
+=======
+    def skip_test(self, myarch):
+>>>>>>> b7ba80a49124 (Commit)
         # If architecture not set always run test
         if self.arch == '':
             # log.warning("test for arch %s is ok" % myarch)
@@ -271,6 +298,7 @@ class Test(object):
     def run_cmd(self, tempdir):
         junk1, junk2, junk3, junk4, myarch = (os.uname())
 
+<<<<<<< HEAD
         if self.skip_test_arch(myarch):
             raise Notest(self, myarch)
 
@@ -283,6 +311,11 @@ class Test(object):
         if self.skip_test_kernel_until():
             raise Notest(self, "new kernel skip")
 
+=======
+        if self.skip_test(myarch):
+            raise Notest(self, myarch)
+
+>>>>>>> b7ba80a49124 (Commit)
         cmd = "PERF_TEST_ATTR=%s %s %s -o %s/perf.data %s" % (tempdir,
               self.perf, self.command, tempdir, self.args)
         ret = os.WEXITSTATUS(os.system(cmd))
@@ -290,10 +323,14 @@ class Test(object):
         log.info("  '%s' ret '%s', expected '%s'" % (cmd, str(ret), str(self.ret)))
 
         if not data_equal(str(ret), str(self.ret)):
+<<<<<<< HEAD
             if self.test_ret:
                 raise Fail(self, "Perf exit code failure")
             else:
                 raise Unsup(self)
+=======
+            raise Unsup(self)
+>>>>>>> b7ba80a49124 (Commit)
 
     def compare(self, expect, result):
         match = {}

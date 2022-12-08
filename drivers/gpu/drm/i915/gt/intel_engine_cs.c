@@ -9,13 +9,19 @@
 
 #include "gem/i915_gem_context.h"
 #include "gem/i915_gem_internal.h"
+<<<<<<< HEAD
 #include "gt/intel_gt_print.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "gt/intel_gt_regs.h"
 
 #include "i915_cmd_parser.h"
 #include "i915_drv.h"
+<<<<<<< HEAD
 #include "i915_irq.h"
 #include "i915_reg.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "intel_breadcrumbs.h"
 #include "intel_context.h"
 #include "intel_engine.h"
@@ -247,6 +253,7 @@ static const struct engine_info intel_engines[] = {
 			{ .graphics_ver = 12, .base = GEN12_COMPUTE3_RING_BASE }
 		}
 	},
+<<<<<<< HEAD
 	[GSC0] = {
 		.class = OTHER_CLASS,
 		.instance = OTHER_GSC_INSTANCE,
@@ -254,6 +261,8 @@ static const struct engine_info intel_engines[] = {
 			{ .graphics_ver = 12, .base = MTL_GSC_RING_BASE }
 		}
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -334,7 +343,10 @@ u32 intel_engine_context_size(struct intel_gt *gt, u8 class)
 	case VIDEO_DECODE_CLASS:
 	case VIDEO_ENHANCEMENT_CLASS:
 	case COPY_ENGINE_CLASS:
+<<<<<<< HEAD
 	case OTHER_CLASS:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (GRAPHICS_VER(gt->i915) < 8)
 			return 0;
 		return GEN8_LR_CONTEXT_OTHER_SIZE;
@@ -426,7 +438,10 @@ static u32 get_reset_domain(u8 ver, enum intel_engine_id id)
 			[CCS1]  = GEN11_GRDOM_RENDER,
 			[CCS2]  = GEN11_GRDOM_RENDER,
 			[CCS3]  = GEN11_GRDOM_RENDER,
+<<<<<<< HEAD
 			[GSC0]  = GEN12_GRDOM_GSC,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 		GEM_BUG_ON(id >= ARRAY_SIZE(engine_reset_domains) ||
 			   !engine_reset_domains[id]);
@@ -498,6 +513,7 @@ static int intel_engine_setup(struct intel_gt *gt, enum intel_engine_id id,
 	engine->logical_mask = BIT(logical_instance);
 	__sprint_engine_name(engine);
 
+<<<<<<< HEAD
 	if ((engine->class == COMPUTE_CLASS && !RCS_MASK(engine->gt) &&
 	     __ffs(CCS_MASK(engine->gt)) == engine->instance) ||
 	     engine->class == RENDER_CLASS)
@@ -509,6 +525,8 @@ static int intel_engine_setup(struct intel_gt *gt, enum intel_engine_id id,
 		engine->flags |= I915_ENGINE_HAS_EU_PRIORITY;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	engine->props.heartbeat_interval_ms =
 		CONFIG_DRM_I915_HEARTBEAT_INTERVAL;
 	engine->props.max_busywait_duration_ns =
@@ -520,6 +538,7 @@ static int intel_engine_setup(struct intel_gt *gt, enum intel_engine_id id,
 	engine->props.timeslice_duration_ms =
 		CONFIG_DRM_I915_TIMESLICE_DURATION;
 
+<<<<<<< HEAD
 	/*
 	 * Mid-thread pre-emption is not available in Gen12. Unfortunately,
 	 * some compute workloads run quite long threads. That means they get
@@ -548,6 +567,22 @@ static int intel_engine_setup(struct intel_gt *gt, enum intel_engine_id id,
 	CLAMP_PROP(timeslice_duration_ms);
 
 #undef CLAMP_PROP
+=======
+	/* Override to uninterruptible for OpenCL workloads. */
+	if (GRAPHICS_VER(i915) == 12 && engine->class == RENDER_CLASS)
+		engine->props.preempt_timeout_ms = 0;
+
+	if ((engine->class == COMPUTE_CLASS && !RCS_MASK(engine->gt) &&
+	     __ffs(CCS_MASK(engine->gt)) == engine->instance) ||
+	     engine->class == RENDER_CLASS)
+		engine->flags |= I915_ENGINE_FIRST_RENDER_COMPUTE;
+
+	/* features common between engines sharing EUs */
+	if (engine->class == RENDER_CLASS || engine->class == COMPUTE_CLASS) {
+		engine->flags |= I915_ENGINE_HAS_RCS_REG_STATE;
+		engine->flags |= I915_ENGINE_HAS_EU_PRIORITY;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	engine->defaults = engine->props; /* never to change again */
 
@@ -571,6 +606,7 @@ static int intel_engine_setup(struct intel_gt *gt, enum intel_engine_id id,
 	return 0;
 }
 
+<<<<<<< HEAD
 u64 intel_clamp_heartbeat_interval_ms(struct intel_engine_cs *engine, u64 value)
 {
 	value = min_t(u64, value, jiffies_to_msecs(MAX_SCHEDULE_TIMEOUT));
@@ -620,6 +656,8 @@ u64 intel_clamp_timeslice_duration_ms(struct intel_engine_cs *engine, u64 value)
 	return value;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void __setup_engine_capabilities(struct intel_engine_cs *engine)
 {
 	struct drm_i915_private *i915 = engine->i915;
@@ -895,6 +933,7 @@ static intel_engine_mask_t init_engine_mask(struct intel_gt *gt)
 	engine_mask_apply_compute_fuses(gt);
 	engine_mask_apply_copy_fuses(gt);
 
+<<<<<<< HEAD
 	/*
 	 * The only use of the GSC CS is to load and communicate with the GSC
 	 * FW, so we have no use for it if we don't have the FW.
@@ -913,6 +952,8 @@ static intel_engine_mask_t init_engine_mask(struct intel_gt *gt)
 		info->engine_mask &= ~BIT(GSC0);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return info->engine_mask;
 }
 
@@ -1043,7 +1084,11 @@ static void cleanup_status_page(struct intel_engine_cs *engine)
 	/* Prevent writes into HWSP after returning the page to the system */
 	intel_engine_set_hwsp_writemask(engine, ~0u);
 
+<<<<<<< HEAD
 	vma = __xchg(&engine->status_page.vma, 0);
+=======
+	vma = fetch_and_zero(&engine->status_page.vma);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!vma)
 		return;
 
@@ -1144,6 +1189,7 @@ err_put:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int intel_engine_init_tlb_invalidation(struct intel_engine_cs *engine)
 {
 	static const union intel_engine_tlb_inv_reg gen8_regs[] = {
@@ -1258,16 +1304,21 @@ static int intel_engine_init_tlb_invalidation(struct intel_engine_cs *engine)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int engine_setup_common(struct intel_engine_cs *engine)
 {
 	int err;
 
 	init_llist_head(&engine->barrier_tasks);
 
+<<<<<<< HEAD
 	err = intel_engine_init_tlb_invalidation(engine);
 	if (err)
 		return err;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = init_status_page(engine);
 	if (err)
 		return err;
@@ -1496,6 +1547,7 @@ int intel_engines_init(struct intel_gt *gt)
 			return err;
 
 		err = setup(engine);
+<<<<<<< HEAD
 		if (err) {
 			intel_engine_cleanup_common(engine);
 			return err;
@@ -1503,6 +1555,10 @@ int intel_engines_init(struct intel_gt *gt)
 
 		/* The backend should now be responsible for cleanup */
 		GEM_BUG_ON(engine->release == NULL);
+=======
+		if (err)
+			return err;
+>>>>>>> b7ba80a49124 (Commit)
 
 		err = engine_init_common(engine);
 		if (err)
@@ -1613,12 +1669,19 @@ static int __intel_engine_stop_cs(struct intel_engine_cs *engine,
 	intel_uncore_write_fw(uncore, mode, _MASKED_BIT_ENABLE(STOP_RING));
 
 	/*
+<<<<<<< HEAD
 	 * Wa_22011802037: Prior to doing a reset, ensure CS is
 	 * stopped, set ring stop bit and prefetch disable bit to halt CS
 	 */
 	if (IS_MTL_GRAPHICS_STEP(engine->i915, M, STEP_A0, STEP_B0) ||
 	    (GRAPHICS_VER(engine->i915) >= 11 &&
 	    GRAPHICS_VER_FULL(engine->i915) < IP_VER(12, 70)))
+=======
+	 * Wa_22011802037 : gen11, gen12, Prior to doing a reset, ensure CS is
+	 * stopped, set ring stop bit and prefetch disable bit to halt CS
+	 */
+	if (IS_GRAPHICS_VER(engine->i915, 11, 12))
+>>>>>>> b7ba80a49124 (Commit)
 		intel_uncore_write_fw(uncore, RING_MODE_GEN7(engine->mmio_base),
 				      _MASKED_BIT_ENABLE(GEN12_GFX_PREFETCH_DISABLE));
 
@@ -1703,8 +1766,16 @@ static u32 __cs_pending_mi_force_wakes(struct intel_engine_cs *engine)
 	};
 	u32 val;
 
+<<<<<<< HEAD
 	if (!_reg[engine->id].reg)
 		return 0;
+=======
+	if (!_reg[engine->id].reg) {
+		drm_err(&engine->i915->drm,
+			"MSG IDLE undefined for engine id %u\n", engine->id);
+		return 0;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	val = intel_uncore_read(engine->uncore, _reg[engine->id]);
 
@@ -1780,11 +1851,19 @@ void intel_engine_get_instdone(const struct intel_engine_cs *engine,
 		for_each_ss_steering(iter, engine->gt, slice, subslice) {
 			instdone->sampler[slice][subslice] =
 				intel_gt_mcr_read(engine->gt,
+<<<<<<< HEAD
 						  GEN8_SAMPLER_INSTDONE,
 						  slice, subslice);
 			instdone->row[slice][subslice] =
 				intel_gt_mcr_read(engine->gt,
 						  GEN8_ROW_INSTDONE,
+=======
+						  GEN7_SAMPLER_INSTDONE,
+						  slice, subslice);
+			instdone->row[slice][subslice] =
+				intel_gt_mcr_read(engine->gt,
+						  GEN7_ROW_INSTDONE,
+>>>>>>> b7ba80a49124 (Commit)
 						  slice, subslice);
 		}
 
@@ -2058,6 +2137,7 @@ static const char *repr_timer(const struct timer_list *t)
 static void intel_engine_print_registers(struct intel_engine_cs *engine,
 					 struct drm_printer *m)
 {
+<<<<<<< HEAD
 	struct drm_i915_private *i915 = engine->i915;
 	struct intel_engine_execlists * const execlists = &engine->execlists;
 	u64 addr;
@@ -2065,6 +2145,15 @@ static void intel_engine_print_registers(struct intel_engine_cs *engine,
 	if (engine->id == RENDER_CLASS && IS_GRAPHICS_VER(i915, 4, 7))
 		drm_printf(m, "\tCCID: 0x%08x\n", ENGINE_READ(engine, CCID));
 	if (HAS_EXECLISTS(i915)) {
+=======
+	struct drm_i915_private *dev_priv = engine->i915;
+	struct intel_engine_execlists * const execlists = &engine->execlists;
+	u64 addr;
+
+	if (engine->id == RENDER_CLASS && IS_GRAPHICS_VER(dev_priv, 4, 7))
+		drm_printf(m, "\tCCID: 0x%08x\n", ENGINE_READ(engine, CCID));
+	if (HAS_EXECLISTS(dev_priv)) {
+>>>>>>> b7ba80a49124 (Commit)
 		drm_printf(m, "\tEL_STAT_HI: 0x%08x\n",
 			   ENGINE_READ(engine, RING_EXECLIST_STATUS_HI));
 		drm_printf(m, "\tEL_STAT_LO: 0x%08x\n",
@@ -2085,7 +2174,11 @@ static void intel_engine_print_registers(struct intel_engine_cs *engine,
 			   ENGINE_READ(engine, RING_MI_MODE) & (MODE_IDLE) ? " [idle]" : "");
 	}
 
+<<<<<<< HEAD
 	if (GRAPHICS_VER(i915) >= 6) {
+=======
+	if (GRAPHICS_VER(dev_priv) >= 6) {
+>>>>>>> b7ba80a49124 (Commit)
 		drm_printf(m, "\tRING_IMR:   0x%08x\n",
 			   ENGINE_READ(engine, RING_IMR));
 		drm_printf(m, "\tRING_ESR:   0x%08x\n",
@@ -2102,15 +2195,25 @@ static void intel_engine_print_registers(struct intel_engine_cs *engine,
 	addr = intel_engine_get_last_batch_head(engine);
 	drm_printf(m, "\tBBADDR: 0x%08x_%08x\n",
 		   upper_32_bits(addr), lower_32_bits(addr));
+<<<<<<< HEAD
 	if (GRAPHICS_VER(i915) >= 8)
 		addr = ENGINE_READ64(engine, RING_DMA_FADD, RING_DMA_FADD_UDW);
 	else if (GRAPHICS_VER(i915) >= 4)
+=======
+	if (GRAPHICS_VER(dev_priv) >= 8)
+		addr = ENGINE_READ64(engine, RING_DMA_FADD, RING_DMA_FADD_UDW);
+	else if (GRAPHICS_VER(dev_priv) >= 4)
+>>>>>>> b7ba80a49124 (Commit)
 		addr = ENGINE_READ(engine, RING_DMA_FADD);
 	else
 		addr = ENGINE_READ(engine, DMA_FADD_I8XX);
 	drm_printf(m, "\tDMA_FADDR: 0x%08x_%08x\n",
 		   upper_32_bits(addr), lower_32_bits(addr));
+<<<<<<< HEAD
 	if (GRAPHICS_VER(i915) >= 4) {
+=======
+	if (GRAPHICS_VER(dev_priv) >= 4) {
+>>>>>>> b7ba80a49124 (Commit)
 		drm_printf(m, "\tIPEIR: 0x%08x\n",
 			   ENGINE_READ(engine, RING_IPEIR));
 		drm_printf(m, "\tIPEHR: 0x%08x\n",
@@ -2120,7 +2223,11 @@ static void intel_engine_print_registers(struct intel_engine_cs *engine,
 		drm_printf(m, "\tIPEHR: 0x%08x\n", ENGINE_READ(engine, IPEHR));
 	}
 
+<<<<<<< HEAD
 	if (HAS_EXECLISTS(i915) && !intel_engine_uses_guc(engine)) {
+=======
+	if (HAS_EXECLISTS(dev_priv) && !intel_engine_uses_guc(engine)) {
+>>>>>>> b7ba80a49124 (Commit)
 		struct i915_request * const *port, *rq;
 		const u32 *hws =
 			&engine->status_page.addr[I915_HWS_CSB_BUF0_INDEX];
@@ -2186,7 +2293,11 @@ static void intel_engine_print_registers(struct intel_engine_cs *engine,
 		}
 		rcu_read_unlock();
 		i915_sched_engine_active_unlock_bh(engine->sched_engine);
+<<<<<<< HEAD
 	} else if (GRAPHICS_VER(i915) > 6) {
+=======
+	} else if (GRAPHICS_VER(dev_priv) > 6) {
+>>>>>>> b7ba80a49124 (Commit)
 		drm_printf(m, "\tPP_DIR_BASE: 0x%08x\n",
 			   ENGINE_READ(engine, RING_PP_DIR_BASE));
 		drm_printf(m, "\tPP_DIR_BASE_READ: 0x%08x\n",
@@ -2230,6 +2341,20 @@ static void print_request_ring(struct drm_printer *m, struct i915_request *rq)
 	}
 }
 
+<<<<<<< HEAD
+=======
+static unsigned long list_count(struct list_head *list)
+{
+	struct list_head *pos;
+	unsigned long count = 0;
+
+	list_for_each(pos, list)
+		count++;
+
+	return count;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static unsigned long read_ul(void *p, size_t x)
 {
 	return *(unsigned long *)(p + x);
@@ -2321,11 +2446,19 @@ void intel_engine_dump_active_requests(struct list_head *requests,
 	}
 }
 
+<<<<<<< HEAD
 static void engine_dump_active_requests(struct intel_engine_cs *engine,
 					struct drm_printer *m)
 {
 	struct intel_context *hung_ce = NULL;
 	struct i915_request *hung_rq = NULL;
+=======
+static void engine_dump_active_requests(struct intel_engine_cs *engine, struct drm_printer *m)
+{
+	struct i915_request *hung_rq = NULL;
+	struct intel_context *ce;
+	bool guc;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * No need for an engine->irq_seqno_barrier() before the seqno reads.
@@ -2334,6 +2467,7 @@ static void engine_dump_active_requests(struct intel_engine_cs *engine,
 	 * But the intention here is just to report an instantaneous snapshot
 	 * so that's fine.
 	 */
+<<<<<<< HEAD
 	intel_engine_get_hung_entity(engine, &hung_ce, &hung_rq);
 
 	drm_printf(m, "\tRequests:\n");
@@ -2350,6 +2484,29 @@ static void engine_dump_active_requests(struct intel_engine_cs *engine,
 
 	if (hung_rq)
 		i915_request_put(hung_rq);
+=======
+	lockdep_assert_held(&engine->sched_engine->lock);
+
+	drm_printf(m, "\tRequests:\n");
+
+	guc = intel_uc_uses_guc_submission(&engine->gt->uc);
+	if (guc) {
+		ce = intel_engine_get_hung_context(engine);
+		if (ce)
+			hung_rq = intel_context_find_active_request(ce);
+	} else {
+		hung_rq = intel_engine_execlist_find_hung_request(engine);
+	}
+
+	if (hung_rq)
+		engine_dump_request(hung_rq, m, "\t\thung");
+
+	if (guc)
+		intel_guc_dump_active_requests(engine, hung_rq, m);
+	else
+		intel_engine_dump_active_requests(&engine->sched_engine->requests,
+						  hung_rq, m);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void intel_engine_dump(struct intel_engine_cs *engine,
@@ -2359,6 +2516,10 @@ void intel_engine_dump(struct intel_engine_cs *engine,
 	struct i915_gpu_error * const error = &engine->i915->gpu_error;
 	struct i915_request *rq;
 	intel_wakeref_t wakeref;
+<<<<<<< HEAD
+=======
+	unsigned long flags;
+>>>>>>> b7ba80a49124 (Commit)
 	ktime_t dummy;
 
 	if (header) {
@@ -2395,8 +2556,18 @@ void intel_engine_dump(struct intel_engine_cs *engine,
 		   i915_reset_count(error));
 	print_properties(engine, m);
 
+<<<<<<< HEAD
 	engine_dump_active_requests(engine, m);
 
+=======
+	spin_lock_irqsave(&engine->sched_engine->lock, flags);
+	engine_dump_active_requests(engine, m);
+
+	drm_printf(m, "\tOn hold?: %lu\n",
+		   list_count(&engine->sched_engine->hold));
+	spin_unlock_irqrestore(&engine->sched_engine->lock, flags);
+
+>>>>>>> b7ba80a49124 (Commit)
 	drm_printf(m, "\tMMIO base:  0x%08x\n", engine->mmio_base);
 	wakeref = intel_runtime_pm_get_if_in_use(engine->uncore->rpm);
 	if (wakeref) {
@@ -2442,7 +2613,12 @@ intel_engine_create_virtual(struct intel_engine_cs **siblings,
 	return siblings[0]->cops->create_virtual(siblings, count, flags);
 }
 
+<<<<<<< HEAD
 static struct i915_request *engine_execlist_find_hung_request(struct intel_engine_cs *engine)
+=======
+struct i915_request *
+intel_engine_execlist_find_hung_request(struct intel_engine_cs *engine)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i915_request *request, *active = NULL;
 
@@ -2494,6 +2670,7 @@ static struct i915_request *engine_execlist_find_hung_request(struct intel_engin
 	return active;
 }
 
+<<<<<<< HEAD
 void intel_engine_get_hung_entity(struct intel_engine_cs *engine,
 				  struct intel_context **ce, struct i915_request **rq)
 {
@@ -2521,6 +2698,8 @@ void intel_engine_get_hung_entity(struct intel_engine_cs *engine,
 	spin_unlock_irqrestore(&engine->sched_engine->lock, flags);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void xehp_enable_ccs_engines(struct intel_engine_cs *engine)
 {
 	/*

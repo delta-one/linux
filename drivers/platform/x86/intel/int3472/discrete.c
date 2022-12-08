@@ -2,6 +2,11 @@
 /* Author: Dan Scally <djrscally@gmail.com> */
 
 #include <linux/acpi.h>
+<<<<<<< HEAD
+=======
+#include <linux/clkdev.h>
+#include <linux/clk-provider.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/device.h>
 #include <linux/gpio/consumer.h>
 #include <linux/gpio/machine.h>
@@ -78,6 +83,17 @@ skl_int3472_get_sensor_module_config(struct int3472_discrete_device *int3472)
 		return ERR_PTR(-ENODEV);
 	}
 
+<<<<<<< HEAD
+=======
+	if (obj->string.type != ACPI_TYPE_STRING) {
+		dev_err(int3472->dev,
+			"Sensor _DSM returned a non-string value\n");
+
+		ACPI_FREE(obj);
+		return ERR_PTR(-EINVAL);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	for (i = 0; i < ARRAY_SIZE(int3472_sensor_configs); i++) {
 		if (!strcmp(int3472_sensor_configs[i].sensor_module_name,
 			    obj->string.pointer))
@@ -144,6 +160,7 @@ static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int347
 	return 0;
 }
 
+<<<<<<< HEAD
 static void int3472_get_func_and_polarity(u8 type, const char **func, u32 *polarity)
 {
 	switch (type) {
@@ -172,6 +189,36 @@ static void int3472_get_func_and_polarity(u8 type, const char **func, u32 *polar
 		*polarity = GPIO_ACTIVE_HIGH;
 		break;
 	}
+=======
+static int skl_int3472_map_gpio_to_clk(struct int3472_discrete_device *int3472,
+				       struct acpi_resource_gpio *agpio, u8 type)
+{
+	char *path = agpio->resource_source.string_ptr;
+	u16 pin = agpio->pin_table[0];
+	struct gpio_desc *gpio;
+
+	switch (type) {
+	case INT3472_GPIO_TYPE_CLK_ENABLE:
+		gpio = acpi_get_and_request_gpiod(path, pin, "int3472,clk-enable");
+		if (IS_ERR(gpio))
+			return (PTR_ERR(gpio));
+
+		int3472->clock.ena_gpio = gpio;
+		break;
+	case INT3472_GPIO_TYPE_PRIVACY_LED:
+		gpio = acpi_get_and_request_gpiod(path, pin, "int3472,privacy-led");
+		if (IS_ERR(gpio))
+			return (PTR_ERR(gpio));
+
+		int3472->clock.led_gpio = gpio;
+		break;
+	default:
+		dev_err(int3472->dev, "Invalid GPIO type 0x%02x for clock\n", type);
+		break;
+	}
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -212,11 +259,17 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
 	struct int3472_discrete_device *int3472 = data;
 	struct acpi_resource_gpio *agpio;
 	union acpi_object *obj;
+<<<<<<< HEAD
 	u8 active_value, type;
 	const char *err_msg;
 	const char *func;
 	u32 polarity;
 	int ret;
+=======
+	const char *err_msg;
+	int ret;
+	u8 type;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!acpi_gpio_get_io_resource(ares, &agpio))
 		return 1;
@@ -238,6 +291,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
 
 	type = obj->integer.value & 0xff;
 
+<<<<<<< HEAD
 	int3472_get_func_and_polarity(type, &func, &polarity);
 
 	/* If bits 31-24 of the _DSM entry are all 0 then the signal is inverted */
@@ -267,6 +321,28 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
 		ret = skl_int3472_register_pled(int3472, agpio, polarity);
 		if (ret)
 			err_msg = "Failed to register LED\n";
+=======
+	switch (type) {
+	case INT3472_GPIO_TYPE_RESET:
+		ret = skl_int3472_map_gpio_to_sensor(int3472, agpio, "reset",
+						     GPIO_ACTIVE_LOW);
+		if (ret)
+			err_msg = "Failed to map reset pin to sensor\n";
+
+		break;
+	case INT3472_GPIO_TYPE_POWERDOWN:
+		ret = skl_int3472_map_gpio_to_sensor(int3472, agpio, "powerdown",
+						     GPIO_ACTIVE_LOW);
+		if (ret)
+			err_msg = "Failed to map powerdown pin to sensor\n";
+
+		break;
+	case INT3472_GPIO_TYPE_CLK_ENABLE:
+	case INT3472_GPIO_TYPE_PRIVACY_LED:
+		ret = skl_int3472_map_gpio_to_clk(int3472, agpio, type);
+		if (ret)
+			err_msg = "Failed to map GPIO to clock\n";
+>>>>>>> b7ba80a49124 (Commit)
 
 		break;
 	case INT3472_GPIO_TYPE_POWER_ENABLE:
@@ -311,21 +387,55 @@ static int skl_int3472_parse_crs(struct int3472_discrete_device *int3472)
 
 	acpi_dev_free_resource_list(&resource_list);
 
+<<<<<<< HEAD
+=======
+	/*
+	 * If we find no clock enable GPIO pin then the privacy LED won't work.
+	 * We've never seen that situation, but it's possible. Warn the user so
+	 * it's clear what's happened.
+	 */
+	if (int3472->clock.ena_gpio) {
+		ret = skl_int3472_register_clock(int3472);
+		if (ret)
+			return ret;
+	} else {
+		if (int3472->clock.led_gpio)
+			dev_warn(int3472->dev,
+				 "No clk GPIO. The privacy LED won't work\n");
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	int3472->gpios.dev_id = int3472->sensor_name;
 	gpiod_add_lookup_table(&int3472->gpios);
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static void skl_int3472_discrete_remove(struct platform_device *pdev)
+=======
+static int skl_int3472_discrete_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct int3472_discrete_device *int3472 = platform_get_drvdata(pdev);
 
 	gpiod_remove_lookup_table(&int3472->gpios);
 
+<<<<<<< HEAD
 	skl_int3472_unregister_clock(int3472);
 	skl_int3472_unregister_pled(int3472);
 	skl_int3472_unregister_regulator(int3472);
+=======
+	if (int3472->clock.cl)
+		skl_int3472_unregister_clock(int3472);
+
+	gpiod_put(int3472->clock.ena_gpio);
+	gpiod_put(int3472->clock.led_gpio);
+
+	skl_int3472_unregister_regulator(int3472);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int skl_int3472_discrete_probe(struct platform_device *pdev)
@@ -390,7 +500,11 @@ static struct platform_driver int3472_discrete = {
 		.acpi_match_table = int3472_device_id,
 	},
 	.probe = skl_int3472_discrete_probe,
+<<<<<<< HEAD
 	.remove_new = skl_int3472_discrete_remove,
+=======
+	.remove = skl_int3472_discrete_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(int3472_discrete);
 

@@ -93,7 +93,11 @@ int xpc_disengage_timelimit = XPC_DISENGAGE_DEFAULT_TIMELIMIT;
 static int xpc_disengage_min_timelimit;	/* = 0 */
 static int xpc_disengage_max_timelimit = 120;
 
+<<<<<<< HEAD
 static struct ctl_table xpc_sys_xpc_hb[] = {
+=======
+static struct ctl_table xpc_sys_xpc_hb_dir[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{
 	 .procname = "hb_interval",
 	 .data = &xpc_hb_interval,
@@ -112,7 +116,15 @@ static struct ctl_table xpc_sys_xpc_hb[] = {
 	 .extra2 = &xpc_hb_check_max_interval},
 	{}
 };
+<<<<<<< HEAD
 static struct ctl_table xpc_sys_xpc[] = {
+=======
+static struct ctl_table xpc_sys_xpc_dir[] = {
+	{
+	 .procname = "hb",
+	 .mode = 0555,
+	 .child = xpc_sys_xpc_hb_dir},
+>>>>>>> b7ba80a49124 (Commit)
 	{
 	 .procname = "disengage_timelimit",
 	 .data = &xpc_disengage_timelimit,
@@ -123,9 +135,20 @@ static struct ctl_table xpc_sys_xpc[] = {
 	 .extra2 = &xpc_disengage_max_timelimit},
 	{}
 };
+<<<<<<< HEAD
 
 static struct ctl_table_header *xpc_sysctl;
 static struct ctl_table_header *xpc_sysctl_hb;
+=======
+static struct ctl_table xpc_sys_dir[] = {
+	{
+	 .procname = "xpc",
+	 .mode = 0555,
+	 .child = xpc_sys_xpc_dir},
+	{}
+};
+static struct ctl_table_header *xpc_sysctl;
+>>>>>>> b7ba80a49124 (Commit)
 
 /* non-zero if any remote partition disengage was timed out */
 int xpc_disengage_timedout;
@@ -1032,8 +1055,11 @@ xpc_do_exit(enum xp_retval reason)
 
 	if (xpc_sysctl)
 		unregister_sysctl_table(xpc_sysctl);
+<<<<<<< HEAD
 	if (xpc_sysctl_hb)
 		unregister_sysctl_table(xpc_sysctl_hb);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	xpc_teardown_partitions();
 
@@ -1236,8 +1262,12 @@ xpc_init(void)
 		goto out_1;
 	}
 
+<<<<<<< HEAD
 	xpc_sysctl = register_sysctl("xpc", xpc_sys_xpc);
 	xpc_sysctl_hb = register_sysctl("xpc/hb", xpc_sys_xpc_hb);
+=======
+	xpc_sysctl = register_sysctl_table(xpc_sys_dir);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Fill the partition reserved page with the information needed by
@@ -1302,8 +1332,11 @@ out_3:
 	(void)unregister_die_notifier(&xpc_die_notifier);
 	(void)unregister_reboot_notifier(&xpc_reboot_notifier);
 out_2:
+<<<<<<< HEAD
 	if (xpc_sysctl_hb)
 		unregister_sysctl_table(xpc_sysctl_hb);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (xpc_sysctl)
 		unregister_sysctl_table(xpc_sysctl);
 

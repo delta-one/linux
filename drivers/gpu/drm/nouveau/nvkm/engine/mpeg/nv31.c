@@ -213,8 +213,13 @@ nv31_mpeg_intr(struct nvkm_engine *engine)
 
 	if (show) {
 		nvkm_error(subdev, "ch %d [%s] %08x %08x %08x %08x\n",
+<<<<<<< HEAD
 			   mpeg->chan ? mpeg->chan->fifo->id : -1,
 			   mpeg->chan ? mpeg->chan->fifo->name :
+=======
+			   mpeg->chan ? mpeg->chan->fifo->chid : -1,
+			   mpeg->chan ? mpeg->chan->object.client->name :
+>>>>>>> b7ba80a49124 (Commit)
 			   "unknown", stat, type, mthd, data);
 	}
 

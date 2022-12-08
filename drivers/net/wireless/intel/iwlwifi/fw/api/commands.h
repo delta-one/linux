@@ -153,7 +153,10 @@ enum iwl_legacy_cmds {
 
 	/**
 	 * @TXPATH_FLUSH: &struct iwl_tx_path_flush_cmd
+<<<<<<< HEAD
 	 *	response in &struct iwl_tx_path_flush_cmd_rsp
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	TXPATH_FLUSH = 0x1e,
 
@@ -266,6 +269,7 @@ enum iwl_legacy_cmds {
 	HOT_SPOT_CMD = 0x53,
 
 	/**
+<<<<<<< HEAD
 	 * @WNM_80211V_TIMING_MEASUREMENT_NOTIFICATION: Time Sync
 	 *	measurement notification for TM/FTM. Sent on receipt of
 	 *	respective WNM action frame for TM protocol or public action
@@ -284,6 +288,8 @@ enum iwl_legacy_cmds {
 	WNM_80211V_TIMING_MEASUREMENT_CONFIRM_NOTIFICATION = 0x68,
 
 	/**
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	 * @SCAN_OFFLOAD_COMPLETE:
 	 * notification, &struct iwl_periodic_scan_complete
 	 */

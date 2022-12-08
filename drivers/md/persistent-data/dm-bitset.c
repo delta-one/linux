@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2012 Red Hat, Inc.
  *
@@ -42,7 +45,11 @@ EXPORT_SYMBOL_GPL(dm_bitset_empty);
 
 struct packer_context {
 	bit_value_fn fn;
+<<<<<<< HEAD
 	unsigned int nr_bits;
+=======
+	unsigned nr_bits;
+>>>>>>> b7ba80a49124 (Commit)
 	void *context;
 };
 
@@ -50,7 +57,11 @@ static int pack_bits(uint32_t index, void *value, void *context)
 {
 	int r;
 	struct packer_context *p = context;
+<<<<<<< HEAD
 	unsigned int bit, nr = min(64u, p->nr_bits - (index * 64));
+=======
+	unsigned bit, nr = min(64u, p->nr_bits - (index * 64));
+>>>>>>> b7ba80a49124 (Commit)
 	uint64_t word = 0;
 	bool bv;
 
@@ -74,7 +85,10 @@ int dm_bitset_new(struct dm_disk_bitset *info, dm_block_t *root,
 		  uint32_t size, bit_value_fn fn, void *context)
 {
 	struct packer_context p;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	p.fn = fn;
 	p.nr_bits = size;
 	p.context = context;
@@ -149,7 +163,11 @@ static int get_array_entry(struct dm_disk_bitset *info, dm_block_t root,
 			   uint32_t index, dm_block_t *new_root)
 {
 	int r;
+<<<<<<< HEAD
 	unsigned int array_index = index / BITS_PER_ARRAY_ENTRY;
+=======
+	unsigned array_index = index / BITS_PER_ARRAY_ENTRY;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (info->current_index_set) {
 		if (info->current_index == array_index)
@@ -167,7 +185,11 @@ int dm_bitset_set_bit(struct dm_disk_bitset *info, dm_block_t root,
 		      uint32_t index, dm_block_t *new_root)
 {
 	int r;
+<<<<<<< HEAD
 	unsigned int b = index % BITS_PER_ARRAY_ENTRY;
+=======
+	unsigned b = index % BITS_PER_ARRAY_ENTRY;
+>>>>>>> b7ba80a49124 (Commit)
 
 	r = get_array_entry(info, root, index, new_root);
 	if (r)
@@ -184,7 +206,11 @@ int dm_bitset_clear_bit(struct dm_disk_bitset *info, dm_block_t root,
 			uint32_t index, dm_block_t *new_root)
 {
 	int r;
+<<<<<<< HEAD
 	unsigned int b = index % BITS_PER_ARRAY_ENTRY;
+=======
+	unsigned b = index % BITS_PER_ARRAY_ENTRY;
+>>>>>>> b7ba80a49124 (Commit)
 
 	r = get_array_entry(info, root, index, new_root);
 	if (r)
@@ -201,7 +227,11 @@ int dm_bitset_test_bit(struct dm_disk_bitset *info, dm_block_t root,
 		       uint32_t index, dm_block_t *new_root, bool *result)
 {
 	int r;
+<<<<<<< HEAD
 	unsigned int b = index % BITS_PER_ARRAY_ENTRY;
+=======
+	unsigned b = index % BITS_PER_ARRAY_ENTRY;
+>>>>>>> b7ba80a49124 (Commit)
 
 	r = get_array_entry(info, root, index, new_root);
 	if (r)

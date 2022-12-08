@@ -7,12 +7,19 @@
  * All rights reserved.
  */
 
+<<<<<<< HEAD
 #include <crypto/algapi.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <crypto/sm4.h>
 #include <linux/module.h>
 #include <linux/init.h>
 #include <linux/types.h>
 #include <linux/errno.h>
+<<<<<<< HEAD
+=======
+#include <linux/crypto.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/byteorder.h>
 #include <asm/unaligned.h>
 

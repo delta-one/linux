@@ -32,17 +32,31 @@ smb3_crypto_shash_allocate(struct TCP_Server_Info *server)
 	struct cifs_secmech *p = &server->secmech;
 	int rc;
 
+<<<<<<< HEAD
 	rc = cifs_alloc_hash("hmac(sha256)", &p->hmacsha256);
 	if (rc)
 		goto err;
 
 	rc = cifs_alloc_hash("cmac(aes)", &p->aes_cmac);
+=======
+	rc = cifs_alloc_hash("hmac(sha256)",
+			     &p->hmacsha256,
+			     &p->sdeschmacsha256);
+	if (rc)
+		goto err;
+
+	rc = cifs_alloc_hash("cmac(aes)", &p->cmacaes, &p->sdesccmacaes);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		goto err;
 
 	return 0;
 err:
+<<<<<<< HEAD
 	cifs_free_hash(&p->hmacsha256);
+=======
+	cifs_free_hash(&p->hmacsha256, &p->sdeschmacsha256);
+>>>>>>> b7ba80a49124 (Commit)
 	return rc;
 }
 
@@ -52,6 +66,7 @@ smb311_crypto_shash_allocate(struct TCP_Server_Info *server)
 	struct cifs_secmech *p = &server->secmech;
 	int rc = 0;
 
+<<<<<<< HEAD
 	rc = cifs_alloc_hash("hmac(sha256)", &p->hmacsha256);
 	if (rc)
 		return rc;
@@ -61,14 +76,32 @@ smb311_crypto_shash_allocate(struct TCP_Server_Info *server)
 		goto err;
 
 	rc = cifs_alloc_hash("sha512", &p->sha512);
+=======
+	rc = cifs_alloc_hash("hmac(sha256)",
+			     &p->hmacsha256,
+			     &p->sdeschmacsha256);
+	if (rc)
+		return rc;
+
+	rc = cifs_alloc_hash("cmac(aes)", &p->cmacaes, &p->sdesccmacaes);
+	if (rc)
+		goto err;
+
+	rc = cifs_alloc_hash("sha512", &p->sha512, &p->sdescsha512);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		goto err;
 
 	return 0;
 
 err:
+<<<<<<< HEAD
 	cifs_free_hash(&p->aes_cmac);
 	cifs_free_hash(&p->hmacsha256);
+=======
+	cifs_free_hash(&p->cmacaes, &p->sdesccmacaes);
+	cifs_free_hash(&p->hmacsha256, &p->sdeschmacsha256);
+>>>>>>> b7ba80a49124 (Commit)
 	return rc;
 }
 
@@ -77,6 +110,7 @@ static
 int smb2_get_sign_key(__u64 ses_id, struct TCP_Server_Info *server, u8 *key)
 {
 	struct cifs_chan *chan;
+<<<<<<< HEAD
 	struct TCP_Server_Info *pserver;
 	struct cifs_ses *ses = NULL;
 	int i;
@@ -91,6 +125,20 @@ int smb2_get_sign_key(__u64 ses_id, struct TCP_Server_Info *server, u8 *key)
 	list_for_each_entry(ses, &pserver->smb_ses_list, smb_ses_list) {
 		if (ses->Suid == ses_id)
 			goto found;
+=======
+	struct cifs_ses *ses = NULL;
+	struct TCP_Server_Info *it = NULL;
+	int i;
+	int rc = 0;
+
+	spin_lock(&cifs_tcp_ses_lock);
+
+	list_for_each_entry(it, &cifs_tcp_ses_list, tcp_ses_list) {
+		list_for_each_entry(ses, &it->smb_ses_list, smb_ses_list) {
+			if (ses->Suid == ses_id)
+				goto found;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	cifs_server_dbg(VFS, "%s: Could not find session 0x%llx\n",
 			__func__, ses_id);
@@ -98,12 +146,18 @@ int smb2_get_sign_key(__u64 ses_id, struct TCP_Server_Info *server, u8 *key)
 	goto out;
 
 found:
+<<<<<<< HEAD
 	spin_lock(&ses->ses_lock);
 	spin_lock(&ses->chan_lock);
 
 	is_binding = (cifs_chan_needs_reconnect(ses, server) &&
 		      ses->ses_status == SES_GOOD);
 	if (is_binding) {
+=======
+	spin_lock(&ses->chan_lock);
+	if (cifs_chan_needs_reconnect(ses, server) &&
+	    !CIFS_ALL_CHANS_NEED_RECONNECT(ses)) {
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * If we are in the process of binding a new channel
 		 * to an existing session, use the master connection
@@ -111,7 +165,10 @@ found:
 		 */
 		memcpy(key, ses->smb3signingkey, SMB3_SIGN_KEY_SIZE);
 		spin_unlock(&ses->chan_lock);
+<<<<<<< HEAD
 		spin_unlock(&ses->ses_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
@@ -124,12 +181,18 @@ found:
 		if (chan->server == server) {
 			memcpy(key, chan->signkey, SMB3_SIGN_KEY_SIZE);
 			spin_unlock(&ses->chan_lock);
+<<<<<<< HEAD
 			spin_unlock(&ses->ses_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			goto out;
 		}
 	}
 	spin_unlock(&ses->chan_lock);
+<<<<<<< HEAD
 	spin_unlock(&ses->ses_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	cifs_dbg(VFS,
 		 "%s: Could not find channel signing key for session 0x%llx\n",
@@ -144,6 +207,7 @@ out:
 static struct cifs_ses *
 smb2_find_smb_ses_unlocked(struct TCP_Server_Info *server, __u64 ses_id)
 {
+<<<<<<< HEAD
 	struct TCP_Server_Info *pserver;
 	struct cifs_ses *ses;
 
@@ -151,6 +215,11 @@ smb2_find_smb_ses_unlocked(struct TCP_Server_Info *server, __u64 ses_id)
 	pserver = CIFS_SERVER_IS_CHAN(server) ? server->primary_server : server;
 
 	list_for_each_entry(ses, &pserver->smb_ses_list, smb_ses_list) {
+=======
+	struct cifs_ses *ses;
+
+	list_for_each_entry(ses, &server->smb_ses_list, smb_ses_list) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (ses->Suid != ses_id)
 			continue;
 		++ses->ses_count;
@@ -227,7 +296,13 @@ smb2_calc_signature(struct smb_rqst *rqst, struct TCP_Server_Info *server,
 	struct kvec *iov = rqst->rq_iov;
 	struct smb2_hdr *shdr = (struct smb2_hdr *)iov[0].iov_base;
 	struct cifs_ses *ses;
+<<<<<<< HEAD
 	struct shash_desc *shash = NULL;
+=======
+	struct shash_desc *shash;
+	struct crypto_shash *hash;
+	struct sdesc *sdesc = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	struct smb_rqst drqst;
 
 	ses = smb2_find_smb_ses(server, le64_to_cpu(shdr->SessionId));
@@ -240,17 +315,31 @@ smb2_calc_signature(struct smb_rqst *rqst, struct TCP_Server_Info *server,
 	memset(shdr->Signature, 0x0, SMB2_SIGNATURE_SIZE);
 
 	if (allocate_crypto) {
+<<<<<<< HEAD
 		rc = cifs_alloc_hash("hmac(sha256)", &shash);
+=======
+		rc = cifs_alloc_hash("hmac(sha256)", &hash, &sdesc);
+>>>>>>> b7ba80a49124 (Commit)
 		if (rc) {
 			cifs_server_dbg(VFS,
 					"%s: sha256 alloc failed\n", __func__);
 			goto out;
 		}
+<<<<<<< HEAD
 	} else {
 		shash = server->secmech.hmacsha256;
 	}
 
 	rc = crypto_shash_setkey(shash->tfm, ses->auth_key.response,
+=======
+		shash = &sdesc->shash;
+	} else {
+		hash = server->secmech.hmacsha256;
+		shash = &server->secmech.sdeschmacsha256->shash;
+	}
+
+	rc = crypto_shash_setkey(hash, ses->auth_key.response,
+>>>>>>> b7ba80a49124 (Commit)
 			SMB2_NTLMV2_SESSKEY_SIZE);
 	if (rc) {
 		cifs_server_dbg(VFS,
@@ -292,7 +381,11 @@ smb2_calc_signature(struct smb_rqst *rqst, struct TCP_Server_Info *server,
 
 out:
 	if (allocate_crypto)
+<<<<<<< HEAD
 		cifs_free_hash(&shash);
+=======
+		cifs_free_hash(&hash, &sdesc);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ses)
 		cifs_put_smb_ses(ses);
 	return rc;
@@ -319,38 +412,66 @@ static int generate_key(struct cifs_ses *ses, struct kvec label,
 		goto smb3signkey_ret;
 	}
 
+<<<<<<< HEAD
 	rc = crypto_shash_setkey(server->secmech.hmacsha256->tfm,
+=======
+	rc = crypto_shash_setkey(server->secmech.hmacsha256,
+>>>>>>> b7ba80a49124 (Commit)
 		ses->auth_key.response, SMB2_NTLMV2_SESSKEY_SIZE);
 	if (rc) {
 		cifs_server_dbg(VFS, "%s: Could not set with session key\n", __func__);
 		goto smb3signkey_ret;
 	}
 
+<<<<<<< HEAD
 	rc = crypto_shash_init(server->secmech.hmacsha256);
+=======
+	rc = crypto_shash_init(&server->secmech.sdeschmacsha256->shash);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc) {
 		cifs_server_dbg(VFS, "%s: Could not init sign hmac\n", __func__);
 		goto smb3signkey_ret;
 	}
 
+<<<<<<< HEAD
 	rc = crypto_shash_update(server->secmech.hmacsha256, i, 4);
+=======
+	rc = crypto_shash_update(&server->secmech.sdeschmacsha256->shash,
+				i, 4);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc) {
 		cifs_server_dbg(VFS, "%s: Could not update with n\n", __func__);
 		goto smb3signkey_ret;
 	}
 
+<<<<<<< HEAD
 	rc = crypto_shash_update(server->secmech.hmacsha256, label.iov_base, label.iov_len);
+=======
+	rc = crypto_shash_update(&server->secmech.sdeschmacsha256->shash,
+				label.iov_base, label.iov_len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc) {
 		cifs_server_dbg(VFS, "%s: Could not update with label\n", __func__);
 		goto smb3signkey_ret;
 	}
 
+<<<<<<< HEAD
 	rc = crypto_shash_update(server->secmech.hmacsha256, &zero, 1);
+=======
+	rc = crypto_shash_update(&server->secmech.sdeschmacsha256->shash,
+				&zero, 1);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc) {
 		cifs_server_dbg(VFS, "%s: Could not update with zero\n", __func__);
 		goto smb3signkey_ret;
 	}
 
+<<<<<<< HEAD
 	rc = crypto_shash_update(server->secmech.hmacsha256, context.iov_base, context.iov_len);
+=======
+	rc = crypto_shash_update(&server->secmech.sdeschmacsha256->shash,
+				context.iov_base, context.iov_len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc) {
 		cifs_server_dbg(VFS, "%s: Could not update with context\n", __func__);
 		goto smb3signkey_ret;
@@ -358,16 +479,29 @@ static int generate_key(struct cifs_ses *ses, struct kvec label,
 
 	if ((server->cipher_type == SMB2_ENCRYPTION_AES256_CCM) ||
 		(server->cipher_type == SMB2_ENCRYPTION_AES256_GCM)) {
+<<<<<<< HEAD
 		rc = crypto_shash_update(server->secmech.hmacsha256, L256, 4);
 	} else {
 		rc = crypto_shash_update(server->secmech.hmacsha256, L128, 4);
+=======
+		rc = crypto_shash_update(&server->secmech.sdeschmacsha256->shash,
+				L256, 4);
+	} else {
+		rc = crypto_shash_update(&server->secmech.sdeschmacsha256->shash,
+				L128, 4);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (rc) {
 		cifs_server_dbg(VFS, "%s: Could not update with L\n", __func__);
 		goto smb3signkey_ret;
 	}
 
+<<<<<<< HEAD
 	rc = crypto_shash_final(server->secmech.hmacsha256, hashptr);
+=======
+	rc = crypto_shash_final(&server->secmech.sdeschmacsha256->shash,
+				hashptr);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc) {
 		cifs_server_dbg(VFS, "%s: Could not generate sha256 hash\n", __func__);
 		goto smb3signkey_ret;
@@ -399,6 +533,7 @@ generate_smb3signingkey(struct cifs_ses *ses,
 	bool is_binding = false;
 	int chan_index = 0;
 
+<<<<<<< HEAD
 	spin_lock(&ses->ses_lock);
 	spin_lock(&ses->chan_lock);
 	is_binding = (cifs_chan_needs_reconnect(ses, server) &&
@@ -408,6 +543,13 @@ generate_smb3signingkey(struct cifs_ses *ses,
 	/* TODO: introduce ref counting for channels when the can be freed */
 	spin_unlock(&ses->chan_lock);
 	spin_unlock(&ses->ses_lock);
+=======
+	spin_lock(&ses->chan_lock);
+	is_binding = !CIFS_ALL_CHANS_NEED_RECONNECT(ses);
+	chan_index = cifs_ses_get_chan_index(ses, server);
+	/* TODO: introduce ref counting for channels when the can be freed */
+	spin_unlock(&ses->chan_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * All channels use the same encryption/decryption keys but
@@ -436,7 +578,11 @@ generate_smb3signingkey(struct cifs_ses *ses,
 
 		/* safe to access primary channel, since it will never go away */
 		spin_lock(&ses->chan_lock);
+<<<<<<< HEAD
 		memcpy(ses->chans[chan_index].signkey, ses->smb3signingkey,
+=======
+		memcpy(ses->chans[0].signkey, ses->smb3signingkey,
+>>>>>>> b7ba80a49124 (Commit)
 		       SMB3_SIGN_KEY_SIZE);
 		spin_unlock(&ses->chan_lock);
 
@@ -551,7 +697,13 @@ smb3_calc_signature(struct smb_rqst *rqst, struct TCP_Server_Info *server,
 	unsigned char *sigptr = smb3_signature;
 	struct kvec *iov = rqst->rq_iov;
 	struct smb2_hdr *shdr = (struct smb2_hdr *)iov[0].iov_base;
+<<<<<<< HEAD
 	struct shash_desc *shash = NULL;
+=======
+	struct shash_desc *shash;
+	struct crypto_shash *hash;
+	struct sdesc *sdesc = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	struct smb_rqst drqst;
 	u8 key[SMB3_SIGN_KEY_SIZE];
 
@@ -562,24 +714,43 @@ smb3_calc_signature(struct smb_rqst *rqst, struct TCP_Server_Info *server,
 	}
 
 	if (allocate_crypto) {
+<<<<<<< HEAD
 		rc = cifs_alloc_hash("cmac(aes)", &shash);
 		if (rc)
 			return rc;
 	} else {
 		shash = server->secmech.aes_cmac;
+=======
+		rc = cifs_alloc_hash("cmac(aes)", &hash, &sdesc);
+		if (rc)
+			return rc;
+
+		shash = &sdesc->shash;
+	} else {
+		hash = server->secmech.cmacaes;
+		shash = &server->secmech.sdesccmacaes->shash;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	memset(smb3_signature, 0x0, SMB2_CMACAES_SIZE);
 	memset(shdr->Signature, 0x0, SMB2_SIGNATURE_SIZE);
 
+<<<<<<< HEAD
 	rc = crypto_shash_setkey(shash->tfm, key, SMB2_CMACAES_SIZE);
+=======
+	rc = crypto_shash_setkey(hash, key, SMB2_CMACAES_SIZE);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc) {
 		cifs_server_dbg(VFS, "%s: Could not set key for cmac aes\n", __func__);
 		goto out;
 	}
 
 	/*
+<<<<<<< HEAD
 	 * we already allocate aes_cmac when we init smb3 signing key,
+=======
+	 * we already allocate sdesccmacaes when we init smb3 signing key,
+>>>>>>> b7ba80a49124 (Commit)
 	 * so unlike smb2 case we do not have to check here if secmech are
 	 * initialized
 	 */
@@ -615,7 +786,11 @@ smb3_calc_signature(struct smb_rqst *rqst, struct TCP_Server_Info *server,
 
 out:
 	if (allocate_crypto)
+<<<<<<< HEAD
 		cifs_free_hash(&shash);
+=======
+		cifs_free_hash(&hash, &sdesc);
+>>>>>>> b7ba80a49124 (Commit)
 	return rc;
 }
 
@@ -900,7 +1075,11 @@ smb3_crypto_aead_allocate(struct TCP_Server_Info *server)
 {
 	struct crypto_aead *tfm;
 
+<<<<<<< HEAD
 	if (!server->secmech.enc) {
+=======
+	if (!server->secmech.ccmaesencrypt) {
+>>>>>>> b7ba80a49124 (Commit)
 		if ((server->cipher_type == SMB2_ENCRYPTION_AES128_GCM) ||
 		    (server->cipher_type == SMB2_ENCRYPTION_AES256_GCM))
 			tfm = crypto_alloc_aead("gcm(aes)", 0, 0);
@@ -911,23 +1090,39 @@ smb3_crypto_aead_allocate(struct TCP_Server_Info *server)
 				 __func__);
 			return PTR_ERR(tfm);
 		}
+<<<<<<< HEAD
 		server->secmech.enc = tfm;
 	}
 
 	if (!server->secmech.dec) {
+=======
+		server->secmech.ccmaesencrypt = tfm;
+	}
+
+	if (!server->secmech.ccmaesdecrypt) {
+>>>>>>> b7ba80a49124 (Commit)
 		if ((server->cipher_type == SMB2_ENCRYPTION_AES128_GCM) ||
 		    (server->cipher_type == SMB2_ENCRYPTION_AES256_GCM))
 			tfm = crypto_alloc_aead("gcm(aes)", 0, 0);
 		else
 			tfm = crypto_alloc_aead("ccm(aes)", 0, 0);
 		if (IS_ERR(tfm)) {
+<<<<<<< HEAD
 			crypto_free_aead(server->secmech.enc);
 			server->secmech.enc = NULL;
+=======
+			crypto_free_aead(server->secmech.ccmaesencrypt);
+			server->secmech.ccmaesencrypt = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 			cifs_server_dbg(VFS, "%s: Failed to alloc decrypt aead\n",
 				 __func__);
 			return PTR_ERR(tfm);
 		}
+<<<<<<< HEAD
 		server->secmech.dec = tfm;
+=======
+		server->secmech.ccmaesdecrypt = tfm;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;

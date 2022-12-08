@@ -132,8 +132,13 @@ static void raw_rcv(struct sk_buff *oskb, void *data)
 		return;
 
 	/* make sure to not pass oversized frames to the socket */
+<<<<<<< HEAD
 	if ((!ro->fd_frames && can_is_canfd_skb(oskb)) ||
 	    (!ro->xl_frames && can_is_canxl_skb(oskb)))
+=======
+	if ((can_is_canfd_skb(oskb) && !ro->fd_frames && !ro->xl_frames) ||
+	    (can_is_canxl_skb(oskb) && !ro->xl_frames))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	/* eliminate multiple filter matches for the same skb */
@@ -523,7 +528,10 @@ static int raw_setsockopt(struct socket *sock, int level, int optname,
 	struct can_filter sfilter;         /* single filter */
 	struct net_device *dev = NULL;
 	can_err_mask_t err_mask = 0;
+<<<<<<< HEAD
 	int fd_frames;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int count = 0;
 	int err = 0;
 
@@ -665,6 +673,7 @@ static int raw_setsockopt(struct socket *sock, int level, int optname,
 		break;
 
 	case CAN_RAW_FD_FRAMES:
+<<<<<<< HEAD
 		if (optlen != sizeof(fd_frames))
 			return -EINVAL;
 
@@ -676,6 +685,14 @@ static int raw_setsockopt(struct socket *sock, int level, int optname,
 			return -EINVAL;
 
 		ro->fd_frames = fd_frames;
+=======
+		if (optlen != sizeof(ro->fd_frames))
+			return -EINVAL;
+
+		if (copy_from_sockptr(&ro->fd_frames, optval, optlen))
+			return -EFAULT;
+
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	case CAN_RAW_XL_FRAMES:
@@ -685,9 +702,12 @@ static int raw_setsockopt(struct socket *sock, int level, int optname,
 		if (copy_from_sockptr(&ro->xl_frames, optval, optlen))
 			return -EFAULT;
 
+<<<<<<< HEAD
 		/* Enabling CAN XL includes CAN FD */
 		if (ro->xl_frames)
 			ro->fd_frames = ro->xl_frames;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	case CAN_RAW_JOIN_FILTERS:
@@ -795,6 +815,7 @@ static int raw_getsockopt(struct socket *sock, int level, int optname,
 	return 0;
 }
 
+<<<<<<< HEAD
 static bool raw_bad_txframe(struct raw_sock *ro, struct sk_buff *skb, int mtu)
 {
 	/* Classical CAN -> no checks for flags and device capabilities */
@@ -814,6 +835,8 @@ static bool raw_bad_txframe(struct raw_sock *ro, struct sk_buff *skb, int mtu)
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int raw_sendmsg(struct socket *sock, struct msghdr *msg, size_t size)
 {
 	struct sock *sk = sock->sk;
@@ -861,8 +884,25 @@ static int raw_sendmsg(struct socket *sock, struct msghdr *msg, size_t size)
 		goto free_skb;
 
 	err = -EINVAL;
+<<<<<<< HEAD
 	if (raw_bad_txframe(ro, skb, dev->mtu))
 		goto free_skb;
+=======
+	if (ro->xl_frames && can_is_canxl_dev_mtu(dev->mtu)) {
+		/* CAN XL, CAN FD and Classical CAN */
+		if (!can_is_canxl_skb(skb) && !can_is_canfd_skb(skb) &&
+		    !can_is_can_skb(skb))
+			goto free_skb;
+	} else if (ro->fd_frames && dev->mtu == CANFD_MTU) {
+		/* CAN FD and Classical CAN */
+		if (!can_is_canfd_skb(skb) && !can_is_can_skb(skb))
+			goto free_skb;
+	} else {
+		/* Classical CAN */
+		if (!can_is_can_skb(skb))
+			goto free_skb;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	sockcm_init(&sockc, sk);
 	if (msg->msg_controllen) {
@@ -873,7 +913,10 @@ static int raw_sendmsg(struct socket *sock, struct msghdr *msg, size_t size)
 
 	skb->dev = dev;
 	skb->priority = sk->sk_priority;
+<<<<<<< HEAD
 	skb->mark = sk->sk_mark;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	skb->tstamp = sockc.transmit_time;
 
 	skb_setup_tx_timestamp(skb, sockc.tsflags);

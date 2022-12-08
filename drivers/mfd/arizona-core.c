@@ -45,7 +45,11 @@ int arizona_clk32k_enable(struct arizona *arizona)
 	if (arizona->clk32k_ref == 1) {
 		switch (arizona->pdata.clk32k_src) {
 		case ARIZONA_32KZ_MCLK1:
+<<<<<<< HEAD
 			ret = pm_runtime_resume_and_get(arizona->dev);
+=======
+			ret = pm_runtime_get_sync(arizona->dev);
+>>>>>>> b7ba80a49124 (Commit)
 			if (ret != 0)
 				goto err_ref;
 			ret = clk_prepare_enable(arizona->mclk[ARIZONA_MCLK1]);
@@ -480,6 +484,10 @@ static int wm5102_clear_write_sequencer(struct arizona *arizona)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM
+>>>>>>> b7ba80a49124 (Commit)
 static int arizona_isolate_dcvdd(struct arizona *arizona)
 {
 	int ret;
@@ -741,7 +749,13 @@ static int arizona_runtime_suspend(struct device *dev)
 
 	return 0;
 }
+<<<<<<< HEAD
 
+=======
+#endif
+
+#ifdef CONFIG_PM_SLEEP
+>>>>>>> b7ba80a49124 (Commit)
 static int arizona_suspend(struct device *dev)
 {
 	struct arizona *arizona = dev_get_drvdata(dev);
@@ -781,6 +795,7 @@ static int arizona_resume(struct device *dev)
 
 	return 0;
 }
+<<<<<<< HEAD
 
 EXPORT_GPL_DEV_PM_OPS(arizona_pm_ops) = {
 	RUNTIME_PM_OPS(arizona_runtime_suspend,
@@ -790,6 +805,19 @@ EXPORT_GPL_DEV_PM_OPS(arizona_pm_ops) = {
 	NOIRQ_SYSTEM_SLEEP_PM_OPS(arizona_suspend_noirq,
 				  arizona_resume_noirq)
 };
+=======
+#endif
+
+const struct dev_pm_ops arizona_pm_ops = {
+	SET_RUNTIME_PM_OPS(arizona_runtime_suspend,
+			   arizona_runtime_resume,
+			   NULL)
+	SET_SYSTEM_SLEEP_PM_OPS(arizona_suspend, arizona_resume)
+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(arizona_suspend_noirq,
+				      arizona_resume_noirq)
+};
+EXPORT_SYMBOL_GPL(arizona_pm_ops);
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_OF
 static int arizona_of_get_core_pdata(struct arizona *arizona)

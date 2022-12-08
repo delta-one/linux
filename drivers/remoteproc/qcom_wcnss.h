@@ -5,6 +5,11 @@
 struct qcom_iris;
 struct qcom_wcnss;
 
+<<<<<<< HEAD
+=======
+extern struct platform_driver qcom_iris_driver;
+
+>>>>>>> b7ba80a49124 (Commit)
 struct wcnss_vreg_info {
 	const char * const name;
 	int min_voltage;

@@ -4,7 +4,10 @@
  */
 
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/pm.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/usb.h>
 
 #include <drm/drm_atomic_helper.h>
@@ -13,7 +16,11 @@
 #include <drm/drm_damage_helper.h>
 #include <drm/drm_drv.h>
 #include <drm/drm_edid.h>
+<<<<<<< HEAD
 #include <drm/drm_fbdev_generic.h>
+=======
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_file.h>
 #include <drm/drm_format_helper.h>
 #include <drm/drm_fourcc.h>
@@ -719,15 +726,24 @@ static void gm12u320_usb_disconnect(struct usb_interface *interface)
 	drm_atomic_helper_shutdown(dev);
 }
 
+<<<<<<< HEAD
 static int gm12u320_suspend(struct usb_interface *interface,
 			    pm_message_t message)
+=======
+static __maybe_unused int gm12u320_suspend(struct usb_interface *interface,
+					   pm_message_t message)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct drm_device *dev = usb_get_intfdata(interface);
 
 	return drm_mode_config_helper_suspend(dev);
 }
 
+<<<<<<< HEAD
 static int gm12u320_resume(struct usb_interface *interface)
+=======
+static __maybe_unused int gm12u320_resume(struct usb_interface *interface)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct drm_device *dev = usb_get_intfdata(interface);
 	struct gm12u320_device *gm12u320 = to_gm12u320(dev);
@@ -748,9 +764,17 @@ static struct usb_driver gm12u320_usb_driver = {
 	.probe = gm12u320_usb_probe,
 	.disconnect = gm12u320_usb_disconnect,
 	.id_table = id_table,
+<<<<<<< HEAD
 	.suspend = pm_ptr(gm12u320_suspend),
 	.resume = pm_ptr(gm12u320_resume),
 	.reset_resume = pm_ptr(gm12u320_resume),
+=======
+#ifdef CONFIG_PM
+	.suspend = gm12u320_suspend,
+	.resume = gm12u320_resume,
+	.reset_resume = gm12u320_resume,
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_usb_driver(gm12u320_usb_driver);

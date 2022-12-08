@@ -11,7 +11,10 @@
 #include <linux/kernel.h>
 #include <linux/list.h>
 #include <linux/usb/g_uvc.h>
+<<<<<<< HEAD
 #include <linux/usb/uvc.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/videodev2.h>
 #include <linux/vmalloc.h>
 #include <linux/wait.h>
@@ -25,6 +28,7 @@
 #include "uvc_queue.h"
 #include "uvc_video.h"
 #include "uvc_v4l2.h"
+<<<<<<< HEAD
 #include "uvc_configfs.h"
 
 static const struct uvc_format_desc *to_uvc_format(struct uvcg_format *uformat)
@@ -173,6 +177,8 @@ static struct uvcg_frame *find_closest_frame_by_size(struct uvc_device *uvc,
 
 	return uframe;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* --------------------------------------------------------------------------
  * Requests handling
@@ -199,6 +205,19 @@ uvc_send_response(struct uvc_device *uvc, struct uvc_request_data *data)
  * V4L2 ioctls
  */
 
+<<<<<<< HEAD
+=======
+struct uvc_format {
+	u8 bpp;
+	u32 fcc;
+};
+
+static struct uvc_format uvc_formats[] = {
+	{ 16, V4L2_PIX_FMT_YUYV  },
+	{ 0,  V4L2_PIX_FMT_MJPEG },
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static int
 uvc_v4l2_querycap(struct file *file, void *fh, struct v4l2_capability *cap)
 {
@@ -233,6 +252,7 @@ uvc_v4l2_get_format(struct file *file, void *fh, struct v4l2_format *fmt)
 }
 
 static int
+<<<<<<< HEAD
 uvc_v4l2_try_format(struct file *file, void *fh, struct v4l2_format *fmt)
 {
 	struct video_device *vdev = video_devdata(file);
@@ -273,11 +293,14 @@ uvc_v4l2_try_format(struct file *file, void *fh, struct v4l2_format *fmt)
 }
 
 static int
+=======
+>>>>>>> b7ba80a49124 (Commit)
 uvc_v4l2_set_format(struct file *file, void *fh, struct v4l2_format *fmt)
 {
 	struct video_device *vdev = video_devdata(file);
 	struct uvc_device *uvc = video_get_drvdata(vdev);
 	struct uvc_video *video = &uvc->video;
+<<<<<<< HEAD
 	int ret;
 
 	ret = uvc_v4l2_try_format(file, fh, fmt);
@@ -376,6 +399,39 @@ uvc_v4l2_enum_format(struct file *file, void *fh, struct v4l2_fmtdesc *f)
 
 	fmtdesc = to_uvc_format(uformat);
 	f->pixelformat = fmtdesc->fcc;
+=======
+	struct uvc_format *format;
+	unsigned int imagesize;
+	unsigned int bpl;
+	unsigned int i;
+
+	for (i = 0; i < ARRAY_SIZE(uvc_formats); ++i) {
+		format = &uvc_formats[i];
+		if (format->fcc == fmt->fmt.pix.pixelformat)
+			break;
+	}
+
+	if (i == ARRAY_SIZE(uvc_formats)) {
+		uvcg_info(&uvc->func, "Unsupported format 0x%08x.\n",
+			  fmt->fmt.pix.pixelformat);
+		return -EINVAL;
+	}
+
+	bpl = format->bpp * fmt->fmt.pix.width / 8;
+	imagesize = bpl ? bpl * fmt->fmt.pix.height : fmt->fmt.pix.sizeimage;
+
+	video->fcc = format->fcc;
+	video->bpp = format->bpp;
+	video->width = fmt->fmt.pix.width;
+	video->height = fmt->fmt.pix.height;
+	video->imagesize = imagesize;
+
+	fmt->fmt.pix.field = V4L2_FIELD_NONE;
+	fmt->fmt.pix.bytesperline = bpl;
+	fmt->fmt.pix.sizeimage = imagesize;
+	fmt->fmt.pix.colorspace = V4L2_COLORSPACE_SRGB;
+	fmt->fmt.pix.priv = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -544,12 +600,17 @@ uvc_v4l2_ioctl_default(struct file *file, void *fh, bool valid_prio,
 
 const struct v4l2_ioctl_ops uvc_v4l2_ioctl_ops = {
 	.vidioc_querycap = uvc_v4l2_querycap,
+<<<<<<< HEAD
 	.vidioc_try_fmt_vid_out = uvc_v4l2_try_format,
 	.vidioc_g_fmt_vid_out = uvc_v4l2_get_format,
 	.vidioc_s_fmt_vid_out = uvc_v4l2_set_format,
 	.vidioc_enum_frameintervals = uvc_v4l2_enum_frameintervals,
 	.vidioc_enum_framesizes = uvc_v4l2_enum_framesizes,
 	.vidioc_enum_fmt_vid_out = uvc_v4l2_enum_format,
+=======
+	.vidioc_g_fmt_vid_out = uvc_v4l2_get_format,
+	.vidioc_s_fmt_vid_out = uvc_v4l2_set_format,
+>>>>>>> b7ba80a49124 (Commit)
 	.vidioc_reqbufs = uvc_v4l2_reqbufs,
 	.vidioc_querybuf = uvc_v4l2_querybuf,
 	.vidioc_qbuf = uvc_v4l2_qbuf,

@@ -12,9 +12,15 @@ extern bool mcore_booted;
 void imx_check_clocks(struct clk *clks[], unsigned int count);
 void imx_check_clk_hws(struct clk_hw *clks[], unsigned int count);
 #ifndef MODULE
+<<<<<<< HEAD
 void imx_register_uart_clocks(void);
 #else
 static inline void imx_register_uart_clocks(void)
+=======
+void imx_register_uart_clocks(unsigned int clk_count);
+#else
+static inline void imx_register_uart_clocks(unsigned int clk_count)
+>>>>>>> b7ba80a49124 (Commit)
 {
 }
 #endif
@@ -288,10 +294,15 @@ struct clk * imx_obtain_fixed_clock(
 struct clk_hw *imx_obtain_fixed_clock_hw(
 			const char *name, unsigned long rate);
 
+<<<<<<< HEAD
 struct clk_hw *imx_obtain_fixed_of_clock(struct device_node *np,
 					 const char *name, unsigned long rate);
 
 struct clk_hw *imx_get_clk_hw_by_name(struct device_node *np, const char *name);
+=======
+struct clk_hw *imx_obtain_fixed_clk_hw(struct device_node *np,
+				       const char *name);
+>>>>>>> b7ba80a49124 (Commit)
 
 struct clk_hw *imx_clk_hw_gate_exclusive(const char *name, const char *parent,
 	 void __iomem *reg, u8 shift, u32 exclusive_mask);
@@ -461,9 +472,12 @@ struct clk_hw *imx_clk_hw_divider_gate(const char *name, const char *parent_name
 		unsigned long flags, void __iomem *reg, u8 shift, u8 width,
 		u8 clk_divider_flags, const struct clk_div_table *table,
 		spinlock_t *lock);
+<<<<<<< HEAD
 
 struct clk_hw *imx_clk_gpr_mux(const char *name, const char *compatible,
 			       u32 reg, const char **parent_names,
 			       u8 num_parents, const u32 *mux_table, u32 mask);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

@@ -83,7 +83,10 @@ This structure has the form::
 		int (*mmio_enabled)(struct pci_dev *dev);
 		int (*slot_reset)(struct pci_dev *dev);
 		void (*resume)(struct pci_dev *dev);
+<<<<<<< HEAD
 		void (*cor_error_detected)(struct pci_dev *dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 The possible channel states are::
@@ -418,15 +421,22 @@ That is, the recovery API only requires that:
    - drivers/next/e100.c
    - drivers/net/e1000
    - drivers/net/e1000e
+<<<<<<< HEAD
+=======
+   - drivers/net/ixgb
+>>>>>>> b7ba80a49124 (Commit)
    - drivers/net/ixgbe
    - drivers/net/cxgb3
    - drivers/net/s2io.c
 
+<<<<<<< HEAD
    The cor_error_detected() callback is invoked in handle_error_source() when
    the error severity is "correctable". The callback is optional and allows
    additional logging to be done if desired. See example:
 
    - drivers/cxl/pci.c
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 The End
 -------

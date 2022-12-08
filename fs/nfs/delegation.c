@@ -146,7 +146,11 @@ static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_state
 {
 	struct inode *inode = state->inode;
 	struct file_lock *fl;
+<<<<<<< HEAD
 	struct file_lock_context *flctx = locks_inode_context(inode);
+=======
+	struct file_lock_context *flctx = inode->i_flctx;
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head *list;
 	int status = 0;
 
@@ -228,7 +232,12 @@ again:
  *
  */
 void nfs_inode_reclaim_delegation(struct inode *inode, const struct cred *cred,
+<<<<<<< HEAD
 				  fmode_t type, const nfs4_stateid *stateid,
+=======
+				  fmode_t type,
+				  const nfs4_stateid *stateid,
+>>>>>>> b7ba80a49124 (Commit)
 				  unsigned long pagemod_limit)
 {
 	struct nfs_delegation *delegation;
@@ -238,6 +247,7 @@ void nfs_inode_reclaim_delegation(struct inode *inode, const struct cred *cred,
 	delegation = rcu_dereference(NFS_I(inode)->delegation);
 	if (delegation != NULL) {
 		spin_lock(&delegation->lock);
+<<<<<<< HEAD
 		nfs4_stateid_copy(&delegation->stateid, stateid);
 		delegation->type = type;
 		delegation->pagemod_limit = pagemod_limit;
@@ -256,6 +266,27 @@ void nfs_inode_reclaim_delegation(struct inode *inode, const struct cred *cred,
 		nfs_inode_set_delegation(inode, cred, type, stateid,
 					 pagemod_limit);
 	}
+=======
+		if (nfs4_is_valid_delegation(delegation, 0)) {
+			nfs4_stateid_copy(&delegation->stateid, stateid);
+			delegation->type = type;
+			delegation->pagemod_limit = pagemod_limit;
+			oldcred = delegation->cred;
+			delegation->cred = get_cred(cred);
+			clear_bit(NFS_DELEGATION_NEED_RECLAIM,
+				  &delegation->flags);
+			spin_unlock(&delegation->lock);
+			rcu_read_unlock();
+			put_cred(oldcred);
+			trace_nfs4_reclaim_delegation(inode, type);
+			return;
+		}
+		/* We appear to have raced with a delegation return. */
+		spin_unlock(&delegation->lock);
+	}
+	rcu_read_unlock();
+	nfs_inode_set_delegation(inode, cred, type, stateid, pagemod_limit);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int nfs_do_return_delegation(struct inode *inode, struct nfs_delegation *delegation, int issync)

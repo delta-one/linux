@@ -2,7 +2,11 @@
 #include <errno.h>
 #include <string.h>
 #include "perf_regs.h"
+<<<<<<< HEAD
 #include "util/sample.h"
+=======
+#include "event.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 int __weak arch_sdt_arg_parse_op(char *old_op __maybe_unused,
 				 char **new_op __maybe_unused)

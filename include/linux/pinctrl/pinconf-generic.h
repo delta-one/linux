@@ -11,12 +11,18 @@
 #ifndef __LINUX_PINCTRL_PINCONF_GENERIC_H
 #define __LINUX_PINCTRL_PINCONF_GENERIC_H
 
+<<<<<<< HEAD
 #include <linux/types.h>
 
 #include <linux/pinctrl/machine.h>
 
 struct device_node;
 
+=======
+#include <linux/device.h>
+#include <linux/pinctrl/machine.h>
+
+>>>>>>> b7ba80a49124 (Commit)
 struct pinctrl_dev;
 struct pinctrl_map;
 
@@ -38,8 +44,12 @@ struct pinctrl_map;
  *	impedance.
  * @PIN_CONFIG_BIAS_PULL_DOWN: the pin will be pulled down (usually with high
  *	impedance to GROUND). If the argument is != 0 pull-down is enabled,
+<<<<<<< HEAD
  *	the value is interpreted by the driver and can be custom or an SI unit
  *  	such as Ohms.
+=======
+ *	if it is 0, pull-down is total, i.e. the pin is connected to GROUND.
+>>>>>>> b7ba80a49124 (Commit)
  * @PIN_CONFIG_BIAS_PULL_PIN_DEFAULT: the pin will be pulled up or down based
  *	on embedded knowledge of the controller hardware, like current mux
  *	function. The pull direction and possibly strength too will normally
@@ -50,8 +60,12 @@ struct pinctrl_map;
  *	@PIN_CONFIG_BIAS_DISABLE.
  * @PIN_CONFIG_BIAS_PULL_UP: the pin will be pulled up (usually with high
  *	impedance to VDD). If the argument is != 0 pull-up is enabled,
+<<<<<<< HEAD
  *	the value is interpreted by the driver and can be custom or an SI unit
  *	such as Ohms.
+=======
+ *	if it is 0, pull-up is total, i.e. the pin is connected to VDD.
+>>>>>>> b7ba80a49124 (Commit)
  * @PIN_CONFIG_DRIVE_OPEN_DRAIN: the pin will be driven with open drain (open
  *	collector) which means it is usually wired with other output ports
  *	which are then pulled up with an external resistor. Setting this
@@ -201,25 +215,43 @@ int pinconf_generic_dt_node_to_map(struct pinctrl_dev *pctldev,
 void pinconf_generic_dt_free_map(struct pinctrl_dev *pctldev,
 		struct pinctrl_map *map, unsigned num_maps);
 
+<<<<<<< HEAD
 static inline int pinconf_generic_dt_node_to_map_group(struct pinctrl_dev *pctldev,
 		struct device_node *np_config, struct pinctrl_map **map,
 		unsigned *num_maps)
+=======
+static inline int pinconf_generic_dt_node_to_map_group(
+		struct pinctrl_dev *pctldev, struct device_node *np_config,
+		struct pinctrl_map **map, unsigned *num_maps)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return pinconf_generic_dt_node_to_map(pctldev, np_config, map, num_maps,
 			PIN_MAP_TYPE_CONFIGS_GROUP);
 }
 
+<<<<<<< HEAD
 static inline int pinconf_generic_dt_node_to_map_pin(struct pinctrl_dev *pctldev,
 		struct device_node *np_config, struct pinctrl_map **map,
 		unsigned *num_maps)
+=======
+static inline int pinconf_generic_dt_node_to_map_pin(
+		struct pinctrl_dev *pctldev, struct device_node *np_config,
+		struct pinctrl_map **map, unsigned *num_maps)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return pinconf_generic_dt_node_to_map(pctldev, np_config, map, num_maps,
 			PIN_MAP_TYPE_CONFIGS_PIN);
 }
 
+<<<<<<< HEAD
 static inline int pinconf_generic_dt_node_to_map_all(struct pinctrl_dev *pctldev,
 		struct device_node *np_config, struct pinctrl_map **map,
 		unsigned *num_maps)
+=======
+static inline int pinconf_generic_dt_node_to_map_all(
+		struct pinctrl_dev *pctldev, struct device_node *np_config,
+		struct pinctrl_map **map, unsigned *num_maps)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/*
 	 * passing the type as PIN_MAP_TYPE_INVALID causes the underlying parser

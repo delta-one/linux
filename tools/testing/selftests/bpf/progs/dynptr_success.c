@@ -5,7 +5,10 @@
 #include <linux/bpf.h>
 #include <bpf/bpf_helpers.h>
 #include "bpf_misc.h"
+<<<<<<< HEAD
 #include "bpf_kfuncs.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "errno.h"
 
 char _license[] SEC("license") = "GPL";
@@ -21,7 +24,10 @@ struct sample {
 
 struct {
 	__uint(type, BPF_MAP_TYPE_RINGBUF);
+<<<<<<< HEAD
 	__uint(max_entries, 4096);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 } ringbuf SEC(".maps");
 
 struct {
@@ -31,11 +37,19 @@ struct {
 	__type(value, __u32);
 } array_map SEC(".maps");
 
+<<<<<<< HEAD
 SEC("?tp/syscalls/sys_enter_nanosleep")
 int test_read_write(void *ctx)
 {
 	char write_data[64] = "hello there, world!!";
 	char read_data[64] = {};
+=======
+SEC("tp/syscalls/sys_enter_nanosleep")
+int test_read_write(void *ctx)
+{
+	char write_data[64] = "hello there, world!!";
+	char read_data[64] = {}, buf[64] = {};
+>>>>>>> b7ba80a49124 (Commit)
 	struct bpf_dynptr ptr;
 	int i;
 
@@ -62,8 +76,13 @@ int test_read_write(void *ctx)
 	return 0;
 }
 
+<<<<<<< HEAD
 SEC("?tp/syscalls/sys_enter_nanosleep")
 int test_dynptr_data(void *ctx)
+=======
+SEC("tp/syscalls/sys_enter_nanosleep")
+int test_data_slice(void *ctx)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	__u32 key = 0, val = 235, *map_val;
 	struct bpf_dynptr ptr;
@@ -132,7 +151,11 @@ static int ringbuf_callback(__u32 index, void *data)
 	return 0;
 }
 
+<<<<<<< HEAD
 SEC("?tp/syscalls/sys_enter_nanosleep")
+=======
+SEC("tp/syscalls/sys_enter_nanosleep")
+>>>>>>> b7ba80a49124 (Commit)
 int test_ringbuf(void *ctx)
 {
 	struct bpf_dynptr ptr;
@@ -164,6 +187,7 @@ done:
 	bpf_ringbuf_discard_dynptr(&ptr, 0);
 	return 0;
 }
+<<<<<<< HEAD
 
 SEC("?cgroup_skb/egress")
 int test_skb_readonly(struct __sk_buff *skb)
@@ -207,3 +231,5 @@ int test_dynptr_skb_data(struct __sk_buff *skb)
 
 	return 1;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

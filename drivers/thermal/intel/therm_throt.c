@@ -190,12 +190,19 @@ static const struct attribute_group thermal_attr_group = {
 };
 #endif /* CONFIG_SYSFS */
 
+<<<<<<< HEAD
+=======
+#define CORE_LEVEL	0
+#define PACKAGE_LEVEL	1
+
+>>>>>>> b7ba80a49124 (Commit)
 #define THERM_THROT_POLL_INTERVAL	HZ
 #define THERM_STATUS_PROCHOT_LOG	BIT(1)
 
 #define THERM_STATUS_CLEAR_CORE_MASK (BIT(1) | BIT(3) | BIT(5) | BIT(7) | BIT(9) | BIT(11) | BIT(13) | BIT(15))
 #define THERM_STATUS_CLEAR_PKG_MASK  (BIT(1) | BIT(3) | BIT(5) | BIT(7) | BIT(9) | BIT(11))
 
+<<<<<<< HEAD
 /*
  * Clear the bits in package thermal status register for bit = 1
  * in bitmask
@@ -220,6 +227,25 @@ void thermal_clear_package_intr_status(int level, u64 bit_mask)
 	wrmsrl(msr, msr_val);
 }
 EXPORT_SYMBOL_GPL(thermal_clear_package_intr_status);
+=======
+static void clear_therm_status_log(int level)
+{
+	int msr;
+	u64 mask, msr_val;
+
+	if (level == CORE_LEVEL) {
+		msr  = MSR_IA32_THERM_STATUS;
+		mask = THERM_STATUS_CLEAR_CORE_MASK;
+	} else {
+		msr  = MSR_IA32_PACKAGE_THERM_STATUS;
+		mask = THERM_STATUS_CLEAR_PKG_MASK;
+	}
+
+	rdmsrl(msr, msr_val);
+	msr_val &= mask;
+	wrmsrl(msr, msr_val & ~THERM_STATUS_PROCHOT_LOG);
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 static void get_therm_status(int level, bool *proc_hot, u8 *temp)
 {
@@ -299,7 +325,11 @@ static void __maybe_unused throttle_active_work(struct work_struct *work)
 	state->average = avg;
 
 re_arm:
+<<<<<<< HEAD
 	thermal_clear_package_intr_status(state->level, THERM_STATUS_PROCHOT_LOG);
+=======
+	clear_therm_status_log(state->level);
+>>>>>>> b7ba80a49124 (Commit)
 	schedule_delayed_work_on(this_cpu, &state->therm_work, THERM_THROT_POLL_INTERVAL);
 }
 

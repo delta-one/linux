@@ -833,12 +833,20 @@ int cxd2880_tnrdmd_dvbt_check_demod_lock(struct cxd2880_tnrdmd
 		else
 			*lock = CXD2880_TNRDMD_LOCK_RESULT_NOTDETECT;
 
+<<<<<<< HEAD
 		return 0;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (sync_stat == 6) {
 		*lock = CXD2880_TNRDMD_LOCK_RESULT_LOCKED;
+<<<<<<< HEAD
 		return 0;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret =
@@ -854,7 +862,11 @@ int cxd2880_tnrdmd_dvbt_check_demod_lock(struct cxd2880_tnrdmd
 	else
 		*lock = CXD2880_TNRDMD_LOCK_RESULT_NOTDETECT;
 
+<<<<<<< HEAD
 	return 0;
+=======
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int cxd2880_tnrdmd_dvbt_check_ts_lock(struct cxd2880_tnrdmd
@@ -893,15 +905,26 @@ int cxd2880_tnrdmd_dvbt_check_ts_lock(struct cxd2880_tnrdmd
 		else
 			*lock = CXD2880_TNRDMD_LOCK_RESULT_NOTDETECT;
 
+<<<<<<< HEAD
 		return 0;
+=======
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (ts_lock) {
 		*lock = CXD2880_TNRDMD_LOCK_RESULT_LOCKED;
+<<<<<<< HEAD
 		return 0;
 	} else if (!unlock_detected) {
 		*lock = CXD2880_TNRDMD_LOCK_RESULT_NOTDETECT;
 		return 0;
+=======
+		return ret;
+	} else if (!unlock_detected) {
+		*lock = CXD2880_TNRDMD_LOCK_RESULT_NOTDETECT;
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	ret =
@@ -915,5 +938,9 @@ int cxd2880_tnrdmd_dvbt_check_ts_lock(struct cxd2880_tnrdmd
 	else
 		*lock = CXD2880_TNRDMD_LOCK_RESULT_NOTDETECT;
 
+<<<<<<< HEAD
 	return 0;
+=======
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }

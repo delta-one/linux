@@ -179,6 +179,11 @@ static void handle_signal(struct ksignal *ksig, struct pt_regs *regs)
 	sigset_t *oldset = sigmask_to_save();
 	int ret;
 
+<<<<<<< HEAD
+=======
+	rseq_signal_deliver(ksig, regs);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Are we from a system call? */
 	if (in_syscall(regs)) {
 		/* Avoid additional syscall restarting via ret_from_exception */

@@ -7,7 +7,10 @@
 #include <linux/kvm_host.h>
 
 #include "hyperv.h"
+<<<<<<< HEAD
 #include "smm.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define KVM_APIC_INIT		0
 #define KVM_APIC_SIPI		1
@@ -112,8 +115,11 @@ int kvm_apic_set_irq(struct kvm_vcpu *vcpu, struct kvm_lapic_irq *irq,
 		     struct dest_map *dest_map);
 int kvm_apic_local_deliver(struct kvm_lapic *apic, int lvt_type);
 void kvm_apic_update_apicv(struct kvm_vcpu *vcpu);
+<<<<<<< HEAD
 int kvm_alloc_apic_access_page(struct kvm *kvm);
 void kvm_inhibit_apic_access_page(struct kvm_vcpu *vcpu);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 bool kvm_irq_delivery_to_apic_fast(struct kvm *kvm, struct kvm_lapic *src,
 		struct kvm_lapic_irq *irq, int *r, struct dest_map *dest_map);
@@ -146,8 +152,11 @@ int kvm_hv_vapic_msr_read(struct kvm_vcpu *vcpu, u32 msr, u64 *data);
 int kvm_lapic_set_pv_eoi(struct kvm_vcpu *vcpu, u64 data, unsigned long len);
 void kvm_lapic_exit(void);
 
+<<<<<<< HEAD
 u64 kvm_lapic_readable_reg_mask(struct kvm_lapic *apic);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define VEC_POS(v) ((v) & (32 - 1))
 #define REG_POS(v) (((v) >> 5) << 4)
 
@@ -192,11 +201,19 @@ static inline bool lapic_in_kernel(struct kvm_vcpu *vcpu)
 
 extern struct static_key_false_deferred apic_hw_disabled;
 
+<<<<<<< HEAD
 static inline bool kvm_apic_hw_enabled(struct kvm_lapic *apic)
 {
 	if (static_branch_unlikely(&apic_hw_disabled.key))
 		return apic->vcpu->arch.apic_base & MSR_IA32_APICBASE_ENABLE;
 	return true;
+=======
+static inline int kvm_apic_hw_enabled(struct kvm_lapic *apic)
+{
+	if (static_branch_unlikely(&apic_hw_disabled.key))
+		return apic->vcpu->arch.apic_base & MSR_IA32_APICBASE_ENABLE;
+	return MSR_IA32_APICBASE_ENABLE;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 extern struct static_key_false_deferred apic_sw_disabled;
@@ -228,17 +245,24 @@ static inline bool kvm_vcpu_apicv_active(struct kvm_vcpu *vcpu)
 	return lapic_in_kernel(vcpu) && vcpu->arch.apic->apicv_active;
 }
 
+<<<<<<< HEAD
 static inline bool kvm_apic_has_pending_init_or_sipi(struct kvm_vcpu *vcpu)
+=======
+static inline bool kvm_apic_has_events(struct kvm_vcpu *vcpu)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return lapic_in_kernel(vcpu) && vcpu->arch.apic->pending_events;
 }
 
+<<<<<<< HEAD
 static inline bool kvm_apic_init_sipi_allowed(struct kvm_vcpu *vcpu)
 {
 	return !is_smm(vcpu) &&
 	       !static_call(kvm_x86_apic_init_signal_blocked)(vcpu);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool kvm_lowest_prio_delivery(struct kvm_lapic_irq *irq)
 {
 	return (irq->delivery_mode == APIC_DM_LOWEST ||

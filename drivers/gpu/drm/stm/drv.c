@@ -18,7 +18,11 @@
 #include <drm/drm_atomic.h>
 #include <drm/drm_atomic_helper.h>
 #include <drm/drm_drv.h>
+<<<<<<< HEAD
 #include <drm/drm_fbdev_dma.h>
+=======
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_gem_dma_helper.h>
 #include <drm/drm_gem_framebuffer_helper.h>
 #include <drm/drm_module.h>
@@ -203,7 +207,11 @@ static int stm_drm_platform_probe(struct platform_device *pdev)
 	if (ret)
 		goto err_put;
 
+<<<<<<< HEAD
 	drm_fbdev_dma_setup(ddev, 16);
+=======
+	drm_fbdev_generic_setup(ddev, 16);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 

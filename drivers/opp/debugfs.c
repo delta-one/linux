@@ -235,7 +235,11 @@ static void opp_migrate_dentry(struct opp_device *opp_dev,
 
 	dentry = debugfs_rename(rootdir, opp_dev->dentry, rootdir,
 				opp_table->dentry_name);
+<<<<<<< HEAD
 	if (IS_ERR(dentry)) {
+=======
+	if (!dentry) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(dev, "%s: Failed to rename link from: %s to %s\n",
 			__func__, dev_name(opp_dev->dev), dev_name(dev));
 		return;

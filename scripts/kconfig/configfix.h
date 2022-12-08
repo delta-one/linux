@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 /* SPDX-License-Identifier: GPL-2.0 */
 /*
  * Copyright (C) 2023 Patrick Franz <deltaone@debian.org>
+=======
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * Copyright (C) 2021 Patrick Franz <deltaone@debian.org>
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #ifndef CONFIGFIX_H

@@ -351,6 +351,11 @@ static void dsa_loop_drv_remove(struct mdio_device *mdiodev)
 
 	dsa_unregister_switch(ds);
 	dev_put(ps->netdev);
+<<<<<<< HEAD
+=======
+
+	dev_set_drvdata(&mdiodev->dev, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void dsa_loop_drv_shutdown(struct mdio_device *mdiodev)
@@ -376,6 +381,7 @@ static struct mdio_driver dsa_loop_drv = {
 
 #define NUM_FIXED_PHYS	(DSA_LOOP_NUM_PORTS - 2)
 
+<<<<<<< HEAD
 static void dsa_loop_phydevs_unregister(void)
 {
 	unsigned int i;
@@ -387,6 +393,8 @@ static void dsa_loop_phydevs_unregister(void)
 		}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __init dsa_loop_init(void)
 {
 	struct fixed_phy_status status = {
@@ -394,23 +402,40 @@ static int __init dsa_loop_init(void)
 		.speed = SPEED_100,
 		.duplex = DUPLEX_FULL,
 	};
+<<<<<<< HEAD
 	unsigned int i, ret;
+=======
+	unsigned int i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < NUM_FIXED_PHYS; i++)
 		phydevs[i] = fixed_phy_register(PHY_POLL, &status, NULL);
 
+<<<<<<< HEAD
 	ret = mdio_driver_register(&dsa_loop_drv);
 	if (ret)
 		dsa_loop_phydevs_unregister();
 
 	return ret;
+=======
+	return mdio_driver_register(&dsa_loop_drv);
+>>>>>>> b7ba80a49124 (Commit)
 }
 module_init(dsa_loop_init);
 
 static void __exit dsa_loop_exit(void)
 {
+<<<<<<< HEAD
 	mdio_driver_unregister(&dsa_loop_drv);
 	dsa_loop_phydevs_unregister();
+=======
+	unsigned int i;
+
+	mdio_driver_unregister(&dsa_loop_drv);
+	for (i = 0; i < NUM_FIXED_PHYS; i++)
+		if (!IS_ERR(phydevs[i]))
+			fixed_phy_unregister(phydevs[i]);
+>>>>>>> b7ba80a49124 (Commit)
 }
 module_exit(dsa_loop_exit);
 

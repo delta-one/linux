@@ -21,6 +21,10 @@ MODULE_DEVICE_TABLE(of, imx93_src_ids);
 static struct platform_driver imx93_src_driver = {
 	.driver = {
 		.name	= "imx93_src",
+<<<<<<< HEAD
+=======
+		.owner	= THIS_MODULE,
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = imx93_src_ids,
 	},
 	.probe = imx93_src_probe,

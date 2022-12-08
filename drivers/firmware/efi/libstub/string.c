@@ -11,6 +11,7 @@
 #include <linux/types.h>
 #include <linux/string.h>
 
+<<<<<<< HEAD
 #ifndef EFI_HAVE_STRLEN
 /**
  * strlen - Find the length of a string
@@ -42,6 +43,9 @@ size_t strnlen(const char *s, size_t count)
 }
 #endif
 
+=======
+#ifndef __HAVE_ARCH_STRSTR
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * strstr - Find the first substring in a %NUL terminated string
  * @s1: The string to be searched
@@ -63,6 +67,7 @@ char *strstr(const char *s1, const char *s2)
 	}
 	return NULL;
 }
+<<<<<<< HEAD
 
 #ifndef EFI_HAVE_STRCMP
 /**
@@ -86,6 +91,11 @@ int strcmp(const char *cs, const char *ct)
 }
 #endif
 
+=======
+#endif
+
+#ifndef __HAVE_ARCH_STRNCMP
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * strncmp - Compare two length-limited strings
  * @cs: One string
@@ -107,6 +117,10 @@ int strncmp(const char *cs, const char *ct, size_t count)
 	}
 	return 0;
 }
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Works only for digits and letters, but small and fast */
 #define TOLOWER(x) ((x) | 0x20)
@@ -162,6 +176,7 @@ long simple_strtol(const char *cp, char **endp, unsigned int base)
 
 	return simple_strtoull(cp, endp, base);
 }
+<<<<<<< HEAD
 
 #ifdef CONFIG_EFI_PARAMS_FROM_FDT
 #ifndef EFI_HAVE_STRRCHR
@@ -202,3 +217,5 @@ void *memchr(const void *s, int c, size_t n)
 }
 #endif
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)

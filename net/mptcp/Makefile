@@ -2,7 +2,11 @@
 obj-$(CONFIG_MPTCP) += mptcp.o
 
 mptcp-y := protocol.o subflow.o options.o token.o crypto.o ctrl.o pm.o diag.o \
+<<<<<<< HEAD
 	   mib.o pm_netlink.o sockopt.o pm_userspace.o fastopen.o
+=======
+	   mib.o pm_netlink.o sockopt.o pm_userspace.o
+>>>>>>> b7ba80a49124 (Commit)
 
 obj-$(CONFIG_SYN_COOKIES) += syncookies.o
 obj-$(CONFIG_INET_MPTCP_DIAG) += mptcp_diag.o

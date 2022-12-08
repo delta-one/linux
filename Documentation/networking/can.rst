@@ -931,7 +931,11 @@ ival1:
 ival2:
 	Throttle the received message rate down to the value of ival2. This
 	is useful to reduce messages for the application when the signal inside the
+<<<<<<< HEAD
 	CAN frame is stateless as state changes within the ival2 period may get
+=======
+	CAN frame is stateless as state changes within the ival2 periode may get
+>>>>>>> b7ba80a49124 (Commit)
 	lost.
 
 Broadcast Manager Multiplex Message Receive Filter
@@ -1148,6 +1152,7 @@ tuning on deep embedded systems'. The author is running a MPC603e
 load without any problems ...
 
 
+<<<<<<< HEAD
 Switchable Termination Resistors
 --------------------------------
 
@@ -1181,6 +1186,8 @@ or add gpio control with the device tree entries from
 Documentation/devicetree/bindings/net/can/can-controller.yaml
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 The Virtual CAN Driver (vcan)
 -----------------------------
 

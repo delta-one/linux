@@ -25,9 +25,14 @@
  */
 
 #include <drm/display/drm_dp_helper.h>
+<<<<<<< HEAD
 #include <drm/drm_crtc_helper.h>
 #include <drm/drm_edid.h>
 #include <drm/drm_modeset_helper_vtables.h>
+=======
+#include <drm/drm_edid.h>
+#include <drm/drm_fb_helper.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_probe_helper.h>
 #include <drm/amdgpu_drm.h>
 #include "amdgpu.h"
@@ -329,6 +334,10 @@ static void amdgpu_connector_free_edid(struct drm_connector *connector)
 
 	kfree(amdgpu_connector->edid);
 	amdgpu_connector->edid = NULL;
+<<<<<<< HEAD
+=======
+	drm_connector_update_edid_property(connector, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int amdgpu_connector_ddc_get_modes(struct drm_connector *connector)
@@ -998,16 +1007,20 @@ amdgpu_connector_dvi_detect(struct drm_connector *connector, bool force)
 		}
 	}
 
+<<<<<<< HEAD
 	if (amdgpu_connector->detected_hpd_without_ddc) {
 		force = true;
 		amdgpu_connector->detected_hpd_without_ddc = false;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!force && amdgpu_connector_check_hpd_status_unchanged(connector)) {
 		ret = connector->status;
 		goto exit;
 	}
 
+<<<<<<< HEAD
 	if (amdgpu_connector->ddc_bus) {
 		dret = amdgpu_display_ddc_probe(amdgpu_connector, false);
 
@@ -1025,6 +1038,10 @@ amdgpu_connector_dvi_detect(struct drm_connector *connector, bool force)
 			goto exit;
 		}
 	}
+=======
+	if (amdgpu_connector->ddc_bus)
+		dret = amdgpu_display_ddc_probe(amdgpu_connector, false);
+>>>>>>> b7ba80a49124 (Commit)
 	if (dret) {
 		amdgpu_connector->detected_by_load = false;
 		amdgpu_connector_free_edid(connector);

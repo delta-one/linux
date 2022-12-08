@@ -209,10 +209,13 @@ static int submit_lookup_cmds(struct msm_gem_submit *submit,
 			goto out;
 		}
 		submit->cmd[i].relocs = kmalloc(sz, GFP_KERNEL);
+<<<<<<< HEAD
 		if (!submit->cmd[i].relocs) {
 			ret = -ENOMEM;
 			goto out;
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ret = copy_from_user(submit->cmd[i].relocs, userptr, sz);
 		if (ret) {
 			ret = -EFAULT;
@@ -338,6 +341,7 @@ static int submit_fence_sync(struct msm_gem_submit *submit, bool no_implicit)
 		if (ret)
 			return ret;
 
+<<<<<<< HEAD
 		/* If userspace has determined that explicit fencing is
 		 * used, it can disable implicit sync on the entire
 		 * submit:
@@ -350,6 +354,10 @@ static int submit_fence_sync(struct msm_gem_submit *submit, bool no_implicit)
 		 * usermode driver managed buffers, suballocation, etc.
 		 */
 		if (submit->bos[i].flags & MSM_SUBMIT_BO_NO_IMPLICIT)
+=======
+		/* exclusive fences must be ordered */
+		if (no_implicit && !write)
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		ret = drm_sched_job_add_implicit_dependencies(&submit->base,
@@ -515,11 +523,19 @@ out:
  */
 static void submit_cleanup(struct msm_gem_submit *submit, bool error)
 {
+<<<<<<< HEAD
 	unsigned cleanup_flags = BO_LOCKED;
 	unsigned i;
 
 	if (error)
 		cleanup_flags |= BO_VMA_PINNED | BO_OBJ_PINNED;
+=======
+	unsigned cleanup_flags = BO_LOCKED | BO_OBJ_PINNED;
+	unsigned i;
+
+	if (error)
+		cleanup_flags |= BO_VMA_PINNED;
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < submit->nr_bos; i++) {
 		struct msm_gem_object *msm_obj = submit->bos[i].obj;
@@ -637,8 +653,13 @@ static struct msm_submit_post_dep *msm_parse_post_deps(struct drm_device *dev,
 	int ret = 0;
 	uint32_t i, j;
 
+<<<<<<< HEAD
 	post_deps = kcalloc(nr_syncobjs, sizeof(*post_deps),
 			    GFP_KERNEL | __GFP_NOWARN | __GFP_NORETRY);
+=======
+	post_deps = kmalloc_array(nr_syncobjs, sizeof(*post_deps),
+	                          GFP_KERNEL | __GFP_NOWARN | __GFP_NORETRY);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!post_deps)
 		return ERR_PTR(-ENOMEM);
 
@@ -653,6 +674,10 @@ static struct msm_submit_post_dep *msm_parse_post_deps(struct drm_device *dev,
 		}
 
 		post_deps[i].point = syncobj_desc.point;
+<<<<<<< HEAD
+=======
+		post_deps[i].chain = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (syncobj_desc.flags) {
 			ret = -EINVAL;
@@ -719,7 +744,11 @@ int msm_ioctl_gem_submit(struct drm_device *dev, void *data,
 	struct msm_drm_private *priv = dev->dev_private;
 	struct drm_msm_gem_submit *args = data;
 	struct msm_file_private *ctx = file->driver_priv;
+<<<<<<< HEAD
 	struct msm_gem_submit *submit;
+=======
+	struct msm_gem_submit *submit = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	struct msm_gpu *gpu = priv->gpu;
 	struct msm_gpu_submitqueue *queue;
 	struct msm_ringbuffer *ring;
@@ -959,7 +988,12 @@ out_unlock:
 		put_unused_fd(out_fence_fd);
 	mutex_unlock(&queue->lock);
 out_post_unlock:
+<<<<<<< HEAD
 	msm_gem_submit_put(submit);
+=======
+	if (submit)
+		msm_gem_submit_put(submit);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!IS_ERR_OR_NULL(post_deps)) {
 		for (i = 0; i < args->nr_out_syncobjs; ++i) {
 			kfree(post_deps[i].chain);

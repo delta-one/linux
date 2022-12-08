@@ -85,7 +85,11 @@
 #define SMEM_GLOBAL_HOST	0xfffe
 
 /* Max number of processors/hosts in a system */
+<<<<<<< HEAD
 #define SMEM_HOST_COUNT		20
+=======
+#define SMEM_HOST_COUNT		15
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
   * struct smem_proc_comm - proc_comm communication struct (legacy)
@@ -1045,7 +1049,11 @@ static int qcom_smem_probe(struct platform_device *pdev)
 	int i;
 
 	num_regions = 1;
+<<<<<<< HEAD
 	if (of_property_present(pdev->dev.of_node, "qcom,rpm-msg-ram"))
+=======
+	if (of_find_property(pdev->dev.of_node, "qcom,rpm-msg-ram", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		num_regions++;
 
 	array_size = num_regions * sizeof(struct smem_region);

@@ -51,7 +51,11 @@ static void vivid_thread_vid_out_tick(struct vivid_dev *dev)
 
 	/* Drop a certain percentage of buffers. */
 	if (dev->perc_dropped_buffers &&
+<<<<<<< HEAD
 	    get_random_u32_below(100) < dev->perc_dropped_buffers)
+=======
+	    prandom_u32_max(100) < dev->perc_dropped_buffers)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	spin_lock(&dev->slock);

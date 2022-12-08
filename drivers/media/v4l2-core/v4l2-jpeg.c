@@ -460,7 +460,11 @@ static int jpeg_parse_app14_data(struct jpeg_stream *stream,
 	/* Check for "Adobe\0" in Ap1..6 */
 	if (stream->curr + 6 > stream->end ||
 	    strncmp(stream->curr, "Adobe\0", 6))
+<<<<<<< HEAD
 		return jpeg_skip(stream, lp - 2);
+=======
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* get to Ap12 */
 	ret = jpeg_skip(stream, 11);
@@ -474,7 +478,11 @@ static int jpeg_parse_app14_data(struct jpeg_stream *stream,
 	*tf = ret;
 
 	/* skip the rest of the segment, this ensures at least it is complete */
+<<<<<<< HEAD
 	skip = lp - 2 - 11 - 1;
+=======
+	skip = lp - 2 - 11;
+>>>>>>> b7ba80a49124 (Commit)
 	return jpeg_skip(stream, skip);
 }
 

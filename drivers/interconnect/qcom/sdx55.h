@@ -6,7 +6,11 @@
 #ifndef __DRIVERS_INTERCONNECT_QCOM_SDX55_H
 #define __DRIVERS_INTERCONNECT_QCOM_SDX55_H
 
+<<<<<<< HEAD
 /* 0 was used by MASTER_IPA_CORE, now represented as RPMh clock */
+=======
+#define SDX55_MASTER_IPA_CORE			0
+>>>>>>> b7ba80a49124 (Commit)
 #define SDX55_MASTER_LLCC			1
 #define SDX55_MASTER_TCU_0			2
 #define SDX55_MASTER_SNOC_GC_MEM_NOC		3
@@ -28,7 +32,11 @@
 #define SDX55_MASTER_QDSS_ETR			19
 #define SDX55_MASTER_SDCC_1			20
 #define SDX55_MASTER_USB3			21
+<<<<<<< HEAD
 /* 22 was used by SLAVE_IPA_CORE, now represented as RPMh clock */
+=======
+#define SDX55_SLAVE_IPA_CORE			22
+>>>>>>> b7ba80a49124 (Commit)
 #define SDX55_SLAVE_EBI_CH0			23
 #define SDX55_SLAVE_LLCC			24
 #define SDX55_SLAVE_MEM_NOC_SNOC		25

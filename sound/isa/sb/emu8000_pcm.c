@@ -236,7 +236,11 @@ static int emu8k_pcm_open(struct snd_pcm_substream *subs)
 
 	/* use timer to update periods.. (specified in msec) */
 	snd_pcm_hw_constraint_minmax(runtime, SNDRV_PCM_HW_PARAM_PERIOD_TIME,
+<<<<<<< HEAD
 				     DIV_ROUND_UP(1000000, HZ), UINT_MAX);
+=======
+				     (1000000 + HZ - 1) / HZ, UINT_MAX);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

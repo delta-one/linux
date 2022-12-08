@@ -46,6 +46,7 @@ struct user_fp_state {
 	uint32_t    fcsr;
 };
 
+<<<<<<< HEAD
 struct user_watch_state {
 	uint16_t dbg_info;
 	struct {
@@ -55,6 +56,8 @@ struct user_watch_state {
 	} dbg_regs[8];
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define PTRACE_SYSEMU			0x1f
 #define PTRACE_SYSEMU_SINGLESTEP	0x20
 

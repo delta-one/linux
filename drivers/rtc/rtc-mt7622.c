@@ -357,11 +357,20 @@ err:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void mtk_rtc_remove(struct platform_device *pdev)
+=======
+static int mtk_rtc_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mtk_rtc *hw = platform_get_drvdata(pdev);
 
 	clk_disable_unprepare(hw->clk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -394,7 +403,11 @@ static SIMPLE_DEV_PM_OPS(mtk_rtc_pm_ops, mtk_rtc_suspend, mtk_rtc_resume);
 
 static struct platform_driver mtk_rtc_driver = {
 	.probe	= mtk_rtc_probe,
+<<<<<<< HEAD
 	.remove_new = mtk_rtc_remove,
+=======
+	.remove	= mtk_rtc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = MTK_RTC_DEV,
 		.of_match_table = mtk_rtc_match,

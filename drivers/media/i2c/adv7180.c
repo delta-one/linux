@@ -1393,9 +1393,15 @@ out_unlock:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int adv7180_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int adv7180_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct device_node *np = client->dev.of_node;
 	struct adv7180_state *state;
 	struct v4l2_subdev *sd;
@@ -1610,7 +1616,11 @@ static struct i2c_driver adv7180_driver = {
 		   .pm = ADV7180_PM_OPS,
 		   .of_match_table = of_match_ptr(adv7180_of_id),
 		   },
+<<<<<<< HEAD
 	.probe_new = adv7180_probe,
+=======
+	.probe = adv7180_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = adv7180_remove,
 	.id_table = adv7180_id,
 };

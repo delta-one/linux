@@ -10,9 +10,12 @@ maintainers:
   - Krzysztof Kozlowski <krzk@kernel.org>
   - Sylwester Nawrocki <s.nawrocki@samsung.com>
 
+<<<<<<< HEAD
 allOf:
   - $ref: dai-common.yaml#
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 properties:
   compatible:
     description: |
@@ -37,6 +40,7 @@ properties:
       samsung,exynos7-i2s1: I2S1 on previous samsung platforms supports
       stereo channels. Exynos7 I2S1 upgraded to 5.1 multichannel with
       slightly modified bit offsets.
+<<<<<<< HEAD
 
       tesla,fsd-i2s: for 8/16/24bit stereo channel I2S for playback and
       capture, secondary FIFO using external DMA, s/w reset control,
@@ -44,13 +48,18 @@ properties:
       frequencies supported by Exynos7 I2S and 7.1 channel TDM support
       for playback and capture TDM (Time division multiplexing) to allow
       transfer of multiple channel audio data on single data line.
+=======
+>>>>>>> b7ba80a49124 (Commit)
     enum:
       - samsung,s3c6410-i2s
       - samsung,s5pv210-i2s
       - samsung,exynos5420-i2s
       - samsung,exynos7-i2s
       - samsung,exynos7-i2s1
+<<<<<<< HEAD
       - tesla,fsd-i2s
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
   '#address-cells':
     const: 1
@@ -75,6 +84,12 @@ properties:
           - const: rx
           - const: tx-sec
 
+<<<<<<< HEAD
+=======
+  assigned-clock-parents: true
+  assigned-clocks: true
+
+>>>>>>> b7ba80a49124 (Commit)
   clocks:
     minItems: 1
     maxItems: 3
@@ -132,7 +147,11 @@ required:
   - clocks
   - clock-names
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |

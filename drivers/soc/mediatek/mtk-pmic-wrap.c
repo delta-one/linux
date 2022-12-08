@@ -983,6 +983,7 @@ static int mt8195_regs[] = {
 	[PWRAP_WACS2_RDATA] =		0x8A8,
 };
 
+<<<<<<< HEAD
 static int mt8365_regs[] = {
 	[PWRAP_MUX_SEL] =		0x0,
 	[PWRAP_WRAP_EN] =		0x4,
@@ -1045,6 +1046,8 @@ static int mt8365_regs[] = {
 	[PWRAP_WDT_SRC_EN_1] =		0xf8,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mt8516_regs[] = {
 	[PWRAP_MUX_SEL] =		0x0,
 	[PWRAP_WRAP_EN] =		0x4,
@@ -1201,7 +1204,10 @@ enum pwrap_type {
 	PWRAP_MT8183,
 	PWRAP_MT8186,
 	PWRAP_MT8195,
+<<<<<<< HEAD
 	PWRAP_MT8365,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	PWRAP_MT8516,
 };
 
@@ -1234,8 +1240,11 @@ struct pmic_wrapper {
 	const struct pwrap_slv_type *slave;
 	struct clk *clk_spi;
 	struct clk *clk_wrap;
+<<<<<<< HEAD
 	struct clk *clk_sys;
 	struct clk *clk_tmr;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct reset_control *rstc;
 
 	struct reset_control *rstc_bridge;
@@ -1661,7 +1670,10 @@ static int pwrap_init_cipher(struct pmic_wrapper *wrp)
 	case PWRAP_MT6797:
 	case PWRAP_MT8173:
 	case PWRAP_MT8186:
+<<<<<<< HEAD
 	case PWRAP_MT8365:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case PWRAP_MT8516:
 		pwrap_writel(wrp, 1, PWRAP_CIPHER_EN);
 		break;
@@ -2170,6 +2182,7 @@ static struct pmic_wrapper_type pwrap_mt8195 = {
 	.init_soc_specific = NULL,
 };
 
+<<<<<<< HEAD
 static const struct pmic_wrapper_type pwrap_mt8365 = {
 	.regs = mt8365_regs,
 	.type = PWRAP_MT8365,
@@ -2183,6 +2196,8 @@ static const struct pmic_wrapper_type pwrap_mt8365 = {
 	.init_soc_specific = NULL,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct pmic_wrapper_type pwrap_mt8516 = {
 	.regs = mt8516_regs,
 	.type = PWRAP_MT8516,
@@ -2220,7 +2235,10 @@ static const struct of_device_id of_pwrap_match_tbl[] = {
 	{ .compatible = "mediatek,mt8183-pwrap", .data = &pwrap_mt8183 },
 	{ .compatible = "mediatek,mt8186-pwrap", .data = &pwrap_mt8186 },
 	{ .compatible = "mediatek,mt8195-pwrap", .data = &pwrap_mt8195 },
+<<<<<<< HEAD
 	{ .compatible = "mediatek,mt8365-pwrap", .data = &pwrap_mt8365 },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "mediatek,mt8516-pwrap", .data = &pwrap_mt8516 },
 	{ /* sentinel */ }
 };
@@ -2294,6 +2312,7 @@ static int pwrap_probe(struct platform_device *pdev)
 		return PTR_ERR(wrp->clk_wrap);
 	}
 
+<<<<<<< HEAD
 	wrp->clk_sys = devm_clk_get_optional(wrp->dev, "sys");
 	if (IS_ERR(wrp->clk_sys)) {
 		return dev_err_probe(wrp->dev, PTR_ERR(wrp->clk_sys),
@@ -2308,6 +2327,8 @@ static int pwrap_probe(struct platform_device *pdev)
 				     wrp->clk_tmr);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = clk_prepare_enable(wrp->clk_spi);
 	if (ret)
 		return ret;
@@ -2316,6 +2337,7 @@ static int pwrap_probe(struct platform_device *pdev)
 	if (ret)
 		goto err_out1;
 
+<<<<<<< HEAD
 	ret = clk_prepare_enable(wrp->clk_sys);
 	if (ret)
 		goto err_out2;
@@ -2324,6 +2346,8 @@ static int pwrap_probe(struct platform_device *pdev)
 	if (ret)
 		goto err_out3;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Enable internal dynamic clock */
 	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_DCM)) {
 		pwrap_writel(wrp, 1, PWRAP_DCM_EN);
@@ -2338,7 +2362,11 @@ static int pwrap_probe(struct platform_device *pdev)
 		ret = pwrap_init(wrp);
 		if (ret) {
 			dev_dbg(wrp->dev, "init failed with %d\n", ret);
+<<<<<<< HEAD
 			goto err_out4;
+=======
+			goto err_out2;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -2352,7 +2380,11 @@ static int pwrap_probe(struct platform_device *pdev)
 	if (!(pwrap_readl(wrp, PWRAP_WACS2_RDATA) & mask_done)) {
 		dev_dbg(wrp->dev, "initialization isn't finished\n");
 		ret = -ENODEV;
+<<<<<<< HEAD
 		goto err_out4;
+=======
+		goto err_out2;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Initialize watchdog, may not be done by the bootloader */
@@ -2390,7 +2422,11 @@ static int pwrap_probe(struct platform_device *pdev)
 			       IRQF_TRIGGER_HIGH,
 			       "mt-pmic-pwrap", wrp);
 	if (ret)
+<<<<<<< HEAD
 		goto err_out4;
+=======
+		goto err_out2;
+>>>>>>> b7ba80a49124 (Commit)
 
 	wrp->regmap = devm_regmap_init(wrp->dev, NULL, wrp, wrp->slave->regops->regmap);
 	if (IS_ERR(wrp->regmap)) {
@@ -2402,15 +2438,22 @@ static int pwrap_probe(struct platform_device *pdev)
 	if (ret) {
 		dev_dbg(wrp->dev, "failed to create child devices at %pOF\n",
 				np);
+<<<<<<< HEAD
 		goto err_out4;
+=======
+		goto err_out2;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
 
+<<<<<<< HEAD
 err_out4:
 	clk_disable_unprepare(wrp->clk_tmr);
 err_out3:
 	clk_disable_unprepare(wrp->clk_sys);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err_out2:
 	clk_disable_unprepare(wrp->clk_wrap);
 err_out1:

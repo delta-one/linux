@@ -364,6 +364,18 @@ snd_azf3328_codec_inw(const struct snd_azf3328_codec_data *codec, unsigned reg)
 }
 
 static inline void
+<<<<<<< HEAD
+=======
+snd_azf3328_codec_outl(const struct snd_azf3328_codec_data *codec,
+		       unsigned reg,
+		       u32 value
+)
+{
+	outl(value, codec->io_base + reg);
+}
+
+static inline void
+>>>>>>> b7ba80a49124 (Commit)
 snd_azf3328_codec_outl_multi(const struct snd_azf3328_codec_data *codec,
 			     unsigned reg, const void *buffer, int count
 )

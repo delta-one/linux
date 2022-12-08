@@ -44,7 +44,11 @@ config PHY_PISTACHIO_USB
 
 config PHY_XGENE
 	tristate "APM X-Gene 15Gbps PHY support"
+<<<<<<< HEAD
 	depends on HAS_IOMEM && OF && (ARCH_XGENE || COMPILE_TEST)
+=======
+	depends on HAS_IOMEM && OF && (ARM64 || COMPILE_TEST)
+>>>>>>> b7ba80a49124 (Commit)
 	select GENERIC_PHY
 	help
 	  This option enables support for APM X-Gene SoC multi-purpose PHY.

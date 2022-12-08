@@ -3,11 +3,14 @@
 #include <linux/virtio.h>
 #include <uapi/linux/virtio_config.h>
 
+<<<<<<< HEAD
 struct virtio_config_ops {
 	int (*disable_vq_and_reset)(struct virtqueue *vq);
 	int (*enable_vq_after_reset)(struct virtqueue *vq);
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * __virtio_test_bit - helper to test feature bits. For use by transports.
  *                     Devices should normally use virtio_has_feature,

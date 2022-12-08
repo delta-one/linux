@@ -80,6 +80,7 @@ void gfs2_remove_from_ail(struct gfs2_bufdata *bd)
 	brelse(bd->bd_bh);
 }
 
+<<<<<<< HEAD
 static int __gfs2_writepage(struct folio *folio, struct writeback_control *wbc,
 		       void *data)
 {
@@ -89,6 +90,8 @@ static int __gfs2_writepage(struct folio *folio, struct writeback_control *wbc,
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * gfs2_ail1_start_one - Start I/O on a transaction
  * @sdp: The superblock
@@ -136,11 +139,19 @@ __acquires(&sdp->sd_ail_lock)
 			continue;
 		gl = bd->bd_gl;
 		list_move(&bd->bd_ail_st_list, &tr->tr_ail1_list);
+<<<<<<< HEAD
 		mapping = bh->b_folio->mapping;
 		if (!mapping)
 			continue;
 		spin_unlock(&sdp->sd_ail_lock);
 		ret = write_cache_pages(mapping, wbc, __gfs2_writepage, mapping);
+=======
+		mapping = bh->b_page->mapping;
+		if (!mapping)
+			continue;
+		spin_unlock(&sdp->sd_ail_lock);
+		ret = filemap_fdatawrite_wbc(mapping, wbc);
+>>>>>>> b7ba80a49124 (Commit)
 		if (need_resched()) {
 			blk_finish_plug(plug);
 			cond_resched();

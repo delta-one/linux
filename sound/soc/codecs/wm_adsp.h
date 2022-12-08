@@ -34,10 +34,15 @@ struct wm_adsp {
 	unsigned int sys_config_size;
 
 	int fw;
+<<<<<<< HEAD
 	bool wmfw_optional;
 
 	struct work_struct boot_work;
 	int (*pre_run)(struct wm_adsp *dsp);
+=======
+
+	struct work_struct boot_work;
+>>>>>>> b7ba80a49124 (Commit)
 
 	bool preloaded;
 	bool fatal_error;
@@ -91,8 +96,11 @@ int wm_adsp1_event(struct snd_soc_dapm_widget *w,
 int wm_adsp_early_event(struct snd_soc_dapm_widget *w,
 			struct snd_kcontrol *kcontrol, int event);
 
+<<<<<<< HEAD
 int wm_adsp_power_up(struct wm_adsp *dsp);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 irqreturn_t wm_adsp2_bus_error(int irq, void *data);
 irqreturn_t wm_halo_bus_error(int irq, void *data);
 irqreturn_t wm_halo_wdt_expire(int irq, void *data);

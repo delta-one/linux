@@ -183,7 +183,11 @@ void ishtp_hid_wakeup(struct hid_device *hid)
 	wake_up_interruptible(&hid_data->hid_wait);
 }
 
+<<<<<<< HEAD
 static const struct hid_ll_driver ishtp_hid_ll_driver = {
+=======
+static struct hid_ll_driver ishtp_hid_ll_driver = {
+>>>>>>> b7ba80a49124 (Commit)
 	.parse = ishtp_hid_parse,
 	.start = ishtp_hid_start,
 	.stop = ishtp_hid_stop,

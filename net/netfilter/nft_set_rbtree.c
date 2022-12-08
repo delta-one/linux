@@ -38,12 +38,19 @@ static bool nft_rbtree_interval_start(const struct nft_rbtree_elem *rbe)
 	return !nft_rbtree_interval_end(rbe);
 }
 
+<<<<<<< HEAD
 static int nft_rbtree_cmp(const struct nft_set *set,
 			  const struct nft_rbtree_elem *e1,
 			  const struct nft_rbtree_elem *e2)
 {
 	return memcmp(nft_set_ext_key(&e1->ext), nft_set_ext_key(&e2->ext),
 		      set->klen);
+=======
+static bool nft_rbtree_equal(const struct nft_set *set, const void *this,
+			     const struct nft_rbtree_elem *interval)
+{
+	return memcmp(this, nft_set_ext_key(&interval->ext), set->klen) == 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set,
@@ -54,6 +61,10 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
 	const struct nft_rbtree_elem *rbe, *interval = NULL;
 	u8 genmask = nft_genmask_cur(net);
 	const struct rb_node *parent;
+<<<<<<< HEAD
+=======
+	const void *this;
+>>>>>>> b7ba80a49124 (Commit)
 	int d;
 
 	parent = rcu_dereference_raw(priv->root.rb_node);
@@ -63,11 +74,20 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
 
 		rbe = rb_entry(parent, struct nft_rbtree_elem, node);
 
+<<<<<<< HEAD
 		d = memcmp(nft_set_ext_key(&rbe->ext), key, set->klen);
 		if (d < 0) {
 			parent = rcu_dereference_raw(parent->rb_left);
 			if (interval &&
 			    !nft_rbtree_cmp(set, rbe, interval) &&
+=======
+		this = nft_set_ext_key(&rbe->ext);
+		d = memcmp(this, key, set->klen);
+		if (d < 0) {
+			parent = rcu_dereference_raw(parent->rb_left);
+			if (interval &&
+			    nft_rbtree_equal(set, this, interval) &&
+>>>>>>> b7ba80a49124 (Commit)
 			    nft_rbtree_interval_end(rbe) &&
 			    nft_rbtree_interval_start(interval))
 				continue;
@@ -215,6 +235,7 @@ static void *nft_rbtree_get(const struct net *net, const struct nft_set *set,
 	return rbe;
 }
 
+<<<<<<< HEAD
 static int nft_rbtree_gc_elem(const struct nft_set *__set,
 			      struct nft_rbtree *priv,
 			      struct nft_rbtree_elem *rbe)
@@ -263,10 +284,13 @@ static bool nft_rbtree_update_first(const struct nft_set *set,
 	return false;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __nft_rbtree_insert(const struct net *net, const struct nft_set *set,
 			       struct nft_rbtree_elem *new,
 			       struct nft_set_ext **ext)
 {
+<<<<<<< HEAD
 	struct nft_rbtree_elem *rbe, *rbe_le = NULL, *rbe_ge = NULL;
 	struct rb_node *node, *parent, **p, *first = NULL;
 	struct nft_rbtree *priv = nft_set_priv(set);
@@ -277,11 +301,74 @@ static int __nft_rbtree_insert(const struct net *net, const struct nft_set *set,
 	 * key value to insert that is greater than the new element. This is the
 	 * first element to walk the ordered elements to find possible overlap.
 	 */
+=======
+	bool overlap = false, dup_end_left = false, dup_end_right = false;
+	struct nft_rbtree *priv = nft_set_priv(set);
+	u8 genmask = nft_genmask_next(net);
+	struct nft_rbtree_elem *rbe;
+	struct rb_node *parent, **p;
+	int d;
+
+	/* Detect overlaps as we descend the tree. Set the flag in these cases:
+	 *
+	 * a1. _ _ __>|  ?_ _ __|  (insert end before existing end)
+	 * a2. _ _ ___|  ?_ _ _>|  (insert end after existing end)
+	 * a3. _ _ ___? >|_ _ __|  (insert start before existing end)
+	 *
+	 * and clear it later on, as we eventually reach the points indicated by
+	 * '?' above, in the cases described below. We'll always meet these
+	 * later, locally, due to tree ordering, and overlaps for the intervals
+	 * that are the closest together are always evaluated last.
+	 *
+	 * b1. _ _ __>|  !_ _ __|  (insert end before existing start)
+	 * b2. _ _ ___|  !_ _ _>|  (insert end after existing start)
+	 * b3. _ _ ___! >|_ _ __|  (insert start after existing end, as a leaf)
+	 *            '--' no nodes falling in this range
+	 * b4.          >|_ _   !  (insert start before existing start)
+	 *
+	 * Case a3. resolves to b3.:
+	 * - if the inserted start element is the leftmost, because the '0'
+	 *   element in the tree serves as end element
+	 * - otherwise, if an existing end is found immediately to the left. If
+	 *   there are existing nodes in between, we need to further descend the
+	 *   tree before we can conclude the new start isn't causing an overlap
+	 *
+	 * or to b4., which, preceded by a3., means we already traversed one or
+	 * more existing intervals entirely, from the right.
+	 *
+	 * For a new, rightmost pair of elements, we'll hit cases b3. and b2.,
+	 * in that order.
+	 *
+	 * The flag is also cleared in two special cases:
+	 *
+	 * b5. |__ _ _!|<_ _ _   (insert start right before existing end)
+	 * b6. |__ _ >|!__ _ _   (insert end right after existing start)
+	 *
+	 * which always happen as last step and imply that no further
+	 * overlapping is possible.
+	 *
+	 * Another special case comes from the fact that start elements matching
+	 * an already existing start element are allowed: insertion is not
+	 * performed but we return -EEXIST in that case, and the error will be
+	 * cleared by the caller if NLM_F_EXCL is not present in the request.
+	 * This way, request for insertion of an exact overlap isn't reported as
+	 * error to userspace if not desired.
+	 *
+	 * However, if the existing start matches a pre-existing start, but the
+	 * end element doesn't match the corresponding pre-existing end element,
+	 * we need to report a partial overlap. This is a local condition that
+	 * can be noticed without need for a tracking flag, by checking for a
+	 * local duplicated end for a corresponding start, from left and right,
+	 * separately.
+	 */
+
+>>>>>>> b7ba80a49124 (Commit)
 	parent = NULL;
 	p = &priv->root.rb_node;
 	while (*p != NULL) {
 		parent = *p;
 		rbe = rb_entry(parent, struct nft_rbtree_elem, node);
+<<<<<<< HEAD
 		d = nft_rbtree_cmp(set, rbe, new);
 
 		if (d < 0) {
@@ -425,6 +512,87 @@ static int __nft_rbtree_insert(const struct net *net, const struct nft_set *set,
 			p = &parent->rb_right;
 	}
 
+=======
+		d = memcmp(nft_set_ext_key(&rbe->ext),
+			   nft_set_ext_key(&new->ext),
+			   set->klen);
+		if (d < 0) {
+			p = &parent->rb_left;
+
+			if (nft_rbtree_interval_start(new)) {
+				if (nft_rbtree_interval_end(rbe) &&
+				    nft_set_elem_active(&rbe->ext, genmask) &&
+				    !nft_set_elem_expired(&rbe->ext) && !*p)
+					overlap = false;
+			} else {
+				if (dup_end_left && !*p)
+					return -ENOTEMPTY;
+
+				overlap = nft_rbtree_interval_end(rbe) &&
+					  nft_set_elem_active(&rbe->ext,
+							      genmask) &&
+					  !nft_set_elem_expired(&rbe->ext);
+
+				if (overlap) {
+					dup_end_right = true;
+					continue;
+				}
+			}
+		} else if (d > 0) {
+			p = &parent->rb_right;
+
+			if (nft_rbtree_interval_end(new)) {
+				if (dup_end_right && !*p)
+					return -ENOTEMPTY;
+
+				overlap = nft_rbtree_interval_end(rbe) &&
+					  nft_set_elem_active(&rbe->ext,
+							      genmask) &&
+					  !nft_set_elem_expired(&rbe->ext);
+
+				if (overlap) {
+					dup_end_left = true;
+					continue;
+				}
+			} else if (nft_set_elem_active(&rbe->ext, genmask) &&
+				   !nft_set_elem_expired(&rbe->ext)) {
+				overlap = nft_rbtree_interval_end(rbe);
+			}
+		} else {
+			if (nft_rbtree_interval_end(rbe) &&
+			    nft_rbtree_interval_start(new)) {
+				p = &parent->rb_left;
+
+				if (nft_set_elem_active(&rbe->ext, genmask) &&
+				    !nft_set_elem_expired(&rbe->ext))
+					overlap = false;
+			} else if (nft_rbtree_interval_start(rbe) &&
+				   nft_rbtree_interval_end(new)) {
+				p = &parent->rb_right;
+
+				if (nft_set_elem_active(&rbe->ext, genmask) &&
+				    !nft_set_elem_expired(&rbe->ext))
+					overlap = false;
+			} else if (nft_set_elem_active(&rbe->ext, genmask) &&
+				   !nft_set_elem_expired(&rbe->ext)) {
+				*ext = &rbe->ext;
+				return -EEXIST;
+			} else {
+				overlap = false;
+				if (nft_rbtree_interval_end(rbe))
+					p = &parent->rb_left;
+				else
+					p = &parent->rb_right;
+			}
+		}
+
+		dup_end_left = dup_end_right = false;
+	}
+
+	if (overlap)
+		return -ENOTEMPTY;
+
+>>>>>>> b7ba80a49124 (Commit)
 	rb_link_node_rcu(&new->node, parent, p);
 	rb_insert_color(&new->node, &priv->root);
 	return 0;
@@ -563,6 +731,7 @@ static void nft_rbtree_gc(struct work_struct *work)
 	struct nft_rbtree *priv;
 	struct rb_node *node;
 	struct nft_set *set;
+<<<<<<< HEAD
 	struct net *net;
 	u8 genmask;
 
@@ -570,12 +739,18 @@ static void nft_rbtree_gc(struct work_struct *work)
 	set  = nft_set_container_of(priv);
 	net  = read_pnet(&set->net);
 	genmask = nft_genmask_cur(net);
+=======
+
+	priv = container_of(work, struct nft_rbtree, gc_work.work);
+	set  = nft_set_container_of(priv);
+>>>>>>> b7ba80a49124 (Commit)
 
 	write_lock_bh(&priv->lock);
 	write_seqcount_begin(&priv->count);
 	for (node = rb_first(&priv->root); node != NULL; node = rb_next(node)) {
 		rbe = rb_entry(node, struct nft_rbtree_elem, node);
 
+<<<<<<< HEAD
 		if (!nft_set_elem_active(&rbe->ext, genmask))
 			continue;
 
@@ -583,17 +758,24 @@ static void nft_rbtree_gc(struct work_struct *work)
 		 * from highest to lowest value, that is why end element is
 		 * always visited before the start element.
 		 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (nft_rbtree_interval_end(rbe)) {
 			rbe_end = rbe;
 			continue;
 		}
 		if (!nft_set_elem_expired(&rbe->ext))
 			continue;
+<<<<<<< HEAD
 
 		if (nft_set_elem_mark_busy(&rbe->ext)) {
 			rbe_end = NULL;
 			continue;
 		}
+=======
+		if (nft_set_elem_mark_busy(&rbe->ext))
+			continue;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (rbe_prev) {
 			rb_erase(&rbe_prev->node, &priv->root);

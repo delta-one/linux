@@ -282,7 +282,11 @@ u8 efuse_OneByteWrite(struct adapter *padapter, u16 addr, u8 data, bool bPseudoT
 {
 	u8 tmpidx = 0;
 	u8 bResult = false;
+<<<<<<< HEAD
 	u32 efuseValue;
+=======
+	u32 efuseValue = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (bPseudoTest)
 		return Efuse_Write1ByteToFakeContent(addr, data);

@@ -253,7 +253,11 @@ static void ipoctal_irq_channel(struct ipoctal_channel *channel)
 static irqreturn_t ipoctal_irq_handler(void *arg)
 {
 	unsigned int i;
+<<<<<<< HEAD
 	struct ipoctal *ipoctal = arg;
+=======
+	struct ipoctal *ipoctal = (struct ipoctal *) arg;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Clear the IPack device interrupt */
 	readw(ipoctal->int_space + ACK_INT_REQ0);
@@ -647,7 +651,11 @@ static void ipoctal_hangup(struct tty_struct *tty)
 	tty_port_hangup(&channel->tty_port);
 
 	ipoctal_reset_channel(channel);
+<<<<<<< HEAD
 	tty_port_set_initialized(&channel->tty_port, false);
+=======
+	tty_port_set_initialized(&channel->tty_port, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	wake_up_interruptible(&channel->tty_port.open_wait);
 }
 
@@ -659,7 +667,11 @@ static void ipoctal_shutdown(struct tty_struct *tty)
 		return;
 
 	ipoctal_reset_channel(channel);
+<<<<<<< HEAD
 	tty_port_set_initialized(&channel->tty_port, false);
+=======
+	tty_port_set_initialized(&channel->tty_port, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ipoctal_cleanup(struct tty_struct *tty)

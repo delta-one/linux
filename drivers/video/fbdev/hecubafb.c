@@ -279,7 +279,11 @@ err_videomem_alloc:
 	return retval;
 }
 
+<<<<<<< HEAD
 static void hecubafb_remove(struct platform_device *dev)
+=======
+static int hecubafb_remove(struct platform_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fb_info *info = platform_get_drvdata(dev);
 
@@ -293,11 +297,19 @@ static void hecubafb_remove(struct platform_device *dev)
 		module_put(par->board->owner);
 		framebuffer_release(info);
 	}
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver hecubafb_driver = {
 	.probe	= hecubafb_probe,
+<<<<<<< HEAD
 	.remove_new = hecubafb_remove,
+=======
+	.remove = hecubafb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.name	= "hecubafb",
 	},

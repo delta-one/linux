@@ -34,9 +34,12 @@ static void
 tu102_grctx_generate_sm_id(struct gf100_gr *gr, int gpc, int tpc, int sm)
 {
 	struct nvkm_device *device = gr->base.engine.subdev.device;
+<<<<<<< HEAD
 
 	tpc = gv100_gr_nonpes_aware_tpc(gr, gpc, tpc);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	nvkm_wr32(device, TPC_UNIT(gpc, tpc, 0x608), sm);
 	nvkm_wr32(device, TPC_UNIT(gpc, tpc, 0x088), sm);
 }
@@ -50,6 +53,7 @@ tu102_grctx_init_unknown_bundle_init_0[] = {
 };
 
 static const struct gf100_gr_pack
+<<<<<<< HEAD
 tu102_grctx_pack_sw_bundle64_init[] = {
 	{ tu102_grctx_init_unknown_bundle_init_0, .type = 64 },
 	{}
@@ -62,19 +66,48 @@ tu102_grctx_generate_unknown(struct gf100_gr_chan *chan, u64 addr, u32 size)
 	gf100_grctx_patch_wr32(chan, 0x408074, size >> 8); /*XXX: guess */
 	gf100_grctx_patch_wr32(chan, 0x419034, addr >> 8);
 	gf100_grctx_patch_wr32(chan, 0x408078, 0x00000000);
+=======
+tu102_grctx_pack_sw_veid_bundle_init[] = {
+	{ gv100_grctx_init_sw_veid_bundle_init_0 },
+	{ tu102_grctx_init_unknown_bundle_init_0 },
+	{}
+};
+
+static void
+tu102_grctx_generate_attrib(struct gf100_grctx *info)
+{
+	const u64 size = 0x80000; /*XXX: educated guess */
+	const int s = 8;
+	const int b = mmio_vram(info, size, (1 << s), true);
+
+	gv100_grctx_generate_attrib(info);
+
+	mmio_refn(info, 0x408070, 0x00000000, s, b);
+	mmio_wr32(info, 0x408074, size >> s); /*XXX: guess */
+	mmio_refn(info, 0x419034, 0x00000000, s, b);
+	mmio_wr32(info, 0x408078, 0x00000000);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 const struct gf100_grctx_func
 tu102_grctx = {
+<<<<<<< HEAD
 	.main = gf100_grctx_generate_main,
 	.unkn = gv100_grctx_generate_unkn,
 	.sw_bundle64_init = tu102_grctx_pack_sw_bundle64_init,
+=======
+	.unkn88c = gv100_grctx_unkn88c,
+	.main = gf100_grctx_generate_main,
+	.unkn = gv100_grctx_generate_unkn,
+	.sw_veid_bundle_init = tu102_grctx_pack_sw_veid_bundle_init,
+>>>>>>> b7ba80a49124 (Commit)
 	.bundle = gm107_grctx_generate_bundle,
 	.bundle_size = 0x3000,
 	.bundle_min_gpm_fifo_depth = 0x180,
 	.bundle_token_limit = 0xa80,
 	.pagepool = gp100_grctx_generate_pagepool,
 	.pagepool_size = 0x20000,
+<<<<<<< HEAD
 	.attrib_cb_size = gp102_grctx_generate_attrib_cb_size,
 	.attrib_cb = gv100_grctx_generate_attrib_cb,
 	.attrib = gv100_grctx_generate_attrib,
@@ -82,6 +115,11 @@ tu102_grctx = {
 	.attrib_nr = 0x700,
 	.unknown_size = 0x80000,
 	.unknown = tu102_grctx_generate_unknown,
+=======
+	.attrib = tu102_grctx_generate_attrib,
+	.attrib_nr_max = 0x800,
+	.attrib_nr = 0x700,
+>>>>>>> b7ba80a49124 (Commit)
 	.alpha_nr_max = 0xc00,
 	.alpha_nr = 0x800,
 	.gfxp_nr = 0xfa8,

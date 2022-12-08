@@ -37,7 +37,10 @@
 #define HELLCREEK_VLAN_UNTAGGED_MEMBER	0x1
 #define HELLCREEK_VLAN_TAGGED_MEMBER	0x3
 #define HELLCREEK_NUM_EGRESS_QUEUES	8
+<<<<<<< HEAD
 #define HELLCREEK_DEFAULT_MAX_SDU	1536
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Register definitions */
 #define HR_MODID_C			(0 * 2)
@@ -73,12 +76,15 @@
 #define HR_PRTCCFG_PCP_TC_MAP_SHIFT	0
 #define HR_PRTCCFG_PCP_TC_MAP_MASK	GENMASK(2, 0)
 
+<<<<<<< HEAD
 #define HR_PTPRTCCFG			(0xa9 * 2)
 #define HR_PTPRTCCFG_SET_QTRACK		BIT(15)
 #define HR_PTPRTCCFG_REJECT		BIT(14)
 #define HR_PTPRTCCFG_MAXSDU_SHIFT	0
 #define HR_PTPRTCCFG_MAXSDU_MASK	GENMASK(10, 0)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define HR_CSEL				(0x8d * 2)
 #define HR_CSEL_SHIFT			0
 #define HR_CSEL_MASK			GENMASK(7, 0)

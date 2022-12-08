@@ -1090,7 +1090,11 @@ static const struct file_operations usblp_fops = {
 	.llseek =	noop_llseek,
 };
 
+<<<<<<< HEAD
 static char *usblp_devnode(const struct device *dev, umode_t *mode)
+=======
+static char *usblp_devnode(struct device *dev, umode_t *mode)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return kasprintf(GFP_KERNEL, "usb/%s", dev_name(dev));
 }

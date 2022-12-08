@@ -13,7 +13,10 @@ if NET_VENDOR_MICROSEMI
 
 # Users should depend on NET_SWITCHDEV, HAS_IOMEM, BRIDGE
 config MSCC_OCELOT_SWITCH_LIB
+<<<<<<< HEAD
 	depends on PTP_1588_CLOCK_OPTIONAL
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select NET_DEVLINK
 	select REGMAP_MMIO
 	select PACKING

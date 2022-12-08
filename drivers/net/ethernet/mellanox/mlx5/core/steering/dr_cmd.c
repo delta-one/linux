@@ -271,6 +271,7 @@ int mlx5dr_cmd_sync_steering(struct mlx5_core_dev *mdev)
 {
 	u32 in[MLX5_ST_SZ_DW(sync_steering_in)] = {};
 
+<<<<<<< HEAD
 	/* Skip SYNC in case the device is internal error state.
 	 * Besides a device error, this also happens when we're
 	 * in fast teardown
@@ -278,6 +279,8 @@ int mlx5dr_cmd_sync_steering(struct mlx5_core_dev *mdev)
 	if (mdev->state == MLX5_DEVICE_STATE_INTERNAL_ERROR)
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	MLX5_SET(sync_steering_in, in, opcode, MLX5_CMD_OP_SYNC_STEERING);
 
 	return mlx5_cmd_exec_in(mdev, sync_steering, in);
@@ -564,6 +567,7 @@ void mlx5dr_cmd_destroy_reformat_ctx(struct mlx5_core_dev *mdev,
 	mlx5_cmd_exec_in(mdev, dealloc_packet_reformat_context, in);
 }
 
+<<<<<<< HEAD
 static void dr_cmd_set_definer_format(void *ptr, u16 format_id,
 				      u8 *dw_selectors,
 				      u8 *byte_selectors)
@@ -641,6 +645,8 @@ mlx5dr_cmd_destroy_definer(struct mlx5_core_dev *mdev, u32 definer_id)
 	mlx5_cmd_exec(mdev, in, sizeof(in), out, sizeof(out));
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int mlx5dr_cmd_query_gid(struct mlx5_core_dev *mdev, u8 vhca_port_num,
 			 u16 index, struct mlx5dr_cmd_gid_attr *attr)
 {

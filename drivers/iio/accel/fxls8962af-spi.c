@@ -44,7 +44,11 @@ MODULE_DEVICE_TABLE(spi, fxls8962af_spi_id_table);
 static struct spi_driver fxls8962af_driver = {
 	.driver = {
 		   .name = "fxls8962af_spi",
+<<<<<<< HEAD
 		   .pm = pm_ptr(&fxls8962af_pm_ops),
+=======
+		   .pm = &fxls8962af_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		   .of_match_table = fxls8962af_spi_of_match,
 		   },
 	.probe = fxls8962af_probe,

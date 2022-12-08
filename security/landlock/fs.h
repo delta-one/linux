@@ -37,6 +37,7 @@ struct landlock_inode_security {
 };
 
 /**
+<<<<<<< HEAD
  * struct landlock_file_security - File security blob
  *
  * This information is populated when opening a file in hook_file_open, and
@@ -55,6 +56,8 @@ struct landlock_file_security {
 };
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * struct landlock_superblock_security - Superblock security blob
  *
  * Enable hook_sb_delete() to wait for concurrent calls to release_inode().
@@ -68,12 +71,15 @@ struct landlock_superblock_security {
 	atomic_long_t inode_refs;
 };
 
+<<<<<<< HEAD
 static inline struct landlock_file_security *
 landlock_file(const struct file *const file)
 {
 	return file->f_security + landlock_blob_sizes.lbs_file;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct landlock_inode_security *
 landlock_inode(const struct inode *const inode)
 {

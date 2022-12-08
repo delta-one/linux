@@ -262,7 +262,17 @@ void ext4_stop_mmpd(struct ext4_sb_info *sbi)
  */
 static unsigned int mmp_new_seq(void)
 {
+<<<<<<< HEAD
 	return get_random_u32_below(EXT4_MMP_SEQ_MAX + 1);
+=======
+	u32 new_seq;
+
+	do {
+		new_seq = prandom_u32();
+	} while (new_seq > EXT4_MMP_SEQ_MAX);
+
+	return new_seq;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*

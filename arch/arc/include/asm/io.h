@@ -32,7 +32,11 @@ static inline void ioport_unmap(void __iomem *addr)
 {
 }
 
+<<<<<<< HEAD
 extern void iounmap(const volatile void __iomem *addr);
+=======
+extern void iounmap(const void __iomem *addr);
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * io{read,write}{16,32}be() macros

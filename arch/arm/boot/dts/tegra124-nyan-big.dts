@@ -18,18 +18,39 @@
 			aux-bus {
 				panel: panel {
 					compatible = "auo,b133xtn01";
+<<<<<<< HEAD
 					power-supply = <&vdd_3v3_panel>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 					backlight = <&backlight>;
 				};
 			};
 		};
 	};
 
+<<<<<<< HEAD
+=======
+	mmc@700b0400 { /* SD Card on this bus */
+		wp-gpios = <&gpio TEGRA_GPIO(Q, 4) GPIO_ACTIVE_LOW>;
+	};
+
+	sound {
+		compatible = "nvidia,tegra-audio-max98090-nyan-big",
+			     "nvidia,tegra-audio-max98090-nyan",
+			     "nvidia,tegra-audio-max98090";
+		nvidia,model = "GoogleNyanBig";
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	pinmux@70000868 {
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinmux_default>;
 
+<<<<<<< HEAD
 		pinmux_default: pinmux {
+=======
+		pinmux_default: common {
+>>>>>>> b7ba80a49124 (Commit)
 			clk_32k_out_pa0 {
 				nvidia,pins = "clk_32k_out_pa0";
 				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
@@ -1334,6 +1355,7 @@
 			};
 		};
 	};
+<<<<<<< HEAD
 
 	mmc@700b0400 { /* SD Card on this bus */
 		wp-gpios = <&gpio TEGRA_GPIO(Q, 4) GPIO_ACTIVE_LOW>;
@@ -1345,4 +1367,6 @@
 			     "nvidia,tegra-audio-max98090";
 		nvidia,model = "GoogleNyanBig";
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };

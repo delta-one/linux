@@ -152,6 +152,10 @@
 			compatible = "mediatek,mt8135-pinctrl";
 			reg = <0 0x1000b000 0 0x1000>;
 			mediatek,pctl-regmap = <&syscfg_pctl_a &syscfg_pctl_b>;
+<<<<<<< HEAD
+=======
+			pins-are-numbered;
+>>>>>>> b7ba80a49124 (Commit)
 			gpio-controller;
 			#gpio-cells = <2>;
 			interrupt-controller;

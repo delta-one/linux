@@ -22,12 +22,15 @@
 struct inode;
 struct dentry;
 
+<<<<<<< HEAD
 static inline bool is_posix_acl_xattr(const char *name)
 {
 	return (strcmp(name, XATTR_NAME_POSIX_ACL_ACCESS) == 0) ||
 	       (strcmp(name, XATTR_NAME_POSIX_ACL_DEFAULT) == 0);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * struct xattr_handler: When @name is set, match attributes with exactly that
  * name.  When @prefix is set instead, match attributes with that prefix and
@@ -42,11 +45,16 @@ struct xattr_handler {
 		   struct inode *inode, const char *name, void *buffer,
 		   size_t size);
 	int (*set)(const struct xattr_handler *,
+<<<<<<< HEAD
 		   struct mnt_idmap *idmap, struct dentry *dentry,
+=======
+		   struct user_namespace *mnt_userns, struct dentry *dentry,
+>>>>>>> b7ba80a49124 (Commit)
 		   struct inode *inode, const char *name, const void *buffer,
 		   size_t size, int flags);
 };
 
+<<<<<<< HEAD
 /**
  * xattr_handler_can_list - check whether xattr can be listed
  * @handler: handler for this type of xattr
@@ -63,6 +71,8 @@ static inline bool xattr_handler_can_list(const struct xattr_handler *handler,
 	return handler && (!handler->list || handler->list(dentry));
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const char *xattr_full_name(const struct xattr_handler *, const char *);
 
 struct xattr {
@@ -72,6 +82,7 @@ struct xattr {
 };
 
 ssize_t __vfs_getxattr(struct dentry *, struct inode *, const char *, void *, size_t);
+<<<<<<< HEAD
 ssize_t vfs_getxattr(struct mnt_idmap *, struct dentry *, const char *,
 		     void *, size_t);
 ssize_t vfs_listxattr(struct dentry *d, char *list, size_t size);
@@ -95,6 +106,31 @@ int vfs_getxattr_alloc(struct mnt_idmap *idmap,
 		       char **xattr_value, size_t size, gfp_t flags);
 
 int xattr_supports_user_prefix(struct inode *inode);
+=======
+ssize_t vfs_getxattr(struct user_namespace *, struct dentry *, const char *,
+		     void *, size_t);
+ssize_t vfs_listxattr(struct dentry *d, char *list, size_t size);
+int __vfs_setxattr(struct user_namespace *, struct dentry *, struct inode *,
+		   const char *, const void *, size_t, int);
+int __vfs_setxattr_noperm(struct user_namespace *, struct dentry *,
+			  const char *, const void *, size_t, int);
+int __vfs_setxattr_locked(struct user_namespace *, struct dentry *,
+			  const char *, const void *, size_t, int,
+			  struct inode **);
+int vfs_setxattr(struct user_namespace *, struct dentry *, const char *,
+		 const void *, size_t, int);
+int __vfs_removexattr(struct user_namespace *, struct dentry *, const char *);
+int __vfs_removexattr_locked(struct user_namespace *, struct dentry *,
+			     const char *, struct inode **);
+int vfs_removexattr(struct user_namespace *, struct dentry *, const char *);
+
+ssize_t generic_listxattr(struct dentry *dentry, char *buffer, size_t buffer_size);
+ssize_t vfs_getxattr_alloc(struct user_namespace *mnt_userns,
+			   struct dentry *dentry, const char *name,
+			   char **xattr_value, size_t size, gfp_t flags);
+
+int xattr_supported_namespace(struct inode *inode, const char *prefix);
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline const char *xattr_prefix(const struct xattr_handler *handler)
 {
@@ -102,29 +138,70 @@ static inline const char *xattr_prefix(const struct xattr_handler *handler)
 }
 
 struct simple_xattrs {
+<<<<<<< HEAD
 	struct rb_root rb_root;
 	rwlock_t lock;
 };
 
 struct simple_xattr {
 	struct rb_node rb_node;
+=======
+	struct list_head head;
+	spinlock_t lock;
+};
+
+struct simple_xattr {
+	struct list_head list;
+>>>>>>> b7ba80a49124 (Commit)
 	char *name;
 	size_t size;
 	char value[];
 };
 
+<<<<<<< HEAD
 void simple_xattrs_init(struct simple_xattrs *xattrs);
 void simple_xattrs_free(struct simple_xattrs *xattrs);
+=======
+/*
+ * initialize the simple_xattrs structure
+ */
+static inline void simple_xattrs_init(struct simple_xattrs *xattrs)
+{
+	INIT_LIST_HEAD(&xattrs->head);
+	spin_lock_init(&xattrs->lock);
+}
+
+/*
+ * free all the xattrs
+ */
+static inline void simple_xattrs_free(struct simple_xattrs *xattrs)
+{
+	struct simple_xattr *xattr, *node;
+
+	list_for_each_entry_safe(xattr, node, &xattrs->head, list) {
+		kfree(xattr->name);
+		kvfree(xattr);
+	}
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 struct simple_xattr *simple_xattr_alloc(const void *value, size_t size);
 int simple_xattr_get(struct simple_xattrs *xattrs, const char *name,
 		     void *buffer, size_t size);
 int simple_xattr_set(struct simple_xattrs *xattrs, const char *name,
 		     const void *value, size_t size, int flags,
 		     ssize_t *removed_size);
+<<<<<<< HEAD
 ssize_t simple_xattr_list(struct inode *inode, struct simple_xattrs *xattrs,
 			  char *buffer, size_t size);
 void simple_xattr_add(struct simple_xattrs *xattrs,
 		      struct simple_xattr *new_xattr);
 int xattr_list_one(char **buffer, ssize_t *remaining_size, const char *name);
+=======
+ssize_t simple_xattr_list(struct inode *inode, struct simple_xattrs *xattrs, char *buffer,
+			  size_t size);
+void simple_xattr_list_add(struct simple_xattrs *xattrs,
+			   struct simple_xattr *new_xattr);
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif	/* _LINUX_XATTR_H */

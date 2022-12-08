@@ -135,6 +135,19 @@ void kvm_arch_hardware_disable(void)
 	kvm_mips_callbacks->hardware_disable();
 }
 
+<<<<<<< HEAD
+=======
+int kvm_arch_hardware_setup(void *opaque)
+{
+	return 0;
+}
+
+int kvm_arch_check_processor_compat(void *opaque)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 extern void kvm_init_loongson_ipi(struct kvm *kvm);
 
 int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
@@ -993,9 +1006,15 @@ void kvm_arch_flush_remote_tlbs_memslot(struct kvm *kvm,
 	kvm_flush_remote_tlbs(kvm);
 }
 
+<<<<<<< HEAD
 int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
 {
 	int r;
+=======
+long kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
+{
+	long r;
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (ioctl) {
 	default:
@@ -1005,6 +1024,24 @@ int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
 	return r;
 }
 
+<<<<<<< HEAD
+=======
+int kvm_arch_init(void *opaque)
+{
+	if (kvm_mips_callbacks) {
+		kvm_err("kvm: module already exists\n");
+		return -EEXIST;
+	}
+
+	return kvm_mips_emulation_init(&kvm_mips_callbacks);
+}
+
+void kvm_arch_exit(void)
+{
+	kvm_mips_callbacks = NULL;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 int kvm_arch_vcpu_ioctl_get_sregs(struct kvm_vcpu *vcpu,
 				  struct kvm_sregs *sregs)
 {
@@ -1621,21 +1658,32 @@ static int __init kvm_mips_init(void)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	ret = kvm_mips_emulation_init();
 	if (ret)
 		return ret;
 
 
+=======
+	ret = kvm_init(NULL, sizeof(struct kvm_vcpu), 0, THIS_MODULE);
+
+	if (ret)
+		return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (boot_cpu_type() == CPU_LOONGSON64)
 		kvm_priority_to_irq = kvm_loongson3_priority_to_irq;
 
 	register_die_notifier(&kvm_mips_csr_die_notifier);
 
+<<<<<<< HEAD
 	ret = kvm_init(sizeof(struct kvm_vcpu), 0, THIS_MODULE);
 	if (ret) {
 		unregister_die_notifier(&kvm_mips_csr_die_notifier);
 		return ret;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

@@ -226,7 +226,11 @@ static void virtbt_rx_work(struct work_struct *work)
 	if (!skb)
 		return;
 
+<<<<<<< HEAD
 	skb_put(skb, len);
+=======
+	skb->len = len;
+>>>>>>> b7ba80a49124 (Commit)
 	virtbt_rx_handle(vbt, skb);
 
 	if (virtbt_add_inbuf(vbt) < 0)
@@ -313,12 +317,16 @@ static int virtbt_probe(struct virtio_device *vdev)
 	if (virtio_has_feature(vdev, VIRTIO_BT_F_VND_HCI)) {
 		__u16 vendor;
 
+<<<<<<< HEAD
 		if (virtio_has_feature(vdev, VIRTIO_BT_F_CONFIG_V2))
 			virtio_cread(vdev, struct virtio_bt_config_v2,
 				     vendor, &vendor);
 		else
 			virtio_cread(vdev, struct virtio_bt_config,
 				     vendor, &vendor);
+=======
+		virtio_cread(vdev, struct virtio_bt_config, vendor, &vendor);
+>>>>>>> b7ba80a49124 (Commit)
 
 		switch (vendor) {
 		case VIRTIO_BT_CONFIG_VENDOR_ZEPHYR:
@@ -351,12 +359,17 @@ static int virtbt_probe(struct virtio_device *vdev)
 	if (virtio_has_feature(vdev, VIRTIO_BT_F_MSFT_EXT)) {
 		__u16 msft_opcode;
 
+<<<<<<< HEAD
 		if (virtio_has_feature(vdev, VIRTIO_BT_F_CONFIG_V2))
 			virtio_cread(vdev, struct virtio_bt_config_v2,
 				     msft_opcode, &msft_opcode);
 		else
 			virtio_cread(vdev, struct virtio_bt_config,
 				     msft_opcode, &msft_opcode);
+=======
+		virtio_cread(vdev, struct virtio_bt_config,
+			     msft_opcode, &msft_opcode);
+>>>>>>> b7ba80a49124 (Commit)
 
 		hci_set_msft_opcode(hdev, msft_opcode);
 	}
@@ -411,7 +424,10 @@ static const unsigned int virtbt_features[] = {
 	VIRTIO_BT_F_VND_HCI,
 	VIRTIO_BT_F_MSFT_EXT,
 	VIRTIO_BT_F_AOSP_EXT,
+<<<<<<< HEAD
 	VIRTIO_BT_F_CONFIG_V2,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct virtio_driver virtbt_driver = {

@@ -405,7 +405,12 @@ static struct attribute *lm3530_attrs[] = {
 };
 ATTRIBUTE_GROUPS(lm3530);
 
+<<<<<<< HEAD
 static int lm3530_probe(struct i2c_client *client)
+=======
+static int lm3530_probe(struct i2c_client *client,
+			   const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lm3530_platform_data *pdata = dev_get_platdata(&client->dev);
 	struct lm3530_data *drvdata;
@@ -484,7 +489,11 @@ static const struct i2c_device_id lm3530_id[] = {
 MODULE_DEVICE_TABLE(i2c, lm3530_id);
 
 static struct i2c_driver lm3530_i2c_driver = {
+<<<<<<< HEAD
 	.probe_new = lm3530_probe,
+=======
+	.probe = lm3530_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = lm3530_remove,
 	.id_table = lm3530_id,
 	.driver = {

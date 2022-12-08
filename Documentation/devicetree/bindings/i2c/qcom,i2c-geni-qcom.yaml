@@ -10,6 +10,7 @@ maintainers:
   - Andy Gross <agross@kernel.org>
   - Bjorn Andersson <bjorn.andersson@linaro.org>
 
+<<<<<<< HEAD
 properties:
   compatible:
     enum:
@@ -23,6 +24,20 @@ properties:
   clock-names:
     minItems: 1
     maxItems: 2
+=======
+allOf:
+  - $ref: /schemas/i2c/i2c-controller.yaml#
+
+properties:
+  compatible:
+    const: qcom,geni-i2c
+
+  clocks:
+    maxItems: 1
+
+  clock-names:
+    const: se
+>>>>>>> b7ba80a49124 (Commit)
 
   clock-frequency:
     default: 100000
@@ -36,18 +51,31 @@ properties:
       - const: rx
 
   interconnects:
+<<<<<<< HEAD
     minItems: 2
     maxItems: 3
 
   interconnect-names:
     minItems: 2
     maxItems: 3
+=======
+    maxItems: 3
+
+  interconnect-names:
+    items:
+      - const: qup-core
+      - const: qup-config
+      - const: qup-memory
+>>>>>>> b7ba80a49124 (Commit)
 
   interrupts:
     maxItems: 1
 
+<<<<<<< HEAD
   operating-points-v2: true
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   pinctrl-0: true
   pinctrl-1: true
 
@@ -73,6 +101,7 @@ required:
   - clock-names
   - reg
 
+<<<<<<< HEAD
 allOf:
   - $ref: /schemas/i2c/i2c-controller.yaml#
   - if:
@@ -117,6 +146,8 @@ allOf:
             - const: qup-config
             - const: qup-memory
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 unevaluatedProperties: false
 
 examples:

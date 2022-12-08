@@ -25,7 +25,11 @@
 #define SMU13_DRIVER_IF_V13_0_0_H
 
 //Increment this version if SkuTable_t or BoardTable_t change
+<<<<<<< HEAD
 #define PPTABLE_VERSION 0x26
+=======
+#define PPTABLE_VERSION 0x24
+>>>>>>> b7ba80a49124 (Commit)
 
 #define NUM_GFXCLK_DPM_LEVELS    16
 #define NUM_SOCCLK_DPM_LEVELS    8
@@ -109,6 +113,7 @@
 #define FEATURE_SPARE_63_BIT                  63
 #define NUM_FEATURES                          64
 
+<<<<<<< HEAD
 #define ALLOWED_FEATURE_CTRL_DEFAULT 0xFFFFFFFFFFFFFFFFULL
 #define ALLOWED_FEATURE_CTRL_SCPM	((1 << FEATURE_DPM_GFXCLK_BIT) | \
 									(1 << FEATURE_DPM_GFX_POWER_OPTIMIZER_BIT) | \
@@ -126,6 +131,8 @@
 									(1 << FEATURE_DS_UCLK_BIT) | \
 									(1ULL << FEATURE_DS_VCN_BIT))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 //For use with feature control messages
 typedef enum {
   FEATURE_PWR_ALL,
@@ -150,7 +157,10 @@ typedef enum {
 #define DEBUG_OVERRIDE_DISABLE_DFLL                    0x00000200
 #define DEBUG_OVERRIDE_ENABLE_RLC_VF_BRINGUP_MODE      0x00000400
 #define DEBUG_OVERRIDE_DFLL_MASTER_MODE                0x00000800
+<<<<<<< HEAD
 #define DEBUG_OVERRIDE_ENABLE_PROFILING_MODE           0x00001000
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 // VR Mapping Bit Defines
 #define VR_MAPPING_VR_SELECT_MASK  0x01
@@ -280,6 +290,7 @@ typedef enum {
 } I2cControllerPort_e;
 
 typedef enum {
+<<<<<<< HEAD
 	I2C_CONTROLLER_NAME_VR_GFX = 0,
 	I2C_CONTROLLER_NAME_VR_SOC,
 	I2C_CONTROLLER_NAME_VR_VMEMP,
@@ -289,6 +300,17 @@ typedef enum {
 	I2C_CONTROLLER_NAME_PLX,
 	I2C_CONTROLLER_NAME_FAN_INTAKE,
 	I2C_CONTROLLER_NAME_COUNT,
+=======
+  I2C_CONTROLLER_NAME_VR_GFX = 0,
+  I2C_CONTROLLER_NAME_VR_SOC,
+  I2C_CONTROLLER_NAME_VR_VMEMP,
+  I2C_CONTROLLER_NAME_VR_VDDIO,
+  I2C_CONTROLLER_NAME_LIQUID0,
+  I2C_CONTROLLER_NAME_LIQUID1,
+  I2C_CONTROLLER_NAME_PLX,
+  I2C_CONTROLLER_NAME_OTHER,
+  I2C_CONTROLLER_NAME_COUNT,
+>>>>>>> b7ba80a49124 (Commit)
 } I2cControllerName_e;
 
 typedef enum {
@@ -300,17 +322,28 @@ typedef enum {
   I2C_CONTROLLER_THROTTLER_LIQUID0,
   I2C_CONTROLLER_THROTTLER_LIQUID1,
   I2C_CONTROLLER_THROTTLER_PLX,
+<<<<<<< HEAD
   I2C_CONTROLLER_THROTTLER_FAN_INTAKE,
+=======
+>>>>>>> b7ba80a49124 (Commit)
   I2C_CONTROLLER_THROTTLER_INA3221,
   I2C_CONTROLLER_THROTTLER_COUNT,
 } I2cControllerThrottler_e;
 
 typedef enum {
+<<<<<<< HEAD
 	I2C_CONTROLLER_PROTOCOL_VR_XPDE132G5,
 	I2C_CONTROLLER_PROTOCOL_VR_IR35217,
 	I2C_CONTROLLER_PROTOCOL_TMP_MAX31875,
 	I2C_CONTROLLER_PROTOCOL_INA3221,
 	I2C_CONTROLLER_PROTOCOL_COUNT,
+=======
+  I2C_CONTROLLER_PROTOCOL_VR_XPDE132G5,
+  I2C_CONTROLLER_PROTOCOL_VR_IR35217,
+  I2C_CONTROLLER_PROTOCOL_TMP_TMP102A,
+  I2C_CONTROLLER_PROTOCOL_INA3221,
+  I2C_CONTROLLER_PROTOCOL_COUNT,
+>>>>>>> b7ba80a49124 (Commit)
 } I2cControllerProtocol_e;
 
 typedef struct {
@@ -677,20 +710,27 @@ typedef struct {
 
 #define PP_NUM_OD_VF_CURVE_POINTS PP_NUM_RTAVFS_PWL_ZONES + 1
 
+<<<<<<< HEAD
 typedef enum {
 	FAN_MODE_AUTO = 0,
 	FAN_MODE_MANUAL_LINEAR,
 } FanMode_e;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 typedef struct {
   uint32_t FeatureCtrlMask;
 
   //Voltage control
   int16_t                VoltageOffsetPerZoneBoundary[PP_NUM_OD_VF_CURVE_POINTS];
+<<<<<<< HEAD
   uint16_t               VddGfxVmax;         // in mV
 
   uint8_t                IdlePwrSavingFeaturesCtrl;
   uint8_t                RuntimePwrSavingFeaturesCtrl;
+=======
+  uint16_t               reserved[2];
+>>>>>>> b7ba80a49124 (Commit)
 
   //Frequency changes
   int16_t                GfxclkFmin;           // MHz
@@ -700,7 +740,11 @@ typedef struct {
 
   //PPT
   int16_t                Ppt;         // %
+<<<<<<< HEAD
   int16_t                Tdc;
+=======
+  int16_t                reserved1;
+>>>>>>> b7ba80a49124 (Commit)
 
   //Fan control
   uint8_t                FanLinearPwmPoints[NUM_OD_FAN_MAX_POINTS];
@@ -727,6 +771,7 @@ typedef struct {
   uint32_t FeatureCtrlMask;
 
   int16_t VoltageOffsetPerZoneBoundary;
+<<<<<<< HEAD
   uint16_t               VddGfxVmax;         // in mV
 
   uint8_t                IdlePwrSavingFeaturesCtrl;
@@ -734,12 +779,22 @@ typedef struct {
 
   int16_t               GfxclkFmin;           // MHz
   int16_t               GfxclkFmax;           // MHz
+=======
+  uint16_t               reserved[2];
+
+  uint16_t               GfxclkFmin;           // MHz
+  uint16_t               GfxclkFmax;           // MHz
+>>>>>>> b7ba80a49124 (Commit)
   uint16_t               UclkFmin;             // MHz
   uint16_t               UclkFmax;             // MHz
 
   //PPT
   int16_t                Ppt;         // %
+<<<<<<< HEAD
   int16_t                Tdc;
+=======
+  int16_t                reserved1;
+>>>>>>> b7ba80a49124 (Commit)
 
   uint8_t                FanLinearPwmPoints;
   uint8_t                FanLinearTempPoints;
@@ -886,8 +941,12 @@ typedef struct {
   uint16_t  FanStartTempMin;
   uint16_t  FanStartTempMax;
 
+<<<<<<< HEAD
   uint16_t  PowerMinPpt0[POWER_SOURCE_COUNT];
   uint32_t Spare[11];
+=======
+  uint32_t Spare[12];
+>>>>>>> b7ba80a49124 (Commit)
 
 } MsgLimits_t;
 
@@ -1071,6 +1130,7 @@ typedef struct {
   uint32_t        GfxoffSpare[15];
 
   // GFX GPO
+<<<<<<< HEAD
   uint32_t        DfllBtcMasterScalerM;
   int32_t         DfllBtcMasterScalerB;
   uint32_t        DfllBtcSlaveScalerM;
@@ -1082,6 +1142,9 @@ typedef struct {
   uint32_t        DfllL2FrequencyBoostM; //Unitless (float)
   uint32_t        DfllL2FrequencyBoostB; //In MHz (integer)
   uint32_t        GfxGpoSpare[8];
+=======
+  uint32_t        GfxGpoSpare[16];
+>>>>>>> b7ba80a49124 (Commit)
 
   // GFX DCS
 
@@ -1154,6 +1217,7 @@ typedef struct {
   uint16_t IntakeTempHighIntakeAcousticLimit;
   uint16_t IntakeTempAcouticLimitReleaseRate;
 
+<<<<<<< HEAD
   int16_t FanAbnormalTempLimitOffset;
   uint16_t FanStalledTriggerRpm;
   uint16_t FanAbnormalTriggerRpmCoeff;
@@ -1162,6 +1226,14 @@ typedef struct {
   uint8_t      FanIntakeSensorSupport;
   uint8_t      FanIntakePadding[3];
   uint32_t     FanSpare[13];
+=======
+  uint16_t FanStalledTempLimitOffset;
+  uint16_t FanStalledTriggerRpm;
+  uint16_t FanAbnormalTriggerRpm;
+  uint16_t FanPadding;
+
+  uint32_t     FanSpare[14];
+>>>>>>> b7ba80a49124 (Commit)
 
   // SECTION: VDD_GFX AVFS
 
@@ -1240,6 +1312,7 @@ typedef struct {
   int16_t     TotalBoardPowerM;
   int16_t     TotalBoardPowerB;
 
+<<<<<<< HEAD
   //PMFW-11158
   QuadraticInt_t qFeffCoeffGameClock[POWER_SOURCE_COUNT];
   QuadraticInt_t qFeffCoeffBaseClock[POWER_SOURCE_COUNT];
@@ -1247,6 +1320,10 @@ typedef struct {
 
   // SECTION: Sku Reserved
   uint32_t         Spare[43];
+=======
+  // SECTION: Sku Reserved
+  uint32_t         Spare[61];
+>>>>>>> b7ba80a49124 (Commit)
 
   // Padding for MMHUB - do not modify this
   uint32_t     MmHubPadding[8];
@@ -1335,11 +1412,16 @@ typedef struct {
   uint32_t    PostVoltageSetBacoDelay; // in microseconds. Amount of time FW will wait after power good is established or PSI0 command is issued
   uint32_t    BacoEntryDelay; // in milliseconds. Amount of time FW will wait to trigger BACO entry after receiving entry notification from OS
 
+<<<<<<< HEAD
   uint8_t     FuseWritePowerMuxPresent;
   uint8_t     FuseWritePadding[3];
 
   // SECTION: Board Reserved
   uint32_t     BoardSpare[63];
+=======
+  // SECTION: Board Reserved
+  uint32_t     BoardSpare[64];
+>>>>>>> b7ba80a49124 (Commit)
 
   // SECTION: Structure Padding
 
@@ -1347,12 +1429,18 @@ typedef struct {
   uint32_t     MmHubPadding[8];
 } BoardTable_t;
 
+<<<<<<< HEAD
 #pragma pack(push, 1)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 typedef struct {
   SkuTable_t SkuTable;
   BoardTable_t BoardTable;
 } PPTable_t;
+<<<<<<< HEAD
 #pragma pack(pop)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 typedef struct {
   // Time constant parameters for clock averages in ms
@@ -1433,7 +1521,11 @@ typedef struct {
   uint16_t AverageTotalBoardPower;
 
   uint16_t AvgTemperature[TEMP_COUNT];
+<<<<<<< HEAD
   uint16_t AvgTemperatureFanIntake;
+=======
+  uint16_t TempPadding;
+>>>>>>> b7ba80a49124 (Commit)
 
   uint8_t  PcieRate               ;
   uint8_t  PcieWidth              ;
@@ -1602,7 +1694,10 @@ typedef struct {
 #define IH_INTERRUPT_CONTEXT_ID_AUDIO_D0            0x5
 #define IH_INTERRUPT_CONTEXT_ID_AUDIO_D3            0x6
 #define IH_INTERRUPT_CONTEXT_ID_THERMAL_THROTTLING  0x7
+<<<<<<< HEAD
 #define IH_INTERRUPT_CONTEXT_ID_FAN_ABNORMAL        0x8
 #define IH_INTERRUPT_CONTEXT_ID_FAN_RECOVERY        0x9
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

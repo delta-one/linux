@@ -53,7 +53,11 @@ struct squashfs_sb_info {
 	__le64					*xattr_id_table;
 	struct mutex				meta_index_mutex;
 	struct meta_index			*meta_index;
+<<<<<<< HEAD
 	void					*stream;
+=======
+	struct squashfs_stream			*stream;
+>>>>>>> b7ba80a49124 (Commit)
 	__le64					*inode_lookup_table;
 	u64					inode_table;
 	u64					directory_table;
@@ -63,10 +67,16 @@ struct squashfs_sb_info {
 	long long				bytes_used;
 	unsigned int				inodes;
 	unsigned int				fragments;
+<<<<<<< HEAD
 	unsigned int				xattr_ids;
 	unsigned int				ids;
 	bool					panic_on_errors;
 	const struct squashfs_decompressor_thread_ops *thread_ops;
 	int					max_thread_num;
+=======
+	int					xattr_ids;
+	unsigned int				ids;
+	bool					panic_on_errors;
+>>>>>>> b7ba80a49124 (Commit)
 };
 #endif

@@ -16,11 +16,16 @@ description:
 
 properties:
   compatible:
+<<<<<<< HEAD
     oneOf:
       - const: goodix,gt7375p
       - items:
           - const: goodix,gt7986u
           - const: goodix,gt7375p
+=======
+    items:
+      - const: goodix,gt7375p
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     enum:
@@ -36,6 +41,7 @@ properties:
   vdd-supply:
     description: The 3.3V supply to the touchscreen.
 
+<<<<<<< HEAD
   mainboard-vddio-supply:
     description:
       The supply on the main board needed to power up IO signals going
@@ -43,6 +49,8 @@ properties:
       itself as long as it allows the main board to make signals compatible
       with what the touchscreen is expecting for its IO rails.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg

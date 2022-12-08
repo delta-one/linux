@@ -14,6 +14,13 @@
    the implementation we have here matches that interface.  */
 #include <asm-generic/iomap.h>
 
+<<<<<<< HEAD
+=======
+/* We don't use IO slowdowns on the Alpha, but.. */
+#define __SLOW_DOWN_IO	do { } while (0)
+#define SLOW_DOWN_IO	do { } while (0)
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Virtual -> physical identity mapping starts at this offset
  */
@@ -151,7 +158,10 @@ static inline void generic_##NAME(TYPE b, QUAL void __iomem *addr)	\
 REMAP1(unsigned int, ioread8, const)
 REMAP1(unsigned int, ioread16, const)
 REMAP1(unsigned int, ioread32, const)
+<<<<<<< HEAD
 REMAP1(u64, ioread64, const)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 REMAP1(u8, readb, const volatile)
 REMAP1(u16, readw, const volatile)
 REMAP1(u32, readl, const volatile)
@@ -160,7 +170,10 @@ REMAP1(u64, readq, const volatile)
 REMAP2(u8, iowrite8, /**/)
 REMAP2(u16, iowrite16, /**/)
 REMAP2(u32, iowrite32, /**/)
+<<<<<<< HEAD
 REMAP2(u64, iowrite64, /**/)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 REMAP2(u8, writeb, volatile)
 REMAP2(u16, writew, volatile)
 REMAP2(u32, writel, volatile)
@@ -398,6 +411,7 @@ extern inline unsigned int ioread32(const void __iomem *addr)
 	return ret;
 }
 
+<<<<<<< HEAD
 extern inline u64 ioread64(const void __iomem *addr)
 {
 	unsigned int ret;
@@ -407,18 +421,23 @@ extern inline u64 ioread64(const void __iomem *addr)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern inline void iowrite32(u32 b, void __iomem *addr)
 {
 	mb();
 	IO_CONCAT(__IO_PREFIX, iowrite32)(b, addr);
 }
 
+<<<<<<< HEAD
 extern inline void iowrite64(u64 b, void __iomem *addr)
 {
 	mb();
 	IO_CONCAT(__IO_PREFIX, iowrite64)(b, addr);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern inline u32 inl(unsigned long port)
 {
 	return ioread32(ioport_map(port, 4));
@@ -431,9 +450,13 @@ extern inline void outl(u32 b, unsigned long port)
 #endif
 
 #define ioread32 ioread32
+<<<<<<< HEAD
 #define ioread64 ioread64
 #define iowrite32 iowrite32
 #define iowrite64 iowrite64
+=======
+#define iowrite32 iowrite32
+>>>>>>> b7ba80a49124 (Commit)
 
 #if IO_CONCAT(__IO_PREFIX,trivial_rw_bw) == 1
 extern inline u8 __raw_readb(const volatile void __iomem *addr)

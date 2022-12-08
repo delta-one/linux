@@ -875,4 +875,8 @@ out_release_data:
 EXPORT_SYMBOL(pldmfw_flash_image);
 
 MODULE_AUTHOR("Jacob Keller <jacob.e.keller@intel.com>");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_DESCRIPTION("PLDM firmware flash update library");

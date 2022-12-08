@@ -11,6 +11,7 @@
 #ifndef __ASTD_DOT_H__
 #define __ASTD_DOT_H__
 
+<<<<<<< HEAD
 #define DLM_ENQUEUE_CALLBACK_NEED_SCHED	1
 #define DLM_ENQUEUE_CALLBACK_SUCCESS	0
 #define DLM_ENQUEUE_CALLBACK_FAILURE	-1
@@ -27,6 +28,15 @@ void dlm_callback_set_last_ptr(struct dlm_callback **from,
 
 void dlm_release_callback(struct kref *ref);
 void dlm_purge_lkb_callbacks(struct dlm_lkb *lkb);
+=======
+int dlm_add_lkb_callback(struct dlm_lkb *lkb, uint32_t flags, int mode,
+                         int status, uint32_t sbflags, uint64_t seq);
+int dlm_rem_lkb_callback(struct dlm_ls *ls, struct dlm_lkb *lkb,
+                         struct dlm_callback *cb, int *resid);
+void dlm_add_cb(struct dlm_lkb *lkb, uint32_t flags, int mode, int status,
+                uint32_t sbflags);
+
+>>>>>>> b7ba80a49124 (Commit)
 void dlm_callback_work(struct work_struct *work);
 int dlm_callback_start(struct dlm_ls *ls);
 void dlm_callback_stop(struct dlm_ls *ls);

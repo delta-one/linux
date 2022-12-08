@@ -1,5 +1,9 @@
 # SPDX-License-Identifier: GPL-2.0
+<<<<<<< HEAD
 obj-y = base.o device.o module.o platform.o property.o
+=======
+obj-y = base.o device.o platform.o property.o
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_OF_KOBJ) += kobj.o
 obj-$(CONFIG_OF_DYNAMIC) += dynamic.o
 obj-$(CONFIG_OF_FLATTREE) += fdt.o

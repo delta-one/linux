@@ -364,3 +364,24 @@ const struct seq_operations cpuinfo_op = {
 	.stop	= c_stop,
 	.show	= show_cpuinfo,
 };
+<<<<<<< HEAD
+=======
+
+int s390_isolate_bp(void)
+{
+	if (!test_facility(82))
+		return -EOPNOTSUPP;
+	set_thread_flag(TIF_ISOLATE_BP);
+	return 0;
+}
+EXPORT_SYMBOL(s390_isolate_bp);
+
+int s390_isolate_bp_guest(void)
+{
+	if (!test_facility(82))
+		return -EOPNOTSUPP;
+	set_thread_flag(TIF_ISOLATE_BP_GUEST);
+	return 0;
+}
+EXPORT_SYMBOL(s390_isolate_bp_guest);
+>>>>>>> b7ba80a49124 (Commit)

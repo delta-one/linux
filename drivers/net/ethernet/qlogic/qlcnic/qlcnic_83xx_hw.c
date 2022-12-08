@@ -8,6 +8,10 @@
 #include <linux/ipv6.h>
 #include <linux/ethtool.h>
 #include <linux/interrupt.h>
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "qlcnic.h"
 #include "qlcnic_sriov.h"
@@ -2990,7 +2994,11 @@ static void qlcnic_83xx_recover_driver_lock(struct qlcnic_adapter *adapter)
 		QLCWRX(adapter->ahw, QLC_83XX_RECOVER_DRV_LOCK, val);
 		dev_info(&adapter->pdev->dev,
 			 "%s: lock recovery initiated\n", __func__);
+<<<<<<< HEAD
 		mdelay(QLC_83XX_DRV_LOCK_RECOVERY_DELAY);
+=======
+		msleep(QLC_83XX_DRV_LOCK_RECOVERY_DELAY);
+>>>>>>> b7ba80a49124 (Commit)
 		val = QLCRDX(adapter->ahw, QLC_83XX_RECOVER_DRV_LOCK);
 		id = ((val >> 2) & 0xF);
 		if (id == adapter->portnum) {
@@ -3026,7 +3034,11 @@ int qlcnic_83xx_lock_driver(struct qlcnic_adapter *adapter)
 		if (status)
 			break;
 
+<<<<<<< HEAD
 		mdelay(QLC_83XX_DRV_LOCK_WAIT_DELAY);
+=======
+		msleep(QLC_83XX_DRV_LOCK_WAIT_DELAY);
+>>>>>>> b7ba80a49124 (Commit)
 		i++;
 
 		if (i == 1)

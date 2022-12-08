@@ -270,6 +270,7 @@ static int xfrm6_tunnel_err(struct sk_buff *skb, struct inet6_skb_parm *opt,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int xfrm6_tunnel_init_state(struct xfrm_state *x, struct netlink_ext_ack *extack)
 {
 	if (x->props.mode != XFRM_MODE_TUNNEL) {
@@ -281,6 +282,15 @@ static int xfrm6_tunnel_init_state(struct xfrm_state *x, struct netlink_ext_ack 
 		NL_SET_ERR_MSG(extack, "IPv6 tunnel is not compatible with encapsulation");
 		return -EINVAL;
 	}
+=======
+static int xfrm6_tunnel_init_state(struct xfrm_state *x)
+{
+	if (x->props.mode != XFRM_MODE_TUNNEL)
+		return -EINVAL;
+
+	if (x->encap)
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	x->props.header_len = sizeof(struct ipv6hdr);
 

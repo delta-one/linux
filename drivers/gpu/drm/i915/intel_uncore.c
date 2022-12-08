@@ -29,9 +29,15 @@
 
 #include "i915_drv.h"
 #include "i915_iosf_mbi.h"
+<<<<<<< HEAD
 #include "i915_reg.h"
 #include "i915_trace.h"
 #include "i915_vgpu.h"
+=======
+#include "i915_trace.h"
+#include "i915_vgpu.h"
+#include "intel_pm.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 #define FORCEWAKE_ACK_TIMEOUT_MS 50
 #define GT_FIFO_TIMEOUT_MS	 10
@@ -104,7 +110,10 @@ static const char * const forcewake_domain_names[] = {
 	"vebox1",
 	"vebox2",
 	"vebox3",
+<<<<<<< HEAD
 	"gsc",
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 const char *
@@ -178,9 +187,14 @@ static inline void
 fw_domain_wait_ack_clear(const struct intel_uncore_forcewake_domain *d)
 {
 	if (wait_ack_clear(d, FORCEWAKE_KERNEL)) {
+<<<<<<< HEAD
 		drm_err(&d->uncore->i915->drm,
 			"%s: timed out waiting for forcewake ack to clear.\n",
 			intel_uncore_forcewake_domain_to_str(d->id));
+=======
+		DRM_ERROR("%s: timed out waiting for forcewake ack to clear.\n",
+			  intel_uncore_forcewake_domain_to_str(d->id));
+>>>>>>> b7ba80a49124 (Commit)
 		add_taint_for_CI(d->uncore->i915, TAINT_WARN); /* CI now unreliable */
 	}
 }
@@ -227,12 +241,20 @@ fw_domain_wait_ack_with_fallback(const struct intel_uncore_forcewake_domain *d,
 		fw_clear(d, FORCEWAKE_KERNEL_FALLBACK);
 	} while (!ack_detected && pass++ < 10);
 
+<<<<<<< HEAD
 	drm_dbg(&d->uncore->i915->drm,
 		"%s had to use fallback to %s ack, 0x%x (passes %u)\n",
 		intel_uncore_forcewake_domain_to_str(d->id),
 		type == ACK_SET ? "set" : "clear",
 		fw_ack(d),
 		pass);
+=======
+	DRM_DEBUG_DRIVER("%s had to use fallback to %s ack, 0x%x (passes %u)\n",
+			 intel_uncore_forcewake_domain_to_str(d->id),
+			 type == ACK_SET ? "set" : "clear",
+			 fw_ack(d),
+			 pass);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ack_detected ? 0 : -ETIMEDOUT;
 }
@@ -257,9 +279,14 @@ static inline void
 fw_domain_wait_ack_set(const struct intel_uncore_forcewake_domain *d)
 {
 	if (wait_ack_set(d, FORCEWAKE_KERNEL)) {
+<<<<<<< HEAD
 		drm_err(&d->uncore->i915->drm,
 			"%s: timed out waiting for forcewake ack request.\n",
 			intel_uncore_forcewake_domain_to_str(d->id));
+=======
+		DRM_ERROR("%s: timed out waiting for forcewake ack request.\n",
+			  intel_uncore_forcewake_domain_to_str(d->id));
+>>>>>>> b7ba80a49124 (Commit)
 		add_taint_for_CI(d->uncore->i915, TAINT_WARN); /* CI now unreliable */
 	}
 }
@@ -823,9 +850,15 @@ void intel_uncore_forcewake_flush(struct intel_uncore *uncore,
 }
 
 /**
+<<<<<<< HEAD
  * intel_uncore_forcewake_put__locked - release forcewake domain references
  * @uncore: the intel_uncore structure
  * @fw_domains: forcewake domains to put references
+=======
+ * intel_uncore_forcewake_put__locked - grab forcewake domain references
+ * @uncore: the intel_uncore structure
+ * @fw_domains: forcewake domains to get reference on
+>>>>>>> b7ba80a49124 (Commit)
  *
  * See intel_uncore_forcewake_put(). This variant places the onus
  * on the caller to explicitly handle the dev_priv->uncore.lock spinlock.
@@ -892,6 +925,7 @@ void assert_forcewakes_active(struct intel_uncore *uncore,
 	spin_unlock_irq(&uncore->lock);
 }
 
+<<<<<<< HEAD
 /*
  * We give fast paths for the really cool registers.  The second range includes
  * media domains (and the GSC starting from Xe_LPM+)
@@ -899,6 +933,12 @@ void assert_forcewakes_active(struct intel_uncore *uncore,
 #define NEEDS_FORCE_WAKE(reg) ({ \
 	u32 __reg = (reg); \
 	__reg < 0x40000 || __reg >= 0x116000; \
+=======
+/* We give fast paths for the really cool registers */
+#define NEEDS_FORCE_WAKE(reg) ({ \
+	u32 __reg = (reg); \
+	__reg < 0x40000 || __reg >= GEN11_BSD_RING_BASE; \
+>>>>>>> b7ba80a49124 (Commit)
 })
 
 static int fw_range_cmp(u32 offset, const struct intel_forcewake_range *entry)
@@ -1138,6 +1178,7 @@ static const struct i915_range pvc_shadowed_regs[] = {
 	{ .start = 0x1F8510, .end = 0x1F8550 },
 };
 
+<<<<<<< HEAD
 static const struct i915_range mtl_shadowed_regs[] = {
 	{ .start =   0x2030, .end =   0x2030 },
 	{ .start =   0x2510, .end =   0x2550 },
@@ -1177,6 +1218,8 @@ static const struct i915_range xelpmp_shadowed_regs[] = {
 	{ .start = 0x38CFD4, .end = 0x38CFDC },
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mmio_range_cmp(u32 key, const struct i915_range *range)
 {
 	if (key < range->start)
@@ -1685,6 +1728,7 @@ static const struct intel_forcewake_range __pvc_fw_ranges[] = {
 	GEN_FW_RANGE(0x12000, 0x12fff, 0), /*
 		0x12000 - 0x127ff: always on
 		0x12800 - 0x12fff: reserved */
+<<<<<<< HEAD
 	GEN_FW_RANGE(0x13000, 0x19fff, FORCEWAKE_GT), /*
 		0x13000 - 0x135ff: gt
 		0x13600 - 0x147ff: reserved
@@ -1706,6 +1750,27 @@ static const struct intel_forcewake_range __pvc_fw_ranges[] = {
 		0x26000 - 0x27fff: render
 		0x28000 - 0x2ffff: reserved */
 	GEN_FW_RANGE(0x30000, 0x3ffff, FORCEWAKE_GT),
+=======
+	GEN_FW_RANGE(0x13000, 0x23fff, FORCEWAKE_GT), /*
+		0x13000 - 0x135ff: gt
+		0x13600 - 0x147ff: reserved
+		0x14800 - 0x153ff: gt
+		0x15400 - 0x19fff: reserved
+		0x1a000 - 0x1ffff: gt
+		0x20000 - 0x21fff: reserved
+		0x22000 - 0x23fff: gt */
+	GEN_FW_RANGE(0x24000, 0x2417f, 0), /*
+		24000 - 0x2407f: always on
+		24080 - 0x2417f: reserved */
+	GEN_FW_RANGE(0x24180, 0x3ffff, FORCEWAKE_GT), /*
+		0x24180 - 0x241ff: gt
+		0x24200 - 0x251ff: reserved
+		0x25200 - 0x252ff: gt
+		0x25300 - 0x25fff: reserved
+		0x26000 - 0x27fff: gt
+		0x28000 - 0x2ffff: reserved
+		0x30000 - 0x3ffff: gt */
+>>>>>>> b7ba80a49124 (Commit)
 	GEN_FW_RANGE(0x40000, 0x1bffff, 0),
 	GEN_FW_RANGE(0x1c0000, 0x1c3fff, FORCEWAKE_MEDIA_VDBOX0), /*
 		0x1c0000 - 0x1c2bff: VD0
@@ -1727,6 +1792,7 @@ static const struct intel_forcewake_range __pvc_fw_ranges[] = {
 	GEN_FW_RANGE(0x3e0000, 0x3effff, FORCEWAKE_GT),
 };
 
+<<<<<<< HEAD
 static const struct intel_forcewake_range __mtl_fw_ranges[] = {
 	GEN_FW_RANGE(0x0, 0xaff, 0),
 	GEN_FW_RANGE(0xb00, 0xbff, FORCEWAKE_GT),
@@ -1883,6 +1949,8 @@ static const struct intel_forcewake_range __xelpmp_fw_ranges[] = {
 	GEN_FW_RANGE(0x393c80, 0x393dff, FORCEWAKE_GT),
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void
 ilk_dummy_write(struct intel_uncore *uncore)
 {
@@ -2225,7 +2293,10 @@ static int __fw_domain_init(struct intel_uncore *uncore,
 	BUILD_BUG_ON(FORCEWAKE_MEDIA_VEBOX1 != (1 << FW_DOMAIN_ID_MEDIA_VEBOX1));
 	BUILD_BUG_ON(FORCEWAKE_MEDIA_VEBOX2 != (1 << FW_DOMAIN_ID_MEDIA_VEBOX2));
 	BUILD_BUG_ON(FORCEWAKE_MEDIA_VEBOX3 != (1 << FW_DOMAIN_ID_MEDIA_VEBOX3));
+<<<<<<< HEAD
 	BUILD_BUG_ON(FORCEWAKE_GSC != (1 << FW_DOMAIN_ID_GSC));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	d->mask = BIT(domain_id);
 
@@ -2290,6 +2361,7 @@ static int intel_uncore_fw_domains_init(struct intel_uncore *uncore)
 	(ret ?: (ret = __fw_domain_init((uncore__), (id__), (set__), (ack__))))
 
 	if (GRAPHICS_VER(i915) >= 11) {
+<<<<<<< HEAD
 		intel_engine_mask_t emask;
 		int i;
 
@@ -2310,6 +2382,19 @@ static int intel_uncore_fw_domains_init(struct intel_uncore *uncore)
 			fw_domain_init(uncore, FW_DOMAIN_ID_RENDER,
 				       FORCEWAKE_RENDER_GEN9,
 				       FORCEWAKE_ACK_RENDER_GEN9);
+=======
+		/* we'll prune the domains of missing engines later */
+		intel_engine_mask_t emask = RUNTIME_INFO(i915)->platform_engine_mask;
+		int i;
+
+		uncore->fw_get_funcs = &uncore_get_fallback;
+		fw_domain_init(uncore, FW_DOMAIN_ID_RENDER,
+			       FORCEWAKE_RENDER_GEN9,
+			       FORCEWAKE_ACK_RENDER_GEN9);
+		fw_domain_init(uncore, FW_DOMAIN_ID_GT,
+			       FORCEWAKE_GT_GEN9,
+			       FORCEWAKE_ACK_GT_GEN9);
+>>>>>>> b7ba80a49124 (Commit)
 
 		for (i = 0; i < I915_MAX_VCS; i++) {
 			if (!__HAS_ENGINE(emask, _VCS(i)))
@@ -2327,10 +2412,13 @@ static int intel_uncore_fw_domains_init(struct intel_uncore *uncore)
 				       FORCEWAKE_MEDIA_VEBOX_GEN11(i),
 				       FORCEWAKE_ACK_MEDIA_VEBOX_GEN11(i));
 		}
+<<<<<<< HEAD
 
 		if (uncore->gt->type == GT_MEDIA)
 			fw_domain_init(uncore, FW_DOMAIN_ID_GSC,
 				       FORCEWAKE_REQ_GSC, FORCEWAKE_ACK_GSC);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (IS_GRAPHICS_VER(i915, 9, 10)) {
 		uncore->fw_get_funcs = &uncore_get_fallback;
 		fw_domain_init(uncore, FW_DOMAIN_ID_RENDER,
@@ -2459,7 +2547,11 @@ static int i915_pmic_bus_access_notifier(struct notifier_block *nb,
 
 static void uncore_unmap_mmio(struct drm_device *drm, void *regs)
 {
+<<<<<<< HEAD
 	iounmap((void __iomem *)regs);
+=======
+	iounmap(regs);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int intel_uncore_setup_mmio(struct intel_uncore *uncore, phys_addr_t phys_addr)
@@ -2490,8 +2582,12 @@ int intel_uncore_setup_mmio(struct intel_uncore *uncore, phys_addr_t phys_addr)
 		return -EIO;
 	}
 
+<<<<<<< HEAD
 	return drmm_add_action_or_reset(&i915->drm, uncore_unmap_mmio,
 					(void __force *)uncore->regs);
+=======
+	return drmm_add_action_or_reset(&i915->drm, uncore_unmap_mmio, uncore->regs);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void intel_uncore_init_early(struct intel_uncore *uncore,
@@ -2519,6 +2615,7 @@ static void uncore_raw_init(struct intel_uncore *uncore)
 	}
 }
 
+<<<<<<< HEAD
 static int uncore_media_forcewake_init(struct intel_uncore *uncore)
 {
 	struct drm_i915_private *i915 = uncore->i915;
@@ -2535,6 +2632,8 @@ static int uncore_media_forcewake_init(struct intel_uncore *uncore)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int uncore_forcewake_init(struct intel_uncore *uncore)
 {
 	struct drm_i915_private *i915 = uncore->i915;
@@ -2549,6 +2648,7 @@ static int uncore_forcewake_init(struct intel_uncore *uncore)
 
 	ASSIGN_READ_MMIO_VFUNCS(uncore, fwtable);
 
+<<<<<<< HEAD
 	if (uncore->gt->type == GT_MEDIA)
 		return uncore_media_forcewake_init(uncore);
 
@@ -2557,6 +2657,9 @@ static int uncore_forcewake_init(struct intel_uncore *uncore)
 		ASSIGN_SHADOW_TABLE(uncore, mtl_shadowed_regs);
 		ASSIGN_WRITE_MMIO_VFUNCS(uncore, fwtable);
 	} else if (GRAPHICS_VER_FULL(i915) >= IP_VER(12, 60)) {
+=======
+	if (GRAPHICS_VER_FULL(i915) >= IP_VER(12, 60)) {
+>>>>>>> b7ba80a49124 (Commit)
 		ASSIGN_FW_DOMAINS_TABLE(uncore, __pvc_fw_ranges);
 		ASSIGN_SHADOW_TABLE(uncore, pvc_shadowed_regs);
 		ASSIGN_WRITE_MMIO_VFUNCS(uncore, fwtable);
@@ -2701,6 +2804,7 @@ void intel_uncore_prune_engine_fw_domains(struct intel_uncore *uncore,
 		if (fw_domains & BIT(domain_id))
 			fw_domain_fini(uncore, domain_id);
 	}
+<<<<<<< HEAD
 
 	if ((fw_domains & BIT(FW_DOMAIN_ID_GSC)) && !HAS_ENGINE(gt, GSC0))
 		fw_domain_fini(uncore, FW_DOMAIN_ID_GSC);
@@ -2768,6 +2872,8 @@ static void driver_initiated_flr(struct intel_uncore *uncore)
 
 	/* Clear sticky completion status */
 	intel_uncore_write_fw(uncore, GU_DEBUG, DRIVERFLR_STATUS);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Called via drm-managed action */
@@ -2783,9 +2889,12 @@ void intel_uncore_fini_mmio(struct drm_device *dev, void *data)
 		intel_uncore_fw_domains_fini(uncore);
 		iosf_mbi_punit_release();
 	}
+<<<<<<< HEAD
 
 	if (intel_uncore_needs_flr_on_fini(uncore))
 		driver_initiated_flr(uncore);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

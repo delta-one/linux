@@ -1,7 +1,10 @@
 /* SPDX-License-Identifier: BSD-3-Clause-Clear */
 /*
  * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+<<<<<<< HEAD
  * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #ifndef ATH11K_HAL_TX_H
@@ -36,7 +39,10 @@ struct hal_tx_info {
 	u8 lmac_id;
 	u8 dscp_tid_tbl_idx;
 	bool enable_mesh;
+<<<<<<< HEAD
 	u8 rbm_id;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* TODO: Check if the actual desc macros can be used instead */

@@ -68,6 +68,17 @@
 /* readahead for partial-frame prefetch */
 #define MALIDP_MMU_PREFETCH_READAHEAD		8
 
+<<<<<<< HEAD
+=======
+static void malidp_de_plane_destroy(struct drm_plane *plane)
+{
+	struct malidp_plane *mp = to_malidp_plane(plane);
+
+	drm_plane_cleanup(plane);
+	kfree(mp);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Replicate what the default ->reset hook does: free the state pointer and
  * allocate a new empty object. We just need enough space to store
@@ -143,7 +154,11 @@ bool malidp_format_mod_supported(struct drm_device *drm,
 {
 	const struct drm_format_info *info;
 	const u64 *modifiers;
+<<<<<<< HEAD
 	struct malidp_drm *malidp = drm_to_malidp(drm);
+=======
+	struct malidp_drm *malidp = drm->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 	const struct malidp_hw_regmap *map = &malidp->dev->hw->map;
 
 	if (WARN_ON(modifier == DRM_FORMAT_MOD_INVALID))
@@ -252,6 +267,10 @@ static bool malidp_format_mod_supported_per_plane(struct drm_plane *plane,
 static const struct drm_plane_funcs malidp_de_plane_funcs = {
 	.update_plane = drm_atomic_helper_update_plane,
 	.disable_plane = drm_atomic_helper_disable_plane,
+<<<<<<< HEAD
+=======
+	.destroy = malidp_de_plane_destroy,
+>>>>>>> b7ba80a49124 (Commit)
 	.reset = malidp_plane_reset,
 	.atomic_duplicate_state = malidp_duplicate_plane_state,
 	.atomic_destroy_state = malidp_destroy_plane_state,
@@ -922,7 +941,11 @@ static const uint64_t linear_only_modifiers[] = {
 
 int malidp_de_planes_init(struct drm_device *drm)
 {
+<<<<<<< HEAD
 	struct malidp_drm *malidp = drm_to_malidp(drm);
+=======
+	struct malidp_drm *malidp = drm->dev_private;
+>>>>>>> b7ba80a49124 (Commit)
 	const struct malidp_hw_regmap *map = &malidp->dev->hw->map;
 	struct malidp_plane *plane = NULL;
 	enum drm_plane_type plane_type;
@@ -963,6 +986,15 @@ int malidp_de_planes_init(struct drm_device *drm)
 	for (i = 0; i < map->n_layers; i++) {
 		u8 id = map->layers[i].id;
 
+<<<<<<< HEAD
+=======
+		plane = kzalloc(sizeof(*plane), GFP_KERNEL);
+		if (!plane) {
+			ret = -ENOMEM;
+			goto cleanup;
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 		/* build the list of DRM supported formats based on the map */
 		for (n = 0, j = 0;  j < map->n_pixel_formats; j++) {
 			if ((map->pixel_formats[j].layer & id) == id)
@@ -975,6 +1007,7 @@ int malidp_de_planes_init(struct drm_device *drm)
 		/*
 		 * All the layers except smart layer supports AFBC modifiers.
 		 */
+<<<<<<< HEAD
 		plane = drmm_universal_plane_alloc(drm, struct malidp_plane, base,
 						   crtcs, &malidp_de_plane_funcs, formats, n,
 						   (id == DE_SMART) ? linear_only_modifiers :
@@ -983,6 +1016,15 @@ int malidp_de_planes_init(struct drm_device *drm)
 			ret = PTR_ERR(plane);
 			goto cleanup;
 		}
+=======
+		ret = drm_universal_plane_init(drm, &plane->base, crtcs,
+				&malidp_de_plane_funcs, formats, n,
+				(id == DE_SMART) ? linear_only_modifiers : modifiers,
+				plane_type, NULL);
+
+		if (ret < 0)
+			goto cleanup;
+>>>>>>> b7ba80a49124 (Commit)
 
 		drm_plane_helper_add(&plane->base,
 				     &malidp_de_plane_helper_funcs);

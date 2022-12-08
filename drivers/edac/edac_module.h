@@ -11,7 +11,10 @@
 #ifndef	__EDAC_MODULE_H__
 #define	__EDAC_MODULE_H__
 
+<<<<<<< HEAD
 #include <acpi/ghes.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "edac_mc.h"
 #include "edac_pci.h"
 #include "edac_device.h"
@@ -53,7 +56,11 @@ bool edac_stop_work(struct delayed_work *work);
 bool edac_mod_work(struct delayed_work *work, unsigned long delay);
 
 extern void edac_device_reset_delay_period(struct edac_device_ctl_info
+<<<<<<< HEAD
 					   *edac_dev, unsigned long msec);
+=======
+					   *edac_dev, unsigned long value);
+>>>>>>> b7ba80a49124 (Commit)
 extern void edac_mc_reset_delay_period(unsigned long value);
 
 /*

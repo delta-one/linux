@@ -91,12 +91,22 @@ static void fib6_walker_unlink(struct net *net, struct fib6_walker *w)
 
 static int fib6_new_sernum(struct net *net)
 {
+<<<<<<< HEAD
 	int new, old = atomic_read(&net->ipv6.fib6_sernum);
 
 	do {
 		new = old < INT_MAX ? old + 1 : 1;
 	} while (!atomic_try_cmpxchg(&net->ipv6.fib6_sernum, &old, new));
 
+=======
+	int new, old;
+
+	do {
+		old = atomic_read(&net->ipv6.fib6_sernum);
+		new = old < INT_MAX ? old + 1 : 1;
+	} while (atomic_cmpxchg(&net->ipv6.fib6_sernum,
+				old, new) != old);
+>>>>>>> b7ba80a49124 (Commit)
 	return new;
 }
 

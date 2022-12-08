@@ -60,6 +60,10 @@
 #include "dcn31/dcn31_hpo_dp_stream_encoder.h"
 #include "dcn31/dcn31_hpo_dp_link_encoder.h"
 #include "dcn32/dcn32_hpo_dp_link_encoder.h"
+<<<<<<< HEAD
+=======
+#include "dc_link_dp.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "dcn31/dcn31_apg.h"
 #include "dcn31/dcn31_dio_link_encoder.h"
 #include "dcn32/dcn32_dio_link_encoder.h"
@@ -72,7 +76,11 @@
 #include "dml/display_mode_vba.h"
 #include "dcn32/dcn32_dccg.h"
 #include "dcn10/dcn10_resource.h"
+<<<<<<< HEAD
 #include "link.h"
+=======
+#include "dc_link_ddc.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "dcn31/dcn31_panel_cntl.h"
 
 #include "dcn30/dcn30_dwb.h"
@@ -93,6 +101,11 @@
 #include "dcn20/dcn20_vmid.h"
 
 #define DC_LOGGER_INIT(logger)
+<<<<<<< HEAD
+=======
+#define fixed16_to_double(x) (((double)x) / ((double) (1 << 16)))
+#define fixed16_to_double_to_cpu(x) fixed16_to_double(le32_to_cpu(x))
+>>>>>>> b7ba80a49124 (Commit)
 
 enum dcn321_clk_src_array_id {
 	DCN321_CLK_SRC_PLL0,
@@ -108,6 +121,11 @@ enum dcn321_clk_src_array_id {
  */
 
 /* DCN */
+<<<<<<< HEAD
+=======
+/* TODO awful hack. fixup dcn20_dwb.h */
+#undef BASE_INNER
+>>>>>>> b7ba80a49124 (Commit)
 #define BASE_INNER(seg) ctx->dcn_reg_offsets[seg]
 
 #define BASE(seg) BASE_INNER(seg)
@@ -171,9 +189,12 @@ enum dcn321_clk_src_array_id {
 	REG_STRUCT.block ## _ ## reg_name[id] = BASE(reg ## block ## id ## _ ## reg_name ## _BASE_IDX) + \
 		reg ## block ## id ## _ ## reg_name
 
+<<<<<<< HEAD
 #define SF_DWB2(reg_name, block, id, field_name, post_fix) \
 	.field_name = reg_name ## __ ## field_name ## post_fix
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define VUPDATE_SRII(reg_name, block, id)\
 	REG_STRUCT.reg_name[id] = BASE(reg ## reg_name ## _ ## block ## id ## _BASE_IDX) + \
 		reg ## reg_name ## _ ## block ## id
@@ -655,6 +676,11 @@ static const struct resource_caps res_cap_dcn321 = {
 
 static const struct dc_plane_cap plane_cap = {
 	.type = DC_PLANE_TYPE_DCN_UNIVERSAL,
+<<<<<<< HEAD
+=======
+	.blends_with_above = true,
+	.blends_with_below = true,
+>>>>>>> b7ba80a49124 (Commit)
 	.per_pixel_alpha = true,
 
 	.pixel_format_support = {
@@ -714,6 +740,7 @@ static const struct dc_debug_options debug_defaults_drv = {
 	.force_disable_subvp = false,
 	.exit_idle_opt_for_cursor_updates = true,
 	.enable_single_display_2to1_odm_policy = true,
+<<<<<<< HEAD
 
 	/*must match enable_single_display_2to1_odm_policy to support dynamic ODM transitions*/
 	.enable_double_buffered_dsc_pg_support = true,
@@ -723,6 +750,11 @@ static const struct dc_debug_options debug_defaults_drv = {
 	.min_prefetch_in_strobe_ns = 60000, // 60us
 	.disable_unbounded_requesting = false,
 	.override_dispclk_programming = true,
+=======
+	.enable_dp_dig_pixel_rate_div_policy = 1,
+	.allow_sw_cursor_fallback = false,
+	.alloc_extra_way_for_cursor = true,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct dc_debug_options debug_defaults_diags = {
@@ -742,7 +774,11 @@ static const struct dc_debug_options debug_defaults_diags = {
 	.dmub_command_table = true,
 	.enable_tri_buf = true,
 	.use_max_lb = true,
+<<<<<<< HEAD
 	.force_disable_subvp = true,
+=======
+	.force_disable_subvp = true
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 
@@ -829,7 +865,10 @@ static struct clock_source *dcn321_clock_source_create(
 		return &clk_src->base;
 	}
 
+<<<<<<< HEAD
 	kfree(clk_src);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	BREAK_TO_DEBUGGER();
 	return NULL;
 }
@@ -1490,11 +1529,16 @@ static void dcn321_resource_destruct(struct dcn321_resource_pool *pool)
 	if (pool->base.dccg != NULL)
 		dcn_dccg_destroy(&pool->base.dccg);
 
+<<<<<<< HEAD
 	if (pool->base.oem_device != NULL) {
 		struct dc *dc = pool->base.oem_device->ctx->dc;
 
 		dc->link_srv->destroy_ddc_service(&pool->base.oem_device);
 	}
+=======
+	if (pool->base.oem_device != NULL)
+		dal_ddc_service_destroy(&pool->base.oem_device);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 
@@ -1609,7 +1653,11 @@ static struct resource_funcs dcn321_res_pool_funcs = {
 	.validate_bandwidth = dcn32_validate_bandwidth,
 	.calculate_wm_and_dlg = dcn32_calculate_wm_and_dlg,
 	.populate_dml_pipes = dcn32_populate_dml_pipes_from_context,
+<<<<<<< HEAD
 	.acquire_idle_pipe_for_head_pipe_in_layer = dcn32_acquire_idle_pipe_for_head_pipe_in_layer,
+=======
+	.acquire_idle_pipe_for_layer = dcn20_acquire_idle_pipe_for_layer,
+>>>>>>> b7ba80a49124 (Commit)
 	.add_stream_to_ctx = dcn30_add_stream_to_ctx,
 	.add_dsc_to_stream_resource = dcn20_add_dsc_to_stream_resource,
 	.remove_stream_from_ctx = dcn20_remove_stream_from_ctx,
@@ -1623,9 +1671,12 @@ static struct resource_funcs dcn321_res_pool_funcs = {
 	.update_soc_for_wm_a = dcn30_update_soc_for_wm_a,
 	.add_phantom_pipes = dcn32_add_phantom_pipes,
 	.remove_phantom_pipes = dcn32_remove_phantom_pipes,
+<<<<<<< HEAD
 	.retain_phantom_pipes = dcn32_retain_phantom_pipes,
 	.save_mall_state = dcn32_save_mall_state,
 	.restore_mall_state = dcn32_restore_mall_state,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 
@@ -1662,7 +1713,11 @@ static bool dcn321_resource_construct(
 
 #undef REG_STRUCT
 #define REG_STRUCT dccg_regs
+<<<<<<< HEAD
 	dccg_regs_init();
+=======
+		dccg_regs_init();
+>>>>>>> b7ba80a49124 (Commit)
 
 
 	ctx->dc_bios->regs = &bios_regs;
@@ -1704,11 +1759,16 @@ static bool dcn321_resource_construct(
 	dc->caps.max_cursor_size = 64;
 	dc->caps.min_horizontal_blanking_period = 80;
 	dc->caps.dmdata_alloc_size = 2048;
+<<<<<<< HEAD
 	dc->caps.mall_size_per_mem_channel = 4;
+=======
+	dc->caps.mall_size_per_mem_channel = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	dc->caps.mall_size_total = 0;
 	dc->caps.cursor_cache_size = dc->caps.max_cursor_size * dc->caps.max_cursor_size * 8;
 	dc->caps.cache_line_size = 64;
 	dc->caps.cache_num_ways = 16;
+<<<<<<< HEAD
 
 	/* Calculate the available MALL space */
 	dc->caps.max_cab_allocation_bytes = dcn32_calc_num_avail_chans_for_mall(
@@ -1718,11 +1778,18 @@ static bool dcn321_resource_construct(
 
 	dc->caps.subvp_fw_processing_delay_us = 15;
 	dc->caps.subvp_drr_max_vblank_margin_us = 40;
+=======
+	dc->caps.max_cab_allocation_bytes = 33554432; // 32MB = 1024 * 1024 * 32
+	dc->caps.subvp_fw_processing_delay_us = 15;
+>>>>>>> b7ba80a49124 (Commit)
 	dc->caps.subvp_prefetch_end_to_mall_start_us = 15;
 	dc->caps.subvp_swath_height_margin_lines = 16;
 	dc->caps.subvp_pstate_allow_width_us = 20;
 	dc->caps.subvp_vertical_int_margin_us = 30;
+<<<<<<< HEAD
 	dc->caps.subvp_drr_vblank_start_margin_us = 100; // 100us margin
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dc->caps.max_slave_planes = 1;
 	dc->caps.max_slave_yuv_planes = 1;
 	dc->caps.max_slave_rgb_planes = 1;
@@ -1998,7 +2065,11 @@ static bool dcn321_resource_construct(
 		ddc_init_data.id.id = dc->ctx->dc_bios->fw_info.oem_i2c_obj_id;
 		ddc_init_data.id.enum_id = 0;
 		ddc_init_data.id.type = OBJECT_TYPE_GENERIC;
+<<<<<<< HEAD
 		pool->base.oem_device = dc->link_srv->create_ddc_service(&ddc_init_data);
+=======
+		pool->base.oem_device = dal_ddc_service_create(&ddc_init_data);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		pool->base.oem_device = NULL;
 	}

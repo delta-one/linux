@@ -1290,15 +1290,23 @@ static int tsi108_open(struct net_device *dev)
 
 	data->rxring = dma_alloc_coherent(&data->pdev->dev, rxring_size,
 					  &data->rxdma, GFP_KERNEL);
+<<<<<<< HEAD
 	if (!data->rxring) {
 		free_irq(data->irq_num, dev);
 		return -ENOMEM;
 	}
+=======
+	if (!data->rxring)
+		return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 
 	data->txring = dma_alloc_coherent(&data->pdev->dev, txring_size,
 					  &data->txdma, GFP_KERNEL);
 	if (!data->txring) {
+<<<<<<< HEAD
 		free_irq(data->irq_num, dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		dma_free_coherent(&data->pdev->dev, rxring_size, data->rxring,
 				    data->rxdma);
 		return -ENOMEM;
@@ -1588,7 +1596,11 @@ tsi108_init_one(struct platform_device *pdev)
 	data->phy_type = einfo->phy_type;
 	data->irq_num = einfo->irq_num;
 	data->id = pdev->id;
+<<<<<<< HEAD
 	netif_napi_add(dev, &data->napi, tsi108_poll);
+=======
+	netif_napi_add(dev, &data->napi, tsi108_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 	dev->netdev_ops = &tsi108_netdev_ops;
 	dev->ethtool_ops = &tsi108_ethtool_ops;
 

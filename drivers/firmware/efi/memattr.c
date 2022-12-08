@@ -33,7 +33,11 @@ int __init efi_memattr_init(void)
 		return -ENOMEM;
 	}
 
+<<<<<<< HEAD
 	if (tbl->version > 2) {
+=======
+	if (tbl->version > 1) {
+>>>>>>> b7ba80a49124 (Commit)
 		pr_warn("Unexpected EFI Memory Attributes table version %d\n",
 			tbl->version);
 		goto unmap;
@@ -129,7 +133,10 @@ int __init efi_memattr_apply_permissions(struct mm_struct *mm,
 					 efi_memattr_perm_setter fn)
 {
 	efi_memory_attributes_table_t *tbl;
+<<<<<<< HEAD
 	bool has_bti = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int i, ret;
 
 	if (tbl_size <= sizeof(*tbl))
@@ -151,10 +158,13 @@ int __init efi_memattr_apply_permissions(struct mm_struct *mm,
 		return -ENOMEM;
 	}
 
+<<<<<<< HEAD
 	if (tbl->version > 1 &&
 	    (tbl->flags & EFI_MEMORY_ATTRIBUTES_FLAGS_RT_FORWARD_CONTROL_FLOW_GUARD))
 		has_bti = true;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (efi_enabled(EFI_DBG))
 		pr_info("Processing EFI Memory Attributes table:\n");
 
@@ -174,7 +184,11 @@ int __init efi_memattr_apply_permissions(struct mm_struct *mm,
 				efi_md_typeattr_format(buf, sizeof(buf), &md));
 
 		if (valid) {
+<<<<<<< HEAD
 			ret = fn(mm, &md, has_bti);
+=======
+			ret = fn(mm, &md);
+>>>>>>> b7ba80a49124 (Commit)
 			if (ret)
 				pr_err("Error updating mappings, skipping subsequent md's\n");
 		}

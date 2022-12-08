@@ -829,7 +829,11 @@ static void r592_remove(struct pci_dev *pdev)
 	/* Stop the processing thread.
 	That ensures that we won't take any more requests */
 	kthread_stop(dev->io_thread);
+<<<<<<< HEAD
 	del_timer_sync(&dev->detect_timer);
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	r592_enable_device(dev, false);
 
 	while (!error && dev->req) {

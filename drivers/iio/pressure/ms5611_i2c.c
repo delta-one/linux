@@ -79,9 +79,15 @@ static int ms5611_i2c_read_adc_temp_and_pressure(struct ms5611_state *st,
 	return ms5611_i2c_read_adc(st, pressure);
 }
 
+<<<<<<< HEAD
 static int ms5611_i2c_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int ms5611_i2c_probe(struct i2c_client *client,
+			    const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct ms5611_state *st;
 	struct iio_dev *indio_dev;
 
@@ -105,6 +111,14 @@ static int ms5611_i2c_probe(struct i2c_client *client)
 	return ms5611_probe(indio_dev, &client->dev, id->name, id->driver_data);
 }
 
+<<<<<<< HEAD
+=======
+static void ms5611_i2c_remove(struct i2c_client *client)
+{
+	ms5611_remove(i2c_get_clientdata(client));
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct of_device_id ms5611_i2c_matches[] = {
 	{ .compatible = "meas,ms5611" },
 	{ .compatible = "meas,ms5607" },
@@ -125,7 +139,12 @@ static struct i2c_driver ms5611_driver = {
 		.of_match_table = ms5611_i2c_matches,
 	},
 	.id_table = ms5611_id,
+<<<<<<< HEAD
 	.probe_new = ms5611_i2c_probe,
+=======
+	.probe = ms5611_i2c_probe,
+	.remove = ms5611_i2c_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_i2c_driver(ms5611_driver);
 

@@ -9,7 +9,10 @@
 #include <linux/bitmap.h>
 #include <linux/init.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/moduleparam.h>
 
 #include "internal.h"
@@ -198,7 +201,11 @@ static int param_set_trace_method_name(const char *val,
 
 static int param_get_trace_method_name(char *buffer, const struct kernel_param *kp)
 {
+<<<<<<< HEAD
 	return sysfs_emit(buffer, "%s\n", acpi_gbl_trace_method_name);
+=======
+	return scnprintf(buffer, PAGE_SIZE, "%s\n", acpi_gbl_trace_method_name);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct kernel_param_ops param_ops_trace_method = {
@@ -953,7 +960,11 @@ static struct attribute *hotplug_profile_attrs[] = {
 };
 ATTRIBUTE_GROUPS(hotplug_profile);
 
+<<<<<<< HEAD
 static const struct kobj_type acpi_hotplug_profile_ktype = {
+=======
+static struct kobj_type acpi_hotplug_profile_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 	.sysfs_ops = &kobj_sysfs_ops,
 	.default_groups = hotplug_profile_groups,
 };
@@ -993,7 +1004,11 @@ static ssize_t force_remove_store(struct kobject *kobj,
 	bool val;
 	int ret;
 
+<<<<<<< HEAD
 	ret = kstrtobool(buf, &val);
+=======
+	ret = strtobool(buf, &val);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 

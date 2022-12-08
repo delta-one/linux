@@ -75,8 +75,12 @@ static struct acpi_bus_type *acpi_get_bus_type(struct device *dev)
 }
 
 #define FIND_CHILD_MIN_SCORE	1
+<<<<<<< HEAD
 #define FIND_CHILD_MID_SCORE	2
 #define FIND_CHILD_MAX_SCORE	3
+=======
+#define FIND_CHILD_MAX_SCORE	2
+>>>>>>> b7ba80a49124 (Commit)
 
 static int match_any(struct acpi_device *adev, void *not_used)
 {
@@ -97,6 +101,7 @@ static int find_child_checks(struct acpi_device *adev, bool check_children)
 		return -ENODEV;
 
 	status = acpi_evaluate_integer(adev->handle, "_STA", NULL, &sta);
+<<<<<<< HEAD
 	if (status == AE_NOT_FOUND) {
 		/*
 		 * Special case: backlight device objects without _STA are
@@ -108,6 +113,10 @@ static int find_child_checks(struct acpi_device *adev, bool check_children)
 
 		return FIND_CHILD_MIN_SCORE;
 	}
+=======
+	if (status == AE_NOT_FOUND)
+		return FIND_CHILD_MIN_SCORE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (ACPI_FAILURE(status) || !(sta & ACPI_STA_DEVICE_ENABLED))
 		return -ENODEV;

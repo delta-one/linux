@@ -93,7 +93,10 @@ jiffies = jiffies_64;
 
 #ifdef CONFIG_HIBERNATION
 #define HIBERNATE_TEXT					\
+<<<<<<< HEAD
 	ALIGN_FUNCTION();				\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__hibernate_exit_text_start = .;		\
 	*(.hibernate_exit.text)				\
 	__hibernate_exit_text_end = .;
@@ -103,7 +106,10 @@ jiffies = jiffies_64;
 
 #ifdef CONFIG_KEXEC_CORE
 #define KEXEC_TEXT					\
+<<<<<<< HEAD
 	ALIGN_FUNCTION();				\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__relocate_new_kernel_start = .;		\
 	*(.kexec_relocate.text)				\
 	__relocate_new_kernel_end = .;
@@ -123,6 +129,7 @@ jiffies = jiffies_64;
 #define TRAMP_TEXT
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_UNWIND_TABLES
 #define UNWIND_DATA_SECTIONS				\
 	.eh_frame : {					\
@@ -134,6 +141,8 @@ jiffies = jiffies_64;
 #define UNWIND_DATA_SECTIONS
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * The size of the PE/COFF section that covers the kernel image, which
  * runs from _stext to _edata, must be a round multiple of the PE/COFF
@@ -177,9 +186,17 @@ SECTIONS
 			ENTRY_TEXT
 			TEXT_TEXT
 			SCHED_TEXT
+<<<<<<< HEAD
 			LOCK_TEXT
 			KPROBES_TEXT
 			HYPERVISOR_TEXT
+=======
+			CPUIDLE_TEXT
+			LOCK_TEXT
+			KPROBES_TEXT
+			HYPERVISOR_TEXT
+			IDMAP_TEXT
+>>>>>>> b7ba80a49124 (Commit)
 			*(.gnu.warning)
 		. = ALIGN(16);
 		*(.got)			/* Global offset table		*/
@@ -206,7 +223,10 @@ SECTIONS
 		TRAMP_TEXT
 		HIBERNATE_TEXT
 		KEXEC_TEXT
+<<<<<<< HEAD
 		IDMAP_TEXT
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		. = ALIGN(PAGE_SIZE);
 	}
 
@@ -243,8 +263,11 @@ SECTIONS
 		__alt_instructions_end = .;
 	}
 
+<<<<<<< HEAD
 	UNWIND_DATA_SECTIONS
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	. = ALIGN(SEGMENT_ALIGN);
 	__inittext_end = .;
 	__initdata_begin = .;
@@ -356,8 +379,11 @@ ASSERT(__idmap_text_end - (__idmap_text_start & ~(SZ_4K - 1)) <= SZ_4K,
 #ifdef CONFIG_HIBERNATION
 ASSERT(__hibernate_exit_text_end - __hibernate_exit_text_start <= SZ_4K,
        "Hibernate exit text is bigger than 4 KiB")
+<<<<<<< HEAD
 ASSERT(__hibernate_exit_text_start == swsusp_arch_suspend_exit,
        "Hibernate exit text does not start with swsusp_arch_suspend_exit")
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
 ASSERT((__entry_tramp_text_end - __entry_tramp_text_start) <= 3*PAGE_SIZE,
@@ -384,6 +410,9 @@ ASSERT(swapper_pg_dir - tramp_pg_dir == TRAMP_SWAPPER_OFFSET,
 ASSERT(__relocate_new_kernel_end - __relocate_new_kernel_start <= SZ_4K,
        "kexec relocation code is bigger than 4 KiB")
 ASSERT(KEXEC_CONTROL_PAGE_SIZE >= SZ_4K, "KEXEC_CONTROL_PAGE_SIZE is broken")
+<<<<<<< HEAD
 ASSERT(__relocate_new_kernel_start == arm64_relocate_new_kernel,
        "kexec control page does not start with arm64_relocate_new_kernel")
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

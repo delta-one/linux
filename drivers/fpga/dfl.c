@@ -13,7 +13,10 @@
 #include <linux/dfl.h>
 #include <linux/fpga-dfl.h>
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/overflow.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/uaccess.h>
 
 #include "dfl.h"
@@ -46,7 +49,11 @@ static const char *dfl_pdata_key_strings[DFL_ID_MAX] = {
 };
 
 /**
+<<<<<<< HEAD
  * struct dfl_dev_info - dfl feature device information.
+=======
+ * dfl_dev_info - dfl feature device information.
+>>>>>>> b7ba80a49124 (Commit)
  * @name: name string of the feature platform device.
  * @dfh_id: id value in Device Feature Header (DFH) register by DFL spec.
  * @id: idr id of the feature dev.
@@ -68,7 +75,11 @@ static struct dfl_dev_info dfl_devs[] = {
 };
 
 /**
+<<<<<<< HEAD
  * struct dfl_chardev_info - chardev information of dfl feature device
+=======
+ * dfl_chardev_info - chardev information of dfl feature device
+>>>>>>> b7ba80a49124 (Commit)
  * @name: nmae string of the char device.
  * @devt: devt of the char device.
  */
@@ -294,9 +305,15 @@ static void dfl_bus_remove(struct device *dev)
 		ddrv->remove(ddev);
 }
 
+<<<<<<< HEAD
 static int dfl_bus_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct dfl_device *ddev = to_dfl_dev(dev);
+=======
+static int dfl_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct dfl_device *ddev = to_dfl_dev(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return add_uevent_var(env, "MODALIAS=dfl:t%04Xf%04X",
 			      ddev->type, ddev->feature_id);
@@ -343,8 +360,11 @@ static void release_dfl_dev(struct device *dev)
 	if (ddev->mmio_res.parent)
 		release_resource(&ddev->mmio_res);
 
+<<<<<<< HEAD
 	kfree(ddev->params);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ida_free(&dfl_device_ida, ddev->id);
 	kfree(ddev->irqs);
 	kfree(ddev);
@@ -383,6 +403,7 @@ dfl_dev_add(struct dfl_feature_platform_data *pdata,
 	ddev->type = feature_dev_id_type(pdev);
 	ddev->feature_id = feature->id;
 	ddev->revision = feature->revision;
+<<<<<<< HEAD
 	ddev->dfh_version = feature->dfh_version;
 	ddev->cdev = pdata->dfl_cdev;
 	if (feature->param_size) {
@@ -393,6 +414,9 @@ dfl_dev_add(struct dfl_feature_platform_data *pdata,
 		}
 		ddev->param_size = feature->param_size;
 	}
+=======
+	ddev->cdev = pdata->dfl_cdev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* add mmio resource */
 	parent_res = &pdev->resource[feature->resource_index];
@@ -720,27 +744,39 @@ struct build_feature_devs_info {
  * struct dfl_feature_info - sub feature info collected during feature dev build
  *
  * @fid: id of this sub feature.
+<<<<<<< HEAD
  * @revision: revision of this sub feature
  * @dfh_version: version of Device Feature Header (DFH)
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @mmio_res: mmio resource of this sub feature.
  * @ioaddr: mapped base address of mmio resource.
  * @node: node in sub_features linked list.
  * @irq_base: start of irq index in this sub feature.
  * @nr_irqs: number of irqs of this sub feature.
+<<<<<<< HEAD
  * @param_size: size DFH parameters.
  * @params: DFH parameter data.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct dfl_feature_info {
 	u16 fid;
 	u8 revision;
+<<<<<<< HEAD
 	u8 dfh_version;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct resource mmio_res;
 	void __iomem *ioaddr;
 	struct list_head node;
 	unsigned int irq_base;
 	unsigned int nr_irqs;
+<<<<<<< HEAD
 	unsigned int param_size;
 	u64 params[];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void dfl_fpga_cdev_add_port_dev(struct dfl_fpga_cdev *cdev,
@@ -816,6 +852,7 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
 		feature->dev = fdev;
 		feature->id = finfo->fid;
 		feature->revision = finfo->revision;
+<<<<<<< HEAD
 		feature->dfh_version = finfo->dfh_version;
 
 		if (finfo->param_size) {
@@ -827,6 +864,9 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
 
 			feature->param_size = finfo->param_size;
 		}
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * the FIU header feature has some fundamental functions (sriov
 		 * set, port enable/disable) needed for the dfl bus device and
@@ -963,6 +1003,7 @@ static u16 feature_id(u64 value)
 	return 0;
 }
 
+<<<<<<< HEAD
 static u64 *find_param(u64 *params, resource_size_t max, int param_id)
 {
 	u64 *end = params + max / sizeof(u64);
@@ -1072,6 +1113,58 @@ static int parse_feature_irqs(struct build_feature_devs_info *binfo,
 	if (!inr) {
 		finfo->irq_base = 0;
 		finfo->nr_irqs = 0;
+=======
+static int parse_feature_irqs(struct build_feature_devs_info *binfo,
+			      resource_size_t ofst, u16 fid,
+			      unsigned int *irq_base, unsigned int *nr_irqs)
+{
+	void __iomem *base = binfo->ioaddr + ofst;
+	unsigned int i, ibase, inr = 0;
+	enum dfl_id_type type;
+	int virq;
+	u64 v;
+
+	type = feature_dev_id_type(binfo->feature_dev);
+
+	/*
+	 * Ideally DFL framework should only read info from DFL header, but
+	 * current version DFL only provides mmio resources information for
+	 * each feature in DFL Header, no field for interrupt resources.
+	 * Interrupt resource information is provided by specific mmio
+	 * registers of each private feature which supports interrupt. So in
+	 * order to parse and assign irq resources, DFL framework has to look
+	 * into specific capability registers of these private features.
+	 *
+	 * Once future DFL version supports generic interrupt resource
+	 * information in common DFL headers, the generic interrupt parsing
+	 * code will be added. But in order to be compatible to old version
+	 * DFL, the driver may still fall back to these quirks.
+	 */
+	if (type == PORT_ID) {
+		switch (fid) {
+		case PORT_FEATURE_ID_UINT:
+			v = readq(base + PORT_UINT_CAP);
+			ibase = FIELD_GET(PORT_UINT_CAP_FST_VECT, v);
+			inr = FIELD_GET(PORT_UINT_CAP_INT_NUM, v);
+			break;
+		case PORT_FEATURE_ID_ERROR:
+			v = readq(base + PORT_ERROR_CAP);
+			ibase = FIELD_GET(PORT_ERROR_CAP_INT_VECT, v);
+			inr = FIELD_GET(PORT_ERROR_CAP_SUPP_INT, v);
+			break;
+		}
+	} else if (type == FME_ID) {
+		if (fid == FME_FEATURE_ID_GLOBAL_ERR) {
+			v = readq(base + FME_ERROR_CAP);
+			ibase = FIELD_GET(FME_ERROR_CAP_INT_VECT, v);
+			inr = FIELD_GET(FME_ERROR_CAP_SUPP_INT, v);
+		}
+	}
+
+	if (!inr) {
+		*irq_base = 0;
+		*nr_irqs = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	}
 
@@ -1094,12 +1187,18 @@ static int parse_feature_irqs(struct build_feature_devs_info *binfo,
 		}
 	}
 
+<<<<<<< HEAD
 	finfo->irq_base = ibase;
 	finfo->nr_irqs = inr;
+=======
+	*irq_base = ibase;
+	*nr_irqs = inr;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 static int dfh_get_param_size(void __iomem *dfh_base, resource_size_t max)
 {
 	int size = 0;
@@ -1125,6 +1224,8 @@ static int dfh_get_param_size(void __iomem *dfh_base, resource_size_t max)
 	return -ENOENT;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * when create sub feature instances, for private features, it doesn't need
  * to provide resource size and feature id as they could be read from DFH
@@ -1136,6 +1237,7 @@ static int
 create_feature_instance(struct build_feature_devs_info *binfo,
 			resource_size_t ofst, resource_size_t size, u16 fid)
 {
+<<<<<<< HEAD
 	struct dfl_feature_info *finfo;
 	resource_size_t start, end;
 	int dfh_psize = 0;
@@ -1143,10 +1245,18 @@ create_feature_instance(struct build_feature_devs_info *binfo,
 	u64 v, addr_off;
 	u8 dfh_ver = 0;
 	int ret;
+=======
+	unsigned int irq_base, nr_irqs;
+	struct dfl_feature_info *finfo;
+	u8 revision = 0;
+	int ret;
+	u64 v;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (fid != FEATURE_ID_AFU) {
 		v = readq(binfo->ioaddr + ofst);
 		revision = FIELD_GET(DFH_REVISION, v);
+<<<<<<< HEAD
 		dfh_ver = FIELD_GET(DFH_VERSION, v);
 		/* read feature size and id if inputs are invalid */
 		size = size ? size : feature_size(v);
@@ -1161,11 +1271,18 @@ create_feature_instance(struct build_feature_devs_info *binfo,
 			}
 			dev_dbg(binfo->dev, "dfhv1_psize %d\n", dfh_psize);
 		}
+=======
+
+		/* read feature size and id if inputs are invalid */
+		size = size ? size : feature_size(v);
+		fid = fid ? fid : feature_id(v);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (binfo->len - ofst < size)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	finfo = kzalloc(struct_size(finfo, params, dfh_psize / sizeof(u64)), GFP_KERNEL);
 	if (!finfo)
 		return -ENOMEM;
@@ -1199,6 +1316,23 @@ create_feature_instance(struct build_feature_devs_info *binfo,
 		kfree(finfo);
 		return ret;
 	}
+=======
+	ret = parse_feature_irqs(binfo, ofst, fid, &irq_base, &nr_irqs);
+	if (ret)
+		return ret;
+
+	finfo = kzalloc(sizeof(*finfo), GFP_KERNEL);
+	if (!finfo)
+		return -ENOMEM;
+
+	finfo->fid = fid;
+	finfo->revision = revision;
+	finfo->mmio_res.start = binfo->start + ofst;
+	finfo->mmio_res.end = finfo->mmio_res.start + size - 1;
+	finfo->mmio_res.flags = IORESOURCE_MEM;
+	finfo->irq_base = irq_base;
+	finfo->nr_irqs = nr_irqs;
+>>>>>>> b7ba80a49124 (Commit)
 
 	list_add_tail(&finfo->node, &binfo->sub_features);
 	binfo->feature_num++;

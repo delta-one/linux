@@ -3249,10 +3249,15 @@ void d_genocide(struct dentry *parent)
 
 EXPORT_SYMBOL(d_genocide);
 
+<<<<<<< HEAD
 void d_tmpfile(struct file *file, struct inode *inode)
 {
 	struct dentry *dentry = file->f_path.dentry;
 
+=======
+void d_tmpfile(struct dentry *dentry, struct inode *inode)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	inode_dec_link_count(inode);
 	BUG_ON(dentry->d_name.name != dentry->d_iname ||
 		!hlist_unhashed(&dentry->d_u.d_alias) ||

@@ -1106,12 +1106,21 @@ static int sta350_probe_dt(struct device *dev, struct sta350_priv *sta350)
 	of_property_read_u8(np, "st,ch3-output-mapping",
 			    &pdata->ch3_output_mapping);
 
+<<<<<<< HEAD
 	pdata->thermal_warning_recovery =
 		of_property_read_bool(np, "st,thermal-warning-recovery");
 	pdata->thermal_warning_adjustment =
 		of_property_read_bool(np, "st,thermal-warning-adjustment");
 	pdata->fault_detect_recovery =
 		of_property_read_bool(np, "st,fault-detect-recovery");
+=======
+	if (of_get_property(np, "st,thermal-warning-recovery", NULL))
+		pdata->thermal_warning_recovery = 1;
+	if (of_get_property(np, "st,thermal-warning-adjustment", NULL))
+		pdata->thermal_warning_adjustment = 1;
+	if (of_get_property(np, "st,fault-detect-recovery", NULL))
+		pdata->fault_detect_recovery = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pdata->ffx_power_output_mode = STA350_FFX_PM_VARIABLE_DROP_COMP;
 	if (!of_property_read_string(np, "st,ffx-power-output-mode",
@@ -1133,6 +1142,7 @@ static int sta350_probe_dt(struct device *dev, struct sta350_priv *sta350)
 	of_property_read_u16(np, "st,drop-compensation-ns", &tmp);
 	pdata->drop_compensation_ns = clamp_t(u16, tmp, 0, 300) / 20;
 
+<<<<<<< HEAD
 	pdata->oc_warning_adjustment =
 		of_property_read_bool(np, "st,overcurrent-warning-adjustment");
 
@@ -1161,6 +1171,43 @@ static int sta350_probe_dt(struct device *dev, struct sta350_priv *sta350)
 		of_property_read_bool(np, "st,noise-shape-dc-cut");
 	pdata->powerdown_master_vol =
 		of_property_read_bool(np, "st,powerdown-master-volume");
+=======
+	if (of_get_property(np, "st,overcurrent-warning-adjustment", NULL))
+		pdata->oc_warning_adjustment = 1;
+
+	/* CONFE */
+	if (of_get_property(np, "st,max-power-use-mpcc", NULL))
+		pdata->max_power_use_mpcc = 1;
+
+	if (of_get_property(np, "st,max-power-correction", NULL))
+		pdata->max_power_correction = 1;
+
+	if (of_get_property(np, "st,am-reduction-mode", NULL))
+		pdata->am_reduction_mode = 1;
+
+	if (of_get_property(np, "st,odd-pwm-speed-mode", NULL))
+		pdata->odd_pwm_speed_mode = 1;
+
+	if (of_get_property(np, "st,distortion-compensation", NULL))
+		pdata->distortion_compensation = 1;
+
+	/* CONFF */
+	if (of_get_property(np, "st,invalid-input-detect-mute", NULL))
+		pdata->invalid_input_detect_mute = 1;
+
+	/* MISC */
+	if (of_get_property(np, "st,activate-mute-output", NULL))
+		pdata->activate_mute_output = 1;
+
+	if (of_get_property(np, "st,bridge-immediate-off", NULL))
+		pdata->bridge_immediate_off = 1;
+
+	if (of_get_property(np, "st,noise-shape-dc-cut", NULL))
+		pdata->noise_shape_dc_cut = 1;
+
+	if (of_get_property(np, "st,powerdown-master-volume", NULL))
+		pdata->powerdown_master_vol = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!of_property_read_u8(np, "st,powerdown-delay-divider", &tmp8)) {
 		if (is_power_of_2(tmp8) && tmp8 >= 1 && tmp8 <= 128)

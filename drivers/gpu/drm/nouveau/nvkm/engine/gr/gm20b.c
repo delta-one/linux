@@ -123,7 +123,10 @@ gm20b_gr = {
 	.init_rop_active_fbps = gk104_gr_init_rop_active_fbps,
 	.trap_mp = gf100_gr_trap_mp,
 	.set_hww_esr_report_mask = gm20b_gr_set_hww_esr_report_mask,
+<<<<<<< HEAD
 	.fecs.reset = gf100_gr_fecs_reset,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.rops = gm200_gr_rops,
 	.ppc_nr = 1,
 	.grctx = &gm20b_grctx,

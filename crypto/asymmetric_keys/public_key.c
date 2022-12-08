@@ -186,6 +186,7 @@ static int software_key_query(const struct kernel_pkey_params *params,
 
 	len = crypto_akcipher_maxsize(tfm);
 	info->key_size = len * 8;
+<<<<<<< HEAD
 
 	if (strncmp(pkey->pkey_algo, "ecdsa", 5) == 0) {
 		/*
@@ -208,6 +209,10 @@ static int software_key_query(const struct kernel_pkey_params *params,
 		info->max_sig_size = len;
 	}
 
+=======
+	info->max_data_size = len;
+	info->max_sig_size = len;
+>>>>>>> b7ba80a49124 (Commit)
 	info->max_enc_size = len;
 	info->max_dec_size = len;
 	info->supported_ops = (KEYCTL_SUPPORTS_ENCRYPT |

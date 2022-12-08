@@ -1190,12 +1190,22 @@ static int lan743x_ethtool_set_wol(struct net_device *netdev,
 }
 #endif /* CONFIG_PM */
 
+<<<<<<< HEAD
 static void lan743x_common_regs(struct net_device *dev, void *p)
+=======
+static void lan743x_common_regs(struct net_device *dev,
+				struct ethtool_regs *regs, void *p)
+
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct lan743x_adapter *adapter = netdev_priv(dev);
 	u32 *rb = p;
 
+<<<<<<< HEAD
 	memset(p, 0, (MAX_LAN743X_ETH_COMMON_REGS * sizeof(u32)));
+=======
+	memset(p, 0, (MAX_LAN743X_ETH_REGS * sizeof(u32)));
+>>>>>>> b7ba80a49124 (Commit)
 
 	rb[ETH_PRIV_FLAGS] = adapter->flags;
 	rb[ETH_ID_REV]     = lan743x_csr_read(adapter, ID_REV);
@@ -1218,6 +1228,7 @@ static void lan743x_common_regs(struct net_device *dev, void *p)
 	rb[ETH_WK_SRC]     = lan743x_csr_read(adapter, MAC_WK_SRC);
 }
 
+<<<<<<< HEAD
 static void lan743x_sgmii_regs(struct net_device *dev, void *p)
 {
 	struct lan743x_adapter *adp = netdev_priv(dev);
@@ -1311,11 +1322,17 @@ static int lan743x_get_regs_len(struct net_device *dev)
 		num_regs += MAX_LAN743X_ETH_SGMII_REGS;
 
 	return num_regs * sizeof(u32);
+=======
+static int lan743x_get_regs_len(struct net_device *dev)
+{
+	return MAX_LAN743X_ETH_REGS * sizeof(u32);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void lan743x_get_regs(struct net_device *dev,
 			     struct ethtool_regs *regs, void *p)
 {
+<<<<<<< HEAD
 	struct lan743x_adapter *adapter = netdev_priv(dev);
 	int regs_len;
 
@@ -1376,6 +1393,11 @@ static int lan743x_set_pauseparam(struct net_device *dev,
 		phy_set_asym_pause(phydev, pause->rx_pause,  pause->tx_pause);
 
 	return 0;
+=======
+	regs->version = LAN743X_ETH_REG_VERSION;
+
+	lan743x_common_regs(dev, regs, p);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 const struct ethtool_ops lan743x_ethtool_ops = {
@@ -1404,8 +1426,11 @@ const struct ethtool_ops lan743x_ethtool_ops = {
 	.set_link_ksettings = phy_ethtool_set_link_ksettings,
 	.get_regs_len = lan743x_get_regs_len,
 	.get_regs = lan743x_get_regs,
+<<<<<<< HEAD
 	.get_pauseparam = lan743x_get_pauseparam,
 	.set_pauseparam = lan743x_set_pauseparam,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PM
 	.get_wol = lan743x_ethtool_get_wol,
 	.set_wol = lan743x_ethtool_set_wol,

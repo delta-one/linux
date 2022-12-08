@@ -11,6 +11,17 @@
 		stdout-path = "serial1:115200n8";
 	};
 
+<<<<<<< HEAD
+=======
+	leds {
+		/delete-node/ led-act;
+
+		led-pwr {
+			gpios = <&gpio 42 GPIO_ACTIVE_HIGH>;
+		};
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	gpio-poweroff {
 		compatible = "gpio-poweroff";
 		gpios = <&expgpio 5 GPIO_ACTIVE_HIGH>;
@@ -32,6 +43,7 @@
 	clock-frequency = <1950000>;
 };
 
+<<<<<<< HEAD
 &led_pwr {
 	gpios = <&gpio 42 GPIO_ACTIVE_HIGH>;
 };
@@ -40,6 +52,8 @@
 	/delete-node/ led_act;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &pm {
 	/delete-property/ system-power-controller;
 };

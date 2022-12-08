@@ -20,9 +20,12 @@ Optional properties:
 - realtek,in3-differential
   Boolean. Indicate MIC1/2/3 input are differential, rather than single-ended.
 
+<<<<<<< HEAD
 - realtek,lout-differential
   Boolean. Indicate LOUT output is differential, rather than stereo.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 - realtek,ldo1-en-gpios : The GPIO that controls the CODEC's LDO1_EN pin.
 
 - realtek,dmic1-data-pin

@@ -1208,6 +1208,7 @@ static int nand_lp_exec_read_page_op(struct nand_chip *chip, unsigned int page,
 	return nand_exec_op(chip, &op);
 }
 
+<<<<<<< HEAD
 static int nand_lp_exec_cont_read_page_op(struct nand_chip *chip, unsigned int page,
 					  unsigned int offset_in_page, void *buf,
 					  unsigned int len, bool check_only)
@@ -1275,6 +1276,8 @@ static bool rawnand_cont_read_ongoing(struct nand_chip *chip, unsigned int page)
 		page <= chip->cont_read.last_page;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * nand_read_page_op - Do a READ PAGE operation
  * @chip: The NAND chip
@@ -1300,6 +1303,7 @@ int nand_read_page_op(struct nand_chip *chip, unsigned int page,
 		return -EINVAL;
 
 	if (nand_has_exec_op(chip)) {
+<<<<<<< HEAD
 		if (mtd->writesize > 512) {
 			if (rawnand_cont_read_ongoing(chip, page))
 				return nand_lp_exec_cont_read_page_op(chip, page,
@@ -1310,6 +1314,12 @@ int nand_read_page_op(struct nand_chip *chip, unsigned int page,
 								 offset_in_page, buf,
 								 len);
 		}
+=======
+		if (mtd->writesize > 512)
+			return nand_lp_exec_read_page_op(chip, page,
+							 offset_in_page, buf,
+							 len);
+>>>>>>> b7ba80a49124 (Commit)
 
 		return nand_sp_exec_read_page_op(chip, page, offset_in_page,
 						 buf, len);
@@ -3426,6 +3436,7 @@ static uint8_t *nand_transfer_oob(struct nand_chip *chip, uint8_t *oob,
 	return NULL;
 }
 
+<<<<<<< HEAD
 static void rawnand_enable_cont_reads(struct nand_chip *chip, unsigned int page,
 				      u32 readlen, int col)
 {
@@ -3447,6 +3458,8 @@ static void rawnand_enable_cont_reads(struct nand_chip *chip, unsigned int page,
 	chip->cont_read.last_page = page + ((readlen >> chip->page_shift) & chip->pagemask);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * nand_setup_read_retry - [INTERN] Set the READ RETRY mode
  * @chip: NAND chip object
@@ -3520,8 +3533,11 @@ static int nand_do_read_ops(struct nand_chip *chip, loff_t from,
 	oob = ops->oobbuf;
 	oob_required = oob ? 1 : 0;
 
+<<<<<<< HEAD
 	rawnand_enable_cont_reads(chip, page, readlen, col);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	while (1) {
 		struct mtd_ecc_stats ecc_stats = mtd->ecc_stats;
 
@@ -5087,6 +5103,7 @@ nand_manufacturer_name(const struct nand_manufacturer_desc *manufacturer_desc)
 	return manufacturer_desc ? manufacturer_desc->name : "Unknown";
 }
 
+<<<<<<< HEAD
 static void rawnand_check_data_only_read_support(struct nand_chip *chip)
 {
 	/* Use an arbitrary size for the check */
@@ -5128,6 +5145,8 @@ static void rawnand_late_check_supported_ops(struct nand_chip *chip)
 	rawnand_check_cont_read_support(chip);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Get the flash and manufacturer id and lookup if the type is supported.
  */
@@ -5160,8 +5179,11 @@ static int nand_detect(struct nand_chip *chip, struct nand_flash_dev *type)
 	/* Select the device */
 	nand_select_target(chip, 0);
 
+<<<<<<< HEAD
 	rawnand_early_check_supported_ops(chip);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Send the command for reading device ID */
 	ret = nand_readid_op(chip, 0, id_data, 2);
 	if (ret)
@@ -5973,7 +5995,11 @@ nand_match_ecc_req(struct nand_chip *chip,
 	int req_step = requirements->step_size;
 	int req_strength = requirements->strength;
 	int req_corr, step_size, strength, nsteps, ecc_bytes, ecc_bytes_total;
+<<<<<<< HEAD
 	int best_step = 0, best_strength = 0, best_ecc_bytes = 0;
+=======
+	int best_step, best_strength, best_ecc_bytes;
+>>>>>>> b7ba80a49124 (Commit)
 	int best_ecc_bytes_total = INT_MAX;
 	int i, j;
 
@@ -6054,7 +6080,11 @@ nand_maximize_ecc(struct nand_chip *chip,
 	int step_size, strength, nsteps, ecc_bytes, corr;
 	int best_corr = 0;
 	int best_step = 0;
+<<<<<<< HEAD
 	int best_strength = 0, best_ecc_bytes = 0;
+=======
+	int best_strength, best_ecc_bytes;
+>>>>>>> b7ba80a49124 (Commit)
 	int i, j;
 
 	for (i = 0; i < caps->nstepinfos; i++) {
@@ -6464,8 +6494,11 @@ static int nand_scan_tail(struct nand_chip *chip)
 			goto err_free_interface_config;
 	}
 
+<<<<<<< HEAD
 	rawnand_late_check_supported_ops(chip);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Look for secure regions in the NAND chip. These regions are supposed
 	 * to be protected by a secure element like Trustzone. So the read/write

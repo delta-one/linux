@@ -65,13 +65,30 @@ int generic_fadvise(struct file *file, loff_t offset, loff_t len, int advice)
 		return 0;
 	}
 
+<<<<<<< HEAD
 	endbyte = fadvise_calc_endbyte(offset, len);
+=======
+	/*
+	 * Careful about overflows. Len == 0 means "as much as possible".  Use
+	 * unsigned math because signed overflows are undefined and UBSan
+	 * complains.
+	 */
+	endbyte = (u64)offset + (u64)len;
+	if (!len || endbyte < len)
+		endbyte = -1;
+	else
+		endbyte--;		/* inclusive */
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (advice) {
 	case POSIX_FADV_NORMAL:
 		file->f_ra.ra_pages = bdi->ra_pages;
 		spin_lock(&file->f_lock);
+<<<<<<< HEAD
 		file->f_mode &= ~(FMODE_RANDOM | FMODE_NOREUSE);
+=======
+		file->f_mode &= ~FMODE_RANDOM;
+>>>>>>> b7ba80a49124 (Commit)
 		spin_unlock(&file->f_lock);
 		break;
 	case POSIX_FADV_RANDOM:
@@ -98,9 +115,12 @@ int generic_fadvise(struct file *file, loff_t offset, loff_t len, int advice)
 		force_page_cache_readahead(mapping, file, start_index, nrpages);
 		break;
 	case POSIX_FADV_NOREUSE:
+<<<<<<< HEAD
 		spin_lock(&file->f_lock);
 		file->f_mode |= FMODE_NOREUSE;
 		spin_unlock(&file->f_lock);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case POSIX_FADV_DONTNEED:
 		__filemap_fdatawrite_range(mapping, offset, endbyte,

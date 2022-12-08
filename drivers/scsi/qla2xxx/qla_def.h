@@ -22,6 +22,10 @@
 #include <linux/interrupt.h>
 #include <linux/workqueue.h>
 #include <linux/firmware.h>
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mutex.h>
 #include <linux/btree.h>
 
@@ -383,6 +387,7 @@ struct els_reject {
 struct req_que;
 struct qla_tgt_sess;
 
+<<<<<<< HEAD
 struct qla_buf_dsc {
 	u16 tag;
 #define TAG_FREED 0xffff
@@ -390,6 +395,8 @@ struct qla_buf_dsc {
 	dma_addr_t buf_dma;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * SCSI Request Block
  */
@@ -398,16 +405,24 @@ struct srb_cmd {
 	uint32_t request_sense_length;
 	uint32_t fw_sense_length;
 	uint8_t *request_sense_ptr;
+<<<<<<< HEAD
 	struct crc_context *crc_ctx;
 	struct ct6_dsd ct6_ctx;
 	struct qla_buf_dsc buf_dsc;
+=======
+	struct ct6_dsd *ct6_ctx;
+	struct crc_context *crc_ctx;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /*
  * SRB flag definitions
  */
 #define SRB_DMA_VALID			BIT_0	/* Command sent to ISP */
+<<<<<<< HEAD
 #define SRB_GOT_BUF			BIT_1
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define SRB_FCP_CMND_DMA_VALID		BIT_12	/* DIF: DSD List valid */
 #define SRB_CRC_CTX_DMA_VALID		BIT_2	/* DIF: context DMA valid */
 #define SRB_CRC_PROT_DMA_VALID		BIT_4	/* DIF: prot DMA valid */
@@ -668,7 +683,11 @@ enum {
 
 struct iocb_resource {
 	u8 res_type;
+<<<<<<< HEAD
 	u8  exch_cnt;
+=======
+	u8 pad;
+>>>>>>> b7ba80a49124 (Commit)
 	u16 iocb_cnt;
 };
 
@@ -2493,6 +2512,10 @@ struct ct_sns_desc {
 
 enum discovery_state {
 	DSC_DELETED,
+<<<<<<< HEAD
+=======
+	DSC_GNN_ID,
+>>>>>>> b7ba80a49124 (Commit)
 	DSC_GNL,
 	DSC_LOGIN_PEND,
 	DSC_LOGIN_FAILED,
@@ -2603,7 +2626,11 @@ typedef struct fc_port {
 
 	int login_retry;
 
+<<<<<<< HEAD
 	struct fc_rport *rport;
+=======
+	struct fc_rport *rport, *drport;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 supported_classes;
 
 	uint8_t fc4_type;
@@ -2706,6 +2733,10 @@ extern const char *const port_state_str[5];
 
 static const char *const port_dstate_str[] = {
 	[DSC_DELETED]		= "DELETED",
+<<<<<<< HEAD
+=======
+	[DSC_GNN_ID]		= "GNN_ID",
+>>>>>>> b7ba80a49124 (Commit)
 	[DSC_GNL]		= "GNL",
 	[DSC_LOGIN_PEND]	= "LOGIN_PEND",
 	[DSC_LOGIN_FAILED]	= "LOGIN_FAILED",
@@ -3468,7 +3499,10 @@ struct qla_msix_entry {
 	int have_irq;
 	int in_use;
 	uint32_t vector;
+<<<<<<< HEAD
 	uint32_t vector_base0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	uint16_t entry;
 	char name[30];
 	void *handle;
@@ -3486,6 +3520,10 @@ enum qla_work_type {
 	QLA_EVT_ASYNC_ADISC,
 	QLA_EVT_UEVENT,
 	QLA_EVT_AENFX,
+<<<<<<< HEAD
+=======
+	QLA_EVT_GPNID,
+>>>>>>> b7ba80a49124 (Commit)
 	QLA_EVT_UNMAP,
 	QLA_EVT_NEW_SESS,
 	QLA_EVT_GPDB,
@@ -3499,6 +3537,10 @@ enum qla_work_type {
 	QLA_EVT_GPNFT,
 	QLA_EVT_GPNFT_DONE,
 	QLA_EVT_GNNFT_DONE,
+<<<<<<< HEAD
+=======
+	QLA_EVT_GNNID,
+>>>>>>> b7ba80a49124 (Commit)
 	QLA_EVT_GFPNID,
 	QLA_EVT_SP_RETRY,
 	QLA_EVT_IIDMA,
@@ -3541,12 +3583,22 @@ struct qla_work_evt {
 		} iosb;
 		struct {
 			port_id_t id;
+<<<<<<< HEAD
+=======
+		} gpnid;
+		struct {
+			port_id_t id;
+>>>>>>> b7ba80a49124 (Commit)
 			u8 port_name[8];
 			u8 node_name[8];
 			void *pla;
 			u8 fc4_type;
 		} new_sess;
+<<<<<<< HEAD
 		struct { /*Get PDB, Get Speed, update fcport, gnl */
+=======
+		struct { /*Get PDB, Get Speed, update fcport, gnl, gidpn */
+>>>>>>> b7ba80a49124 (Commit)
 			fc_port_t *fcport;
 			u8 opt;
 		} fcport;
@@ -3723,14 +3775,18 @@ struct qla_fw_resources {
 	u16 iocbs_limit;
 	u16 iocbs_qp_limit;
 	u16 iocbs_used;
+<<<<<<< HEAD
 	u16 exch_total;
 	u16 exch_limit;
 	u16 exch_used;
 	u16 pad;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define QLA_IOCB_PCT_LIMIT 95
 
+<<<<<<< HEAD
 struct  qla_buf_pool {
 	u16 num_bufs;
 	u16 num_active;
@@ -3744,6 +3800,8 @@ struct  qla_buf_pool {
 	dma_addr_t *dma_array;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*Queue pair data structure */
 struct qla_qpair {
 	spinlock_t qp_lock;
@@ -3797,7 +3855,10 @@ struct qla_qpair {
 	struct qla_tgt_counters tgt_counters;
 	uint16_t cpuid;
 	struct qla_fw_resources fwres ____cacheline_aligned;
+<<<<<<< HEAD
 	struct  qla_buf_pool buf_pool;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32	cmd_cnt;
 	u32	cmd_completion_cnt;
 	u32	prev_completion_cnt;
@@ -3958,6 +4019,10 @@ struct qlt_hw_data {
 	__le32 __iomem *atio_q_out;
 
 	const struct qla_tgt_func_tmpl *tgt_ops;
+<<<<<<< HEAD
+=======
+	struct qla_tgt_vp_map *tgt_vp_map;
+>>>>>>> b7ba80a49124 (Commit)
 
 	int saved_set;
 	__le16	saved_exchange_count;
@@ -4125,7 +4190,10 @@ struct qla_hw_data {
 	struct req_que **req_q_map;
 	struct rsp_que **rsp_q_map;
 	struct qla_qpair **queue_pair_map;
+<<<<<<< HEAD
 	struct qla_qpair **qp_cpu_map;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long req_qid_map[(QLA_MAX_QUEUES / 8) / sizeof(unsigned long)];
 	unsigned long rsp_qid_map[(QLA_MAX_QUEUES / 8) / sizeof(unsigned long)];
 	unsigned long qpair_qid_map[(QLA_MAX_QUEUES / 8)
@@ -4782,7 +4850,10 @@ struct qla_hw_data {
 	spinlock_t sadb_lock;	/* protects list */
 	struct els_reject elsrej;
 	u8 edif_post_stop_cnt_down;
+<<<<<<< HEAD
 	struct qla_vp_map *vp_map;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define RX_ELS_SIZE (roundup(sizeof(struct enode) + ELS_MAX_PAYLOAD, SMP_CACHE_BYTES))
@@ -4878,7 +4949,10 @@ typedef struct scsi_qla_host {
 #define LOOP_READY	5
 #define LOOP_DEAD	6
 
+<<<<<<< HEAD
 	unsigned long   buf_expired;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long   relogin_jif;
 	unsigned long   dpc_flags;
 #define RESET_MARKER_NEEDED	0	/* Send marker to ISP. */
@@ -4894,6 +4968,10 @@ typedef struct scsi_qla_host {
 #define ISP_ABORT_RETRY		10	/* ISP aborted. */
 #define BEACON_BLINK_NEEDED	11
 #define REGISTER_FDMI_NEEDED	12
+<<<<<<< HEAD
+=======
+#define FCPORT_UPDATE_NEEDED	13
+>>>>>>> b7ba80a49124 (Commit)
 #define VP_DPC_NEEDED		14	/* wake up for VP dpc handling */
 #define UNLOADING		15
 #define NPIV_CONFIG_NEEDED	16
@@ -5043,6 +5121,10 @@ typedef struct scsi_qla_host {
 	uint8_t n2n_port_name[WWN_SIZE];
 	uint16_t	n2n_id;
 	__le16 dport_data[4];
+<<<<<<< HEAD
+=======
+	struct list_head gpnid_list;
+>>>>>>> b7ba80a49124 (Commit)
 	struct fab_scan scan;
 	uint8_t	scm_fabric_connection_flags;
 
@@ -5084,7 +5166,11 @@ struct qla27xx_image_status {
 #define SET_AL_PA	2
 #define RESET_VP_IDX	3
 #define RESET_AL_PA	4
+<<<<<<< HEAD
 struct qla_vp_map {
+=======
+struct qla_tgt_vp_map {
+>>>>>>> b7ba80a49124 (Commit)
 	uint8_t	idx;
 	scsi_qla_host_t *vha;
 };
@@ -5156,6 +5242,7 @@ struct secure_flash_update_block_pk {
 		(test_bit(ISP_ABORT_NEEDED, &ha->dpc_flags) || \
 			 test_bit(LOOP_RESYNC_NEEDED, &ha->dpc_flags))
 
+<<<<<<< HEAD
 static inline bool qla_vha_mark_busy(scsi_qla_host_t *vha)
 {
 	atomic_inc(&vha->vref_count);
@@ -5167,6 +5254,19 @@ static inline bool qla_vha_mark_busy(scsi_qla_host_t *vha)
 	}
 	return false;
 }
+=======
+#define QLA_VHA_MARK_BUSY(__vha, __bail) do {		\
+	atomic_inc(&__vha->vref_count);			\
+	mb();						\
+	if (__vha->flags.delete_progress) {		\
+		atomic_dec(&__vha->vref_count);		\
+		wake_up(&__vha->vref_waitq);		\
+		__bail = 1;				\
+	} else {					\
+		__bail = 0;				\
+	}						\
+} while (0)
+>>>>>>> b7ba80a49124 (Commit)
 
 #define QLA_VHA_MARK_NOT_BUSY(__vha) do {		\
 	atomic_dec(&__vha->vref_count);			\

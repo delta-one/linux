@@ -1140,7 +1140,12 @@ out_err:
 	return error;
 }
 
+<<<<<<< HEAD
 static int da7280_probe(struct i2c_client *client)
+=======
+static int da7280_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device *dev = &client->dev;
 	struct da7280_haptic *haptics;
@@ -1260,7 +1265,11 @@ static int da7280_probe(struct i2c_client *client)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int da7280_suspend(struct device *dev)
+=======
+static int __maybe_unused da7280_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct da7280_haptic *haptics = dev_get_drvdata(dev);
 
@@ -1281,7 +1290,11 @@ static int da7280_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int da7280_resume(struct device *dev)
+=======
+static int __maybe_unused da7280_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct da7280_haptic *haptics = dev_get_drvdata(dev);
 	int retval;
@@ -1313,15 +1326,25 @@ static const struct i2c_device_id da7280_i2c_id[] = {
 };
 MODULE_DEVICE_TABLE(i2c, da7280_i2c_id);
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(da7280_pm_ops, da7280_suspend, da7280_resume);
+=======
+static SIMPLE_DEV_PM_OPS(da7280_pm_ops, da7280_suspend, da7280_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct i2c_driver da7280_driver = {
 	.driver = {
 		.name = "da7280",
 		.of_match_table = of_match_ptr(da7280_of_match),
+<<<<<<< HEAD
 		.pm = pm_sleep_ptr(&da7280_pm_ops),
 	},
 	.probe_new = da7280_probe,
+=======
+		.pm = &da7280_pm_ops,
+	},
+	.probe = da7280_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = da7280_i2c_id,
 };
 module_i2c_driver(da7280_driver);

@@ -997,6 +997,10 @@ bool rtl92ee_is_tx_desc_closed(struct ieee80211_hw *hw, u8 hw_queue, u16 index)
 	struct rtl_priv *rtlpriv = rtl_priv(hw);
 	u16 read_point, write_point;
 	bool ret = false;
+<<<<<<< HEAD
+=======
+	static u8 stop_report_cnt;
+>>>>>>> b7ba80a49124 (Commit)
 	struct rtl8192_tx_ring *ring = &rtlpci->tx_ring[hw_queue];
 
 	{
@@ -1037,6 +1041,16 @@ bool rtl92ee_is_tx_desc_closed(struct ieee80211_hw *hw, u8 hw_queue, u16 index)
 	    rtlpriv->psc.rfoff_reason > RF_CHANGE_BY_PS)
 		ret = true;
 
+<<<<<<< HEAD
+=======
+	if (hw_queue < BEACON_QUEUE) {
+		if (!ret)
+			stop_report_cnt++;
+		else
+			stop_report_cnt = 0;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 

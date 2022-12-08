@@ -4,10 +4,14 @@
  */
 /dts-v1/;
 
+<<<<<<< HEAD
 #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
 #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
 #include "sm6350.dtsi"
 #include "pm6350.dtsi"
+=======
+#include "sm6350.dtsi"
+>>>>>>> b7ba80a49124 (Commit)
 
 / {
 	model = "Sony Xperia 10 III";
@@ -31,6 +35,7 @@
 			clocks = <&gcc GCC_DISP_AXI_CLK>;
 		};
 	};
+<<<<<<< HEAD
 
 	gpio-keys {
 		compatible = "gpio-keys";
@@ -341,19 +346,25 @@
 		drive-strength = <2>;
 		bias-pull-up;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &sdhc_2 {
 	status = "okay";
 
+<<<<<<< HEAD
 	vmmc-supply = <&pm6150l_l9>;
 	vqmmc-supply = <&pm6150l_l6>;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cd-gpios = <&tlmm 94 GPIO_ACTIVE_HIGH>;
 };
 
 &tlmm {
 	gpio-reserved-ranges = <13 4>, <45 2>, <56 2>;
+<<<<<<< HEAD
 
 	ts_active: ts-active-state {
 		pins = "gpio21";
@@ -369,6 +380,8 @@
 		bias-disable;
 		input-enable;
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &usb_1 {

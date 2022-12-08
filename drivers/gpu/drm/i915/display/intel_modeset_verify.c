@@ -227,8 +227,12 @@ void intel_modeset_verify_crtc(struct intel_crtc *crtc,
 			       struct intel_crtc_state *old_crtc_state,
 			       struct intel_crtc_state *new_crtc_state)
 {
+<<<<<<< HEAD
 	if (!intel_crtc_needs_modeset(new_crtc_state) &&
 	    !intel_crtc_needs_fastset(new_crtc_state))
+=======
+	if (!intel_crtc_needs_modeset(new_crtc_state) && !new_crtc_state->update_pipe)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	intel_wm_state_verify(crtc, new_crtc_state);

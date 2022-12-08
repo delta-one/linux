@@ -597,8 +597,11 @@ extern int hashdist;		/* Distribute hashes across NUMA nodes? */
 #endif
 
 #ifdef CONFIG_MEMTEST
+<<<<<<< HEAD
 extern phys_addr_t early_memtest_bad_size;	/* Size of faulty ram found by memtest */
 extern bool early_memtest_done;			/* Was early memtest done? */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern void early_memtest(phys_addr_t start, phys_addr_t end);
 #else
 static inline void early_memtest(phys_addr_t start, phys_addr_t end)

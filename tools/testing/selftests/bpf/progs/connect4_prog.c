@@ -32,7 +32,11 @@
 #define IFNAMSIZ 16
 #endif
 
+<<<<<<< HEAD
 __attribute__ ((noinline)) __weak
+=======
+__attribute__ ((noinline))
+>>>>>>> b7ba80a49124 (Commit)
 int do_bind(struct bpf_sock_addr *ctx)
 {
 	struct sockaddr_in sa = {};

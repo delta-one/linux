@@ -7,6 +7,12 @@
  * Gunze AHL-51S touchscreen driver for Linux
  */
 
+<<<<<<< HEAD
+=======
+/*
+ */
+
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/errno.h>
 #include <linux/kernel.h>
 #include <linux/module.h>

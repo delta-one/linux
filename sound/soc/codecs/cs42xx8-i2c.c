@@ -12,12 +12,16 @@
 
 #include <linux/i2c.h>
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/of_device.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/pm_runtime.h>
 #include <sound/soc.h>
 
 #include "cs42xx8.h"
 
+<<<<<<< HEAD
 static const struct of_device_id cs42xx8_of_match[];
 
 static int cs42xx8_i2c_probe(struct i2c_client *i2c)
@@ -36,6 +40,12 @@ static int cs42xx8_i2c_probe(struct i2c_client *i2c)
 
 	ret = cs42xx8_probe(&i2c->dev,
 		devm_regmap_init_i2c(i2c, &cs42xx8_regmap_config), drvdata);
+=======
+static int cs42xx8_i2c_probe(struct i2c_client *i2c)
+{
+	int ret = cs42xx8_probe(&i2c->dev,
+			devm_regmap_init_i2c(i2c, &cs42xx8_regmap_config));
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -50,6 +60,7 @@ static void cs42xx8_i2c_remove(struct i2c_client *i2c)
 	pm_runtime_disable(&i2c->dev);
 }
 
+<<<<<<< HEAD
 static const struct of_device_id cs42xx8_of_match[] = {
 	{ .compatible = "cirrus,cs42448", .data = &cs42448_data, },
 	{ .compatible = "cirrus,cs42888", .data = &cs42888_data, },
@@ -58,6 +69,9 @@ static const struct of_device_id cs42xx8_of_match[] = {
 MODULE_DEVICE_TABLE(of, cs42xx8_of_match);
 
 static const struct i2c_device_id cs42xx8_i2c_id[] = {
+=======
+static struct i2c_device_id cs42xx8_i2c_id[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{"cs42448", (kernel_ulong_t)&cs42448_data},
 	{"cs42888", (kernel_ulong_t)&cs42888_data},
 	{}

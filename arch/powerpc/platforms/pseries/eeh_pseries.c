@@ -154,7 +154,11 @@ static int pseries_eeh_get_pe_config_addr(struct pci_dn *pdn)
 /**
  * pseries_eeh_phb_reset - Reset the specified PHB
  * @phb: PCI controller
+<<<<<<< HEAD
  * @config_addr: the associated config address
+=======
+ * @config_adddr: the associated config address
+>>>>>>> b7ba80a49124 (Commit)
  * @option: reset option
  *
  * Reset the specified PHB/PE
@@ -188,7 +192,11 @@ static int pseries_eeh_phb_reset(struct pci_controller *phb, int config_addr, in
 /**
  * pseries_eeh_phb_configure_bridge - Configure PCI bridges in the indicated PE
  * @phb: PCI controller
+<<<<<<< HEAD
  * @config_addr: the associated config address
+=======
+ * @config_adddr: the associated config address
+>>>>>>> b7ba80a49124 (Commit)
  *
  * The function will be called to reconfigure the bridges included
  * in the specified PE so that the mulfunctional PE would be recovered
@@ -699,7 +707,11 @@ static int pseries_eeh_write_config(struct eeh_dev *edev, int where, int size, u
 static int pseries_send_allow_unfreeze(struct pci_dn *pdn, u16 *vf_pe_array, int cur_vfs)
 {
 	int rc;
+<<<<<<< HEAD
 	int ibm_allow_unfreeze = rtas_function_token(RTAS_FN_IBM_OPEN_SRIOV_ALLOW_UNFREEZE);
+=======
+	int ibm_allow_unfreeze = rtas_token("ibm,open-sriov-allow-unfreeze");
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long buid, addr;
 
 	addr = rtas_config_addr(pdn->busno, pdn->devfn, 0);
@@ -774,7 +786,11 @@ static int pseries_notify_resume(struct eeh_dev *edev)
 	if (!edev)
 		return -EEXIST;
 
+<<<<<<< HEAD
 	if (rtas_function_token(RTAS_FN_IBM_OPEN_SRIOV_ALLOW_UNFREEZE) == RTAS_UNKNOWN_SERVICE)
+=======
+	if (rtas_token("ibm,open-sriov-allow-unfreeze") == RTAS_UNKNOWN_SERVICE)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	if (edev->pdev->is_physfn || edev->pdev->is_virtfn)
@@ -815,6 +831,7 @@ static int __init eeh_pseries_init(void)
 	int ret, config_addr;
 
 	/* figure out EEH RTAS function call tokens */
+<<<<<<< HEAD
 	ibm_set_eeh_option		= rtas_function_token(RTAS_FN_IBM_SET_EEH_OPTION);
 	ibm_set_slot_reset		= rtas_function_token(RTAS_FN_IBM_SET_SLOT_RESET);
 	ibm_read_slot_reset_state2	= rtas_function_token(RTAS_FN_IBM_READ_SLOT_RESET_STATE2);
@@ -823,6 +840,16 @@ static int __init eeh_pseries_init(void)
 	ibm_get_config_addr_info2	= rtas_function_token(RTAS_FN_IBM_GET_CONFIG_ADDR_INFO2);
 	ibm_get_config_addr_info	= rtas_function_token(RTAS_FN_IBM_GET_CONFIG_ADDR_INFO);
 	ibm_configure_pe		= rtas_function_token(RTAS_FN_IBM_CONFIGURE_PE);
+=======
+	ibm_set_eeh_option		= rtas_token("ibm,set-eeh-option");
+	ibm_set_slot_reset		= rtas_token("ibm,set-slot-reset");
+	ibm_read_slot_reset_state2	= rtas_token("ibm,read-slot-reset-state2");
+	ibm_read_slot_reset_state	= rtas_token("ibm,read-slot-reset-state");
+	ibm_slot_error_detail		= rtas_token("ibm,slot-error-detail");
+	ibm_get_config_addr_info2	= rtas_token("ibm,get-config-addr-info2");
+	ibm_get_config_addr_info	= rtas_token("ibm,get-config-addr-info");
+	ibm_configure_pe		= rtas_token("ibm,configure-pe");
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * ibm,configure-pe and ibm,configure-bridge have the same semantics,
@@ -830,7 +857,11 @@ static int __init eeh_pseries_init(void)
 	 * ibm,configure-pe then fall back to using ibm,configure-bridge.
 	 */
 	if (ibm_configure_pe == RTAS_UNKNOWN_SERVICE)
+<<<<<<< HEAD
 		ibm_configure_pe	= rtas_function_token(RTAS_FN_IBM_CONFIGURE_BRIDGE);
+=======
+		ibm_configure_pe	= rtas_token("ibm,configure-bridge");
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Necessary sanity check. We needn't check "get-config-addr-info"
@@ -848,7 +879,20 @@ static int __init eeh_pseries_init(void)
 	}
 
 	/* Initialize error log size */
+<<<<<<< HEAD
 	eeh_error_buf_size = rtas_get_error_log_max();
+=======
+	eeh_error_buf_size = rtas_token("rtas-error-log-max");
+	if (eeh_error_buf_size == RTAS_UNKNOWN_SERVICE) {
+		pr_info("%s: unknown EEH error log size\n",
+			__func__);
+		eeh_error_buf_size = 1024;
+	} else if (eeh_error_buf_size > RTAS_ERROR_LOG_MAX) {
+		pr_info("%s: EEH error log size %d exceeds the maximal %d\n",
+			__func__, eeh_error_buf_size, RTAS_ERROR_LOG_MAX);
+		eeh_error_buf_size = RTAS_ERROR_LOG_MAX;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Set EEH probe mode */
 	eeh_add_flag(EEH_PROBE_MODE_DEVTREE | EEH_ENABLE_IO_FOR_LOG);

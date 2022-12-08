@@ -1,9 +1,13 @@
 // SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 /* Copyright (C) 2018 Netronome Systems, Inc. */
 
+<<<<<<< HEAD
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
+=======
+#define _GNU_SOURCE
+>>>>>>> b7ba80a49124 (Commit)
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>

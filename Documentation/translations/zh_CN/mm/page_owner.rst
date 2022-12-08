@@ -34,9 +34,26 @@ page owner在默认情况下是禁用的。所以，如果你想使用它，你�
 一样进行。这两个不可能的分支应该不会影响到分配的性能，特别是在静态键跳转标签修补
 功能可用的情况下。以下是由于这个功能而导致的内核代码大小的变化。
 
+<<<<<<< HEAD
 尽管启用page owner会使内核的大小增加几千字节，但这些代码大部分都在页面分配器和
 热路径之外。构建带有page owner的内核，并在需要时打开它，将是调试内核内存问题的
 最佳选择。
+=======
+- 没有page owner::
+
+   text    data     bss     dec     hex filename
+   48392   2333     644   51369    c8a9 mm/page_alloc.o
+
+- 有page owner::
+
+   text    data     bss     dec     hex filename
+   48800   2445     644   51889    cab1 mm/page_alloc.o
+   6662     108      29    6799    1a8f mm/page_owner.o
+   1025       8       8    1041     411 mm/page_ext.o
+
+虽然总共增加了8KB的代码，但page_alloc.o增加了520字节，其中不到一半是在hotpath
+中。构建带有page owner的内核，并在需要时打开它，将是调试内核内存问题的最佳选择。
+>>>>>>> b7ba80a49124 (Commit)
 
 有一个问题是由实现细节引起的。页所有者将信息存储到struct page扩展的内存中。这
 个内存的初始化时间比稀疏内存系统中的页面分配器启动的时间要晚一些，所以，在初始化
@@ -51,7 +68,11 @@ page owner在默认情况下是禁用的。所以，如果你想使用它，你�
 
 1) 构建用户空间的帮助::
 
+<<<<<<< HEAD
 	cd tools/mm
+=======
+	cd tools/vm
+>>>>>>> b7ba80a49124 (Commit)
 	make page_owner_sort
 
 2) 启用page owner: 添加 "page_owner=on" 到 boot cmdline.
@@ -63,6 +84,7 @@ page owner在默认情况下是禁用的。所以，如果你想使用它，你�
 	cat /sys/kernel/debug/page_owner > page_owner_full.txt
 	./page_owner_sort page_owner_full.txt sorted_page_owner.txt
 
+<<<<<<< HEAD
    ``page_owner_full.txt`` 的一般输出情况如下::
 
 	Page allocated via order XXX, ...
@@ -76,6 +98,17 @@ page owner在默认情况下是禁用的。所以，如果你想使用它，你�
 
     FILE *fp = fopen("/sys/kernel/debug/page_owner", "r");
     fseek(fp, pfn_start, SEEK_SET);
+=======
+   ``page_owner_full.txt`` 的一般输出情况如下(输出信息无翻译价值)::
+
+	Page allocated via order XXX, ...
+	PFN XXX ...
+	// Detailed stack
+
+	Page allocated via order XXX, ...
+	PFN XXX ...
+	// Detailed stack
+>>>>>>> b7ba80a49124 (Commit)
 
    ``page_owner_sort`` 工具忽略了 ``PFN`` 行，将剩余的行放在buf中，使用regexp提
    取页序值，计算buf的次数和页数，最后根据参数进行排序。

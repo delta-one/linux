@@ -23,7 +23,10 @@ absoulte||absolute
 acccess||access
 acceess||access
 accelaration||acceleration
+<<<<<<< HEAD
 accelearion||acceleration
+=======
+>>>>>>> b7ba80a49124 (Commit)
 acceleratoin||acceleration
 accelleration||acceleration
 accesing||accessing
@@ -59,13 +62,19 @@ acording||according
 activete||activate
 actived||activated
 actualy||actually
+<<<<<<< HEAD
 actvie||active
+=======
+>>>>>>> b7ba80a49124 (Commit)
 acumulating||accumulating
 acumulative||accumulative
 acumulator||accumulator
 acutally||actually
 adapater||adapter
+<<<<<<< HEAD
 adderted||asserted
+=======
+>>>>>>> b7ba80a49124 (Commit)
 addional||additional
 additionaly||additionally
 additonal||additional
@@ -123,7 +132,10 @@ alue||value
 ambigious||ambiguous
 ambigous||ambiguous
 amoung||among
+<<<<<<< HEAD
 amount of times||number of times
+=======
+>>>>>>> b7ba80a49124 (Commit)
 amout||amount
 amplifer||amplifier
 amplifyer||amplifier
@@ -257,7 +269,10 @@ brigde||bridge
 broadcase||broadcast
 broadcat||broadcast
 bufer||buffer
+<<<<<<< HEAD
 bufferred||buffered
+=======
+>>>>>>> b7ba80a49124 (Commit)
 bufufer||buffer
 cacluated||calculated
 caculate||calculate
@@ -278,7 +293,10 @@ cant||can't
 cant'||can't
 canot||cannot
 cann't||can't
+<<<<<<< HEAD
 cannnot||cannot
+=======
+>>>>>>> b7ba80a49124 (Commit)
 capabilites||capabilities
 capabilties||capabilities
 capabilty||capability
@@ -289,7 +307,10 @@ capapbilities||capabilities
 caputure||capture
 carefuly||carefully
 cariage||carriage
+<<<<<<< HEAD
 casued||caused
+=======
+>>>>>>> b7ba80a49124 (Commit)
 catagory||category
 cehck||check
 challange||challenge
@@ -316,7 +337,10 @@ chiled||child
 chked||checked
 chnage||change
 chnages||changes
+<<<<<<< HEAD
 chnange||change
+=======
+>>>>>>> b7ba80a49124 (Commit)
 chnnel||channel
 choosen||chosen
 chouse||chose
@@ -373,7 +397,10 @@ conbination||combination
 conditionaly||conditionally
 conditon||condition
 condtion||condition
+<<<<<<< HEAD
 condtional||conditional
+=======
+>>>>>>> b7ba80a49124 (Commit)
 conected||connected
 conector||connector
 configration||configuration
@@ -427,7 +454,10 @@ cound||could
 couter||counter
 coutner||counter
 cryptocraphic||cryptographic
+<<<<<<< HEAD
 cummulative||cumulative
+=======
+>>>>>>> b7ba80a49124 (Commit)
 cunter||counter
 curently||currently
 cylic||cyclic
@@ -449,7 +479,10 @@ defferred||deferred
 definate||definite
 definately||definitely
 definiation||definition
+<<<<<<< HEAD
 definiton||definition
+=======
+>>>>>>> b7ba80a49124 (Commit)
 defintion||definition
 defintions||definitions
 defualt||default
@@ -463,7 +496,10 @@ delare||declare
 delares||declares
 delaring||declaring
 delemiter||delimiter
+<<<<<<< HEAD
 delibrately||deliberately
+=======
+>>>>>>> b7ba80a49124 (Commit)
 delievered||delivered
 demodualtor||demodulator
 demension||dimension
@@ -493,7 +529,10 @@ destroied||destroyed
 detabase||database
 deteced||detected
 detectt||detect
+<<<<<<< HEAD
 detroyed||destroyed
+=======
+>>>>>>> b7ba80a49124 (Commit)
 develope||develop
 developement||development
 developped||developed
@@ -520,7 +559,10 @@ dimention||dimension
 dimesions||dimensions
 diconnected||disconnected
 disabed||disabled
+<<<<<<< HEAD
 disasembler||disassembler
+=======
+>>>>>>> b7ba80a49124 (Commit)
 disble||disable
 disgest||digest
 disired||desired
@@ -630,10 +672,15 @@ exeuction||execution
 existance||existence
 existant||existent
 exixt||exist
+<<<<<<< HEAD
 exsits||exists
 exlcude||exclude
 exlcusive||exclusive
 exlusive||exclusive
+=======
+exlcude||exclude
+exlcusive||exclusive
+>>>>>>> b7ba80a49124 (Commit)
 exmaple||example
 expecially||especially
 experies||expires
@@ -671,20 +718,29 @@ feauture||feature
 feautures||features
 fetaure||feature
 fetaures||features
+<<<<<<< HEAD
 fetcing||fetching
+=======
+>>>>>>> b7ba80a49124 (Commit)
 fileystem||filesystem
 fimrware||firmware
 fimware||firmware
 firmare||firmware
 firmaware||firmware
+<<<<<<< HEAD
 firtly||firstly
+=======
+>>>>>>> b7ba80a49124 (Commit)
 firware||firmware
 firwmare||firmware
 finanize||finalize
 findn||find
 finilizes||finalizes
 finsih||finish
+<<<<<<< HEAD
 fliter||filter
+=======
+>>>>>>> b7ba80a49124 (Commit)
 flusing||flushing
 folloing||following
 followign||following
@@ -744,7 +800,10 @@ hanled||handled
 happend||happened
 hardare||hardware
 harware||hardware
+<<<<<<< HEAD
 hardward||hardware
+=======
+>>>>>>> b7ba80a49124 (Commit)
 havind||having
 heirarchically||hierarchically
 heirarchy||hierarchy
@@ -760,7 +819,10 @@ howver||however
 hsould||should
 hypervior||hypervisor
 hypter||hyper
+<<<<<<< HEAD
 idel||idle
+=======
+>>>>>>> b7ba80a49124 (Commit)
 identidier||identifier
 iligal||illegal
 illigal||illegal
@@ -847,7 +909,10 @@ integrety||integrity
 integrey||integrity
 intendet||intended
 intented||intended
+<<<<<<< HEAD
 interal||internal
+=======
+>>>>>>> b7ba80a49124 (Commit)
 interanl||internal
 interchangable||interchangeable
 interferring||interfering
@@ -953,11 +1018,17 @@ matchs||matches
 mathimatical||mathematical
 mathimatic||mathematic
 mathimatics||mathematics
+<<<<<<< HEAD
 maxmium||maximum
 maximium||maximum
 maxium||maximum
 mechamism||mechanism
 mechanim||mechanism
+=======
+maximium||maximum
+maxium||maximum
+mechamism||mechanism
+>>>>>>> b7ba80a49124 (Commit)
 meetign||meeting
 memeory||memory
 memmber||member
@@ -966,7 +1037,10 @@ memroy||memory
 ment||meant
 mergable||mergeable
 mesage||message
+<<<<<<< HEAD
 mesages||messages
+=======
+>>>>>>> b7ba80a49124 (Commit)
 messags||messages
 messgaes||messages
 messsage||message
@@ -1008,9 +1082,14 @@ monochromo||monochrome
 monocrome||monochrome
 mopdule||module
 mroe||more
+<<<<<<< HEAD
 mulitplied||multiplied
 muliple||multiple
 multipler||multiplier
+=======
+multipler||multiplier
+mulitplied||multiplied
+>>>>>>> b7ba80a49124 (Commit)
 multidimensionnal||multidimensional
 multipe||multiple
 multple||multiple
@@ -1033,7 +1112,10 @@ negotation||negotiation
 nerver||never
 nescessary||necessary
 nessessary||necessary
+<<<<<<< HEAD
 none existent||non-existent
+=======
+>>>>>>> b7ba80a49124 (Commit)
 noticable||noticeable
 notication||notification
 notications||notifications
@@ -1055,7 +1137,10 @@ occured||occurred
 occurence||occurrence
 occure||occurred
 occuring||occurring
+<<<<<<< HEAD
 ocurrence||occurrence
+=======
+>>>>>>> b7ba80a49124 (Commit)
 offser||offset
 offet||offset
 offlaod||offload
@@ -1067,7 +1152,10 @@ omitt||omit
 ommiting||omitting
 ommitted||omitted
 onself||oneself
+<<<<<<< HEAD
 onthe||on the
+=======
+>>>>>>> b7ba80a49124 (Commit)
 ony||only
 openning||opening
 operatione||operation
@@ -1134,12 +1222,18 @@ perfomring||performing
 periperal||peripheral
 peripherial||peripheral
 permissons||permissions
+<<<<<<< HEAD
 permited||permitted
+=======
+>>>>>>> b7ba80a49124 (Commit)
 peroid||period
 persistance||persistence
 persistant||persistent
 phoneticly||phonetically
+<<<<<<< HEAD
 plaform||platform
+=======
+>>>>>>> b7ba80a49124 (Commit)
 plalform||platform
 platfoem||platform
 platfrom||platform
@@ -1267,7 +1361,10 @@ refering||referring
 refernces||references
 refernnce||reference
 refrence||reference
+<<<<<<< HEAD
 regiser||register
+=======
+>>>>>>> b7ba80a49124 (Commit)
 registed||registered
 registerd||registered
 registeration||registration
@@ -1308,7 +1405,10 @@ reseting||resetting
 reseved||reserved
 reseverd||reserved
 resizeable||resizable
+<<<<<<< HEAD
 resotre||restore
+=======
+>>>>>>> b7ba80a49124 (Commit)
 resouce||resource
 resouces||resources
 resoures||resources
@@ -1347,8 +1447,11 @@ runtine||runtime
 sacrifying||sacrificing
 safly||safely
 safty||safety
+<<<<<<< HEAD
 satify||satisfy
 satisifed||satisfied
+=======
+>>>>>>> b7ba80a49124 (Commit)
 savable||saveable
 scaleing||scaling
 scaned||scanned
@@ -1400,12 +1503,18 @@ similiar||similar
 simlar||similar
 simliar||similar
 simpified||simplified
+<<<<<<< HEAD
 simultaneusly||simultaneously
+=======
+>>>>>>> b7ba80a49124 (Commit)
 simultanous||simultaneous
 singaled||signaled
 singal||signal
 singed||signed
+<<<<<<< HEAD
 slect||select
+=======
+>>>>>>> b7ba80a49124 (Commit)
 sleeped||slept
 sliped||slipped
 softwade||software
@@ -1475,7 +1584,10 @@ suported||supported
 suport||support
 supportet||supported
 suppored||supported
+<<<<<<< HEAD
 supporing||supporting
+=======
+>>>>>>> b7ba80a49124 (Commit)
 supportin||supporting
 suppoted||supported
 suppported||supported
@@ -1513,18 +1625,27 @@ sytem||system
 sythesis||synthesis
 taht||that
 tained||tainted
+<<<<<<< HEAD
 tarffic||traffic
+=======
+>>>>>>> b7ba80a49124 (Commit)
 tansmit||transmit
 targetted||targeted
 targetting||targeting
 taskelt||tasklet
 teh||the
+<<<<<<< HEAD
 temeprature||temperature
+=======
+>>>>>>> b7ba80a49124 (Commit)
 temorary||temporary
 temproarily||temporarily
 temperture||temperature
 thead||thread
+<<<<<<< HEAD
 theads||threads
+=======
+>>>>>>> b7ba80a49124 (Commit)
 therfore||therefore
 thier||their
 threds||threads
@@ -1573,16 +1694,23 @@ tunning||tuning
 ture||true
 tyep||type
 udpate||update
+<<<<<<< HEAD
 updtes||updates
 uesd||used
 unknwon||unknown
+=======
+uesd||used
+>>>>>>> b7ba80a49124 (Commit)
 uknown||unknown
 usccess||success
 uncommited||uncommitted
 uncompatible||incompatible
 unconditionaly||unconditionally
 undeflow||underflow
+<<<<<<< HEAD
 undelying||underlying
+=======
+>>>>>>> b7ba80a49124 (Commit)
 underun||underrun
 unecessary||unnecessary
 unexecpted||unexpected
@@ -1613,14 +1741,20 @@ unneedingly||unnecessarily
 unnsupported||unsupported
 unmached||unmatched
 unprecise||imprecise
+<<<<<<< HEAD
 unpriviledged||unprivileged
 unpriviliged||unprivileged
+=======
+>>>>>>> b7ba80a49124 (Commit)
 unregester||unregister
 unresgister||unregister
 unrgesiter||unregister
 unsinged||unsigned
 unstabel||unstable
+<<<<<<< HEAD
 unsolicted||unsolicited
+=======
+>>>>>>> b7ba80a49124 (Commit)
 unsolicitied||unsolicited
 unsuccessfull||unsuccessful
 unsuported||unsupported
@@ -1630,7 +1764,10 @@ unuseful||useless
 unvalid||invalid
 upate||update
 upsupported||unsupported
+<<<<<<< HEAD
 upto||up to
+=======
+>>>>>>> b7ba80a49124 (Commit)
 useable||usable
 usefule||useful
 usefull||useful

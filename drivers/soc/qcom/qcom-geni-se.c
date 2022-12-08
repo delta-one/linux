@@ -14,7 +14,11 @@
 #include <linux/of_platform.h>
 #include <linux/pinctrl/consumer.h>
 #include <linux/platform_device.h>
+<<<<<<< HEAD
 #include <linux/soc/qcom/geni-se.h>
+=======
+#include <linux/qcom-geni-se.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * DOC: Overview
@@ -81,19 +85,28 @@
  */
 
 #define MAX_CLK_PERF_LEVEL 32
+<<<<<<< HEAD
 #define MAX_CLKS 2
+=======
+#define NUM_AHB_CLKS 2
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct geni_wrapper - Data structure to represent the QUP Wrapper Core
  * @dev:		Device pointer of the QUP wrapper core
  * @base:		Base address of this instance of QUP wrapper core
+<<<<<<< HEAD
  * @clks:		Handle to the primary & optional secondary AHB clocks
  * @num_clks:		Count of clocks
+=======
+ * @ahb_clks:		Handle to the primary & secondary AHB clocks
+>>>>>>> b7ba80a49124 (Commit)
  * @to_core:		Core ICC path
  */
 struct geni_wrapper {
 	struct device *dev;
 	void __iomem *base;
+<<<<<<< HEAD
 	struct clk_bulk_data clks[MAX_CLKS];
 	unsigned int num_clks;
 };
@@ -106,6 +119,9 @@ struct geni_wrapper {
 struct geni_se_desc {
 	unsigned int num_clks;
 	const char * const *clks;
+=======
+	struct clk_bulk_data ahb_clks[NUM_AHB_CLKS];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const char * const icc_path_names[] = {"qup-core", "qup-config",
@@ -508,7 +524,12 @@ static void geni_se_clks_off(struct geni_se *se)
 	struct geni_wrapper *wrapper = se->wrapper;
 
 	clk_disable_unprepare(se->clk);
+<<<<<<< HEAD
 	clk_bulk_disable_unprepare(wrapper->num_clks, wrapper->clks);
+=======
+	clk_bulk_disable_unprepare(ARRAY_SIZE(wrapper->ahb_clks),
+						wrapper->ahb_clks);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -539,13 +560,23 @@ static int geni_se_clks_on(struct geni_se *se)
 	int ret;
 	struct geni_wrapper *wrapper = se->wrapper;
 
+<<<<<<< HEAD
 	ret = clk_bulk_prepare_enable(wrapper->num_clks, wrapper->clks);
+=======
+	ret = clk_bulk_prepare_enable(ARRAY_SIZE(wrapper->ahb_clks),
+						wrapper->ahb_clks);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
 	ret = clk_prepare_enable(se->clk);
 	if (ret)
+<<<<<<< HEAD
 		clk_bulk_disable_unprepare(wrapper->num_clks, wrapper->clks);
+=======
+		clk_bulk_disable_unprepare(ARRAY_SIZE(wrapper->ahb_clks),
+							wrapper->ahb_clks);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -896,6 +927,7 @@ static int geni_se_probe(struct platform_device *pdev)
 		return PTR_ERR(wrapper->base);
 
 	if (!has_acpi_companion(&pdev->dev)) {
+<<<<<<< HEAD
 		const struct geni_se_desc *desc;
 		int i;
 
@@ -923,6 +955,13 @@ static int geni_se_probe(struct platform_device *pdev)
 		ret = devm_clk_bulk_get(dev, wrapper->num_clks, wrapper->clks);
 		if (ret) {
 			dev_err(dev, "Err getting clks %d\n", ret);
+=======
+		wrapper->ahb_clks[0].id = "m-ahb";
+		wrapper->ahb_clks[1].id = "s-ahb";
+		ret = devm_clk_bulk_get(dev, NUM_AHB_CLKS, wrapper->ahb_clks);
+		if (ret) {
+			dev_err(dev, "Err getting AHB clks %d\n", ret);
+>>>>>>> b7ba80a49124 (Commit)
 			return ret;
 		}
 	}
@@ -932,6 +971,7 @@ static int geni_se_probe(struct platform_device *pdev)
 	return devm_of_platform_populate(dev);
 }
 
+<<<<<<< HEAD
 static const char * const qup_clks[] = {
 	"m-ahb",
 	"s-ahb",
@@ -954,6 +994,10 @@ static const struct geni_se_desc i2c_master_hub_desc = {
 static const struct of_device_id geni_se_dt_match[] = {
 	{ .compatible = "qcom,geni-se-qup", .data = &qup_desc },
 	{ .compatible = "qcom,geni-se-i2c-master-hub", .data = &i2c_master_hub_desc },
+=======
+static const struct of_device_id geni_se_dt_match[] = {
+	{ .compatible = "qcom,geni-se-qup", },
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 MODULE_DEVICE_TABLE(of, geni_se_dt_match);

@@ -16,5 +16,9 @@
 
 / {
 	model = "Globalscale Marvell ESPRESSOBin Board";
+<<<<<<< HEAD
 	compatible = "globalscale,espressobin", "marvell,armada3720", "marvell,armada3700";
+=======
+	compatible = "globalscale,espressobin", "marvell,armada3720", "marvell,armada3710";
+>>>>>>> b7ba80a49124 (Commit)
 };

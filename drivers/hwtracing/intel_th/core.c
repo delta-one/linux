@@ -185,11 +185,19 @@ static struct device_type intel_th_source_device_type = {
 	.release	= intel_th_device_release,
 };
 
+<<<<<<< HEAD
 static char *intel_th_output_devnode(const struct device *dev, umode_t *mode,
 				     kuid_t *uid, kgid_t *gid)
 {
 	const struct intel_th_device *thdev = to_intel_th_device(dev);
 	const struct intel_th *th = to_intel_th(thdev);
+=======
+static char *intel_th_output_devnode(struct device *dev, umode_t *mode,
+				     kuid_t *uid, kgid_t *gid)
+{
+	struct intel_th_device *thdev = to_intel_th_device(dev);
+	struct intel_th *th = to_intel_th(thdev);
+>>>>>>> b7ba80a49124 (Commit)
 	char *node;
 
 	if (thdev->id >= 0)

@@ -35,14 +35,24 @@ struct macvtap_dev {
  */
 static dev_t macvtap_major;
 
+<<<<<<< HEAD
 static const void *macvtap_net_namespace(const struct device *d)
 {
 	const struct net_device *dev = to_net_dev(d->parent);
+=======
+static const void *macvtap_net_namespace(struct device *d)
+{
+	struct net_device *dev = to_net_dev(d->parent);
+>>>>>>> b7ba80a49124 (Commit)
 	return dev_net(dev);
 }
 
 static struct class macvtap_class = {
 	.name = "macvtap",
+<<<<<<< HEAD
+=======
+	.owner = THIS_MODULE,
+>>>>>>> b7ba80a49124 (Commit)
 	.ns_type = &net_ns_type_operations,
 	.namespace = macvtap_net_namespace,
 };

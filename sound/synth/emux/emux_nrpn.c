@@ -349,9 +349,12 @@ int
 snd_emux_xg_control(struct snd_emux_port *port, struct snd_midi_channel *chan,
 		    int param)
 {
+<<<<<<< HEAD
 	if (param >= ARRAY_SIZE(chan->control))
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return send_converted_effect(xg_effects, ARRAY_SIZE(xg_effects),
 				     port, chan, param,
 				     chan->control[param],

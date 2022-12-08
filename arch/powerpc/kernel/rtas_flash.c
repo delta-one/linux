@@ -376,7 +376,11 @@ static void manage_flash(struct rtas_manage_flash_t *args_buf, unsigned int op)
 	s32 rc;
 
 	do {
+<<<<<<< HEAD
 		rc = rtas_call(rtas_function_token(RTAS_FN_IBM_MANAGE_FLASH_IMAGE), 1, 1,
+=======
+		rc = rtas_call(rtas_token("ibm,manage-flash-image"), 1, 1,
+>>>>>>> b7ba80a49124 (Commit)
 			       NULL, op);
 	} while (rtas_busy_delay(rc));
 
@@ -444,7 +448,11 @@ error:
  */
 static void validate_flash(struct rtas_validate_flash_t *args_buf)
 {
+<<<<<<< HEAD
 	int token = rtas_function_token(RTAS_FN_IBM_VALIDATE_FLASH_IMAGE);
+=======
+	int token = rtas_token("ibm,validate-flash-image");
+>>>>>>> b7ba80a49124 (Commit)
 	int update_results;
 	s32 rc;	
 
@@ -570,7 +578,11 @@ static void rtas_flash_firmware(int reboot_type)
 		return;
 	}
 
+<<<<<<< HEAD
 	update_token = rtas_function_token(RTAS_FN_IBM_UPDATE_FLASH_64_AND_REBOOT);
+=======
+	update_token = rtas_token("ibm,update-flash-64-and-reboot");
+>>>>>>> b7ba80a49124 (Commit)
 	if (update_token == RTAS_UNKNOWN_SERVICE) {
 		printk(KERN_ALERT "FLASH: ibm,update-flash-64-and-reboot "
 		       "is not available -- not a service partition?\n");
@@ -653,7 +665,11 @@ static void rtas_flash_firmware(int reboot_type)
  */
 struct rtas_flash_file {
 	const char *filename;
+<<<<<<< HEAD
 	const rtas_fn_handle_t handle;
+=======
+	const char *rtas_call_name;
+>>>>>>> b7ba80a49124 (Commit)
 	int *status;
 	const struct proc_ops ops;
 };
@@ -661,7 +677,11 @@ struct rtas_flash_file {
 static const struct rtas_flash_file rtas_flash_files[] = {
 	{
 		.filename	= "powerpc/rtas/" FIRMWARE_FLASH_NAME,
+<<<<<<< HEAD
 		.handle		= RTAS_FN_IBM_UPDATE_FLASH_64_AND_REBOOT,
+=======
+		.rtas_call_name	= "ibm,update-flash-64-and-reboot",
+>>>>>>> b7ba80a49124 (Commit)
 		.status		= &rtas_update_flash_data.status,
 		.ops.proc_read	= rtas_flash_read_msg,
 		.ops.proc_write	= rtas_flash_write,
@@ -670,7 +690,11 @@ static const struct rtas_flash_file rtas_flash_files[] = {
 	},
 	{
 		.filename	= "powerpc/rtas/" FIRMWARE_UPDATE_NAME,
+<<<<<<< HEAD
 		.handle		= RTAS_FN_IBM_UPDATE_FLASH_64_AND_REBOOT,
+=======
+		.rtas_call_name	= "ibm,update-flash-64-and-reboot",
+>>>>>>> b7ba80a49124 (Commit)
 		.status		= &rtas_update_flash_data.status,
 		.ops.proc_read	= rtas_flash_read_num,
 		.ops.proc_write	= rtas_flash_write,
@@ -679,7 +703,11 @@ static const struct rtas_flash_file rtas_flash_files[] = {
 	},
 	{
 		.filename	= "powerpc/rtas/" VALIDATE_FLASH_NAME,
+<<<<<<< HEAD
 		.handle		= RTAS_FN_IBM_VALIDATE_FLASH_IMAGE,
+=======
+		.rtas_call_name	= "ibm,validate-flash-image",
+>>>>>>> b7ba80a49124 (Commit)
 		.status		= &rtas_validate_flash_data.status,
 		.ops.proc_read	= validate_flash_read,
 		.ops.proc_write	= validate_flash_write,
@@ -688,7 +716,11 @@ static const struct rtas_flash_file rtas_flash_files[] = {
 	},
 	{
 		.filename	= "powerpc/rtas/" MANAGE_FLASH_NAME,
+<<<<<<< HEAD
 		.handle		= RTAS_FN_IBM_MANAGE_FLASH_IMAGE,
+=======
+		.rtas_call_name	= "ibm,manage-flash-image",
+>>>>>>> b7ba80a49124 (Commit)
 		.status		= &rtas_manage_flash_data.status,
 		.ops.proc_read	= manage_flash_read,
 		.ops.proc_write	= manage_flash_write,
@@ -700,7 +732,12 @@ static int __init rtas_flash_init(void)
 {
 	int i;
 
+<<<<<<< HEAD
 	if (rtas_function_token(RTAS_FN_IBM_UPDATE_FLASH_64_AND_REBOOT) == RTAS_UNKNOWN_SERVICE) {
+=======
+	if (rtas_token("ibm,update-flash-64-and-reboot") ==
+		       RTAS_UNKNOWN_SERVICE) {
+>>>>>>> b7ba80a49124 (Commit)
 		pr_info("rtas_flash: no firmware flash support\n");
 		return -EINVAL;
 	}
@@ -729,7 +766,11 @@ static int __init rtas_flash_init(void)
 		 * This code assumes that the status int is the first member of the
 		 * struct
 		 */
+<<<<<<< HEAD
 		token = rtas_function_token(f->handle);
+=======
+		token = rtas_token(f->rtas_call_name);
+>>>>>>> b7ba80a49124 (Commit)
 		if (token == RTAS_UNKNOWN_SERVICE)
 			*f->status = FLASH_AUTH;
 		else

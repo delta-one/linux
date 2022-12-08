@@ -5,7 +5,11 @@
 $id: http://devicetree.org/schemas/spi/marvell,mmp2-ssp.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: PXA2xx SSP SPI Controller
+=======
+title: PXA2xx SSP SPI Controller bindings
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Lubomir Rintel <lkundrak@v3.sk>

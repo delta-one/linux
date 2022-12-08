@@ -11,6 +11,7 @@
 #include <linux/io.h>
 #include <asm/pci-bridge.h>
 
+<<<<<<< HEAD
 static DEFINE_SPINLOCK(hose_spinlock);
 LIST_HEAD(hose_list);
 
@@ -47,6 +48,8 @@ int pci_proc_domain(struct pci_bus *bus)
 	return pci_domain_nr(bus);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void pci_iounmap(struct pci_dev *dev, void __iomem *addr)
 {
 	if (isa_vaddr_is_ioport(addr))

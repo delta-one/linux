@@ -105,6 +105,7 @@ static int sprint_frac(char *dest, int value, int denom)
 }
 
 static int spi_execute(struct scsi_device *sdev, const void *cmd,
+<<<<<<< HEAD
 		       enum req_op op, void *buffer, unsigned int bufflen,
 		       struct scsi_sense_hdr *sshdr)
 {
@@ -118,14 +119,35 @@ static int spi_execute(struct scsi_device *sdev, const void *cmd,
 	};
 
 	sshdr = exec_args.sshdr;
+=======
+		       enum dma_data_direction dir,
+		       void *buffer, unsigned bufflen,
+		       struct scsi_sense_hdr *sshdr)
+{
+	int i, result;
+	unsigned char sense[SCSI_SENSE_BUFFERSIZE];
+	struct scsi_sense_hdr sshdr_tmp;
+
+	if (!sshdr)
+		sshdr = &sshdr_tmp;
+>>>>>>> b7ba80a49124 (Commit)
 
 	for(i = 0; i < DV_RETRIES; i++) {
 		/*
 		 * The purpose of the RQF_PM flag below is to bypass the
 		 * SDEV_QUIESCE state.
 		 */
+<<<<<<< HEAD
 		result = scsi_execute_cmd(sdev, cmd, opf, buffer, bufflen,
 					  DV_TIMEOUT, 1, &exec_args);
+=======
+		result = scsi_execute(sdev, cmd, dir, buffer, bufflen, sense,
+				      sshdr, DV_TIMEOUT, /* retries */ 1,
+				      REQ_FAILFAST_DEV |
+				      REQ_FAILFAST_TRANSPORT |
+				      REQ_FAILFAST_DRIVER,
+				      RQF_PM, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 		if (result < 0 || !scsi_sense_valid(sshdr) ||
 		    sshdr->sense_key != UNIT_ATTENTION)
 			break;
@@ -674,7 +696,11 @@ spi_dv_device_echo_buffer(struct scsi_device *sdev, u8 *buffer,
 	}
 
 	for (r = 0; r < retries; r++) {
+<<<<<<< HEAD
 		result = spi_execute(sdev, spi_write_buffer, REQ_OP_DRV_OUT,
+=======
+		result = spi_execute(sdev, spi_write_buffer, DMA_TO_DEVICE,
+>>>>>>> b7ba80a49124 (Commit)
 				     buffer, len, &sshdr);
 		if(result || !scsi_device_online(sdev)) {
 
@@ -696,7 +722,11 @@ spi_dv_device_echo_buffer(struct scsi_device *sdev, u8 *buffer,
 		}
 
 		memset(ptr, 0, len);
+<<<<<<< HEAD
 		spi_execute(sdev, spi_read_buffer, REQ_OP_DRV_IN,
+=======
+		spi_execute(sdev, spi_read_buffer, DMA_FROM_DEVICE,
+>>>>>>> b7ba80a49124 (Commit)
 			    ptr, len, NULL);
 		scsi_device_set_state(sdev, SDEV_QUIESCE);
 
@@ -721,7 +751,11 @@ spi_dv_device_compare_inquiry(struct scsi_device *sdev, u8 *buffer,
 	for (r = 0; r < retries; r++) {
 		memset(ptr, 0, len);
 
+<<<<<<< HEAD
 		result = spi_execute(sdev, spi_inquiry, REQ_OP_DRV_IN,
+=======
+		result = spi_execute(sdev, spi_inquiry, DMA_FROM_DEVICE,
+>>>>>>> b7ba80a49124 (Commit)
 				     ptr, len, NULL);
 		
 		if(result || !scsi_device_online(sdev)) {
@@ -827,7 +861,11 @@ spi_dv_device_get_echo_buffer(struct scsi_device *sdev, u8 *buffer)
 	 * (reservation conflict, device not ready, etc) just
 	 * skip the write tests */
 	for (l = 0; ; l++) {
+<<<<<<< HEAD
 		result = spi_execute(sdev, spi_test_unit_ready, REQ_OP_DRV_IN,
+=======
+		result = spi_execute(sdev, spi_test_unit_ready, DMA_NONE, 
+>>>>>>> b7ba80a49124 (Commit)
 				     NULL, 0, NULL);
 
 		if(result) {
@@ -840,7 +878,11 @@ spi_dv_device_get_echo_buffer(struct scsi_device *sdev, u8 *buffer)
 	}
 
 	result = spi_execute(sdev, spi_read_buffer_descriptor, 
+<<<<<<< HEAD
 			     REQ_OP_DRV_IN, buffer, 4, NULL);
+=======
+			     DMA_FROM_DEVICE, buffer, 4, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (result)
 		/* Device has no echo buffer */

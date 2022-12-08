@@ -120,18 +120,31 @@ err:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void qcom_apcs_sdx55_clk_remove(struct platform_device *pdev)
+=======
+static int qcom_apcs_sdx55_clk_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device *cpu_dev = get_cpu_device(0);
 	struct clk_regmap_mux_div *a7cc = platform_get_drvdata(pdev);
 
 	clk_notifier_unregister(a7cc->pclk, &a7cc->clk_nb);
 	dev_pm_domain_detach(cpu_dev, true);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver qcom_apcs_sdx55_clk_driver = {
 	.probe = qcom_apcs_sdx55_clk_probe,
+<<<<<<< HEAD
 	.remove_new = qcom_apcs_sdx55_clk_remove,
+=======
+	.remove = qcom_apcs_sdx55_clk_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "qcom-sdx55-acps-clk",
 	},

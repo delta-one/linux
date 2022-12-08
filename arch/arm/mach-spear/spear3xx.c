@@ -13,7 +13,10 @@
 #include <linux/amba/pl022.h>
 #include <linux/amba/pl080.h>
 #include <linux/clk.h>
+<<<<<<< HEAD
 #include <linux/clk/spear.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/io.h>
 #include <asm/mach/map.h>
 #include "pl080.h"

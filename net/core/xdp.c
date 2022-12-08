@@ -4,8 +4,11 @@
  * Copyright (c) 2017 Jesper Dangaard Brouer, Red Hat Inc.
  */
 #include <linux/bpf.h>
+<<<<<<< HEAD
 #include <linux/btf.h>
 #include <linux/btf_ids.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/filter.h>
 #include <linux/types.h>
 #include <linux/mm.h>
@@ -377,10 +380,15 @@ EXPORT_SYMBOL_GPL(xdp_rxq_info_reg_mem_model);
 void __xdp_return(void *data, struct xdp_mem_info *mem, bool napi_direct,
 		  struct xdp_buff *xdp)
 {
+<<<<<<< HEAD
+=======
+	struct xdp_mem_allocator *xa;
+>>>>>>> b7ba80a49124 (Commit)
 	struct page *page;
 
 	switch (mem->type) {
 	case MEM_TYPE_PAGE_POOL:
+<<<<<<< HEAD
 		page = virt_to_head_page(data);
 		if (napi_direct && xdp_return_frame_no_direct())
 			napi_direct = false;
@@ -388,6 +396,16 @@ void __xdp_return(void *data, struct xdp_mem_info *mem, bool napi_direct,
 		 * as mem->type knows this a page_pool page
 		 */
 		page_pool_put_full_page(page->pp, page, napi_direct);
+=======
+		rcu_read_lock();
+		/* mem->id is valid, checked in xdp_rxq_info_reg_mem_model() */
+		xa = rhashtable_lookup(mem_id_ht, &mem->id, mem_id_rht_params);
+		page = virt_to_head_page(data);
+		if (napi_direct && xdp_return_frame_no_direct())
+			napi_direct = false;
+		page_pool_put_full_page(xa->page_pool, page, napi_direct);
+		rcu_read_unlock();
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case MEM_TYPE_PAGE_SHARED:
 		page_frag_free(data);
@@ -531,6 +549,24 @@ out:
 }
 EXPORT_SYMBOL_GPL(xdp_return_buff);
 
+<<<<<<< HEAD
+=======
+/* Only called for MEM_TYPE_PAGE_POOL see xdp.h */
+void __xdp_release_frame(void *data, struct xdp_mem_info *mem)
+{
+	struct xdp_mem_allocator *xa;
+	struct page *page;
+
+	rcu_read_lock();
+	xa = rhashtable_lookup(mem_id_ht, &mem->id, mem_id_rht_params);
+	page = virt_to_head_page(data);
+	if (xa)
+		page_pool_release_page(xa->page_pool, page);
+	rcu_read_unlock();
+}
+EXPORT_SYMBOL_GPL(__xdp_release_frame);
+
+>>>>>>> b7ba80a49124 (Commit)
 void xdp_attachment_setup(struct xdp_attachment_info *info,
 			  struct netdev_bpf *bpf)
 {
@@ -589,7 +625,12 @@ EXPORT_SYMBOL_GPL(xdp_warn);
 
 int xdp_alloc_skb_bulk(void **skbs, int n_skb, gfp_t gfp)
 {
+<<<<<<< HEAD
 	n_skb = kmem_cache_alloc_bulk(skbuff_cache, gfp, n_skb, skbs);
+=======
+	n_skb = kmem_cache_alloc_bulk(skbuff_head_cache, gfp,
+				      n_skb, skbs);
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(!n_skb))
 		return -ENOMEM;
 
@@ -643,8 +684,13 @@ struct sk_buff *__xdp_build_skb_from_frame(struct xdp_frame *xdpf,
 	 * - RX ring dev queue index	(skb_record_rx_queue)
 	 */
 
+<<<<<<< HEAD
 	if (xdpf->mem.type == MEM_TYPE_PAGE_POOL)
 		skb_mark_for_recycle(skb);
+=======
+	/* Until page_pool get SKB return path, release DMA here */
+	xdp_release_frame(xdpf);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Allow SKB to reuse area used by xdp_frame */
 	xdp_scrub_frame(xdpf);
@@ -658,7 +704,11 @@ struct sk_buff *xdp_build_skb_from_frame(struct xdp_frame *xdpf,
 {
 	struct sk_buff *skb;
 
+<<<<<<< HEAD
 	skb = kmem_cache_alloc(skbuff_cache, GFP_ATOMIC);
+=======
+	skb = kmem_cache_alloc(skbuff_head_cache, GFP_ATOMIC);
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(!skb))
 		return NULL;
 
@@ -695,6 +745,7 @@ struct xdp_frame *xdpf_clone(struct xdp_frame *xdpf)
 
 	return nxdpf;
 }
+<<<<<<< HEAD
 
 __diag_push();
 __diag_ignore_all("-Wmissing-prototypes",
@@ -796,3 +847,5 @@ void xdp_features_clear_redirect_target(struct net_device *dev)
 	xdp_set_features_flag(dev, val);
 }
 EXPORT_SYMBOL_GPL(xdp_features_clear_redirect_target);
+=======
+>>>>>>> b7ba80a49124 (Commit)

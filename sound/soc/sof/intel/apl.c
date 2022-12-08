@@ -45,9 +45,12 @@ int sof_apl_ops_init(struct snd_sof_dev *sdev)
 
 		/* ipc */
 		sof_apl_ops.send_msg	= hda_dsp_ipc_send_msg;
+<<<<<<< HEAD
 
 		/* debug */
 		sof_apl_ops.ipc_dump	= hda_ipc_dump;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (sdev->pdata->ipc_type == SOF_INTEL_IPC4) {
@@ -62,17 +65,23 @@ int sof_apl_ops_init(struct snd_sof_dev *sdev)
 
 		ipc4_data->mtrace_type = SOF_IPC4_MTRACE_INTEL_CAVS_1_5;
 
+<<<<<<< HEAD
 		/* External library loading support */
 		ipc4_data->load_library = hda_dsp_ipc4_load_library;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* doorbell */
 		sof_apl_ops.irq_thread	= hda_dsp_ipc4_irq_thread;
 
 		/* ipc */
 		sof_apl_ops.send_msg	= hda_dsp_ipc4_send_msg;
+<<<<<<< HEAD
 
 		/* debug */
 		sof_apl_ops.ipc_dump	= hda_ipc4_dump;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* set DAI driver ops */
@@ -81,6 +90,10 @@ int sof_apl_ops_init(struct snd_sof_dev *sdev)
 	/* debug */
 	sof_apl_ops.debug_map	= apl_dsp_debugfs;
 	sof_apl_ops.debug_map_count	= ARRAY_SIZE(apl_dsp_debugfs);
+<<<<<<< HEAD
+=======
+	sof_apl_ops.ipc_dump	= hda_ipc_dump;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* firmware run */
 	sof_apl_ops.run = hda_dsp_cl_boot_firmware;
@@ -109,12 +122,18 @@ const struct sof_intel_dsp_desc apl_chip_info = {
 	.rom_init_timeout	= 150,
 	.ssp_count = APL_SSP_COUNT,
 	.ssp_base_offset = APL_SSP_BASE_OFFSET,
+<<<<<<< HEAD
 	.d0i3_offset = SOF_HDA_VS_D0I3C,
 	.quirks = SOF_INTEL_PROCEN_FMT_QUIRK,
 	.check_ipc_irq	= hda_dsp_check_ipc_irq,
 	.cl_init = cl_dsp_init,
 	.power_down_dsp = hda_power_down_dsp,
 	.disable_interrupts = hda_dsp_disable_interrupts,
+=======
+	.quirks = SOF_INTEL_PROCEN_FMT_QUIRK,
+	.check_ipc_irq	= hda_dsp_check_ipc_irq,
+	.cl_init = cl_dsp_init,
+>>>>>>> b7ba80a49124 (Commit)
 	.hw_ip_version = SOF_INTEL_CAVS_1_5_PLUS,
 };
 EXPORT_SYMBOL_NS(apl_chip_info, SND_SOC_SOF_INTEL_HDA_COMMON);

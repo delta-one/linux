@@ -601,7 +601,11 @@ static int journal_list_still_alive(struct super_block *s,
  */
 static void release_buffer_page(struct buffer_head *bh)
 {
+<<<<<<< HEAD
 	struct folio *folio = bh->b_folio;
+=======
+	struct folio *folio = page_folio(bh->b_page);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!folio->mapping && folio_trylock(folio)) {
 		folio_get(folio);
 		put_bh(bh);
@@ -866,7 +870,11 @@ loop_next:
 		 * will ever write the buffer. We're safe if we write the
 		 * page one last time after freeing the journal header.
 		 */
+<<<<<<< HEAD
 		if (buffer_dirty(bh) && unlikely(bh->b_folio->mapping == NULL)) {
+=======
+		if (buffer_dirty(bh) && unlikely(bh->b_page->mapping == NULL)) {
+>>>>>>> b7ba80a49124 (Commit)
 			spin_unlock(lock);
 			write_dirty_buffer(bh, 0);
 			spin_lock(lock);

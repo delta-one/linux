@@ -8,6 +8,7 @@
 #ifndef _DT_BINDINGS_PINCTRL_TI_K3_H
 #define _DT_BINDINGS_PINCTRL_TI_K3_H
 
+<<<<<<< HEAD
 /*
  * These bindings are deprecated, because they do not match the actual
  * concept of bindings but rather contain pure register values.
@@ -15,6 +16,8 @@
  */
 #warning "These bindings are deprecated. Instead, use the header in the DTS source directory."
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define PULLUDEN_SHIFT		(16)
 #define PULLTYPESEL_SHIFT	(17)
 #define RXACTIVE_SHIFT		(18)
@@ -54,7 +57,10 @@
 #define J721S2_IOPAD(pa, val, muxmode)		(((pa) & 0x1fff)) ((val) | (muxmode))
 #define J721S2_WKUP_IOPAD(pa, val, muxmode)	(((pa) & 0x1fff)) ((val) | (muxmode))
 
+<<<<<<< HEAD
 #define J784S4_IOPAD(pa, val, muxmode)		(((pa) & 0x1fff)) ((val) | (muxmode))
 #define J784S4_WKUP_IOPAD(pa, val, muxmode)	(((pa) & 0x1fff)) ((val) | (muxmode))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

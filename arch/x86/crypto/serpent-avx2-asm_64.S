@@ -550,6 +550,10 @@
 #define write_blocks(x0, x1, x2, x3, t0, t1, t2) \
 	transpose_4x4(x0, x1, x2, x3, t0, t1, t2)
 
+<<<<<<< HEAD
+=======
+.align 8
+>>>>>>> b7ba80a49124 (Commit)
 SYM_FUNC_START_LOCAL(__serpent_enc_blk16)
 	/* input:
 	 *	%rdi: ctx, CTX
@@ -603,6 +607,10 @@ SYM_FUNC_START_LOCAL(__serpent_enc_blk16)
 	RET;
 SYM_FUNC_END(__serpent_enc_blk16)
 
+<<<<<<< HEAD
+=======
+.align 8
+>>>>>>> b7ba80a49124 (Commit)
 SYM_FUNC_START_LOCAL(__serpent_dec_blk16)
 	/* input:
 	 *	%rdi: ctx, CTX

@@ -10,12 +10,17 @@
 #ifndef _PTP_CLASSIFY_H_
 #define _PTP_CLASSIFY_H_
 
+<<<<<<< HEAD
 #include <asm/unaligned.h>
 #include <linux/ip.h>
 #include <linux/ktime.h>
 #include <linux/skbuff.h>
 #include <linux/udp.h>
 #include <net/checksum.h>
+=======
+#include <linux/ip.h>
+#include <linux/skbuff.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #define PTP_CLASS_NONE  0x00 /* not a PTP event message */
 #define PTP_CLASS_V1    0x01 /* protocol version 1 */
@@ -134,6 +139,7 @@ static inline u8 ptp_get_msgtype(const struct ptp_header *hdr,
 }
 
 /**
+<<<<<<< HEAD
  * ptp_check_diff8 - Computes new checksum (when altering a 64-bit field)
  * @old: old field value
  * @new: new field value
@@ -197,6 +203,8 @@ void ptp_header_update_correction(struct sk_buff *skb, unsigned int type,
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * ptp_msg_is_sync - Evaluates whether the given skb is a PTP Sync message
  * @skb: packet buffer
  * @type: type of the packet (see ptp_classify_raw())
@@ -233,11 +241,14 @@ static inline bool ptp_msg_is_sync(struct sk_buff *skb, unsigned int type)
 {
 	return false;
 }
+<<<<<<< HEAD
 
 static inline
 void ptp_header_update_correction(struct sk_buff *skb, unsigned int type,
 				  struct ptp_header *hdr, s64 correction)
 {
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 #endif /* _PTP_CLASSIFY_H_ */

@@ -6,6 +6,7 @@
 /dts-v1/;
 
 #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+<<<<<<< HEAD
 #include <dt-bindings/sound/qcom,q6dsp-lpass-ports.h>
 #include "sm8450.dtsi"
 #include "pm8350.dtsi"
@@ -15,6 +16,9 @@
 #include "pmk8350.dtsi"
 #include "pmr735a.dtsi"
 #include "pmr735b.dtsi"
+=======
+#include "sm8450.dtsi"
+>>>>>>> b7ba80a49124 (Commit)
 
 / {
 	model = "Qualcomm Technologies, Inc. SM8450 HDK";
@@ -24,6 +28,7 @@
 		serial0 = &uart7;
 	};
 
+<<<<<<< HEAD
 	wcd938x: audio-codec {
 		compatible = "qcom,wcd9385-codec";
 
@@ -50,10 +55,13 @@
 		#sound-dai-cells = <1>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	chosen {
 		stdout-path = "serial0:115200n8";
 	};
 
+<<<<<<< HEAD
 	hdmi-out {
 		compatible = "hdmi-connector";
 		type = "a";
@@ -121,6 +129,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vph_pwr: vph-pwr-regulator {
 		compatible = "regulator-fixed";
 		regulator-name = "vph_pwr";
@@ -133,7 +143,11 @@
 };
 
 &apps_rsc {
+<<<<<<< HEAD
 	regulators-0 {
+=======
+	pm8350-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8350-rpmh-regulators";
 		qcom,pmic-id = "b";
 
@@ -224,7 +238,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	regulators-1 {
+=======
+	pm8350c-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8350c-rpmh-regulators";
 		qcom,pmic-id = "c";
 
@@ -337,7 +355,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	regulators-2 {
+=======
+	pm8450-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8450-rpmh-regulators";
 		qcom,pmic-id = "h";
 
@@ -377,9 +399,16 @@
 			regulator-max-microvolt = <912000>;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
+<<<<<<< HEAD
 	};
 
 	regulators-3 {
+=======
+
+	};
+
+	pmr735a-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pmr735a-rpmh-regulators";
 		qcom,pmic-id = "e";
 
@@ -449,6 +478,7 @@
 	};
 };
 
+<<<<<<< HEAD
 &dispcc {
 	status = "okay";
 };
@@ -517,6 +547,8 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &pcie0 {
 	status = "okay";
 	max-link-speed = <2>;
@@ -562,6 +594,7 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &qupv3_id_1 {
 	status = "okay";
 };
@@ -728,6 +761,10 @@
 		drive-strength = <2>;
 		bias-pull-up;
 	};
+=======
+&tlmm {
+	gpio-reserved-ranges = <28 4>, <36 4>;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &uart7 {
@@ -757,6 +794,7 @@
 };
 
 &usb_1_dwc3 {
+<<<<<<< HEAD
 	dr_mode = "otg";
 	usb-role-switch;
 };
@@ -767,6 +805,9 @@
 
 &usb_1_dwc3_ss {
 	remote-endpoint = <&pmic_glink_ss_in>;
+=======
+	dr_mode = "peripheral";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &usb_1_hsphy {
@@ -783,6 +824,7 @@
 	vdda-phy-supply = <&vreg_l6b_1p2>;
 	vdda-pll-supply = <&vreg_l1b_0p91>;
 };
+<<<<<<< HEAD
 
 &vamacro {
 	pinctrl-0 = <&dmic01_default>, <&dmic02_default>;
@@ -818,3 +860,5 @@
 		output-low;
 	};
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

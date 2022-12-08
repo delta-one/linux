@@ -152,6 +152,7 @@ void show_stack(struct task_struct *task, unsigned long *stack,
 static void show_last_breaking_event(struct pt_regs *regs)
 {
 	printk("Last Breaking-Event-Address:\n");
+<<<<<<< HEAD
 	printk(" [<%016lx>] ", regs->last_break);
 	if (user_mode(regs)) {
 		print_vma_addr(KERN_CONT, regs->last_break);
@@ -159,6 +160,9 @@ static void show_last_breaking_event(struct pt_regs *regs)
 	} else {
 		pr_cont("%pSR\n", (void *)regs->last_break);
 	}
+=======
+	printk(" [<%016lx>] %pSR\n", regs->last_break, (void *)regs->last_break);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void show_registers(struct pt_regs *regs)

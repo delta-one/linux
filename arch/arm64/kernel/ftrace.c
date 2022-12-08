@@ -17,6 +17,7 @@
 #include <asm/insn.h>
 #include <asm/patching.h>
 
+<<<<<<< HEAD
 #ifdef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
 struct fregs_offset {
 	const char *name;
@@ -143,6 +144,9 @@ unsigned long ftrace_call_adjust(unsigned long addr)
 	return addr;
 }
 
+=======
+#ifdef CONFIG_DYNAMIC_FTRACE
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Replace a single instruction, which may be a branch or NOP.
  * If @validate == true, a replaced instruction is checked against 'old'.
@@ -181,6 +185,7 @@ int ftrace_update_ftrace_func(ftrace_func_t func)
 	unsigned long pc;
 	u32 new;
 
+<<<<<<< HEAD
 	/*
 	 * When using CALL_OPS, the function to call is associated with the
 	 * call site, and we don't have a global function pointer to update.
@@ -189,6 +194,9 @@ int ftrace_update_ftrace_func(ftrace_func_t func)
 		return 0;
 
 	pc = (unsigned long)ftrace_call;
+=======
+	pc = (unsigned long)function_nocfi(ftrace_call);
+>>>>>>> b7ba80a49124 (Commit)
 	new = aarch64_insn_gen_branch_imm(pc, (unsigned long)func,
 					  AARCH64_INSN_BRANCH_LINK);
 
@@ -202,6 +210,12 @@ static struct plt_entry *get_ftrace_plt(struct module *mod, unsigned long addr)
 
 	if (addr == FTRACE_ADDR)
 		return &plt[FTRACE_PLT_IDX];
+<<<<<<< HEAD
+=======
+	if (addr == FTRACE_REGS_ADDR &&
+	    IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_REGS))
+		return &plt[FTRACE_REGS_PLT_IDX];
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	return NULL;
 }
@@ -266,6 +280,7 @@ static bool ftrace_find_callable_addr(struct dyn_ftrace *rec,
 	return true;
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS
 static const struct ftrace_ops *arm64_rec_get_ops(struct dyn_ftrace *rec)
 {
@@ -304,6 +319,8 @@ static int ftrace_rec_set_nop_ops(struct dyn_ftrace *rec) { return 0; }
 static int ftrace_rec_update_ops(struct dyn_ftrace *rec) { return 0; }
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Turn on the call to ftrace_caller() in instrumented function
  */
@@ -311,11 +328,14 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
 {
 	unsigned long pc = rec->ip;
 	u32 old, new;
+<<<<<<< HEAD
 	int ret;
 
 	ret = ftrace_rec_update_ops(rec);
 	if (ret)
 		return ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!ftrace_find_callable_addr(rec, NULL, &addr))
 		return -EINVAL;
@@ -326,6 +346,7 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
 	return ftrace_modify_code(pc, old, new, true);
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS
 int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
 		       unsigned long addr)
@@ -340,6 +361,27 @@ int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
 #endif
 
 #ifdef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+=======
+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
+int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
+			unsigned long addr)
+{
+	unsigned long pc = rec->ip;
+	u32 old, new;
+
+	if (!ftrace_find_callable_addr(rec, NULL, &old_addr))
+		return -EINVAL;
+	if (!ftrace_find_callable_addr(rec, NULL, &addr))
+		return -EINVAL;
+
+	old = aarch64_insn_gen_branch_imm(pc, old_addr,
+					  AARCH64_INSN_BRANCH_LINK);
+	new = aarch64_insn_gen_branch_imm(pc, addr, AARCH64_INSN_BRANCH_LINK);
+
+	return ftrace_modify_code(pc, old, new, true);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * The compiler has inserted two NOPs before the regular function prologue.
  * All instrumented functions follow the AAPCS, so x0-x8 and x19-x30 are live,
@@ -355,7 +397,11 @@ int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
  * | NOP      | MOV X9, LR | MOV X9, LR |
  * | NOP      | NOP        | BL <entry> |
  *
+<<<<<<< HEAD
  * The LR value will be recovered by ftrace_caller, and restored into LR
+=======
+ * The LR value will be recovered by ftrace_regs_entry, and restored into LR
+>>>>>>> b7ba80a49124 (Commit)
  * before returning to the regular function prologue. When a function is not
  * being traced, the MOV is not harmful given x9 is not live per the AAPCS.
  *
@@ -366,11 +412,14 @@ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
 {
 	unsigned long pc = rec->ip - AARCH64_INSN_SIZE;
 	u32 old, new;
+<<<<<<< HEAD
 	int ret;
 
 	ret = ftrace_rec_set_nop_ops(rec);
 	if (ret)
 		return ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	old = aarch64_insn_gen_nop();
 	new = aarch64_insn_gen_move_reg(AARCH64_INSN_REG_9,
@@ -388,6 +437,7 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
 {
 	unsigned long pc = rec->ip;
 	u32 old = 0, new;
+<<<<<<< HEAD
 	int ret;
 
 	new = aarch64_insn_gen_nop();
@@ -409,11 +459,17 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
 	    IS_ENABLED(CONFIG_ARM64_MODULE_PLTS) && mod) {
 		return aarch64_insn_patch_text_nosync((void *)pc, new);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!ftrace_find_callable_addr(rec, mod, &addr))
 		return -EINVAL;
 
 	old = aarch64_insn_gen_branch_imm(pc, addr, AARCH64_INSN_BRANCH_LINK);
+<<<<<<< HEAD
+=======
+	new = aarch64_insn_gen_nop();
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ftrace_modify_code(pc, old, new, true);
 }
@@ -423,6 +479,10 @@ void arch_ftrace_update_code(int command)
 	command |= FTRACE_MAY_SLEEP;
 	ftrace_modify_all_code(command);
 }
+<<<<<<< HEAD
+=======
+#endif /* CONFIG_DYNAMIC_FTRACE */
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_FUNCTION_GRAPH_TRACER
 /*
@@ -453,11 +513,29 @@ void prepare_ftrace_return(unsigned long self_addr, unsigned long *parent,
 	}
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
 void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
 		       struct ftrace_ops *op, struct ftrace_regs *fregs)
 {
 	prepare_ftrace_return(ip, &fregs->lr, fregs->fp);
+=======
+#ifdef CONFIG_DYNAMIC_FTRACE
+
+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
+void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+		       struct ftrace_ops *op, struct ftrace_regs *fregs)
+{
+	/*
+	 * When DYNAMIC_FTRACE_WITH_REGS is selected, `fregs` can never be NULL
+	 * and arch_ftrace_get_regs(fregs) will always give a non-NULL pt_regs
+	 * in which we can safely modify the LR.
+	 */
+	struct pt_regs *regs = arch_ftrace_get_regs(fregs);
+	unsigned long *parent = (unsigned long *)&procedure_link_pointer(regs);
+
+	prepare_ftrace_return(ip, parent, frame_pointer(regs));
+>>>>>>> b7ba80a49124 (Commit)
 }
 #else
 /*
@@ -489,5 +567,10 @@ int ftrace_disable_ftrace_graph_caller(void)
 {
 	return ftrace_modify_graph_caller(false);
 }
+<<<<<<< HEAD
 #endif /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
+=======
+#endif /* CONFIG_DYNAMIC_FTRACE_WITH_REGS */
+#endif /* CONFIG_DYNAMIC_FTRACE */
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_FUNCTION_GRAPH_TRACER */

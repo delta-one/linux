@@ -1,5 +1,9 @@
 # SPDX-License-Identifier: GPL-2.0
 
+<<<<<<< HEAD
+=======
+target.json
+>>>>>>> b7ba80a49124 (Commit)
 bindings_generated.rs
 bindings_helpers_generated.rs
 exports_*_generated.h

@@ -11,12 +11,22 @@ Video4Linux (V4L) driver-specific documentation
 
 	bttv
 	cafe_ccic
+<<<<<<< HEAD
 	cx88
+=======
+	cpia2
+	cx88
+	davinci-vpbe
+>>>>>>> b7ba80a49124 (Commit)
 	fimc
 	imx
 	imx7
 	ipu3
 	ivtv
+<<<<<<< HEAD
+=======
+	meye
+>>>>>>> b7ba80a49124 (Commit)
 	omap3isp
 	omap4_camera
 	philips
@@ -28,5 +38,8 @@ Video4Linux (V4L) driver-specific documentation
 	si4713
 	si476x
 	vimc
+<<<<<<< HEAD
 	visl
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vivid

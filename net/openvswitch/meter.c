@@ -343,7 +343,11 @@ static struct dp_meter *dp_meter_create(struct nlattr **a)
 			return ERR_PTR(-EINVAL);
 
 	/* Allocate and set up the meter before locking anything. */
+<<<<<<< HEAD
 	meter = kzalloc(struct_size(meter, bands, n_bands), GFP_KERNEL_ACCOUNT);
+=======
+	meter = kzalloc(struct_size(meter, bands, n_bands), GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!meter)
 		return ERR_PTR(-ENOMEM);
 
@@ -449,7 +453,11 @@ static int ovs_meter_cmd_set(struct sk_buff *skb, struct genl_info *info)
 
 	err = attach_meter(meter_tbl, meter);
 	if (err)
+<<<<<<< HEAD
 		goto exit_free_old_meter;
+=======
+		goto exit_unlock;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ovs_unlock();
 
@@ -472,8 +480,11 @@ static int ovs_meter_cmd_set(struct sk_buff *skb, struct genl_info *info)
 	genlmsg_end(reply, ovs_reply_header);
 	return genlmsg_reply(reply, info);
 
+<<<<<<< HEAD
 exit_free_old_meter:
 	ovs_meter_free(old_meter);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 exit_unlock:
 	ovs_unlock();
 	nlmsg_free(reply);
@@ -689,9 +700,15 @@ static const struct genl_small_ops dp_meter_genl_ops[] = {
 	},
 	{ .cmd = OVS_METER_CMD_SET,
 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+<<<<<<< HEAD
 		.flags = GENL_UNS_ADMIN_PERM, /* Requires CAP_NET_ADMIN
 					       *  privilege.
 					       */
+=======
+		.flags = GENL_ADMIN_PERM, /* Requires CAP_NET_ADMIN
+					   *  privilege.
+					   */
+>>>>>>> b7ba80a49124 (Commit)
 		.doit = ovs_meter_cmd_set,
 	},
 	{ .cmd = OVS_METER_CMD_GET,
@@ -701,9 +718,15 @@ static const struct genl_small_ops dp_meter_genl_ops[] = {
 	},
 	{ .cmd = OVS_METER_CMD_DEL,
 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+<<<<<<< HEAD
 		.flags = GENL_UNS_ADMIN_PERM, /* Requires CAP_NET_ADMIN
 					       *  privilege.
 					       */
+=======
+		.flags = GENL_ADMIN_PERM, /* Requires CAP_NET_ADMIN
+					   *  privilege.
+					   */
+>>>>>>> b7ba80a49124 (Commit)
 		.doit = ovs_meter_cmd_del
 	},
 };

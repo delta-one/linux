@@ -80,7 +80,15 @@ struct fw_sysfs {
 	struct firmware *fw;
 	void *fw_upload_priv;
 };
+<<<<<<< HEAD
 #define to_fw_sysfs(__dev)	container_of_const(__dev, struct fw_sysfs, dev)
+=======
+
+static inline struct fw_sysfs *to_fw_sysfs(struct device *dev)
+{
+	return container_of(dev, struct fw_sysfs, dev);
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 void __fw_load_abort(struct fw_priv *fw_priv);
 

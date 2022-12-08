@@ -40,21 +40,29 @@ static int port_cost(struct net_device *dev)
 		switch (ecmd.base.speed) {
 		case SPEED_10000:
 			return 2;
+<<<<<<< HEAD
 		case SPEED_5000:
 			return 3;
 		case SPEED_2500:
 			return 4;
 		case SPEED_1000:
 			return 5;
+=======
+		case SPEED_1000:
+			return 4;
+>>>>>>> b7ba80a49124 (Commit)
 		case SPEED_100:
 			return 19;
 		case SPEED_10:
 			return 100;
+<<<<<<< HEAD
 		case SPEED_UNKNOWN:
 			return 100;
 		default:
 			if (ecmd.base.speed > SPEED_10000)
 				return 1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -262,14 +270,22 @@ static void release_nbp(struct kobject *kobj)
 	kfree(p);
 }
 
+<<<<<<< HEAD
 static void brport_get_ownership(const struct kobject *kobj, kuid_t *uid, kgid_t *gid)
+=======
+static void brport_get_ownership(struct kobject *kobj, kuid_t *uid, kgid_t *gid)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct net_bridge_port *p = kobj_to_brport(kobj);
 
 	net_ns_get_ownership(dev_net(p->dev), uid, gid);
 }
 
+<<<<<<< HEAD
 static const struct kobj_type brport_ktype = {
+=======
+static struct kobj_type brport_ktype = {
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_SYSFS
 	.sysfs_ops = &brport_sysfs_ops,
 #endif

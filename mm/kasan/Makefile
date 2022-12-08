@@ -35,6 +35,7 @@ CFLAGS_shadow.o := $(CC_FLAGS_KASAN_RUNTIME)
 CFLAGS_hw_tags.o := $(CC_FLAGS_KASAN_RUNTIME)
 CFLAGS_sw_tags.o := $(CC_FLAGS_KASAN_RUNTIME)
 
+<<<<<<< HEAD
 CFLAGS_KASAN_TEST := $(CFLAGS_KASAN) $(call cc-disable-warning, vla)
 ifndef CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX
 # If compiler instruments memintrinsics by prefixing them with __asan/__hwasan,
@@ -43,6 +44,9 @@ ifndef CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX
 # pass -fno-builtin, so the compiler doesn't inline them.
 CFLAGS_KASAN_TEST += -fno-builtin
 endif
+=======
+CFLAGS_KASAN_TEST := $(CFLAGS_KASAN) -fno-builtin $(call cc-disable-warning, vla)
+>>>>>>> b7ba80a49124 (Commit)
 
 CFLAGS_kasan_test.o := $(CFLAGS_KASAN_TEST)
 CFLAGS_kasan_test_module.o := $(CFLAGS_KASAN_TEST)

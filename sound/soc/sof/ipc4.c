@@ -8,12 +8,18 @@
 // Authors: Rander Wang <rander.wang@linux.intel.com>
 //	    Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
 //
+<<<<<<< HEAD
 #include <linux/firmware.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <sound/sof/header.h>
 #include <sound/sof/ipc4/header.h>
 #include "sof-priv.h"
 #include "sof-audio.h"
+<<<<<<< HEAD
 #include "ipc4-fw-reg.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "ipc4-priv.h"
 #include "ops.h"
 
@@ -297,7 +303,10 @@ static int ipc4_wait_tx_done(struct snd_sof_ipc *ipc, void *reply_data)
 	if (ret == 0) {
 		dev_err(sdev->dev, "ipc timed out for %#x|%#x\n",
 			ipc4_msg->primary, ipc4_msg->extension);
+<<<<<<< HEAD
 		snd_sof_handle_fw_exception(ipc->sdev, "IPC timeout");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return -ETIMEDOUT;
 	}
 
@@ -344,8 +353,11 @@ static int ipc4_tx_msg_unlocked(struct snd_sof_ipc *ipc,
 	if (msg_bytes > ipc->max_payload_size || reply_bytes > ipc->max_payload_size)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	sof_ipc4_log_header(sdev->dev, "ipc tx      ", msg_data, true);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = sof_ipc_send_msg(sdev, msg_data, msg_bytes, reply_bytes);
 	if (ret) {
 		dev_err_ratelimited(sdev->dev,
@@ -354,6 +366,11 @@ static int ipc4_tx_msg_unlocked(struct snd_sof_ipc *ipc,
 		return ret;
 	}
 
+<<<<<<< HEAD
+=======
+	sof_ipc4_log_header(sdev->dev, "ipc tx      ", msg_data, true);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* now wait for completion */
 	return ipc4_wait_tx_done(ipc, reply_data);
 }
@@ -370,6 +387,7 @@ static int sof_ipc4_tx_msg(struct snd_sof_dev *sdev, void *msg_data, size_t msg_
 	if (!msg_data)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (!no_pm) {
 		const struct sof_dsp_power_state target_state = {
 			.state = SOF_DSP_PM_D0,
@@ -381,6 +399,8 @@ static int sof_ipc4_tx_msg(struct snd_sof_dev *sdev, void *msg_data, size_t msg_
 			return ret;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Serialise IPC TX */
 	mutex_lock(&ipc->tx_mutex);
 
@@ -405,9 +425,12 @@ static int sof_ipc4_tx_msg(struct snd_sof_dev *sdev, void *msg_data, size_t msg_
 static int sof_ipc4_set_get_data(struct snd_sof_dev *sdev, void *data,
 				 size_t payload_bytes, bool set)
 {
+<<<<<<< HEAD
 	const struct sof_dsp_power_state target_state = {
 			.state = SOF_DSP_PM_D0,
 	};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	size_t payload_limit = sdev->ipc->max_payload_size;
 	struct sof_ipc4_msg *ipc4_msg = data;
 	struct sof_ipc4_msg tx = {{ 0 }};
@@ -438,11 +461,14 @@ static int sof_ipc4_set_get_data(struct snd_sof_dev *sdev, void *data,
 
 	tx.extension |= SOF_IPC4_MOD_EXT_MSG_FIRST_BLOCK(1);
 
+<<<<<<< HEAD
 	/* ensure the DSP is in D0i0 before sending IPC */
 	ret = snd_sof_dsp_set_power_state(sdev, &target_state);
 	if (ret < 0)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Serialise IPC TX */
 	mutex_lock(&sdev->ipc->tx_mutex);
 
@@ -562,8 +588,11 @@ static int ipc4_fw_ready(struct snd_sof_dev *sdev, struct sof_ipc4_msg *ipc4_msg
 	outbox_offset = snd_sof_dsp_get_window_offset(sdev, SOF_IPC4_OUTBOX_WINDOW_IDX);
 	outbox_size = SOF_IPC4_MSG_MAX_SIZE;
 
+<<<<<<< HEAD
 	sdev->fw_info_box.offset = snd_sof_dsp_get_window_offset(sdev, SOF_IPC4_INBOX_WINDOW_IDX);
 	sdev->fw_info_box.size = sizeof(struct sof_ipc4_fw_registers);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sdev->dsp_box.offset = inbox_offset;
 	sdev->dsp_box.size = inbox_size;
 	sdev->host_box.offset = outbox_offset;
@@ -675,6 +704,7 @@ static int sof_ipc4_ctx_save(struct snd_sof_dev *sdev)
 	return sof_ipc4_set_core_state(sdev, SOF_DSP_PRIMARY_CORE, false);
 }
 
+<<<<<<< HEAD
 static int sof_ipc4_set_pm_gate(struct snd_sof_dev *sdev, u32 flags)
 {
 	struct sof_ipc4_msg msg = {{0}};
@@ -736,6 +766,14 @@ const struct sof_ipc_ops ipc4_ops = {
 	.init = sof_ipc4_init,
 	.exit = sof_ipc4_exit,
 	.post_fw_boot = sof_ipc4_post_boot,
+=======
+static const struct sof_ipc_pm_ops ipc4_pm_ops = {
+	.ctx_save = sof_ipc4_ctx_save,
+	.set_core_state = sof_ipc4_set_core_state,
+};
+
+const struct sof_ipc_ops ipc4_ops = {
+>>>>>>> b7ba80a49124 (Commit)
 	.tx_msg = sof_ipc4_tx_msg,
 	.rx_msg = sof_ipc4_rx_msg,
 	.set_get_data = sof_ipc4_set_get_data,

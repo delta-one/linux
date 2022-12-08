@@ -139,6 +139,11 @@ struct snd_sof_dev;
 #define DSP_MBOX1_BAR	6
 #define DSP_MBOX2_BAR	7
 
+<<<<<<< HEAD
+=======
+#define TOTAL_SIZE_SHARED_SRAM_FROM_TAIL  0x0
+
+>>>>>>> b7ba80a49124 (Commit)
 #define SIZE_SHARED_DRAM_DL 0x40000 /*Shared buffer for Downlink*/
 #define SIZE_SHARED_DRAM_UL 0x40000 /*Shared buffer for Uplink*/
 

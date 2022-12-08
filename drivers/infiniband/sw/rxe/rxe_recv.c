@@ -16,12 +16,17 @@ static int check_type_state(struct rxe_dev *rxe, struct rxe_pkt_info *pkt,
 	unsigned int pkt_type;
 
 	if (unlikely(!qp->valid))
+<<<<<<< HEAD
 		return -EINVAL;
+=======
+		goto err1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pkt_type = pkt->opcode & 0xe0;
 
 	switch (qp_type(qp)) {
 	case IB_QPT_RC:
+<<<<<<< HEAD
 		if (unlikely(pkt_type != IB_OPCODE_RC))
 			return -EINVAL;
 		break;
@@ -36,16 +41,52 @@ static int check_type_state(struct rxe_dev *rxe, struct rxe_pkt_info *pkt,
 		break;
 	default:
 		return -EINVAL;
+=======
+		if (unlikely(pkt_type != IB_OPCODE_RC)) {
+			pr_warn_ratelimited("bad qp type\n");
+			goto err1;
+		}
+		break;
+	case IB_QPT_UC:
+		if (unlikely(pkt_type != IB_OPCODE_UC)) {
+			pr_warn_ratelimited("bad qp type\n");
+			goto err1;
+		}
+		break;
+	case IB_QPT_UD:
+	case IB_QPT_GSI:
+		if (unlikely(pkt_type != IB_OPCODE_UD)) {
+			pr_warn_ratelimited("bad qp type\n");
+			goto err1;
+		}
+		break;
+	default:
+		pr_warn_ratelimited("unsupported qp type\n");
+		goto err1;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (pkt->mask & RXE_REQ_MASK) {
 		if (unlikely(qp->resp.state != QP_STATE_READY))
+<<<<<<< HEAD
 			return -EINVAL;
 	} else if (unlikely(qp->req.state < QP_STATE_READY ||
 				qp->req.state > QP_STATE_DRAINED))
 		return -EINVAL;
 
 	return 0;
+=======
+			goto err1;
+	} else if (unlikely(qp->req.state < QP_STATE_READY ||
+				qp->req.state > QP_STATE_DRAINED)) {
+		goto err1;
+	}
+
+	return 0;
+
+err1:
+	return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void set_bad_pkey_cntr(struct rxe_port *port)
@@ -73,20 +114,39 @@ static int check_keys(struct rxe_dev *rxe, struct rxe_pkt_info *pkt,
 	pkt->pkey_index = 0;
 
 	if (!pkey_match(pkey, IB_DEFAULT_PKEY_FULL)) {
+<<<<<<< HEAD
 		set_bad_pkey_cntr(port);
 		return -EINVAL;
+=======
+		pr_warn_ratelimited("bad pkey = 0x%x\n", pkey);
+		set_bad_pkey_cntr(port);
+		goto err1;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (qp_type(qp) == IB_QPT_UD || qp_type(qp) == IB_QPT_GSI) {
 		u32 qkey = (qpn == 1) ? GSI_QKEY : qp->attr.qkey;
 
 		if (unlikely(deth_qkey(pkt) != qkey)) {
+<<<<<<< HEAD
 			set_qkey_viol_cntr(port);
 			return -EINVAL;
+=======
+			pr_warn_ratelimited("bad qkey, got 0x%x expected 0x%x for qpn 0x%x\n",
+					    deth_qkey(pkt), qkey, qpn);
+			set_qkey_viol_cntr(port);
+			goto err1;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
 	return 0;
+<<<<<<< HEAD
+=======
+
+err1:
+	return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int check_addr(struct rxe_dev *rxe, struct rxe_pkt_info *pkt,
@@ -95,10 +155,20 @@ static int check_addr(struct rxe_dev *rxe, struct rxe_pkt_info *pkt,
 	struct sk_buff *skb = PKT_TO_SKB(pkt);
 
 	if (qp_type(qp) != IB_QPT_RC && qp_type(qp) != IB_QPT_UC)
+<<<<<<< HEAD
 		return 0;
 
 	if (unlikely(pkt->port_num != qp->attr.port_num))
 		return -EINVAL;
+=======
+		goto done;
+
+	if (unlikely(pkt->port_num != qp->attr.port_num)) {
+		pr_warn_ratelimited("port %d != qp port %d\n",
+				    pkt->port_num, qp->attr.port_num);
+		goto err1;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (skb->protocol == htons(ETH_P_IP)) {
 		struct in_addr *saddr =
@@ -106,9 +176,25 @@ static int check_addr(struct rxe_dev *rxe, struct rxe_pkt_info *pkt,
 		struct in_addr *daddr =
 			&qp->pri_av.dgid_addr._sockaddr_in.sin_addr;
 
+<<<<<<< HEAD
 		if ((ip_hdr(skb)->daddr != saddr->s_addr) ||
 		    (ip_hdr(skb)->saddr != daddr->s_addr))
 			return -EINVAL;
+=======
+		if (ip_hdr(skb)->daddr != saddr->s_addr) {
+			pr_warn_ratelimited("dst addr %pI4 != qp source addr %pI4\n",
+					    &ip_hdr(skb)->daddr,
+					    &saddr->s_addr);
+			goto err1;
+		}
+
+		if (ip_hdr(skb)->saddr != daddr->s_addr) {
+			pr_warn_ratelimited("source addr %pI4 != qp dst addr %pI4\n",
+					    &ip_hdr(skb)->saddr,
+					    &daddr->s_addr);
+			goto err1;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 	} else if (skb->protocol == htons(ETH_P_IPV6)) {
 		struct in6_addr *saddr =
@@ -116,12 +202,33 @@ static int check_addr(struct rxe_dev *rxe, struct rxe_pkt_info *pkt,
 		struct in6_addr *daddr =
 			&qp->pri_av.dgid_addr._sockaddr_in6.sin6_addr;
 
+<<<<<<< HEAD
 		if (memcmp(&ipv6_hdr(skb)->daddr, saddr, sizeof(*saddr)) ||
 		    memcmp(&ipv6_hdr(skb)->saddr, daddr, sizeof(*daddr)))
 			return -EINVAL;
 	}
 
 	return 0;
+=======
+		if (memcmp(&ipv6_hdr(skb)->daddr, saddr, sizeof(*saddr))) {
+			pr_warn_ratelimited("dst addr %pI6 != qp source addr %pI6\n",
+					    &ipv6_hdr(skb)->daddr, saddr);
+			goto err1;
+		}
+
+		if (memcmp(&ipv6_hdr(skb)->saddr, daddr, sizeof(*daddr))) {
+			pr_warn_ratelimited("source addr %pI6 != qp dst addr %pI6\n",
+					    &ipv6_hdr(skb)->saddr, daddr);
+			goto err1;
+		}
+	}
+
+done:
+	return 0;
+
+err1:
+	return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int hdr_check(struct rxe_pkt_info *pkt)
@@ -133,18 +240,37 @@ static int hdr_check(struct rxe_pkt_info *pkt)
 	int index;
 	int err;
 
+<<<<<<< HEAD
 	if (unlikely(bth_tver(pkt) != BTH_TVER))
 		goto err1;
 
 	if (unlikely(qpn == 0))
 		goto err1;
+=======
+	if (unlikely(bth_tver(pkt) != BTH_TVER)) {
+		pr_warn_ratelimited("bad tver\n");
+		goto err1;
+	}
+
+	if (unlikely(qpn == 0)) {
+		pr_warn_once("QP 0 not supported");
+		goto err1;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (qpn != IB_MULTICAST_QPN) {
 		index = (qpn == 1) ? port->qp_gsi_index : qpn;
 
 		qp = rxe_pool_get_index(&rxe->qp_pool, index);
+<<<<<<< HEAD
 		if (unlikely(!qp))
 			goto err1;
+=======
+		if (unlikely(!qp)) {
+			pr_warn_ratelimited("no qp matches qpn 0x%x\n", qpn);
+			goto err1;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		err = check_type_state(rxe, pkt, qp);
 		if (unlikely(err))
@@ -158,8 +284,15 @@ static int hdr_check(struct rxe_pkt_info *pkt)
 		if (unlikely(err))
 			goto err2;
 	} else {
+<<<<<<< HEAD
 		if (unlikely((pkt->mask & RXE_GRH_MASK) == 0))
 			goto err1;
+=======
+		if (unlikely((pkt->mask & RXE_GRH_MASK) == 0)) {
+			pr_warn_ratelimited("no grh for mcast qpn\n");
+			goto err1;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	pkt->qp = qp;
@@ -314,8 +447,15 @@ void rxe_rcv(struct sk_buff *skb)
 	if (unlikely(skb->len < RXE_BTH_BYTES))
 		goto drop;
 
+<<<<<<< HEAD
 	if (rxe_chk_dgid(rxe, skb) < 0)
 		goto drop;
+=======
+	if (rxe_chk_dgid(rxe, skb) < 0) {
+		pr_warn_ratelimited("failed checking dgid\n");
+		goto drop;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	pkt->opcode = bth_opcode(pkt);
 	pkt->psn = bth_psn(pkt);

@@ -1140,10 +1140,19 @@ static int q6pcm_routing_probe(struct platform_device *pdev)
 					  NULL, 0);
 }
 
+<<<<<<< HEAD
 static void q6pcm_routing_remove(struct platform_device *pdev)
 {
 	kfree(routing_data);
 	routing_data = NULL;
+=======
+static int q6pcm_routing_remove(struct platform_device *pdev)
+{
+	kfree(routing_data);
+	routing_data = NULL;
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_OF
@@ -1160,7 +1169,11 @@ static struct platform_driver q6pcm_routing_platform_driver = {
 		.of_match_table = of_match_ptr(q6pcm_routing_device_id),
 	},
 	.probe = q6pcm_routing_probe,
+<<<<<<< HEAD
 	.remove_new = q6pcm_routing_remove,
+=======
+	.remove = q6pcm_routing_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(q6pcm_routing_platform_driver);
 

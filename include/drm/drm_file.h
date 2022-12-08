@@ -51,15 +51,21 @@ struct file;
 
 /* Note that the order of this enum is ABI (it determines
  * /dev/dri/renderD* numbers).
+<<<<<<< HEAD
  *
  * Setting DRM_MINOR_ACCEL to 32 gives enough space for more drm minors to
  * be implemented before we hit any future
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 enum drm_minor_type {
 	DRM_MINOR_PRIMARY,
 	DRM_MINOR_CONTROL,
 	DRM_MINOR_RENDER,
+<<<<<<< HEAD
 	DRM_MINOR_ACCEL = 32,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -74,7 +80,11 @@ enum drm_minor_type {
 struct drm_minor {
 	/* private: */
 	int index;			/* Minor device number */
+<<<<<<< HEAD
 	int type;                       /* Control or render or accel */
+=======
+	int type;                       /* Control or render */
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *kdev;		/* Linux device */
 	struct drm_device *dev;
 
@@ -401,6 +411,7 @@ static inline bool drm_is_render_client(const struct drm_file *file_priv)
 	return file_priv->minor->type == DRM_MINOR_RENDER;
 }
 
+<<<<<<< HEAD
 /**
  * drm_is_accel_client - is this an open file of the compute acceleration node
  * @file_priv: DRM file
@@ -418,6 +429,9 @@ static inline bool drm_is_accel_client(const struct drm_file *file_priv)
 
 int drm_open(struct inode *inode, struct file *filp);
 int drm_open_helper(struct file *filp, struct drm_minor *minor);
+=======
+int drm_open(struct inode *inode, struct file *filp);
+>>>>>>> b7ba80a49124 (Commit)
 ssize_t drm_read(struct file *filp, char __user *buffer,
 		 size_t count, loff_t *offset);
 int drm_release(struct inode *inode, struct file *filp);

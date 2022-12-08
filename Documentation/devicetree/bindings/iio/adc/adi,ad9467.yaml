@@ -64,10 +64,17 @@ examples:
         #size-cells = <0>;
 
         adc@0 {
+<<<<<<< HEAD
             compatible = "adi,ad9467";
             reg = <0>;
             clocks = <&adc_clk>;
             clock-names = "adc-clk";
+=======
+          compatible = "adi,ad9467";
+          reg = <0>;
+          clocks = <&adc_clk>;
+          clock-names = "adc-clk";
+>>>>>>> b7ba80a49124 (Commit)
         };
     };
 ...

@@ -11,14 +11,21 @@ maintainers:
 
 description: |
   This binding describes the MIPI DSI/CSI-2 encoder embedded in the Renesas
+<<<<<<< HEAD
   R-Car Gen4 SoCs. The encoder can operate in either DSI or CSI-2 mode, with up
+=======
+  R-Car V3U SoC. The encoder can operate in either DSI or CSI-2 mode, with up
+>>>>>>> b7ba80a49124 (Commit)
   to four data lanes.
 
 properties:
   compatible:
     enum:
       - renesas,r8a779a0-dsi-csi2-tx    # for V3U
+<<<<<<< HEAD
       - renesas,r8a779g0-dsi-csi2-tx    # for V4H
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1

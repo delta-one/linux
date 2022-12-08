@@ -10,8 +10,14 @@ maintainers:
   - Arınç ÜNAL <arinc.unal@arinc9.com>
   - Sergio Paracuellos <sergio.paracuellos@gmail.com>
 
+<<<<<<< HEAD
 description: |
   Ralink RT305X pin controller for RT3050, RT3052, and RT3350 SoCs.
+=======
+description:
+  Ralink RT305X pin controller for RT3050, RT3052, RT3350, RT3352 and RT5350
+  SoCs.
+>>>>>>> b7ba80a49124 (Commit)
   The pin controller can only set the muxing of pin groups. Muxing individual
   pins is not supported. There is no pinconf support.
 
@@ -22,13 +28,17 @@ properties:
 patternProperties:
   '-pins$':
     type: object
+<<<<<<< HEAD
     additionalProperties: false
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
     patternProperties:
       '^(.*-)?pinmux$':
         type: object
         description: node for pinctrl.
         $ref: pinmux-node.yaml#
+<<<<<<< HEAD
         additionalProperties: false
 
         properties:
@@ -43,11 +53,43 @@ patternProperties:
             description:
               An array of strings. Each string contains the name of a group.
             maxItems: 1
+=======
+
+        properties:
+          groups:
+            description: The pin group to select.
+            enum: [
+              # common
+              i2c, jtag, led, mdio, rgmii, spi, spi_cs1, uartf, uartlite,
+
+              # For RT3050, RT3052 and RT3350 SoCs
+              sdram,
+
+              # For RT3352 SoC
+              lna, pa
+            ]
+
+          function:
+            description: The mux function to select.
+            enum: [
+              # common
+              gpio, gpio i2s, gpio uartf, i2c, i2s uartf, jtag, led, mdio,
+              pcm gpio, pcm i2s, pcm uartf, rgmii, spi, spi_cs1, uartf,
+              uartlite, wdg_cs1,
+
+              # For RT3050, RT3052 and RT3350 SoCs
+              sdram,
+
+              # For RT3352 SoC
+              lna, pa
+            ]
+>>>>>>> b7ba80a49124 (Commit)
 
         required:
           - groups
           - function
 
+<<<<<<< HEAD
         allOf:
           - if:
               properties:
@@ -186,6 +228,14 @@ patternProperties:
 
 allOf:
   - $ref: pinctrl.yaml#
+=======
+        additionalProperties: false
+
+    additionalProperties: false
+
+allOf:
+  - $ref: "pinctrl.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 required:
   - compatible
@@ -193,6 +243,10 @@ required:
 additionalProperties: false
 
 examples:
+<<<<<<< HEAD
+=======
+  # Pinmux controller node
+>>>>>>> b7ba80a49124 (Commit)
   - |
     pinctrl {
       compatible = "ralink,rt305x-pinctrl";

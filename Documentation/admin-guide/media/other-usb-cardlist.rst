@@ -14,6 +14,11 @@ dvb-as102	  nBox DVB-T Dongle			  0b89:0007
 dvb-as102	  Sky IT Digital Key (green led)	  2137:0001
 b2c2-flexcop-usb  Technisat/B2C2 FlexCop II/IIb/III	  0af7:0101
 		  Digital TV
+<<<<<<< HEAD
+=======
+cpia2		  Vision's CPiA2 cameras		  0553:0100, 0553:0140,
+		  such as the Digital Blue QX5		  0553:0151
+>>>>>>> b7ba80a49124 (Commit)
 go7007		  WIS GO7007 MPEG encoder		  1943:a250, 093b:a002,
 							  093b:a004, 0eb1:6666,
 							  0eb1:6668
@@ -64,6 +69,10 @@ pwc		  Visionite VCS-UC300			  0d81:1900
 pwc		  Visionite VCS-UM100			  0d81:1910
 s2255drv	  Sensoray 2255				  1943:2255, 1943:2257
 stk1160		  STK1160 USB video capture dongle	  05e1:0408
+<<<<<<< HEAD
+=======
+stkwebcam	  Syntek DC1125				  174f:a311, 05e1:0501
+>>>>>>> b7ba80a49124 (Commit)
 dvb-ttusb-budget  Technotrend/Hauppauge Nova-USB devices  0b48:1003, 0b48:1004,
 							  0b48:1005
 dvb-ttusb_dec	  Technotrend/Hauppauge MPEG decoder	  0b48:1006
@@ -75,4 +84,18 @@ dvb-ttusb_dec	  Technotrend/Hauppauge MPEG decoder
 		  DEC2540-t				  0b48:1009
 usbtv		  Fushicai USBTV007 Audio-Video Grabber	  1b71:3002, 1f71:3301,
 							  1f71:3306
+<<<<<<< HEAD
+=======
+zr364xx		  USB ZR364XX Camera			  08ca:0109, 041e:4024,
+							  0d64:0108, 0546:3187,
+							  0d64:3108, 0595:4343,
+							  0bb0:500d, 0feb:2004,
+							  055f:b500, 08ca:2062,
+							  052b:1a18, 04c8:0729,
+							  04f2:a208, 0784:0040,
+							  06d6:0034, 0a17:0062,
+							  06d6:003b, 0a17:004e,
+							  041e:405d, 08ca:2102,
+							  06d6:003d
+>>>>>>> b7ba80a49124 (Commit)
 ================  ======================================  =====================

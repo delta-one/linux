@@ -98,7 +98,12 @@ static const struct of_device_id tpic2810_of_match_table[] = {
 };
 MODULE_DEVICE_TABLE(of, tpic2810_of_match_table);
 
+<<<<<<< HEAD
 static int tpic2810_probe(struct i2c_client *client)
+=======
+static int tpic2810_probe(struct i2c_client *client,
+			  const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tpic2810 *gpio;
 	int ret;
@@ -143,7 +148,11 @@ static struct i2c_driver tpic2810_driver = {
 		.name = "tpic2810",
 		.of_match_table = tpic2810_of_match_table,
 	},
+<<<<<<< HEAD
 	.probe_new = tpic2810_probe,
+=======
+	.probe = tpic2810_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = tpic2810_remove,
 	.id_table = tpic2810_id_table,
 };

@@ -13,6 +13,7 @@ Supported chips:
 
     Datasheet: Not published
 
+<<<<<<< HEAD
   * Maxim MAX16600
 
     Prefix: 'max16600'
@@ -21,6 +22,8 @@ Supported chips:
 
     Datasheet: Not published
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   * Maxim MAX16601
 
     Prefix: 'max16601'
@@ -44,8 +47,12 @@ Description
 -----------
 
 This driver supports the MAX16508 VR13 Dual-Output Voltage Regulator
+<<<<<<< HEAD
 as well as the MAX16600, MAX16601, and MAX16602 VR13.HC Dual-Output
 Voltage Regulator chipsets.
+=======
+as well as the MAX16601 VR13.HC Dual-Output Voltage Regulator chipsets.
+>>>>>>> b7ba80a49124 (Commit)
 
 The driver is a client driver to the core PMBus driver.
 Please see Documentation/hwmon/pmbus.rst for details on PMBus client drivers.

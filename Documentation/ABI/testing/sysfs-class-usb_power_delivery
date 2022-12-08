@@ -69,7 +69,11 @@ Description:
 		This file contains boolean value that tells does the device
 		support both source and sink power roles.
 
+<<<<<<< HEAD
 What:		/sys/class/usb_power_delivery/.../source-capabilities/1:fixed_supply/usb_suspend_supported
+=======
+What:		/sys/class/usb_power_delivery/.../<capability>/1:fixed_supply/usb_suspend_supported
+>>>>>>> b7ba80a49124 (Commit)
 Date:		May 2022
 Contact:	Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Description:
@@ -78,6 +82,7 @@ Description:
 		will follow the USB 2.0 and USB 3.2 rules for suspend and
 		resume.
 
+<<<<<<< HEAD
 What:		/sys/class/usb_power_delivery/.../sink-capabilities/1:fixed_supply/higher_capability
 Date:		February 2023
 Contact:	Saranya Gopal <saranya.gopal@linux.intel.com>
@@ -87,6 +92,8 @@ Description:
 		needs more than vsafe5V(eg. 12 V) to provide full functionality.
 		Valid values: 0, 1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 What:		/sys/class/usb_power_delivery/.../<capability>/1:fixed_supply/unconstrained_power
 Date:		May 2022
 Contact:	Heikki Krogerus <heikki.krogerus@linux.intel.com>

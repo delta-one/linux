@@ -14,7 +14,10 @@ maintainers:
 
 allOf:
   - $ref: panel-common.yaml#
+<<<<<<< HEAD
   - $ref: /schemas/spi/spi-peripheral-props.yaml#
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:
@@ -52,7 +55,11 @@ required:
   - spi-cpol
   - port
 
+<<<<<<< HEAD
 unevaluatedProperties: false
+=======
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |

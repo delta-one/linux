@@ -61,6 +61,11 @@ struct cifs_sb_info {
 	/* only used when CIFS_MOUNT_USE_PREFIX_PATH is set */
 	char *prepath;
 
+<<<<<<< HEAD
+=======
+	/* randomly generated 128-bit number for indexing dfs mount groups in referral cache */
+	uuid_t dfs_mount_id;
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Indicate whether serverino option was turned off later
 	 * (cifs_autodisable_serverino) in order to match new mounts.

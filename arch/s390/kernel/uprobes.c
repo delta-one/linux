@@ -11,7 +11,10 @@
 #include <linux/compat.h>
 #include <linux/kdebug.h>
 #include <linux/sched/task_stack.h>
+<<<<<<< HEAD
 #include <linux/non-atomic/xchg.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/switch_to.h>
 #include <asm/facility.h>
@@ -145,7 +148,15 @@ void arch_uprobe_abort_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
 unsigned long arch_uretprobe_hijack_return_addr(unsigned long trampoline,
 						struct pt_regs *regs)
 {
+<<<<<<< HEAD
 	return __xchg(&regs->gprs[14], trampoline);
+=======
+	unsigned long orig;
+
+	orig = regs->gprs[14];
+	regs->gprs[14] = trampoline;
+	return orig;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 bool arch_uretprobe_is_alive(struct return_instance *ret, enum rp_check ctx,

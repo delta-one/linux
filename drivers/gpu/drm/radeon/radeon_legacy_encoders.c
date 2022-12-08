@@ -27,9 +27,15 @@
 #include <linux/backlight.h>
 #include <linux/pci.h>
 
+<<<<<<< HEAD
 #include <drm/drm_device.h>
 #include <drm/drm_file.h>
 #include <drm/drm_modeset_helper_vtables.h>
+=======
+#include <drm/drm_crtc_helper.h>
+#include <drm/drm_device.h>
+#include <drm/drm_file.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_util.h>
 #include <drm/radeon_drm.h>
 

@@ -1359,6 +1359,10 @@ static int mv_udc_start(struct usb_gadget *gadget,
 	spin_lock_irqsave(&udc->lock, flags);
 
 	/* hook up the driver ... */
+<<<<<<< HEAD
+=======
+	driver->driver.bus = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	udc->driver = driver;
 
 	udc->usb_state = USB_STATE_ATTACHED;
@@ -2229,11 +2233,15 @@ static int mv_udc_probe(struct platform_device *pdev)
 	INIT_LIST_HEAD(&udc->status_req->queue);
 
 	/* allocate a small amount of memory to get valid address */
+<<<<<<< HEAD
 	udc->status_req->req.buf = devm_kzalloc(&pdev->dev, 8, GFP_KERNEL);
 	if (!udc->status_req->req.buf) {
 		retval = -ENOMEM;
 		goto err_destroy_dma;
 	}
+=======
+	udc->status_req->req.buf = kzalloc(8, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	udc->status_req->req.dma = DMA_ADDR_INVALID;
 
 	udc->resume_state = USB_STATE_NOTATTACHED;

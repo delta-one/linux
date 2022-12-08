@@ -100,7 +100,11 @@ static irqreturn_t pwrkey_release_irq(int irq, void *_pwr)
 	return IRQ_HANDLED;
 }
 
+<<<<<<< HEAD
 static int pmic8xxx_pwrkey_suspend(struct device *dev)
+=======
+static int __maybe_unused pmic8xxx_pwrkey_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pmic8xxx_pwrkey *pwrkey = dev_get_drvdata(dev);
 
@@ -110,7 +114,11 @@ static int pmic8xxx_pwrkey_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int pmic8xxx_pwrkey_resume(struct device *dev)
+=======
+static int __maybe_unused pmic8xxx_pwrkey_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pmic8xxx_pwrkey *pwrkey = dev_get_drvdata(dev);
 
@@ -120,7 +128,11 @@ static int pmic8xxx_pwrkey_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(pm8xxx_pwr_key_pm_ops,
+=======
+static SIMPLE_DEV_PM_OPS(pm8xxx_pwr_key_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		pmic8xxx_pwrkey_suspend, pmic8xxx_pwrkey_resume);
 
 static void pmic8xxx_pwrkey_shutdown(struct platform_device *pdev)
@@ -442,7 +454,11 @@ static struct platform_driver pmic8xxx_pwrkey_driver = {
 	.shutdown	= pmic8xxx_pwrkey_shutdown,
 	.driver		= {
 		.name	= "pm8xxx-pwrkey",
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&pm8xxx_pwr_key_pm_ops),
+=======
+		.pm	= &pm8xxx_pwr_key_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = pm8xxx_pwr_key_id_table,
 	},
 };

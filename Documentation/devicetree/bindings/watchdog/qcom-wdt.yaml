@@ -9,18 +9,29 @@ title: Qualcomm Krait Processor Sub-system (KPSS) Watchdog timer
 maintainers:
   - Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
+<<<<<<< HEAD
 properties:
   $nodename:
     pattern: "^(watchdog|timer)@[0-9a-f]+$"
 
+=======
+allOf:
+  - $ref: watchdog.yaml#
+
+properties:
+>>>>>>> b7ba80a49124 (Commit)
   compatible:
     oneOf:
       - items:
           - enum:
+<<<<<<< HEAD
               - qcom,kpss-wdt-ipq4019
               - qcom,apss-wdt-msm8994
               - qcom,apss-wdt-qcs404
               - qcom,apss-wdt-sa8775p
+=======
+              - qcom,apss-wdt-qcs404
+>>>>>>> b7ba80a49124 (Commit)
               - qcom,apss-wdt-sc7180
               - qcom,apss-wdt-sc7280
               - qcom,apss-wdt-sc8180x
@@ -32,6 +43,7 @@ properties:
               - qcom,apss-wdt-sm8150
               - qcom,apss-wdt-sm8250
           - const: qcom,kpss-wdt
+<<<<<<< HEAD
       - const: qcom,kpss-wdt
         deprecated: true
       - items:
@@ -45,6 +57,17 @@ properties:
               - qcom,kpss-wdt-msm8960
           - const: qcom,kpss-timer
           - const: qcom,msm-timer
+=======
+      - items:
+          - enum:
+              - qcom,kpss-wdt
+              - qcom,kpss-timer
+              - qcom,kpss-wdt-apq8064
+              - qcom,kpss-wdt-ipq4019
+              - qcom,kpss-wdt-ipq8064
+              - qcom,kpss-wdt-msm8960
+              - qcom,scss-timer
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1
@@ -52,6 +75,7 @@ properties:
   clocks:
     maxItems: 1
 
+<<<<<<< HEAD
   clock-names:
     items:
       - const: sleep
@@ -70,11 +94,14 @@ properties:
     minItems: 1
     maxItems: 5
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg
   - clocks
 
+<<<<<<< HEAD
 allOf:
   - $ref: watchdog.yaml#
 
@@ -106,10 +133,13 @@ allOf:
       required:
         - clock-frequency
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 unevaluatedProperties: false
 
 examples:
   - |
+<<<<<<< HEAD
     #include <dt-bindings/interrupt-controller/arm-gic.h>
 
     watchdog@17c10000 {
@@ -136,3 +166,11 @@ examples:
       clock-names = "sleep";
       cpu-offset = <0x80000>;
     };
+=======
+    watchdog@208a038 {
+      compatible = "qcom,kpss-wdt-ipq8064";
+      reg = <0x0208a038 0x40>;
+      clocks = <&sleep_clk>;
+      timeout-sec = <10>;
+    };
+>>>>>>> b7ba80a49124 (Commit)

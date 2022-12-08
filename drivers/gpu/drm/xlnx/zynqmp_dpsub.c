@@ -12,6 +12,7 @@
 #include <linux/clk.h>
 #include <linux/dma-mapping.h>
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/of_graph.h>
 #include <linux/of_reserved_mem.h>
 #include <linux/platform_device.h>
@@ -22,11 +23,143 @@
 #include <drm/drm_bridge.h>
 #include <drm/drm_modeset_helper.h>
 #include <drm/drm_module.h>
+=======
+#include <linux/of_reserved_mem.h>
+#include <linux/platform_device.h>
+#include <linux/pm_runtime.h>
+
+#include <drm/drm_atomic_helper.h>
+#include <drm/drm_device.h>
+#include <drm/drm_drv.h>
+#include <drm/drm_fb_helper.h>
+#include <drm/drm_fourcc.h>
+#include <drm/drm_gem_dma_helper.h>
+#include <drm/drm_gem_framebuffer_helper.h>
+#include <drm/drm_managed.h>
+#include <drm/drm_mode_config.h>
+#include <drm/drm_module.h>
+#include <drm/drm_probe_helper.h>
+#include <drm/drm_vblank.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "zynqmp_disp.h"
 #include "zynqmp_dp.h"
 #include "zynqmp_dpsub.h"
+<<<<<<< HEAD
 #include "zynqmp_kms.h"
+=======
+
+/* -----------------------------------------------------------------------------
+ * Dumb Buffer & Framebuffer Allocation
+ */
+
+static int zynqmp_dpsub_dumb_create(struct drm_file *file_priv,
+				    struct drm_device *drm,
+				    struct drm_mode_create_dumb *args)
+{
+	struct zynqmp_dpsub *dpsub = to_zynqmp_dpsub(drm);
+	unsigned int pitch = DIV_ROUND_UP(args->width * args->bpp, 8);
+
+	/* Enforce the alignment constraints of the DMA engine. */
+	args->pitch = ALIGN(pitch, dpsub->dma_align);
+
+	return drm_gem_dma_dumb_create_internal(file_priv, drm, args);
+}
+
+static struct drm_framebuffer *
+zynqmp_dpsub_fb_create(struct drm_device *drm, struct drm_file *file_priv,
+		       const struct drm_mode_fb_cmd2 *mode_cmd)
+{
+	struct zynqmp_dpsub *dpsub = to_zynqmp_dpsub(drm);
+	struct drm_mode_fb_cmd2 cmd = *mode_cmd;
+	unsigned int i;
+
+	/* Enforce the alignment constraints of the DMA engine. */
+	for (i = 0; i < ARRAY_SIZE(cmd.pitches); ++i)
+		cmd.pitches[i] = ALIGN(cmd.pitches[i], dpsub->dma_align);
+
+	return drm_gem_fb_create(drm, file_priv, &cmd);
+}
+
+static const struct drm_mode_config_funcs zynqmp_dpsub_mode_config_funcs = {
+	.fb_create		= zynqmp_dpsub_fb_create,
+	.atomic_check		= drm_atomic_helper_check,
+	.atomic_commit		= drm_atomic_helper_commit,
+};
+
+/* -----------------------------------------------------------------------------
+ * DRM/KMS Driver
+ */
+
+DEFINE_DRM_GEM_DMA_FOPS(zynqmp_dpsub_drm_fops);
+
+static const struct drm_driver zynqmp_dpsub_drm_driver = {
+	.driver_features		= DRIVER_MODESET | DRIVER_GEM |
+					  DRIVER_ATOMIC,
+
+	DRM_GEM_DMA_DRIVER_OPS_WITH_DUMB_CREATE(zynqmp_dpsub_dumb_create),
+
+	.fops				= &zynqmp_dpsub_drm_fops,
+
+	.name				= "zynqmp-dpsub",
+	.desc				= "Xilinx DisplayPort Subsystem Driver",
+	.date				= "20130509",
+	.major				= 1,
+	.minor				= 0,
+};
+
+static int zynqmp_dpsub_drm_init(struct zynqmp_dpsub *dpsub)
+{
+	struct drm_device *drm = &dpsub->drm;
+	int ret;
+
+	/* Initialize mode config, vblank and the KMS poll helper. */
+	ret = drmm_mode_config_init(drm);
+	if (ret < 0)
+		return ret;
+
+	drm->mode_config.funcs = &zynqmp_dpsub_mode_config_funcs;
+	drm->mode_config.min_width = 0;
+	drm->mode_config.min_height = 0;
+	drm->mode_config.max_width = ZYNQMP_DISP_MAX_WIDTH;
+	drm->mode_config.max_height = ZYNQMP_DISP_MAX_HEIGHT;
+
+	ret = drm_vblank_init(drm, 1);
+	if (ret)
+		return ret;
+
+	drm_kms_helper_poll_init(drm);
+
+	/*
+	 * Initialize the DISP and DP components. This will creates planes,
+	 * CRTC, encoder and connector. The DISP should be initialized first as
+	 * the DP encoder needs the CRTC.
+	 */
+	ret = zynqmp_disp_drm_init(dpsub);
+	if (ret)
+		goto err_poll_fini;
+
+	ret = zynqmp_dp_drm_init(dpsub);
+	if (ret)
+		goto err_poll_fini;
+
+	/* Reset all components and register the DRM device. */
+	drm_mode_config_reset(drm);
+
+	ret = drm_dev_register(drm, 0);
+	if (ret < 0)
+		goto err_poll_fini;
+
+	/* Initialize fbdev generic emulation. */
+	drm_fbdev_generic_setup(drm, 24);
+
+	return 0;
+
+err_poll_fini:
+	drm_kms_helper_poll_fini(drm);
+	return ret;
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 /* -----------------------------------------------------------------------------
  * Power Management
@@ -36,20 +169,28 @@ static int __maybe_unused zynqmp_dpsub_suspend(struct device *dev)
 {
 	struct zynqmp_dpsub *dpsub = dev_get_drvdata(dev);
 
+<<<<<<< HEAD
 	if (!dpsub->drm)
 		return 0;
 
 	return drm_mode_config_helper_suspend(&dpsub->drm->dev);
+=======
+	return drm_mode_config_helper_suspend(&dpsub->drm);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __maybe_unused zynqmp_dpsub_resume(struct device *dev)
 {
 	struct zynqmp_dpsub *dpsub = dev_get_drvdata(dev);
 
+<<<<<<< HEAD
 	if (!dpsub->drm)
 		return 0;
 
 	return drm_mode_config_helper_resume(&dpsub->drm->dev);
+=======
+	return drm_mode_config_helper_resume(&dpsub->drm);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct dev_pm_ops zynqmp_dpsub_pm_ops = {
@@ -57,6 +198,7 @@ static const struct dev_pm_ops zynqmp_dpsub_pm_ops = {
 };
 
 /* -----------------------------------------------------------------------------
+<<<<<<< HEAD
  * DPSUB Configuration
  */
 
@@ -87,6 +229,8 @@ unsigned int zynqmp_dpsub_get_audio_clk_rate(struct zynqmp_dpsub *dpsub)
 }
 
 /* -----------------------------------------------------------------------------
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Probe & Remove
  */
 
@@ -104,6 +248,7 @@ static int zynqmp_dpsub_init_clocks(struct zynqmp_dpsub *dpsub)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * Try the live PL video clock, and fall back to the PS clock if the
 	 * live PL video clock isn't valid.
@@ -214,15 +359,27 @@ void zynqmp_dpsub_release(struct zynqmp_dpsub *dpsub)
 	kfree(dpsub);
 }
 
+=======
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int zynqmp_dpsub_probe(struct platform_device *pdev)
 {
 	struct zynqmp_dpsub *dpsub;
 	int ret;
 
 	/* Allocate private data. */
+<<<<<<< HEAD
 	dpsub = kzalloc(sizeof(*dpsub), GFP_KERNEL);
 	if (!dpsub)
 		return -ENOMEM;
+=======
+	dpsub = devm_drm_dev_alloc(&pdev->dev, &zynqmp_dpsub_drm_driver,
+				   struct zynqmp_dpsub, drm);
+	if (IS_ERR(dpsub))
+		return PTR_ERR(dpsub);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dpsub->dev = &pdev->dev;
 	platform_set_drvdata(pdev, dpsub);
@@ -236,16 +393,20 @@ static int zynqmp_dpsub_probe(struct platform_device *pdev)
 	if (ret < 0)
 		goto err_mem;
 
+<<<<<<< HEAD
 	ret = zynqmp_dpsub_parse_dt(dpsub);
 	if (ret < 0)
 		goto err_mem;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pm_runtime_enable(&pdev->dev);
 
 	/*
 	 * DP should be probed first so that the zynqmp_disp can set the output
 	 * format accordingly.
 	 */
+<<<<<<< HEAD
 	ret = zynqmp_dp_probe(dpsub);
 	if (ret)
 		goto err_pm;
@@ -261,6 +422,19 @@ static int zynqmp_dpsub_probe(struct platform_device *pdev)
 	} else {
 		drm_bridge_add(dpsub->bridge);
 	}
+=======
+	ret = zynqmp_dp_probe(dpsub, &dpsub->drm);
+	if (ret)
+		goto err_pm;
+
+	ret = zynqmp_disp_probe(dpsub, &dpsub->drm);
+	if (ret)
+		goto err_dp;
+
+	ret = zynqmp_dpsub_drm_init(dpsub);
+	if (ret)
+		goto err_disp;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_info(&pdev->dev, "ZynqMP DisplayPort Subsystem driver probed");
 
@@ -275,19 +449,30 @@ err_pm:
 	clk_disable_unprepare(dpsub->apb_clk);
 err_mem:
 	of_reserved_mem_device_release(&pdev->dev);
+<<<<<<< HEAD
 	if (!dpsub->drm)
 		zynqmp_dpsub_release(dpsub);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
 static int zynqmp_dpsub_remove(struct platform_device *pdev)
 {
 	struct zynqmp_dpsub *dpsub = platform_get_drvdata(pdev);
+<<<<<<< HEAD
 
 	if (dpsub->drm)
 		zynqmp_dpsub_drm_cleanup(dpsub);
 	else
 		drm_bridge_remove(dpsub->bridge);
+=======
+	struct drm_device *drm = &dpsub->drm;
+
+	drm_dev_unregister(drm);
+	drm_atomic_helper_shutdown(drm);
+	drm_kms_helper_poll_fini(drm);
+>>>>>>> b7ba80a49124 (Commit)
 
 	zynqmp_disp_remove(dpsub);
 	zynqmp_dp_remove(dpsub);
@@ -296,9 +481,12 @@ static int zynqmp_dpsub_remove(struct platform_device *pdev)
 	clk_disable_unprepare(dpsub->apb_clk);
 	of_reserved_mem_device_release(&pdev->dev);
 
+<<<<<<< HEAD
 	if (!dpsub->drm)
 		zynqmp_dpsub_release(dpsub);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -306,10 +494,14 @@ static void zynqmp_dpsub_shutdown(struct platform_device *pdev)
 {
 	struct zynqmp_dpsub *dpsub = platform_get_drvdata(pdev);
 
+<<<<<<< HEAD
 	if (!dpsub->drm)
 		return;
 
 	drm_atomic_helper_shutdown(&dpsub->drm->dev);
+=======
+	drm_atomic_helper_shutdown(&dpsub->drm);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id zynqmp_dpsub_of_match[] = {

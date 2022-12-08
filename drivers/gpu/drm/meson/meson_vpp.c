@@ -100,8 +100,11 @@ void meson_vpp_init(struct meson_drm *priv)
 			       priv->io_base + _REG(VPP_DOLBY_CTRL));
 		writel_relaxed(0x1020080,
 				priv->io_base + _REG(VPP_DUMMY_DATA1));
+<<<<<<< HEAD
 		writel_relaxed(0x42020,
 				priv->io_base + _REG(VPP_DUMMY_DATA));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A))
 		writel_relaxed(0xf, priv->io_base + _REG(DOLBY_PATH_CTRL));
 

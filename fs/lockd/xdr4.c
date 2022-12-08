@@ -33,6 +33,7 @@ loff_t_to_s64(loff_t offset)
 	return res;
 }
 
+<<<<<<< HEAD
 void nlm4svc_set_file_lock_range(struct file_lock *fl, u64 off, u64 len)
 {
 	s64 end = off + len - 1;
@@ -44,6 +45,8 @@ void nlm4svc_set_file_lock_range(struct file_lock *fl, u64 off, u64 len)
 		fl->fl_end = end;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * NLM file handles are defined by specification to be a variable-length
  * XDR opaque no longer than 1024 bytes. However, this implementation
@@ -91,7 +94,11 @@ svcxdr_decode_lock(struct xdr_stream *xdr, struct nlm_lock *lock)
 	locks_init_lock(fl);
 	fl->fl_flags = FL_POSIX;
 	fl->fl_type  = F_RDLCK;
+<<<<<<< HEAD
 	nlm4svc_set_file_lock_range(fl, lock->lock_start, lock->lock_len);
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	return true;
 }
 

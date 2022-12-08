@@ -11,6 +11,23 @@
 
 #include "map.h"
 
+<<<<<<< HEAD
+=======
+#define S3C24XX_VA_IRQ		S3C_VA_IRQ
+#define S3C24XX_VA_MEMCTRL	S3C_VA_MEM
+#define S3C24XX_VA_UART		S3C_VA_UART
+
+#define S3C24XX_VA_TIMER	S3C_VA_TIMER
+#define S3C24XX_VA_CLKPWR	S3C_VA_SYS
+#define S3C24XX_VA_WATCHDOG	S3C_VA_WATCHDOG
+
+#define S3C2412_VA_SSMC		S3C_ADDR_CPU(0x00000000)
+#define S3C2412_VA_EBI		S3C_ADDR_CPU(0x00100000)
+
+#define S3C2410_PA_UART		(0x50000000)
+#define S3C24XX_PA_UART		S3C2410_PA_UART
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * GPIO ports
  *
@@ -21,6 +38,14 @@
  * 0xFA800000, which is not in the way of any current mapping
  * by the base system.
 */
+<<<<<<< HEAD
+=======
+
+#define S3C2410_PA_GPIO		(0x56000000)
+#define S3C24XX_PA_GPIO		S3C2410_PA_GPIO
+
+#define S3C24XX_VA_GPIO		((S3C24XX_PA_GPIO - S3C24XX_PA_UART) + S3C24XX_VA_UART)
+>>>>>>> b7ba80a49124 (Commit)
 #define S3C64XX_VA_GPIO		S3C_ADDR_CPU(0x00000000)
 
 #define S3C64XX_VA_MODEM	S3C_ADDR_CPU(0x00100000)
@@ -28,6 +53,27 @@
 
 #define S3C_VA_USB_HSPHY	S3C64XX_VA_USB_HSPHY
 
+<<<<<<< HEAD
+=======
+#define S3C2410_ADDR(x)		S3C_ADDR(x)
+
+/* deal with the registers that move under the 2412/2413 */
+
+#if defined(CONFIG_CPU_S3C2412)
+#ifndef __ASSEMBLY__
+extern void __iomem *s3c24xx_va_gpio2;
+#endif
+#ifdef CONFIG_CPU_S3C2412_ONLY
+#define S3C24XX_VA_GPIO2	(S3C24XX_VA_GPIO + 0x10)
+#else
+#define S3C24XX_VA_GPIO2 s3c24xx_va_gpio2
+#endif
+#else
+#define s3c24xx_va_gpio2 S3C24XX_VA_GPIO
+#define S3C24XX_VA_GPIO2 S3C24XX_VA_GPIO
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 #include "map-s5p.h"
 
 #endif /* __ASM_PLAT_MAP_S3C_H */

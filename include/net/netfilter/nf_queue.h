@@ -43,7 +43,11 @@ void nf_queue_entry_free(struct nf_queue_entry *entry);
 static inline void init_hashrandom(u32 *jhash_initval)
 {
 	while (*jhash_initval == 0)
+<<<<<<< HEAD
 		*jhash_initval = get_random_u32();
+=======
+		*jhash_initval = prandom_u32();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline u32 hash_v4(const struct iphdr *iph, u32 initval)

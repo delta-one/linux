@@ -7,9 +7,12 @@
 #include <linux/vmalloc.h>
 #include <linux/reboot.h>
 
+<<<<<<< HEAD
 #define CREATE_TRACE_POINTS
 #include <trace/events/notifier.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  *	Notifier list for kernel code which wants to be called
  *	at shutdown. This is used to stop any idling DMA operations
@@ -40,7 +43,10 @@ static int notifier_chain_register(struct notifier_block **nl,
 	}
 	n->next = *nl;
 	rcu_assign_pointer(*nl, n);
+<<<<<<< HEAD
 	trace_notifier_register((void *)n->notifier_call);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -50,7 +56,10 @@ static int notifier_chain_unregister(struct notifier_block **nl,
 	while ((*nl) != NULL) {
 		if ((*nl) == n) {
 			rcu_assign_pointer(*nl, n->next);
+<<<<<<< HEAD
 			trace_notifier_unregister((void *)n->notifier_call);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			return 0;
 		}
 		nl = &((*nl)->next);
@@ -67,7 +76,11 @@ static int notifier_chain_unregister(struct notifier_block **nl,
  *			value of this parameter is -1.
  *	@nr_calls:	Records the number of notifications sent. Don't care
  *			value of this field is NULL.
+<<<<<<< HEAD
  *	Return:		notifier_call_chain returns the value returned by the
+=======
+ *	@returns:	notifier_call_chain returns the value returned by the
+>>>>>>> b7ba80a49124 (Commit)
  *			last notifier function called.
  */
 static int notifier_call_chain(struct notifier_block **nl,
@@ -89,7 +102,10 @@ static int notifier_call_chain(struct notifier_block **nl,
 			continue;
 		}
 #endif
+<<<<<<< HEAD
 		trace_notifier_run((void *)nb->notifier_call);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ret = nb->notifier_call(nb, val, v);
 
 		if (nr_calls)
@@ -111,13 +127,21 @@ NOKPROBE_SYMBOL(notifier_call_chain);
  * @val_up:	Value passed unmodified to the notifier function
  * @val_down:	Value passed unmodified to the notifier function when recovering
  *              from an error on @val_up
+<<<<<<< HEAD
  * @v:		Pointer passed unmodified to the notifier function
+=======
+ * @v		Pointer passed unmodified to the notifier function
+>>>>>>> b7ba80a49124 (Commit)
  *
  * NOTE:	It is important the @nl chain doesn't change between the two
  *		invocations of notifier_call_chain() such that we visit the
  *		exact same notifier callbacks; this rules out any RCU usage.
  *
+<<<<<<< HEAD
  * Return:	the return value of the @val_up call.
+=======
+ * Returns:	the return value of the @val_up call.
+>>>>>>> b7ba80a49124 (Commit)
  */
 static int notifier_call_chain_robust(struct notifier_block **nl,
 				     unsigned long val_up, unsigned long val_down,
@@ -462,6 +486,10 @@ int raw_notifier_call_chain(struct raw_notifier_head *nh,
 }
 EXPORT_SYMBOL_GPL(raw_notifier_call_chain);
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_SRCU
+>>>>>>> b7ba80a49124 (Commit)
 /*
  *	SRCU notifier chain routines.    Registration and unregistration
  *	use a mutex, and call_chain is synchronized by SRCU (no locks).
@@ -578,6 +606,11 @@ void srcu_init_notifier_head(struct srcu_notifier_head *nh)
 }
 EXPORT_SYMBOL_GPL(srcu_init_notifier_head);
 
+<<<<<<< HEAD
+=======
+#endif /* CONFIG_SRCU */
+
+>>>>>>> b7ba80a49124 (Commit)
 static ATOMIC_NOTIFIER_HEAD(die_chain);
 
 int notrace notify_die(enum die_val val, const char *str,

@@ -28,8 +28,11 @@
 #include <drm/drm_drv.h>
 #include <drm/drm_vblank.h>
 
+<<<<<<< HEAD
 #include <soc/bcm2835/raspberrypi-firmware.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "vc4_drv.h"
 #include "vc4_regs.h"
 
@@ -93,8 +96,13 @@ void vc4_hvs_dump_state(struct vc4_hvs *hvs)
 
 static int vc4_hvs_debugfs_underrun(struct seq_file *m, void *data)
 {
+<<<<<<< HEAD
 	struct drm_debugfs_entry *entry = m->private;
 	struct drm_device *dev = entry->dev;
+=======
+	struct drm_info_node *node = m->private;
+	struct drm_device *dev = node->minor->dev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct vc4_dev *vc4 = to_vc4_dev(dev);
 	struct drm_printer p = drm_seq_file_printer(m);
 
@@ -105,8 +113,13 @@ static int vc4_hvs_debugfs_underrun(struct seq_file *m, void *data)
 
 static int vc4_hvs_debugfs_dlist(struct seq_file *m, void *data)
 {
+<<<<<<< HEAD
 	struct drm_debugfs_entry *entry = m->private;
 	struct drm_device *dev = entry->dev;
+=======
+	struct drm_info_node *node = m->private;
+	struct drm_device *dev = node->minor->dev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct vc4_dev *vc4 = to_vc4_dev(dev);
 	struct vc4_hvs *hvs = vc4->hvs;
 	struct drm_printer p = drm_seq_file_printer(m);
@@ -370,30 +383,50 @@ static int vc4_hvs_init_channel(struct vc4_hvs *hvs, struct drm_crtc *crtc,
 	 * mode.
 	 */
 	dispctrl = SCALER_DISPCTRLX_ENABLE;
+<<<<<<< HEAD
 	dispbkgndx = HVS_READ(SCALER_DISPBKGNDX(chan));
 
 	if (!vc4->is_vc5) {
+=======
+
+	if (!vc4->is_vc5)
+>>>>>>> b7ba80a49124 (Commit)
 		dispctrl |= VC4_SET_FIELD(mode->hdisplay,
 					  SCALER_DISPCTRLX_WIDTH) |
 			    VC4_SET_FIELD(mode->vdisplay,
 					  SCALER_DISPCTRLX_HEIGHT) |
 			    (oneshot ? SCALER_DISPCTRLX_ONESHOT : 0);
+<<<<<<< HEAD
 		dispbkgndx |= SCALER_DISPBKGND_AUTOHS;
 	} else {
+=======
+	else
+>>>>>>> b7ba80a49124 (Commit)
 		dispctrl |= VC4_SET_FIELD(mode->hdisplay,
 					  SCALER5_DISPCTRLX_WIDTH) |
 			    VC4_SET_FIELD(mode->vdisplay,
 					  SCALER5_DISPCTRLX_HEIGHT) |
 			    (oneshot ? SCALER5_DISPCTRLX_ONESHOT : 0);
+<<<<<<< HEAD
 		dispbkgndx &= ~SCALER5_DISPBKGND_BCK2BCK;
 	}
 
 	HVS_WRITE(SCALER_DISPCTRLX(chan), dispctrl);
 
+=======
+
+	HVS_WRITE(SCALER_DISPCTRLX(chan), dispctrl);
+
+	dispbkgndx = HVS_READ(SCALER_DISPBKGNDX(chan));
+>>>>>>> b7ba80a49124 (Commit)
 	dispbkgndx &= ~SCALER_DISPBKGND_GAMMA;
 	dispbkgndx &= ~SCALER_DISPBKGND_INTERLACE;
 
 	HVS_WRITE(SCALER_DISPBKGNDX(chan), dispbkgndx |
+<<<<<<< HEAD
+=======
+		  SCALER_DISPBKGND_AUTOHS |
+>>>>>>> b7ba80a49124 (Commit)
 		  ((!vc4->is_vc5) ? SCALER_DISPBKGND_GAMMA : 0) |
 		  (interlace ? SCALER_DISPBKGND_INTERLACE : 0));
 
@@ -570,8 +603,11 @@ void vc4_hvs_atomic_flush(struct drm_crtc *crtc,
 	bool enable_bg_fill = false;
 	u32 __iomem *dlist_start = vc4->hvs->dlist + vc4_state->mm.start;
 	u32 __iomem *dlist_next = dlist_start;
+<<<<<<< HEAD
 	unsigned int zpos = 0;
 	bool found = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int idx;
 
 	if (!drm_dev_enter(dev, &idx)) {
@@ -579,15 +615,19 @@ void vc4_hvs_atomic_flush(struct drm_crtc *crtc,
 		return;
 	}
 
+<<<<<<< HEAD
 	if (vc4_state->assigned_channel == VC4_HVS_CHANNEL_DISABLED)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (debug_dump_regs) {
 		DRM_INFO("CRTC %d HVS before:\n", drm_crtc_index(crtc));
 		vc4_hvs_dump_state(hvs);
 	}
 
 	/* Copy all the active planes' dlist contents to the hardware dlist. */
+<<<<<<< HEAD
 	do {
 		found = false;
 
@@ -616,6 +656,25 @@ void vc4_hvs_atomic_flush(struct drm_crtc *crtc,
 
 		zpos++;
 	} while (found);
+=======
+	drm_atomic_crtc_for_each_plane(plane, crtc) {
+		/* Is this the first active plane? */
+		if (dlist_next == dlist_start) {
+			/* We need to enable background fill when a plane
+			 * could be alpha blending from the background, i.e.
+			 * where no other plane is underneath. It suffices to
+			 * consider the first active plane here since we set
+			 * needs_bg_fill such that either the first plane
+			 * already needs it or all planes on top blend from
+			 * the first or a lower plane.
+			 */
+			vc4_plane_state = to_vc4_plane_state(plane->state);
+			enable_bg_fill = vc4_plane_state->needs_bg_fill;
+		}
+
+		dlist_next += vc4_plane_write_dlist(plane, dlist_next);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	writel(SCALER_CTL0_END, dlist_next);
 	dlist_next++;
@@ -676,8 +735,12 @@ void vc4_hvs_mask_underrun(struct vc4_hvs *hvs, int channel)
 		return;
 
 	dispctrl = HVS_READ(SCALER_DISPCTRL);
+<<<<<<< HEAD
 	dispctrl &= ~(hvs->vc4->is_vc5 ? SCALER5_DISPCTRL_DSPEISLUR(channel) :
 					 SCALER_DISPCTRL_DSPEISLUR(channel));
+=======
+	dispctrl &= ~SCALER_DISPCTRL_DSPEISLUR(channel);
+>>>>>>> b7ba80a49124 (Commit)
 
 	HVS_WRITE(SCALER_DISPCTRL, dispctrl);
 
@@ -694,8 +757,12 @@ void vc4_hvs_unmask_underrun(struct vc4_hvs *hvs, int channel)
 		return;
 
 	dispctrl = HVS_READ(SCALER_DISPCTRL);
+<<<<<<< HEAD
 	dispctrl |= (hvs->vc4->is_vc5 ? SCALER5_DISPCTRL_DSPEISLUR(channel) :
 					SCALER_DISPCTRL_DSPEISLUR(channel));
+=======
+	dispctrl |= SCALER_DISPCTRL_DSPEISLUR(channel);
+>>>>>>> b7ba80a49124 (Commit)
 
 	HVS_WRITE(SCALER_DISPSTAT,
 		  SCALER_DISPSTAT_EUFLOW(channel));
@@ -721,7 +788,10 @@ static irqreturn_t vc4_hvs_irq_handler(int irq, void *data)
 	int channel;
 	u32 control;
 	u32 status;
+<<<<<<< HEAD
 	u32 dspeislur;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * NOTE: We don't need to protect the register access using
@@ -738,11 +808,17 @@ static irqreturn_t vc4_hvs_irq_handler(int irq, void *data)
 	control = HVS_READ(SCALER_DISPCTRL);
 
 	for (channel = 0; channel < SCALER_CHANNELS_COUNT; channel++) {
+<<<<<<< HEAD
 		dspeislur = vc4->is_vc5 ? SCALER5_DISPCTRL_DSPEISLUR(channel) :
 					  SCALER_DISPCTRL_DSPEISLUR(channel);
 		/* Interrupt masking is not always honored, so check it here. */
 		if (status & SCALER_DISPSTAT_EUFLOW(channel) &&
 		    control & dspeislur) {
+=======
+		/* Interrupt masking is not always honored, so check it here. */
+		if (status & SCALER_DISPSTAT_EUFLOW(channel) &&
+		    control & SCALER_DISPCTRL_DSPEISLUR(channel)) {
+>>>>>>> b7ba80a49124 (Commit)
 			vc4_hvs_mask_underrun(hvs, channel);
 			vc4_hvs_report_underrun(dev);
 
@@ -763,6 +839,10 @@ int vc4_hvs_debugfs_init(struct drm_minor *minor)
 	struct drm_device *drm = minor->dev;
 	struct vc4_dev *vc4 = to_vc4_dev(drm);
 	struct vc4_hvs *hvs = vc4->hvs;
+<<<<<<< HEAD
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!vc4->hvs)
 		return -ENODEV;
@@ -772,15 +852,33 @@ int vc4_hvs_debugfs_init(struct drm_minor *minor)
 				    minor->debugfs_root,
 				    &vc4->load_tracker_enabled);
 
+<<<<<<< HEAD
 	drm_debugfs_add_file(drm, "hvs_dlists", vc4_hvs_debugfs_dlist, NULL);
 
 	drm_debugfs_add_file(drm, "hvs_underrun", vc4_hvs_debugfs_underrun, NULL);
 
 	vc4_debugfs_add_regset32(drm, "hvs_regs", &hvs->regset);
+=======
+	ret = vc4_debugfs_add_file(minor, "hvs_dlists",
+				   vc4_hvs_debugfs_dlist, NULL);
+	if (ret)
+		return ret;
+
+	ret = vc4_debugfs_add_file(minor, "hvs_underrun",
+				   vc4_hvs_debugfs_underrun, NULL);
+	if (ret)
+		return ret;
+
+	ret = vc4_debugfs_add_regset32(minor, "hvs_regs",
+				       &hvs->regset);
+	if (ret)
+		return ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
 
+<<<<<<< HEAD
 struct vc4_hvs *__vc4_hvs_alloc(struct vc4_dev *vc4, struct platform_device *pdev)
 {
 	struct drm_device *drm = &vc4->base;
@@ -793,6 +891,51 @@ struct vc4_hvs *__vc4_hvs_alloc(struct vc4_dev *vc4, struct platform_device *pde
 	hvs->vc4 = vc4;
 	hvs->pdev = pdev;
 
+=======
+static int vc4_hvs_bind(struct device *dev, struct device *master, void *data)
+{
+	struct platform_device *pdev = to_platform_device(dev);
+	struct drm_device *drm = dev_get_drvdata(master);
+	struct vc4_dev *vc4 = to_vc4_dev(drm);
+	struct vc4_hvs *hvs = NULL;
+	int ret;
+	u32 dispctrl;
+	u32 reg;
+
+	hvs = drmm_kzalloc(drm, sizeof(*hvs), GFP_KERNEL);
+	if (!hvs)
+		return -ENOMEM;
+	hvs->vc4 = vc4;
+	hvs->pdev = pdev;
+
+	hvs->regs = vc4_ioremap_regs(pdev, 0);
+	if (IS_ERR(hvs->regs))
+		return PTR_ERR(hvs->regs);
+
+	hvs->regset.base = hvs->regs;
+	hvs->regset.regs = hvs_regs;
+	hvs->regset.nregs = ARRAY_SIZE(hvs_regs);
+
+	if (vc4->is_vc5) {
+		hvs->core_clk = devm_clk_get(&pdev->dev, NULL);
+		if (IS_ERR(hvs->core_clk)) {
+			dev_err(&pdev->dev, "Couldn't get core clock\n");
+			return PTR_ERR(hvs->core_clk);
+		}
+
+		ret = clk_prepare_enable(hvs->core_clk);
+		if (ret) {
+			dev_err(&pdev->dev, "Couldn't enable the core clock\n");
+			return ret;
+		}
+	}
+
+	if (!vc4->is_vc5)
+		hvs->dlist = hvs->regs + SCALER_DLIST_START;
+	else
+		hvs->dlist = hvs->regs + SCALER5_DLIST_START;
+
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock_init(&hvs->mm_lock);
 
 	/* Set up the HVS display list memory manager.  We never
@@ -816,6 +959,7 @@ struct vc4_hvs *__vc4_hvs_alloc(struct vc4_dev *vc4, struct platform_device *pde
 		/* 60k words of 4x12-bit pixels */
 		drm_mm_init(&hvs->lbm_mm, 0, 60 * 1024);
 
+<<<<<<< HEAD
 	vc4->hvs = hvs;
 
 	return hvs;
@@ -886,6 +1030,8 @@ static int vc4_hvs_bind(struct device *dev, struct device *master, void *data)
 	else
 		hvs->dlist = hvs->regs + SCALER5_DLIST_START;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Upload filter kernels.  We only have the one for now, so we
 	 * keep it around for the lifetime of the driver.
 	 */
@@ -895,6 +1041,11 @@ static int vc4_hvs_bind(struct device *dev, struct device *master, void *data)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
+=======
+	vc4->hvs = hvs;
+
+>>>>>>> b7ba80a49124 (Commit)
 	reg = HVS_READ(SCALER_DISPECTRL);
 	reg &= ~SCALER_DISPECTRL_DSP2_MUX_MASK;
 	HVS_WRITE(SCALER_DISPECTRL,
@@ -922,6 +1073,7 @@ static int vc4_hvs_bind(struct device *dev, struct device *master, void *data)
 		    SCALER_DISPCTRL_DISPEIRQ(1) |
 		    SCALER_DISPCTRL_DISPEIRQ(2);
 
+<<<<<<< HEAD
 	if (!vc4->is_vc5)
 		dispctrl &= ~(SCALER_DISPCTRL_DMAEIRQ |
 			      SCALER_DISPCTRL_SLVWREIRQ |
@@ -1018,6 +1170,24 @@ static int vc4_hvs_bind(struct device *dev, struct device *master, void *data)
 		HVS_WRITE(SCALER_DISPBASE0, reg);
 	}
 
+=======
+	dispctrl &= ~(SCALER_DISPCTRL_DMAEIRQ |
+		      SCALER_DISPCTRL_SLVWREIRQ |
+		      SCALER_DISPCTRL_SLVRDEIRQ |
+		      SCALER_DISPCTRL_DSPEIEOF(0) |
+		      SCALER_DISPCTRL_DSPEIEOF(1) |
+		      SCALER_DISPCTRL_DSPEIEOF(2) |
+		      SCALER_DISPCTRL_DSPEIEOLN(0) |
+		      SCALER_DISPCTRL_DSPEIEOLN(1) |
+		      SCALER_DISPCTRL_DSPEIEOLN(2) |
+		      SCALER_DISPCTRL_DSPEISLUR(0) |
+		      SCALER_DISPCTRL_DSPEISLUR(1) |
+		      SCALER_DISPCTRL_DSPEISLUR(2) |
+		      SCALER_DISPCTRL_SCLEIRQ);
+
+	HVS_WRITE(SCALER_DISPCTRL, dispctrl);
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = devm_request_irq(dev, platform_get_irq(pdev, 0),
 			       vc4_hvs_irq_handler, 0, "vc4 hvs", drm);
 	if (ret)

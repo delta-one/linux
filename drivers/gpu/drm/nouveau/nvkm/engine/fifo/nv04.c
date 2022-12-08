@@ -21,6 +21,7 @@
  *
  * Authors: Ben Skeggs
  */
+<<<<<<< HEAD
 #include "priv.h"
 #include "cgrp.h"
 #include "chan.h"
@@ -216,6 +217,40 @@ __acquires(fifo->lock)
 	unsigned long flags;
 
 	spin_lock_irqsave(&fifo->lock, flags);
+=======
+#include "nv04.h"
+#include "channv04.h"
+#include "regsnv04.h"
+
+#include <core/client.h>
+#include <core/ramht.h>
+#include <subdev/instmem.h>
+#include <subdev/timer.h>
+#include <engine/sw.h>
+
+static const struct nv04_fifo_ramfc
+nv04_fifo_ramfc[] = {
+	{ 32,  0, 0x00,  0, NV04_PFIFO_CACHE1_DMA_PUT },
+	{ 32,  0, 0x04,  0, NV04_PFIFO_CACHE1_DMA_GET },
+	{ 16,  0, 0x08,  0, NV04_PFIFO_CACHE1_DMA_INSTANCE },
+	{ 16, 16, 0x08,  0, NV04_PFIFO_CACHE1_DMA_DCOUNT },
+	{ 32,  0, 0x0c,  0, NV04_PFIFO_CACHE1_DMA_STATE },
+	{ 32,  0, 0x10,  0, NV04_PFIFO_CACHE1_DMA_FETCH },
+	{ 32,  0, 0x14,  0, NV04_PFIFO_CACHE1_ENGINE },
+	{ 32,  0, 0x18,  0, NV04_PFIFO_CACHE1_PULL1 },
+	{}
+};
+
+void
+nv04_fifo_pause(struct nvkm_fifo *base, unsigned long *pflags)
+__acquires(fifo->base.lock)
+{
+	struct nv04_fifo *fifo = nv04_fifo(base);
+	struct nvkm_device *device = fifo->base.engine.subdev.device;
+	unsigned long flags;
+
+	spin_lock_irqsave(&fifo->base.lock, flags);
+>>>>>>> b7ba80a49124 (Commit)
 	*pflags = flags;
 
 	nvkm_wr32(device, NV03_PFIFO_CACHES, 0x00000000);
@@ -244,21 +279,66 @@ __acquires(fifo->lock)
 }
 
 void
+<<<<<<< HEAD
 nv04_fifo_start(struct nvkm_fifo *fifo, unsigned long *pflags)
 __releases(fifo->lock)
 {
 	struct nvkm_device *device = fifo->engine.subdev.device;
+=======
+nv04_fifo_start(struct nvkm_fifo *base, unsigned long *pflags)
+__releases(fifo->base.lock)
+{
+	struct nv04_fifo *fifo = nv04_fifo(base);
+	struct nvkm_device *device = fifo->base.engine.subdev.device;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long flags = *pflags;
 
 	nvkm_mask(device, NV04_PFIFO_CACHE1_PULL0, 0x00000001, 0x00000001);
 	nvkm_wr32(device, NV03_PFIFO_CACHES, 0x00000001);
 
+<<<<<<< HEAD
 	spin_unlock_irqrestore(&fifo->lock, flags);
 }
 
 const struct nvkm_runl_func
 nv04_runl = {
 };
+=======
+	spin_unlock_irqrestore(&fifo->base.lock, flags);
+}
+
+struct nvkm_engine *
+nv04_fifo_id_engine(struct nvkm_fifo *fifo, int engi)
+{
+	enum nvkm_subdev_type type;
+
+	switch (engi) {
+	case NV04_FIFO_ENGN_SW  : type = NVKM_ENGINE_SW; break;
+	case NV04_FIFO_ENGN_GR  : type = NVKM_ENGINE_GR; break;
+	case NV04_FIFO_ENGN_MPEG: type = NVKM_ENGINE_MPEG; break;
+	case NV04_FIFO_ENGN_DMA : type = NVKM_ENGINE_DMAOBJ; break;
+	default:
+		WARN_ON(1);
+		return NULL;
+	}
+
+	return nvkm_device_engine(fifo->engine.subdev.device, type, 0);
+}
+
+int
+nv04_fifo_engine_id(struct nvkm_fifo *base, struct nvkm_engine *engine)
+{
+	switch (engine->subdev.type) {
+	case NVKM_ENGINE_SW    : return NV04_FIFO_ENGN_SW;
+	case NVKM_ENGINE_GR    : return NV04_FIFO_ENGN_GR;
+	case NVKM_ENGINE_MPEG  : return NV04_FIFO_ENGN_MPEG;
+	case NVKM_ENGINE_DMAOBJ: return NV04_FIFO_ENGN_DMA;
+	default:
+		WARN_ON(1);
+		return 0;
+	}
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 static const char *
 nv_dma_state_err(u32 state)
@@ -300,11 +380,19 @@ nv04_fifo_swmthd(struct nvkm_device *device, u32 chid, u32 addr, u32 data)
 }
 
 static void
+<<<<<<< HEAD
 nv04_fifo_intr_cache_error(struct nvkm_fifo *fifo, u32 chid, u32 get)
 {
 	struct nvkm_subdev *subdev = &fifo->engine.subdev;
 	struct nvkm_device *device = subdev->device;
 	struct nvkm_chan *chan;
+=======
+nv04_fifo_cache_error(struct nv04_fifo *fifo, u32 chid, u32 get)
+{
+	struct nvkm_subdev *subdev = &fifo->base.engine.subdev;
+	struct nvkm_device *device = subdev->device;
+	struct nvkm_fifo_chan *chan;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long flags;
 	u32 pull0 = nvkm_rd32(device, 0x003250);
 	u32 mthd, data;
@@ -327,12 +415,21 @@ nv04_fifo_intr_cache_error(struct nvkm_fifo *fifo, u32 chid, u32 get)
 
 	if (!(pull0 & 0x00000100) ||
 	    !nv04_fifo_swmthd(device, chid, mthd, data)) {
+<<<<<<< HEAD
 		chan = nvkm_chan_get_chid(&fifo->engine, chid, &flags);
 		nvkm_error(subdev, "CACHE_ERROR - "
 			   "ch %d [%s] subc %d mthd %04x data %08x\n",
 			   chid, chan ? chan->name : "unknown",
 			   (mthd >> 13) & 7, mthd & 0x1ffc, data);
 		nvkm_chan_put(&chan, flags);
+=======
+		chan = nvkm_fifo_chan_chid(&fifo->base, chid, &flags);
+		nvkm_error(subdev, "CACHE_ERROR - "
+			   "ch %d [%s] subc %d mthd %04x data %08x\n",
+			   chid, chan ? chan->object.client->name : "unknown",
+			   (mthd >> 13) & 7, mthd & 0x1ffc, data);
+		nvkm_fifo_chan_put(&fifo->base, flags, &chan);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	nvkm_wr32(device, NV04_PFIFO_CACHE1_DMA_PUSH, 0);
@@ -351,20 +448,35 @@ nv04_fifo_intr_cache_error(struct nvkm_fifo *fifo, u32 chid, u32 get)
 }
 
 static void
+<<<<<<< HEAD
 nv04_fifo_intr_dma_pusher(struct nvkm_fifo *fifo, u32 chid)
 {
 	struct nvkm_subdev *subdev = &fifo->engine.subdev;
+=======
+nv04_fifo_dma_pusher(struct nv04_fifo *fifo, u32 chid)
+{
+	struct nvkm_subdev *subdev = &fifo->base.engine.subdev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct nvkm_device *device = subdev->device;
 	u32 dma_get = nvkm_rd32(device, 0x003244);
 	u32 dma_put = nvkm_rd32(device, 0x003240);
 	u32 push = nvkm_rd32(device, 0x003220);
 	u32 state = nvkm_rd32(device, 0x003228);
+<<<<<<< HEAD
 	struct nvkm_chan *chan;
 	unsigned long flags;
 	const char *name;
 
 	chan = nvkm_chan_get_chid(&fifo->engine, chid, &flags);
 	name = chan ? chan->name : "unknown";
+=======
+	struct nvkm_fifo_chan *chan;
+	unsigned long flags;
+	const char *name;
+
+	chan = nvkm_fifo_chan_chid(&fifo->base, chid, &flags);
+	name = chan ? chan->object.client->name : "unknown";
+>>>>>>> b7ba80a49124 (Commit)
 	if (device->card_type == NV_50) {
 		u32 ho_get = nvkm_rd32(device, 0x003328);
 		u32 ho_put = nvkm_rd32(device, 0x003320);
@@ -395,18 +507,30 @@ nv04_fifo_intr_dma_pusher(struct nvkm_fifo *fifo, u32 chid)
 		if (dma_get != dma_put)
 			nvkm_wr32(device, 0x003244, dma_put);
 	}
+<<<<<<< HEAD
 	nvkm_chan_put(&chan, flags);
+=======
+	nvkm_fifo_chan_put(&fifo->base, flags, &chan);
+>>>>>>> b7ba80a49124 (Commit)
 
 	nvkm_wr32(device, 0x003228, 0x00000000);
 	nvkm_wr32(device, 0x003220, 0x00000001);
 	nvkm_wr32(device, 0x002100, NV_PFIFO_INTR_DMA_PUSHER);
 }
 
+<<<<<<< HEAD
 irqreturn_t
 nv04_fifo_intr(struct nvkm_inth *inth)
 {
 	struct nvkm_fifo *fifo = container_of(inth, typeof(*fifo), engine.subdev.inth);
 	struct nvkm_subdev *subdev = &fifo->engine.subdev;
+=======
+void
+nv04_fifo_intr(struct nvkm_fifo *base)
+{
+	struct nv04_fifo *fifo = nv04_fifo(base);
+	struct nvkm_subdev *subdev = &fifo->base.engine.subdev;
+>>>>>>> b7ba80a49124 (Commit)
 	struct nvkm_device *device = subdev->device;
 	u32 mask = nvkm_rd32(device, NV03_PFIFO_INTR_EN_0);
 	u32 stat = nvkm_rd32(device, NV03_PFIFO_INTR_0) & mask;
@@ -415,16 +539,28 @@ nv04_fifo_intr(struct nvkm_inth *inth)
 	reassign = nvkm_rd32(device, NV03_PFIFO_CACHES) & 1;
 	nvkm_wr32(device, NV03_PFIFO_CACHES, 0);
 
+<<<<<<< HEAD
 	chid = nvkm_rd32(device, NV03_PFIFO_CACHE1_PUSH1) & fifo->chid->mask;
 	get  = nvkm_rd32(device, NV03_PFIFO_CACHE1_GET);
 
 	if (stat & NV_PFIFO_INTR_CACHE_ERROR) {
 		nv04_fifo_intr_cache_error(fifo, chid, get);
+=======
+	chid = nvkm_rd32(device, NV03_PFIFO_CACHE1_PUSH1) & (fifo->base.nr - 1);
+	get  = nvkm_rd32(device, NV03_PFIFO_CACHE1_GET);
+
+	if (stat & NV_PFIFO_INTR_CACHE_ERROR) {
+		nv04_fifo_cache_error(fifo, chid, get);
+>>>>>>> b7ba80a49124 (Commit)
 		stat &= ~NV_PFIFO_INTR_CACHE_ERROR;
 	}
 
 	if (stat & NV_PFIFO_INTR_DMA_PUSHER) {
+<<<<<<< HEAD
 		nv04_fifo_intr_dma_pusher(fifo, chid);
+=======
+		nv04_fifo_dma_pusher(fifo, chid);
+>>>>>>> b7ba80a49124 (Commit)
 		stat &= ~NV_PFIFO_INTR_DMA_PUSHER;
 	}
 
@@ -447,7 +583,11 @@ nv04_fifo_intr(struct nvkm_inth *inth)
 
 		if (stat & 0x40000000) {
 			nvkm_wr32(device, 0x002100, 0x40000000);
+<<<<<<< HEAD
 			nvkm_event_ntfy(&fifo->nonstall.event, 0, NVKM_FIFO_NONSTALL_EVENT);
+=======
+			nvkm_fifo_uevent(&fifo->base);
+>>>>>>> b7ba80a49124 (Commit)
 			stat &= ~0x40000000;
 		}
 	}
@@ -459,6 +599,7 @@ nv04_fifo_intr(struct nvkm_inth *inth)
 	}
 
 	nvkm_wr32(device, NV03_PFIFO_CACHES, reassign);
+<<<<<<< HEAD
 	return IRQ_HANDLED;
 }
 
@@ -466,6 +607,15 @@ void
 nv04_fifo_init(struct nvkm_fifo *fifo)
 {
 	struct nvkm_device *device = fifo->engine.subdev.device;
+=======
+}
+
+void
+nv04_fifo_init(struct nvkm_fifo *base)
+{
+	struct nv04_fifo *fifo = nv04_fifo(base);
+	struct nvkm_device *device = fifo->base.engine.subdev.device;
+>>>>>>> b7ba80a49124 (Commit)
 	struct nvkm_instmem *imem = device->imem;
 	struct nvkm_ramht *ramht = imem->ramht;
 	struct nvkm_memory *ramro = imem->ramro;
@@ -480,7 +630,11 @@ nv04_fifo_init(struct nvkm_fifo *fifo)
 	nvkm_wr32(device, NV03_PFIFO_RAMRO, nvkm_memory_addr(ramro) >> 8);
 	nvkm_wr32(device, NV03_PFIFO_RAMFC, nvkm_memory_addr(ramfc) >> 8);
 
+<<<<<<< HEAD
 	nvkm_wr32(device, NV03_PFIFO_CACHE1_PUSH1, fifo->chid->mask);
+=======
+	nvkm_wr32(device, NV03_PFIFO_CACHE1_PUSH1, fifo->base.nr - 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	nvkm_wr32(device, NV03_PFIFO_INTR_0, 0xffffffff);
 	nvkm_wr32(device, NV03_PFIFO_INTR_EN_0, 0xffffffff);
@@ -491,6 +645,7 @@ nv04_fifo_init(struct nvkm_fifo *fifo)
 }
 
 int
+<<<<<<< HEAD
 nv04_fifo_runl_ctor(struct nvkm_fifo *fifo)
 {
 	struct nvkm_runl *runl;
@@ -533,11 +688,49 @@ nv04_fifo = {
 	.engn_sw = &nv04_engn,
 	.cgrp = {{                        }, &nv04_cgrp },
 	.chan = {{ 0, 0, NV03_CHANNEL_DMA }, &nv04_chan },
+=======
+nv04_fifo_new_(const struct nvkm_fifo_func *func, struct nvkm_device *device,
+	       enum nvkm_subdev_type type, int inst, int nr, const struct nv04_fifo_ramfc *ramfc,
+	       struct nvkm_fifo **pfifo)
+{
+	struct nv04_fifo *fifo;
+	int ret;
+
+	if (!(fifo = kzalloc(sizeof(*fifo), GFP_KERNEL)))
+		return -ENOMEM;
+	fifo->ramfc = ramfc;
+	*pfifo = &fifo->base;
+
+	ret = nvkm_fifo_ctor(func, device, type, inst, nr, &fifo->base);
+	if (ret)
+		return ret;
+
+	set_bit(nr - 1, fifo->base.mask); /* inactive channel */
+	return 0;
+}
+
+static const struct nvkm_fifo_func
+nv04_fifo = {
+	.init = nv04_fifo_init,
+	.intr = nv04_fifo_intr,
+	.engine_id = nv04_fifo_engine_id,
+	.id_engine = nv04_fifo_id_engine,
+	.pause = nv04_fifo_pause,
+	.start = nv04_fifo_start,
+	.chan = {
+		&nv04_fifo_dma_oclass,
+		NULL
+	},
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int
 nv04_fifo_new(struct nvkm_device *device, enum nvkm_subdev_type type, int inst,
 	      struct nvkm_fifo **pfifo)
 {
+<<<<<<< HEAD
 	return nvkm_fifo_new_(&nv04_fifo, device, type, inst, pfifo);
+=======
+	return nv04_fifo_new_(&nv04_fifo, device, type, inst, 16, nv04_fifo_ramfc, pfifo);
+>>>>>>> b7ba80a49124 (Commit)
 }

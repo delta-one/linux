@@ -81,19 +81,30 @@ MODULE_DEVICE_TABLE(of, exynos_clkout_ids);
 static int exynos_clkout_match_parent_dev(struct device *dev, u32 *mux_mask)
 {
 	const struct exynos_clkout_variant *variant;
+<<<<<<< HEAD
 	const struct of_device_id *match;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!dev->parent) {
 		dev_err(dev, "not instantiated from MFD\n");
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	match = of_match_device(exynos_clkout_ids, dev->parent);
 	if (!match) {
 		dev_err(dev, "cannot match parent device\n");
 		return -EINVAL;
 	}
 	variant = match->data;
+=======
+	variant = of_device_get_match_data(dev->parent);
+	if (!variant) {
+		dev_err(dev, "cannot match parent device\n");
+		return -EINVAL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	*mux_mask = variant->mux_mask;
 
@@ -196,13 +207,22 @@ clks_put:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void exynos_clkout_remove(struct platform_device *pdev)
+=======
+static int exynos_clkout_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct exynos_clkout *clkout = platform_get_drvdata(pdev);
 
 	of_clk_del_provider(clkout->np);
 	clk_hw_unregister(clkout->data.hws[0]);
 	iounmap(clkout->reg);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __maybe_unused exynos_clkout_suspend(struct device *dev)
@@ -233,7 +253,11 @@ static struct platform_driver exynos_clkout_driver = {
 		.pm = &exynos_clkout_pm_ops,
 	},
 	.probe = exynos_clkout_probe,
+<<<<<<< HEAD
 	.remove_new = exynos_clkout_remove,
+=======
+	.remove = exynos_clkout_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(exynos_clkout_driver);
 

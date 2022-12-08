@@ -210,7 +210,11 @@ static int stm32_vrefbuf_probe(struct platform_device *pdev)
 						      pdev->dev.of_node,
 						      &stm32_vrefbuf_regu);
 
+<<<<<<< HEAD
 	rdev = regulator_register(&pdev->dev, &stm32_vrefbuf_regu, &config);
+=======
+	rdev = regulator_register(&stm32_vrefbuf_regu, &config);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(rdev)) {
 		ret = PTR_ERR(rdev);
 		dev_err(&pdev->dev, "register failed with error %d\n", ret);
@@ -285,7 +289,10 @@ static struct platform_driver stm32_vrefbuf_driver = {
 	.remove = stm32_vrefbuf_remove,
 	.driver = {
 		.name  = "stm32-vrefbuf",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = of_match_ptr(stm32_vrefbuf_of_match),
 		.pm = &stm32_vrefbuf_pm_ops,
 	},

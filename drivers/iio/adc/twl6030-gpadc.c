@@ -57,6 +57,7 @@
 #define TWL6030_GPADCS				BIT(1)
 #define TWL6030_GPADCR				BIT(0)
 
+<<<<<<< HEAD
 #define USB_VBUS_CTRL_SET			0x04
 #define USB_ID_CTRL_SET				0x06
 
@@ -69,6 +70,8 @@
 #define BB_MEAS                 0x01
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct twl6030_chnl_calib - channel calibration
  * @gain:		slope coefficient for ideal curve
@@ -939,6 +942,7 @@ static int twl6030_gpadc_probe(struct platform_device *pdev)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	ret = twl_i2c_write_u8(TWL_MODULE_USB, VBUS_MEAS, USB_VBUS_CTRL_SET);
 	if (ret < 0) {
 		dev_err(dev, "failed to wire up inputs\n");
@@ -959,6 +963,8 @@ static int twl6030_gpadc_probe(struct platform_device *pdev)
 		return ret;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	indio_dev->name = DRIVER_NAME;
 	indio_dev->info = &twl6030_gpadc_iio_info;
 	indio_dev->modes = INDIO_DIRECT_MODE;

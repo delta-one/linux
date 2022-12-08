@@ -18,7 +18,11 @@ description: |
 patternProperties:
   "^buck-v(core2|io18|dvfs11|dvfs12|dvfs13|dvfs14)$":
     type: object
+<<<<<<< HEAD
     $ref: regulator.yaml#
+=======
+    $ref: "regulator.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
     properties:
       regulator-name:
@@ -28,7 +32,11 @@ patternProperties:
 
   "^ldo-v(avdd32aud|auxa32)$":
     type: object
+<<<<<<< HEAD
     $ref: regulator.yaml#
+=======
+    $ref: "regulator.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
     properties:
       regulator-name:
@@ -38,7 +46,11 @@ patternProperties:
 
   "^ldo-v(dig18|emc33|ibr|mc|mch|mipi|rtc|sram|usb10)$":
     type: object
+<<<<<<< HEAD
     $ref: regulator.yaml#
+=======
+    $ref: "regulator.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
     properties:
       regulator-name:
@@ -48,7 +60,11 @@ patternProperties:
 
   "^ldo-vcam(a|af|d|io)$":
     type: object
+<<<<<<< HEAD
     $ref: regulator.yaml#
+=======
+    $ref: "regulator.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
     properties:
       regulator-name:
@@ -58,7 +74,11 @@ patternProperties:
 
   "^ldo-vtcxo[12]$":
     type: object
+<<<<<<< HEAD
     $ref: regulator.yaml#
+=======
+    $ref: "regulator.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
     properties:
       regulator-name:
@@ -71,7 +91,11 @@ patternProperties:
 
   "^ldo-vgp[1234]$":
     type: object
+<<<<<<< HEAD
     $ref: regulator.yaml#
+=======
+    $ref: "regulator.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
     properties:
       regulator-name:

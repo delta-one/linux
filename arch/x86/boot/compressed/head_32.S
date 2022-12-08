@@ -187,7 +187,11 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
 	leal	boot_heap@GOTOFF(%ebx), %eax
 	pushl	%eax			/* heap area */
 	pushl	%esi			/* real mode pointer */
+<<<<<<< HEAD
 	call	extract_kernel		/* returns kernel entry point in %eax */
+=======
+	call	extract_kernel		/* returns kernel location in %eax */
+>>>>>>> b7ba80a49124 (Commit)
 	addl	$24, %esp
 
 /*
@@ -208,6 +212,13 @@ SYM_DATA_START_LOCAL(gdt)
 	.quad	0x00cf92000000ffff	/* __KERNEL_DS */
 SYM_DATA_END_LABEL(gdt, SYM_L_LOCAL, gdt_end)
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_EFI_STUB
+SYM_DATA(image_offset, .long 0)
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Stack and heap for uncompression
  */

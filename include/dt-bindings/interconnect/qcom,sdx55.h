@@ -70,5 +70,10 @@
 #define SLAVE_QDSS_STM			48
 #define SLAVE_TCU			49
 
+<<<<<<< HEAD
+=======
+#define MASTER_IPA_CORE			0
+#define SLAVE_IPA_CORE			1
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

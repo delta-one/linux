@@ -56,9 +56,16 @@ static int acpi_hed_add(struct acpi_device *device)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void acpi_hed_remove(struct acpi_device *device)
 {
 	hed_handle = NULL;
+=======
+static int acpi_hed_remove(struct acpi_device *device)
+{
+	hed_handle = NULL;
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct acpi_driver acpi_hed_driver = {

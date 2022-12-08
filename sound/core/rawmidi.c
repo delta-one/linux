@@ -1050,6 +1050,10 @@ static int receive_with_tstamp_framing(struct snd_rawmidi_substream *substream,
 	struct snd_rawmidi_runtime *runtime = substream->runtime;
 	struct snd_rawmidi_framing_tstamp *dest_ptr;
 	struct snd_rawmidi_framing_tstamp frame = { .tv_sec = tstamp->tv_sec, .tv_nsec = tstamp->tv_nsec };
+<<<<<<< HEAD
+=======
+	int dest_frames = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int orig_count = src_count;
 	int frame_size = sizeof(struct snd_rawmidi_framing_tstamp);
 
@@ -1076,6 +1080,10 @@ static int receive_with_tstamp_framing(struct snd_rawmidi_substream *substream,
 		runtime->avail += frame_size;
 		runtime->hw_ptr += frame_size;
 		runtime->hw_ptr %= runtime->buffer_size;
+<<<<<<< HEAD
+=======
+		dest_frames++;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return orig_count - src_count;
 }
@@ -1897,8 +1905,15 @@ static int snd_rawmidi_free(struct snd_rawmidi *rmidi)
 
 	snd_info_free_entry(rmidi->proc_entry);
 	rmidi->proc_entry = NULL;
+<<<<<<< HEAD
 	if (rmidi->ops && rmidi->ops->dev_unregister)
 		rmidi->ops->dev_unregister(rmidi);
+=======
+	mutex_lock(&register_mutex);
+	if (rmidi->ops && rmidi->ops->dev_unregister)
+		rmidi->ops->dev_unregister(rmidi);
+	mutex_unlock(&register_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 	snd_rawmidi_free_substreams(&rmidi->streams[SNDRV_RAWMIDI_STREAM_INPUT]);
 	snd_rawmidi_free_substreams(&rmidi->streams[SNDRV_RAWMIDI_STREAM_OUTPUT]);

@@ -302,13 +302,21 @@ void __init mem_init(void)
 		for (pfn = highmem_mapnr; pfn < max_mapnr; ++pfn) {
 			phys_addr_t paddr = (phys_addr_t)pfn << PAGE_SHIFT;
 			struct page *page = pfn_to_page(pfn);
+<<<<<<< HEAD
 			if (memblock_is_memory(paddr) && !memblock_is_reserved(paddr))
+=======
+			if (!memblock_is_reserved(paddr))
+>>>>>>> b7ba80a49124 (Commit)
 				free_highmem_page(page);
 		}
 	}
 #endif /* CONFIG_HIGHMEM */
 
+<<<<<<< HEAD
 #if defined(CONFIG_PPC_E500) && !defined(CONFIG_SMP)
+=======
+#if defined(CONFIG_PPC_FSL_BOOK3E) && !defined(CONFIG_SMP)
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * If smp is enabled, next_tlbcam_idx is initialized in the cpu up
 	 * functions.... do it here for the non-smp case.
@@ -344,6 +352,10 @@ void free_initmem(void)
 {
 	ppc_md.progress = ppc_printk_progress;
 	mark_initmem_nx();
+<<<<<<< HEAD
+=======
+	static_branch_enable(&init_mem_is_free);
+>>>>>>> b7ba80a49124 (Commit)
 	free_initmem_default(POISON_FREE_INITMEM);
 	ftrace_free_init_tramp();
 }

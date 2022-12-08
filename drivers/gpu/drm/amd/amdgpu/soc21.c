@@ -43,11 +43,15 @@
 #include "soc15.h"
 #include "soc15_common.h"
 #include "soc21.h"
+<<<<<<< HEAD
 #include "mxgpu_nv.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct amd_ip_funcs soc21_common_ip_funcs;
 
 /* SOC21 */
+<<<<<<< HEAD
 static const struct amdgpu_video_codec_info vcn_4_0_0_video_codecs_encode_array_vcn0[] =
 {
 	{codec_info_build(AMDGPU_INFO_VIDEO_CAPS_CODEC_IDX_MPEG4_AVC, 4096, 2304, 0)},
@@ -56,11 +60,15 @@ static const struct amdgpu_video_codec_info vcn_4_0_0_video_codecs_encode_array_
 };
 
 static const struct amdgpu_video_codec_info vcn_4_0_0_video_codecs_encode_array_vcn1[] =
+=======
+static const struct amdgpu_video_codec_info vcn_4_0_0_video_codecs_encode_array[] =
+>>>>>>> b7ba80a49124 (Commit)
 {
 	{codec_info_build(AMDGPU_INFO_VIDEO_CAPS_CODEC_IDX_MPEG4_AVC, 4096, 2304, 0)},
 	{codec_info_build(AMDGPU_INFO_VIDEO_CAPS_CODEC_IDX_HEVC, 4096, 2304, 0)},
 };
 
+<<<<<<< HEAD
 static const struct amdgpu_video_codecs vcn_4_0_0_video_codecs_encode_vcn0 =
 {
 	.codec_count = ARRAY_SIZE(vcn_4_0_0_video_codecs_encode_array_vcn0),
@@ -76,12 +84,24 @@ static const struct amdgpu_video_codecs vcn_4_0_0_video_codecs_encode_vcn1 =
 static const struct amdgpu_video_codec_info vcn_4_0_0_video_codecs_decode_array_vcn0[] =
 {
 	{codec_info_build(AMDGPU_INFO_VIDEO_CAPS_CODEC_IDX_MPEG4_AVC, 4096, 4096, 52)},
+=======
+static const struct amdgpu_video_codecs vcn_4_0_0_video_codecs_encode =
+{
+	.codec_count = ARRAY_SIZE(vcn_4_0_0_video_codecs_encode_array),
+	.codec_array = vcn_4_0_0_video_codecs_encode_array,
+};
+
+static const struct amdgpu_video_codec_info vcn_4_0_0_video_codecs_decode_array[] =
+{
+	{codec_info_build(AMDGPU_INFO_VIDEO_CAPS_CODEC_IDX_MPEG4_AVC, 4096, 4906, 52)},
+>>>>>>> b7ba80a49124 (Commit)
 	{codec_info_build(AMDGPU_INFO_VIDEO_CAPS_CODEC_IDX_HEVC, 8192, 4352, 186)},
 	{codec_info_build(AMDGPU_INFO_VIDEO_CAPS_CODEC_IDX_JPEG, 4096, 4096, 0)},
 	{codec_info_build(AMDGPU_INFO_VIDEO_CAPS_CODEC_IDX_VP9, 8192, 4352, 0)},
 	{codec_info_build(AMDGPU_INFO_VIDEO_CAPS_CODEC_IDX_AV1, 8192, 4352, 0)},
 };
 
+<<<<<<< HEAD
 static const struct amdgpu_video_codec_info vcn_4_0_0_video_codecs_decode_array_vcn1[] =
 {
 	{codec_info_build(AMDGPU_INFO_VIDEO_CAPS_CODEC_IDX_MPEG4_AVC, 4096, 4096, 52)},
@@ -153,11 +173,18 @@ static struct amdgpu_video_codecs sriov_vcn_4_0_0_video_codecs_decode_vcn0 = {
 static struct amdgpu_video_codecs sriov_vcn_4_0_0_video_codecs_decode_vcn1 = {
 	.codec_count = ARRAY_SIZE(sriov_vcn_4_0_0_video_codecs_decode_array_vcn1),
 	.codec_array = sriov_vcn_4_0_0_video_codecs_decode_array_vcn1,
+=======
+static const struct amdgpu_video_codecs vcn_4_0_0_video_codecs_decode =
+{
+	.codec_count = ARRAY_SIZE(vcn_4_0_0_video_codecs_decode_array),
+	.codec_array = vcn_4_0_0_video_codecs_decode_array,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int soc21_query_video_codecs(struct amdgpu_device *adev, bool encode,
 				 const struct amdgpu_video_codecs **codecs)
 {
+<<<<<<< HEAD
 	if (adev->vcn.num_vcn_inst == hweight8(adev->vcn.harvest_config))
 		return -EINVAL;
 
@@ -191,11 +218,64 @@ static int soc21_query_video_codecs(struct amdgpu_device *adev, bool encode,
 					*codecs = &vcn_4_0_0_video_codecs_decode_vcn0;
 			}
 		}
+=======
+	switch (adev->ip_versions[UVD_HWIP][0]) {
+
+	case IP_VERSION(4, 0, 0):
+	case IP_VERSION(4, 0, 2):
+		if (encode)
+			*codecs = &vcn_4_0_0_video_codecs_encode;
+		else
+			*codecs = &vcn_4_0_0_video_codecs_decode;
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	default:
 		return -EINVAL;
 	}
 }
+<<<<<<< HEAD
+=======
+/*
+ * Indirect registers accessor
+ */
+static u32 soc21_pcie_rreg(struct amdgpu_device *adev, u32 reg)
+{
+	unsigned long address, data;
+	address = adev->nbio.funcs->get_pcie_index_offset(adev);
+	data = adev->nbio.funcs->get_pcie_data_offset(adev);
+
+	return amdgpu_device_indirect_rreg(adev, address, data, reg);
+}
+
+static void soc21_pcie_wreg(struct amdgpu_device *adev, u32 reg, u32 v)
+{
+	unsigned long address, data;
+
+	address = adev->nbio.funcs->get_pcie_index_offset(adev);
+	data = adev->nbio.funcs->get_pcie_data_offset(adev);
+
+	amdgpu_device_indirect_wreg(adev, address, data, reg, v);
+}
+
+static u64 soc21_pcie_rreg64(struct amdgpu_device *adev, u32 reg)
+{
+	unsigned long address, data;
+	address = adev->nbio.funcs->get_pcie_index_offset(adev);
+	data = adev->nbio.funcs->get_pcie_data_offset(adev);
+
+	return amdgpu_device_indirect_rreg64(adev, address, data, reg);
+}
+
+static void soc21_pcie_wreg64(struct amdgpu_device *adev, u32 reg, u64 v)
+{
+	unsigned long address, data;
+
+	address = adev->nbio.funcs->get_pcie_index_offset(adev);
+	data = adev->nbio.funcs->get_pcie_data_offset(adev);
+
+	amdgpu_device_indirect_wreg64(adev, address, data, reg, v);
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 static u32 soc21_didt_rreg(struct amdgpu_device *adev, u32 reg)
 {
@@ -320,10 +400,16 @@ static int soc21_read_register(struct amdgpu_device *adev, u32 se_num,
 	*value = 0;
 	for (i = 0; i < ARRAY_SIZE(soc21_allowed_read_registers); i++) {
 		en = &soc21_allowed_read_registers[i];
+<<<<<<< HEAD
 		if (!adev->reg_offset[en->hwip][en->inst])
 			continue;
 		else if (reg_offset != (adev->reg_offset[en->hwip][en->inst][en->seg]
 					+ en->reg_offset))
+=======
+		if (adev->reg_offset[en->hwip][en->inst] &&
+		    reg_offset != (adev->reg_offset[en->hwip][en->inst][en->seg]
+				   + en->reg_offset))
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		*value = soc21_get_register_value(adev,
@@ -389,10 +475,15 @@ soc21_asic_reset_method(struct amdgpu_device *adev)
 	switch (adev->ip_versions[MP1_HWIP][0]) {
 	case IP_VERSION(13, 0, 0):
 	case IP_VERSION(13, 0, 7):
+<<<<<<< HEAD
 	case IP_VERSION(13, 0, 10):
 		return AMD_RESET_METHOD_MODE1;
 	case IP_VERSION(13, 0, 4):
 	case IP_VERSION(13, 0, 11):
+=======
+		return AMD_RESET_METHOD_MODE1;
+	case IP_VERSION(13, 0, 4):
+>>>>>>> b7ba80a49124 (Commit)
 		return AMD_RESET_METHOD_MODE2;
 	default:
 		if (amdgpu_dpm_is_baco_supported(adev))
@@ -440,6 +531,24 @@ static int soc21_set_vce_clocks(struct amdgpu_device *adev, u32 evclk, u32 ecclk
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static void soc21_pcie_gen3_enable(struct amdgpu_device *adev)
+{
+	if (pci_is_root_bus(adev->pdev->bus))
+		return;
+
+	if (amdgpu_pcie_gen2 == 0)
+		return;
+
+	if (!(adev->pm.pcie_gen_mask & (CAIL_PCIE_LINK_SPEED_SUPPORT_GEN2 |
+					CAIL_PCIE_LINK_SPEED_SUPPORT_GEN3)))
+		return;
+
+	/* todo */
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void soc21_program_aspm(struct amdgpu_device *adev)
 {
 	if (!amdgpu_device_should_use_aspm(adev))
@@ -466,13 +575,24 @@ const struct amdgpu_ip_block_version soc21_common_ip_block =
 	.funcs = &soc21_common_ip_funcs,
 };
 
+<<<<<<< HEAD
+=======
+static uint32_t soc21_get_rev_id(struct amdgpu_device *adev)
+{
+	return adev->nbio.funcs->get_rev_id(adev);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static bool soc21_need_full_reset(struct amdgpu_device *adev)
 {
 	switch (adev->ip_versions[GC_HWIP][0]) {
 	case IP_VERSION(11, 0, 0):
 		return amdgpu_ras_is_supported(adev, AMDGPU_RAS_BLOCK__UMC);
 	case IP_VERSION(11, 0, 2):
+<<<<<<< HEAD
 	case IP_VERSION(11, 0, 3):
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 	default:
 		return true;
@@ -590,10 +710,17 @@ static int soc21_common_early_init(void *handle)
 	adev->rmmio_remap.bus_addr = adev->rmmio_base + MMIO_REG_HOLE_OFFSET;
 	adev->smc_rreg = NULL;
 	adev->smc_wreg = NULL;
+<<<<<<< HEAD
 	adev->pcie_rreg = &amdgpu_device_indirect_rreg;
 	adev->pcie_wreg = &amdgpu_device_indirect_wreg;
 	adev->pcie_rreg64 = &amdgpu_device_indirect_rreg64;
 	adev->pcie_wreg64 = &amdgpu_device_indirect_wreg64;
+=======
+	adev->pcie_rreg = &soc21_pcie_rreg;
+	adev->pcie_wreg = &soc21_pcie_wreg;
+	adev->pcie_rreg64 = &soc21_pcie_rreg64;
+	adev->pcie_wreg64 = &soc21_pcie_wreg64;
+>>>>>>> b7ba80a49124 (Commit)
 	adev->pciep_rreg = amdgpu_device_pcie_port_rreg;
 	adev->pciep_wreg = amdgpu_device_pcie_port_wreg;
 
@@ -606,7 +733,11 @@ static int soc21_common_early_init(void *handle)
 
 	adev->asic_funcs = &soc21_asic_funcs;
 
+<<<<<<< HEAD
 	adev->rev_id = amdgpu_device_get_rev_id(adev);
+=======
+	adev->rev_id = soc21_get_rev_id(adev);
+>>>>>>> b7ba80a49124 (Commit)
 	adev->external_rev_id = 0xff;
 	switch (adev->ip_versions[GC_HWIP][0]) {
 	case IP_VERSION(11, 0, 0):
@@ -633,6 +764,13 @@ static int soc21_common_early_init(void *handle)
 			AMD_PG_SUPPORT_JPEG |
 			AMD_PG_SUPPORT_ATHUB |
 			AMD_PG_SUPPORT_MMHUB;
+<<<<<<< HEAD
+=======
+		if (amdgpu_sriov_vf(adev)) {
+			adev->cg_flags = 0;
+			adev->pg_flags = 0;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		adev->external_rev_id = adev->rev_id + 0x1; // TODO: need update
 		break;
 	case IP_VERSION(11, 0, 2):
@@ -675,13 +813,17 @@ static int soc21_common_early_init(void *handle)
 			AMD_CG_SUPPORT_JPEG_MGCG;
 		adev->pg_flags =
 			AMD_PG_SUPPORT_GFX_PG |
+<<<<<<< HEAD
 			AMD_PG_SUPPORT_VCN |
 			AMD_PG_SUPPORT_VCN_DPG |
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			AMD_PG_SUPPORT_JPEG;
 		adev->external_rev_id = adev->rev_id + 0x1;
 		break;
 	case IP_VERSION(11, 0, 3):
 		adev->cg_flags = AMD_CG_SUPPORT_VCN_MGCG |
+<<<<<<< HEAD
 			AMD_CG_SUPPORT_JPEG_MGCG |
 			AMD_CG_SUPPORT_GFX_CGCG |
 			AMD_CG_SUPPORT_GFX_CGLS |
@@ -721,21 +863,38 @@ static int soc21_common_early_init(void *handle)
 		adev->external_rev_id = adev->rev_id + 0x1;
 		break;
 
+=======
+			AMD_CG_SUPPORT_JPEG_MGCG;
+		adev->pg_flags = AMD_PG_SUPPORT_VCN |
+			AMD_PG_SUPPORT_VCN_DPG |
+			AMD_PG_SUPPORT_JPEG;
+		if (amdgpu_sriov_vf(adev)) {
+			/* hypervisor control CG and PG enablement */
+			adev->cg_flags = 0;
+			adev->pg_flags = 0;
+		}
+		adev->external_rev_id = adev->rev_id + 0x20;
+		break;
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		/* FIXME: not supported yet */
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	if (amdgpu_sriov_vf(adev)) {
 		amdgpu_virt_init_setting(adev);
 		xgpu_nv_mailbox_set_irq_funcs(adev);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 static int soc21_common_late_init(void *handle)
 {
+<<<<<<< HEAD
 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
 
 	if (amdgpu_sriov_vf(adev)) {
@@ -756,16 +915,21 @@ static int soc21_common_late_init(void *handle)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
 static int soc21_common_sw_init(void *handle)
 {
+<<<<<<< HEAD
 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
 
 	if (amdgpu_sriov_vf(adev))
 		xgpu_nv_mailbox_add_irq_id(adev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -778,6 +942,11 @@ static int soc21_common_hw_init(void *handle)
 {
 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
 
+<<<<<<< HEAD
+=======
+	/* enable pcie gen2/3 link */
+	soc21_pcie_gen3_enable(adev);
+>>>>>>> b7ba80a49124 (Commit)
 	/* enable aspm */
 	soc21_program_aspm(adev);
 	/* setup nbio registers */
@@ -801,9 +970,12 @@ static int soc21_common_hw_fini(void *handle)
 	/* disable the doorbell aperture */
 	soc21_enable_doorbell_aperture(adev, false);
 
+<<<<<<< HEAD
 	if (amdgpu_sriov_vf(adev))
 		xgpu_nv_mailbox_put_irq(adev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

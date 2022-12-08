@@ -3,7 +3,11 @@ perf-y += machine.o
 perf-y += perf_regs.o
 perf-y += tsc.o
 perf-y += pmu.o
+<<<<<<< HEAD
 perf-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
+=======
+perf-y += kvm-stat.o
+>>>>>>> b7ba80a49124 (Commit)
 perf-$(CONFIG_DWARF)     += dwarf-regs.o
 perf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
 perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
@@ -11,4 +15,8 @@ perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
 perf-$(CONFIG_AUXTRACE) += ../../arm/util/pmu.o \
 			      ../../arm/util/auxtrace.o \
 			      ../../arm/util/cs-etm.o \
+<<<<<<< HEAD
 			      arm-spe.o mem-events.o hisi-ptt.o
+=======
+			      arm-spe.o mem-events.o
+>>>>>>> b7ba80a49124 (Commit)

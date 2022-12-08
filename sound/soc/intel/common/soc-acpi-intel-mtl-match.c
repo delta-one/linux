@@ -15,11 +15,14 @@ static const struct snd_soc_acpi_codecs mtl_max98357a_amp = {
 	.codecs = {"MX98357A"}
 };
 
+<<<<<<< HEAD
 static const struct snd_soc_acpi_codecs mtl_max98360a_amp = {
 	.num_codecs = 1,
 	.codecs = {"MX98360A"}
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct snd_soc_acpi_codecs mtl_rt5682_rt5682s_hp = {
 	.num_codecs = 2,
 	.codecs = {"10EC5682", "RTL5682"},
@@ -33,6 +36,7 @@ struct snd_soc_acpi_mach snd_soc_acpi_intel_mtl_machines[] = {
 		.quirk_data = &mtl_max98357a_amp,
 		.sof_tplg_filename = "sof-mtl-max98357a-rt5682.tplg",
 	},
+<<<<<<< HEAD
 	{
 		.comp_ids = &mtl_rt5682_rt5682s_hp,
 		.drv_name = "mtl_mx98360_rt5682",
@@ -40,6 +44,8 @@ struct snd_soc_acpi_mach snd_soc_acpi_intel_mtl_machines[] = {
 		.quirk_data = &mtl_max98360a_amp,
 		.sof_tplg_filename = "sof-mtl-max98360a-rt5682.tplg",
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 EXPORT_SYMBOL_GPL(snd_soc_acpi_intel_mtl_machines);
@@ -51,6 +57,7 @@ static const struct snd_soc_acpi_endpoint single_endpoint = {
 	.group_id = 0,
 };
 
+<<<<<<< HEAD
 static const struct snd_soc_acpi_endpoint spk_l_endpoint = {
 	.num = 0,
 	.aggregated = 1,
@@ -65,6 +72,8 @@ static const struct snd_soc_acpi_endpoint spk_r_endpoint = {
 	.group_id = 1,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct snd_soc_acpi_adr_device rt711_sdca_0_adr[] = {
 	{
 		.adr = 0x000030025D071101ull,
@@ -74,6 +83,7 @@ static const struct snd_soc_acpi_adr_device rt711_sdca_0_adr[] = {
 	}
 };
 
+<<<<<<< HEAD
 static const struct snd_soc_acpi_adr_device mx8373_0_adr[] = {
 	{
 		.adr = 0x000023019F837300ull,
@@ -113,6 +123,8 @@ static const struct snd_soc_acpi_link_adr rt5682_link2_max98373_link0[] = {
 	{}
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct snd_soc_acpi_link_adr mtl_rvp[] = {
 	{
 		.mask = BIT(0),
@@ -149,12 +161,15 @@ struct snd_soc_acpi_mach snd_soc_acpi_intel_mtl_sdw_machines[] = {
 		.drv_name = "sof_sdw",
 		.sof_tplg_filename = "sof-mtl-rt711.tplg",
 	},
+<<<<<<< HEAD
 	{
 		.link_mask = BIT(0) | BIT(2),
 		.links = rt5682_link2_max98373_link0,
 		.drv_name = "sof_sdw",
 		.sof_tplg_filename = "sof-mtl-sdw-rt5682-l2-max98373-l0.tplg",
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 EXPORT_SYMBOL_GPL(snd_soc_acpi_intel_mtl_sdw_machines);

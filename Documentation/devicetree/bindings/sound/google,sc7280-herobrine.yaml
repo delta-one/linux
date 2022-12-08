@@ -75,6 +75,7 @@ patternProperties:
 
         additionalProperties: false
 
+<<<<<<< HEAD
       platform:
         description: Holds subnode which includes the phandle of q6apm platform device.
         type: object
@@ -87,6 +88,8 @@ patternProperties:
 
         additionalProperties: false
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
     required:
       - link-name
       - cpu

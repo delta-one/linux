@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2012-2017 Red Hat, Inc.
  *
@@ -149,7 +152,11 @@ static bool __find_or_insert(struct dm_bio_prison_v2 *prison,
 
 static bool __get(struct dm_bio_prison_v2 *prison,
 		  struct dm_cell_key_v2 *key,
+<<<<<<< HEAD
 		  unsigned int lock_level,
+=======
+		  unsigned lock_level,
+>>>>>>> b7ba80a49124 (Commit)
 		  struct bio *inmate,
 		  struct dm_bio_prison_cell_v2 *cell_prealloc,
 		  struct dm_bio_prison_cell_v2 **cell)
@@ -172,7 +179,11 @@ static bool __get(struct dm_bio_prison_v2 *prison,
 
 bool dm_cell_get_v2(struct dm_bio_prison_v2 *prison,
 		    struct dm_cell_key_v2 *key,
+<<<<<<< HEAD
 		    unsigned int lock_level,
+=======
+		    unsigned lock_level,
+>>>>>>> b7ba80a49124 (Commit)
 		    struct bio *inmate,
 		    struct dm_bio_prison_cell_v2 *cell_prealloc,
 		    struct dm_bio_prison_cell_v2 **cell_result)
@@ -195,7 +206,11 @@ static bool __put(struct dm_bio_prison_v2 *prison,
 
 	// FIXME: shared locks granted above the lock level could starve this
 	if (!cell->shared_count) {
+<<<<<<< HEAD
 		if (cell->exclusive_lock) {
+=======
+		if (cell->exclusive_lock){
+>>>>>>> b7ba80a49124 (Commit)
 			if (cell->quiesce_continuation) {
 				queue_work(prison->wq, cell->quiesce_continuation);
 				cell->quiesce_continuation = NULL;
@@ -225,7 +240,11 @@ EXPORT_SYMBOL_GPL(dm_cell_put_v2);
 
 static int __lock(struct dm_bio_prison_v2 *prison,
 		  struct dm_cell_key_v2 *key,
+<<<<<<< HEAD
 		  unsigned int lock_level,
+=======
+		  unsigned lock_level,
+>>>>>>> b7ba80a49124 (Commit)
 		  struct dm_bio_prison_cell_v2 *cell_prealloc,
 		  struct dm_bio_prison_cell_v2 **cell_result)
 {
@@ -256,7 +275,11 @@ static int __lock(struct dm_bio_prison_v2 *prison,
 
 int dm_cell_lock_v2(struct dm_bio_prison_v2 *prison,
 		    struct dm_cell_key_v2 *key,
+<<<<<<< HEAD
 		    unsigned int lock_level,
+=======
+		    unsigned lock_level,
+>>>>>>> b7ba80a49124 (Commit)
 		    struct dm_bio_prison_cell_v2 *cell_prealloc,
 		    struct dm_bio_prison_cell_v2 **cell_result)
 {
@@ -292,7 +315,11 @@ EXPORT_SYMBOL_GPL(dm_cell_quiesce_v2);
 
 static int __promote(struct dm_bio_prison_v2 *prison,
 		     struct dm_bio_prison_cell_v2 *cell,
+<<<<<<< HEAD
 		     unsigned int new_lock_level)
+=======
+		     unsigned new_lock_level)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (!cell->exclusive_lock)
 		return -EINVAL;
@@ -303,7 +330,11 @@ static int __promote(struct dm_bio_prison_v2 *prison,
 
 int dm_cell_lock_promote_v2(struct dm_bio_prison_v2 *prison,
 			    struct dm_bio_prison_cell_v2 *cell,
+<<<<<<< HEAD
 			    unsigned int new_lock_level)
+=======
+			    unsigned new_lock_level)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int r;
 

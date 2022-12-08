@@ -142,7 +142,11 @@
 		reg = <0>;
 		spi-rx-bus-width = <2>;
 
+<<<<<<< HEAD
 		partitions {
+=======
+		partitions@80000000 {
+>>>>>>> b7ba80a49124 (Commit)
 			compatible = "fixed-partitions";
 			#address-cells = <1>;
 			#size-cells = <1>;

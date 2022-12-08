@@ -19,9 +19,12 @@ config RTW89_PCI
 config RTW89_8852A
 	tristate
 
+<<<<<<< HEAD
 config RTW89_8852B
 	tristate
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config RTW89_8852C
 	tristate
 
@@ -36,6 +39,7 @@ config RTW89_8852AE
 
 	  802.11ax PCIe wireless network (Wi-Fi 6) adapter
 
+<<<<<<< HEAD
 config RTW89_8852BE
 	tristate "Realtek 8852BE PCI wireless network (Wi-Fi 6) adapter"
 	depends on PCI
@@ -47,6 +51,8 @@ config RTW89_8852BE
 
 	  802.11ax PCIe wireless network (Wi-Fi 6) adapter
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config RTW89_8852CE
 	tristate "Realtek 8852CE PCI wireless network (Wi-Fi 6E) adapter"
 	depends on PCI

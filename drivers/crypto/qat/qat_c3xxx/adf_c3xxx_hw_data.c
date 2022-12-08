@@ -2,8 +2,11 @@
 /* Copyright(c) 2014 - 2021 Intel Corporation */
 #include <adf_accel_devices.h>
 #include <adf_common_drv.h>
+<<<<<<< HEAD
 #include <adf_gen2_config.h>
 #include <adf_gen2_dc.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <adf_gen2_hw_data.h>
 #include <adf_gen2_pfvf.h>
 #include "adf_c3xxx_hw_data.h"
@@ -75,7 +78,11 @@ static enum dev_sku_info get_sku(struct adf_hw_device_data *self)
 	return DEV_SKU_UNKNOWN;
 }
 
+<<<<<<< HEAD
 static const u32 *adf_get_arbiter_mapping(struct adf_accel_dev *accel_dev)
+=======
+static const u32 *adf_get_arbiter_mapping(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return thrd_to_arb_map;
 }
@@ -126,11 +133,17 @@ void adf_init_hw_data_c3xxx(struct adf_hw_device_data *hw_data)
 	hw_data->reset_device = adf_reset_flr;
 	hw_data->set_ssm_wdtimer = adf_gen2_set_ssm_wdtimer;
 	hw_data->disable_iov = adf_disable_sriov;
+<<<<<<< HEAD
 	hw_data->dev_config = adf_gen2_dev_config;
 
 	adf_gen2_init_pf_pfvf_ops(&hw_data->pfvf_ops);
 	adf_gen2_init_hw_csr_ops(&hw_data->csr_ops);
 	adf_gen2_init_dc_ops(&hw_data->dc_ops);
+=======
+
+	adf_gen2_init_pf_pfvf_ops(&hw_data->pfvf_ops);
+	adf_gen2_init_hw_csr_ops(&hw_data->csr_ops);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void adf_clean_hw_data_c3xxx(struct adf_hw_device_data *hw_data)

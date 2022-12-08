@@ -22,7 +22,11 @@
 	};
 
 	reserved-memory {
+<<<<<<< HEAD
 		/* wcnss.mdt is not relocatable, so it must be loaded at 0x8b600000 */
+=======
+		// wcnss.mdt is not relocatable, so it must be loaded at 0x8b600000
+>>>>>>> b7ba80a49124 (Commit)
 		/delete-node/ wcnss@89300000;
 
 		wcnss_mem: wcnss@8b600000 {
@@ -204,12 +208,20 @@
 
 		rmi4-f01@1 {
 			reg = <0x1>;
+<<<<<<< HEAD
 			syna,nosleep-mode = <1>; /* Allow sleeping */
+=======
+			syna,nosleep-mode = <1>; // Allow sleeping
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		rmi4-f12@12 {
 			reg = <0x12>;
+<<<<<<< HEAD
 			syna,sensor-type = <1>; /* Touchscreen */
+=======
+			syna,sensor-type = <1>; // Touchscreen
+>>>>>>> b7ba80a49124 (Commit)
 		};
 	};
 };
@@ -367,7 +379,11 @@
 };
 
 &msmgpio {
+<<<<<<< HEAD
 	accel_int_default: accel-int-default-state {
+=======
+	accel_int_default: accel-int-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio116";
 		function = "gpio";
 
@@ -375,7 +391,11 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	camera_flash_default: camera-flash-default-state {
+=======
+	camera_flash_default: camera-flash-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio31", "gpio32";
 		function = "gpio";
 
@@ -383,7 +403,11 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	ctp_pwr_en_default: ctp-pwr-en-default-state {
+=======
+	ctp_pwr_en_default: ctp-pwr-en-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio17";
 		function = "gpio";
 
@@ -391,7 +415,11 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	gpio_keys_default: gpio-keys-default-state {
+=======
+	gpio_keys_default: gpio-keys-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio107";
 		function = "gpio";
 
@@ -399,7 +427,11 @@
 		bias-pull-up;
 	};
 
+<<<<<<< HEAD
 	gyro_int_default: gyro-int-default-state {
+=======
+	gyro_int_default: gyro-int-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio22", "gpio23";
 		function = "gpio";
 
@@ -407,7 +439,11 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	light_int_default: light-int-default-state {
+=======
+	light_int_default: light-int-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio115";
 		function = "gpio";
 
@@ -415,7 +451,11 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	magn_int_default: magn-int-default-state {
+=======
+	magn_int_default: magn-int-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio113";
 		function = "gpio";
 
@@ -423,7 +463,11 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	tp_int_default: tp-int-default-state {
+=======
+	tp_int_default: tp-int-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio13";
 		function = "gpio";
 

@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/clock/imx8ulp-pcc-clock.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: NXP i.MX8ULP Peripheral Clock Controller(PCC) Module
+=======
+title: NXP i.MX8ULP Peripheral Clock Controller(PCC) Module Binding
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Jacky Bai <ping.bai@nxp.com>

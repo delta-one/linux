@@ -47,12 +47,16 @@ nvkm_oproxy_map(struct nvkm_object *object, void *argv, u32 argc,
 static int
 nvkm_oproxy_unmap(struct nvkm_object *object)
 {
+<<<<<<< HEAD
 	struct nvkm_oproxy *oproxy = nvkm_oproxy(object);
 
 	if (unlikely(!oproxy->object))
 		return 0;
 
 	return nvkm_object_unmap(oproxy->object);
+=======
+	return nvkm_object_unmap(nvkm_oproxy(object)->object);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int
@@ -111,6 +115,7 @@ nvkm_oproxy_sclass(struct nvkm_object *object, int index,
 }
 
 static int
+<<<<<<< HEAD
 nvkm_oproxy_uevent(struct nvkm_object *object, void *argv, u32 argc,
 		   struct nvkm_uevent *uevent)
 {
@@ -123,6 +128,8 @@ nvkm_oproxy_uevent(struct nvkm_object *object, void *argv, u32 argc,
 }
 
 static int
+=======
+>>>>>>> b7ba80a49124 (Commit)
 nvkm_oproxy_fini(struct nvkm_object *object, bool suspend)
 {
 	struct nvkm_oproxy *oproxy = nvkm_oproxy(object);
@@ -205,7 +212,10 @@ nvkm_oproxy_func = {
 	.wr32 = nvkm_oproxy_wr32,
 	.bind = nvkm_oproxy_bind,
 	.sclass = nvkm_oproxy_sclass,
+<<<<<<< HEAD
 	.uevent = nvkm_oproxy_uevent,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 void

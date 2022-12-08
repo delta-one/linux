@@ -376,7 +376,11 @@ static int neponset_probe(struct platform_device *dev)
 	return ret;
 }
 
+<<<<<<< HEAD
 static void neponset_remove(struct platform_device *dev)
+=======
+static int neponset_remove(struct platform_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct neponset_drvdata *d = platform_get_drvdata(dev);
 	int irq = platform_get_irq(dev, 0);
@@ -395,6 +399,11 @@ static void neponset_remove(struct platform_device *dev)
 	nep = NULL;
 	iounmap(d->base);
 	kfree(d);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -423,7 +432,11 @@ static const struct dev_pm_ops neponset_pm_ops = {
 
 static struct platform_driver neponset_device_driver = {
 	.probe		= neponset_probe,
+<<<<<<< HEAD
 	.remove_new	= neponset_remove,
+=======
+	.remove		= neponset_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= "neponset",
 		.pm	= PM_OPS,

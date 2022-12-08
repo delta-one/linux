@@ -49,7 +49,12 @@
 
 MODULE_ALIAS_GENL_FAMILY(IPVS_GENL_NAME);
 
+<<<<<<< HEAD
 DEFINE_MUTEX(__ip_vs_mutex); /* Serialize configuration with sockopt/netlink */
+=======
+/* semaphore for IPVS sockopts. And, [gs]etsockopt may sleep. */
+static DEFINE_MUTEX(__ip_vs_mutex);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* sysctl variables */
 
@@ -240,6 +245,7 @@ static void defense_work_handler(struct work_struct *work)
 }
 #endif
 
+<<<<<<< HEAD
 static void est_reload_work_handler(struct work_struct *work)
 {
 	struct netns_ipvs *ipvs =
@@ -281,6 +287,8 @@ unlock:
 	mutex_unlock(&ipvs->est_mutex);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int
 ip_vs_use_count_inc(void)
 {
@@ -511,7 +519,11 @@ __ip_vs_bind_svc(struct ip_vs_dest *dest, struct ip_vs_service *svc)
 
 static void ip_vs_service_free(struct ip_vs_service *svc)
 {
+<<<<<<< HEAD
 	ip_vs_stats_release(&svc->stats);
+=======
+	free_percpu(svc->stats.cpustats);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(svc);
 }
 
@@ -523,14 +535,25 @@ static void ip_vs_service_rcu_free(struct rcu_head *head)
 	ip_vs_service_free(svc);
 }
 
+<<<<<<< HEAD
 static void __ip_vs_svc_put(struct ip_vs_service *svc)
+=======
+static void __ip_vs_svc_put(struct ip_vs_service *svc, bool do_delay)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (atomic_dec_and_test(&svc->refcnt)) {
 		IP_VS_DBG_BUF(3, "Removing service %u/%s:%u\n",
 			      svc->fwmark,
 			      IP_VS_DBG_ADDR(svc->af, &svc->addr),
 			      ntohs(svc->port));
+<<<<<<< HEAD
 		call_rcu(&svc->rcu_head, ip_vs_service_rcu_free);
+=======
+		if (do_delay)
+			call_rcu(&svc->rcu_head, ip_vs_service_rcu_free);
+		else
+			ip_vs_service_free(svc);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -817,6 +840,7 @@ out:
 	return dest;
 }
 
+<<<<<<< HEAD
 static void ip_vs_dest_rcu_free(struct rcu_head *head)
 {
 	struct ip_vs_dest *dest;
@@ -826,13 +850,21 @@ static void ip_vs_dest_rcu_free(struct rcu_head *head)
 	ip_vs_dest_put_and_free(dest);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void ip_vs_dest_free(struct ip_vs_dest *dest)
 {
 	struct ip_vs_service *svc = rcu_dereference_protected(dest->svc, 1);
 
 	__ip_vs_dst_cache_reset(dest);
+<<<<<<< HEAD
 	__ip_vs_svc_put(svc);
 	call_rcu(&dest->rcu_head, ip_vs_dest_rcu_free);
+=======
+	__ip_vs_svc_put(svc, false);
+	free_percpu(dest->stats.cpustats);
+	ip_vs_dest_put_and_free(dest);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -856,6 +888,7 @@ static void ip_vs_trash_cleanup(struct netns_ipvs *ipvs)
 	}
 }
 
+<<<<<<< HEAD
 static void ip_vs_stats_rcu_free(struct rcu_head *head)
 {
 	struct ip_vs_stats_rcu *rs = container_of(head,
@@ -866,12 +899,18 @@ static void ip_vs_stats_rcu_free(struct rcu_head *head)
 	kfree(rs);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void
 ip_vs_copy_stats(struct ip_vs_kstats *dst, struct ip_vs_stats *src)
 {
 #define IP_VS_SHOW_STATS_COUNTER(c) dst->c = src->kstats.c - src->kstats0.c
 
+<<<<<<< HEAD
 	spin_lock(&src->lock);
+=======
+	spin_lock_bh(&src->lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	IP_VS_SHOW_STATS_COUNTER(conns);
 	IP_VS_SHOW_STATS_COUNTER(inpkts);
@@ -881,7 +920,11 @@ ip_vs_copy_stats(struct ip_vs_kstats *dst, struct ip_vs_stats *src)
 
 	ip_vs_read_estimator(dst, src);
 
+<<<<<<< HEAD
 	spin_unlock(&src->lock);
+=======
+	spin_unlock_bh(&src->lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -902,7 +945,11 @@ ip_vs_export_stats_user(struct ip_vs_stats_user *dst, struct ip_vs_kstats *src)
 static void
 ip_vs_zero_stats(struct ip_vs_stats *stats)
 {
+<<<<<<< HEAD
 	spin_lock(&stats->lock);
+=======
+	spin_lock_bh(&stats->lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* get current counters as zero point, rates are zeroed */
 
@@ -916,6 +963,7 @@ ip_vs_zero_stats(struct ip_vs_stats *stats)
 
 	ip_vs_zero_estimator(stats);
 
+<<<<<<< HEAD
 	spin_unlock(&stats->lock);
 }
 
@@ -958,6 +1006,9 @@ void ip_vs_stats_free(struct ip_vs_stats *stats)
 		ip_vs_stats_release(stats);
 		kfree(stats);
 	}
+=======
+	spin_unlock_bh(&stats->lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1019,7 +1070,11 @@ __ip_vs_update_dest(struct ip_vs_service *svc, struct ip_vs_dest *dest,
 		if (old_svc != svc) {
 			ip_vs_zero_stats(&dest->stats);
 			__ip_vs_bind_svc(dest, svc);
+<<<<<<< HEAD
 			__ip_vs_svc_put(old_svc);
+=======
+			__ip_vs_svc_put(old_svc, true);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -1038,6 +1093,10 @@ __ip_vs_update_dest(struct ip_vs_service *svc, struct ip_vs_dest *dest,
 	spin_unlock_bh(&dest->dst_lock);
 
 	if (add) {
+<<<<<<< HEAD
+=======
+		ip_vs_start_estimator(svc->ipvs, &dest->stats);
+>>>>>>> b7ba80a49124 (Commit)
 		list_add_rcu(&dest->n_list, &svc->destinations);
 		svc->num_dests++;
 		sched = rcu_dereference_protected(svc->scheduler, 1);
@@ -1058,13 +1117,22 @@ static int
 ip_vs_new_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest)
 {
 	struct ip_vs_dest *dest;
+<<<<<<< HEAD
 	unsigned int atype;
 	int ret;
+=======
+	unsigned int atype, i;
+>>>>>>> b7ba80a49124 (Commit)
 
 	EnterFunction(2);
 
 #ifdef CONFIG_IP_VS_IPV6
 	if (udest->af == AF_INET6) {
+<<<<<<< HEAD
+=======
+		int ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 		atype = ipv6_addr_type(&udest->addr.in6);
 		if ((!(atype & IPV6_ADDR_UNICAST) ||
 			atype & IPV6_ADDR_LINKLOCAL) &&
@@ -1086,6 +1154,7 @@ ip_vs_new_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest)
 	if (dest == NULL)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	ret = ip_vs_stats_init_alloc(&dest->stats);
 	if (ret < 0)
 		goto err_alloc;
@@ -1093,6 +1162,17 @@ ip_vs_new_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest)
 	ret = ip_vs_start_estimator(svc->ipvs, &dest->stats);
 	if (ret < 0)
 		goto err_stats;
+=======
+	dest->stats.cpustats = alloc_percpu(struct ip_vs_cpu_stats);
+	if (!dest->stats.cpustats)
+		goto err_alloc;
+
+	for_each_possible_cpu(i) {
+		struct ip_vs_cpu_stats *ip_vs_dest_stats;
+		ip_vs_dest_stats = per_cpu_ptr(dest->stats.cpustats, i);
+		u64_stats_init(&ip_vs_dest_stats->syncp);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	dest->af = udest->af;
 	dest->protocol = svc->protocol;
@@ -1109,17 +1189,27 @@ ip_vs_new_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest)
 
 	INIT_HLIST_NODE(&dest->d_list);
 	spin_lock_init(&dest->dst_lock);
+<<<<<<< HEAD
+=======
+	spin_lock_init(&dest->stats.lock);
+>>>>>>> b7ba80a49124 (Commit)
 	__ip_vs_update_dest(svc, dest, udest, 1);
 
 	LeaveFunction(2);
 	return 0;
 
+<<<<<<< HEAD
 err_stats:
 	ip_vs_stats_release(&dest->stats);
 
 err_alloc:
 	kfree(dest);
 	return ret;
+=======
+err_alloc:
+	kfree(dest);
+	return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 
@@ -1181,18 +1271,26 @@ ip_vs_add_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest)
 			      IP_VS_DBG_ADDR(svc->af, &dest->vaddr),
 			      ntohs(dest->vport));
 
+<<<<<<< HEAD
 		ret = ip_vs_start_estimator(svc->ipvs, &dest->stats);
 		if (ret < 0)
 			goto err;
 		__ip_vs_update_dest(svc, dest, udest, 1);
+=======
+		__ip_vs_update_dest(svc, dest, udest, 1);
+		ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		/*
 		 * Allocate and initialize the dest structure
 		 */
 		ret = ip_vs_new_dest(svc, udest);
 	}
+<<<<<<< HEAD
 
 err:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	LeaveFunction(2);
 
 	return ret;
@@ -1382,7 +1480,11 @@ static int
 ip_vs_add_service(struct netns_ipvs *ipvs, struct ip_vs_service_user_kern *u,
 		  struct ip_vs_service **svc_p)
 {
+<<<<<<< HEAD
 	int ret = 0;
+=======
+	int ret = 0, i;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ip_vs_scheduler *sched = NULL;
 	struct ip_vs_pe *pe = NULL;
 	struct ip_vs_service *svc = NULL;
@@ -1442,9 +1544,24 @@ ip_vs_add_service(struct netns_ipvs *ipvs, struct ip_vs_service_user_kern *u,
 		ret = -ENOMEM;
 		goto out_err;
 	}
+<<<<<<< HEAD
 	ret = ip_vs_stats_init_alloc(&svc->stats);
 	if (ret < 0)
 		goto out_err;
+=======
+	svc->stats.cpustats = alloc_percpu(struct ip_vs_cpu_stats);
+	if (!svc->stats.cpustats) {
+		ret = -ENOMEM;
+		goto out_err;
+	}
+
+	for_each_possible_cpu(i) {
+		struct ip_vs_cpu_stats *ip_vs_stats;
+		ip_vs_stats = per_cpu_ptr(svc->stats.cpustats, i);
+		u64_stats_init(&ip_vs_stats->syncp);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* I'm the first user of the service */
 	atomic_set(&svc->refcnt, 0);
@@ -1461,6 +1578,10 @@ ip_vs_add_service(struct netns_ipvs *ipvs, struct ip_vs_service_user_kern *u,
 
 	INIT_LIST_HEAD(&svc->destinations);
 	spin_lock_init(&svc->sched_lock);
+<<<<<<< HEAD
+=======
+	spin_lock_init(&svc->stats.lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Bind the scheduler */
 	if (sched) {
@@ -1470,10 +1591,13 @@ ip_vs_add_service(struct netns_ipvs *ipvs, struct ip_vs_service_user_kern *u,
 		sched = NULL;
 	}
 
+<<<<<<< HEAD
 	ret = ip_vs_start_estimator(ipvs, &svc->stats);
 	if (ret < 0)
 		goto out_err;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Bind the ct retriever */
 	RCU_INIT_POINTER(svc->pe, pe);
 	pe = NULL;
@@ -1486,6 +1610,11 @@ ip_vs_add_service(struct netns_ipvs *ipvs, struct ip_vs_service_user_kern *u,
 	if (svc->pe && svc->pe->conn_out)
 		atomic_inc(&ipvs->conn_out_counter);
 
+<<<<<<< HEAD
+=======
+	ip_vs_start_estimator(ipvs, &svc->stats);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Count only IPv4 services for old get/setsockopt interface */
 	if (svc->af == AF_INET)
 		ipvs->num_services++;
@@ -1496,6 +1625,7 @@ ip_vs_add_service(struct netns_ipvs *ipvs, struct ip_vs_service_user_kern *u,
 	ip_vs_svc_hash(svc);
 
 	*svc_p = svc;
+<<<<<<< HEAD
 
 	if (!ipvs->enable) {
 		/* Now there is a service - full throttle */
@@ -1505,6 +1635,10 @@ ip_vs_add_service(struct netns_ipvs *ipvs, struct ip_vs_service_user_kern *u,
 		ip_vs_est_reload_start(ipvs);
 	}
 
+=======
+	/* Now there is a service - full throttle */
+	ipvs->enable = 1;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
 
@@ -1668,7 +1802,11 @@ static void __ip_vs_del_service(struct ip_vs_service *svc, bool cleanup)
 	/*
 	 *    Free the service if nobody refers to it
 	 */
+<<<<<<< HEAD
 	__ip_vs_svc_put(svc);
+=======
+	__ip_vs_svc_put(svc, true);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* decrease the module use count */
 	ip_vs_use_count_dec();
@@ -1858,7 +1996,11 @@ static int ip_vs_zero_all(struct netns_ipvs *ipvs)
 		}
 	}
 
+<<<<<<< HEAD
 	ip_vs_zero_stats(&ipvs->tot_stats->s);
+=======
+	ip_vs_zero_stats(&ipvs->tot_stats);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1940,6 +2082,7 @@ proc_do_sync_ports(struct ctl_table *table, int write,
 	return rc;
 }
 
+<<<<<<< HEAD
 static int ipvs_proc_est_cpumask_set(struct ctl_table *table, void *buffer)
 {
 	struct netns_ipvs *ipvs = table->extra2;
@@ -2082,6 +2225,8 @@ static int ipvs_proc_run_estimation(struct ctl_table *table, int write,
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  *	IPVS sysctl table (under the /proc/sys/net/ipv4/vs/)
  *	Do not change order or insert new entries without
@@ -2256,6 +2401,7 @@ static struct ctl_table vs_vars[] = {
 		.procname	= "run_estimation",
 		.maxlen		= sizeof(int),
 		.mode		= 0644,
+<<<<<<< HEAD
 		.proc_handler	= ipvs_proc_run_estimation,
 	},
 	{
@@ -2269,6 +2415,9 @@ static struct ctl_table vs_vars[] = {
 		.maxlen		= sizeof(int),
 		.mode		= 0644,
 		.proc_handler	= ipvs_proc_est_nice,
+=======
+		.proc_handler	= proc_dointvec,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 #ifdef CONFIG_IP_VS_DEBUG
 	{
@@ -2506,7 +2655,11 @@ static int ip_vs_stats_show(struct seq_file *seq, void *v)
 	seq_puts(seq,
 		 "   Conns  Packets  Packets            Bytes            Bytes\n");
 
+<<<<<<< HEAD
 	ip_vs_copy_stats(&show, &net_ipvs(net)->tot_stats->s);
+=======
+	ip_vs_copy_stats(&show, &net_ipvs(net)->tot_stats);
+>>>>>>> b7ba80a49124 (Commit)
 	seq_printf(seq, "%8LX %8LX %8LX %16LX %16LX\n\n",
 		   (unsigned long long)show.conns,
 		   (unsigned long long)show.inpkts,
@@ -2530,7 +2683,11 @@ static int ip_vs_stats_show(struct seq_file *seq, void *v)
 static int ip_vs_stats_percpu_show(struct seq_file *seq, void *v)
 {
 	struct net *net = seq_file_single_net(seq);
+<<<<<<< HEAD
 	struct ip_vs_stats *tot_stats = &net_ipvs(net)->tot_stats->s;
+=======
+	struct ip_vs_stats *tot_stats = &net_ipvs(net)->tot_stats;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ip_vs_cpu_stats __percpu *cpustats = tot_stats->cpustats;
 	struct ip_vs_kstats kstats;
 	int i;
@@ -2547,6 +2704,7 @@ static int ip_vs_stats_percpu_show(struct seq_file *seq, void *v)
 		u64 conns, inpkts, outpkts, inbytes, outbytes;
 
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&u->syncp);
 			conns = u64_stats_read(&u->cnt.conns);
 			inpkts = u64_stats_read(&u->cnt.inpkts);
@@ -2554,6 +2712,15 @@ static int ip_vs_stats_percpu_show(struct seq_file *seq, void *v)
 			inbytes = u64_stats_read(&u->cnt.inbytes);
 			outbytes = u64_stats_read(&u->cnt.outbytes);
 		} while (u64_stats_fetch_retry(&u->syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&u->syncp);
+			conns = u->cnt.conns;
+			inpkts = u->cnt.inpkts;
+			outpkts = u->cnt.outpkts;
+			inbytes = u->cnt.inbytes;
+			outbytes = u->cnt.outbytes;
+		} while (u64_stats_fetch_retry_irq(&u->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 
 		seq_printf(seq, "%3X %8LX %8LX %8LX %16LX %16LX\n",
 			   i, (u64)conns, (u64)inpkts,
@@ -2841,11 +3008,14 @@ do_ip_vs_set_ctl(struct sock *sk, int cmd, sockptr_t ptr, unsigned int len)
 		break;
 	case IP_VS_SO_SET_DELDEST:
 		ret = ip_vs_del_dest(svc, &udest);
+<<<<<<< HEAD
 		break;
 	default:
 		WARN_ON_ONCE(1);
 		ret = -EINVAL;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
   out_unlock:
@@ -4283,17 +4453,25 @@ static void ip_vs_genl_unregister(void)
 static int __net_init ip_vs_control_net_init_sysctl(struct netns_ipvs *ipvs)
 {
 	struct net *net = ipvs->net;
+<<<<<<< HEAD
 	struct ctl_table *tbl;
 	int idx, ret;
+=======
+	int idx;
+	struct ctl_table *tbl;
+>>>>>>> b7ba80a49124 (Commit)
 
 	atomic_set(&ipvs->dropentry, 0);
 	spin_lock_init(&ipvs->dropentry_lock);
 	spin_lock_init(&ipvs->droppacket_lock);
 	spin_lock_init(&ipvs->securetcp_lock);
+<<<<<<< HEAD
 	INIT_DELAYED_WORK(&ipvs->defense_work, defense_work_handler);
 	INIT_DELAYED_WORK(&ipvs->expire_nodest_conn_work,
 			  expire_nodest_conn_handler);
 	ipvs->est_stopped = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!net_eq(net, &init_net)) {
 		tbl = kmemdup(vs_vars, sizeof(vs_vars), GFP_KERNEL);
@@ -4354,6 +4532,7 @@ static int __net_init ip_vs_control_net_init_sysctl(struct netns_ipvs *ipvs)
 	tbl[idx++].data = &ipvs->sysctl_schedule_icmp;
 	tbl[idx++].data = &ipvs->sysctl_ignore_tunneled;
 	ipvs->sysctl_run_estimation = 1;
+<<<<<<< HEAD
 	tbl[idx].extra2 = ipvs;
 	tbl[idx++].data = &ipvs->sysctl_run_estimation;
 
@@ -4365,12 +4544,16 @@ static int __net_init ip_vs_control_net_init_sysctl(struct netns_ipvs *ipvs)
 	tbl[idx].extra2 = ipvs;
 	tbl[idx++].data = &ipvs->sysctl_est_nice;
 
+=======
+	tbl[idx++].data = &ipvs->sysctl_run_estimation;
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_IP_VS_DEBUG
 	/* Global sysctls must be ro in non-init netns */
 	if (!net_eq(net, &init_net))
 		tbl[idx++].mode = 0444;
 #endif
 
+<<<<<<< HEAD
 	ret = -ENOMEM;
 	ipvs->sysctl_hdr = register_net_sysctl(net, "net/ipv4/vs", tbl);
 	if (!ipvs->sysctl_hdr)
@@ -4392,6 +4575,26 @@ err:
 	if (!net_eq(net, &init_net))
 		kfree(tbl);
 	return ret;
+=======
+	ipvs->sysctl_hdr = register_net_sysctl(net, "net/ipv4/vs", tbl);
+	if (ipvs->sysctl_hdr == NULL) {
+		if (!net_eq(net, &init_net))
+			kfree(tbl);
+		return -ENOMEM;
+	}
+	ip_vs_start_estimator(ipvs, &ipvs->tot_stats);
+	ipvs->sysctl_tbl = tbl;
+	/* Schedule defense work */
+	INIT_DELAYED_WORK(&ipvs->defense_work, defense_work_handler);
+	queue_delayed_work(system_long_wq, &ipvs->defense_work,
+			   DEFENSE_TIMER_PERIOD);
+
+	/* Init delayed work for expiring no dest conn */
+	INIT_DELAYED_WORK(&ipvs->expire_nodest_conn_work,
+			  expire_nodest_conn_handler);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __net_exit ip_vs_control_net_cleanup_sysctl(struct netns_ipvs *ipvs)
@@ -4402,10 +4605,14 @@ static void __net_exit ip_vs_control_net_cleanup_sysctl(struct netns_ipvs *ipvs)
 	cancel_delayed_work_sync(&ipvs->defense_work);
 	cancel_work_sync(&ipvs->defense_work.work);
 	unregister_net_sysctl_table(ipvs->sysctl_hdr);
+<<<<<<< HEAD
 	ip_vs_stop_estimator(ipvs, &ipvs->tot_stats->s);
 
 	if (ipvs->est_cpulist_valid)
 		free_cpumask_var(ipvs->sysctl_est_cpulist);
+=======
+	ip_vs_stop_estimator(ipvs, &ipvs->tot_stats);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!net_eq(net, &init_net))
 		kfree(ipvs->sysctl_tbl);
@@ -4427,8 +4634,12 @@ static struct notifier_block ip_vs_dst_notifier = {
 
 int __net_init ip_vs_control_net_init(struct netns_ipvs *ipvs)
 {
+<<<<<<< HEAD
 	int ret = -ENOMEM;
 	int idx;
+=======
+	int i, idx;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Initialize rs_table */
 	for (idx = 0; idx < IP_VS_RTAB_SIZE; idx++)
@@ -4441,6 +4652,7 @@ int __net_init ip_vs_control_net_init(struct netns_ipvs *ipvs)
 	atomic_set(&ipvs->nullsvc_counter, 0);
 	atomic_set(&ipvs->conn_out_counter, 0);
 
+<<<<<<< HEAD
 	INIT_DELAYED_WORK(&ipvs->est_reload_work, est_reload_work_handler);
 
 	/* procfs stats */
@@ -4449,6 +4661,20 @@ int __net_init ip_vs_control_net_init(struct netns_ipvs *ipvs)
 		goto out;
 	if (ip_vs_stats_init_alloc(&ipvs->tot_stats->s) < 0)
 		goto err_tot_stats;
+=======
+	/* procfs stats */
+	ipvs->tot_stats.cpustats = alloc_percpu(struct ip_vs_cpu_stats);
+	if (!ipvs->tot_stats.cpustats)
+		return -ENOMEM;
+
+	for_each_possible_cpu(i) {
+		struct ip_vs_cpu_stats *ipvs_tot_stats;
+		ipvs_tot_stats = per_cpu_ptr(ipvs->tot_stats.cpustats, i);
+		u64_stats_init(&ipvs_tot_stats->syncp);
+	}
+
+	spin_lock_init(&ipvs->tot_stats.lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_PROC_FS
 	if (!proc_create_net("ip_vs", 0, ipvs->net->proc_net,
@@ -4463,8 +4689,12 @@ int __net_init ip_vs_control_net_init(struct netns_ipvs *ipvs)
 		goto err_percpu;
 #endif
 
+<<<<<<< HEAD
 	ret = ip_vs_control_net_init_sysctl(ipvs);
 	if (ret < 0)
+=======
+	if (ip_vs_control_net_init_sysctl(ipvs))
+>>>>>>> b7ba80a49124 (Commit)
 		goto err;
 
 	return 0;
@@ -4481,6 +4711,7 @@ err_stats:
 
 err_vs:
 #endif
+<<<<<<< HEAD
 	ip_vs_stats_release(&ipvs->tot_stats->s);
 
 err_tot_stats:
@@ -4488,19 +4719,30 @@ err_tot_stats:
 
 out:
 	return ret;
+=======
+	free_percpu(ipvs->tot_stats.cpustats);
+	return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void __net_exit ip_vs_control_net_cleanup(struct netns_ipvs *ipvs)
 {
 	ip_vs_trash_cleanup(ipvs);
 	ip_vs_control_net_cleanup_sysctl(ipvs);
+<<<<<<< HEAD
 	cancel_delayed_work_sync(&ipvs->est_reload_work);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PROC_FS
 	remove_proc_entry("ip_vs_stats_percpu", ipvs->net->proc_net);
 	remove_proc_entry("ip_vs_stats", ipvs->net->proc_net);
 	remove_proc_entry("ip_vs", ipvs->net->proc_net);
 #endif
+<<<<<<< HEAD
 	call_rcu(&ipvs->tot_stats->rcu_head, ip_vs_stats_rcu_free);
+=======
+	free_percpu(ipvs->tot_stats.cpustats);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int __init ip_vs_register_nl_ioctl(void)
@@ -4560,6 +4802,9 @@ void ip_vs_control_cleanup(void)
 {
 	EnterFunction(2);
 	unregister_netdevice_notifier(&ip_vs_dst_notifier);
+<<<<<<< HEAD
 	/* relying on common rcu_barrier() in ip_vs_cleanup() */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	LeaveFunction(2);
 }

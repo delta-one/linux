@@ -154,6 +154,7 @@ of the GPIOs that can't be used.
 
 Optionally, a GPIO controller may have a "gpio-line-names" property. This is
 an array of strings defining the names of the GPIO lines going out of the
+<<<<<<< HEAD
 GPIO controller.
 
 For lines which are routed to on-board devices, this name should be
@@ -183,6 +184,20 @@ The names are assigned starting from line offset 0, from left to right,
 from the passed array. An incomplete array (where the number of passed
 names is less than ngpios) will be used up until the last provided valid
 line index.
+=======
+GPIO controller. This name should be the most meaningful producer name
+for the system, such as a rail name indicating the usage. Package names
+such as pin name are discouraged: such lines have opaque names (since they
+are by definition generic purpose) and such names are usually not very
+helpful. For example "MMC-CD", "Red LED Vdd" and "ethernet reset" are
+reasonable line names as they describe what the line is used for. "GPIO0"
+is not a good name to give to a GPIO line. Placeholders are discouraged:
+rather use the "" (blank string) if the use of the GPIO line is undefined
+in your design. The names are assigned starting from line offset 0 from
+left to right from the passed array. An incomplete array (where the number
+of passed named are less than ngpios) will still be used up until the last
+provided valid line index.
+>>>>>>> b7ba80a49124 (Commit)
 
 Example:
 

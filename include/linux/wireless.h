@@ -26,6 +26,7 @@ struct compat_iw_point {
 struct __compat_iw_event {
 	__u16		len;			/* Real length of this stuff */
 	__u16		cmd;			/* Wireless IOCTL */
+<<<<<<< HEAD
 
 	union {
 		compat_caddr_t	pointer;
@@ -35,6 +36,9 @@ struct __compat_iw_event {
 		 */
 		DECLARE_FLEX_ARRAY(__u8, ptr_bytes);
 	};
+=======
+	compat_caddr_t	pointer;
+>>>>>>> b7ba80a49124 (Commit)
 };
 #define IW_EV_COMPAT_LCP_LEN offsetof(struct __compat_iw_event, pointer)
 #define IW_EV_COMPAT_POINT_OFF offsetof(struct compat_iw_point, length)

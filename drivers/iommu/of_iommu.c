@@ -9,8 +9,13 @@
 #include <linux/iommu.h>
 #include <linux/limits.h>
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/of.h>
 #include <linux/of_address.h>
+=======
+#include <linux/msi.h>
+#include <linux/of.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/of_iommu.h>
 #include <linux/of_pci.h>
 #include <linux/pci.h>
@@ -172,6 +177,7 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
 
 	return ops;
 }
+<<<<<<< HEAD
 
 static enum iommu_resv_type __maybe_unused
 iommu_resv_region_get_type(struct device *dev,
@@ -267,3 +273,5 @@ void of_iommu_get_resv_regions(struct device *dev, struct list_head *list)
 #endif
 }
 EXPORT_SYMBOL(of_iommu_get_resv_regions);
+=======
+>>>>>>> b7ba80a49124 (Commit)

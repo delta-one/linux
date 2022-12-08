@@ -1,5 +1,8 @@
 perf-y += perf_regs.o
+<<<<<<< HEAD
 perf-y += header.o
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 perf-$(CONFIG_DWARF) += dwarf-regs.o
 perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o

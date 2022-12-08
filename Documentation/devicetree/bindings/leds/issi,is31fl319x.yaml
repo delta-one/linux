@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/leds/issi,is31fl319x.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: ISSI LED Controllers for IS31FL319{0,1,3,6,9}
+=======
+title: ISSI LED controllers bindings for IS31FL319{0,1,3,6,9}
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Vincent Knecht <vincent.knecht@mailoo.org>
@@ -57,7 +61,10 @@ patternProperties:
   "^led@[1-9]$":
     type: object
     $ref: common.yaml#
+<<<<<<< HEAD
     unevaluatedProperties: false
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
     properties:
       reg:
@@ -165,7 +172,11 @@ examples:
     #include <dt-bindings/gpio/gpio.h>
     #include <dt-bindings/leds/common.h>
 
+<<<<<<< HEAD
     i2c {
+=======
+    i2c0 {
+>>>>>>> b7ba80a49124 (Commit)
         #address-cells = <1>;
         #size-cells = <0>;
 

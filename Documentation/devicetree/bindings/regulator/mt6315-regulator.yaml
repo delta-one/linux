@@ -28,7 +28,11 @@ properties:
     patternProperties:
       "^vbuck[1-4]$":
         type: object
+<<<<<<< HEAD
         $ref: regulator.yaml#
+=======
+        $ref: "regulator.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
         unevaluatedProperties: false
 
         properties:

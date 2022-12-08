@@ -10,8 +10,12 @@ maintainers:
   - Fugang Duan <fugang.duan@nxp.com>
 
 allOf:
+<<<<<<< HEAD
   - $ref: rs485.yaml#
   - $ref: serial.yaml#
+=======
+  - $ref: "rs485.yaml"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:
@@ -33,9 +37,12 @@ properties:
               - fsl,imx8qm-lpuart
               - fsl,imx8dxl-lpuart
           - const: fsl,imx8qxp-lpuart
+<<<<<<< HEAD
       - items:
           - const: fsl,imxrt1050-lpuart
           - const: fsl,imxrt1170-lpuart
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1
@@ -65,6 +72,12 @@ properties:
       - const: rx
       - const: tx
 
+<<<<<<< HEAD
+=======
+  rs485-rts-active-low: true
+  linux,rs485-enabled-at-boot-time: true
+
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg

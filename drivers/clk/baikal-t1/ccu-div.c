@@ -34,9 +34,15 @@
 #define CCU_DIV_CTL_CLKDIV_MASK(_width) \
 	GENMASK((_width) + CCU_DIV_CTL_CLKDIV_FLD - 1, CCU_DIV_CTL_CLKDIV_FLD)
 #define CCU_DIV_CTL_LOCK_SHIFTED	BIT(27)
+<<<<<<< HEAD
 #define CCU_DIV_CTL_GATE_REF_BUF	BIT(28)
 #define CCU_DIV_CTL_LOCK_NORMAL		BIT(31)
 
+=======
+#define CCU_DIV_CTL_LOCK_NORMAL		BIT(31)
+
+#define CCU_DIV_RST_DELAY_US		1
+>>>>>>> b7ba80a49124 (Commit)
 #define CCU_DIV_LOCK_CHECK_RETRIES	50
 
 #define CCU_DIV_CLKDIV_MIN		0
@@ -170,6 +176,7 @@ static int ccu_div_gate_is_enabled(struct clk_hw *hw)
 	return !!(val & CCU_DIV_CTL_EN);
 }
 
+<<<<<<< HEAD
 static int ccu_div_buf_enable(struct clk_hw *hw)
 {
 	struct ccu_div *div = to_ccu_div(hw);
@@ -204,6 +211,8 @@ static int ccu_div_buf_is_enabled(struct clk_hw *hw)
 	return !(val & CCU_DIV_CTL_GATE_REF_BUF);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static unsigned long ccu_div_var_recalc_rate(struct clk_hw *hw,
 					     unsigned long parent_rate)
 {
@@ -322,6 +331,27 @@ static int ccu_div_fixed_set_rate(struct clk_hw *hw, unsigned long rate,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+int ccu_div_reset_domain(struct ccu_div *div)
+{
+	unsigned long flags;
+
+	if (!div || !(div->features & CCU_DIV_RESET_DOMAIN))
+		return -EINVAL;
+
+	spin_lock_irqsave(&div->lock, flags);
+	regmap_update_bits(div->sys_regs, div->reg_ctl,
+			   CCU_DIV_CTL_RST, CCU_DIV_CTL_RST);
+	spin_unlock_irqrestore(&div->lock, flags);
+
+	/* The next delay must be enough to cover all the resets. */
+	udelay(CCU_DIV_RST_DELAY_US);
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_DEBUG_FS
 
 struct ccu_div_dbgfs_bit {
@@ -339,7 +369,10 @@ static const struct ccu_div_dbgfs_bit ccu_div_bits[] = {
 	CCU_DIV_DBGFS_BIT_ATTR("div_en", CCU_DIV_CTL_EN),
 	CCU_DIV_DBGFS_BIT_ATTR("div_rst", CCU_DIV_CTL_RST),
 	CCU_DIV_DBGFS_BIT_ATTR("div_bypass", CCU_DIV_CTL_SET_CLKDIV),
+<<<<<<< HEAD
 	CCU_DIV_DBGFS_BIT_ATTR("div_buf", CCU_DIV_CTL_GATE_REF_BUF),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	CCU_DIV_DBGFS_BIT_ATTR("div_lock", CCU_DIV_CTL_LOCK_NORMAL)
 };
 
@@ -458,9 +491,12 @@ static void ccu_div_var_debug_init(struct clk_hw *hw, struct dentry *dentry)
 			continue;
 		}
 
+<<<<<<< HEAD
 		if (!strcmp("div_buf", name))
 			continue;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		bits[didx] = ccu_div_bits[bidx];
 		bits[didx].div = div;
 
@@ -497,6 +533,7 @@ static void ccu_div_gate_debug_init(struct clk_hw *hw, struct dentry *dentry)
 				   &ccu_div_dbgfs_fixed_clkdiv_fops);
 }
 
+<<<<<<< HEAD
 static void ccu_div_buf_debug_init(struct clk_hw *hw, struct dentry *dentry)
 {
 	struct ccu_div *div = to_ccu_div(hw);
@@ -512,6 +549,8 @@ static void ccu_div_buf_debug_init(struct clk_hw *hw, struct dentry *dentry)
 				   &ccu_div_dbgfs_bit_fops);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void ccu_div_fixed_debug_init(struct clk_hw *hw, struct dentry *dentry)
 {
 	struct ccu_div *div = to_ccu_div(hw);
@@ -524,7 +563,10 @@ static void ccu_div_fixed_debug_init(struct clk_hw *hw, struct dentry *dentry)
 
 #define ccu_div_var_debug_init NULL
 #define ccu_div_gate_debug_init NULL
+<<<<<<< HEAD
 #define ccu_div_buf_debug_init NULL
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define ccu_div_fixed_debug_init NULL
 
 #endif /* !CONFIG_DEBUG_FS */
@@ -556,6 +598,7 @@ static const struct clk_ops ccu_div_gate_ops = {
 	.debug_init = ccu_div_gate_debug_init
 };
 
+<<<<<<< HEAD
 static const struct clk_ops ccu_div_buf_ops = {
 	.enable = ccu_div_buf_enable,
 	.disable = ccu_div_buf_disable,
@@ -563,6 +606,8 @@ static const struct clk_ops ccu_div_buf_ops = {
 	.debug_init = ccu_div_buf_debug_init
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct clk_ops ccu_div_fixed_ops = {
 	.recalc_rate = ccu_div_fixed_recalc_rate,
 	.round_rate = ccu_div_fixed_round_rate,
@@ -609,8 +654,11 @@ struct ccu_div *ccu_div_hw_register(const struct ccu_div_init_data *div_init)
 	} else if (div_init->type == CCU_DIV_GATE) {
 		hw_init.ops = &ccu_div_gate_ops;
 		div->divider = div_init->divider;
+<<<<<<< HEAD
 	} else if (div_init->type == CCU_DIV_BUF) {
 		hw_init.ops = &ccu_div_buf_ops;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} else if (div_init->type == CCU_DIV_FIXED) {
 		hw_init.ops = &ccu_div_fixed_ops;
 		div->divider = div_init->divider;
@@ -624,7 +672,10 @@ struct ccu_div *ccu_div_hw_register(const struct ccu_div_init_data *div_init)
 		goto err_free_div;
 	}
 	parent_data.fw_name = div_init->parent_name;
+<<<<<<< HEAD
 	parent_data.name = div_init->parent_name;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	hw_init.parent_data = &parent_data;
 	hw_init.num_parents = 1;
 

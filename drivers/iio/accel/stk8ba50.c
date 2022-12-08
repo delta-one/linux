@@ -379,7 +379,12 @@ static const struct iio_buffer_setup_ops stk8ba50_buffer_setup_ops = {
 	.postdisable = stk8ba50_buffer_postdisable,
 };
 
+<<<<<<< HEAD
 static int stk8ba50_probe(struct i2c_client *client)
+=======
+static int stk8ba50_probe(struct i2c_client *client,
+			  const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 	struct iio_dev *indio_dev;
@@ -543,7 +548,11 @@ static struct i2c_driver stk8ba50_driver = {
 		.pm = pm_sleep_ptr(&stk8ba50_pm_ops),
 		.acpi_match_table = ACPI_PTR(stk8ba50_acpi_id),
 	},
+<<<<<<< HEAD
 	.probe_new =        stk8ba50_probe,
+=======
+	.probe =            stk8ba50_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove =           stk8ba50_remove,
 	.id_table =         stk8ba50_i2c_id,
 };

@@ -238,7 +238,11 @@
 };
 
 &apps_rsc {
+<<<<<<< HEAD
 	regulators-0 {
+=======
+	pm8009-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8009-1-rpmh-regulators";
 		qcom,pmic-id = "f";
 
@@ -284,7 +288,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	regulators-1 {
+=======
+	pm8150-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8150-rpmh-regulators";
 		qcom,pmic-id = "a";
 
@@ -417,7 +425,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	regulators-2 {
+=======
+	pm8150l-rpmh-regulators {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "qcom,pm8150l-rpmh-regulators";
 		qcom,pmic-id = "c";
 
@@ -867,7 +879,11 @@
 };
 
 &q6afedai {
+<<<<<<< HEAD
 	dai@16 {
+=======
+	qi2s@16 {
+>>>>>>> b7ba80a49124 (Commit)
 		reg = <PRIMARY_MI2S_RX>;
 		qcom,sd-lines = <0 1 2 3>;
 	};
@@ -875,7 +891,11 @@
 
 /* TERT I2S Uses 1 I2S SD Lines for audio on LT9611 HDMI Bridge */
 &q6afedai {
+<<<<<<< HEAD
 	dai@20 {
+=======
+	qi2s@20 {
+>>>>>>> b7ba80a49124 (Commit)
 		reg = <TERTIARY_MI2S_RX>;
 		qcom,sd-lines = <0>;
 	};
@@ -904,7 +924,11 @@
 	cd-gpios = <&tlmm 77 GPIO_ACTIVE_LOW>;
 	bus-width = <4>;
 	no-sdio;
+<<<<<<< HEAD
 	no-mmc;
+=======
+	no-emmc;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &sound {
@@ -1007,9 +1031,13 @@
 };
 
 &swr0 {
+<<<<<<< HEAD
 	status = "okay";
 
 	left_spkr: speaker@0,3 {
+=======
+	left_spkr: wsa8810-left{
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "sdw10217211000";
 		reg = <0 3>;
 		powerdown-gpios = <&tlmm 130 GPIO_ACTIVE_HIGH>;
@@ -1018,7 +1046,11 @@
 		#sound-dai-cells = <0>;
 	};
 
+<<<<<<< HEAD
 	right_spkr: speaker@0,4 {
+=======
+	right_spkr: wsa8810-right{
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "sdw10217211000";
 		reg = <0 4>;
 		powerdown-gpios = <&tlmm 130 GPIO_ACTIVE_HIGH>;
@@ -1212,33 +1244,54 @@
 		"HST_WLAN_UART_TX",
 		"HST_WLAN_UART_RX";
 
+<<<<<<< HEAD
 	lt9611_irq_pin: lt9611-irq-state {
+=======
+	lt9611_irq_pin: lt9611-irq {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio63";
 		function = "gpio";
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	sdc2_default_state: sdc2-default-state {
 		clk-pins {
+=======
+	sdc2_default_state: sdc2-default {
+		clk {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc2_clk";
 			bias-disable;
 			drive-strength = <16>;
 		};
 
+<<<<<<< HEAD
 		cmd-pins {
+=======
+		cmd {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc2_cmd";
 			bias-pull-up;
 			drive-strength = <10>;
 		};
 
+<<<<<<< HEAD
 		data-pins {
+=======
+		data {
+>>>>>>> b7ba80a49124 (Commit)
 			pins = "sdc2_data";
 			bias-pull-up;
 			drive-strength = <10>;
 		};
 	};
 
+<<<<<<< HEAD
 	sdc2_card_det_n: sd-card-det-n-state {
+=======
+	sdc2_card_det_n: sd-card-det-n {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio77";
 		function = "gpio";
 		bias-pull-up;
@@ -1324,10 +1377,13 @@
 	status = "okay";
 };
 
+<<<<<<< HEAD
 &wsamacro {
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* PINCTRL - additions to nodes defined in sm8250.dtsi */
 &qup_spi0_cs_gpio {
 	drive-strength = <6>;

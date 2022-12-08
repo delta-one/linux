@@ -21,7 +21,11 @@
 #include <linux/user_namespace.h>
 #include <linux/netfilter_ipv4.h>
 #include <linux/netfilter_ipv6.h>
+<<<<<<< HEAD
 #include <linux/zstd.h>
+=======
+#include <linux/zlib.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <net/sock.h>
 #include <uapi/linux/mount.h>
 
@@ -163,6 +167,7 @@ static int apparmor_capget(struct task_struct *target, kernel_cap_t *effective,
 		struct label_it i;
 
 		label_for_each_confined(i, label, profile) {
+<<<<<<< HEAD
 			struct aa_ruleset *rules;
 			if (COMPLAIN_MODE(profile))
 				continue;
@@ -172,6 +177,14 @@ static int apparmor_capget(struct task_struct *target, kernel_cap_t *effective,
 						   rules->caps.allow);
 			*permitted = cap_intersect(*permitted,
 						   rules->caps.allow);
+=======
+			if (COMPLAIN_MODE(profile))
+				continue;
+			*effective = cap_intersect(*effective,
+						   profile->caps.allow);
+			*permitted = cap_intersect(*permitted,
+						   profile->caps.allow);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 	rcu_read_unlock();
@@ -227,10 +240,16 @@ static int common_perm(const char *op, const struct path *path, u32 mask,
  */
 static int common_perm_cond(const char *op, const struct path *path, u32 mask)
 {
+<<<<<<< HEAD
 	vfsuid_t vfsuid = i_uid_into_vfsuid(mnt_idmap(path->mnt),
 					    d_backing_inode(path->dentry));
 	struct path_cond cond = {
 		vfsuid_into_kuid(vfsuid),
+=======
+	struct user_namespace *mnt_userns = mnt_user_ns(path->mnt);
+	struct path_cond cond = {
+		i_uid_into_mnt(mnt_userns, d_backing_inode(path->dentry)),
+>>>>>>> b7ba80a49124 (Commit)
 		d_backing_inode(path->dentry)->i_mode
 	};
 
@@ -272,14 +291,23 @@ static int common_perm_rm(const char *op, const struct path *dir,
 			  struct dentry *dentry, u32 mask)
 {
 	struct inode *inode = d_backing_inode(dentry);
+<<<<<<< HEAD
 	struct path_cond cond = { };
 	vfsuid_t vfsuid;
+=======
+	struct user_namespace *mnt_userns = mnt_user_ns(dir->mnt);
+	struct path_cond cond = { };
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!inode || !path_mediated_fs(dentry))
 		return 0;
 
+<<<<<<< HEAD
 	vfsuid = i_uid_into_vfsuid(mnt_idmap(dir->mnt), inode);
 	cond.uid = vfsuid_into_kuid(vfsuid);
+=======
+	cond.uid = i_uid_into_mnt(mnt_userns, inode);
+>>>>>>> b7ba80a49124 (Commit)
 	cond.mode = inode->i_mode;
 
 	return common_perm_dir_dentry(op, dir, dentry, mask, &cond);
@@ -334,11 +362,14 @@ static int apparmor_path_truncate(const struct path *path)
 	return common_perm_cond(OP_TRUNC, path, MAY_WRITE | AA_MAY_SETATTR);
 }
 
+<<<<<<< HEAD
 static int apparmor_file_truncate(struct file *file)
 {
 	return apparmor_path_truncate(&file->f_path);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int apparmor_path_symlink(const struct path *dir, struct dentry *dentry,
 				 const char *old_name)
 {
@@ -377,13 +408,18 @@ static int apparmor_path_rename(const struct path *old_dir, struct dentry *old_d
 
 	label = begin_current_label_crit_section();
 	if (!unconfined(label)) {
+<<<<<<< HEAD
 		struct mnt_idmap *idmap = mnt_idmap(old_dir->mnt);
 		vfsuid_t vfsuid;
+=======
+		struct user_namespace *mnt_userns = mnt_user_ns(old_dir->mnt);
+>>>>>>> b7ba80a49124 (Commit)
 		struct path old_path = { .mnt = old_dir->mnt,
 					 .dentry = old_dentry };
 		struct path new_path = { .mnt = new_dir->mnt,
 					 .dentry = new_dentry };
 		struct path_cond cond = {
+<<<<<<< HEAD
 			.mode = d_backing_inode(old_dentry)->i_mode
 		};
 		vfsuid = i_uid_into_vfsuid(idmap, d_backing_inode(old_dentry));
@@ -395,6 +431,17 @@ static int apparmor_path_rename(const struct path *old_dir, struct dentry *old_d
 			};
 			vfsuid = i_uid_into_vfsuid(idmap, d_backing_inode(old_dentry));
 			cond_exchange.uid = vfsuid_into_kuid(vfsuid);
+=======
+			i_uid_into_mnt(mnt_userns, d_backing_inode(old_dentry)),
+			d_backing_inode(old_dentry)->i_mode
+		};
+
+		if (flags & RENAME_EXCHANGE) {
+			struct path_cond cond_exchange = {
+				i_uid_into_mnt(mnt_userns, d_backing_inode(new_dentry)),
+				d_backing_inode(new_dentry)->i_mode
+			};
+>>>>>>> b7ba80a49124 (Commit)
 
 			error = aa_path_perm(OP_RENAME_SRC, label, &new_path, 0,
 					     MAY_READ | AA_MAY_GETATTR | MAY_WRITE |
@@ -458,6 +505,7 @@ static int apparmor_file_open(struct file *file)
 
 	label = aa_get_newest_cred_label(file->f_cred);
 	if (!unconfined(label)) {
+<<<<<<< HEAD
 		struct mnt_idmap *idmap = file_mnt_idmap(file);
 		struct inode *inode = file_inode(file);
 		vfsuid_t vfsuid;
@@ -466,6 +514,14 @@ static int apparmor_file_open(struct file *file)
 		};
 		vfsuid = i_uid_into_vfsuid(idmap, inode);
 		cond.uid = vfsuid_into_kuid(vfsuid);
+=======
+		struct user_namespace *mnt_userns = file_mnt_user_ns(file);
+		struct inode *inode = file_inode(file);
+		struct path_cond cond = {
+			i_uid_into_mnt(mnt_userns, inode),
+			inode->i_mode
+		};
+>>>>>>> b7ba80a49124 (Commit)
 
 		error = aa_path_perm(OP_OPEN, label, &file->f_path, 0,
 				     aa_map_file_to_perms(file), &cond);
@@ -662,8 +718,12 @@ static int apparmor_setprocattr(const char *name, void *value,
 	char *command, *largs = NULL, *args = value;
 	size_t arg_size;
 	int error;
+<<<<<<< HEAD
 	DEFINE_AUDIT_DATA(sa, LSM_AUDIT_DATA_NONE, AA_CLASS_NONE,
 			  OP_SETPROCATTR);
+=======
+	DEFINE_AUDIT_DATA(sa, LSM_AUDIT_DATA_NONE, OP_SETPROCATTR);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (size == 0)
 		return -EINVAL;
@@ -753,7 +813,11 @@ static void apparmor_bprm_committing_creds(struct linux_binprm *bprm)
 }
 
 /**
+<<<<<<< HEAD
  * apparmor_bprm_committed_creds() - do cleanup after new creds committed
+=======
+ * apparmor_bprm_committed_cred - do cleanup after new creds committed
+>>>>>>> b7ba80a49124 (Commit)
  * @bprm: binprm for the exec  (NOT NULL)
  */
 static void apparmor_bprm_committed_creds(struct linux_binprm *bprm)
@@ -1119,10 +1183,18 @@ static struct aa_label *sk_peer_label(struct sock *sk)
  * Note: for tcp only valid if using ipsec or cipso on lan
  */
 static int apparmor_socket_getpeersec_stream(struct socket *sock,
+<<<<<<< HEAD
 					     sockptr_t optval, sockptr_t optlen,
 					     unsigned int len)
 {
 	char *name = NULL;
+=======
+					     char __user *optval,
+					     int __user *optlen,
+					     unsigned int len)
+{
+	char *name;
+>>>>>>> b7ba80a49124 (Commit)
 	int slen, error = 0;
 	struct aa_label *label;
 	struct aa_label *peer;
@@ -1139,6 +1211,7 @@ static int apparmor_socket_getpeersec_stream(struct socket *sock,
 	/* don't include terminating \0 in slen, it breaks some apps */
 	if (slen < 0) {
 		error = -ENOMEM;
+<<<<<<< HEAD
 		goto done;
 	}
 	if (slen > len) {
@@ -1154,6 +1227,25 @@ done_len:
 done:
 	end_current_label_crit_section(label);
 	kfree(name);
+=======
+	} else {
+		if (slen > len) {
+			error = -ERANGE;
+		} else if (copy_to_user(optval, name, slen)) {
+			error = -EFAULT;
+			goto out;
+		}
+		if (put_user(slen, optlen))
+			error = -EFAULT;
+out:
+		kfree(name);
+
+	}
+
+done:
+	end_current_label_crit_section(label);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return error;
 }
 
@@ -1207,15 +1299,26 @@ static int apparmor_inet_conn_request(const struct sock *sk, struct sk_buff *skb
 #endif
 
 /*
+<<<<<<< HEAD
  * The cred blob is a pointer to, not an instance of, an aa_label.
  */
 struct lsm_blob_sizes apparmor_blob_sizes __ro_after_init = {
 	.lbs_cred = sizeof(struct aa_label *),
+=======
+ * The cred blob is a pointer to, not an instance of, an aa_task_ctx.
+ */
+struct lsm_blob_sizes apparmor_blob_sizes __lsm_ro_after_init = {
+	.lbs_cred = sizeof(struct aa_task_ctx *),
+>>>>>>> b7ba80a49124 (Commit)
 	.lbs_file = sizeof(struct aa_file_ctx),
 	.lbs_task = sizeof(struct aa_task_ctx),
 };
 
+<<<<<<< HEAD
 static struct security_hook_list apparmor_hooks[] __ro_after_init = {
+=======
+static struct security_hook_list apparmor_hooks[] __lsm_ro_after_init = {
+>>>>>>> b7ba80a49124 (Commit)
 	LSM_HOOK_INIT(ptrace_access_check, apparmor_ptrace_access_check),
 	LSM_HOOK_INIT(ptrace_traceme, apparmor_ptrace_traceme),
 	LSM_HOOK_INIT(capget, apparmor_capget),
@@ -1245,7 +1348,10 @@ static struct security_hook_list apparmor_hooks[] __ro_after_init = {
 	LSM_HOOK_INIT(mmap_file, apparmor_mmap_file),
 	LSM_HOOK_INIT(file_mprotect, apparmor_file_mprotect),
 	LSM_HOOK_INIT(file_lock, apparmor_file_lock),
+<<<<<<< HEAD
 	LSM_HOOK_INIT(file_truncate, apparmor_file_truncate),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	LSM_HOOK_INIT(getprocattr, apparmor_getprocattr),
 	LSM_HOOK_INIT(setprocattr, apparmor_setprocattr),
@@ -1375,7 +1481,11 @@ module_param_named(export_binary, aa_g_export_binary, aabool, 0600);
 #endif
 
 /* policy loaddata compression level */
+<<<<<<< HEAD
 int aa_g_rawdata_compression_level = AA_DEFAULT_CLEVEL;
+=======
+int aa_g_rawdata_compression_level = Z_DEFAULT_COMPRESSION;
+>>>>>>> b7ba80a49124 (Commit)
 module_param_named(rawdata_compression_level, aa_g_rawdata_compression_level,
 		   aacompressionlevel, 0400);
 
@@ -1427,7 +1537,11 @@ static const struct kernel_param_ops param_ops_aaintbool = {
 	.get = param_get_aaintbool
 };
 /* Boot time disable flag */
+<<<<<<< HEAD
 static int apparmor_enabled __ro_after_init = 1;
+=======
+static int apparmor_enabled __lsm_ro_after_init = 1;
+>>>>>>> b7ba80a49124 (Commit)
 module_param_named(enabled, apparmor_enabled, aaintbool, 0444);
 
 static int __init apparmor_enabled_setup(char *str)
@@ -1557,8 +1671,14 @@ static int param_set_aacompressionlevel(const char *val,
 	error = param_set_int(val, kp);
 
 	aa_g_rawdata_compression_level = clamp(aa_g_rawdata_compression_level,
+<<<<<<< HEAD
 					       AA_MIN_CLEVEL, AA_MAX_CLEVEL);
 	pr_info("AppArmor: policy rawdata compression level set to %d\n",
+=======
+					       Z_NO_COMPRESSION,
+					       Z_BEST_COMPRESSION);
+	pr_info("AppArmor: policy rawdata compression level set to %u\n",
+>>>>>>> b7ba80a49124 (Commit)
 		aa_g_rawdata_compression_level);
 
 	return error;
@@ -1764,6 +1884,14 @@ static int apparmor_dointvec(struct ctl_table *table, int write,
 	return proc_dointvec(table, write, buffer, lenp, ppos);
 }
 
+<<<<<<< HEAD
+=======
+static struct ctl_path apparmor_sysctl_path[] = {
+	{ .procname = "kernel", },
+	{ }
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct ctl_table apparmor_sysctl_table[] = {
 	{
 		.procname       = "unprivileged_userns_apparmor_policy",
@@ -1785,7 +1913,12 @@ static struct ctl_table apparmor_sysctl_table[] = {
 
 static int __init apparmor_init_sysctl(void)
 {
+<<<<<<< HEAD
 	return register_sysctl("kernel", apparmor_sysctl_table) ? 0 : -ENOMEM;
+=======
+	return register_sysctl_paths(apparmor_sysctl_path,
+				     apparmor_sysctl_table) ? 0 : -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 }
 #else
 static inline int apparmor_init_sysctl(void)

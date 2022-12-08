@@ -61,12 +61,26 @@ config LLD_VERSION
 	default 0
 
 config RUST_IS_AVAILABLE
+<<<<<<< HEAD
 	def_bool $(success,$(srctree)/scripts/rust_is_available.sh)
+=======
+	# Because some common tools like 'diff' don't support permissions of
+	# the files, 'rust_is_available.sh' in some trees that managed with such
+	# tools result in having no execution permission.  As a temporal work
+	# around, we specify the interpreter ('/bin/sh').  It will be unneeded
+	# once 'rust_is_available.sh' is merged in the mainline with its execution
+	# permission.
+	def_bool $(success,/bin/sh $(srctree)/scripts/rust_is_available.sh)
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  This shows whether a suitable Rust toolchain is available (found).
 
 	  Please see Documentation/rust/quick-start.rst for instructions on how
+<<<<<<< HEAD
 	  to satisfy the build requirements of Rust support.
+=======
+	  to satify the build requirements of Rust support.
+>>>>>>> b7ba80a49124 (Commit)
 
 	  In particular, the Makefile target 'rustavailable' is useful to check
 	  why the Rust toolchain is not being detected.
@@ -87,7 +101,11 @@ config CC_HAS_ASM_GOTO_OUTPUT
 config CC_HAS_ASM_GOTO_TIED_OUTPUT
 	depends on CC_HAS_ASM_GOTO_OUTPUT
 	# Detect buggy gcc and clang, fixed in gcc-11 clang-14.
+<<<<<<< HEAD
 	def_bool $(success,echo 'int foo(int *x) { asm goto (".long (%l[bar]) - .": "+m"(*x) ::: bar); return *x; bar: return 0; }' | $CC -x c - -c -o /dev/null)
+=======
+	def_bool $(success,echo 'int foo(int *x) { asm goto (".long (%l[bar]) - .\n": "+m"(*x) ::: bar); return *x; bar: return 0; }' | $CC -x c - -c -o /dev/null)
+>>>>>>> b7ba80a49124 (Commit)
 
 config TOOLS_SUPPORT_RELR
 	def_bool $(success,env "CC=$(CC)" "LD=$(LD)" "NM=$(NM)" "OBJCOPY=$(OBJCOPY)" $(srctree)/scripts/tools-support-relr.sh)
@@ -159,12 +177,19 @@ config WERROR
 	help
 	  A kernel build should not cause any compiler warnings, and this
 	  enables the '-Werror' (for C) and '-Dwarnings' (for Rust) flags
+<<<<<<< HEAD
 	  to enforce that rule by default. Certain warnings from other tools
 	  such as the linker may be upgraded to errors with this option as
 	  well.
 
 	  However, if you have a new (or very old) compiler or linker with odd
 	  and unusual warnings, or you have some architecture with problems,
+=======
+	  to enforce that rule by default.
+
+	  However, if you have a new (or very old) compiler with odd and
+	  unusual warnings, or you have some architecture with problems,
+>>>>>>> b7ba80a49124 (Commit)
 	  you may need to disable this config option in order to
 	  successfully build the kernel.
 
@@ -204,7 +229,11 @@ config LOCALVERSION_AUTO
 	  appended after any matching localversion* files, and after the value
 	  set in CONFIG_LOCALVERSION.
 
+<<<<<<< HEAD
 	  (The actual string used here is the first 12 characters produced
+=======
+	  (The actual string used here is the first eight characters produced
+>>>>>>> b7ba80a49124 (Commit)
 	  by running the command:
 
 	    $ git rev-parse --verify HEAD
@@ -682,6 +711,13 @@ config CPU_ISOLATION
 
 source "kernel/rcu/Kconfig"
 
+<<<<<<< HEAD
+=======
+config BUILD_BIN2C
+	bool
+	default n
+
+>>>>>>> b7ba80a49124 (Commit)
 config IKCONFIG
 	tristate "Kernel .config support"
 	help
@@ -772,7 +808,11 @@ config PRINTK_SAFE_LOG_BUF_SHIFT
 	depends on PRINTK
 	help
 	  Select the size of an alternate printk per-CPU buffer where messages
+<<<<<<< HEAD
 	  printed from unsafe contexts are temporary stored. One example would
+=======
+	  printed from usafe contexts are temporary stored. One example would
+>>>>>>> b7ba80a49124 (Commit)
 	  be NMI messages, another one - printk recursion. The messages are
 	  copied to the main log buffer in a safe context to avoid a deadlock.
 	  The value defines the size as a power of 2.
@@ -890,17 +930,25 @@ config CC_IMPLICIT_FALLTHROUGH
 	default "-Wimplicit-fallthrough=5" if CC_IS_GCC && $(cc-option,-Wimplicit-fallthrough=5)
 	default "-Wimplicit-fallthrough" if CC_IS_CLANG && $(cc-option,-Wunreachable-code-fallthrough)
 
+<<<<<<< HEAD
 # Currently, disable gcc-11,12 array-bounds globally.
 # We may want to target only particular configurations some day.
 config GCC11_NO_ARRAY_BOUNDS
 	def_bool y
 
+=======
+# Currently, disable gcc-12 array-bounds globally.
+# We may want to target only particular configurations some day.
+>>>>>>> b7ba80a49124 (Commit)
 config GCC12_NO_ARRAY_BOUNDS
 	def_bool y
 
 config CC_NO_ARRAY_BOUNDS
 	bool
+<<<<<<< HEAD
 	default y if CC_IS_GCC && GCC_VERSION >= 110000 && GCC_VERSION < 120000 && GCC11_NO_ARRAY_BOUNDS
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default y if CC_IS_GCC && GCC_VERSION >= 120000 && GCC_VERSION < 130000 && GCC12_NO_ARRAY_BOUNDS
 
 #
@@ -971,9 +1019,20 @@ config MEMCG
 	help
 	  Provides control over the memory footprint of tasks in a cgroup.
 
+<<<<<<< HEAD
 config MEMCG_KMEM
 	bool
 	depends on MEMCG
+=======
+config MEMCG_SWAP
+	bool
+	depends on MEMCG && SWAP
+	default y
+
+config MEMCG_KMEM
+	bool
+	depends on MEMCG && !SLOB
+>>>>>>> b7ba80a49124 (Commit)
 	default y
 
 config BLK_CGROUP
@@ -1041,10 +1100,13 @@ config RT_GROUP_SCHED
 
 endif #CGROUP_SCHED
 
+<<<<<<< HEAD
 config SCHED_MM_CID
 	def_bool y
 	depends on SMP && RSEQ
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config UCLAMP_TASK_GROUP
 	bool "Utilization clamping per group of tasks"
 	depends on CGROUP_SCHED
@@ -1273,7 +1335,10 @@ endif # NAMESPACES
 
 config CHECKPOINT_RESTORE
 	bool "Checkpoint/restore support"
+<<<<<<< HEAD
 	depends on PROC_FS
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select PROC_CHILDREN
 	select KCMP
 	default n
@@ -1297,6 +1362,47 @@ config SCHED_AUTOGROUP
 	  desktop applications.  Task group autogeneration is currently based
 	  upon task session.
 
+<<<<<<< HEAD
+=======
+config SYSFS_DEPRECATED
+	bool "Enable deprecated sysfs features to support old userspace tools"
+	depends on SYSFS
+	default n
+	help
+	  This option adds code that switches the layout of the "block" class
+	  devices, to not show up in /sys/class/block/, but only in
+	  /sys/block/.
+
+	  This switch is only active when the sysfs.deprecated=1 boot option is
+	  passed or the SYSFS_DEPRECATED_V2 option is set.
+
+	  This option allows new kernels to run on old distributions and tools,
+	  which might get confused by /sys/class/block/. Since 2007/2008 all
+	  major distributions and tools handle this just fine.
+
+	  Recent distributions and userspace tools after 2009/2010 depend on
+	  the existence of /sys/class/block/, and will not work with this
+	  option enabled.
+
+	  Only if you are using a new kernel on an old distribution, you might
+	  need to say Y here.
+
+config SYSFS_DEPRECATED_V2
+	bool "Enable deprecated sysfs features by default"
+	default n
+	depends on SYSFS
+	depends on SYSFS_DEPRECATED
+	help
+	  Enable deprecated sysfs by default.
+
+	  See the CONFIG_SYSFS_DEPRECATED option for more details about this
+	  option.
+
+	  Only if you are using a new kernel on an old distribution, you might
+	  need to say Y here. Even then, odds are you would not need it
+	  enabled, you can always pass the boot option if absolutely necessary.
+
+>>>>>>> b7ba80a49124 (Commit)
 config RELAY
 	bool "Kernel->user space relay support (formerly relayfs)"
 	select IRQ_WORK
@@ -1342,6 +1448,7 @@ config BOOT_CONFIG
 
 	  If unsure, say Y.
 
+<<<<<<< HEAD
 config BOOT_CONFIG_FORCE
 	bool "Force unconditional bootconfig processing"
 	depends on BOOT_CONFIG
@@ -1355,6 +1462,8 @@ config BOOT_CONFIG_FORCE
 
 	  If unsure, say N.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config BOOT_CONFIG_EMBED
 	bool "Embed bootconfig file in the kernel"
 	depends on BOOT_CONFIG
@@ -1435,6 +1544,7 @@ config LD_ORPHAN_WARN
 	def_bool y
 	depends on ARCH_WANT_LD_ORPHAN_WARN
 	depends on $(ld-option,--orphan-handling=warn)
+<<<<<<< HEAD
 	depends on $(ld-option,--orphan-handling=error)
 
 config LD_ORPHAN_WARN_LEVEL
@@ -1442,6 +1552,8 @@ config LD_ORPHAN_WARN_LEVEL
         depends on LD_ORPHAN_WARN
         default "error" if WERROR
         default "warn"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 config SYSCTL
 	bool
@@ -1711,6 +1823,7 @@ config KALLSYMS
 	  symbolic stack backtraces. This increases the size of the kernel
 	  somewhat, as all symbols have to be loaded into the kernel image.
 
+<<<<<<< HEAD
 config KALLSYMS_SELFTEST
 	bool "Test the basic functions and performance of kallsyms"
 	depends on KALLSYMS
@@ -1724,6 +1837,8 @@ config KALLSYMS_SELFTEST
 	  "dmesg | grep kallsyms_selftest" to collect test results. "finish" is
 	  displayed in the last line, indicating that the test is complete.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config KALLSYMS_ALL
 	bool "Include all symbols in kallsyms"
 	depends on DEBUG_KERNEL && KALLSYMS
@@ -1844,6 +1959,10 @@ config PERF_EVENTS
 	default y if PROFILING
 	depends on HAVE_PERF_EVENTS
 	select IRQ_WORK
+<<<<<<< HEAD
+=======
+	select SRCU
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  Enable kernel support for various performance events provided
 	  by software and hardware.
@@ -1913,7 +2032,11 @@ config RUST
 	depends on !MODVERSIONS
 	depends on !GCC_PLUGINS
 	depends on !RANDSTRUCT
+<<<<<<< HEAD
 	depends on !DEBUG_INFO_BTF || PAHOLE_HAS_LANG_EXCLUDE
+=======
+	depends on !DEBUG_INFO_BTF
+>>>>>>> b7ba80a49124 (Commit)
 	select CONSTRUCTORS
 	help
 	  Enables Rust support in the kernel.

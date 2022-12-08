@@ -155,7 +155,11 @@ static ssize_t repeat_show(struct device *dev, struct device_attribute *attr,
 
 	mutex_unlock(&data->lock);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%d\n", repeat);
+=======
+	return scnprintf(buf, PAGE_SIZE, "%d\n", repeat);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t repeat_store(struct device *dev, struct device_attribute *attr,
@@ -430,7 +434,11 @@ static void pattern_trig_deactivate(struct led_classdev *led_cdev)
 	if (led_cdev->pattern_clear)
 		led_cdev->pattern_clear(led_cdev);
 
+<<<<<<< HEAD
 	timer_shutdown_sync(&data->timer);
+=======
+	del_timer_sync(&data->timer);
+>>>>>>> b7ba80a49124 (Commit)
 
 	led_set_brightness(led_cdev, LED_OFF);
 	kfree(data);

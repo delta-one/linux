@@ -2,7 +2,10 @@
 /* Copyright (C) 2021 Felix Fietkau <nbd@nbd.name> */
 
 #include <linux/seq_file.h>
+<<<<<<< HEAD
 #include <linux/soc/mediatek/mtk_wed.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "mtk_wed.h"
 #include "mtk_wed_regs.h"
 
@@ -19,8 +22,11 @@ enum {
 	DUMP_TYPE_WDMA,
 	DUMP_TYPE_WPDMA_TX,
 	DUMP_TYPE_WPDMA_TXFREE,
+<<<<<<< HEAD
 	DUMP_TYPE_WPDMA_RX,
 	DUMP_TYPE_WED_RRO,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define DUMP_STR(_str) { _str, 0, DUMP_TYPE_STRING }
@@ -39,9 +45,12 @@ enum {
 
 #define DUMP_WPDMA_TX_RING(_n) DUMP_RING("WPDMA_TX" #_n, 0, DUMP_TYPE_WPDMA_TX, _n)
 #define DUMP_WPDMA_TXFREE_RING DUMP_RING("WPDMA_RX1", 0, DUMP_TYPE_WPDMA_TXFREE)
+<<<<<<< HEAD
 #define DUMP_WPDMA_RX_RING(_n)	DUMP_RING("WPDMA_RX" #_n, 0, DUMP_TYPE_WPDMA_RX, _n)
 #define DUMP_WED_RRO_RING(_base)DUMP_RING("WED_RRO_MIOD", MTK_##_base, DUMP_TYPE_WED_RRO)
 #define DUMP_WED_RRO_FDBK(_base)DUMP_RING("WED_RRO_FDBK", MTK_##_base, DUMP_TYPE_WED_RRO)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static void
 print_reg_val(struct seq_file *s, const char *name, u32 val)
@@ -63,7 +72,10 @@ dump_wed_regs(struct seq_file *s, struct mtk_wed_device *dev,
 				   cur > regs ? "\n" : "",
 				   cur->name);
 			continue;
+<<<<<<< HEAD
 		case DUMP_TYPE_WED_RRO:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		case DUMP_TYPE_WED:
 			val = wed_r32(dev, cur->offset);
 			break;
@@ -76,9 +88,12 @@ dump_wed_regs(struct seq_file *s, struct mtk_wed_device *dev,
 		case DUMP_TYPE_WPDMA_TXFREE:
 			val = wpdma_txfree_r32(dev, cur->offset);
 			break;
+<<<<<<< HEAD
 		case DUMP_TYPE_WPDMA_RX:
 			val = wpdma_rx_r32(dev, cur->base, cur->offset);
 			break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		print_reg_val(s, cur->name, val);
 	}
@@ -142,6 +157,7 @@ wed_txinfo_show(struct seq_file *s, void *data)
 }
 DEFINE_SHOW_ATTRIBUTE(wed_txinfo);
 
+<<<<<<< HEAD
 static int
 wed_rxinfo_show(struct seq_file *s, void *data)
 {
@@ -216,6 +232,8 @@ wed_rxinfo_show(struct seq_file *s, void *data)
 	return 0;
 }
 DEFINE_SHOW_ATTRIBUTE(wed_rxinfo);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int
 mtk_wed_reg_set(void *data, u64 val)
@@ -259,7 +277,10 @@ void mtk_wed_hw_add_debugfs(struct mtk_wed_hw *hw)
 	debugfs_create_u32("regidx", 0600, dir, &hw->debugfs_reg);
 	debugfs_create_file_unsafe("regval", 0600, dir, hw, &fops_regval);
 	debugfs_create_file_unsafe("txinfo", 0400, dir, hw, &wed_txinfo_fops);
+<<<<<<< HEAD
 	if (hw->version != 1)
 		debugfs_create_file_unsafe("rxinfo", 0400, dir, hw,
 					   &wed_rxinfo_fops);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }

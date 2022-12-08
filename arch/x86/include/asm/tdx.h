@@ -67,8 +67,11 @@ void tdx_safe_halt(void);
 
 bool tdx_early_handle_ve(struct pt_regs *regs);
 
+<<<<<<< HEAD
 int tdx_mcall_get_report0(u8 *reportdata, u8 *tdreport);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else
 
 static inline void tdx_early_init(void) { };

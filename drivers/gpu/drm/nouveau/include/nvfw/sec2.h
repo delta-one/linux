@@ -10,7 +10,10 @@ struct nv_sec2_args {
 };
 
 #define NV_SEC2_UNIT_INIT                                                  0x01
+<<<<<<< HEAD
 #define NV_SEC2_UNIT_UNLOAD                                                0x06
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define NV_SEC2_UNIT_ACR                                                   0x08
 
 struct nv_sec2_init_msg {
@@ -34,6 +37,7 @@ struct nv_sec2_init_msg {
 	u16 sw_managed_area_size;
 };
 
+<<<<<<< HEAD
 struct nv_sec2_init_msg_v1 {
 	struct nvfw_falcon_msg hdr;
 #define NV_SEC2_INIT_MSG_INIT                                              0x00
@@ -57,6 +61,8 @@ struct nv_sec2_init_msg_v1 {
 	u32 unkn[8];
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct nv_sec2_acr_cmd {
 	struct nvfw_falcon_cmd hdr;
 #define NV_SEC2_ACR_CMD_BOOTSTRAP_FALCON                                   0x00
@@ -81,6 +87,7 @@ struct nv_sec2_acr_bootstrap_falcon_msg {
 	u32 error_code;
 	u32 falcon_id;
 };
+<<<<<<< HEAD
 
 #define NV_SEC2_UNIT_V2_INIT   0x01
 #define NV_SEC2_UNIT_V2_UNLOAD 0x05
@@ -102,4 +109,6 @@ struct nv_sec2_acr_bootstrap_falcon_msg_v1 {
 	u32 falcon_id;
 	u32 unkn08;
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

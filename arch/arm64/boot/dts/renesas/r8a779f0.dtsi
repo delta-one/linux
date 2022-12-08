@@ -14,6 +14,7 @@
 	#address-cells = <2>;
 	#size-cells = <2>;
 
+<<<<<<< HEAD
 	cluster01_opp: opp-table-0 {
 		compatible = "operating-points-v2";
 		opp-shared;
@@ -68,6 +69,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	cpus {
 		#address-cells = <1>;
 		#size-cells = <0>;
@@ -119,7 +122,10 @@
 			enable-method = "psci";
 			cpu-idle-states = <&CPU_SLEEP_0>;
 			clocks = <&cpg CPG_CORE R8A779F0_CLK_Z0>;
+<<<<<<< HEAD
 			operating-points-v2 = <&cluster01_opp>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		a55_1: cpu@100 {
@@ -131,7 +137,10 @@
 			enable-method = "psci";
 			cpu-idle-states = <&CPU_SLEEP_0>;
 			clocks = <&cpg CPG_CORE R8A779F0_CLK_Z0>;
+<<<<<<< HEAD
 			operating-points-v2 = <&cluster01_opp>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		a55_2: cpu@10000 {
@@ -143,7 +152,10 @@
 			enable-method = "psci";
 			cpu-idle-states = <&CPU_SLEEP_0>;
 			clocks = <&cpg CPG_CORE R8A779F0_CLK_Z0>;
+<<<<<<< HEAD
 			operating-points-v2 = <&cluster01_opp>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		a55_3: cpu@10100 {
@@ -155,7 +167,10 @@
 			enable-method = "psci";
 			cpu-idle-states = <&CPU_SLEEP_0>;
 			clocks = <&cpg CPG_CORE R8A779F0_CLK_Z0>;
+<<<<<<< HEAD
 			operating-points-v2 = <&cluster01_opp>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		a55_4: cpu@20000 {
@@ -167,7 +182,10 @@
 			enable-method = "psci";
 			cpu-idle-states = <&CPU_SLEEP_0>;
 			clocks = <&cpg CPG_CORE R8A779F0_CLK_Z1>;
+<<<<<<< HEAD
 			operating-points-v2 = <&cluster23_opp>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		a55_5: cpu@20100 {
@@ -179,7 +197,10 @@
 			enable-method = "psci";
 			cpu-idle-states = <&CPU_SLEEP_0>;
 			clocks = <&cpg CPG_CORE R8A779F0_CLK_Z1>;
+<<<<<<< HEAD
 			operating-points-v2 = <&cluster23_opp>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		a55_6: cpu@30000 {
@@ -191,7 +212,10 @@
 			enable-method = "psci";
 			cpu-idle-states = <&CPU_SLEEP_0>;
 			clocks = <&cpg CPG_CORE R8A779F0_CLK_Z1>;
+<<<<<<< HEAD
 			operating-points-v2 = <&cluster23_opp>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		a55_7: cpu@30100 {
@@ -203,7 +227,10 @@
 			enable-method = "psci";
 			cpu-idle-states = <&CPU_SLEEP_0>;
 			clocks = <&cpg CPG_CORE R8A779F0_CLK_Z1>;
+<<<<<<< HEAD
 			operating-points-v2 = <&cluster23_opp>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		L3_CA55_0: cache-controller-0 {
@@ -531,6 +558,7 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		eth_serdes: phy@e6444000 {
 			compatible = "renesas,r8a779f0-ether-serdes";
 			reg = <0 0xe6444000 0 0x2800>;
@@ -541,6 +569,8 @@
 			status = "disabled";
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		i2c0: i2c@e6500000 {
 			compatible = "renesas,i2c-r8a779f0",
 				     "renesas,rcar-gen4-i2c";
@@ -649,7 +679,11 @@
 			reg = <0 0xe6540000 0 0x60>;
 			interrupts = <GIC_SPI 245 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&cpg CPG_MOD 514>,
+<<<<<<< HEAD
 				 <&cpg CPG_CORE R8A779F0_CLK_SASYNCPERD1>,
+=======
+				 <&cpg CPG_CORE R8A779F0_CLK_S0D3>,
+>>>>>>> b7ba80a49124 (Commit)
 				 <&scif_clk>;
 			clock-names = "fck", "brg_int", "scif_clk";
 			dmas = <&dmac0 0x31>, <&dmac0 0x30>,
@@ -666,7 +700,11 @@
 			reg = <0 0xe6550000 0 0x60>;
 			interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&cpg CPG_MOD 515>,
+<<<<<<< HEAD
 				 <&cpg CPG_CORE R8A779F0_CLK_SASYNCPERD1>,
+=======
+				 <&cpg CPG_CORE R8A779F0_CLK_S0D3>,
+>>>>>>> b7ba80a49124 (Commit)
 				 <&scif_clk>;
 			clock-names = "fck", "brg_int", "scif_clk";
 			dmas = <&dmac0 0x33>, <&dmac0 0x32>,
@@ -683,7 +721,11 @@
 			reg = <0 0xe6560000 0 0x60>;
 			interrupts = <GIC_SPI 247 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&cpg CPG_MOD 516>,
+<<<<<<< HEAD
 				 <&cpg CPG_CORE R8A779F0_CLK_SASYNCPERD1>,
+=======
+				 <&cpg CPG_CORE R8A779F0_CLK_S0D3>,
+>>>>>>> b7ba80a49124 (Commit)
 				 <&scif_clk>;
 			clock-names = "fck", "brg_int", "scif_clk";
 			dmas = <&dmac0 0x35>, <&dmac0 0x34>,
@@ -700,7 +742,11 @@
 			reg = <0 0xe66a0000 0 0x60>;
 			interrupts = <GIC_SPI 248 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&cpg CPG_MOD 517>,
+<<<<<<< HEAD
 				 <&cpg CPG_CORE R8A779F0_CLK_SASYNCPERD1>,
+=======
+				 <&cpg CPG_CORE R8A779F0_CLK_S0D3>,
+>>>>>>> b7ba80a49124 (Commit)
 				 <&scif_clk>;
 			clock-names = "fck", "brg_int", "scif_clk";
 			dmas = <&dmac0 0x37>, <&dmac0 0x36>,
@@ -723,6 +769,7 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		rswitch: ethernet@e6880000 {
 			compatible = "renesas,r8a779f0-ether-switch";
 			reg = <0 0xe6880000 0 0x20000>, <0 0xe68c0000 0 0x20000>;
@@ -823,13 +870,19 @@
 			};
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		scif0: serial@e6e60000 {
 			compatible = "renesas,scif-r8a779f0",
 				     "renesas,rcar-gen4-scif", "renesas,scif";
 			reg = <0 0xe6e60000 0 64>;
 			interrupts = <GIC_SPI 249 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&cpg CPG_MOD 702>,
+<<<<<<< HEAD
 				 <&cpg CPG_CORE R8A779F0_CLK_SASYNCPERD1>,
+=======
+				 <&cpg CPG_CORE R8A779F0_CLK_S0D3_PER>,
+>>>>>>> b7ba80a49124 (Commit)
 				 <&scif_clk>;
 			clock-names = "fck", "brg_int", "scif_clk";
 			dmas = <&dmac0 0x51>, <&dmac0 0x50>,
@@ -846,7 +899,11 @@
 			reg = <0 0xe6e68000 0 64>;
 			interrupts = <GIC_SPI 250 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&cpg CPG_MOD 703>,
+<<<<<<< HEAD
 				 <&cpg CPG_CORE R8A779F0_CLK_SASYNCPERD1>,
+=======
+				 <&cpg CPG_CORE R8A779F0_CLK_S0D3_PER>,
+>>>>>>> b7ba80a49124 (Commit)
 				 <&scif_clk>;
 			clock-names = "fck", "brg_int", "scif_clk";
 			dmas = <&dmac0 0x53>, <&dmac0 0x52>,
@@ -863,7 +920,11 @@
 			reg = <0 0xe6c50000 0 64>;
 			interrupts = <GIC_SPI 252 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&cpg CPG_MOD 704>,
+<<<<<<< HEAD
 				 <&cpg CPG_CORE R8A779F0_CLK_SASYNCPERD1>,
+=======
+				 <&cpg CPG_CORE R8A779F0_CLK_S0D3_PER>,
+>>>>>>> b7ba80a49124 (Commit)
 				 <&scif_clk>;
 			clock-names = "fck", "brg_int", "scif_clk";
 			dmas = <&dmac0 0x57>, <&dmac0 0x56>,
@@ -880,7 +941,11 @@
 			reg = <0 0xe6c40000 0 64>;
 			interrupts = <GIC_SPI 253 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&cpg CPG_MOD 705>,
+<<<<<<< HEAD
 				 <&cpg CPG_CORE R8A779F0_CLK_SASYNCPERD1>,
+=======
+				 <&cpg CPG_CORE R8A779F0_CLK_S0D3_PER>,
+>>>>>>> b7ba80a49124 (Commit)
 				 <&scif_clk>;
 			clock-names = "fck", "brg_int", "scif_clk";
 			dmas = <&dmac0 0x59>, <&dmac0 0x58>,
@@ -1051,7 +1116,10 @@
 			power-domains = <&sysc R8A779F0_PD_ALWAYS_ON>;
 			resets = <&cpg 706>;
 			max-frequency = <200000000>;
+<<<<<<< HEAD
 			iommus = <&ipmmu_ds0 32>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			status = "disabled";
 		};
 
@@ -1108,7 +1176,12 @@
 			interrupt-controller;
 			reg = <0x0 0xf1000000 0 0x20000>,
 			      <0x0 0xf1060000 0 0x110000>;
+<<<<<<< HEAD
 			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+=======
+			interrupts = <GIC_PPI 9
+				      (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		prr: chipid@fff00044 {
@@ -1118,7 +1191,11 @@
 	};
 
 	thermal-zones {
+<<<<<<< HEAD
 		sensor_thermal_rtcore: sensor1-thermal {
+=======
+		sensor_thermal1: sensor1-thermal {
+>>>>>>> b7ba80a49124 (Commit)
 			polling-delay-passive = <250>;
 			polling-delay = <1000>;
 			thermal-sensors = <&tsc 0>;
@@ -1132,7 +1209,11 @@
 			};
 		};
 
+<<<<<<< HEAD
 		sensor_thermal_apcore0: sensor2-thermal {
+=======
+		sensor_thermal2: sensor2-thermal {
+>>>>>>> b7ba80a49124 (Commit)
 			polling-delay-passive = <250>;
 			polling-delay = <1000>;
 			thermal-sensors = <&tsc 1>;
@@ -1146,7 +1227,11 @@
 			};
 		};
 
+<<<<<<< HEAD
 		sensor_thermal_apcore4: sensor3-thermal {
+=======
+		sensor_thermal3: sensor3-thermal {
+>>>>>>> b7ba80a49124 (Commit)
 			polling-delay-passive = <250>;
 			polling-delay = <1000>;
 			thermal-sensors = <&tsc 2>;
@@ -1163,10 +1248,17 @@
 
 	timer {
 		compatible = "arm,armv8-timer";
+<<<<<<< HEAD
 		interrupts-extended = <&gic GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
 				      <&gic GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
 				      <&gic GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
 				      <&gic GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
+=======
+		interrupts-extended = <&gic GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+				      <&gic GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+				      <&gic GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+				      <&gic GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	ufs30_clk: ufs30-clk {

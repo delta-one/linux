@@ -62,11 +62,19 @@
 };
 
 &gpio_leds {
+<<<<<<< HEAD
 	led-power {
 		label = "cobra:white:power";
 	};
 
 	led-sata {
+=======
+	power {
+		label = "cobra:white:power";
+	};
+
+	sata {
+>>>>>>> b7ba80a49124 (Commit)
 		label = "cobra:white:sata";
 	};
 };

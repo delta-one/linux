@@ -144,6 +144,7 @@ int rxrpc_server_keyring(struct rxrpc_sock *rx, sockptr_t optval, int optlen)
 	_leave(" = 0 [key %x]", key->serial);
 	return 0;
 }
+<<<<<<< HEAD
 
 /**
  * rxrpc_sock_set_security_keyring - Set the security keyring for a kernel service
@@ -169,3 +170,5 @@ int rxrpc_sock_set_security_keyring(struct sock *sk, struct key *keyring)
 	return ret;
 }
 EXPORT_SYMBOL(rxrpc_sock_set_security_keyring);
+=======
+>>>>>>> b7ba80a49124 (Commit)

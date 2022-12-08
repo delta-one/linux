@@ -410,7 +410,14 @@ static void process_rdmsr(struct kvm_vcpu *vcpu, uint32_t msr_index)
 
 	check_for_guest_assert(vcpu);
 
+<<<<<<< HEAD
 	TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_X86_RDMSR);
+=======
+	TEST_ASSERT(run->exit_reason == KVM_EXIT_X86_RDMSR,
+		    "Unexpected exit reason: %u (%s),\n",
+		    run->exit_reason,
+		    exit_reason_str(run->exit_reason));
+>>>>>>> b7ba80a49124 (Commit)
 	TEST_ASSERT(run->msr.index == msr_index,
 			"Unexpected msr (0x%04x), expected 0x%04x",
 			run->msr.index, msr_index);
@@ -442,7 +449,14 @@ static void process_wrmsr(struct kvm_vcpu *vcpu, uint32_t msr_index)
 
 	check_for_guest_assert(vcpu);
 
+<<<<<<< HEAD
 	TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_X86_WRMSR);
+=======
+	TEST_ASSERT(run->exit_reason == KVM_EXIT_X86_WRMSR,
+		    "Unexpected exit reason: %u (%s),\n",
+		    run->exit_reason,
+		    exit_reason_str(run->exit_reason));
+>>>>>>> b7ba80a49124 (Commit)
 	TEST_ASSERT(run->msr.index == msr_index,
 			"Unexpected msr (0x%04x), expected 0x%04x",
 			run->msr.index, msr_index);
@@ -466,11 +480,22 @@ static void process_wrmsr(struct kvm_vcpu *vcpu, uint32_t msr_index)
 
 static void process_ucall_done(struct kvm_vcpu *vcpu)
 {
+<<<<<<< HEAD
+=======
+	struct kvm_run *run = vcpu->run;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ucall uc;
 
 	check_for_guest_assert(vcpu);
 
+<<<<<<< HEAD
 	TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_IO);
+=======
+	TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
+		    "Unexpected exit reason: %u (%s)",
+		    run->exit_reason,
+		    exit_reason_str(run->exit_reason));
+>>>>>>> b7ba80a49124 (Commit)
 
 	TEST_ASSERT(get_ucall(vcpu, &uc) == UCALL_DONE,
 		    "Unexpected ucall command: %lu, expected UCALL_DONE (%d)",
@@ -479,11 +504,22 @@ static void process_ucall_done(struct kvm_vcpu *vcpu)
 
 static uint64_t process_ucall(struct kvm_vcpu *vcpu)
 {
+<<<<<<< HEAD
+=======
+	struct kvm_run *run = vcpu->run;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ucall uc = {};
 
 	check_for_guest_assert(vcpu);
 
+<<<<<<< HEAD
 	TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_IO);
+=======
+	TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
+		    "Unexpected exit reason: %u (%s)",
+		    run->exit_reason,
+		    exit_reason_str(run->exit_reason));
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (get_ucall(vcpu, &uc)) {
 	case UCALL_SYNC:
@@ -719,6 +755,7 @@ static void test_msr_permission_bitmap(void)
 	kvm_vm_free(vm);
 }
 
+<<<<<<< HEAD
 #define test_user_exit_msr_ioctl(vm, cmd, arg, flag, valid_mask)	\
 ({									\
 	int r = __vm_ioctl(vm, cmd, arg);				\
@@ -804,13 +841,23 @@ static void test_user_exit_msr_flags(void)
 
 int main(int argc, char *argv[])
 {
+=======
+int main(int argc, char *argv[])
+{
+	/* Tell stdout not to buffer its content */
+	setbuf(stdout, NULL);
+
+>>>>>>> b7ba80a49124 (Commit)
 	test_msr_filter_allow();
 
 	test_msr_filter_deny();
 
 	test_msr_permission_bitmap();
 
+<<<<<<< HEAD
 	test_user_exit_msr_flags();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }

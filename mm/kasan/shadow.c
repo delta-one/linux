@@ -38,6 +38,7 @@ bool __kasan_check_write(const volatile void *p, unsigned int size)
 }
 EXPORT_SYMBOL(__kasan_check_write);
 
+<<<<<<< HEAD
 #if !defined(CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX) && !defined(CONFIG_GENERIC_ENTRY)
 /*
  * CONFIG_GENERIC_ENTRY relies on compiler emitted mem*() calls to not be
@@ -47,6 +48,8 @@ EXPORT_SYMBOL(__kasan_check_write);
  * If we have a compiler that can instrument meminstrinsics, never override
  * these, so that non-instrumented files can safely consider them as builtins.
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #undef memset
 void *memset(void *addr, int c, size_t len)
 {
@@ -77,6 +80,7 @@ void *memcpy(void *dest, const void *src, size_t len)
 
 	return __memcpy(dest, src, len);
 }
+<<<<<<< HEAD
 #endif
 
 void *__asan_memset(void *addr, int c, size_t len)
@@ -120,6 +124,8 @@ EXPORT_SYMBOL(__hwasan_memmove);
 void *__hwasan_memcpy(void *dest, const void *src, size_t len) __alias(__asan_memcpy);
 EXPORT_SYMBOL(__hwasan_memcpy);
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 void kasan_poison(const void *addr, size_t size, u8 value, bool init)
 {
@@ -296,7 +302,11 @@ static int __meminit kasan_mem_notifier(struct notifier_block *nb,
 
 static int __init kasan_memhotplug_init(void)
 {
+<<<<<<< HEAD
 	hotplug_memory_notifier(kasan_mem_notifier, DEFAULT_CALLBACK_PRI);
+=======
+	hotplug_memory_notifier(kasan_mem_notifier, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -343,9 +353,12 @@ int kasan_populate_vmalloc(unsigned long addr, unsigned long size)
 	unsigned long shadow_start, shadow_end;
 	int ret;
 
+<<<<<<< HEAD
 	if (!kasan_arch_is_ready())
 		return 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!is_vmalloc_or_module_addr((void *)addr))
 		return 0;
 
@@ -514,9 +527,12 @@ void kasan_release_vmalloc(unsigned long start, unsigned long end,
 	unsigned long region_start, region_end;
 	unsigned long size;
 
+<<<<<<< HEAD
 	if (!kasan_arch_is_ready())
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	region_start = ALIGN(start, KASAN_MEMORY_PER_SHADOW_PAGE);
 	region_end = ALIGN_DOWN(end, KASAN_MEMORY_PER_SHADOW_PAGE);
 
@@ -560,9 +576,12 @@ void *__kasan_unpoison_vmalloc(const void *start, unsigned long size,
 	 * with setting memory tags, so the KASAN_VMALLOC_INIT flag is ignored.
 	 */
 
+<<<<<<< HEAD
 	if (!kasan_arch_is_ready())
 		return (void *)start;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!is_vmalloc_or_module_addr(start))
 		return (void *)start;
 
@@ -585,9 +604,12 @@ void *__kasan_unpoison_vmalloc(const void *start, unsigned long size,
  */
 void __kasan_poison_vmalloc(const void *start, unsigned long size)
 {
+<<<<<<< HEAD
 	if (!kasan_arch_is_ready())
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!is_vmalloc_or_module_addr(start))
 		return;
 

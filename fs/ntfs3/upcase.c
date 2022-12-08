@@ -102,6 +102,7 @@ case_insentive:
 	diff2 = l1 - l2;
 	return diff2 ? diff2 : diff1;
 }
+<<<<<<< HEAD
 
 /* Helper function for ntfs_d_hash. */
 unsigned long ntfs_names_hash(const u16 *name, size_t len, const u16 *upcase,
@@ -114,3 +115,5 @@ unsigned long ntfs_names_hash(const u16 *name, size_t len, const u16 *upcase,
 
 	return hash;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

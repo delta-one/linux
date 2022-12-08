@@ -102,7 +102,11 @@ static int gic_probe(struct platform_device *pdev)
 
 	pm_runtime_enable(dev);
 
+<<<<<<< HEAD
 	ret = pm_runtime_resume_and_get(dev);
+=======
+	ret = pm_runtime_get_sync(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		goto rpm_disable;
 

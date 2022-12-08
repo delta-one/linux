@@ -4,6 +4,12 @@ if SOC_BRCMSTB
 config BRCMSTB_PM
 	bool "Support suspend/resume for STB platforms"
 	default y
+<<<<<<< HEAD
 	depends on PM && BMIPS_GENERIC
+=======
+	depends on PM
+	depends on ARCH_BRCMSTB || BMIPS_GENERIC
+	select ARM_CPU_SUSPEND if ARM
+>>>>>>> b7ba80a49124 (Commit)
 
 endif # SOC_BRCMSTB

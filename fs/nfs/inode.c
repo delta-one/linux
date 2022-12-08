@@ -313,7 +313,11 @@ struct nfs_find_desc {
 static int
 nfs_find_actor(struct inode *inode, void *opaque)
 {
+<<<<<<< HEAD
 	struct nfs_find_desc	*desc = opaque;
+=======
+	struct nfs_find_desc	*desc = (struct nfs_find_desc *)opaque;
+>>>>>>> b7ba80a49124 (Commit)
 	struct nfs_fh		*fh = desc->fh;
 	struct nfs_fattr	*fattr = desc->fattr;
 
@@ -331,7 +335,11 @@ nfs_find_actor(struct inode *inode, void *opaque)
 static int
 nfs_init_locked(struct inode *inode, void *opaque)
 {
+<<<<<<< HEAD
 	struct nfs_find_desc	*desc = opaque;
+=======
+	struct nfs_find_desc	*desc = (struct nfs_find_desc *)opaque;
+>>>>>>> b7ba80a49124 (Commit)
 	struct nfs_fattr	*fattr = desc->fattr;
 
 	set_nfs_fileid(inode, fattr->fileid);
@@ -606,7 +614,11 @@ EXPORT_SYMBOL_GPL(nfs_fhget);
 #define NFS_VALID_ATTRS (ATTR_MODE|ATTR_UID|ATTR_GID|ATTR_SIZE|ATTR_ATIME|ATTR_ATIME_SET|ATTR_MTIME|ATTR_MTIME_SET|ATTR_FILE|ATTR_OPEN)
 
 int
+<<<<<<< HEAD
 nfs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+=======
+nfs_setattr(struct user_namespace *mnt_userns, struct dentry *dentry,
+>>>>>>> b7ba80a49124 (Commit)
 	    struct iattr *attr)
 {
 	struct inode *inode = d_inode(dentry);
@@ -825,12 +837,19 @@ static u32 nfs_get_valid_attrmask(struct inode *inode)
 		reply_mask |= STATX_UID | STATX_GID;
 	if (!(cache_validity & NFS_INO_INVALID_BLOCKS))
 		reply_mask |= STATX_BLOCKS;
+<<<<<<< HEAD
 	if (!(cache_validity & NFS_INO_INVALID_CHANGE))
 		reply_mask |= STATX_CHANGE_COOKIE;
 	return reply_mask;
 }
 
 int nfs_getattr(struct mnt_idmap *idmap, const struct path *path,
+=======
+	return reply_mask;
+}
+
+int nfs_getattr(struct user_namespace *mnt_userns, const struct path *path,
+>>>>>>> b7ba80a49124 (Commit)
 		struct kstat *stat, u32 request_mask, unsigned int query_flags)
 {
 	struct inode *inode = d_inode(path->dentry);
@@ -845,8 +864,12 @@ int nfs_getattr(struct mnt_idmap *idmap, const struct path *path,
 
 	request_mask &= STATX_TYPE | STATX_MODE | STATX_NLINK | STATX_UID |
 			STATX_GID | STATX_ATIME | STATX_MTIME | STATX_CTIME |
+<<<<<<< HEAD
 			STATX_INO | STATX_SIZE | STATX_BLOCKS | STATX_BTIME |
 			STATX_CHANGE_COOKIE;
+=======
+			STATX_INO | STATX_SIZE | STATX_BLOCKS;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if ((query_flags & AT_STATX_DONT_SYNC) && !force_sync) {
 		if (readdirplus_enabled)
@@ -854,8 +877,13 @@ int nfs_getattr(struct mnt_idmap *idmap, const struct path *path,
 		goto out_no_revalidate;
 	}
 
+<<<<<<< HEAD
 	/* Flush out writes to the server in order to update c/mtime/version.  */
 	if ((request_mask & (STATX_CTIME | STATX_MTIME | STATX_CHANGE_COOKIE)) &&
+=======
+	/* Flush out writes to the server in order to update c/mtime.  */
+	if ((request_mask & (STATX_CTIME | STATX_MTIME)) &&
+>>>>>>> b7ba80a49124 (Commit)
 	    S_ISREG(inode->i_mode))
 		filemap_write_and_wait(inode->i_mapping);
 
@@ -875,8 +903,12 @@ int nfs_getattr(struct mnt_idmap *idmap, const struct path *path,
 	/* Is the user requesting attributes that might need revalidation? */
 	if (!(request_mask & (STATX_MODE|STATX_NLINK|STATX_ATIME|STATX_CTIME|
 					STATX_MTIME|STATX_UID|STATX_GID|
+<<<<<<< HEAD
 					STATX_SIZE|STATX_BLOCKS|
 					STATX_CHANGE_COOKIE)))
+=======
+					STATX_SIZE|STATX_BLOCKS)))
+>>>>>>> b7ba80a49124 (Commit)
 		goto out_no_revalidate;
 
 	/* Check whether the cached attributes are stale */
@@ -912,12 +944,17 @@ out_no_revalidate:
 	/* Only return attributes that were revalidated. */
 	stat->result_mask = nfs_get_valid_attrmask(inode) | request_mask;
 
+<<<<<<< HEAD
 	generic_fillattr(&nop_mnt_idmap, inode, stat);
 	stat->ino = nfs_compat_user_ino64(NFS_FILEID(inode));
 	stat->change_cookie = inode_peek_iversion_raw(inode);
 	stat->attributes_mask |= STATX_ATTR_CHANGE_MONOTONIC;
 	if (server->change_attr_type != NFS4_CHANGE_TYPE_IS_UNDEFINED)
 		stat->attributes |= STATX_ATTR_CHANGE_MONOTONIC;
+=======
+	generic_fillattr(&init_user_ns, inode, stat);
+	stat->ino = nfs_compat_user_ino64(NFS_FILEID(inode));
+>>>>>>> b7ba80a49124 (Commit)
 	if (S_ISDIR(inode->i_mode))
 		stat->blksize = NFS_SERVER(inode)->dtsize;
 out:
@@ -1176,8 +1213,12 @@ int nfs_open(struct inode *inode, struct file *filp)
 {
 	struct nfs_open_context *ctx;
 
+<<<<<<< HEAD
 	ctx = alloc_nfs_open_context(file_dentry(filp),
 				     flags_to_mode(filp->f_flags), filp);
+=======
+	ctx = alloc_nfs_open_context(file_dentry(filp), filp->f_mode, filp);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(ctx))
 		return PTR_ERR(ctx);
 	nfs_file_set_open_context(filp, ctx);
@@ -2276,7 +2317,11 @@ static inline void nfs4_init_once(struct nfs_inode *nfsi)
 
 static void init_once(void *foo)
 {
+<<<<<<< HEAD
 	struct nfs_inode *nfsi = foo;
+=======
+	struct nfs_inode *nfsi = (struct nfs_inode *) foo;
+>>>>>>> b7ba80a49124 (Commit)
 
 	inode_init_once(&nfsi->vfs_inode);
 	INIT_LIST_HEAD(&nfsi->open_files);

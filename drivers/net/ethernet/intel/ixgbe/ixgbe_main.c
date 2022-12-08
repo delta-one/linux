@@ -6647,7 +6647,11 @@ int ixgbe_setup_rx_resources(struct ixgbe_adapter *adapter,
 			     rx_ring->queue_index, ixgbe_rx_napi_id(rx_ring)) < 0)
 		goto err;
 
+<<<<<<< HEAD
 	WRITE_ONCE(rx_ring->xdp_prog, adapter->xdp_prog);
+=======
+	rx_ring->xdp_prog = adapter->xdp_prog;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 err:
@@ -6778,6 +6782,7 @@ static void ixgbe_free_all_rx_resources(struct ixgbe_adapter *adapter)
 }
 
 /**
+<<<<<<< HEAD
  * ixgbe_max_xdp_frame_size - returns the maximum allowed frame size for XDP
  * @adapter: device handle, pointer to adapter
  */
@@ -6790,6 +6795,8 @@ static int ixgbe_max_xdp_frame_size(struct ixgbe_adapter *adapter)
 }
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * ixgbe_change_mtu - Change the Maximum Transfer Unit
  * @netdev: network interface device structure
  * @new_mtu: new value for maximum frame size
@@ -6800,12 +6807,27 @@ static int ixgbe_change_mtu(struct net_device *netdev, int new_mtu)
 {
 	struct ixgbe_adapter *adapter = netdev_priv(netdev);
 
+<<<<<<< HEAD
 	if (ixgbe_enabled_xdp_adapter(adapter)) {
 		int new_frame_size = new_mtu + IXGBE_PKT_HDR_PAD;
 
 		if (new_frame_size > ixgbe_max_xdp_frame_size(adapter)) {
 			e_warn(probe, "Requested MTU size is not supported with XDP\n");
 			return -EINVAL;
+=======
+	if (adapter->xdp_prog) {
+		int new_frame_size = new_mtu + ETH_HLEN + ETH_FCS_LEN +
+				     VLAN_HLEN;
+		int i;
+
+		for (i = 0; i < adapter->num_rx_queues; i++) {
+			struct ixgbe_ring *ring = adapter->rx_ring[i];
+
+			if (new_frame_size > ixgbe_rx_bufsz(ring)) {
+				e_warn(probe, "Requested MTU size is not supported with XDP\n");
+				return -EINVAL;
+			}
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -8943,8 +8965,12 @@ ixgbe_mdio_read(struct net_device *netdev, int prtad, int devad, u16 addr)
 		int regnum = addr;
 
 		if (devad != MDIO_DEVAD_NONE)
+<<<<<<< HEAD
 			return mdiobus_c45_read(adapter->mii_bus, prtad,
 						devad, regnum);
+=======
+			regnum |= (devad << 16) | MII_ADDR_C45;
+>>>>>>> b7ba80a49124 (Commit)
 
 		return mdiobus_read(adapter->mii_bus, prtad, regnum);
 	}
@@ -8967,8 +8993,12 @@ static int ixgbe_mdio_write(struct net_device *netdev, int prtad, int devad,
 		int regnum = addr;
 
 		if (devad != MDIO_DEVAD_NONE)
+<<<<<<< HEAD
 			return mdiobus_c45_write(adapter->mii_bus, prtad, devad,
 						 regnum, value);
+=======
+			regnum |= (devad << 16) | MII_ADDR_C45;
+>>>>>>> b7ba80a49124 (Commit)
 
 		return mdiobus_write(adapter->mii_bus, prtad, regnum, value);
 	}
@@ -9049,10 +9079,17 @@ static void ixgbe_get_ring_stats64(struct rtnl_link_stats64 *stats,
 
 	if (ring) {
 		do {
+<<<<<<< HEAD
 			start = u64_stats_fetch_begin(&ring->syncp);
 			packets = ring->stats.packets;
 			bytes   = ring->stats.bytes;
 		} while (u64_stats_fetch_retry(&ring->syncp, start));
+=======
+			start = u64_stats_fetch_begin_irq(&ring->syncp);
+			packets = ring->stats.packets;
+			bytes   = ring->stats.bytes;
+		} while (u64_stats_fetch_retry_irq(&ring->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 		stats->tx_packets += packets;
 		stats->tx_bytes   += bytes;
 	}
@@ -9072,10 +9109,17 @@ static void ixgbe_get_stats64(struct net_device *netdev,
 
 		if (ring) {
 			do {
+<<<<<<< HEAD
 				start = u64_stats_fetch_begin(&ring->syncp);
 				packets = ring->stats.packets;
 				bytes   = ring->stats.bytes;
 			} while (u64_stats_fetch_retry(&ring->syncp, start));
+=======
+				start = u64_stats_fetch_begin_irq(&ring->syncp);
+				packets = ring->stats.packets;
+				bytes   = ring->stats.bytes;
+			} while (u64_stats_fetch_retry_irq(&ring->syncp, start));
+>>>>>>> b7ba80a49124 (Commit)
 			stats->rx_packets += packets;
 			stats->rx_bytes   += bytes;
 		}
@@ -10305,6 +10349,7 @@ static int ixgbe_xdp_setup(struct net_device *dev, struct bpf_prog *prog)
 			synchronize_rcu();
 		err = ixgbe_setup_tc(dev, adapter->hw_tcs);
 
+<<<<<<< HEAD
 		if (err)
 			return -EINVAL;
 		if (!prog)
@@ -10314,6 +10359,16 @@ static int ixgbe_xdp_setup(struct net_device *dev, struct bpf_prog *prog)
 			WRITE_ONCE(adapter->rx_ring[i]->xdp_prog,
 				   adapter->xdp_prog);
 		}
+=======
+		if (err) {
+			rcu_assign_pointer(adapter->xdp_prog, old_prog);
+			return -EINVAL;
+		}
+	} else {
+		for (i = 0; i < adapter->num_rx_queues; i++)
+			(void)xchg(&adapter->rx_ring[i]->xdp_prog,
+			    adapter->xdp_prog);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (old_prog)
@@ -10329,7 +10384,10 @@ static int ixgbe_xdp_setup(struct net_device *dev, struct bpf_prog *prog)
 			if (adapter->xdp_ring[i]->xsk_pool)
 				(void)ixgbe_xsk_wakeup(adapter->netdev, i,
 						       XDP_WAKEUP_RX);
+<<<<<<< HEAD
 		xdp_features_set_redirect_target(dev, true);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -10818,6 +10876,11 @@ static int ixgbe_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 		goto err_pci_reg;
 	}
 
+<<<<<<< HEAD
+=======
+	pci_enable_pcie_error_reporting(pdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	pci_set_master(pdev);
 	pci_save_state(pdev);
 
@@ -11025,9 +11088,12 @@ skip_sriov:
 	netdev->priv_flags |= IFF_UNICAST_FLT;
 	netdev->priv_flags |= IFF_SUPP_NOFCS;
 
+<<<<<<< HEAD
 	netdev->xdp_features = NETDEV_XDP_ACT_BASIC | NETDEV_XDP_ACT_REDIRECT |
 			       NETDEV_XDP_ACT_XSK_ZEROCOPY;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* MTU range: 68 - 9710 */
 	netdev->min_mtu = ETH_MIN_MTU;
 	netdev->max_mtu = IXGBE_MAX_JUMBO_FRAME_SIZE - (ETH_HLEN + ETH_FCS_LEN);
@@ -11248,6 +11314,10 @@ err_ioremap:
 	disable_dev = !test_and_set_bit(__IXGBE_DISABLED, &adapter->state);
 	free_netdev(netdev);
 err_alloc_etherdev:
+<<<<<<< HEAD
+=======
+	pci_disable_pcie_error_reporting(pdev);
+>>>>>>> b7ba80a49124 (Commit)
 	pci_release_mem_regions(pdev);
 err_pci_reg:
 err_dma:
@@ -11336,6 +11406,11 @@ static void ixgbe_remove(struct pci_dev *pdev)
 	disable_dev = !test_and_set_bit(__IXGBE_DISABLED, &adapter->state);
 	free_netdev(netdev);
 
+<<<<<<< HEAD
+=======
+	pci_disable_pcie_error_reporting(pdev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (disable_dev)
 		pci_disable_device(pdev);
 }

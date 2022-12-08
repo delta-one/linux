@@ -1,5 +1,8 @@
 		i	synthesize instructions events
+<<<<<<< HEAD
 		y	synthesize cycles events
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		b	synthesize branches events (branch misses for Arm SPE)
 		c	synthesize branches events (calls only)
 		r	synthesize branches events (returns only)
@@ -26,7 +29,11 @@
 		A	approximate IPC
 		Z	prefer to ignore timestamps (so-called "timeless" decoding)
 
+<<<<<<< HEAD
 	The default is all events i.e. the same as --itrace=iybxwpe,
+=======
+	The default is all events i.e. the same as --itrace=ibxwpe,
+>>>>>>> b7ba80a49124 (Commit)
 	except for perf script where it is --itrace=ce
 
 	In addition, the period (default 100000, except for perf script where it is 1)

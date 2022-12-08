@@ -65,7 +65,11 @@ static void Usage(void);
 static void read_trace_pipe2(void);
 static void do_error(char *msg, bool errno_flag);
 
+<<<<<<< HEAD
 #define TRACEFS "/sys/kernel/tracing/"
+=======
+#define DEBUGFS "/sys/kernel/debug/tracing/"
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct bpf_program *bpf_prog;
 static struct bpf_object *obj;
@@ -77,7 +81,11 @@ static void read_trace_pipe2(void)
 	FILE *outf;
 	char *outFname = "hbm_out.log";
 
+<<<<<<< HEAD
 	trace_fd = open(TRACEFS "trace_pipe", O_RDONLY, 0);
+=======
+	trace_fd = open(DEBUGFS "trace_pipe", O_RDONLY, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (trace_fd < 0) {
 		printf("Error opening trace_pipe\n");
 		return;

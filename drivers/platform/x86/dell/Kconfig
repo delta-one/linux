@@ -189,6 +189,7 @@ config DELL_WMI_DESCRIPTOR
 	default n
 	depends on ACPI_WMI
 
+<<<<<<< HEAD
 config DELL_WMI_DDV
 	tristate "Dell WMI sensors Support"
 	default m
@@ -202,6 +203,8 @@ config DELL_WMI_DDV
 	  To compile this drivers as a module, choose M here: the module will
 	  be called dell-wmi-ddv.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config DELL_WMI_LED
 	tristate "External LED on Dell Business Netbooks"
 	default m

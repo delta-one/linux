@@ -2179,15 +2179,25 @@ long __do_semtimedop(int semid, struct sembuf *sops,
 		 * scenarios where we were awakened externally, during the
 		 * window between wake_q_add() and wake_up_q().
 		 */
+<<<<<<< HEAD
 		rcu_read_lock();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		error = READ_ONCE(queue.status);
 		if (error != -EINTR) {
 			/* see SEM_BARRIER_2 for purpose/pairing */
 			smp_acquire__after_ctrl_dep();
+<<<<<<< HEAD
 			rcu_read_unlock();
 			goto out;
 		}
 
+=======
+			goto out;
+		}
+
+		rcu_read_lock();
+>>>>>>> b7ba80a49124 (Commit)
 		locknum = sem_lock(sma, sops, nsops);
 
 		if (!ipc_valid_object(&sma->sem_perm))

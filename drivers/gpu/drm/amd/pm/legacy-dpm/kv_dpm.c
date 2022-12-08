@@ -1384,16 +1384,23 @@ static int kv_dpm_enable(struct amdgpu_device *adev)
 static void kv_dpm_disable(struct amdgpu_device *adev)
 {
 	struct kv_power_info *pi = kv_get_pi(adev);
+<<<<<<< HEAD
 	int err;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	amdgpu_irq_put(adev, &adev->pm.dpm.thermal.irq,
 		       AMDGPU_THERMAL_IRQ_LOW_TO_HIGH);
 	amdgpu_irq_put(adev, &adev->pm.dpm.thermal.irq,
 		       AMDGPU_THERMAL_IRQ_HIGH_TO_LOW);
 
+<<<<<<< HEAD
 	err = amdgpu_kv_smc_bapm_enable(adev, false);
 	if (err)
 		DRM_ERROR("amdgpu_kv_smc_bapm_enable failed\n");
+=======
+	amdgpu_kv_smc_bapm_enable(adev, false);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (adev->asic_type == CHIP_MULLINS)
 		kv_enable_nb_dpm(adev, false);

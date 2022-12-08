@@ -81,15 +81,23 @@ ext4_xattr_block_cache_find(struct inode *, struct ext4_xattr_header *,
 			    struct mb_cache_entry **);
 static __le32 ext4_xattr_hash_entry(char *name, size_t name_len, __le32 *value,
 				    size_t value_count);
+<<<<<<< HEAD
 static __le32 ext4_xattr_hash_entry_signed(char *name, size_t name_len, __le32 *value,
 				    size_t value_count);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void ext4_xattr_rehash(struct ext4_xattr_header *);
 
 static const struct xattr_handler * const ext4_xattr_handler_map[] = {
 	[EXT4_XATTR_INDEX_USER]		     = &ext4_xattr_user_handler,
 #ifdef CONFIG_EXT4_FS_POSIX_ACL
+<<<<<<< HEAD
 	[EXT4_XATTR_INDEX_POSIX_ACL_ACCESS]  = &nop_posix_acl_access,
 	[EXT4_XATTR_INDEX_POSIX_ACL_DEFAULT] = &nop_posix_acl_default,
+=======
+	[EXT4_XATTR_INDEX_POSIX_ACL_ACCESS]  = &posix_acl_access_xattr_handler,
+	[EXT4_XATTR_INDEX_POSIX_ACL_DEFAULT] = &posix_acl_default_xattr_handler,
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	[EXT4_XATTR_INDEX_TRUSTED]	     = &ext4_xattr_trusted_handler,
 #ifdef CONFIG_EXT4_FS_SECURITY
@@ -101,6 +109,13 @@ static const struct xattr_handler * const ext4_xattr_handler_map[] = {
 const struct xattr_handler *ext4_xattr_handlers[] = {
 	&ext4_xattr_user_handler,
 	&ext4_xattr_trusted_handler,
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_EXT4_FS_POSIX_ACL
+	&posix_acl_access_xattr_handler,
+	&posix_acl_default_xattr_handler,
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_EXT4_FS_SECURITY
 	&ext4_xattr_security_handler,
 #endif
@@ -169,13 +184,19 @@ static void ext4_xattr_block_csum_set(struct inode *inode,
 						bh->b_blocknr, BHDR(bh));
 }
 
+<<<<<<< HEAD
 static inline const char *ext4_xattr_prefix(int name_index,
 					    struct dentry *dentry)
+=======
+static inline const struct xattr_handler *
+ext4_xattr_handler(int name_index)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct xattr_handler *handler = NULL;
 
 	if (name_index > 0 && name_index < ARRAY_SIZE(ext4_xattr_handler_map))
 		handler = ext4_xattr_handler_map[name_index];
+<<<<<<< HEAD
 
 	if (!xattr_handler_can_list(handler, dentry))
 		return NULL;
@@ -218,10 +239,21 @@ check_xattrs(struct inode *inode, struct buffer_head *bh,
 			goto errout;
 		}
 	}
+=======
+	return handler;
+}
+
+static int
+ext4_xattr_check_entries(struct ext4_xattr_entry *entry, void *end,
+			 void *value_start)
+{
+	struct ext4_xattr_entry *e = entry;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Find the end of the names list */
 	while (!IS_LAST_ENTRY(e)) {
 		struct ext4_xattr_entry *next = EXT4_XATTR_NEXT(e);
+<<<<<<< HEAD
 		if ((void *)next >= end) {
 			err_str = "e_name out of bounds";
 			goto errout;
@@ -230,12 +262,19 @@ check_xattrs(struct inode *inode, struct buffer_head *bh,
 			err_str = "bad e_name length";
 			goto errout;
 		}
+=======
+		if ((void *)next >= end)
+			return -EFSCORRUPTED;
+		if (strnlen(e->e_name, e->e_name_len) != e->e_name_len)
+			return -EFSCORRUPTED;
+>>>>>>> b7ba80a49124 (Commit)
 		e = next;
 	}
 
 	/* Check the values */
 	while (!IS_LAST_ENTRY(entry)) {
 		u32 size = le32_to_cpu(entry->e_value_size);
+<<<<<<< HEAD
 		unsigned long ea_ino = le32_to_cpu(entry->e_value_inum);
 
 		if (!ext4_has_feature_ea_inode(inode->i_sb) && ea_ino) {
@@ -251,6 +290,11 @@ check_xattrs(struct inode *inode, struct buffer_head *bh,
 			err_str = "e_value size too large";
 			goto errout;
 		}
+=======
+
+		if (size > EXT4_XATTR_SIZE_MAX)
+			return -EFSCORRUPTED;
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (size != 0 && entry->e_value_inum == 0) {
 			u16 offs = le16_to_cpu(entry->e_value_offs);
@@ -262,6 +306,7 @@ check_xattrs(struct inode *inode, struct buffer_head *bh,
 			 * the padded and unpadded sizes, since the size may
 			 * overflow to 0 when adding padding.
 			 */
+<<<<<<< HEAD
 			if (offs > end - value_start) {
 				err_str = "e_value out of bounds";
 				goto errout;
@@ -290,26 +335,82 @@ errout:
 		__ext4_error_inode(inode, function, line, 0, -err,
 				   "corrupted in-inode xattr: %s", err_str);
 	return err;
+=======
+			if (offs > end - value_start)
+				return -EFSCORRUPTED;
+			value = value_start + offs;
+			if (value < (void *)e + sizeof(u32) ||
+			    size > end - value ||
+			    EXT4_XATTR_SIZE(size) > end - value)
+				return -EFSCORRUPTED;
+		}
+		entry = EXT4_XATTR_NEXT(entry);
+	}
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline int
 __ext4_xattr_check_block(struct inode *inode, struct buffer_head *bh,
 			 const char *function, unsigned int line)
 {
+<<<<<<< HEAD
 	return check_xattrs(inode, bh, BFIRST(bh), bh->b_data + bh->b_size,
 			    bh->b_data, function, line);
+=======
+	int error = -EFSCORRUPTED;
+
+	if (BHDR(bh)->h_magic != cpu_to_le32(EXT4_XATTR_MAGIC) ||
+	    BHDR(bh)->h_blocks != cpu_to_le32(1))
+		goto errout;
+	if (buffer_verified(bh))
+		return 0;
+
+	error = -EFSBADCRC;
+	if (!ext4_xattr_block_csum_verify(inode, bh))
+		goto errout;
+	error = ext4_xattr_check_entries(BFIRST(bh), bh->b_data + bh->b_size,
+					 bh->b_data);
+errout:
+	if (error)
+		__ext4_error_inode(inode, function, line, 0, -error,
+				   "corrupted xattr block %llu",
+				   (unsigned long long) bh->b_blocknr);
+	else
+		set_buffer_verified(bh);
+	return error;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define ext4_xattr_check_block(inode, bh) \
 	__ext4_xattr_check_block((inode), (bh),  __func__, __LINE__)
 
 
+<<<<<<< HEAD
 static inline int
 __xattr_check_inode(struct inode *inode, struct ext4_xattr_ibody_header *header,
 			 void *end, const char *function, unsigned int line)
 {
 	return check_xattrs(inode, NULL, IFIRST(header), end, IFIRST(header),
 			    function, line);
+=======
+static int
+__xattr_check_inode(struct inode *inode, struct ext4_xattr_ibody_header *header,
+			 void *end, const char *function, unsigned int line)
+{
+	int error = -EFSCORRUPTED;
+
+	if (end - (void *)header < sizeof(*header) + sizeof(u32) ||
+	    (header->h_magic != cpu_to_le32(EXT4_XATTR_MAGIC)))
+		goto errout;
+	error = ext4_xattr_check_entries(IFIRST(header), end, IFIRST(header));
+errout:
+	if (error)
+		__ext4_error_inode(inode, function, line, 0, -error,
+				   "corrupted in-inode xattr");
+	return error;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define xattr_check_inode(inode, header, end) \
@@ -422,6 +523,7 @@ static int ext4_xattr_inode_iget(struct inode *parent, unsigned long ea_ino,
 	struct inode *inode;
 	int err;
 
+<<<<<<< HEAD
 	/*
 	 * We have to check for this corruption early as otherwise
 	 * iget_locked() could wait indefinitely for the state of our
@@ -433,6 +535,8 @@ static int ext4_xattr_inode_iget(struct inode *parent, unsigned long ea_ino,
 		return -EFSCORRUPTED;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	inode = ext4_iget(parent->i_sb, ea_ino, EXT4_IGET_NORMAL);
 	if (IS_ERR(inode)) {
 		err = PTR_ERR(inode);
@@ -517,6 +621,7 @@ ext4_xattr_inode_verify_hashes(struct inode *ea_inode,
 		tmp_data = cpu_to_le32(hash);
 		e_hash = ext4_xattr_hash_entry(entry->e_name, entry->e_name_len,
 					       &tmp_data, 1);
+<<<<<<< HEAD
 		/* All good? */
 		if (e_hash == entry->e_hash)
 			return 0;
@@ -533,6 +638,10 @@ ext4_xattr_inode_verify_hashes(struct inode *ea_inode,
 
 		/* Let people know about old hash */
 		pr_warn_once("ext4: filesystem with signed xattr name hash");
+=======
+		if (e_hash != entry->e_hash)
+			return -EFSCORRUPTED;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return 0;
 }
@@ -740,10 +849,18 @@ ext4_xattr_list_entries(struct dentry *dentry, struct ext4_xattr_entry *entry,
 	size_t rest = buffer_size;
 
 	for (; !IS_LAST_ENTRY(entry); entry = EXT4_XATTR_NEXT(entry)) {
+<<<<<<< HEAD
 		const char *prefix;
 
 		prefix = ext4_xattr_prefix(entry->e_name_index, dentry);
 		if (prefix) {
+=======
+		const struct xattr_handler *handler =
+			ext4_xattr_handler(entry->e_name_index);
+
+		if (handler && (!handler->list || handler->list(dentry))) {
+			const char *prefix = handler->prefix ?: handler->name;
+>>>>>>> b7ba80a49124 (Commit)
 			size_t prefix_len = strlen(prefix);
 			size_t size = prefix_len + entry->e_name_len + 1;
 
@@ -1341,7 +1458,11 @@ retry_ref:
 				ce = mb_cache_entry_get(ea_block_cache, hash,
 							bh->b_blocknr);
 				if (ce) {
+<<<<<<< HEAD
 					set_bit(MBE_REUSABLE_B, &ce->e_flags);
+=======
+					ce->e_reusable = 1;
+>>>>>>> b7ba80a49124 (Commit)
 					mb_cache_entry_put(ea_block_cache, ce);
 				}
 			}
@@ -1482,6 +1603,7 @@ static struct inode *ext4_xattr_inode_create(handle_t *handle,
 	uid_t owner[2] = { i_uid_read(inode), i_gid_read(inode) };
 	int err;
 
+<<<<<<< HEAD
 	if (inode->i_sb->s_root == NULL) {
 		ext4_warning(inode->i_sb,
 			     "refuse to create EA inode when umounting");
@@ -1489,6 +1611,8 @@ static struct inode *ext4_xattr_inode_create(handle_t *handle,
 		return ERR_PTR(-EINVAL);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Let the next inode be the goal, so we try and allocate the EA inode
 	 * in the same group, or nearby one.
@@ -1508,9 +1632,12 @@ static struct inode *ext4_xattr_inode_create(handle_t *handle,
 		if (!err)
 			err = ext4_inode_attach_jinode(ea_inode);
 		if (err) {
+<<<<<<< HEAD
 			if (ext4_xattr_inode_dec_ref(handle, ea_inode))
 				ext4_warning_inode(ea_inode,
 					"cleanup dec ref error %d", err);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			iput(ea_inode);
 			return ERR_PTR(err);
 		}
@@ -1610,8 +1737,12 @@ static int ext4_xattr_inode_lookup_create(handle_t *handle, struct inode *inode,
 
 	err = ext4_xattr_inode_write(handle, ea_inode, value, value_len);
 	if (err) {
+<<<<<<< HEAD
 		if (ext4_xattr_inode_dec_ref(handle, ea_inode))
 			ext4_warning_inode(ea_inode, "cleanup dec ref error %d", err);
+=======
+		ext4_xattr_inode_dec_ref(handle, ea_inode);
+>>>>>>> b7ba80a49124 (Commit)
 		iput(ea_inode);
 		return err;
 	}
@@ -2113,7 +2244,11 @@ inserted:
 				}
 				BHDR(new_bh)->h_refcount = cpu_to_le32(ref);
 				if (ref == EXT4_XATTR_REFCOUNT_MAX)
+<<<<<<< HEAD
 					clear_bit(MBE_REUSABLE_B, &ce->e_flags);
+=======
+					ce->e_reusable = 0;
+>>>>>>> b7ba80a49124 (Commit)
 				ea_bdebug(new_bh, "reusing; refcount now=%d",
 					  ref);
 				ext4_xattr_block_csum_set(inode, new_bh);
@@ -2141,11 +2276,25 @@ inserted:
 
 			goal = ext4_group_first_block_no(sb,
 						EXT4_I(inode)->i_block_group);
+<<<<<<< HEAD
+=======
+
+			/* non-extent files can't have physical blocks past 2^32 */
+			if (!(ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS)))
+				goal = goal & EXT4_MAX_BLOCK_FILE_PHYS;
+
+>>>>>>> b7ba80a49124 (Commit)
 			block = ext4_new_meta_blocks(handle, inode, goal, 0,
 						     NULL, &error);
 			if (error)
 				goto cleanup;
 
+<<<<<<< HEAD
+=======
+			if (!(ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS)))
+				BUG_ON(block > EXT4_MAX_BLOCK_FILE_PHYS);
+
+>>>>>>> b7ba80a49124 (Commit)
 			ea_idebug(inode, "creating block %llu",
 				  (unsigned long long)block);
 
@@ -2475,7 +2624,10 @@ retry_inode:
 	if (!error) {
 		ext4_xattr_update_super_block(handle, inode->i_sb);
 		inode->i_ctime = current_time(inode);
+<<<<<<< HEAD
 		inode_inc_iversion(inode);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (!value)
 			no_expand = 0;
 		error = ext4_mark_iloc_dirty(handle, inode, &is.iloc);
@@ -2618,8 +2770,14 @@ static int ext4_xattr_move_to_block(handle_t *handle, struct inode *inode,
 
 	is = kzalloc(sizeof(struct ext4_xattr_ibody_find), GFP_NOFS);
 	bs = kzalloc(sizeof(struct ext4_xattr_block_find), GFP_NOFS);
+<<<<<<< HEAD
 	b_entry_name = kmalloc(entry->e_name_len + 1, GFP_NOFS);
 	if (!is || !bs || !b_entry_name) {
+=======
+	buffer = kmalloc(value_size, GFP_NOFS);
+	b_entry_name = kmalloc(entry->e_name_len + 1, GFP_NOFS);
+	if (!is || !bs || !buffer || !b_entry_name) {
+>>>>>>> b7ba80a49124 (Commit)
 		error = -ENOMEM;
 		goto out;
 	}
@@ -2631,18 +2789,25 @@ static int ext4_xattr_move_to_block(handle_t *handle, struct inode *inode,
 
 	/* Save the entry name and the entry value */
 	if (entry->e_value_inum) {
+<<<<<<< HEAD
 		buffer = kvmalloc(value_size, GFP_NOFS);
 		if (!buffer) {
 			error = -ENOMEM;
 			goto out;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		error = ext4_xattr_inode_get(inode, entry, buffer, value_size);
 		if (error)
 			goto out;
 	} else {
 		size_t value_offs = le16_to_cpu(entry->e_value_offs);
+<<<<<<< HEAD
 		buffer = (void *)IFIRST(header) + value_offs;
+=======
+		memcpy(buffer, (void *)IFIRST(header) + value_offs, value_size);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	memcpy(b_entry_name, entry->e_name, entry->e_name_len);
@@ -2657,12 +2822,21 @@ static int ext4_xattr_move_to_block(handle_t *handle, struct inode *inode,
 	if (error)
 		goto out;
 
+<<<<<<< HEAD
+=======
+	/* Remove the chosen entry from the inode */
+	error = ext4_xattr_ibody_set(handle, inode, &i, is);
+	if (error)
+		goto out;
+
+>>>>>>> b7ba80a49124 (Commit)
 	i.value = buffer;
 	i.value_len = value_size;
 	error = ext4_xattr_block_find(inode, &i, bs);
 	if (error)
 		goto out;
 
+<<<<<<< HEAD
 	/* Move ea entry from the inode into the block */
 	error = ext4_xattr_block_set(handle, inode, &i, bs);
 	if (error)
@@ -2677,6 +2851,16 @@ out:
 	kfree(b_entry_name);
 	if (entry->e_value_inum && buffer)
 		kvfree(buffer);
+=======
+	/* Add entry which was removed from the inode into the block */
+	error = ext4_xattr_block_set(handle, inode, &i, bs);
+	if (error)
+		goto out;
+	error = 0;
+out:
+	kfree(b_entry_name);
+	kfree(buffer);
+>>>>>>> b7ba80a49124 (Commit)
 	if (is)
 		brelse(is->iloc.bh);
 	if (bs)
@@ -2851,9 +3035,12 @@ shift:
 			(void *)header, total_ino);
 	EXT4_I(inode)->i_extra_isize = new_extra_isize;
 
+<<<<<<< HEAD
 	if (ext4_has_inline_data(inode))
 		error = ext4_find_inline_data_nolock(inode);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 cleanup:
 	if (error && (mnt_count != le16_to_cpu(sbi->s_es->s_mnt_count))) {
 		ext4_warning(inode->i_sb, "Unable to expand inode %lu. Delete some EAs or run e2fsck.",
@@ -3157,6 +3344,7 @@ static __le32 ext4_xattr_hash_entry(char *name, size_t name_len, __le32 *value,
 	while (name_len--) {
 		hash = (hash << NAME_HASH_SHIFT) ^
 		       (hash >> (8*sizeof(hash) - NAME_HASH_SHIFT)) ^
+<<<<<<< HEAD
 		       (unsigned char)*name++;
 	}
 	while (value_count--) {
@@ -3180,6 +3368,9 @@ static __le32 ext4_xattr_hash_entry_signed(char *name, size_t name_len, __le32 *
 		hash = (hash << NAME_HASH_SHIFT) ^
 		       (hash >> (8*sizeof(hash) - NAME_HASH_SHIFT)) ^
 		       (signed char)*name++;
+=======
+		       *name++;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	while (value_count--) {
 		hash = (hash << VALUE_HASH_SHIFT) ^

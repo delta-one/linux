@@ -38,7 +38,10 @@
 #include <linux/interrupt.h>
 #include <linux/io.h>
 #include <linux/resource_ext.h>
+<<<<<<< HEAD
 #include <linux/msi_api.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <uapi/linux/pci.h>
 
 #include <linux/pci_ids.h>
@@ -410,7 +413,10 @@ struct pci_dev {
 	 */
 	unsigned int	irq;
 	struct resource resource[DEVICE_COUNT_RESOURCE]; /* I/O and memory regions + expansion ROMs */
+<<<<<<< HEAD
 	struct resource driver_exclusive_resource;	 /* driver exclusive resource ranges */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	bool		match_driver;		/* Skip attaching driver */
 
@@ -572,14 +578,20 @@ struct pci_host_bridge {
 	void		*release_data;
 	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
 	unsigned int	no_ext_tags:1;		/* No Extended Tags */
+<<<<<<< HEAD
 	unsigned int	no_inc_mrrs:1;		/* No Increase MRRS */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int	native_aer:1;		/* OS may use PCIe AER */
 	unsigned int	native_pcie_hotplug:1;	/* OS may use PCIe hotplug */
 	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
 	unsigned int	native_pme:1;		/* OS may use PCIe PME */
 	unsigned int	native_ltr:1;		/* OS may use PCIe LTR */
 	unsigned int	native_dpc:1;		/* OS may use PCIe DPC */
+<<<<<<< HEAD
 	unsigned int	native_cxl_error:1;	/* OS may use CXL RAS/Events */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
 	unsigned int	size_windows:1;		/* Enable root bus sizing */
 	unsigned int	msi_domain:1;		/* Bridge wants MSI domain */
@@ -847,9 +859,12 @@ struct pci_error_handlers {
 
 	/* Device driver may resume normal operations */
 	void (*resume)(struct pci_dev *dev);
+<<<<<<< HEAD
 
 	/* Allow device driver to record more details of a correctable error */
 	void (*cor_error_detected)(struct pci_dev *dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 
@@ -1414,6 +1429,7 @@ int pci_request_selected_regions(struct pci_dev *, int, const char *);
 int pci_request_selected_regions_exclusive(struct pci_dev *, int, const char *);
 void pci_release_selected_regions(struct pci_dev *, int);
 
+<<<<<<< HEAD
 static inline __must_check struct resource *
 pci_request_config_region_exclusive(struct pci_dev *pdev, unsigned int offset,
 				    unsigned int len, const char *name)
@@ -1429,6 +1445,8 @@ static inline void pci_release_config_region(struct pci_dev *pdev,
 	__release_region(&pdev->driver_exclusive_resource, offset, len);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* drivers/pci/bus.c */
 void pci_add_resource(struct list_head *resources, struct resource *res);
 void pci_add_resource_offset(struct list_head *resources, struct resource *res,
@@ -1438,7 +1456,10 @@ void pci_bus_add_resource(struct pci_bus *bus, struct resource *res,
 			  unsigned int flags);
 struct resource *pci_bus_resource_n(const struct pci_bus *bus, int n);
 void pci_bus_remove_resources(struct pci_bus *bus);
+<<<<<<< HEAD
 void pci_bus_remove_resource(struct pci_bus *bus, struct resource *res);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int devm_request_pci_bus_resources(struct device *dev,
 				   struct list_head *resources);
 
@@ -1576,17 +1597,23 @@ static inline int pci_enable_msix_exact(struct pci_dev *dev,
 		return rc;
 	return 0;
 }
+<<<<<<< HEAD
 int pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
 			  unsigned int max_vecs, unsigned int flags);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
 				   unsigned int max_vecs, unsigned int flags,
 				   struct irq_affinity *affd);
 
+<<<<<<< HEAD
 bool pci_msix_can_alloc_dyn(struct pci_dev *dev);
 struct msi_map pci_msix_alloc_irq_at(struct pci_dev *dev, unsigned int index,
 				     const struct irq_affinity_desc *affdesc);
 void pci_msix_free_irq(struct pci_dev *pdev, struct msi_map map);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void pci_free_irq_vectors(struct pci_dev *dev);
 int pci_irq_vector(struct pci_dev *dev, unsigned int nr);
 const struct cpumask *pci_irq_get_affinity(struct pci_dev *pdev, int vec);
@@ -1616,6 +1643,7 @@ pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
 		return 1;
 	return -ENOSPC;
 }
+<<<<<<< HEAD
 static inline int
 pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
 		      unsigned int max_vecs, unsigned int flags)
@@ -1635,6 +1663,8 @@ static inline struct msi_map pci_msix_alloc_irq_at(struct pci_dev *dev, unsigned
 static inline void pci_msix_free_irq(struct pci_dev *pdev, struct msi_map map)
 {
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline void pci_free_irq_vectors(struct pci_dev *dev)
 {
@@ -1700,15 +1730,21 @@ extern bool pcie_ports_native;
 #define PCIE_LINK_STATE_L1_2		BIT(4)
 #define PCIE_LINK_STATE_L1_1_PCIPM	BIT(5)
 #define PCIE_LINK_STATE_L1_2_PCIPM	BIT(6)
+<<<<<<< HEAD
 #define PCIE_LINK_STATE_ALL		(PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1 |\
 					 PCIE_LINK_STATE_CLKPM | PCIE_LINK_STATE_L1_1 |\
 					 PCIE_LINK_STATE_L1_2 | PCIE_LINK_STATE_L1_1_PCIPM |\
 					 PCIE_LINK_STATE_L1_2_PCIPM)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_PCIEASPM
 int pci_disable_link_state(struct pci_dev *pdev, int state);
 int pci_disable_link_state_locked(struct pci_dev *pdev, int state);
+<<<<<<< HEAD
 int pci_enable_link_state(struct pci_dev *pdev, int state);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void pcie_no_aspm(void);
 bool pcie_aspm_support_enabled(void);
 bool pcie_aspm_enabled(struct pci_dev *pdev);
@@ -1717,8 +1753,11 @@ static inline int pci_disable_link_state(struct pci_dev *pdev, int state)
 { return 0; }
 static inline int pci_disable_link_state_locked(struct pci_dev *pdev, int state)
 { return 0; }
+<<<<<<< HEAD
 static inline int pci_enable_link_state(struct pci_dev *pdev, int state)
 { return 0; }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline void pcie_no_aspm(void) { }
 static inline bool pcie_aspm_support_enabled(void) { return false; }
 static inline bool pcie_aspm_enabled(struct pci_dev *pdev) { return false; }
@@ -1782,7 +1821,10 @@ static inline int acpi_pci_bus_find_domain_nr(struct pci_bus *bus)
 { return 0; }
 #endif
 int pci_bus_find_domain_nr(struct pci_bus *bus, struct device *parent);
+<<<<<<< HEAD
 void pci_bus_release_domain_nr(struct pci_bus *bus, struct device *parent);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 /* Some architectures require additional setup to direct VGA traffic */
@@ -1955,13 +1997,24 @@ pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
 {
 	return -ENOSPC;
 }
+<<<<<<< HEAD
+=======
+#endif /* CONFIG_PCI */
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline int
 pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
 		      unsigned int max_vecs, unsigned int flags)
 {
+<<<<<<< HEAD
 	return -ENOSPC;
 }
 #endif /* CONFIG_PCI */
+=======
+	return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs, flags,
+					      NULL);
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Include architecture-dependent settings and functions */
 
@@ -2077,8 +2130,13 @@ enum pci_fixup_pass {
 #ifdef CONFIG_LTO_CLANG
 #define __DECLARE_PCI_FIXUP_SECTION(sec, name, vendor, device, class,	\
 				  class_shift, hook, stub)		\
+<<<<<<< HEAD
 	void stub(struct pci_dev *dev);					\
 	void stub(struct pci_dev *dev)					\
+=======
+	void __cficanonical stub(struct pci_dev *dev);			\
+	void __cficanonical stub(struct pci_dev *dev)			\
+>>>>>>> b7ba80a49124 (Commit)
 	{ 								\
 		hook(dev); 						\
 	}								\
@@ -2529,6 +2587,7 @@ static inline bool pci_is_thunderbolt_attached(struct pci_dev *pdev)
 void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
 #endif
 
+<<<<<<< HEAD
 struct msi_domain_template;
 
 bool pci_create_ims_domain(struct pci_dev *pdev, const struct msi_domain_template *template,
@@ -2537,6 +2596,8 @@ struct msi_map pci_ims_alloc_irq(struct pci_dev *pdev, union msi_instance_cookie
 				 const struct irq_affinity_desc *affdesc);
 void pci_ims_free_irq(struct pci_dev *pdev, struct msi_map map);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/dma-mapping.h>
 
 #define pci_printk(level, pdev, fmt, arg...) \
@@ -2547,7 +2608,10 @@ void pci_ims_free_irq(struct pci_dev *pdev, struct msi_map map);
 #define pci_crit(pdev, fmt, arg...)	dev_crit(&(pdev)->dev, fmt, ##arg)
 #define pci_err(pdev, fmt, arg...)	dev_err(&(pdev)->dev, fmt, ##arg)
 #define pci_warn(pdev, fmt, arg...)	dev_warn(&(pdev)->dev, fmt, ##arg)
+<<<<<<< HEAD
 #define pci_warn_once(pdev, fmt, arg...) dev_warn_once(&(pdev)->dev, fmt, ##arg)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define pci_notice(pdev, fmt, arg...)	dev_notice(&(pdev)->dev, fmt, ##arg)
 #define pci_info(pdev, fmt, arg...)	dev_info(&(pdev)->dev, fmt, ##arg)
 #define pci_dbg(pdev, fmt, arg...)	dev_dbg(&(pdev)->dev, fmt, ##arg)

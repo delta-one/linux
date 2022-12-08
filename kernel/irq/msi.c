@@ -19,6 +19,7 @@
 
 #include "internals.h"
 
+<<<<<<< HEAD
 /**
  * struct msi_ctrl - MSI internal management control structure
  * @domid:	ID of the domain on which management operations should be done
@@ -44,6 +45,10 @@ static unsigned int msi_domain_get_hwsize(struct device *dev, unsigned int domid
 static inline int msi_sysfs_create_group(struct device *dev);
 
 
+=======
+static inline int msi_sysfs_create_group(struct device *dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * msi_alloc_desc - Allocate an initialized msi_desc
  * @dev:	Pointer to the device for which this is allocated
@@ -56,7 +61,11 @@ static inline int msi_sysfs_create_group(struct device *dev);
  * Return: pointer to allocated &msi_desc on success or %NULL on failure
  */
 static struct msi_desc *msi_alloc_desc(struct device *dev, int nvec,
+<<<<<<< HEAD
 				       const struct irq_affinity_desc *affinity)
+=======
+					const struct irq_affinity_desc *affinity)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct msi_desc *desc = kzalloc(sizeof(*desc), GFP_KERNEL);
 
@@ -81,6 +90,7 @@ static void msi_free_desc(struct msi_desc *desc)
 	kfree(desc);
 }
 
+<<<<<<< HEAD
 static int msi_insert_desc(struct device *dev, struct msi_desc *desc,
 			   unsigned int domid, unsigned int index)
 {
@@ -116,21 +126,40 @@ static int msi_insert_desc(struct device *dev, struct msi_desc *desc,
 	}
 fail:
 	msi_free_desc(desc);
+=======
+static int msi_insert_desc(struct msi_device_data *md, struct msi_desc *desc, unsigned int index)
+{
+	int ret;
+
+	desc->msi_index = index;
+	ret = xa_insert(&md->__store, index, desc, GFP_KERNEL);
+	if (ret)
+		msi_free_desc(desc);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
 /**
+<<<<<<< HEAD
  * msi_domain_insert_msi_desc - Allocate and initialize a MSI descriptor and
  *				insert it at @init_desc->msi_index
  *
  * @dev:	Pointer to the device for which the descriptor is allocated
  * @domid:	The id of the interrupt domain to which the desriptor is added
+=======
+ * msi_add_msi_desc - Allocate and initialize a MSI descriptor
+ * @dev:	Pointer to the device for which the descriptor is allocated
+>>>>>>> b7ba80a49124 (Commit)
  * @init_desc:	Pointer to an MSI descriptor to initialize the new descriptor
  *
  * Return: 0 on success or an appropriate failure code.
  */
+<<<<<<< HEAD
 int msi_domain_insert_msi_desc(struct device *dev, unsigned int domid,
 			       struct msi_desc *init_desc)
+=======
+int msi_add_msi_desc(struct device *dev, struct msi_desc *init_desc)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct msi_desc *desc;
 
@@ -142,8 +171,45 @@ int msi_domain_insert_msi_desc(struct device *dev, unsigned int domid,
 
 	/* Copy type specific data to the new descriptor. */
 	desc->pci = init_desc->pci;
+<<<<<<< HEAD
 
 	return msi_insert_desc(dev, desc, domid, init_desc->msi_index);
+=======
+	return msi_insert_desc(dev->msi.data, desc, init_desc->msi_index);
+}
+
+/**
+ * msi_add_simple_msi_descs - Allocate and initialize MSI descriptors
+ * @dev:	Pointer to the device for which the descriptors are allocated
+ * @index:	Index for the first MSI descriptor
+ * @ndesc:	Number of descriptors to allocate
+ *
+ * Return: 0 on success or an appropriate failure code.
+ */
+static int msi_add_simple_msi_descs(struct device *dev, unsigned int index, unsigned int ndesc)
+{
+	unsigned int idx, last = index + ndesc - 1;
+	struct msi_desc *desc;
+	int ret;
+
+	lockdep_assert_held(&dev->msi.data->mutex);
+
+	for (idx = index; idx <= last; idx++) {
+		desc = msi_alloc_desc(dev, 1, NULL);
+		if (!desc)
+			goto fail_mem;
+		ret = msi_insert_desc(dev->msi.data, desc, idx);
+		if (ret)
+			goto fail;
+	}
+	return 0;
+
+fail_mem:
+	ret = -ENOMEM;
+fail:
+	msi_free_msi_descs_range(dev, MSI_DESC_NOTASSOCIATED, index, last);
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool msi_desc_match(struct msi_desc *desc, enum msi_desc_filter filter)
@@ -160,6 +226,7 @@ static bool msi_desc_match(struct msi_desc *desc, enum msi_desc_filter filter)
 	return false;
 }
 
+<<<<<<< HEAD
 static bool msi_ctrl_valid(struct device *dev, struct msi_ctrl *ctrl)
 {
 	unsigned int hwsize;
@@ -181,10 +248,25 @@ static void msi_domain_free_descs(struct device *dev, struct msi_ctrl *ctrl)
 {
 	struct msi_desc *desc;
 	struct xarray *xa;
+=======
+/**
+ * msi_free_msi_descs_range - Free MSI descriptors of a device
+ * @dev:		Device to free the descriptors
+ * @filter:		Descriptor state filter
+ * @first_index:	Index to start freeing from
+ * @last_index:		Last index to be freed
+ */
+void msi_free_msi_descs_range(struct device *dev, enum msi_desc_filter filter,
+			      unsigned int first_index, unsigned int last_index)
+{
+	struct xarray *xa = &dev->msi.data->__store;
+	struct msi_desc *desc;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long idx;
 
 	lockdep_assert_held(&dev->msi.data->mutex);
 
+<<<<<<< HEAD
 	if (!msi_ctrl_valid(dev, ctrl))
 		return;
 
@@ -253,6 +335,16 @@ fail:
 	return ret;
 }
 
+=======
+	xa_for_each_range(xa, idx, desc, first_index, last_index) {
+		if (msi_desc_match(desc, filter)) {
+			xa_erase(xa, idx);
+			msi_free_desc(desc);
+		}
+	}
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 void __get_cached_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
 {
 	*msg = entry->msg;
@@ -269,6 +361,7 @@ EXPORT_SYMBOL_GPL(get_cached_msi_msg);
 static void msi_device_data_release(struct device *dev, void *res)
 {
 	struct msi_device_data *md = res;
+<<<<<<< HEAD
 	int i;
 
 	for (i = 0; i < MSI_MAX_DEVICE_IRQDOMAINS; i++) {
@@ -276,6 +369,11 @@ static void msi_device_data_release(struct device *dev, void *res)
 		WARN_ON_ONCE(!xa_empty(&md->__domains[i].store));
 		xa_destroy(&md->__domains[i].store);
 	}
+=======
+
+	WARN_ON_ONCE(!xa_empty(&md->__store));
+	xa_destroy(&md->__store);
+>>>>>>> b7ba80a49124 (Commit)
 	dev->msi.data = NULL;
 }
 
@@ -292,7 +390,11 @@ static void msi_device_data_release(struct device *dev, void *res)
 int msi_setup_device_data(struct device *dev)
 {
 	struct msi_device_data *md;
+<<<<<<< HEAD
 	int ret, i;
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (dev->msi.data)
 		return 0;
@@ -307,6 +409,7 @@ int msi_setup_device_data(struct device *dev)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	for (i = 0; i < MSI_MAX_DEVICE_IRQDOMAINS; i++)
 		xa_init_flags(&md->__domains[i].store, XA_FLAGS_ALLOC);
 
@@ -319,6 +422,9 @@ int msi_setup_device_data(struct device *dev)
 	if (dev->msi.domain && !irq_domain_is_msi_parent(dev->msi.domain))
 		md->__domains[MSI_DEFAULT_DOMAIN].domain = dev->msi.domain;
 
+=======
+	xa_init(&md->__store);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_init(&md->mutex);
 	dev->msi.data = md;
 	devres_add(dev, md);
@@ -341,12 +447,18 @@ EXPORT_SYMBOL_GPL(msi_lock_descs);
  */
 void msi_unlock_descs(struct device *dev)
 {
+<<<<<<< HEAD
 	/* Invalidate the index which was cached by the iterator */
 	dev->msi.data->__iter_idx = MSI_XA_MAX_INDEX;
+=======
+	/* Invalidate the index wich was cached by the iterator */
+	dev->msi.data->__iter_idx = MSI_MAX_INDEX;
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&dev->msi.data->mutex);
 }
 EXPORT_SYMBOL_GPL(msi_unlock_descs);
 
+<<<<<<< HEAD
 static struct msi_desc *msi_find_desc(struct msi_device_data *md, unsigned int domid,
 				      enum msi_desc_filter filter)
 {
@@ -358,13 +470,29 @@ static struct msi_desc *msi_find_desc(struct msi_device_data *md, unsigned int d
 			return desc;
 	}
 	md->__iter_idx = MSI_XA_MAX_INDEX;
+=======
+static struct msi_desc *msi_find_desc(struct msi_device_data *md, enum msi_desc_filter filter)
+{
+	struct msi_desc *desc;
+
+	xa_for_each_start(&md->__store, md->__iter_idx, desc, md->__iter_idx) {
+		if (msi_desc_match(desc, filter))
+			return desc;
+	}
+	md->__iter_idx = MSI_MAX_INDEX;
+>>>>>>> b7ba80a49124 (Commit)
 	return NULL;
 }
 
 /**
+<<<<<<< HEAD
  * msi_domain_first_desc - Get the first MSI descriptor of an irqdomain associated to a device
  * @dev:	Device to operate on
  * @domid:	The id of the interrupt domain which should be walked.
+=======
+ * msi_first_desc - Get the first MSI descriptor of a device
+ * @dev:	Device to operate on
+>>>>>>> b7ba80a49124 (Commit)
  * @filter:	Descriptor state filter
  *
  * Must be called with the MSI descriptor mutex held, i.e. msi_lock_descs()
@@ -373,26 +501,43 @@ static struct msi_desc *msi_find_desc(struct msi_device_data *md, unsigned int d
  * Return: Pointer to the first MSI descriptor matching the search
  *	   criteria, NULL if none found.
  */
+<<<<<<< HEAD
 struct msi_desc *msi_domain_first_desc(struct device *dev, unsigned int domid,
 				       enum msi_desc_filter filter)
 {
 	struct msi_device_data *md = dev->msi.data;
 
 	if (WARN_ON_ONCE(!md || domid >= MSI_MAX_DEVICE_IRQDOMAINS))
+=======
+struct msi_desc *msi_first_desc(struct device *dev, enum msi_desc_filter filter)
+{
+	struct msi_device_data *md = dev->msi.data;
+
+	if (WARN_ON_ONCE(!md))
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 
 	lockdep_assert_held(&md->mutex);
 
 	md->__iter_idx = 0;
+<<<<<<< HEAD
 	return msi_find_desc(md, domid, filter);
 }
 EXPORT_SYMBOL_GPL(msi_domain_first_desc);
+=======
+	return msi_find_desc(md, filter);
+}
+EXPORT_SYMBOL_GPL(msi_first_desc);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * msi_next_desc - Get the next MSI descriptor of a device
  * @dev:	Device to operate on
+<<<<<<< HEAD
  * @domid:	The id of the interrupt domain which should be walked.
  * @filter:	Descriptor state filter
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * The first invocation of msi_next_desc() has to be preceeded by a
  * successful invocation of __msi_first_desc(). Consecutive invocations are
@@ -402,12 +547,20 @@ EXPORT_SYMBOL_GPL(msi_domain_first_desc);
  * Return: Pointer to the next MSI descriptor matching the search
  *	   criteria, NULL if none found.
  */
+<<<<<<< HEAD
 struct msi_desc *msi_next_desc(struct device *dev, unsigned int domid,
 			       enum msi_desc_filter filter)
 {
 	struct msi_device_data *md = dev->msi.data;
 
 	if (WARN_ON_ONCE(!md || domid >= MSI_MAX_DEVICE_IRQDOMAINS))
+=======
+struct msi_desc *msi_next_desc(struct device *dev, enum msi_desc_filter filter)
+{
+	struct msi_device_data *md = dev->msi.data;
+
+	if (WARN_ON_ONCE(!md))
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 
 	lockdep_assert_held(&md->mutex);
@@ -416,28 +569,46 @@ struct msi_desc *msi_next_desc(struct device *dev, unsigned int domid,
 		return NULL;
 
 	md->__iter_idx++;
+<<<<<<< HEAD
 	return msi_find_desc(md, domid, filter);
+=======
+	return msi_find_desc(md, filter);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(msi_next_desc);
 
 /**
+<<<<<<< HEAD
  * msi_domain_get_virq - Lookup the Linux interrupt number for a MSI index on a interrupt domain
  * @dev:	Device to operate on
  * @domid:	Domain ID of the interrupt domain associated to the device
+=======
+ * msi_get_virq - Return Linux interrupt number of a MSI interrupt
+ * @dev:	Device to operate on
+>>>>>>> b7ba80a49124 (Commit)
  * @index:	MSI interrupt index to look for (0-based)
  *
  * Return: The Linux interrupt number on success (> 0), 0 if not found
  */
+<<<<<<< HEAD
 unsigned int msi_domain_get_virq(struct device *dev, unsigned int domid, unsigned int index)
 {
 	struct msi_desc *desc;
 	unsigned int ret = 0;
 	bool pcimsi = false;
 	struct xarray *xa;
+=======
+unsigned int msi_get_virq(struct device *dev, unsigned int index)
+{
+	struct msi_desc *desc;
+	unsigned int ret = 0;
+	bool pcimsi;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!dev->msi.data)
 		return 0;
 
+<<<<<<< HEAD
 	if (WARN_ON_ONCE(index > MSI_MAX_INDEX || domid >= MSI_MAX_DEVICE_IRQDOMAINS))
 		return 0;
 
@@ -448,6 +619,12 @@ unsigned int msi_domain_get_virq(struct device *dev, unsigned int domid, unsigne
 	msi_lock_descs(dev);
 	xa = &dev->msi.data->__domains[domid].store;
 	desc = xa_load(xa, pcimsi ? 0 : index);
+=======
+	pcimsi = dev_is_pci(dev) ? to_pci_dev(dev)->msi_enabled : false;
+
+	msi_lock_descs(dev);
+	desc = xa_load(&dev->msi.data->__store, pcimsi ? 0 : index);
+>>>>>>> b7ba80a49124 (Commit)
 	if (desc && desc->irq) {
 		/*
 		 * PCI-MSI has only one descriptor for multiple interrupts.
@@ -461,11 +638,18 @@ unsigned int msi_domain_get_virq(struct device *dev, unsigned int domid, unsigne
 			ret = desc->irq;
 		}
 	}
+<<<<<<< HEAD
 
 	msi_unlock_descs(dev);
 	return ret;
 }
 EXPORT_SYMBOL_GPL(msi_domain_get_virq);
+=======
+	msi_unlock_descs(dev);
+	return ret;
+}
+EXPORT_SYMBOL_GPL(msi_get_virq);
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_SYSFS
 static struct attribute *msi_dev_attrs[] = {
@@ -581,6 +765,7 @@ static inline int msi_sysfs_populate_desc(struct device *dev, struct msi_desc *d
 static inline void msi_sysfs_remove_desc(struct device *dev, struct msi_desc *desc) { }
 #endif /* !CONFIG_SYSFS */
 
+<<<<<<< HEAD
 static struct irq_domain *msi_get_device_domain(struct device *dev, unsigned int domid)
 {
 	struct irq_domain *domain;
@@ -614,6 +799,9 @@ static unsigned int msi_domain_get_hwsize(struct device *dev, unsigned int domid
 	return MSI_XA_DOMAIN_SIZE;
 }
 
+=======
+#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
+>>>>>>> b7ba80a49124 (Commit)
 static inline void irq_chip_write_msi_msg(struct irq_data *data,
 					  struct msi_msg *msg)
 {
@@ -767,11 +955,29 @@ static int msi_domain_ops_init(struct irq_domain *domain,
 	return 0;
 }
 
+<<<<<<< HEAD
 static struct msi_domain_ops msi_domain_ops_default = {
 	.get_hwirq		= msi_domain_ops_get_hwirq,
 	.msi_init		= msi_domain_ops_init,
 	.msi_prepare		= msi_domain_ops_prepare,
 	.set_desc		= msi_domain_ops_set_desc,
+=======
+static int msi_domain_ops_check(struct irq_domain *domain,
+				struct msi_domain_info *info,
+				struct device *dev)
+{
+	return 0;
+}
+
+static struct msi_domain_ops msi_domain_ops_default = {
+	.get_hwirq		= msi_domain_ops_get_hwirq,
+	.msi_init		= msi_domain_ops_init,
+	.msi_check		= msi_domain_ops_check,
+	.msi_prepare		= msi_domain_ops_prepare,
+	.set_desc		= msi_domain_ops_set_desc,
+	.domain_alloc_irqs	= __msi_domain_alloc_irqs,
+	.domain_free_irqs	= __msi_domain_free_irqs,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void msi_domain_update_dom_ops(struct msi_domain_info *info)
@@ -783,6 +989,14 @@ static void msi_domain_update_dom_ops(struct msi_domain_info *info)
 		return;
 	}
 
+<<<<<<< HEAD
+=======
+	if (ops->domain_alloc_irqs == NULL)
+		ops->domain_alloc_irqs = msi_domain_ops_default.domain_alloc_irqs;
+	if (ops->domain_free_irqs == NULL)
+		ops->domain_free_irqs = msi_domain_ops_default.domain_free_irqs;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (!(info->flags & MSI_FLAG_USE_DEF_DOM_OPS))
 		return;
 
@@ -790,6 +1004,11 @@ static void msi_domain_update_dom_ops(struct msi_domain_info *info)
 		ops->get_hwirq = msi_domain_ops_default.get_hwirq;
 	if (ops->msi_init == NULL)
 		ops->msi_init = msi_domain_ops_default.msi_init;
+<<<<<<< HEAD
+=======
+	if (ops->msi_check == NULL)
+		ops->msi_check = msi_domain_ops_default.msi_check;
+>>>>>>> b7ba80a49124 (Commit)
 	if (ops->msi_prepare == NULL)
 		ops->msi_prepare = msi_domain_ops_default.msi_prepare;
 	if (ops->set_desc == NULL)
@@ -805,6 +1024,7 @@ static void msi_domain_update_chip_ops(struct msi_domain_info *info)
 		chip->irq_set_affinity = msi_domain_set_affinity;
 }
 
+<<<<<<< HEAD
 static struct irq_domain *__msi_create_irq_domain(struct fwnode_handle *fwnode,
 						  struct msi_domain_info *info,
 						  unsigned int flags,
@@ -836,6 +1056,8 @@ static struct irq_domain *__msi_create_irq_domain(struct fwnode_handle *fwnode,
 	return domain;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * msi_create_irq_domain - Create an MSI interrupt domain
  * @fwnode:	Optional fwnode of the interrupt controller
@@ -848,6 +1070,7 @@ struct irq_domain *msi_create_irq_domain(struct fwnode_handle *fwnode,
 					 struct msi_domain_info *info,
 					 struct irq_domain *parent)
 {
+<<<<<<< HEAD
 	return __msi_create_irq_domain(fwnode, info, 0, parent);
 }
 
@@ -1056,6 +1279,21 @@ bool msi_match_device_irq_domain(struct device *dev, unsigned int domid,
 	}
 	msi_unlock_descs(dev);
 	return ret;
+=======
+	struct irq_domain *domain;
+
+	msi_domain_update_dom_ops(info);
+	if (info->flags & MSI_FLAG_USE_DEF_CHIP_OPS)
+		msi_domain_update_chip_ops(info);
+
+	domain = irq_domain_create_hierarchy(parent, IRQ_DOMAIN_FLAG_MSI, 0,
+					     fwnode, &msi_domain_ops, info);
+
+	if (domain && !domain->name && info->chip)
+		domain->name = info->chip->name;
+
+	return domain;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int msi_domain_prepare_irqs(struct irq_domain *domain, struct device *dev,
@@ -1063,8 +1301,18 @@ int msi_domain_prepare_irqs(struct irq_domain *domain, struct device *dev,
 {
 	struct msi_domain_info *info = domain->host_data;
 	struct msi_domain_ops *ops = info->ops;
+<<<<<<< HEAD
 
 	return ops->msi_prepare(domain, dev, nvec, arg);
+=======
+	int ret;
+
+	ret = ops->msi_check(domain, info, dev);
+	if (ret == 0)
+		ret = ops->msi_prepare(domain, dev, nvec, arg);
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int msi_domain_populate_irqs(struct irq_domain *domain, struct device *dev,
@@ -1072,6 +1320,7 @@ int msi_domain_populate_irqs(struct irq_domain *domain, struct device *dev,
 {
 	struct msi_domain_info *info = domain->host_data;
 	struct msi_domain_ops *ops = info->ops;
+<<<<<<< HEAD
 	struct msi_ctrl ctrl = {
 		.domid	= MSI_DEFAULT_DOMAIN,
 		.first  = virq_base,
@@ -1096,6 +1345,18 @@ int msi_domain_populate_irqs(struct irq_domain *domain, struct device *dev,
 
 	for (virq = virq_base; virq < virq_base + nvec; virq++) {
 		desc = xa_load(xa, virq);
+=======
+	struct msi_desc *desc;
+	int ret, virq;
+
+	msi_lock_descs(dev);
+	ret = msi_add_simple_msi_descs(dev, virq_base, nvec);
+	if (ret)
+		goto unlock;
+
+	for (virq = virq_base; virq < virq_base + nvec; virq++) {
+		desc = xa_load(&dev->msi.data->__store, virq);
+>>>>>>> b7ba80a49124 (Commit)
 		desc->irq = virq;
 
 		ops->set_desc(arg, desc);
@@ -1109,16 +1370,23 @@ int msi_domain_populate_irqs(struct irq_domain *domain, struct device *dev,
 	return 0;
 
 fail:
+<<<<<<< HEAD
 	for (--virq; virq >= virq_base; virq--) {
 		msi_domain_depopulate_descs(dev, virq, 1);
 		irq_domain_free_irqs_common(domain, virq, 1);
 	}
 	msi_domain_free_descs(dev, &ctrl);
+=======
+	for (--virq; virq >= virq_base; virq--)
+		irq_domain_free_irqs_common(domain, virq, 1);
+	msi_free_msi_descs_range(dev, MSI_DESC_ALL, virq_base, virq_base + nvec - 1);
+>>>>>>> b7ba80a49124 (Commit)
 unlock:
 	msi_unlock_descs(dev);
 	return ret;
 }
 
+<<<<<<< HEAD
 void msi_domain_depopulate_descs(struct device *dev, int virq_base, int nvec)
 {
 	struct msi_ctrl ctrl = {
@@ -1138,6 +1406,8 @@ void msi_domain_depopulate_descs(struct device *dev, int virq_base, int nvec)
 		desc->irq = 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Carefully check whether the device can use reservation mode. If
  * reservation mode is enabled then the early activation will assign a
@@ -1157,8 +1427,11 @@ static bool msi_check_reservation_mode(struct irq_domain *domain,
 
 	switch(domain->bus_token) {
 	case DOMAIN_BUS_PCI_MSI:
+<<<<<<< HEAD
 	case DOMAIN_BUS_PCI_DEVICE_MSI:
 	case DOMAIN_BUS_PCI_DEVICE_MSIX:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case DOMAIN_BUS_VMD_MSI:
 		break;
 	default:
@@ -1184,8 +1457,11 @@ static int msi_handle_pci_fail(struct irq_domain *domain, struct msi_desc *desc,
 {
 	switch(domain->bus_token) {
 	case DOMAIN_BUS_PCI_MSI:
+<<<<<<< HEAD
 	case DOMAIN_BUS_PCI_DEVICE_MSI:
 	case DOMAIN_BUS_PCI_DEVICE_MSIX:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case DOMAIN_BUS_VMD_MSI:
 		if (IS_ENABLED(CONFIG_PCI_MSI))
 			break;
@@ -1247,6 +1523,7 @@ static int msi_init_virq(struct irq_domain *domain, int virq, unsigned int vflag
 	return 0;
 }
 
+<<<<<<< HEAD
 static int __msi_domain_alloc_irqs(struct device *dev, struct irq_domain *domain,
 				   struct msi_ctrl *ctrl)
 {
@@ -1260,6 +1537,20 @@ static int __msi_domain_alloc_irqs(struct device *dev, struct irq_domain *domain
 	int i, ret, virq;
 
 	ret = msi_domain_prepare_irqs(domain, dev, ctrl->nirqs, &arg);
+=======
+int __msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+			    int nvec)
+{
+	struct msi_domain_info *info = domain->host_data;
+	struct msi_domain_ops *ops = info->ops;
+	msi_alloc_info_t arg = { };
+	unsigned int vflags = 0;
+	struct msi_desc *desc;
+	int allocated = 0;
+	int i, ret, virq;
+
+	ret = msi_domain_prepare_irqs(domain, dev, nvec, &arg);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -1281,6 +1572,7 @@ static int __msi_domain_alloc_irqs(struct device *dev, struct irq_domain *domain
 		 * MSI affinity setting requires a special quirk (X86) when
 		 * reservation mode is active.
 		 */
+<<<<<<< HEAD
 		if (info->flags & MSI_FLAG_NOMASK_QUIRK)
 			vflags |= VIRQ_NOMASK_QUIRK;
 	}
@@ -1296,6 +1588,13 @@ static int __msi_domain_alloc_irqs(struct device *dev, struct irq_domain *domain
 		if (ops->prepare_desc)
 			ops->prepare_desc(domain, &arg, desc);
 
+=======
+		if (domain->flags & IRQ_DOMAIN_MSI_NOMASK_QUIRK)
+			vflags |= VIRQ_NOMASK_QUIRK;
+	}
+
+	msi_for_each_desc(desc, dev, MSI_DESC_NOTASSOCIATED) {
+>>>>>>> b7ba80a49124 (Commit)
 		ops->set_desc(&arg, desc);
 
 		virq = __irq_domain_alloc_irqs(domain, -1, desc->nvec_used,
@@ -1321,13 +1620,20 @@ static int __msi_domain_alloc_irqs(struct device *dev, struct irq_domain *domain
 	return 0;
 }
 
+<<<<<<< HEAD
 static int msi_domain_alloc_simple_msi_descs(struct device *dev,
 					     struct msi_domain_info *info,
 					     struct msi_ctrl *ctrl)
+=======
+static int msi_domain_add_simple_msi_descs(struct msi_domain_info *info,
+					   struct device *dev,
+					   unsigned int num_descs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (!(info->flags & MSI_FLAG_ALLOC_SIMPLE_MSI_DESCS))
 		return 0;
 
+<<<<<<< HEAD
 	return msi_domain_add_simple_msi_descs(dev, ctrl);
 }
 
@@ -1377,10 +1683,25 @@ static int msi_domain_alloc_locked(struct device *dev, struct msi_ctrl *ctrl)
  *
  * Must be invoked from within a msi_lock_descs() / msi_unlock_descs()
  * pair. Use this for MSI irqdomains which implement their own descriptor
+=======
+	return msi_add_simple_msi_descs(dev, 0, num_descs);
+}
+
+/**
+ * msi_domain_alloc_irqs_descs_locked - Allocate interrupts from a MSI interrupt domain
+ * @domain:	The domain to allocate from
+ * @dev:	Pointer to device struct of the device for which the interrupts
+ *		are allocated
+ * @nvec:	The number of interrupts to allocate
+ *
+ * Must be invoked from within a msi_lock_descs() / msi_unlock_descs()
+ * pair. Use this for MSI irqdomains which implement their own vector
+>>>>>>> b7ba80a49124 (Commit)
  * allocation/free.
  *
  * Return: %0 on success or an error code.
  */
+<<<<<<< HEAD
 int msi_domain_alloc_irqs_range_locked(struct device *dev, unsigned int domid,
 				       unsigned int first, unsigned int last)
 {
@@ -1412,10 +1733,29 @@ int msi_domain_alloc_irqs_range(struct device *dev, unsigned int domid,
 	msi_lock_descs(dev);
 	ret = msi_domain_alloc_irqs_range_locked(dev, domid, first, last);
 	msi_unlock_descs(dev);
+=======
+int msi_domain_alloc_irqs_descs_locked(struct irq_domain *domain, struct device *dev,
+				       int nvec)
+{
+	struct msi_domain_info *info = domain->host_data;
+	struct msi_domain_ops *ops = info->ops;
+	int ret;
+
+	lockdep_assert_held(&dev->msi.data->mutex);
+
+	ret = msi_domain_add_simple_msi_descs(info, dev, nvec);
+	if (ret)
+		return ret;
+
+	ret = ops->domain_alloc_irqs(domain, dev, nvec);
+	if (ret)
+		msi_domain_free_irqs_descs_locked(domain, dev);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
 /**
+<<<<<<< HEAD
  * msi_domain_alloc_irqs_all_locked - Allocate all interrupts from a MSI interrupt domain
  *
  * @dev:	Pointer to device struct of the device for which the interrupts
@@ -1528,6 +1868,35 @@ static void __msi_domain_free_irqs(struct device *dev, struct irq_domain *domain
 		if (!msi_desc_match(desc, MSI_DESC_ASSOCIATED))
 			continue;
 
+=======
+ * msi_domain_alloc_irqs - Allocate interrupts from a MSI interrupt domain
+ * @domain:	The domain to allocate from
+ * @dev:	Pointer to device struct of the device for which the interrupts
+ *		are allocated
+ * @nvec:	The number of interrupts to allocate
+ *
+ * Return: %0 on success or an error code.
+ */
+int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev, int nvec)
+{
+	int ret;
+
+	msi_lock_descs(dev);
+	ret = msi_domain_alloc_irqs_descs_locked(domain, dev, nvec);
+	msi_unlock_descs(dev);
+	return ret;
+}
+
+void __msi_domain_free_irqs(struct irq_domain *domain, struct device *dev)
+{
+	struct msi_domain_info *info = domain->host_data;
+	struct irq_data *irqd;
+	struct msi_desc *desc;
+	int i;
+
+	/* Only handle MSI entries which have an interrupt associated */
+	msi_for_each_desc(desc, dev, MSI_DESC_ASSOCIATED) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Make sure all interrupts are deactivated */
 		for (i = 0; i < desc->nvec_used; i++) {
 			irqd = irq_domain_get_irq_data(domain, desc->irq + i);
@@ -1542,6 +1911,7 @@ static void __msi_domain_free_irqs(struct device *dev, struct irq_domain *domain
 	}
 }
 
+<<<<<<< HEAD
 static void msi_domain_free_locked(struct device *dev, struct msi_ctrl *ctrl)
 {
 	struct msi_domain_info *info;
@@ -1613,11 +1983,26 @@ void msi_domain_free_irqs_range(struct device *dev, unsigned int domid,
  * @dev:	Pointer to device struct of the device for which the interrupts
  *		are freed
  * @domid:	The id of the domain to operate on
+=======
+static void msi_domain_free_msi_descs(struct msi_domain_info *info,
+				      struct device *dev)
+{
+	if (info->flags & MSI_FLAG_FREE_MSI_DESCS)
+		msi_free_msi_descs(dev);
+}
+
+/**
+ * msi_domain_free_irqs_descs_locked - Free interrupts from a MSI interrupt @domain associated to @dev
+ * @domain:	The domain to managing the interrupts
+ * @dev:	Pointer to device struct of the device for which the interrupts
+ *		are free
+>>>>>>> b7ba80a49124 (Commit)
  *
  * Must be invoked from within a msi_lock_descs() / msi_unlock_descs()
  * pair. Use this for MSI irqdomains which implement their own vector
  * allocation.
  */
+<<<<<<< HEAD
 void msi_domain_free_irqs_all_locked(struct device *dev, unsigned int domid)
 {
 	msi_domain_free_irqs_range_locked(dev, domid, 0,
@@ -1635,6 +2020,29 @@ void msi_domain_free_irqs_all(struct device *dev, unsigned int domid)
 {
 	msi_lock_descs(dev);
 	msi_domain_free_irqs_all_locked(dev, domid);
+=======
+void msi_domain_free_irqs_descs_locked(struct irq_domain *domain, struct device *dev)
+{
+	struct msi_domain_info *info = domain->host_data;
+	struct msi_domain_ops *ops = info->ops;
+
+	lockdep_assert_held(&dev->msi.data->mutex);
+
+	ops->domain_free_irqs(domain, dev);
+	msi_domain_free_msi_descs(info, dev);
+}
+
+/**
+ * msi_domain_free_irqs - Free interrupts from a MSI interrupt @domain associated to @dev
+ * @domain:	The domain to managing the interrupts
+ * @dev:	Pointer to device struct of the device for which the interrupts
+ *		are free
+ */
+void msi_domain_free_irqs(struct irq_domain *domain, struct device *dev)
+{
+	msi_lock_descs(dev);
+	msi_domain_free_irqs_descs_locked(domain, dev);
+>>>>>>> b7ba80a49124 (Commit)
 	msi_unlock_descs(dev);
 }
 
@@ -1649,6 +2057,7 @@ struct msi_domain_info *msi_get_domain_info(struct irq_domain *domain)
 	return (struct msi_domain_info *)domain->host_data;
 }
 
+<<<<<<< HEAD
 /**
  * msi_device_has_isolated_msi - True if the device has isolated MSI
  * @dev: The device to check
@@ -1675,3 +2084,6 @@ bool msi_device_has_isolated_msi(struct device *dev)
 	return arch_is_isolated_msi();
 }
 EXPORT_SYMBOL_GPL(msi_device_has_isolated_msi);
+=======
+#endif /* CONFIG_GENERIC_MSI_IRQ_DOMAIN */
+>>>>>>> b7ba80a49124 (Commit)

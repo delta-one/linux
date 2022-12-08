@@ -121,6 +121,11 @@ static int vsc73xx_platform_remove(struct platform_device *pdev)
 
 	vsc73xx_remove(&vsc_platform->vsc);
 
+<<<<<<< HEAD
+=======
+	platform_set_drvdata(pdev, NULL);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

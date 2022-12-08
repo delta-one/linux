@@ -18,10 +18,15 @@
 #include <linux/errno.h>
 #include <asm/types.h>
 #include <asm/byteorder.h>
+<<<<<<< HEAD
 #include <asm/checksum.h>
 #if !defined(_HAVE_ARCH_COPY_AND_CSUM_FROM_USER) || !defined(HAVE_CSUM_COPY_USER)
 #include <linux/uaccess.h>
 #endif
+=======
+#include <linux/uaccess.h>
+#include <asm/checksum.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifndef _HAVE_ARCH_COPY_AND_CSUM_FROM_USER
 static __always_inline

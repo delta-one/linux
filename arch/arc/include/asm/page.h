@@ -109,6 +109,10 @@ extern int pfn_valid(unsigned long pfn);
 #else /* CONFIG_HIGHMEM */
 
 #define ARCH_PFN_OFFSET		virt_to_pfn(CONFIG_LINUX_RAM_BASE)
+<<<<<<< HEAD
+=======
+#define pfn_valid(pfn)		(((pfn) - ARCH_PFN_OFFSET) < max_mapnr)
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* CONFIG_HIGHMEM */
 

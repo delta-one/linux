@@ -9,7 +9,11 @@ group_fd=-1
 config=0|1
 sample_period=1234000
 sample_type=87
+<<<<<<< HEAD
 read_format=12|28
+=======
+read_format=12
+>>>>>>> b7ba80a49124 (Commit)
 inherit=0
 freq=0
 
@@ -19,7 +23,11 @@ group_fd=1
 config=0|1
 sample_period=6789000
 sample_type=87
+<<<<<<< HEAD
 read_format=12|28
+=======
+read_format=12
+>>>>>>> b7ba80a49124 (Commit)
 disabled=0
 inherit=0
 mmap=0

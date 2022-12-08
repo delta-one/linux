@@ -78,7 +78,10 @@ static int sni_82596_probe(struct platform_device *dev)
 	void __iomem *mpu_addr;
 	void __iomem *ca_addr;
 	u8 __iomem *eth_addr;
+<<<<<<< HEAD
 	u8 mac[ETH_ALEN];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	res = platform_get_resource(dev, IORESOURCE_MEM, 0);
 	ca = platform_get_resource(dev, IORESOURCE_MEM, 1);
@@ -110,6 +113,7 @@ static int sni_82596_probe(struct platform_device *dev)
 		goto probe_failed;
 
 	/* someone seems to like messed up stuff */
+<<<<<<< HEAD
 	mac[0] = readb(eth_addr + 0x0b);
 	mac[1] = readb(eth_addr + 0x0a);
 	mac[2] = readb(eth_addr + 0x09);
@@ -117,6 +121,14 @@ static int sni_82596_probe(struct platform_device *dev)
 	mac[4] = readb(eth_addr + 0x07);
 	mac[5] = readb(eth_addr + 0x06);
 	eth_hw_addr_set(netdevice, mac);
+=======
+	netdevice->dev_addr[0] = readb(eth_addr + 0x0b);
+	netdevice->dev_addr[1] = readb(eth_addr + 0x0a);
+	netdevice->dev_addr[2] = readb(eth_addr + 0x09);
+	netdevice->dev_addr[3] = readb(eth_addr + 0x08);
+	netdevice->dev_addr[4] = readb(eth_addr + 0x07);
+	netdevice->dev_addr[5] = readb(eth_addr + 0x06);
+>>>>>>> b7ba80a49124 (Commit)
 	iounmap(eth_addr);
 
 	if (netdevice->irq < 0) {

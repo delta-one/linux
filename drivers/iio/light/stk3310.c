@@ -586,7 +586,12 @@ out:
 	return IRQ_HANDLED;
 }
 
+<<<<<<< HEAD
 static int stk3310_probe(struct i2c_client *client)
+=======
+static int stk3310_probe(struct i2c_client *client,
+			 const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 	struct iio_dev *indio_dev;
@@ -714,7 +719,11 @@ static struct i2c_driver stk3310_driver = {
 		.pm = pm_sleep_ptr(&stk3310_pm_ops),
 		.acpi_match_table = ACPI_PTR(stk3310_acpi_id),
 	},
+<<<<<<< HEAD
 	.probe_new =        stk3310_probe,
+=======
+	.probe =            stk3310_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove =           stk3310_remove,
 	.id_table =         stk3310_i2c_id,
 };

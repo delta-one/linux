@@ -16,18 +16,25 @@
 
 static int mtk_drm_gem_object_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma);
 
+<<<<<<< HEAD
 static const struct vm_operations_struct vm_ops = {
 	.open = drm_gem_vm_open,
 	.close = drm_gem_vm_close,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct drm_gem_object_funcs mtk_drm_gem_object_funcs = {
 	.free = mtk_drm_gem_free_object,
 	.get_sg_table = mtk_gem_prime_get_sg_table,
 	.vmap = mtk_drm_gem_prime_vmap,
 	.vunmap = mtk_drm_gem_prime_vunmap,
 	.mmap = mtk_drm_gem_object_mmap,
+<<<<<<< HEAD
 	.vm_ops = &vm_ops,
+=======
+	.vm_ops = &drm_gem_dma_vm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct mtk_drm_gem_obj *mtk_drm_gem_init(struct drm_device *dev,
@@ -163,12 +170,21 @@ static int mtk_drm_gem_object_mmap(struct drm_gem_object *obj,
 	 * dma_alloc_attrs() allocated a struct page table for mtk_gem, so clear
 	 * VM_PFNMAP flag that was set by drm_gem_mmap_obj()/drm_gem_mmap().
 	 */
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_IO | VM_DONTEXPAND | VM_DONTDUMP);
+=======
+	vma->vm_flags |= VM_IO | VM_DONTEXPAND | VM_DONTDUMP;
+>>>>>>> b7ba80a49124 (Commit)
 	vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
 	vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
 
 	ret = dma_mmap_attrs(priv->dma_dev, vma, mtk_gem->cookie,
 			     mtk_gem->dma_addr, obj->size, mtk_gem->dma_attrs);
+<<<<<<< HEAD
+=======
+	if (ret)
+		drm_gem_vm_close(vma);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -265,6 +281,10 @@ void mtk_drm_gem_prime_vunmap(struct drm_gem_object *obj,
 		return;
 
 	vunmap(vaddr);
+<<<<<<< HEAD
 	mtk_gem->kvaddr = NULL;
+=======
+	mtk_gem->kvaddr = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(mtk_gem->pages);
 }

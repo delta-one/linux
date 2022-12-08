@@ -458,6 +458,7 @@ static void __mxser_stop_tx(struct mxser_port *info)
 	outb(info->IER, info->ioaddr + UART_IER);
 }
 
+<<<<<<< HEAD
 static bool mxser_carrier_raised(struct tty_port *port)
 {
 	struct mxser_port *mp = container_of(port, struct mxser_port, port);
@@ -466,6 +467,15 @@ static bool mxser_carrier_raised(struct tty_port *port)
 }
 
 static void mxser_dtr_rts(struct tty_port *port, bool active)
+=======
+static int mxser_carrier_raised(struct tty_port *port)
+{
+	struct mxser_port *mp = container_of(port, struct mxser_port, port);
+	return (inb(mp->ioaddr + UART_MSR) & UART_MSR_DCD)?1:0;
+}
+
+static void mxser_dtr_rts(struct tty_port *port, int on)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mxser_port *mp = container_of(port, struct mxser_port, port);
 	unsigned long flags;
@@ -473,7 +483,11 @@ static void mxser_dtr_rts(struct tty_port *port, bool active)
 
 	spin_lock_irqsave(&mp->slock, flags);
 	mcr = inb(mp->ioaddr + UART_MCR);
+<<<<<<< HEAD
 	if (active)
+=======
+	if (on)
+>>>>>>> b7ba80a49124 (Commit)
 		mcr |= UART_MCR_DTR | UART_MCR_RTS;
 	else
 		mcr &= ~(UART_MCR_DTR | UART_MCR_RTS);
@@ -553,7 +567,11 @@ static void mxser_handle_cts(struct tty_struct *tty, struct mxser_port *info,
 
 	if (tty->hw_stopped) {
 		if (cts) {
+<<<<<<< HEAD
 			tty->hw_stopped = false;
+=======
+			tty->hw_stopped = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 			if (!mxser_16550A_or_MUST(info))
 				__mxser_start_tx(info);
@@ -563,7 +581,11 @@ static void mxser_handle_cts(struct tty_struct *tty, struct mxser_port *info,
 	} else if (cts)
 		return;
 
+<<<<<<< HEAD
 	tty->hw_stopped = true;
+=======
+	tty->hw_stopped = 1;
+>>>>>>> b7ba80a49124 (Commit)
 	if (!mxser_16550A_or_MUST(info))
 		__mxser_stop_tx(info);
 }
@@ -1064,7 +1086,11 @@ static int mxser_set_serial_info(struct tty_struct *tty,
 	} else {
 		retval = mxser_activate(port, tty);
 		if (retval == 0)
+<<<<<<< HEAD
 			tty_port_set_initialized(port, true);
+=======
+			tty_port_set_initialized(port, 1);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	mutex_unlock(&port->mutex);
 	return retval;
@@ -1361,7 +1387,11 @@ static void mxser_set_termios(struct tty_struct *tty,
 	spin_unlock_irqrestore(&info->slock, flags);
 
 	if ((old_termios->c_cflag & CRTSCTS) && !C_CRTSCTS(tty)) {
+<<<<<<< HEAD
 		tty->hw_stopped = false;
+=======
+		tty->hw_stopped = 0;
+>>>>>>> b7ba80a49124 (Commit)
 		mxser_start(tty);
 	}
 

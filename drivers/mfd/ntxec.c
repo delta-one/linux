@@ -175,7 +175,10 @@ static int ntxec_probe(struct i2c_client *client)
 	/* Bail out if we encounter an unknown firmware version */
 	switch (version) {
 	case NTXEC_VERSION_KOBO_AURA:
+<<<<<<< HEAD
 	case NTXEC_VERSION_TOLINO_VISION:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		subdevs = ntxec_subdev;
 		n_subdevs = ARRAY_SIZE(ntxec_subdev);
 		break;

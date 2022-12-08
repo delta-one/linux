@@ -760,7 +760,11 @@ static void software_node_release(struct kobject *kobj)
 	kfree(swnode);
 }
 
+<<<<<<< HEAD
 static const struct kobj_type software_node_type = {
+=======
+static struct kobj_type software_node_type = {
+>>>>>>> b7ba80a49124 (Commit)
 	.release = software_node_release,
 	.sysfs_ops = &kobj_sysfs_ops,
 };
@@ -820,6 +824,70 @@ swnode_register(const struct software_node *node, struct swnode *parent,
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * software_node_register_nodes - Register an array of software nodes
+ * @nodes: Zero terminated array of software nodes to be registered
+ *
+ * Register multiple software nodes at once. If any node in the array
+ * has its .parent pointer set (which can only be to another software_node),
+ * then its parent **must** have been registered before it is; either outside
+ * of this function or by ordering the array such that parent comes before
+ * child.
+ */
+int software_node_register_nodes(const struct software_node *nodes)
+{
+	int ret;
+	int i;
+
+	for (i = 0; nodes[i].name; i++) {
+		const struct software_node *parent = nodes[i].parent;
+
+		if (parent && !software_node_to_swnode(parent)) {
+			ret = -EINVAL;
+			goto err_unregister_nodes;
+		}
+
+		ret = software_node_register(&nodes[i]);
+		if (ret)
+			goto err_unregister_nodes;
+	}
+
+	return 0;
+
+err_unregister_nodes:
+	software_node_unregister_nodes(nodes);
+	return ret;
+}
+EXPORT_SYMBOL_GPL(software_node_register_nodes);
+
+/**
+ * software_node_unregister_nodes - Unregister an array of software nodes
+ * @nodes: Zero terminated array of software nodes to be unregistered
+ *
+ * Unregister multiple software nodes at once. If parent pointers are set up
+ * in any of the software nodes then the array **must** be ordered such that
+ * parents come before their children.
+ *
+ * NOTE: If you are uncertain whether the array is ordered such that
+ * parents will be unregistered before their children, it is wiser to
+ * remove the nodes individually, in the correct order (child before
+ * parent).
+ */
+void software_node_unregister_nodes(const struct software_node *nodes)
+{
+	unsigned int i = 0;
+
+	while (nodes[i].name)
+		i++;
+
+	while (i--)
+		software_node_unregister(&nodes[i]);
+}
+EXPORT_SYMBOL_GPL(software_node_unregister_nodes);
+
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * software_node_register_node_group - Register a group of software nodes
  * @node_group: NULL terminated array of software node pointers to be registered
  *

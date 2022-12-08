@@ -1609,10 +1609,17 @@ static int vio_bus_match(struct device *dev, struct device_driver *drv)
 	return (ids != NULL) && (vio_match_device(ids, vio_dev) != NULL);
 }
 
+<<<<<<< HEAD
 static int vio_hotplug(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct vio_dev *vio_dev = to_vio_dev(dev);
 	const struct device_node *dn;
+=======
+static int vio_hotplug(struct device *dev, struct kobj_uevent_env *env)
+{
+	const struct vio_dev *vio_dev = to_vio_dev(dev);
+	struct device_node *dn;
+>>>>>>> b7ba80a49124 (Commit)
 	const char *cp;
 
 	dn = dev->of_node;

@@ -751,6 +751,7 @@
 			polling-delay = <1000>;
 			polling-delay-passive = <100>;
 			thermal-sensors = <&scpi_sensors0 0>;
+<<<<<<< HEAD
 			trips {
 				pmic_crit0: trip0 {
 					temperature = <90000>;
@@ -758,12 +759,15 @@
 					type = "critical";
 				};
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		soc {
 			polling-delay = <1000>;
 			polling-delay-passive = <100>;
 			thermal-sensors = <&scpi_sensors0 3>;
+<<<<<<< HEAD
 			trips {
 				soc_crit0: trip0 {
 					temperature = <80000>;
@@ -771,6 +775,8 @@
 					type = "critical";
 				};
 			};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		big_cluster_thermal_zone: big-cluster {

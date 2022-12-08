@@ -61,6 +61,28 @@ enum dpu_enc_enable_state {
 struct dpu_encoder_phys;
 
 /**
+<<<<<<< HEAD
+=======
+ * struct dpu_encoder_virt_ops - Interface the containing virtual encoder
+ *	provides for the physical encoders to use to callback.
+ * @handle_vblank_virt:	Notify virtual encoder of vblank IRQ reception
+ *			Note: This is called from IRQ handler context.
+ * @handle_underrun_virt: Notify virtual encoder of underrun IRQ reception
+ *			Note: This is called from IRQ handler context.
+ * @handle_frame_done:	Notify virtual encoder that this phys encoder
+ *			completes last request frame.
+ */
+struct dpu_encoder_virt_ops {
+	void (*handle_vblank_virt)(struct drm_encoder *,
+			struct dpu_encoder_phys *phys);
+	void (*handle_underrun_virt)(struct drm_encoder *,
+			struct dpu_encoder_phys *phys);
+	void (*handle_frame_done)(struct drm_encoder *,
+			struct dpu_encoder_phys *phys, u32 event);
+};
+
+/**
+>>>>>>> b7ba80a49124 (Commit)
  * struct dpu_encoder_phys_ops - Interface the physical encoders provide to
  *	the containing virtual encoder.
  * @late_register:		DRM Call. Add Userspace interfaces, debugfs.
@@ -180,6 +202,10 @@ enum dpu_intr_idx {
 struct dpu_encoder_phys {
 	struct drm_encoder *parent;
 	struct dpu_encoder_phys_ops ops;
+<<<<<<< HEAD
+=======
+	const struct dpu_encoder_virt_ops *parent_ops;
+>>>>>>> b7ba80a49124 (Commit)
 	struct dpu_hw_mdp *hw_mdptop;
 	struct dpu_hw_ctl *hw_ctl;
 	struct dpu_hw_pingpong *hw_pp;
@@ -263,6 +289,10 @@ struct dpu_encoder_phys_cmd {
 struct dpu_enc_phys_init_params {
 	struct dpu_kms *dpu_kms;
 	struct drm_encoder *parent;
+<<<<<<< HEAD
+=======
+	const struct dpu_encoder_virt_ops *parent_ops;
+>>>>>>> b7ba80a49124 (Commit)
 	enum dpu_enc_split_role split_role;
 	enum dpu_intf intf_idx;
 	enum dpu_wb wb_idx;
@@ -379,6 +409,7 @@ int dpu_encoder_helper_wait_for_irq(struct dpu_encoder_phys *phys_enc,
  */
 void dpu_encoder_helper_phys_cleanup(struct dpu_encoder_phys *phys_enc);
 
+<<<<<<< HEAD
 /**
  * dpu_encoder_vblank_callback - Notify virtual encoder of vblank IRQ reception
  * @drm_enc:    Pointer to drm encoder structure
@@ -405,4 +436,6 @@ void dpu_encoder_frame_done_callback(
 		struct drm_encoder *drm_enc,
 		struct dpu_encoder_phys *ready_phys, u32 event);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __dpu_encoder_phys_H__ */

@@ -45,15 +45,23 @@ struct brcm_usb_init_ops {
 	void (*uninit_eohci)(struct brcm_usb_init_params *params);
 	void (*uninit_xhci)(struct brcm_usb_init_params *params);
 	int  (*get_dual_select)(struct brcm_usb_init_params *params);
+<<<<<<< HEAD
 	void (*set_dual_select)(struct brcm_usb_init_params *params);
+=======
+	void (*set_dual_select)(struct brcm_usb_init_params *params, int mode);
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct  brcm_usb_init_params {
 	void __iomem *regs[BRCM_REGS_MAX];
 	int ioc;
 	int ipp;
+<<<<<<< HEAD
 	int supported_port_modes;
 	int port_mode;
+=======
+	int mode;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 family_id;
 	u32 product_id;
 	int selected_family;
@@ -62,6 +70,10 @@ struct  brcm_usb_init_params {
 	const struct brcm_usb_init_ops *ops;
 	struct regmap *syscon_piarbctl;
 	bool wake_enabled;
+<<<<<<< HEAD
+=======
+	bool suspend_with_clocks;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 void brcm_usb_dvr_init_4908(struct brcm_usb_init_params *params);
@@ -153,10 +165,18 @@ static inline int brcm_usb_get_dual_select(struct brcm_usb_init_params *ini)
 	return 0;
 }
 
+<<<<<<< HEAD
 static inline void brcm_usb_set_dual_select(struct brcm_usb_init_params *ini)
 {
 	if (ini->ops->set_dual_select)
 		ini->ops->set_dual_select(ini);
+=======
+static inline void brcm_usb_set_dual_select(struct brcm_usb_init_params *ini,
+	int mode)
+{
+	if (ini->ops->set_dual_select)
+		ini->ops->set_dual_select(ini, mode);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #endif /* _USB_BRCM_COMMON_INIT_H */

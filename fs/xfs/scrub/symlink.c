@@ -21,7 +21,11 @@ xchk_setup_symlink(
 	struct xfs_scrub	*sc)
 {
 	/* Allocate the buffer without the inode lock held. */
+<<<<<<< HEAD
 	sc->buf = kvzalloc(XFS_SYMLINK_MAXLEN + 1, XCHK_GFP_FLAGS);
+=======
+	sc->buf = kvzalloc(XFS_SYMLINK_MAXLEN + 1, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!sc->buf)
 		return -ENOMEM;
 

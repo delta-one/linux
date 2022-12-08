@@ -42,9 +42,17 @@ static int hdmi_runtime_get(void)
 
 	DSSDBG("hdmi_runtime_get\n");
 
+<<<<<<< HEAD
 	r = pm_runtime_resume_and_get(&hdmi.pdev->dev);
 	if (WARN_ON(r < 0))
 		return r;
+=======
+	r = pm_runtime_get_sync(&hdmi.pdev->dev);
+	if (WARN_ON(r < 0)) {
+		pm_runtime_put_sync(&hdmi.pdev->dev);
+		return r;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -797,9 +805,16 @@ static int hdmi5_probe(struct platform_device *pdev)
 	return component_add(&pdev->dev, &hdmi5_component_ops);
 }
 
+<<<<<<< HEAD
 static void hdmi5_remove(struct platform_device *pdev)
 {
 	component_del(&pdev->dev, &hdmi5_component_ops);
+=======
+static int hdmi5_remove(struct platform_device *pdev)
+{
+	component_del(&pdev->dev, &hdmi5_component_ops);
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int hdmi_runtime_suspend(struct device *dev)
@@ -833,7 +848,11 @@ static const struct of_device_id hdmi_of_match[] = {
 
 static struct platform_driver omapdss_hdmihw_driver = {
 	.probe		= hdmi5_probe,
+<<<<<<< HEAD
 	.remove_new	= hdmi5_remove,
+=======
+	.remove		= hdmi5_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver         = {
 		.name   = "omapdss_hdmi5",
 		.pm	= &hdmi_pm_ops,

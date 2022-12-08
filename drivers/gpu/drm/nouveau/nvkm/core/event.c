@@ -20,6 +20,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 #include <core/event.h>
+<<<<<<< HEAD
 #include <core/subdev.h>
 
 static void
@@ -33,12 +34,24 @@ nvkm_event_put(struct nvkm_event *event, u32 types, int index)
 		int type = __ffs(types); types &= ~(1 << type);
 		if (--event->refs[index * event->types_nr + type] == 0) {
 			nvkm_trace(event->subdev, "event: blocking %d on %d\n", type, index);
+=======
+#include <core/notify.h>
+
+void
+nvkm_event_put(struct nvkm_event *event, u32 types, int index)
+{
+	assert_spin_locked(&event->refs_lock);
+	while (types) {
+		int type = __ffs(types); types &= ~(1 << type);
+		if (--event->refs[index * event->types_nr + type] == 0) {
+>>>>>>> b7ba80a49124 (Commit)
 			if (event->func->fini)
 				event->func->fini(event, 1 << type, index);
 		}
 	}
 }
 
+<<<<<<< HEAD
 static void
 nvkm_event_get(struct nvkm_event *event, u32 types, int index)
 {
@@ -50,12 +63,22 @@ nvkm_event_get(struct nvkm_event *event, u32 types, int index)
 		int type = __ffs(types); types &= ~(1 << type);
 		if (++event->refs[index * event->types_nr + type] == 1) {
 			nvkm_trace(event->subdev, "event: allowing %d on %d\n", type, index);
+=======
+void
+nvkm_event_get(struct nvkm_event *event, u32 types, int index)
+{
+	assert_spin_locked(&event->refs_lock);
+	while (types) {
+		int type = __ffs(types); types &= ~(1 << type);
+		if (++event->refs[index * event->types_nr + type] == 1) {
+>>>>>>> b7ba80a49124 (Commit)
 			if (event->func->init)
 				event->func->init(event, 1 << type, index);
 		}
 	}
 }
 
+<<<<<<< HEAD
 static void
 nvkm_event_ntfy_state(struct nvkm_event_ntfy *ntfy)
 {
@@ -185,6 +208,28 @@ nvkm_event_ntfy(struct nvkm_event *event, int id, u32 bits)
 		}
 	}
 
+=======
+void
+nvkm_event_send(struct nvkm_event *event, u32 types, int index,
+		void *data, u32 size)
+{
+	struct nvkm_notify *notify;
+	unsigned long flags;
+
+	if (!event->refs || WARN_ON(index >= event->index_nr))
+		return;
+
+	spin_lock_irqsave(&event->list_lock, flags);
+	list_for_each_entry(notify, &event->list, head) {
+		if (notify->index == index && (notify->types & types)) {
+			if (event->func->send) {
+				event->func->send(data, size, notify);
+				continue;
+			}
+			nvkm_notify_send(notify, data, size);
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock_irqrestore(&event->list_lock, flags);
 }
 
@@ -198,17 +243,34 @@ nvkm_event_fini(struct nvkm_event *event)
 }
 
 int
+<<<<<<< HEAD
 __nvkm_event_init(const struct nvkm_event_func *func, struct nvkm_subdev *subdev,
 		  int types_nr, int index_nr, struct nvkm_event *event)
 {
 	event->refs = kzalloc(array3_size(index_nr, types_nr, sizeof(*event->refs)), GFP_KERNEL);
+=======
+nvkm_event_init(const struct nvkm_event_func *func, int types_nr, int index_nr,
+		struct nvkm_event *event)
+{
+	event->refs = kzalloc(array3_size(index_nr, types_nr,
+					  sizeof(*event->refs)),
+			      GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!event->refs)
 		return -ENOMEM;
 
 	event->func = func;
+<<<<<<< HEAD
 	event->subdev = subdev;
 	event->types_nr = types_nr;
 	event->index_nr = index_nr;
 	INIT_LIST_HEAD(&event->ntfy);
+=======
+	event->types_nr = types_nr;
+	event->index_nr = index_nr;
+	spin_lock_init(&event->refs_lock);
+	spin_lock_init(&event->list_lock);
+	INIT_LIST_HEAD(&event->list);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }

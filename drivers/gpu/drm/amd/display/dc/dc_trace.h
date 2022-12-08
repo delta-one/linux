@@ -40,5 +40,8 @@
 
 #define TRACE_DCN_FPU(begin, function, line, ref_count) \
 	trace_dcn_fpu(begin, function, line, ref_count)
+<<<<<<< HEAD
 #define TRACE_OPTC_LOCK_UNLOCK_STATE(optc, inst, lock) \
 	trace_dcn_optc_lock_unlock_state(optc, inst, lock, __func__, __LINE__)
+=======
+>>>>>>> b7ba80a49124 (Commit)

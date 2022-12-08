@@ -12,6 +12,7 @@ intel_qat-objs := adf_cfg.o \
 	adf_hw_arbiter.o \
 	adf_sysfs.o \
 	adf_gen2_hw_data.o \
+<<<<<<< HEAD
 	adf_gen2_config.o \
 	adf_gen4_hw_data.o \
 	adf_gen4_pm.o \
@@ -20,12 +21,21 @@ intel_qat-objs := adf_cfg.o \
 	qat_crypto.o \
 	qat_compression.o \
 	qat_comp_algs.o \
+=======
+	adf_gen4_hw_data.o \
+	adf_gen4_pm.o \
+	qat_crypto.o \
+>>>>>>> b7ba80a49124 (Commit)
 	qat_algs.o \
 	qat_asym_algs.o \
 	qat_algs_send.o \
 	qat_uclo.o \
+<<<<<<< HEAD
 	qat_hal.o \
 	qat_bl.o
+=======
+	qat_hal.o
+>>>>>>> b7ba80a49124 (Commit)
 
 intel_qat-$(CONFIG_DEBUG_FS) += adf_transport_debug.o
 intel_qat-$(CONFIG_PCI_IOV) += adf_sriov.o adf_vf_isr.o adf_pfvf_utils.o \

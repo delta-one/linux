@@ -664,10 +664,16 @@ void rtw_reset_drv_sw(struct adapter *padapter)
 
 u8 rtw_init_drv_sw(struct adapter *padapter)
 {
+<<<<<<< HEAD
+=======
+	u8 ret8 = _SUCCESS;
+
+>>>>>>> b7ba80a49124 (Commit)
 	rtw_init_default_value(padapter);
 
 	rtw_init_hal_com_default_value(padapter);
 
+<<<<<<< HEAD
 	if (rtw_init_cmd_priv(&padapter->cmdpriv))
 		return _FAIL;
 
@@ -686,14 +692,52 @@ u8 rtw_init_drv_sw(struct adapter *padapter)
 
 	if (_rtw_init_recv_priv(&padapter->recvpriv, padapter) == _FAIL)
 		goto free_xmit_priv;
+=======
+	if (rtw_init_cmd_priv(&padapter->cmdpriv)) {
+		ret8 = _FAIL;
+		goto exit;
+	}
+
+	padapter->cmdpriv.padapter = padapter;
+
+	if (rtw_init_evt_priv(&padapter->evtpriv)) {
+		ret8 = _FAIL;
+		goto exit;
+	}
+
+
+	if (rtw_init_mlme_priv(padapter) == _FAIL) {
+		ret8 = _FAIL;
+		goto exit;
+	}
+
+	init_mlme_ext_priv(padapter);
+
+	if (_rtw_init_xmit_priv(&padapter->xmitpriv, padapter) == _FAIL) {
+		ret8 = _FAIL;
+		goto exit;
+	}
+
+	if (_rtw_init_recv_priv(&padapter->recvpriv, padapter) == _FAIL) {
+		ret8 = _FAIL;
+		goto exit;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	/*  add for CONFIG_IEEE80211W, none 11w also can use */
 	spin_lock_init(&padapter->security_key_mutex);
 
 	/*  We don't need to memset padapter->XXX to zero, because adapter is allocated by vzalloc(). */
 	/* memset((unsigned char *)&padapter->securitypriv, 0, sizeof (struct security_priv)); */
 
+<<<<<<< HEAD
 	if (_rtw_init_sta_priv(&padapter->stapriv) == _FAIL)
 		goto free_recv_priv;
+=======
+	if (_rtw_init_sta_priv(&padapter->stapriv) == _FAIL) {
+		ret8 = _FAIL;
+		goto exit;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	padapter->stapriv.padapter = padapter;
 	padapter->setband = GHZ24_50;
@@ -704,6 +748,7 @@ u8 rtw_init_drv_sw(struct adapter *padapter)
 
 	rtw_hal_dm_init(padapter);
 
+<<<<<<< HEAD
 	return _SUCCESS;
 
 free_recv_priv:
@@ -724,6 +769,11 @@ free_cmd_priv:
 	rtw_free_cmd_priv(&padapter->cmdpriv);
 
 	return _FAIL;
+=======
+exit:
+
+	return ret8;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void rtw_cancel_all_timer(struct adapter *padapter)

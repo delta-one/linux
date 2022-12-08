@@ -71,6 +71,7 @@ config MLX5_VDPA_NET
 	  be executed by the hardware. It also supports a variety of stateless
 	  offloads depending on the actual device used and firmware version.
 
+<<<<<<< HEAD
 config MLX5_VDPA_STEERING_DEBUG
 	bool "expose steering counters on debugfs"
 	select MLX5_VDPA
@@ -83,6 +84,8 @@ config MLX5_VDPA_STEERING_DEBUG
 	  cat /sys/kernel/debug/mlx5/mlx5_core.sf.1/vdpa-0/rx/untagged/ucast/packets
 	  cat /sys/kernel/debug/mlx5/mlx5_core.sf.1/vdpa-0/rx/untagged/mcast/bytes
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config VP_VDPA
 	tristate "Virtio PCI bridge vDPA driver"
 	select VIRTIO_PCI_LIB
@@ -98,6 +101,7 @@ config ALIBABA_ENI_VDPA
 	  VDPA driver for Alibaba ENI (Elastic Network Interface) which is built upon
 	  virtio 0.9.5 specification.
 
+<<<<<<< HEAD
  config SNET_VDPA
 	tristate "SolidRun's vDPA driver for SolidNET"
 	depends on PCI_MSI && PCI_IOV && (HWMON || HWMON=n)
@@ -116,4 +120,6 @@ config ALIBABA_ENI_VDPA
 	  This driver includes a HW monitor device that
 	  reads health values from the DPU.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 endif # VDPA

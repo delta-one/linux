@@ -51,7 +51,11 @@ static bool CalculateBytePerPixelAnd256BBlockSizes(
 		*BytePerPixelDETC = 0;
 		*BytePerPixelY = 4;
 		*BytePerPixelC = 0;
+<<<<<<< HEAD
 	} else if (SourcePixelFormat == dm_444_16) {
+=======
+	} else if (SourcePixelFormat == dm_444_16 || SourcePixelFormat == dm_444_16) {
+>>>>>>> b7ba80a49124 (Commit)
 		*BytePerPixelDETY = 2;
 		*BytePerPixelDETC = 0;
 		*BytePerPixelY = 2;

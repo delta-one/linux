@@ -104,9 +104,14 @@ additionalProperties: false
 examples:
   - |
     #include <dt-bindings/gpio/gpio.h>
+<<<<<<< HEAD
     #include <dt-bindings/media/video-interfaces.h>
 
     i2c {
+=======
+
+    i2c2 {
+>>>>>>> b7ba80a49124 (Commit)
         #address-cells = <1>;
         #size-cells = <0>;
 
@@ -125,7 +130,11 @@ examples:
                     remote-endpoint = <&csi2a_ep>;
                     link-frequencies = /bits/ 64 <199200000 210000000
                                                   499200000>;
+<<<<<<< HEAD
                     bus-type = <MEDIA_BUS_TYPE_CSI2_DPHY>;
+=======
+                    bus-type = <4>;
+>>>>>>> b7ba80a49124 (Commit)
                 };
             };
         };

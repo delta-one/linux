@@ -578,7 +578,11 @@ static int ams_delta_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void ams_delta_remove(struct platform_device *pdev)
+=======
+static int ams_delta_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct snd_soc_card *card = platform_get_drvdata(pdev);
 
@@ -586,6 +590,10 @@ static void ams_delta_remove(struct platform_device *pdev)
 
 	snd_soc_unregister_card(card);
 	card->dev = NULL;
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define DRV_NAME "ams-delta-audio"
@@ -595,7 +603,11 @@ static struct platform_driver ams_delta_driver = {
 		.name = DRV_NAME,
 	},
 	.probe = ams_delta_probe,
+<<<<<<< HEAD
 	.remove_new = ams_delta_remove,
+=======
+	.remove = ams_delta_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(ams_delta_driver);

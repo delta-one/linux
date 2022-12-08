@@ -527,7 +527,11 @@ verify_tb_operation(void)
 	if (use_tbia_try2) {
 		alpha_mv.mv_pci_tbi = cia_pci_tbi_try2;
 
+<<<<<<< HEAD
 		/* Tags 0-3 must be disabled if we use this workaround. */
+=======
+		/* Tags 0-3 must be disabled if we use this workaraund. */
+>>>>>>> b7ba80a49124 (Commit)
 		wmb();
 		*(vip)CIA_IOC_TB_TAGn(0) = 2;
 		*(vip)CIA_IOC_TB_TAGn(1) = 2;

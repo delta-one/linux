@@ -460,7 +460,11 @@ static int cc_cipher_setkey(struct crypto_skcipher *sktfm, const u8 *key,
 	}
 
 	if (ctx_p->cipher_mode == DRV_CIPHER_XTS &&
+<<<<<<< HEAD
 	    xts_verify_key(sktfm, key, keylen)) {
+=======
+	    xts_check_key(tfm, key, keylen)) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_dbg(dev, "weak XTS key");
 		return -EINVAL;
 	}

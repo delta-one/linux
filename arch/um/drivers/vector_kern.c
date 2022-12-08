@@ -767,7 +767,10 @@ static int vector_config(char *str, char **error_out)
 
 	if (parsed == NULL) {
 		*error_out = "vector_config failed to parse parameters";
+<<<<<<< HEAD
 		kfree(params);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	}
 

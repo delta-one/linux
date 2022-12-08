@@ -12,11 +12,19 @@
 
 #define MAX_UINSN_BYTES		AARCH64_INSN_SIZE
 
+<<<<<<< HEAD
 #define UPROBE_SWBP_INSN	cpu_to_le32(BRK64_OPCODE_UPROBES)
 #define UPROBE_SWBP_INSN_SIZE	AARCH64_INSN_SIZE
 #define UPROBE_XOL_SLOT_BYTES	MAX_UINSN_BYTES
 
 typedef __le32 uprobe_opcode_t;
+=======
+#define UPROBE_SWBP_INSN	BRK64_OPCODE_UPROBES
+#define UPROBE_SWBP_INSN_SIZE	AARCH64_INSN_SIZE
+#define UPROBE_XOL_SLOT_BYTES	MAX_UINSN_BYTES
+
+typedef u32 uprobe_opcode_t;
+>>>>>>> b7ba80a49124 (Commit)
 
 struct arch_uprobe_task {
 };

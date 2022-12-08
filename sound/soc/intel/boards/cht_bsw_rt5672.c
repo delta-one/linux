@@ -270,7 +270,11 @@ static int cht_codec_fixup(struct snd_soc_pcm_runtime *rtd,
 						SNDRV_PCM_HW_PARAM_CHANNELS);
 	int ret, bits;
 
+<<<<<<< HEAD
 	/* The DSP will convert the FE rate to 48k, stereo, 24bits */
+=======
+	/* The DSP will covert the FE rate to 48k, stereo, 24bits */
+>>>>>>> b7ba80a49124 (Commit)
 	rate->min = rate->max = 48000;
 	channels->min = channels->max = 2;
 
@@ -473,9 +477,15 @@ static int snd_cht_mc_probe(struct platform_device *pdev)
 	if (adev) {
 		snprintf(drv->codec_name, sizeof(drv->codec_name),
 			 "i2c-%s", acpi_dev_name(adev));
+<<<<<<< HEAD
 		cht_dailink[dai_index].codecs->name = drv->codec_name;
 	}
 	acpi_dev_put(adev);
+=======
+		put_device(&adev->dev);
+		cht_dailink[dai_index].codecs->name = drv->codec_name;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Use SSP0 on Bay Trail CR devices */
 	if (soc_intel_is_byt() && mach->mach_params.acpi_ipc_irq_index == 0) {

@@ -61,6 +61,7 @@ config LEDS_MT6360
 	  Independent current sources supply for each flash LED support torch
 	  and strobe mode.
 
+<<<<<<< HEAD
 config LEDS_MT6370_FLASH
 	tristate "Flash LED Support for MediaTek MT6370 PMIC"
 	depends on LEDS_CLASS
@@ -89,6 +90,8 @@ config LEDS_QCOM_FLASH
 	  the total LED current will be split symmetrically on each channel and
 	  they will be enabled/disabled at the same time.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config LEDS_RT4505
 	tristate "LED support for RT4505 flashlight controller"
 	depends on I2C && OF

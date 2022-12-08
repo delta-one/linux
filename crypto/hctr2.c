@@ -252,9 +252,16 @@ static int hctr2_finish(struct skcipher_request *req)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void hctr2_xctr_done(void *data, int err)
 {
 	struct skcipher_request *req = data;
+=======
+static void hctr2_xctr_done(struct crypto_async_request *areq,
+				    int err)
+{
+	struct skcipher_request *req = areq->data;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!err)
 		err = hctr2_finish(req);

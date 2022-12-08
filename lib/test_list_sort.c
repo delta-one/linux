@@ -71,7 +71,11 @@ static void list_sort_test(struct kunit *test)
 		KUNIT_ASSERT_NOT_ERR_OR_NULL(test, el);
 
 		 /* force some equivalencies */
+<<<<<<< HEAD
 		el->value = get_random_u32_below(TEST_LIST_LEN / 3);
+=======
+		el->value = prandom_u32() % (TEST_LIST_LEN / 3);
+>>>>>>> b7ba80a49124 (Commit)
 		el->serial = i;
 		el->poison1 = TEST_POISON1;
 		el->poison2 = TEST_POISON2;

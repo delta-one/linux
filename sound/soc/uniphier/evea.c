@@ -536,7 +536,11 @@ err_out_clock:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void evea_remove(struct platform_device *pdev)
+=======
+static int evea_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct evea_priv *evea = platform_get_drvdata(pdev);
 
@@ -546,6 +550,11 @@ static void evea_remove(struct platform_device *pdev)
 
 	clk_disable_unprepare(evea->clk_exiv);
 	clk_disable_unprepare(evea->clk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id evea_of_match[] __maybe_unused = {
@@ -560,7 +569,11 @@ static struct platform_driver evea_codec_driver = {
 		.of_match_table = of_match_ptr(evea_of_match),
 	},
 	.probe  = evea_probe,
+<<<<<<< HEAD
 	.remove_new = evea_remove,
+=======
+	.remove = evea_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(evea_codec_driver);
 

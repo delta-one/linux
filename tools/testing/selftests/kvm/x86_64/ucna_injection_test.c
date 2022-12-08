@@ -137,11 +137,22 @@ static void guest_gp_handler(struct ex_regs *regs)
 
 static void run_vcpu_expect_gp(struct kvm_vcpu *vcpu)
 {
+<<<<<<< HEAD
+=======
+	unsigned int exit_reason;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ucall uc;
 
 	vcpu_run(vcpu);
 
+<<<<<<< HEAD
 	TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_IO);
+=======
+	exit_reason = vcpu->run->exit_reason;
+	TEST_ASSERT(exit_reason == KVM_EXIT_IO,
+		    "exited with unexpected exit reason %u-%s, expected KVM_EXIT_IO",
+		    exit_reason, exit_reason_str(exit_reason));
+>>>>>>> b7ba80a49124 (Commit)
 	TEST_ASSERT(get_ucall(vcpu, &uc) == UCALL_SYNC,
 		    "Expect UCALL_SYNC\n");
 	TEST_ASSERT(uc.args[1] == SYNC_GP, "#GP is expected.");
@@ -178,6 +189,10 @@ static void *run_ucna_injection(void *arg)
 	struct ucall uc;
 	int old;
 	int r;
+<<<<<<< HEAD
+=======
+	unsigned int exit_reason;
+>>>>>>> b7ba80a49124 (Commit)
 
 	r = pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, &old);
 	TEST_ASSERT(r == 0,
@@ -186,7 +201,14 @@ static void *run_ucna_injection(void *arg)
 
 	vcpu_run(params->vcpu);
 
+<<<<<<< HEAD
 	TEST_ASSERT_KVM_EXIT_REASON(params->vcpu, KVM_EXIT_IO);
+=======
+	exit_reason = params->vcpu->run->exit_reason;
+	TEST_ASSERT(exit_reason == KVM_EXIT_IO,
+		    "unexpected exit reason %u-%s, expected KVM_EXIT_IO",
+		    exit_reason, exit_reason_str(exit_reason));
+>>>>>>> b7ba80a49124 (Commit)
 	TEST_ASSERT(get_ucall(params->vcpu, &uc) == UCALL_SYNC,
 		    "Expect UCALL_SYNC\n");
 	TEST_ASSERT(uc.args[1] == SYNC_FIRST_UCNA, "Injecting first UCNA.");
@@ -196,7 +218,14 @@ static void *run_ucna_injection(void *arg)
 	inject_ucna(params->vcpu, FIRST_UCNA_ADDR);
 	vcpu_run(params->vcpu);
 
+<<<<<<< HEAD
 	TEST_ASSERT_KVM_EXIT_REASON(params->vcpu, KVM_EXIT_IO);
+=======
+	exit_reason = params->vcpu->run->exit_reason;
+	TEST_ASSERT(exit_reason == KVM_EXIT_IO,
+		    "unexpected exit reason %u-%s, expected KVM_EXIT_IO",
+		    exit_reason, exit_reason_str(exit_reason));
+>>>>>>> b7ba80a49124 (Commit)
 	TEST_ASSERT(get_ucall(params->vcpu, &uc) == UCALL_SYNC,
 		    "Expect UCALL_SYNC\n");
 	TEST_ASSERT(uc.args[1] == SYNC_SECOND_UCNA, "Injecting second UCNA.");
@@ -206,7 +235,14 @@ static void *run_ucna_injection(void *arg)
 	inject_ucna(params->vcpu, SECOND_UCNA_ADDR);
 	vcpu_run(params->vcpu);
 
+<<<<<<< HEAD
 	TEST_ASSERT_KVM_EXIT_REASON(params->vcpu, KVM_EXIT_IO);
+=======
+	exit_reason = params->vcpu->run->exit_reason;
+	TEST_ASSERT(exit_reason == KVM_EXIT_IO,
+		    "unexpected exit reason %u-%s, expected KVM_EXIT_IO",
+		    exit_reason, exit_reason_str(exit_reason));
+>>>>>>> b7ba80a49124 (Commit)
 	if (get_ucall(params->vcpu, &uc) == UCALL_ABORT) {
 		TEST_ASSERT(false, "vCPU assertion failure: %s.\n",
 			    (const char *)uc.args[0]);

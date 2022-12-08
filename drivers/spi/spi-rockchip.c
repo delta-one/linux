@@ -246,13 +246,18 @@ static void rockchip_spi_set_cs(struct spi_device *spi, bool enable)
 	bool cs_asserted = spi->mode & SPI_CS_HIGH ? enable : !enable;
 
 	/* Return immediately for no-op */
+<<<<<<< HEAD
 	if (cs_asserted == rs->cs_asserted[spi_get_chipselect(spi, 0)])
+=======
+	if (cs_asserted == rs->cs_asserted[spi->chip_select])
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	if (cs_asserted) {
 		/* Keep things powered as long as CS is asserted */
 		pm_runtime_get_sync(rs->dev);
 
+<<<<<<< HEAD
 		if (spi_get_csgpiod(spi, 0))
 			ROCKCHIP_SPI_SET_BITS(rs->regs + ROCKCHIP_SPI_SER, 1);
 		else
@@ -264,12 +269,27 @@ static void rockchip_spi_set_cs(struct spi_device *spi, bool enable)
 		else
 			ROCKCHIP_SPI_CLR_BITS(rs->regs + ROCKCHIP_SPI_SER,
 					      BIT(spi_get_chipselect(spi, 0)));
+=======
+		if (spi->cs_gpiod)
+			ROCKCHIP_SPI_SET_BITS(rs->regs + ROCKCHIP_SPI_SER, 1);
+		else
+			ROCKCHIP_SPI_SET_BITS(rs->regs + ROCKCHIP_SPI_SER, BIT(spi->chip_select));
+	} else {
+		if (spi->cs_gpiod)
+			ROCKCHIP_SPI_CLR_BITS(rs->regs + ROCKCHIP_SPI_SER, 1);
+		else
+			ROCKCHIP_SPI_CLR_BITS(rs->regs + ROCKCHIP_SPI_SER, BIT(spi->chip_select));
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* Drop reference from when we first asserted CS */
 		pm_runtime_put(rs->dev);
 	}
 
+<<<<<<< HEAD
 	rs->cs_asserted[spi_get_chipselect(spi, 0)] = cs_asserted;
+=======
+	rs->cs_asserted[spi->chip_select] = cs_asserted;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void rockchip_spi_handle_err(struct spi_controller *ctlr,
@@ -543,7 +563,11 @@ static int rockchip_spi_config(struct rockchip_spi *rs,
 	if (spi->mode & SPI_LSB_FIRST)
 		cr0 |= CR0_FBM_LSB << CR0_FBM_OFFSET;
 	if (spi->mode & SPI_CS_HIGH)
+<<<<<<< HEAD
 		cr0 |= BIT(spi_get_chipselect(spi, 0)) << CR0_SOI_OFFSET;
+=======
+		cr0 |= BIT(spi->chip_select) << CR0_SOI_OFFSET;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (xfer->rx_buf && xfer->tx_buf)
 		cr0 |= CR0_XFM_TR << CR0_XFM_OFFSET;
@@ -726,7 +750,11 @@ static int rockchip_spi_setup(struct spi_device *spi)
 	struct rockchip_spi *rs = spi_controller_get_devdata(spi->controller);
 	u32 cr0;
 
+<<<<<<< HEAD
 	if (!spi_get_csgpiod(spi, 0) && (spi->mode & SPI_CS_HIGH) && !rs->cs_high_supported) {
+=======
+	if (!spi->cs_gpiod && (spi->mode & SPI_CS_HIGH) && !rs->cs_high_supported) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_warn(&spi->dev, "setup: non GPIO CS can't be active-high\n");
 		return -EINVAL;
 	}
@@ -737,10 +765,17 @@ static int rockchip_spi_setup(struct spi_device *spi)
 
 	cr0 &= ~(0x3 << CR0_SCPH_OFFSET);
 	cr0 |= ((spi->mode & 0x3) << CR0_SCPH_OFFSET);
+<<<<<<< HEAD
 	if (spi->mode & SPI_CS_HIGH && spi_get_chipselect(spi, 0) <= 1)
 		cr0 |= BIT(spi_get_chipselect(spi, 0)) << CR0_SOI_OFFSET;
 	else if (spi_get_chipselect(spi, 0) <= 1)
 		cr0 &= ~(BIT(spi_get_chipselect(spi, 0)) << CR0_SOI_OFFSET);
+=======
+	if (spi->mode & SPI_CS_HIGH && spi->chip_select <= 1)
+		cr0 |= BIT(spi->chip_select) << CR0_SOI_OFFSET;
+	else if (spi->chip_select <= 1)
+		cr0 &= ~(BIT(spi->chip_select) << CR0_SOI_OFFSET);
+>>>>>>> b7ba80a49124 (Commit)
 
 	writel_relaxed(cr0, rs->regs + ROCKCHIP_SPI_CTRLR0);
 
@@ -774,9 +809,17 @@ static int rockchip_spi_probe(struct platform_device *pdev)
 	platform_set_drvdata(pdev, ctlr);
 
 	rs = spi_controller_get_devdata(ctlr);
+<<<<<<< HEAD
 
 	/* Get basic io resource and map it */
 	rs->regs = devm_platform_get_and_ioremap_resource(pdev, 0, &mem);
+=======
+	ctlr->slave = slave_mode;
+
+	/* Get basic io resource and map it */
+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	rs->regs = devm_ioremap_resource(&pdev->dev, mem);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(rs->regs)) {
 		ret =  PTR_ERR(rs->regs);
 		goto err_put_ctlr;
@@ -947,7 +990,11 @@ err_put_ctlr:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void rockchip_spi_remove(struct platform_device *pdev)
+=======
+static int rockchip_spi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_controller *ctlr = spi_controller_get(platform_get_drvdata(pdev));
 	struct rockchip_spi *rs = spi_controller_get_devdata(ctlr);
@@ -967,6 +1014,11 @@ static void rockchip_spi_remove(struct platform_device *pdev)
 		dma_release_channel(ctlr->dma_rx);
 
 	spi_controller_put(ctlr);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -1074,7 +1126,11 @@ static struct platform_driver rockchip_spi_driver = {
 		.of_match_table = of_match_ptr(rockchip_spi_dt_match),
 	},
 	.probe = rockchip_spi_probe,
+<<<<<<< HEAD
 	.remove_new = rockchip_spi_remove,
+=======
+	.remove = rockchip_spi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(rockchip_spi_driver);

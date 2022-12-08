@@ -27,7 +27,11 @@
 #include <linux/tracepoint-defs.h>
 #include <linux/srcu.h>
 #include <linux/static_call_types.h>
+<<<<<<< HEAD
 #include <linux/dynamic_debug.h>
+=======
+#include <linux/cfi.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/percpu.h>
 #include <asm/module.h>
@@ -132,7 +136,11 @@ extern void cleanup_module(void);
 	{ return initfn; }					\
 	int init_module(void) __copy(initfn)			\
 		__attribute__((alias(#initfn)));		\
+<<<<<<< HEAD
 	___ADDRESSABLE(init_module, __initdata);
+=======
+	__CFI_ADDRESSABLE(init_module, __initdata);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* This is only required if you want to be unloadable. */
 #define module_exit(exitfn)					\
@@ -140,7 +148,11 @@ extern void cleanup_module(void);
 	{ return exitfn; }					\
 	void cleanup_module(void) __copy(exitfn)		\
 		__attribute__((alias(#exitfn)));		\
+<<<<<<< HEAD
 	___ADDRESSABLE(cleanup_module, __exitdata);
+=======
+	__CFI_ADDRESSABLE(cleanup_module, __exitdata);
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif
 
@@ -321,6 +333,7 @@ struct mod_tree_node {
 	struct latch_tree_node node;
 };
 
+<<<<<<< HEAD
 enum mod_mem_type {
 	MOD_TEXT = 0,
 	MOD_DATA,
@@ -362,6 +375,19 @@ enum mod_mem_type {
 struct module_memory {
 	void *base;
 	unsigned int size;
+=======
+struct module_layout {
+	/* The actual code + data. */
+	void *base;
+	/* Total size. */
+	unsigned int size;
+	/* The size of the executable code.  */
+	unsigned int text_size;
+	/* Size of RO section of the module (text+rodata) */
+	unsigned int ro_size;
+	/* Size of RO after init section */
+	unsigned int ro_after_init_size;
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_MODULES_TREE_LOOKUP
 	struct mod_tree_node mtn;
@@ -370,9 +396,15 @@ struct module_memory {
 
 #ifdef CONFIG_MODULES_TREE_LOOKUP
 /* Only touch one cacheline for common rbtree-for-core-layout case. */
+<<<<<<< HEAD
 #define __module_memory_align ____cacheline_aligned
 #else
 #define __module_memory_align
+=======
+#define __module_layout_align ____cacheline_aligned
+#else
+#define __module_layout_align
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 struct mod_kallsyms {
@@ -383,6 +415,7 @@ struct mod_kallsyms {
 };
 
 #ifdef CONFIG_LIVEPATCH
+<<<<<<< HEAD
 /**
  * struct klp_modinfo - ELF information preserved from the livepatch module
  *
@@ -391,6 +424,8 @@ struct mod_kallsyms {
  * @secstrings: String table for the section headers
  * @symndx: The symbol table section index
  */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct klp_modinfo {
 	Elf_Ehdr hdr;
 	Elf_Shdr *sechdrs;
@@ -425,9 +460,14 @@ struct module {
 	const s32 *crcs;
 	unsigned int num_syms;
 
+<<<<<<< HEAD
 #ifdef CONFIG_ARCH_USES_CFI_TRAPS
 	s32 *kcfi_traps;
 	s32 *kcfi_traps_end;
+=======
+#ifdef CONFIG_CFI_CLANG
+	cfi_check_fn cfi_check;
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 	/* Kernel parameters. */
@@ -457,7 +497,16 @@ struct module {
 	/* Startup function. */
 	int (*init)(void);
 
+<<<<<<< HEAD
 	struct module_memory mem[MOD_MEM_NUM_TYPES] __module_memory_align;
+=======
+	/* Core layout: rbtree is accessed frequently, so keep together. */
+	struct module_layout core_layout __module_layout_align;
+	struct module_layout init_layout;
+#ifdef CONFIG_ARCH_WANTS_MODULES_DATA_IN_VMALLOC
+	struct module_layout data_layout;
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Arch-specific module values */
 	struct mod_arch_specific arch;
@@ -549,7 +598,11 @@ struct module {
 	bool klp; /* Is this a livepatch module? */
 	bool klp_alive;
 
+<<<<<<< HEAD
 	/* ELF information */
+=======
+	/* Elf information */
+>>>>>>> b7ba80a49124 (Commit)
 	struct klp_modinfo *klp_info;
 #endif
 
@@ -580,9 +633,12 @@ struct module {
 	struct error_injection_entry *ei_funcs;
 	unsigned int num_ei_funcs;
 #endif
+<<<<<<< HEAD
 #ifdef CONFIG_DYNAMIC_DEBUG_CORE
 	struct _ddebug_info dyndbg_info;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 } ____cacheline_aligned __randomize_layout;
 #ifndef MODULE_ARCH_INIT
 #define MODULE_ARCH_INIT {}
@@ -610,6 +666,7 @@ bool __is_module_percpu_address(unsigned long addr, unsigned long *can_addr);
 bool is_module_percpu_address(unsigned long addr);
 bool is_module_text_address(unsigned long addr);
 
+<<<<<<< HEAD
 static inline bool within_module_mem_type(unsigned long addr,
 					  const struct module *mod,
 					  enum mod_mem_type type)
@@ -629,16 +686,33 @@ static inline bool within_module_core(unsigned long addr,
 			return true;
 	}
 	return false;
+=======
+static inline bool within_module_core(unsigned long addr,
+				      const struct module *mod)
+{
+#ifdef CONFIG_ARCH_WANTS_MODULES_DATA_IN_VMALLOC
+	if ((unsigned long)mod->data_layout.base <= addr &&
+	    addr < (unsigned long)mod->data_layout.base + mod->data_layout.size)
+		return true;
+#endif
+	return (unsigned long)mod->core_layout.base <= addr &&
+	       addr < (unsigned long)mod->core_layout.base + mod->core_layout.size;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline bool within_module_init(unsigned long addr,
 				      const struct module *mod)
 {
+<<<<<<< HEAD
 	for_class_mod_mem_type(type, init) {
 		if (within_module_mem_type(addr, mod, type))
 			return true;
 	}
 	return false;
+=======
+	return (unsigned long)mod->init_layout.base <= addr &&
+	       addr < (unsigned long)mod->init_layout.base + mod->init_layout.size;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline bool within_module(unsigned long addr, const struct module *mod)
@@ -657,8 +731,11 @@ int module_get_kallsym(unsigned int symnum, unsigned long *value, char *type,
 /* Look for this name: can be of form module:name. */
 unsigned long module_kallsyms_lookup_name(const char *name);
 
+<<<<<<< HEAD
 unsigned long find_kallsyms_symbol_value(struct module *mod, const char *name);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 extern void __noreturn __module_put_and_kthread_exit(struct module *mod,
 			long code);
 #define module_put_and_kthread_exit(code) __module_put_and_kthread_exit(THIS_MODULE, code)
@@ -673,6 +750,7 @@ void symbol_put_addr(void *addr);
    to handle the error case (which only happens with rmmod --wait). */
 extern void __module_get(struct module *module);
 
+<<<<<<< HEAD
 /**
  * try_module_get() - take module refcount unless module is being removed
  * @module: the module we should check for
@@ -713,6 +791,12 @@ extern bool try_module_get(struct module *module);
  * when you are finished you must call module_put() to release that reference
  * count.
  */
+=======
+/* This is the Right Way to get a module: if it fails, it's being removed,
+ * so pretend it's not there. */
+extern bool try_module_get(struct module *module);
+
+>>>>>>> b7ba80a49124 (Commit)
 extern void module_put(struct module *module);
 
 #else /*!CONFIG_MODULE_UNLOAD*/
@@ -875,12 +959,15 @@ static inline unsigned long module_kallsyms_lookup_name(const char *name)
 	return 0;
 }
 
+<<<<<<< HEAD
 static inline unsigned long find_kallsyms_symbol_value(struct module *mod,
 						       const char *name)
 {
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int register_module_notifier(struct notifier_block *nb)
 {
 	/* no events will happen anyway, so this can always succeed */
@@ -919,7 +1006,12 @@ void *dereference_module_function_descriptor(struct module *mod, void *ptr)
 
 #ifdef CONFIG_SYSFS
 extern struct kset *module_kset;
+<<<<<<< HEAD
 extern const struct kobj_type module_ktype;
+=======
+extern struct kobj_type module_ktype;
+extern int module_sysfs_initialized;
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_SYSFS */
 
 #define symbol_request(x) try_then_request_module(symbol_get(x), "symbol:" #x)
@@ -971,6 +1063,7 @@ static inline bool module_sig_ok(struct module *module)
 }
 #endif	/* CONFIG_MODULE_SIG */
 
+<<<<<<< HEAD
 #if defined(CONFIG_MODULES) && defined(CONFIG_KALLSYMS)
 int module_kallsyms_on_each_symbol(const char *modname,
 				   int (*fn)(void *, const char *, unsigned long),
@@ -983,5 +1076,10 @@ static inline int module_kallsyms_on_each_symbol(const char *modname,
 	return -EOPNOTSUPP;
 }
 #endif  /* CONFIG_MODULES && CONFIG_KALLSYMS */
+=======
+int module_kallsyms_on_each_symbol(int (*fn)(void *, const char *,
+					     struct module *, unsigned long),
+				   void *data);
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _LINUX_MODULE_H */

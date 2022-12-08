@@ -5,7 +5,10 @@
 #include <asm/sclp.h>
 #include <asm/sections.h>
 #include <asm/boot_data.h>
+<<<<<<< HEAD
 #include <asm/physmem_info.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <uapi/asm/ipl.h>
 #include "boot.h"
 
@@ -17,16 +20,31 @@ unsigned long __bootdata_preserved(ipl_cert_list_size);
 unsigned long __bootdata(early_ipl_comp_list_addr);
 unsigned long __bootdata(early_ipl_comp_list_size);
 
+<<<<<<< HEAD
 static struct ipl_rb_certificates *certs;
 static struct ipl_rb_components *comps;
 static bool ipl_report_needs_saving;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define for_each_rb_entry(entry, rb) \
 	for (entry = rb->entries; \
 	     (void *) entry + sizeof(*entry) <= (void *) rb + rb->len; \
 	     entry++)
 
+<<<<<<< HEAD
 static unsigned long get_cert_comp_list_size(void)
+=======
+static inline bool intersects(unsigned long addr0, unsigned long size0,
+			      unsigned long addr1, unsigned long size1)
+{
+	return addr0 + size0 > addr1 && addr1 + size1 > addr0;
+}
+
+static unsigned long find_bootdata_space(struct ipl_rb_components *comps,
+					 struct ipl_rb_certificates *certs,
+					 unsigned long safe_addr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ipl_rb_certificate_entry *cert;
 	struct ipl_rb_component_entry *comp;
@@ -41,6 +59,7 @@ static unsigned long get_cert_comp_list_size(void)
 	ipl_cert_list_size = 0;
 	for_each_rb_entry(cert, certs)
 		ipl_cert_list_size += sizeof(unsigned int) + cert->len;
+<<<<<<< HEAD
 	return ipl_cert_list_size + early_ipl_comp_list_size;
 }
 
@@ -62,6 +81,38 @@ bool ipl_report_certs_intersects(unsigned long addr, unsigned long size,
 }
 
 static void copy_components_bootdata(void)
+=======
+	size = ipl_cert_list_size + early_ipl_comp_list_size;
+
+	/*
+	 * Start from safe_addr to find a free memory area large
+	 * enough for the IPL report boot data. This area is used
+	 * for ipl_cert_list_addr/ipl_cert_list_size and
+	 * early_ipl_comp_list_addr/early_ipl_comp_list_size. It must
+	 * not overlap with any component or any certificate.
+	 */
+repeat:
+	if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && initrd_data.start && initrd_data.size &&
+	    intersects(initrd_data.start, initrd_data.size, safe_addr, size))
+		safe_addr = initrd_data.start + initrd_data.size;
+	for_each_rb_entry(comp, comps)
+		if (intersects(safe_addr, size, comp->addr, comp->len)) {
+			safe_addr = comp->addr + comp->len;
+			goto repeat;
+		}
+	for_each_rb_entry(cert, certs)
+		if (intersects(safe_addr, size, cert->addr, cert->len)) {
+			safe_addr = cert->addr + cert->len;
+			goto repeat;
+		}
+	early_ipl_comp_list_addr = safe_addr;
+	ipl_cert_list_addr = safe_addr + early_ipl_comp_list_size;
+
+	return safe_addr + size;
+}
+
+static void copy_components_bootdata(struct ipl_rb_components *comps)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ipl_rb_component_entry *comp, *ptr;
 
@@ -70,7 +121,11 @@ static void copy_components_bootdata(void)
 		memcpy(ptr++, comp, sizeof(*ptr));
 }
 
+<<<<<<< HEAD
 static void copy_certificates_bootdata(void)
+=======
+static void copy_certificates_bootdata(struct ipl_rb_certificates *certs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ipl_rb_certificate_entry *cert;
 	void *ptr;
@@ -84,8 +139,15 @@ static void copy_certificates_bootdata(void)
 	}
 }
 
+<<<<<<< HEAD
 int read_ipl_report(void)
 {
+=======
+unsigned long read_ipl_report(unsigned long safe_addr)
+{
+	struct ipl_rb_certificates *certs;
+	struct ipl_rb_components *comps;
+>>>>>>> b7ba80a49124 (Commit)
 	struct ipl_pl_hdr *pl_hdr;
 	struct ipl_rl_hdr *rl_hdr;
 	struct ipl_rb_hdr *rb_hdr;
@@ -98,7 +160,11 @@ int read_ipl_report(void)
 	 */
 	if (!ipl_block_valid ||
 	    !(ipl_block.hdr.flags & IPL_PL_FLAG_IPLSR))
+<<<<<<< HEAD
 		return -1;
+=======
+		return safe_addr;
+>>>>>>> b7ba80a49124 (Commit)
 	ipl_secure_flag = !!(ipl_block.hdr.flags & IPL_PL_FLAG_SIPL);
 	/*
 	 * There is an IPL report, to find it load the pointer to the
@@ -136,6 +202,7 @@ int read_ipl_report(void)
 	 * With either the component list or the certificate list
 	 * missing the kernel will stay ignorant of secure IPL.
 	 */
+<<<<<<< HEAD
 	if (!comps || !certs) {
 		certs = NULL;
 		return -1;
@@ -162,4 +229,18 @@ void save_ipl_cert_comp_list(void)
 	copy_certificates_bootdata();
 	physmem_free(RR_IPLREPORT);
 	ipl_report_needs_saving = false;
+=======
+	if (!comps || !certs)
+		return safe_addr;
+
+	/*
+	 * Copy component and certificate list to a safe area
+	 * where the decompressed kernel can find them.
+	 */
+	safe_addr = find_bootdata_space(comps, certs, safe_addr);
+	copy_components_bootdata(comps);
+	copy_certificates_bootdata(certs);
+
+	return safe_addr;
+>>>>>>> b7ba80a49124 (Commit)
 }

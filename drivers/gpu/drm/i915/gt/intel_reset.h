@@ -39,7 +39,10 @@ int __intel_engine_reset_bh(struct intel_engine_cs *engine,
 void __i915_request_reset(struct i915_request *rq, bool guilty);
 
 int __must_check intel_gt_reset_trylock(struct intel_gt *gt, int *srcu);
+<<<<<<< HEAD
 int __must_check intel_gt_reset_lock_interruptible(struct intel_gt *gt, int *srcu);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void intel_gt_reset_unlock(struct intel_gt *gt, int tag);
 
 void intel_gt_set_wedged(struct intel_gt *gt);

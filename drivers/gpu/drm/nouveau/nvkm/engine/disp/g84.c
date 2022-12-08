@@ -29,6 +29,7 @@
 
 #include <nvif/class.h>
 
+<<<<<<< HEAD
 static void
 g84_sor_hdmi_infoframe_vsi(struct nvkm_ior *ior, int head, void *data, u32 size)
 {
@@ -77,6 +78,11 @@ g84_sor_hdmi_infoframe_avi(struct nvkm_ior *ior, int head, void *data, u32 size)
 
 static void
 g84_sor_hdmi_ctrl(struct nvkm_ior *ior, int head, bool enable, u8 max_ac_packet, u8 rekey)
+=======
+void
+g84_sor_hdmi_ctrl(struct nvkm_ior *ior, int head, bool enable, u8 max_ac_packet,
+		  u8 rekey, u8 *avi, u8 avi_size, u8 *vendor, u8 vendor_size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nvkm_device *device = ior->disp->engine.subdev.device;
 	const u32 ctrl = 0x40000000 * enable |
@@ -84,13 +90,40 @@ g84_sor_hdmi_ctrl(struct nvkm_ior *ior, int head, bool enable, u8 max_ac_packet,
 			 max_ac_packet << 16 |
 			 rekey;
 	const u32 hoff = head * 0x800;
+<<<<<<< HEAD
 
 	if (!(ctrl & 0x40000000)) {
 		nvkm_mask(device, 0x6165a4 + hoff, 0x40000000, 0x00000000);
+=======
+	struct packed_hdmi_infoframe avi_infoframe;
+	struct packed_hdmi_infoframe vendor_infoframe;
+
+	pack_hdmi_infoframe(&avi_infoframe, avi, avi_size);
+	pack_hdmi_infoframe(&vendor_infoframe, vendor, vendor_size);
+
+	if (!(ctrl & 0x40000000)) {
+		nvkm_mask(device, 0x6165a4 + hoff, 0x40000000, 0x00000000);
+		nvkm_mask(device, 0x61653c + hoff, 0x00000001, 0x00000000);
+		nvkm_mask(device, 0x616520 + hoff, 0x00000001, 0x00000000);
+>>>>>>> b7ba80a49124 (Commit)
 		nvkm_mask(device, 0x616500 + hoff, 0x00000001, 0x00000000);
 		return;
 	}
 
+<<<<<<< HEAD
+=======
+	/* AVI InfoFrame */
+	nvkm_mask(device, 0x616520 + hoff, 0x00000001, 0x00000000);
+	if (avi_size) {
+		nvkm_wr32(device, 0x616528 + hoff, avi_infoframe.header);
+		nvkm_wr32(device, 0x61652c + hoff, avi_infoframe.subpack0_low);
+		nvkm_wr32(device, 0x616530 + hoff, avi_infoframe.subpack0_high);
+		nvkm_wr32(device, 0x616534 + hoff, avi_infoframe.subpack1_low);
+		nvkm_wr32(device, 0x616538 + hoff, avi_infoframe.subpack1_high);
+		nvkm_mask(device, 0x616520 + hoff, 0x00000001, 0x00000001);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Audio InfoFrame */
 	nvkm_mask(device, 0x616500 + hoff, 0x00000001, 0x00000000);
 	nvkm_wr32(device, 0x616508 + hoff, 0x000a0184);
@@ -98,6 +131,20 @@ g84_sor_hdmi_ctrl(struct nvkm_ior *ior, int head, bool enable, u8 max_ac_packet,
 	nvkm_wr32(device, 0x616510 + hoff, 0x00000000);
 	nvkm_mask(device, 0x616500 + hoff, 0x00000001, 0x00000001);
 
+<<<<<<< HEAD
+=======
+	/* Vendor InfoFrame */
+	nvkm_mask(device, 0x61653c + hoff, 0x00010001, 0x00010000);
+	if (vendor_size) {
+		nvkm_wr32(device, 0x616544 + hoff, vendor_infoframe.header);
+		nvkm_wr32(device, 0x616548 + hoff, vendor_infoframe.subpack0_low);
+		nvkm_wr32(device, 0x61654c + hoff, vendor_infoframe.subpack0_high);
+		/* Is there a second (or up to fourth?) set of subpack registers here? */
+		/* nvkm_wr32(device, 0x616550 + hoff, vendor_infoframe->subpack1_low); */
+		/* nvkm_wr32(device, 0x616554 + hoff, vendor_infoframe->subpack1_high); */
+		nvkm_mask(device, 0x61653c + hoff, 0x00010001, 0x00010001);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	nvkm_mask(device, 0x6165d0 + hoff, 0x00070001, 0x00010001); /* SPARE, HW_CTS */
 	nvkm_mask(device, 0x616568 + hoff, 0x00010101, 0x00000000); /* ACR_CTRL, ?? */
@@ -112,6 +159,7 @@ g84_sor_hdmi_ctrl(struct nvkm_ior *ior, int head, bool enable, u8 max_ac_packet,
 	nvkm_mask(device, 0x6165a4 + hoff, 0x5f1f007f, ctrl);
 }
 
+<<<<<<< HEAD
 const struct nvkm_ior_func_hdmi
 g84_sor_hdmi = {
 	.ctrl = g84_sor_hdmi_ctrl,
@@ -119,12 +167,20 @@ g84_sor_hdmi = {
 	.infoframe_vsi = g84_sor_hdmi_infoframe_vsi,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct nvkm_ior_func
 g84_sor = {
 	.state = nv50_sor_state,
 	.power = nv50_sor_power,
 	.clock = nv50_sor_clock,
+<<<<<<< HEAD
 	.hdmi = &g84_sor_hdmi,
+=======
+	.hdmi = {
+		.ctrl = g84_sor_hdmi_ctrl,
+	},
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 int

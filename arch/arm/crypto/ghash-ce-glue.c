@@ -2,14 +2,19 @@
 /*
  * Accelerated GHASH implementation with ARMv8 vmull.p64 instructions.
  *
+<<<<<<< HEAD
  * Copyright (C) 2015 - 2018 Linaro Ltd.
  * Copyright (C) 2023 Google LLC.
+=======
+ * Copyright (C) 2015 - 2018 Linaro Ltd. <ard.biesheuvel@linaro.org>
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include <asm/hwcap.h>
 #include <asm/neon.h>
 #include <asm/simd.h>
 #include <asm/unaligned.h>
+<<<<<<< HEAD
 #include <crypto/aes.h>
 #include <crypto/gcm.h>
 #include <crypto/b128ops.h>
@@ -20,28 +25,45 @@
 #include <crypto/internal/skcipher.h>
 #include <crypto/gf128mul.h>
 #include <crypto/scatterwalk.h>
+=======
+#include <crypto/b128ops.h>
+#include <crypto/cryptd.h>
+#include <crypto/internal/hash.h>
+#include <crypto/internal/simd.h>
+#include <crypto/gf128mul.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/cpufeature.h>
 #include <linux/crypto.h>
 #include <linux/jump_label.h>
 #include <linux/module.h>
 
 MODULE_DESCRIPTION("GHASH hash function using ARMv8 Crypto Extensions");
+<<<<<<< HEAD
 MODULE_AUTHOR("Ard Biesheuvel <ardb@kernel.org>");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS_CRYPTO("ghash");
 MODULE_ALIAS_CRYPTO("gcm(aes)");
 MODULE_ALIAS_CRYPTO("rfc4106(gcm(aes))");
+=======
+MODULE_AUTHOR("Ard Biesheuvel <ard.biesheuvel@linaro.org>");
+MODULE_LICENSE("GPL v2");
+MODULE_ALIAS_CRYPTO("ghash");
+>>>>>>> b7ba80a49124 (Commit)
 
 #define GHASH_BLOCK_SIZE	16
 #define GHASH_DIGEST_SIZE	16
 
+<<<<<<< HEAD
 #define RFC4106_NONCE_SIZE	4
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ghash_key {
 	be128	k;
 	u64	h[][2];
 };
 
+<<<<<<< HEAD
 struct gcm_key {
 	u64	h[4][2];
 	u32	rk[AES_MAX_KEYLENGTH_U32];
@@ -49,6 +71,8 @@ struct gcm_key {
 	u8	nonce[];	// for RFC4106 nonce
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct ghash_desc_ctx {
 	u64 digest[GHASH_DIGEST_SIZE/sizeof(u64)];
 	u8 buf[GHASH_BLOCK_SIZE];
@@ -361,6 +385,7 @@ static struct ahash_alg ghash_async_alg = {
 	},
 };
 
+<<<<<<< HEAD
 
 void pmull_gcm_encrypt(int blocks, u64 dg[], const char *src,
 		       struct gcm_key const *k, char *dst,
@@ -748,6 +773,8 @@ static struct aead_alg gcm_aes_algs[] = {{
 	.base.cra_module	= THIS_MODULE,
 }};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int __init ghash_ce_mod_init(void)
 {
 	int err;
@@ -756,17 +783,24 @@ static int __init ghash_ce_mod_init(void)
 		return -ENODEV;
 
 	if (elf_hwcap2 & HWCAP2_PMULL) {
+<<<<<<< HEAD
 		err = crypto_register_aeads(gcm_aes_algs,
 					    ARRAY_SIZE(gcm_aes_algs));
 		if (err)
 			return err;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		ghash_alg.base.cra_ctxsize += 3 * sizeof(u64[2]);
 		static_branch_enable(&use_p64);
 	}
 
 	err = crypto_register_shash(&ghash_alg);
 	if (err)
+<<<<<<< HEAD
 		goto err_aead;
+=======
+		return err;
+>>>>>>> b7ba80a49124 (Commit)
 	err = crypto_register_ahash(&ghash_async_alg);
 	if (err)
 		goto err_shash;
@@ -775,10 +809,13 @@ static int __init ghash_ce_mod_init(void)
 
 err_shash:
 	crypto_unregister_shash(&ghash_alg);
+<<<<<<< HEAD
 err_aead:
 	if (elf_hwcap2 & HWCAP2_PMULL)
 		crypto_unregister_aeads(gcm_aes_algs,
 					ARRAY_SIZE(gcm_aes_algs));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return err;
 }
 
@@ -786,9 +823,12 @@ static void __exit ghash_ce_mod_exit(void)
 {
 	crypto_unregister_ahash(&ghash_async_alg);
 	crypto_unregister_shash(&ghash_alg);
+<<<<<<< HEAD
 	if (elf_hwcap2 & HWCAP2_PMULL)
 		crypto_unregister_aeads(gcm_aes_algs,
 					ARRAY_SIZE(gcm_aes_algs));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 module_init(ghash_ce_mod_init);

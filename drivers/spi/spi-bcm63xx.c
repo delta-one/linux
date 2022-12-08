@@ -157,6 +157,19 @@ static inline u8 bcm_spi_readb(struct bcm63xx_spi *bs,
 	return readb(bs->regs + bs->reg_offsets[offset]);
 }
 
+<<<<<<< HEAD
+=======
+static inline u16 bcm_spi_readw(struct bcm63xx_spi *bs,
+				unsigned int offset)
+{
+#ifdef CONFIG_CPU_BIG_ENDIAN
+	return ioread16be(bs->regs + bs->reg_offsets[offset]);
+#else
+	return readw(bs->regs + bs->reg_offsets[offset]);
+#endif
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline void bcm_spi_writeb(struct bcm63xx_spi *bs,
 				  u8 value, unsigned int offset)
 {
@@ -282,7 +295,11 @@ static int bcm63xx_txrx_bufs(struct spi_device *spi, struct spi_transfer *first,
 	/* Issue the transfer */
 	cmd = SPI_CMD_START_IMMEDIATE;
 	cmd |= (prepend_len << SPI_CMD_PREPEND_BYTE_CNT_SHIFT);
+<<<<<<< HEAD
 	cmd |= (spi_get_chipselect(spi, 0) << SPI_CMD_DEVICE_ID_SHIFT);
+=======
+	cmd |= (spi->chip_select << SPI_CMD_DEVICE_ID_SHIFT);
+>>>>>>> b7ba80a49124 (Commit)
 	bcm_spi_writew(bs, cmd, SPI_CMD);
 
 	/* Enable the CMD_DONE interrupt */
@@ -537,7 +554,12 @@ static int bcm63xx_spi_probe(struct platform_device *pdev)
 	platform_set_drvdata(pdev, master);
 	bs->pdev = pdev;
 
+<<<<<<< HEAD
 	bs->regs = devm_platform_get_and_ioremap_resource(pdev, 0, &r);
+=======
+	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	bs->regs = devm_ioremap_resource(&pdev->dev, r);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(bs->regs)) {
 		ret = PTR_ERR(bs->regs);
 		goto out_err;
@@ -605,7 +627,11 @@ out_err:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void bcm63xx_spi_remove(struct platform_device *pdev)
+=======
+static int bcm63xx_spi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_master *master = platform_get_drvdata(pdev);
 	struct bcm63xx_spi *bs = spi_master_get_devdata(master);
@@ -615,6 +641,11 @@ static void bcm63xx_spi_remove(struct platform_device *pdev)
 
 	/* HW shutdown */
 	clk_disable_unprepare(bs->clk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -658,7 +689,11 @@ static struct platform_driver bcm63xx_spi_driver = {
 	},
 	.id_table	= bcm63xx_spi_dev_match,
 	.probe		= bcm63xx_spi_probe,
+<<<<<<< HEAD
 	.remove_new	= bcm63xx_spi_remove,
+=======
+	.remove		= bcm63xx_spi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(bcm63xx_spi_driver);

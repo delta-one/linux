@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0+
 /* Copyright (c) 2016-2017 Hisilicon Limited. */
 
+<<<<<<< HEAD
 #include <linux/sched/clock.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "hclge_err.h"
 
 static const struct hclge_hw_error hclge_imp_tcm_ecc_int[] = {

@@ -45,7 +45,10 @@ properties:
               - mediatek,mt8188-uart
               - mediatek,mt8192-uart
               - mediatek,mt8195-uart
+<<<<<<< HEAD
               - mediatek,mt8365-uart
+=======
+>>>>>>> b7ba80a49124 (Commit)
               - mediatek,mt8516-uart
           - const: mediatek,mt6577-uart
 

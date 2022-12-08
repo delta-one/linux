@@ -7,7 +7,10 @@
 #define QUEUE_SIZE 128
 #define SIGNAL_PER_DIV_QUEUE 16
 #define TH_NUMS_TO_DRAIN 2
+<<<<<<< HEAD
 #define DR_SEND_INFO_POOL_SIZE 1000
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 enum { CQ_OK = 0, CQ_EMPTY = -1, CQ_POLL_ERR = -2 };
 
@@ -50,6 +53,7 @@ struct dr_qp_init_attr {
 	u8 isolate_vl_tc:1;
 };
 
+<<<<<<< HEAD
 struct mlx5dr_send_info_pool_obj {
 	struct mlx5dr_ste_send_info ste_send_info;
 	struct mlx5dr_send_info_pool *pool;
@@ -180,6 +184,8 @@ void mlx5dr_send_info_free(struct mlx5dr_ste_send_info *ste_send_info)
 	list_add(&pool_obj->list_node, &pool_obj->pool->free_list);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int dr_parse_cqe(struct mlx5dr_cq *dr_cq, struct mlx5_cqe64 *cqe64)
 {
 	unsigned int idx;
@@ -209,6 +215,7 @@ static int dr_cq_poll_one(struct mlx5dr_cq *dr_cq)
 	int err;
 
 	cqe64 = mlx5_cqwq_get_cqe(&dr_cq->wq);
+<<<<<<< HEAD
 	if (!cqe64) {
 		if (unlikely(dr_cq->mdev->state ==
 			     MLX5_DEVICE_STATE_INTERNAL_ERROR)) {
@@ -218,6 +225,10 @@ static int dr_cq_poll_one(struct mlx5dr_cq *dr_cq)
 		}
 		return CQ_EMPTY;
 	}
+=======
+	if (!cqe64)
+		return CQ_EMPTY;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mlx5_cqwq_pop(&dr_cq->wq);
 	err = dr_parse_cqe(dr_cq, cqe64);
@@ -724,6 +735,10 @@ int mlx5dr_send_postsend_action(struct mlx5dr_domain *dmn,
 				struct mlx5dr_action *action)
 {
 	struct postsend_info send_info = {};
+<<<<<<< HEAD
+=======
+	int ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	send_info.write.addr = (uintptr_t)action->rewrite->data;
 	send_info.write.length = action->rewrite->num_of_actions *
@@ -733,7 +748,13 @@ int mlx5dr_send_postsend_action(struct mlx5dr_domain *dmn,
 		mlx5dr_icm_pool_get_chunk_mr_addr(action->rewrite->chunk);
 	send_info.rkey = mlx5dr_icm_pool_get_chunk_rkey(action->rewrite->chunk);
 
+<<<<<<< HEAD
 	return dr_postsend_icm_data(dmn, &send_info);
+=======
+	ret = dr_postsend_icm_data(dmn, &send_info);
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int dr_modify_qp_rst2init(struct mlx5_core_dev *mdev,
@@ -968,7 +989,10 @@ static struct mlx5dr_cq *dr_create_cq(struct mlx5_core_dev *mdev,
 
 	cq->mcq.vector = 0;
 	cq->mcq.uar = uar;
+<<<<<<< HEAD
 	cq->mdev = mdev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return cq;
 

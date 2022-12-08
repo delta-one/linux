@@ -8,7 +8,10 @@
 #include <linux/fs.h>
 #include <linux/string.h>
 #include <linux/ctype.h>
+<<<<<<< HEAD
 #include <linux/kstrtox.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/proc_fs.h>
 #include <linux/uaccess.h>
@@ -176,7 +179,11 @@ static int cifs_debug_files_proc_show(struct seq_file *m, void *v)
 
 	seq_puts(m, "# Version:1\n");
 	seq_puts(m, "# Format:\n");
+<<<<<<< HEAD
 	seq_puts(m, "# <tree id> <ses id> <persistent fid> <flags> <count> <pid> <uid>");
+=======
+	seq_puts(m, "# <tree id> <persistent fid> <flags> <count> <pid> <uid>");
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_CIFS_DEBUG2
 	seq_printf(m, " <filename> <mid>\n");
 #else
@@ -189,9 +196,14 @@ static int cifs_debug_files_proc_show(struct seq_file *m, void *v)
 				spin_lock(&tcon->open_file_lock);
 				list_for_each_entry(cfile, &tcon->openFileList, tlist) {
 					seq_printf(m,
+<<<<<<< HEAD
 						"0x%x 0x%llx 0x%llx 0x%x %d %d %d %pd",
 						tcon->tid,
 						ses->Suid,
+=======
+						"0x%x 0x%llx 0x%x %d %d %d %pd",
+						tcon->tid,
+>>>>>>> b7ba80a49124 (Commit)
 						cfile->fid.persistent_fid,
 						cfile->f_flags,
 						cfile->count,
@@ -217,7 +229,10 @@ static int cifs_debug_data_proc_show(struct seq_file *m, void *v)
 {
 	struct mid_q_entry *mid_entry;
 	struct TCP_Server_Info *server;
+<<<<<<< HEAD
 	struct TCP_Server_Info *chan_server;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct cifs_ses *ses;
 	struct cifs_tcon *tcon;
 	struct cifs_server_iface *iface;
@@ -375,6 +390,7 @@ skip_rdma:
 		seq_printf(m, "\nIn Send: %d In MaxReq Wait: %d",
 				atomic_read(&server->in_send),
 				atomic_read(&server->num_waiters));
+<<<<<<< HEAD
 		if (IS_ENABLED(CONFIG_CIFS_DFS_UPCALL)) {
 			if (server->origin_fullpath)
 				seq_printf(m, "\nDFS origin full path: %s",
@@ -383,6 +399,8 @@ skip_rdma:
 				seq_printf(m, "\nDFS leaf full path:   %s",
 					   server->leaf_fullpath);
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		seq_printf(m, "\n\n\tSessions: ");
 		i = 0;
@@ -422,11 +440,14 @@ skip_rdma:
 				   from_kuid(&init_user_ns, ses->linux_uid),
 				   from_kuid(&init_user_ns, ses->cred_uid));
 
+<<<<<<< HEAD
 			if (ses->dfs_root_ses) {
 				seq_printf(m, "\n\tDFS root session id: 0x%llx",
 					   ses->dfs_root_ses->Suid);
 			}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			spin_lock(&ses->chan_lock);
 			if (CIFS_CHAN_NEEDS_RECONNECT(ses, 0))
 				seq_puts(m, "\tPrimary channel: DISCONNECTED ");
@@ -463,10 +484,15 @@ skip_rdma:
 
 			spin_lock(&ses->iface_lock);
 			if (ses->iface_count)
+<<<<<<< HEAD
 				seq_printf(m, "\n\n\tServer interfaces: %zu"
 					   "\tLast updated: %lu seconds ago",
 					   ses->iface_count,
 					   (jiffies - ses->iface_last_update) / HZ);
+=======
+				seq_printf(m, "\n\n\tServer interfaces: %zu",
+					   ses->iface_count);
+>>>>>>> b7ba80a49124 (Commit)
 			j = 0;
 			list_for_each_entry(iface, &ses->iface_list,
 						 iface_head) {
@@ -476,6 +502,7 @@ skip_rdma:
 					seq_puts(m, "\t\t[CONNECTED]\n");
 			}
 			spin_unlock(&ses->iface_lock);
+<<<<<<< HEAD
 
 			seq_puts(m, "\n\n\tMIDs: ");
 			spin_lock(&ses->chan_lock);
@@ -505,6 +532,25 @@ skip_rdma:
 		}
 		if (i == 0)
 			seq_printf(m, "\n\t\t[NONE]");
+=======
+		}
+		if (i == 0)
+			seq_printf(m, "\n\t\t[NONE]");
+
+		seq_puts(m, "\n\n\tMIDs: ");
+		spin_lock(&server->mid_lock);
+		list_for_each_entry(mid_entry, &server->pending_mid_q, qhead) {
+			seq_printf(m, "\n\tState: %d com: %d pid:"
+					" %d cbdata: %p mid %llu\n",
+					mid_entry->mid_state,
+					le16_to_cpu(mid_entry->command),
+					mid_entry->pid,
+					mid_entry->callback_data,
+					mid_entry->mid);
+		}
+		spin_unlock(&server->mid_lock);
+		seq_printf(m, "\n--\n");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (c == 0)
 		seq_printf(m, "\n\t[NONE]");
@@ -809,7 +855,11 @@ static ssize_t cifsFYI_proc_write(struct file *file, const char __user *buffer,
 	rc = get_user(c[0], buffer);
 	if (rc)
 		return rc;
+<<<<<<< HEAD
 	if (kstrtobool(c, &bv) == 0)
+=======
+	if (strtobool(c, &bv) == 0)
+>>>>>>> b7ba80a49124 (Commit)
 		cifsFYI = bv;
 	else if ((c[0] > '1') && (c[0] <= '9'))
 		cifsFYI = (int) (c[0] - '0'); /* see cifs_debug.h for meanings */
@@ -969,7 +1019,11 @@ static ssize_t cifs_security_flags_proc_write(struct file *file,
 
 	if (count < 3) {
 		/* single char or single char followed by null */
+<<<<<<< HEAD
 		if (kstrtobool(flags_string, &bv) == 0) {
+=======
+		if (strtobool(flags_string, &bv) == 0) {
+>>>>>>> b7ba80a49124 (Commit)
 			global_secflags = bv ? CIFSSEC_MAX : CIFSSEC_DEF;
 			return count;
 		} else if (!isdigit(flags_string[0])) {

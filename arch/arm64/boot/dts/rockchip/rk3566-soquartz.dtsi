@@ -4,7 +4,10 @@
 
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/pinctrl/rockchip.h>
+<<<<<<< HEAD
 #include <dt-bindings/soc/rockchip,vop2.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "rk3566.dtsi"
 
 / {
@@ -29,6 +32,7 @@
 		#clock-cells = <0>;
 	};
 
+<<<<<<< HEAD
 	hdmi-con {
 		compatible = "hdmi-connector";
 		type = "a";
@@ -40,6 +44,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	leds {
 		compatible = "gpio-leds";
 
@@ -155,6 +161,7 @@
 	status = "disabled";
 };
 
+<<<<<<< HEAD
 &gpu {
 	mali-supply = <&vdd_gpu>;
 	status = "okay";
@@ -182,6 +189,8 @@
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &i2c0 {
 	status = "okay";
 
@@ -450,10 +459,13 @@
 	status = "disabled";
 };
 
+<<<<<<< HEAD
 &i2s0_8ch {
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * i2s1_8ch is exposed on CM1 / Module1A
  * pin 24 - i2s1_sdi1_m1
@@ -487,12 +499,15 @@
 	};
 };
 
+<<<<<<< HEAD
 &pcie2x1 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pcie_reset_h>;
 	reset-gpios = <&gpio1 RK_PB2 GPIO_ACTIVE_HIGH>;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &pinctrl {
 	bt {
 		bt_enable_h: bt-enable-h {
@@ -518,6 +533,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 	pcie {
 		pcie_clkreq_h: pcie-clkreq-h {
 			rockchip,pins = <1 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
@@ -527,6 +543,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pmic {
 		pmic_int_l: pmic-int-l {
 			rockchip,pins = <0 RK_PA3 RK_FUNC_GPIO &pcfg_pull_up>;
@@ -598,7 +616,11 @@
 	non-removable;
 	pinctrl-names = "default";
 	pinctrl-0 = <&sdmmc1_bus4 &sdmmc1_cmd &sdmmc1_clk>;
+<<<<<<< HEAD
 	sd-uhs-sdr50;
+=======
+	sd-uhs-sdr104;
+>>>>>>> b7ba80a49124 (Commit)
 	vmmc-supply = <&vcc3v3_sys>;
 	vqmmc-supply = <&vcc_1v8>;
 	status = "okay";
@@ -672,6 +694,7 @@
 &usb_host0_xhci {
 	status = "disabled";
 };
+<<<<<<< HEAD
 
 &vop {
 	assigned-clocks = <&cru DCLK_VOP0>, <&cru DCLK_VOP1>;
@@ -689,3 +712,5 @@
 		remote-endpoint = <&hdmi_in_vp0>;
 	};
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

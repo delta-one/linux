@@ -29,7 +29,10 @@
 void inet_twsk_bind_unhash(struct inet_timewait_sock *tw,
 			  struct inet_hashinfo *hashinfo)
 {
+<<<<<<< HEAD
 	struct inet_bind2_bucket *tb2 = tw->tw_tb2;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct inet_bind_bucket *tb = tw->tw_tb;
 
 	if (!tb)
@@ -38,11 +41,14 @@ void inet_twsk_bind_unhash(struct inet_timewait_sock *tw,
 	__hlist_del(&tw->tw_bind_node);
 	tw->tw_tb = NULL;
 	inet_bind_bucket_destroy(hashinfo->bind_bucket_cachep, tb);
+<<<<<<< HEAD
 
 	__hlist_del(&tw->tw_bind2_node);
 	tw->tw_tb2 = NULL;
 	inet_bind2_bucket_destroy(hashinfo->bind2_bucket_cachep, tb2);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__sock_put((struct sock *)tw);
 }
 
@@ -51,7 +57,11 @@ static void inet_twsk_kill(struct inet_timewait_sock *tw)
 {
 	struct inet_hashinfo *hashinfo = tw->tw_dr->hashinfo;
 	spinlock_t *lock = inet_ehash_lockp(hashinfo, tw->tw_hash);
+<<<<<<< HEAD
 	struct inet_bind_hashbucket *bhead, *bhead2;
+=======
+	struct inet_bind_hashbucket *bhead;
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock(lock);
 	sk_nulls_del_node_init_rcu((struct sock *)tw);
@@ -60,6 +70,7 @@ static void inet_twsk_kill(struct inet_timewait_sock *tw)
 	/* Disassociate with bind bucket. */
 	bhead = &hashinfo->bhash[inet_bhashfn(twsk_net(tw), tw->tw_num,
 			hashinfo->bhash_size)];
+<<<<<<< HEAD
 	bhead2 = inet_bhashfn_portaddr(hashinfo, (struct sock *)tw,
 				       twsk_net(tw), tw->tw_num);
 
@@ -67,6 +78,11 @@ static void inet_twsk_kill(struct inet_timewait_sock *tw)
 	spin_lock(&bhead2->lock);
 	inet_twsk_bind_unhash(tw, hashinfo);
 	spin_unlock(&bhead2->lock);
+=======
+
+	spin_lock(&bhead->lock);
+	inet_twsk_bind_unhash(tw, hashinfo);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock(&bhead->lock);
 
 	refcount_dec(&tw->tw_dr->tw_refcount);
@@ -77,6 +93,12 @@ void inet_twsk_free(struct inet_timewait_sock *tw)
 {
 	struct module *owner = tw->tw_prot->owner;
 	twsk_destructor((struct sock *)tw);
+<<<<<<< HEAD
+=======
+#ifdef SOCK_REFCNT_DEBUG
+	pr_debug("%s timewait_sock %p released\n", tw->tw_prot->name, tw);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 	kmem_cache_free(tw->tw_prot->twsk_prot->twsk_slab, tw);
 	module_put(owner);
 }
@@ -88,10 +110,17 @@ void inet_twsk_put(struct inet_timewait_sock *tw)
 }
 EXPORT_SYMBOL_GPL(inet_twsk_put);
 
+<<<<<<< HEAD
 static void inet_twsk_add_node_tail_rcu(struct inet_timewait_sock *tw,
 					struct hlist_nulls_head *list)
 {
 	hlist_nulls_add_tail_rcu(&tw->tw_node, list);
+=======
+static void inet_twsk_add_node_rcu(struct inet_timewait_sock *tw,
+				   struct hlist_nulls_head *list)
+{
+	hlist_nulls_add_head_rcu(&tw->tw_node, list);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void inet_twsk_add_bind_node(struct inet_timewait_sock *tw,
@@ -100,12 +129,15 @@ static void inet_twsk_add_bind_node(struct inet_timewait_sock *tw,
 	hlist_add_head(&tw->tw_bind_node, list);
 }
 
+<<<<<<< HEAD
 static void inet_twsk_add_bind2_node(struct inet_timewait_sock *tw,
 				     struct hlist_head *list)
 {
 	hlist_add_head(&tw->tw_bind2_node, list);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Enter the time wait state. This is called with locally disabled BH.
  * Essentially we whip up a timewait bucket, copy the relevant info into it
@@ -118,14 +150,19 @@ void inet_twsk_hashdance(struct inet_timewait_sock *tw, struct sock *sk,
 	const struct inet_connection_sock *icsk = inet_csk(sk);
 	struct inet_ehash_bucket *ehead = inet_ehash_bucket(hashinfo, sk->sk_hash);
 	spinlock_t *lock = inet_ehash_lockp(hashinfo, sk->sk_hash);
+<<<<<<< HEAD
 	struct inet_bind_hashbucket *bhead, *bhead2;
 
+=======
+	struct inet_bind_hashbucket *bhead;
+>>>>>>> b7ba80a49124 (Commit)
 	/* Step 1: Put TW into bind hash. Original socket stays there too.
 	   Note, that any socket with inet->num != 0 MUST be bound in
 	   binding cache, even if it is closed.
 	 */
 	bhead = &hashinfo->bhash[inet_bhashfn(twsk_net(tw), inet->inet_num,
 			hashinfo->bhash_size)];
+<<<<<<< HEAD
 	bhead2 = inet_bhashfn_portaddr(hashinfo, sk, twsk_net(tw), inet->inet_num);
 
 	spin_lock(&bhead->lock);
@@ -140,11 +177,21 @@ void inet_twsk_hashdance(struct inet_timewait_sock *tw, struct sock *sk,
 	inet_twsk_add_bind2_node(tw, &tw->tw_tb2->deathrow);
 
 	spin_unlock(&bhead2->lock);
+=======
+	spin_lock(&bhead->lock);
+	tw->tw_tb = icsk->icsk_bind_hash;
+	WARN_ON(!icsk->icsk_bind_hash);
+	inet_twsk_add_bind_node(tw, &tw->tw_tb->owners);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock(&bhead->lock);
 
 	spin_lock(lock);
 
+<<<<<<< HEAD
 	inet_twsk_add_node_tail_rcu(tw, &ehead->chain);
+=======
+	inet_twsk_add_node_rcu(tw, &ehead->chain);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Step 3: Remove SK from hash chain */
 	if (__sk_nulls_del_node_init_rcu(sk))
@@ -292,6 +339,7 @@ restart_rcu:
 		rcu_read_lock();
 restart:
 		sk_nulls_for_each_rcu(sk, node, &head->chain) {
+<<<<<<< HEAD
 			if (sk->sk_state != TCP_TIME_WAIT) {
 				/* A kernel listener socket might not hold refcnt for net,
 				 * so reqsk_timer_handler() could be fired after net is
@@ -307,6 +355,10 @@ restart:
 				continue;
 			}
 
+=======
+			if (sk->sk_state != TCP_TIME_WAIT)
+				continue;
+>>>>>>> b7ba80a49124 (Commit)
 			tw = inet_twsk(sk);
 			if ((tw->tw_family != family) ||
 				refcount_read(&twsk_net(tw)->ns.count))

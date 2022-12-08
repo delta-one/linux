@@ -506,9 +506,14 @@ static int squashfs_readahead_fragment(struct page **page,
 		squashfs_i(inode)->fragment_size);
 	struct squashfs_sb_info *msblk = inode->i_sb->s_fs_info;
 	unsigned int n, mask = (1 << (msblk->block_log - PAGE_SHIFT)) - 1;
+<<<<<<< HEAD
 	int error = buffer->error;
 
 	if (error)
+=======
+
+	if (buffer->error)
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 
 	expected += squashfs_i(inode)->fragment_offset;
@@ -530,7 +535,11 @@ static int squashfs_readahead_fragment(struct page **page,
 
 out:
 	squashfs_cache_put(buffer);
+<<<<<<< HEAD
 	return error;
+=======
+	return buffer->error;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void squashfs_readahead(struct readahead_control *ractl)
@@ -558,6 +567,7 @@ static void squashfs_readahead(struct readahead_control *ractl)
 		int res, bsize;
 		u64 block = 0;
 		unsigned int expected;
+<<<<<<< HEAD
 		struct page *last_page;
 
 		expected = start >> msblk->block_log == file_end ?
@@ -565,6 +575,8 @@ static void squashfs_readahead(struct readahead_control *ractl)
 			    msblk->block_size;
 
 		max_pages = (expected + PAGE_SIZE - 1) >> PAGE_SHIFT;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		nr_pages = __readahead_batch(ractl, pages, max_pages);
 		if (!nr_pages)
@@ -574,10 +586,20 @@ static void squashfs_readahead(struct readahead_control *ractl)
 			goto skip_pages;
 
 		index = pages[0]->index >> shift;
+<<<<<<< HEAD
 
 		if ((pages[nr_pages - 1]->index >> shift) != index)
 			goto skip_pages;
 
+=======
+		if ((pages[nr_pages - 1]->index >> shift) != index)
+			goto skip_pages;
+
+		expected = index == file_end ?
+			   (i_size_read(inode) & (msblk->block_size - 1)) :
+			    msblk->block_size;
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (index == file_end && squashfs_i(inode)->fragment_block !=
 						SQUASHFS_INVALID_BLK) {
 			res = squashfs_readahead_fragment(pages, nr_pages,
@@ -598,15 +620,24 @@ static void squashfs_readahead(struct readahead_control *ractl)
 
 		res = squashfs_read_data(inode->i_sb, block, bsize, NULL, actor);
 
+<<<<<<< HEAD
 		last_page = squashfs_page_actor_free(actor);
+=======
+		squashfs_page_actor_free(actor);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (res == expected) {
 			int bytes;
 
 			/* Last page (if present) may have trailing bytes not filled */
 			bytes = res % PAGE_SIZE;
+<<<<<<< HEAD
 			if (index == file_end && bytes && last_page)
 				memzero_page(last_page, bytes,
+=======
+			if (pages[nr_pages - 1]->index == file_end && bytes)
+				memzero_page(pages[nr_pages - 1], bytes,
+>>>>>>> b7ba80a49124 (Commit)
 					     PAGE_SIZE - bytes);
 
 			for (i = 0; i < nr_pages; i++) {

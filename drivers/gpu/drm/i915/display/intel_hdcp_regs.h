@@ -6,7 +6,11 @@
 #ifndef __INTEL_HDCP_REGS_H__
 #define __INTEL_HDCP_REGS_H__
 
+<<<<<<< HEAD
 #include "intel_display_reg_defs.h"
+=======
+#include "i915_reg_defs.h"
+>>>>>>> b7ba80a49124 (Commit)
 
 /* HDCP Key Registers */
 #define HDCP_KEY_CONF			_MMIO(0x66c00)

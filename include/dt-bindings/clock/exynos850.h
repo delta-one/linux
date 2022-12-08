@@ -85,10 +85,14 @@
 #define CLK_DOUT_MFCMSCL_M2M		73
 #define CLK_DOUT_MFCMSCL_MCSC		74
 #define CLK_DOUT_MFCMSCL_JPEG		75
+<<<<<<< HEAD
 #define CLK_MOUT_G3D_SWITCH		76
 #define CLK_GOUT_G3D_SWITCH		77
 #define CLK_DOUT_G3D_SWITCH		78
 #define TOP_NR_CLK			79
+=======
+#define TOP_NR_CLK			76
+>>>>>>> b7ba80a49124 (Commit)
 
 /* CMU_APM */
 #define CLK_RCO_I3C_PMIC		1
@@ -178,8 +182,12 @@
 #define IOCLK_AUDIOCDCLK5		58
 #define IOCLK_AUDIOCDCLK6		59
 #define TICK_USB			60
+<<<<<<< HEAD
 #define CLK_GOUT_AUD_CMU_AUD_PCLK	61
 #define AUD_NR_CLK			62
+=======
+#define AUD_NR_CLK			61
+>>>>>>> b7ba80a49124 (Commit)
 
 /* CMU_CMGP */
 #define CLK_RCO_CMGP			1
@@ -199,6 +207,7 @@
 #define CLK_GOUT_SYSREG_CMGP_PCLK	15
 #define CMGP_NR_CLK			16
 
+<<<<<<< HEAD
 /* CMU_G3D */
 #define CLK_FOUT_G3D_PLL		1
 #define CLK_MOUT_G3D_PLL		2
@@ -214,6 +223,8 @@
 #define CLK_GOUT_G3D_SYSREG_PCLK	12
 #define G3D_NR_CLK			13
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* CMU_HSI */
 #define CLK_MOUT_HSI_BUS_USER		1
 #define CLK_MOUT_HSI_MMC_CARD_USER	2
@@ -228,10 +239,14 @@
 #define CLK_GOUT_MMC_CARD_ACLK		11
 #define CLK_GOUT_MMC_CARD_SDCLKIN	12
 #define CLK_GOUT_SYSREG_HSI_PCLK	13
+<<<<<<< HEAD
 #define CLK_GOUT_HSI_PPMU_ACLK		14
 #define CLK_GOUT_HSI_PPMU_PCLK		15
 #define CLK_GOUT_HSI_CMU_HSI_PCLK	16
 #define HSI_NR_CLK			17
+=======
+#define HSI_NR_CLK			14
+>>>>>>> b7ba80a49124 (Commit)
 
 /* CMU_IS */
 #define CLK_MOUT_IS_BUS_USER		1

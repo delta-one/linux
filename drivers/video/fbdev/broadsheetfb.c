@@ -1193,7 +1193,11 @@ err:
 
 }
 
+<<<<<<< HEAD
 static void broadsheetfb_remove(struct platform_device *dev)
+=======
+static int broadsheetfb_remove(struct platform_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct fb_info *info = platform_get_drvdata(dev);
 
@@ -1209,11 +1213,19 @@ static void broadsheetfb_remove(struct platform_device *dev)
 		module_put(par->board->owner);
 		framebuffer_release(info);
 	}
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver broadsheetfb_driver = {
 	.probe	= broadsheetfb_probe,
+<<<<<<< HEAD
 	.remove_new = broadsheetfb_remove,
+=======
+	.remove = broadsheetfb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.name	= "broadsheetfb",
 	},

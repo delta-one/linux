@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* SPDX-License-Identifier: MIT */
 #ifndef __NVKM_CGRP_H__
 #define __NVKM_CGRP_H__
@@ -72,4 +73,16 @@ void nvkm_cgrp_put(struct nvkm_cgrp **, unsigned long irqflags);
 #define CGRP_PRINT(c,l,p,f,a...) RUNL_PRINT((c)->runl, l, p, "%04x:"f, (c)->id, ##a)
 #define CGRP_ERROR(c,f,a...) CGRP_PRCLI((c), ERROR,    err, " "f"\n", ##a)
 #define CGRP_TRACE(c,f,a...) CGRP_PRINT((c), TRACE,   info, " "f"\n", ##a)
+=======
+#ifndef __NVKM_FIFO_CGRP_H__
+#define __NVKM_FIFO_CGRP_H__
+#include "priv.h"
+
+struct nvkm_fifo_cgrp {
+	int id;
+	struct list_head head;
+	struct list_head chan;
+	int chan_nr;
+};
+>>>>>>> b7ba80a49124 (Commit)
 #endif

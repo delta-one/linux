@@ -15,7 +15,10 @@
 #include <linux/phy/phy.h>
 
 #define P2U_CONTROL_CMN			0x74
+<<<<<<< HEAD
 #define P2U_CONTROL_CMN_ENABLE_L2_EXIT_RATE_CHANGE		BIT(13)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define P2U_CONTROL_CMN_SKP_SIZE_PROTECTION_EN			BIT(20)
 
 #define P2U_PERIODIC_EQ_CTRL_GEN3	0xc0
@@ -86,6 +89,7 @@ static int tegra_p2u_power_on(struct phy *x)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int tegra_p2u_calibrate(struct phy *x)
 {
 	struct tegra_p2u *phy = phy_get_drvdata(x);
@@ -101,6 +105,10 @@ static int tegra_p2u_calibrate(struct phy *x)
 static const struct phy_ops ops = {
 	.power_on = tegra_p2u_power_on,
 	.calibrate = tegra_p2u_calibrate,
+=======
+static const struct phy_ops ops = {
+	.power_on = tegra_p2u_power_on,
+>>>>>>> b7ba80a49124 (Commit)
 	.owner = THIS_MODULE,
 };
 

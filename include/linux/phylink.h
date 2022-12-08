@@ -21,6 +21,7 @@ enum {
 	MLO_AN_FIXED,	/* Fixed-link mode */
 	MLO_AN_INBAND,	/* In-band protocol */
 
+<<<<<<< HEAD
 	/* MAC_SYM_PAUSE and MAC_ASYM_PAUSE are used when configuring our
 	 * autonegotiation advertisement. They correspond to the PAUSE and
 	 * ASM_DIR bits defined by 802.3, respectively.
@@ -50,6 +51,8 @@ enum {
 	 * MAC_SYM_PAUSE unless your device can support tx_pause and rx_pause
 	 * at the same time.
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	MAC_SYM_PAUSE	= BIT(0),
 	MAC_ASYM_PAUSE	= BIT(1),
 	MAC_10HD	= BIT(2),
@@ -88,11 +91,16 @@ static inline bool phylink_autoneg_inband(unsigned int mode)
  * @speed: link speed, one of the SPEED_* constants.
  * @duplex: link duplex mode, one of DUPLEX_* constants.
  * @pause: link pause state, described by MLO_PAUSE_* constants.
+<<<<<<< HEAD
  * @rate_matching: rate matching being performed, one of the RATE_MATCH_*
  *   constants. If rate matching is taking place, then the speed/duplex of
  *   the medium link mode (@speed and @duplex) and the speed/duplex of the phy
  *   interface mode (@interface) are different.
  * @link: true if the link is up.
+=======
+ * @link: true if the link is up.
+ * @an_enabled: true if autonegotiation is enabled/desired.
+>>>>>>> b7ba80a49124 (Commit)
  * @an_complete: true if autonegotiation has completed.
  */
 struct phylink_link_state {
@@ -102,8 +110,13 @@ struct phylink_link_state {
 	int speed;
 	int duplex;
 	int pause;
+<<<<<<< HEAD
 	int rate_matching;
 	unsigned int link:1;
+=======
+	unsigned int link:1;
+	unsigned int an_enabled:1;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int an_complete:1;
 };
 
@@ -120,7 +133,10 @@ enum phylink_op_type {
  *	(See commit 7cceb599d15d ("net: phylink: avoid mac_config calls")
  * @poll_fixed_state: if true, starts link_poll,
  *		      if MAC link is at %MLO_AN_FIXED mode.
+<<<<<<< HEAD
  * @mac_managed_pm: if true, indicate the MAC driver is responsible for PHY PM.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @ovr_an_inband: if true, override PCS to MLO_AN_INBAND
  * @get_fixed_state: callback to execute to determine the fixed link state,
  *		     if MAC link is at %MLO_AN_FIXED mode.
@@ -133,7 +149,10 @@ struct phylink_config {
 	enum phylink_op_type type;
 	bool legacy_pre_march2020;
 	bool poll_fixed_state;
+<<<<<<< HEAD
 	bool mac_managed_pm;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bool ovr_an_inband;
 	void (*get_fixed_state)(struct phylink_config *config,
 				struct phylink_link_state *state);
@@ -205,11 +224,14 @@ struct phylink_mac_ops {
  *
  * If the @state->interface mode is not supported, then the @supported
  * mask must be cleared.
+<<<<<<< HEAD
  *
  * This member is optional; if not set, the generic validator will be
  * used making use of @config->mac_capabilities and
  * @config->supported_interfaces to determine which link modes are
  * supported.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 void validate(struct phylink_config *config, unsigned long *supported,
 	      struct phylink_link_state *state);
@@ -557,6 +579,7 @@ void pcs_link_up(struct phylink_pcs *pcs, unsigned int mode,
 		 phy_interface_t interface, int speed, int duplex);
 #endif
 
+<<<<<<< HEAD
 void phylink_caps_to_linkmodes(unsigned long *linkmodes, unsigned long caps);
 unsigned long phylink_get_capabilities(phy_interface_t interface,
 				       unsigned long mac_capabilities,
@@ -564,6 +587,10 @@ unsigned long phylink_get_capabilities(phy_interface_t interface,
 void phylink_validate_mask_caps(unsigned long *supported,
 				struct phylink_link_state *state,
 				unsigned long caps);
+=======
+void phylink_get_linkmodes(unsigned long *linkmodes, phy_interface_t interface,
+			   unsigned long mac_capabilities);
+>>>>>>> b7ba80a49124 (Commit)
 void phylink_generic_validate(struct phylink_config *config,
 			      unsigned long *supported,
 			      struct phylink_link_state *state);
@@ -619,6 +646,7 @@ int phylink_speed_up(struct phylink *pl);
 
 void phylink_set_port_modes(unsigned long *bits);
 
+<<<<<<< HEAD
 /**
  * phylink_get_link_timer_ns - return the PCS link timer value
  * @interface: link &typedef phy_interface_t mode
@@ -643,6 +671,8 @@ static inline int phylink_get_link_timer_ns(phy_interface_t interface)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void phylink_mii_c22_pcs_decode_state(struct phylink_link_state *state,
 				      u16 bmsr, u16 lpa);
 void phylink_mii_c22_pcs_get_state(struct mdio_device *pcs,

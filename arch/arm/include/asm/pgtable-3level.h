@@ -76,9 +76,12 @@
 #define L_PTE_NONE		(_AT(pteval_t, 1) << 57)	/* PROT_NONE */
 #define L_PTE_RDONLY		(_AT(pteval_t, 1) << 58)	/* READ ONLY */
 
+<<<<<<< HEAD
 /* We borrow bit 7 to store the exclusive marker in swap PTEs. */
 #define L_PTE_SWP_EXCLUSIVE	(_AT(pteval_t, 1) << 7)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define L_PMD_SECT_VALID	(_AT(pmdval_t, 1) << 0)
 #define L_PMD_SECT_DIRTY	(_AT(pmdval_t, 1) << 55)
 #define L_PMD_SECT_NONE		(_AT(pmdval_t, 1) << 57)
@@ -202,16 +205,23 @@ static inline pmd_t pmd_##fn(pmd_t pmd) { pmd_val(pmd) op; return pmd; }
 
 PMD_BIT_FUNC(wrprotect,	|= L_PMD_SECT_RDONLY);
 PMD_BIT_FUNC(mkold,	&= ~PMD_SECT_AF);
+<<<<<<< HEAD
+=======
+PMD_BIT_FUNC(mkwrite,   &= ~L_PMD_SECT_RDONLY);
+>>>>>>> b7ba80a49124 (Commit)
 PMD_BIT_FUNC(mkdirty,   |= L_PMD_SECT_DIRTY);
 PMD_BIT_FUNC(mkclean,   &= ~L_PMD_SECT_DIRTY);
 PMD_BIT_FUNC(mkyoung,   |= PMD_SECT_AF);
 
+<<<<<<< HEAD
 static inline pmd_t pmd_mkwrite(pmd_t pmd, struct vm_area_struct *vma)
 {
 	pmd_val(pmd) |= L_PMD_SECT_RDONLY;
 	return pmd;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define pmd_mkhuge(pmd)		(__pmd(pmd_val(pmd) & ~PMD_TABLE_BIT))
 
 #define pmd_pfn(pmd)		(((pmd_val(pmd) & PMD_MASK) & PHYS_MASK) >> PAGE_SHIFT)

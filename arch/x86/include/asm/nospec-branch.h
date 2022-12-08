@@ -12,6 +12,7 @@
 #include <asm/msr-index.h>
 #include <asm/unwind_hints.h>
 #include <asm/percpu.h>
+<<<<<<< HEAD
 #include <asm/current.h>
 
 /*
@@ -110,6 +111,10 @@
 #define ASM_INCREMENT_CALL_DEPTH
 #define RESET_CALL_DEPTH_FROM_CALL
 #endif
+=======
+
+#define RETPOLINE_THUNK_SIZE	32
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Fill the CPU return stack buffer.
@@ -128,7 +133,10 @@
  * from C via asm(".include <asm/nospec-branch.h>") but let's not go there.
  */
 
+<<<<<<< HEAD
 #define RETPOLINE_THUNK_SIZE	32
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define RSB_CLEAR_LOOPS		32	/* To forcibly overwrite all entries */
 
 /*
@@ -157,9 +165,13 @@
 	dec	reg;					\
 	jnz	771b;					\
 	/* barrier for jnz misprediction */		\
+<<<<<<< HEAD
 	lfence;						\
 	ASM_CREDIT_CALL_DEPTH				\
 	CALL_THUNKS_DEBUG_INC_CTXSW
+=======
+	lfence;
+>>>>>>> b7ba80a49124 (Commit)
 #else
 /*
  * i386 doesn't unconditionally have LFENCE, as such it can't
@@ -261,7 +273,11 @@
 .macro FILL_RETURN_BUFFER reg:req nr:req ftr:req ftr2=ALT_NOT(X86_FEATURE_ALWAYS)
 	ALTERNATIVE_2 "jmp .Lskip_rsb_\@", \
 		__stringify(__FILL_RETURN_BUFFER(\reg,\nr)), \ftr, \
+<<<<<<< HEAD
 		__stringify(nop;nop;__FILL_ONE_RETURN), \ftr2
+=======
+		__stringify(__FILL_ONE_RETURN), \ftr2
+>>>>>>> b7ba80a49124 (Commit)
 
 .Lskip_rsb_\@:
 .endm
@@ -284,6 +300,7 @@
  * where we have a stack but before any RET instruction.
  */
 .macro UNTRAIN_RET
+<<<<<<< HEAD
 #if defined(CONFIG_CPU_UNRET_ENTRY) || defined(CONFIG_CPU_IBPB_ENTRY) || \
 	defined(CONFIG_CALL_DEPTH_TRACKING)
 	ANNOTATE_UNRET_END
@@ -310,6 +327,13 @@
 #ifdef CONFIG_CALL_DEPTH_TRACKING
 	ALTERNATIVE "",							\
 		    __stringify(ASM_INCREMENT_CALL_DEPTH), X86_FEATURE_CALL_DEPTH
+=======
+#if defined(CONFIG_CPU_UNRET_ENTRY) || defined(CONFIG_CPU_IBPB_ENTRY)
+	ANNOTATE_UNRET_END
+	ALTERNATIVE_2 "",						\
+	              CALL_ZEN_UNTRAIN_RET, X86_FEATURE_UNRET,		\
+		      "call entry_ibpb", X86_FEATURE_ENTRY_IBPB
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 .endm
 
@@ -323,13 +347,17 @@
 
 typedef u8 retpoline_thunk_t[RETPOLINE_THUNK_SIZE];
 extern retpoline_thunk_t __x86_indirect_thunk_array[];
+<<<<<<< HEAD
 extern retpoline_thunk_t __x86_indirect_call_thunk_array[];
 extern retpoline_thunk_t __x86_indirect_jump_thunk_array[];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 extern void __x86_return_thunk(void);
 extern void zen_untrain_ret(void);
 extern void entry_ibpb(void);
 
+<<<<<<< HEAD
 #ifdef CONFIG_CALL_THUNKS
 extern void (*x86_return_thunk)(void);
 #else
@@ -362,6 +390,8 @@ static inline void x86_set_skl_return_thunk(void) {}
 
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_RETPOLINE
 
 #define GEN(reg) \
@@ -369,6 +399,7 @@ static inline void x86_set_skl_return_thunk(void) {}
 #include <asm/GEN-for-each-reg.h>
 #undef GEN
 
+<<<<<<< HEAD
 #define GEN(reg)						\
 	extern retpoline_thunk_t __x86_indirect_call_thunk_ ## reg;
 #include <asm/GEN-for-each-reg.h>
@@ -379,6 +410,8 @@ static inline void x86_set_skl_return_thunk(void) {}
 #include <asm/GEN-for-each-reg.h>
 #undef GEN
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_X86_64
 
 /*
@@ -485,7 +518,11 @@ static inline void indirect_branch_prediction_barrier(void)
 /* The Intel SPEC CTRL MSR base value cache */
 extern u64 x86_spec_ctrl_base;
 DECLARE_PER_CPU(u64, x86_spec_ctrl_current);
+<<<<<<< HEAD
 extern void update_spec_ctrl_cond(u64 val);
+=======
+extern void write_spec_ctrl_current(u64 val, bool force);
+>>>>>>> b7ba80a49124 (Commit)
 extern u64 spec_ctrl_current(void);
 
 /*
@@ -564,7 +601,11 @@ static __always_inline void mds_user_clear_cpu_buffers(void)
  *
  * Clear CPU buffers if the corresponding static key is enabled
  */
+<<<<<<< HEAD
 static __always_inline void mds_idle_clear_cpu_buffers(void)
+=======
+static inline void mds_idle_clear_cpu_buffers(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (static_branch_likely(&mds_idle_clear))
 		mds_clear_cpu_buffers();

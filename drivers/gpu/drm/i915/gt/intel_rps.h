@@ -10,10 +10,13 @@
 #include "i915_reg_defs.h"
 
 struct i915_request;
+<<<<<<< HEAD
 struct drm_printer;
 
 #define GT_FREQUENCY_MULTIPLIER 50
 #define GEN9_FREQ_SCALER 3
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 void intel_rps_init_early(struct intel_rps *rps);
 void intel_rps_init(struct intel_rps *rps);
@@ -51,8 +54,11 @@ u32 intel_rps_get_rp1_frequency(struct intel_rps *rps);
 u32 intel_rps_get_rpn_frequency(struct intel_rps *rps);
 u32 intel_rps_read_punit_req(struct intel_rps *rps);
 u32 intel_rps_read_punit_req_frequency(struct intel_rps *rps);
+<<<<<<< HEAD
 u32 intel_rps_read_rpstat(struct intel_rps *rps);
 u32 intel_rps_read_rpstat_fw(struct intel_rps *rps);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void gen6_rps_get_freq_caps(struct intel_rps *rps, struct intel_rps_freq_caps *caps);
 void intel_rps_raise_unslice(struct intel_rps *rps);
 void intel_rps_lower_unslice(struct intel_rps *rps);
@@ -60,8 +66,11 @@ void intel_rps_lower_unslice(struct intel_rps *rps);
 u32 intel_rps_read_throttle_reason(struct intel_rps *rps);
 bool rps_read_mask_mmio(struct intel_rps *rps, i915_reg_t reg32, u32 mask);
 
+<<<<<<< HEAD
 void gen6_rps_frequency_dump(struct intel_rps *rps, struct drm_printer *p);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void gen5_rps_irq_handler(struct intel_rps *rps);
 void gen6_rps_irq_handler(struct intel_rps *rps, u32 pm_iir);
 void gen11_rps_irq_handler(struct intel_rps *rps, u32 pm_iir);

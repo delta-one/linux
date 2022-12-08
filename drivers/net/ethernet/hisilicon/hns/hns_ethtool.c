@@ -644,6 +644,7 @@ static void hns_nic_get_drvinfo(struct net_device *net_dev,
 {
 	struct hns_nic_priv *priv = netdev_priv(net_dev);
 
+<<<<<<< HEAD
 	strscpy(drvinfo->version, HNAE_DRIVER_VERSION,
 		sizeof(drvinfo->version));
 
@@ -653,6 +654,20 @@ static void hns_nic_get_drvinfo(struct net_device *net_dev,
 		sizeof(drvinfo->bus_info));
 
 	strscpy(drvinfo->fw_version, "N/A", ETHTOOL_FWVERS_LEN);
+=======
+	strncpy(drvinfo->version, HNAE_DRIVER_VERSION,
+		sizeof(drvinfo->version));
+	drvinfo->version[sizeof(drvinfo->version) - 1] = '\0';
+
+	strncpy(drvinfo->driver, HNAE_DRIVER_NAME, sizeof(drvinfo->driver));
+	drvinfo->driver[sizeof(drvinfo->driver) - 1] = '\0';
+
+	strncpy(drvinfo->bus_info, priv->dev->bus->name,
+		sizeof(drvinfo->bus_info));
+	drvinfo->bus_info[ETHTOOL_BUSINFO_LEN - 1] = '\0';
+
+	strncpy(drvinfo->fw_version, "N/A", ETHTOOL_FWVERS_LEN);
+>>>>>>> b7ba80a49124 (Commit)
 	drvinfo->eedump_len = 0;
 }
 

@@ -130,6 +130,7 @@ struct rseq {
 	 *     this thread.
 	 */
 	__u32 flags;
+<<<<<<< HEAD
 
 	/*
 	 * Restartable sequences node_id field. Updated by the kernel. Read by
@@ -152,6 +153,8 @@ struct rseq {
 	 * Flexible array member at end of structure, after last feature field.
 	 */
 	char end[];
+=======
+>>>>>>> b7ba80a49124 (Commit)
 } __attribute__((aligned(4 * sizeof(__u64))));
 
 #endif /* _UAPI_LINUX_RSEQ_H */

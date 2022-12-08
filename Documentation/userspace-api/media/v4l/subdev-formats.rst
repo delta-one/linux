@@ -949,6 +949,7 @@ The following tables list existing packed RGB formats.
       - b\ :sub:`2`
       - b\ :sub:`1`
       - b\ :sub:`0`
+<<<<<<< HEAD
     * .. _MEDIA-BUS-FMT-BGR666-1X18:
 
       - MEDIA_BUS_FMT_BGR666_1X18
@@ -986,6 +987,8 @@ The following tables list existing packed RGB formats.
       - r\ :sub:`2`
       - r\ :sub:`1`
       - r\ :sub:`0`
+=======
+>>>>>>> b7ba80a49124 (Commit)
     * .. _MEDIA-BUS-FMT-RBG888-1X24:
 
       - MEDIA_BUS_FMT_RBG888_1X24
@@ -1060,6 +1063,7 @@ The following tables list existing packed RGB formats.
       - b\ :sub:`2`
       - b\ :sub:`1`
       - b\ :sub:`0`
+<<<<<<< HEAD
     * .. _MEDIA-BUS-FMT-BGR666-1X24_CPADHI:
 
       - MEDIA_BUS_FMT_BGR666_1X24_CPADHI
@@ -1134,6 +1138,8 @@ The following tables list existing packed RGB formats.
       - b\ :sub:`2`
       - b\ :sub:`1`
       - b\ :sub:`0`
+=======
+>>>>>>> b7ba80a49124 (Commit)
     * .. _MEDIA-BUS-FMT-BGR888-1X24:
 
       - MEDIA_BUS_FMT_BGR888_1X24
@@ -6168,6 +6174,7 @@ the following codes.
       - y\ :sub:`2`
       - y\ :sub:`1`
       - y\ :sub:`0`
+<<<<<<< HEAD
     * .. _MEDIA-BUS-FMT-Y16-1X16:
 
       - MEDIA_BUS_FMT_Y16_1X16
@@ -6205,6 +6212,8 @@ the following codes.
       - y\ :sub:`2`
       - y\ :sub:`1`
       - y\ :sub:`0`
+=======
+>>>>>>> b7ba80a49124 (Commit)
     * .. _MEDIA-BUS-FMT-UYVY8-1X16:
 
       - MEDIA_BUS_FMT_UYVY8_1X16

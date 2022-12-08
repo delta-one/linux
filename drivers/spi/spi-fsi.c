@@ -425,7 +425,11 @@ static int fsi_spi_transfer_one_message(struct spi_controller *ctlr,
 					struct spi_message *mesg)
 {
 	int rc;
+<<<<<<< HEAD
 	u8 seq_slave = SPI_FSI_SEQUENCE_SEL_SLAVE(spi_get_chipselect(mesg->spi, 0) + 1);
+=======
+	u8 seq_slave = SPI_FSI_SEQUENCE_SEL_SLAVE(mesg->spi->chip_select + 1);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int len;
 	struct spi_transfer *transfer;
 	struct fsi_spi *ctx = spi_controller_get_devdata(ctlr);

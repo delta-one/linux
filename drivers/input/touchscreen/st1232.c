@@ -220,9 +220,15 @@ static const struct st_chip_info st1633_chip_info = {
 	.max_fingers	= 5,
 };
 
+<<<<<<< HEAD
 static int st1232_ts_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int st1232_ts_probe(struct i2c_client *client,
+			   const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	const struct st_chip_info *match;
 	struct st1232_ts_data *ts;
 	struct input_dev *input_dev;
@@ -340,7 +346,11 @@ static int st1232_ts_probe(struct i2c_client *client)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int st1232_ts_suspend(struct device *dev)
+=======
+static int __maybe_unused st1232_ts_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct st1232_ts_data *ts = i2c_get_clientdata(client);
@@ -353,7 +363,11 @@ static int st1232_ts_suspend(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int st1232_ts_resume(struct device *dev)
+=======
+static int __maybe_unused st1232_ts_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct st1232_ts_data *ts = i2c_get_clientdata(client);
@@ -366,8 +380,13 @@ static int st1232_ts_resume(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static DEFINE_SIMPLE_DEV_PM_OPS(st1232_ts_pm_ops,
 				st1232_ts_suspend, st1232_ts_resume);
+=======
+static SIMPLE_DEV_PM_OPS(st1232_ts_pm_ops,
+			 st1232_ts_suspend, st1232_ts_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static const struct i2c_device_id st1232_ts_id[] = {
 	{ ST1232_TS_NAME, (unsigned long)&st1232_chip_info },
@@ -384,13 +403,21 @@ static const struct of_device_id st1232_ts_dt_ids[] = {
 MODULE_DEVICE_TABLE(of, st1232_ts_dt_ids);
 
 static struct i2c_driver st1232_ts_driver = {
+<<<<<<< HEAD
 	.probe_new	= st1232_ts_probe,
+=======
+	.probe		= st1232_ts_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= st1232_ts_id,
 	.driver = {
 		.name	= ST1232_TS_NAME,
 		.of_match_table = st1232_ts_dt_ids,
 		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
+<<<<<<< HEAD
 		.pm	= pm_sleep_ptr(&st1232_ts_pm_ops),
+=======
+		.pm	= &st1232_ts_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 

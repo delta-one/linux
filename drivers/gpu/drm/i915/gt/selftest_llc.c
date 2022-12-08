@@ -3,6 +3,10 @@
  * Copyright © 2019 Intel Corporation
  */
 
+<<<<<<< HEAD
+=======
+#include "intel_pm.h" /* intel_gpu_freq() */
+>>>>>>> b7ba80a49124 (Commit)
 #include "selftest_llc.h"
 #include "intel_rps.h"
 

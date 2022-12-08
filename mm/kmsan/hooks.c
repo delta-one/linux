@@ -260,7 +260,10 @@ void kmsan_handle_urb(const struct urb *urb, bool is_out)
 					       urb->transfer_buffer_length,
 					       /*checked*/ false);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(kmsan_handle_urb);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static void kmsan_handle_dma_page(const void *addr, size_t size,
 				  enum dma_data_direction dir)

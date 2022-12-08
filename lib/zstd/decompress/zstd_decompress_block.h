@@ -33,12 +33,15 @@
  */
 
 
+<<<<<<< HEAD
  /* Streaming state is used to inform allocation of the literal buffer */
 typedef enum {
     not_streaming = 0,
     is_streaming = 1
 } streaming_operation;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* ZSTD_decompressBlock_internal() :
  * decompress block, starting at `src`,
  * into destination buffer `dst`.
@@ -47,7 +50,11 @@ typedef enum {
  */
 size_t ZSTD_decompressBlock_internal(ZSTD_DCtx* dctx,
                                void* dst, size_t dstCapacity,
+<<<<<<< HEAD
                          const void* src, size_t srcSize, const int frame, const streaming_operation streaming);
+=======
+                         const void* src, size_t srcSize, const int frame);
+>>>>>>> b7ba80a49124 (Commit)
 
 /* ZSTD_buildFSETable() :
  * generate FSE decoding table for one symbol (ll, ml or off)
@@ -60,7 +67,11 @@ size_t ZSTD_decompressBlock_internal(ZSTD_DCtx* dctx,
  */
 void ZSTD_buildFSETable(ZSTD_seqSymbol* dt,
              const short* normalizedCounter, unsigned maxSymbolValue,
+<<<<<<< HEAD
              const U32* baseValue, const U8* nbAdditionalBits,
+=======
+             const U32* baseValue, const U32* nbAdditionalBits,
+>>>>>>> b7ba80a49124 (Commit)
                    unsigned tableLog, void* wksp, size_t wkspSize,
                    int bmi2);
 

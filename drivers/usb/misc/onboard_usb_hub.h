@@ -22,6 +22,7 @@ static const struct onboard_hub_pdata ti_tusb8041_data = {
 	.reset_us = 3000,
 };
 
+<<<<<<< HEAD
 static const struct onboard_hub_pdata genesys_gl850g_data = {
 	.reset_us = 3,
 };
@@ -41,12 +42,21 @@ static const struct of_device_id onboard_hub_match[] = {
 	{ .compatible = "usb451,8142", .data = &ti_tusb8041_data, },
 	{ .compatible = "usb5e3,608", .data = &genesys_gl850g_data, },
 	{ .compatible = "usb5e3,610", .data = &genesys_gl852g_data, },
+=======
+static const struct of_device_id onboard_hub_match[] = {
+	{ .compatible = "usb424,2514", .data = &microchip_usb424_data, },
+	{ .compatible = "usb451,8140", .data = &ti_tusb8041_data, },
+	{ .compatible = "usb451,8142", .data = &ti_tusb8041_data, },
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "usbbda,411", .data = &realtek_rts5411_data, },
 	{ .compatible = "usbbda,5411", .data = &realtek_rts5411_data, },
 	{ .compatible = "usbbda,414", .data = &realtek_rts5411_data, },
 	{ .compatible = "usbbda,5414", .data = &realtek_rts5411_data, },
+<<<<<<< HEAD
 	{ .compatible = "usb2109,817", .data = &vialab_vl817_data, },
 	{ .compatible = "usb2109,2817", .data = &vialab_vl817_data, },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 

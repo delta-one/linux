@@ -108,7 +108,11 @@ static void acpi_als_notify(struct acpi_device *device, u32 event)
 	if (iio_buffer_enabled(indio_dev) && iio_trigger_using_own(indio_dev)) {
 		switch (event) {
 		case ACPI_ALS_NOTIFY_ILLUMINANCE:
+<<<<<<< HEAD
 			iio_trigger_poll_nested(als->trig);
+=======
+			iio_trigger_poll_chained(als->trig);
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		default:
 			/* Unhandled event */

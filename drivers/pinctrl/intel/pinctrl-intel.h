@@ -36,6 +36,7 @@ struct intel_pingroup {
 
 /**
  * struct intel_function - Description about a function
+<<<<<<< HEAD
  * @func: Generic data of the pin function (name and groups of pins)
  */
 struct intel_function {
@@ -44,11 +45,27 @@ struct intel_function {
 
 #define INTEL_PINCTRL_MAX_GPP_SIZE	32
 
+=======
+ * @name: Name of the function
+ * @groups: An array of groups for this function
+ * @ngroups: Number of groups in @groups
+ */
+struct intel_function {
+	const char *name;
+	const char * const *groups;
+	size_t ngroups;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct intel_padgroup - Hardware pad group information
  * @reg_num: GPI_IS register number
  * @base: Starting pin of this group
+<<<<<<< HEAD
  * @size: Size of this group (maximum is %INTEL_PINCTRL_MAX_GPP_SIZE).
+=======
+ * @size: Size of this group (maximum is 32).
+>>>>>>> b7ba80a49124 (Commit)
  * @gpio_base: Starting GPIO base of this group
  * @padown_num: PAD_OWN register number (assigned by the core driver)
  *
@@ -94,7 +111,12 @@ enum {
  * @gpp_size: Maximum number of pads in each group, such as PADCFGLOCK,
  *            HOSTSW_OWN, GPI_IS, GPI_IE. Used when @gpps is %NULL.
  * @gpp_num_padown_regs: Number of pad registers each pad group consumes at
+<<<<<<< HEAD
  *			 minimum. Used when @gpps is %NULL.
+=======
+ *			 minimum. Use %0 if the number of registers can be
+ *			 determined by the size of the group.
+>>>>>>> b7ba80a49124 (Commit)
  * @gpps: Pad groups if the controller has variable size pad groups
  * @ngpps: Number of pad groups in this community
  * @pad_map: Optional non-linear mapping of the pads
@@ -103,6 +125,7 @@ enum {
  * @regs: Community specific common registers (reserved for core driver)
  * @pad_regs: Community specific pad registers (reserved for core driver)
  *
+<<<<<<< HEAD
  * In older Intel GPIO host controllers, this driver supports, each pad group
  * is of equal size (except the last one). In that case the driver can just
  * fill in @gpp_size and @gpp_num_padown_regs fields and let the core driver
@@ -110,6 +133,13 @@ enum {
  *
  * In newer Intel GPIO host controllers each pad group is of variable size,
  * so the client driver can pass custom @gpps and @ngpps instead.
+=======
+ * In some of Intel GPIO host controllers this driver supports each pad group
+ * is of equal size (except the last one). In that case the driver can just
+ * fill in @gpp_size field and let the core driver to handle the rest. If
+ * the controller has pad groups of variable size the client driver can
+ * pass custom @gpps and @ngpps instead.
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct intel_community {
 	unsigned int barno;
@@ -142,6 +172,7 @@ struct intel_community {
 #define PINCTRL_FEATURE_BLINK		BIT(4)
 #define PINCTRL_FEATURE_EXP		BIT(5)
 
+<<<<<<< HEAD
 #define __INTEL_COMMUNITY(b, s, e, g, n, gs, gn, soc)		\
 	{							\
 		.barno = (b),					\
@@ -164,6 +195,8 @@ struct intel_community {
 #define INTEL_COMMUNITY_SIZE(b, s, e, gs, gn, soc)		\
 	__INTEL_COMMUNITY(b, s, e, NULL, 0, gs, gn, soc)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * PIN_GROUP - Declare a pin group
  * @n: Name of the group
@@ -179,9 +212,17 @@ struct intel_community {
 		.modes = __builtin_choose_expr(__builtin_constant_p((m)), NULL, (m)),	\
 	}
 
+<<<<<<< HEAD
 #define FUNCTION(n, g)							\
 	{								\
 		.func = PINCTRL_PINFUNCTION((n), (g), ARRAY_SIZE(g)),	\
+=======
+#define FUNCTION(n, g)				\
+	{					\
+		.name = (n),			\
+		.groups = (g),			\
+		.ngroups = ARRAY_SIZE((g)),	\
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 /**

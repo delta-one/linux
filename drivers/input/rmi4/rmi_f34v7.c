@@ -25,7 +25,11 @@ static int rmi_f34v7_read_flash_status(struct f34_data *f34)
 	int ret;
 
 	ret = rmi_read_block(f34->fn->rmi_dev,
+<<<<<<< HEAD
 			f34->fn->fd.data_base_addr + V7_FLASH_STATUS_OFFSET,
+=======
+			f34->fn->fd.data_base_addr + f34->v7.off.flash_status,
+>>>>>>> b7ba80a49124 (Commit)
 			&status,
 			sizeof(status));
 	if (ret < 0) {
@@ -43,7 +47,11 @@ static int rmi_f34v7_read_flash_status(struct f34_data *f34)
 	}
 
 	ret = rmi_read_block(f34->fn->rmi_dev,
+<<<<<<< HEAD
 			f34->fn->fd.data_base_addr + V7_COMMAND_OFFSET,
+=======
+			f34->fn->fd.data_base_addr + f34->v7.off.flash_cmd,
+>>>>>>> b7ba80a49124 (Commit)
 			&command,
 			sizeof(command));
 	if (ret < 0) {
@@ -72,6 +80,7 @@ static int rmi_f34v7_wait_for_idle(struct f34_data *f34, int timeout_ms)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int rmi_f34v7_check_command_status(struct f34_data *f34, int timeout_ms)
 {
 	int ret;
@@ -90,6 +99,8 @@ static int rmi_f34v7_check_command_status(struct f34_data *f34, int timeout_ms)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int rmi_f34v7_write_command_single_transaction(struct f34_data *f34,
 						      u8 cmd)
 {
@@ -140,7 +151,11 @@ static int rmi_f34v7_write_command_single_transaction(struct f34_data *f34,
 	data_1_5.payload[1] = f34->bootloader_id[1];
 
 	ret = rmi_write_block(f34->fn->rmi_dev,
+<<<<<<< HEAD
 			base + V7_PARTITION_ID_OFFSET,
+=======
+			base + f34->v7.off.partition_id,
+>>>>>>> b7ba80a49124 (Commit)
 			&data_1_5, sizeof(data_1_5));
 	if (ret < 0) {
 		dev_err(&f34->fn->dev,
@@ -213,7 +228,11 @@ static int rmi_f34v7_write_command(struct f34_data *f34, u8 cmd)
 		__func__, command);
 
 	ret = rmi_write_block(f34->fn->rmi_dev,
+<<<<<<< HEAD
 			base + V7_COMMAND_OFFSET,
+=======
+			base + f34->v7.off.flash_cmd,
+>>>>>>> b7ba80a49124 (Commit)
 			&command, sizeof(command));
 	if (ret < 0) {
 		dev_err(&f34->fn->dev, "%s: Failed to write flash command\n",
@@ -280,7 +299,11 @@ static int rmi_f34v7_write_partition_id(struct f34_data *f34, u8 cmd)
 	}
 
 	ret = rmi_write_block(f34->fn->rmi_dev,
+<<<<<<< HEAD
 			base + V7_PARTITION_ID_OFFSET,
+=======
+			base + f34->v7.off.partition_id,
+>>>>>>> b7ba80a49124 (Commit)
 			&partition, sizeof(partition));
 	if (ret < 0) {
 		dev_err(&f34->fn->dev, "%s: Failed to write partition ID\n",
@@ -308,7 +331,11 @@ static int rmi_f34v7_read_partition_table(struct f34_data *f34)
 		return ret;
 
 	ret = rmi_write_block(f34->fn->rmi_dev,
+<<<<<<< HEAD
 			base + V7_BLOCK_NUMBER_OFFSET,
+=======
+			base + f34->v7.off.block_number,
+>>>>>>> b7ba80a49124 (Commit)
 			&block_number, sizeof(block_number));
 	if (ret < 0) {
 		dev_err(&f34->fn->dev, "%s: Failed to write block number\n",
@@ -319,7 +346,11 @@ static int rmi_f34v7_read_partition_table(struct f34_data *f34)
 	put_unaligned_le16(f34->v7.flash_config_length, &length);
 
 	ret = rmi_write_block(f34->fn->rmi_dev,
+<<<<<<< HEAD
 			base + V7_TRANSFER_LENGTH_OFFSET,
+=======
+			base + f34->v7.off.transfer_length,
+>>>>>>> b7ba80a49124 (Commit)
 			&length, sizeof(length));
 	if (ret < 0) {
 		dev_err(&f34->fn->dev, "%s: Failed to write transfer length\n",
@@ -336,10 +367,13 @@ static int rmi_f34v7_read_partition_table(struct f34_data *f34)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * rmi_f34v7_check_command_status() can't be used here, as this
 	 * function is called before IRQs are available
 	 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	timeout = msecs_to_jiffies(F34_WRITE_WAIT_MS);
 	while (time_before(jiffies, timeout)) {
 		usleep_range(5000, 6000);
@@ -352,7 +386,11 @@ static int rmi_f34v7_read_partition_table(struct f34_data *f34)
 	}
 
 	ret = rmi_read_block(f34->fn->rmi_dev,
+<<<<<<< HEAD
 			base + V7_PAYLOAD_OFFSET,
+=======
+			base + f34->v7.off.payload,
+>>>>>>> b7ba80a49124 (Commit)
 			f34->v7.read_config_buf,
 			f34->v7.partition_table_bytes);
 	if (ret < 0) {
@@ -526,6 +564,16 @@ static int rmi_f34v7_read_queries(struct f34_data *f34)
 	rmi_dbg(RMI_DEBUG_FN, &f34->fn->dev, "%s: f34->v7.block_size = %d\n",
 		 __func__, f34->v7.block_size);
 
+<<<<<<< HEAD
+=======
+	f34->v7.off.flash_status = V7_FLASH_STATUS_OFFSET;
+	f34->v7.off.partition_id = V7_PARTITION_ID_OFFSET;
+	f34->v7.off.block_number = V7_BLOCK_NUMBER_OFFSET;
+	f34->v7.off.transfer_length = V7_TRANSFER_LENGTH_OFFSET;
+	f34->v7.off.flash_cmd = V7_COMMAND_OFFSET;
+	f34->v7.off.payload = V7_PAYLOAD_OFFSET;
+
+>>>>>>> b7ba80a49124 (Commit)
 	f34->v7.has_display_cfg = query_1_7.partition_support[1] & HAS_DISP_CFG;
 	f34->v7.has_guest_code =
 			query_1_7.partition_support[1] & HAS_GUEST_CODE;
@@ -586,6 +634,71 @@ static int rmi_f34v7_read_queries(struct f34_data *f34)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int rmi_f34v7_check_ui_firmware_size(struct f34_data *f34)
+{
+	u16 block_count;
+
+	block_count = f34->v7.img.ui_firmware.size / f34->v7.block_size;
+	f34->update_size += block_count;
+
+	if (block_count != f34->v7.blkcount.ui_firmware) {
+		dev_err(&f34->fn->dev,
+			"UI firmware size mismatch: %d != %d\n",
+			block_count, f34->v7.blkcount.ui_firmware);
+		return -EINVAL;
+	}
+
+	return 0;
+}
+
+static int rmi_f34v7_check_ui_config_size(struct f34_data *f34)
+{
+	u16 block_count;
+
+	block_count = f34->v7.img.ui_config.size / f34->v7.block_size;
+	f34->update_size += block_count;
+
+	if (block_count != f34->v7.blkcount.ui_config) {
+		dev_err(&f34->fn->dev, "UI config size mismatch\n");
+		return -EINVAL;
+	}
+
+	return 0;
+}
+
+static int rmi_f34v7_check_dp_config_size(struct f34_data *f34)
+{
+	u16 block_count;
+
+	block_count = f34->v7.img.dp_config.size / f34->v7.block_size;
+	f34->update_size += block_count;
+
+	if (block_count != f34->v7.blkcount.dp_config) {
+		dev_err(&f34->fn->dev, "Display config size mismatch\n");
+		return -EINVAL;
+	}
+
+	return 0;
+}
+
+static int rmi_f34v7_check_guest_code_size(struct f34_data *f34)
+{
+	u16 block_count;
+
+	block_count = f34->v7.img.guest_code.size / f34->v7.block_size;
+	f34->update_size += block_count;
+
+	if (block_count != f34->v7.blkcount.guest_code) {
+		dev_err(&f34->fn->dev, "Guest code size mismatch\n");
+		return -EINVAL;
+	}
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int rmi_f34v7_check_bl_config_size(struct f34_data *f34)
 {
 	u16 block_count;
@@ -601,6 +714,61 @@ static int rmi_f34v7_check_bl_config_size(struct f34_data *f34)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int rmi_f34v7_erase_config(struct f34_data *f34)
+{
+	int ret;
+
+	dev_info(&f34->fn->dev, "Erasing config...\n");
+
+	init_completion(&f34->v7.cmd_done);
+
+	switch (f34->v7.config_area) {
+	case v7_UI_CONFIG_AREA:
+		ret = rmi_f34v7_write_command(f34, v7_CMD_ERASE_UI_CONFIG);
+		if (ret < 0)
+			return ret;
+		break;
+	case v7_DP_CONFIG_AREA:
+		ret = rmi_f34v7_write_command(f34, v7_CMD_ERASE_DISP_CONFIG);
+		if (ret < 0)
+			return ret;
+		break;
+	case v7_BL_CONFIG_AREA:
+		ret = rmi_f34v7_write_command(f34, v7_CMD_ERASE_BL_CONFIG);
+		if (ret < 0)
+			return ret;
+		break;
+	}
+
+	ret = rmi_f34v7_wait_for_idle(f34, F34_ERASE_WAIT_MS);
+	if (ret < 0)
+		return ret;
+
+	return 0;
+}
+
+static int rmi_f34v7_erase_guest_code(struct f34_data *f34)
+{
+	int ret;
+
+	dev_info(&f34->fn->dev, "Erasing guest code...\n");
+
+	init_completion(&f34->v7.cmd_done);
+
+	ret = rmi_f34v7_write_command(f34, v7_CMD_ERASE_GUEST_CODE);
+	if (ret < 0)
+		return ret;
+
+	ret = rmi_f34v7_wait_for_idle(f34, F34_ERASE_WAIT_MS);
+	if (ret < 0)
+		return ret;
+
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int rmi_f34v7_erase_all(struct f34_data *f34)
 {
 	int ret;
@@ -609,6 +777,7 @@ static int rmi_f34v7_erase_all(struct f34_data *f34)
 
 	init_completion(&f34->v7.cmd_done);
 
+<<<<<<< HEAD
 	ret = rmi_f34v7_write_command(f34, v7_CMD_ERASE_ALL);
 	if (ret < 0)
 		return ret;
@@ -617,6 +786,34 @@ static int rmi_f34v7_erase_all(struct f34_data *f34)
 	if (ret < 0)
 		return ret;
 
+=======
+	ret = rmi_f34v7_write_command(f34, v7_CMD_ERASE_UI_FIRMWARE);
+	if (ret < 0)
+		return ret;
+
+	ret = rmi_f34v7_wait_for_idle(f34, F34_ERASE_WAIT_MS);
+	if (ret < 0)
+		return ret;
+
+	f34->v7.config_area = v7_UI_CONFIG_AREA;
+	ret = rmi_f34v7_erase_config(f34);
+	if (ret < 0)
+		return ret;
+
+	if (f34->v7.has_display_cfg) {
+		f34->v7.config_area = v7_DP_CONFIG_AREA;
+		ret = rmi_f34v7_erase_config(f34);
+		if (ret < 0)
+			return ret;
+	}
+
+	if (f34->v7.new_partition_table && f34->v7.has_guest_code) {
+		ret = rmi_f34v7_erase_guest_code(f34);
+		if (ret < 0)
+			return ret;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -639,7 +836,11 @@ static int rmi_f34v7_read_blocks(struct f34_data *f34,
 		return ret;
 
 	ret = rmi_write_block(f34->fn->rmi_dev,
+<<<<<<< HEAD
 			base + V7_BLOCK_NUMBER_OFFSET,
+=======
+			base + f34->v7.off.block_number,
+>>>>>>> b7ba80a49124 (Commit)
 			&block_number, sizeof(block_number));
 	if (ret < 0) {
 		dev_err(&f34->fn->dev, "%s: Failed to write block number\n",
@@ -655,7 +856,11 @@ static int rmi_f34v7_read_blocks(struct f34_data *f34,
 		put_unaligned_le16(transfer, &length);
 
 		ret = rmi_write_block(f34->fn->rmi_dev,
+<<<<<<< HEAD
 				base + V7_TRANSFER_LENGTH_OFFSET,
+=======
+				base + f34->v7.off.transfer_length,
+>>>>>>> b7ba80a49124 (Commit)
 				&length, sizeof(length));
 		if (ret < 0) {
 			dev_err(&f34->fn->dev,
@@ -670,12 +875,20 @@ static int rmi_f34v7_read_blocks(struct f34_data *f34,
 		if (ret < 0)
 			return ret;
 
+<<<<<<< HEAD
 		ret = rmi_f34v7_check_command_status(f34, F34_ENABLE_WAIT_MS);
+=======
+		ret = rmi_f34v7_wait_for_idle(f34, F34_ENABLE_WAIT_MS);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret < 0)
 			return ret;
 
 		ret = rmi_read_block(f34->fn->rmi_dev,
+<<<<<<< HEAD
 				base + V7_PAYLOAD_OFFSET,
+=======
+				base + f34->v7.off.payload,
+>>>>>>> b7ba80a49124 (Commit)
 				&f34->v7.read_config_buf[index],
 				transfer * f34->v7.block_size);
 		if (ret < 0) {
@@ -711,7 +924,11 @@ static int rmi_f34v7_write_f34v7_blocks(struct f34_data *f34,
 		return ret;
 
 	ret = rmi_write_block(f34->fn->rmi_dev,
+<<<<<<< HEAD
 			base + V7_BLOCK_NUMBER_OFFSET,
+=======
+			base + f34->v7.off.block_number,
+>>>>>>> b7ba80a49124 (Commit)
 			&block_number, sizeof(block_number));
 	if (ret < 0) {
 		dev_err(&f34->fn->dev, "%s: Failed to write block number\n",
@@ -731,7 +948,11 @@ static int rmi_f34v7_write_f34v7_blocks(struct f34_data *f34,
 		init_completion(&f34->v7.cmd_done);
 
 		ret = rmi_write_block(f34->fn->rmi_dev,
+<<<<<<< HEAD
 				base + V7_TRANSFER_LENGTH_OFFSET,
+=======
+				base + f34->v7.off.transfer_length,
+>>>>>>> b7ba80a49124 (Commit)
 				&length, sizeof(length));
 		if (ret < 0) {
 			dev_err(&f34->fn->dev,
@@ -745,7 +966,11 @@ static int rmi_f34v7_write_f34v7_blocks(struct f34_data *f34,
 			return ret;
 
 		ret = rmi_write_block(f34->fn->rmi_dev,
+<<<<<<< HEAD
 				base + V7_PAYLOAD_OFFSET,
+=======
+				base + f34->v7.off.payload,
+>>>>>>> b7ba80a49124 (Commit)
 				block_ptr, transfer * f34->v7.block_size);
 		if (ret < 0) {
 			dev_err(&f34->fn->dev,
@@ -754,7 +979,11 @@ static int rmi_f34v7_write_f34v7_blocks(struct f34_data *f34,
 			return ret;
 		}
 
+<<<<<<< HEAD
 		ret = rmi_f34v7_check_command_status(f34, F34_ENABLE_WAIT_MS);
+=======
+		ret = rmi_f34v7_wait_for_idle(f34, F34_ENABLE_WAIT_MS);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret < 0)
 			return ret;
 
@@ -820,6 +1049,20 @@ static int rmi_f34v7_write_flash_config(struct f34_data *f34)
 
 	init_completion(&f34->v7.cmd_done);
 
+<<<<<<< HEAD
+=======
+	ret = rmi_f34v7_write_command(f34, v7_CMD_ERASE_FLASH_CONFIG);
+	if (ret < 0)
+		return ret;
+
+	rmi_dbg(RMI_DEBUG_FN, &f34->fn->dev,
+		"%s: Erase flash config command written\n", __func__);
+
+	ret = rmi_f34v7_wait_for_idle(f34, F34_WRITE_WAIT_MS);
+	if (ret < 0)
+		return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = rmi_f34v7_write_config(f34);
 	if (ret < 0)
 		return ret;
@@ -849,6 +1092,13 @@ static int rmi_f34v7_write_partition_table(struct f34_data *f34)
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
+=======
+	ret = rmi_f34v7_erase_config(f34);
+	if (ret < 0)
+		return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = rmi_f34v7_write_flash_config(f34);
 	if (ret < 0)
 		return ret;
@@ -875,6 +1125,36 @@ static int rmi_f34v7_write_firmware(struct f34_data *f34)
 					    blk_count, v7_CMD_WRITE_FW);
 }
 
+<<<<<<< HEAD
+=======
+static void rmi_f34v7_compare_partition_tables(struct f34_data *f34)
+{
+	if (f34->v7.phyaddr.ui_firmware != f34->v7.img.phyaddr.ui_firmware) {
+		f34->v7.new_partition_table = true;
+		return;
+	}
+
+	if (f34->v7.phyaddr.ui_config != f34->v7.img.phyaddr.ui_config) {
+		f34->v7.new_partition_table = true;
+		return;
+	}
+
+	if (f34->v7.has_display_cfg &&
+	    f34->v7.phyaddr.dp_config != f34->v7.img.phyaddr.dp_config) {
+		f34->v7.new_partition_table = true;
+		return;
+	}
+
+	if (f34->v7.has_guest_code &&
+	    f34->v7.phyaddr.guest_code != f34->v7.img.phyaddr.guest_code) {
+		f34->v7.new_partition_table = true;
+		return;
+	}
+
+	f34->v7.new_partition_table = false;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void rmi_f34v7_parse_img_header_10_bl_container(struct f34_data *f34,
 						       const void *image)
 {
@@ -1021,6 +1301,11 @@ static int rmi_f34v7_parse_image_info(struct f34_data *f34)
 	rmi_f34v7_parse_partition_table(f34, f34->v7.img.fl_config.data,
 			&f34->v7.img.blkcount, &f34->v7.img.phyaddr);
 
+<<<<<<< HEAD
+=======
+	rmi_f34v7_compare_partition_tables(f34);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1039,6 +1324,7 @@ int rmi_f34v7_do_reflash(struct f34_data *f34, const struct firmware *fw)
 
 	ret = rmi_f34v7_parse_image_info(f34);
 	if (ret < 0)
+<<<<<<< HEAD
 		return ret;
 
 	ret = rmi_f34v7_check_bl_config_size(f34);
@@ -1061,13 +1347,59 @@ int rmi_f34v7_do_reflash(struct f34_data *f34, const struct firmware *fw)
 	ret = rmi_scan_pdt(f34->fn->rmi_dev, NULL, rmi_initial_reset);
 	if (ret < 0)
 		dev_warn(&f34->fn->dev, "RMI reset failed!\n");
+=======
+		goto fail;
+
+	if (!f34->v7.new_partition_table) {
+		ret = rmi_f34v7_check_ui_firmware_size(f34);
+		if (ret < 0)
+			goto fail;
+
+		ret = rmi_f34v7_check_ui_config_size(f34);
+		if (ret < 0)
+			goto fail;
+
+		if (f34->v7.has_display_cfg &&
+		    f34->v7.img.contains_display_cfg) {
+			ret = rmi_f34v7_check_dp_config_size(f34);
+			if (ret < 0)
+				goto fail;
+		}
+
+		if (f34->v7.has_guest_code && f34->v7.img.contains_guest_code) {
+			ret = rmi_f34v7_check_guest_code_size(f34);
+			if (ret < 0)
+				goto fail;
+		}
+	} else {
+		ret = rmi_f34v7_check_bl_config_size(f34);
+		if (ret < 0)
+			goto fail;
+	}
+
+	ret = rmi_f34v7_erase_all(f34);
+	if (ret < 0)
+		goto fail;
+
+	if (f34->v7.new_partition_table) {
+		ret = rmi_f34v7_write_partition_table(f34);
+		if (ret < 0)
+			goto fail;
+		dev_info(&f34->fn->dev, "%s: Partition table programmed\n",
+			 __func__);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_info(&f34->fn->dev, "Writing firmware (%d bytes)...\n",
 		 f34->v7.img.ui_firmware.size);
 
 	ret = rmi_f34v7_write_firmware(f34);
 	if (ret < 0)
+<<<<<<< HEAD
 		return ret;
+=======
+		goto fail;
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev_info(&f34->fn->dev, "Writing config (%d bytes)...\n",
 		 f34->v7.img.ui_config.size);
@@ -1075,13 +1407,18 @@ int rmi_f34v7_do_reflash(struct f34_data *f34, const struct firmware *fw)
 	f34->v7.config_area = v7_UI_CONFIG_AREA;
 	ret = rmi_f34v7_write_ui_config(f34);
 	if (ret < 0)
+<<<<<<< HEAD
 		return ret;
+=======
+		goto fail;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (f34->v7.has_display_cfg && f34->v7.img.contains_display_cfg) {
 		dev_info(&f34->fn->dev, "Writing display config...\n");
 
 		ret = rmi_f34v7_write_dp_config(f34);
 		if (ret < 0)
+<<<<<<< HEAD
 			return ret;
 	}
 
@@ -1094,6 +1431,23 @@ int rmi_f34v7_do_reflash(struct f34_data *f34, const struct firmware *fw)
 	}
 
 	return 0;
+=======
+			goto fail;
+	}
+
+	if (f34->v7.new_partition_table) {
+		if (f34->v7.has_guest_code && f34->v7.img.contains_guest_code) {
+			dev_info(&f34->fn->dev, "Writing guest code...\n");
+
+			ret = rmi_f34v7_write_guest_code(f34);
+			if (ret < 0)
+				goto fail;
+		}
+	}
+
+fail:
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int rmi_f34v7_enter_flash_prog(struct f34_data *f34)
@@ -1106,11 +1460,16 @@ static int rmi_f34v7_enter_flash_prog(struct f34_data *f34)
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
 	if (f34->v7.in_bl_mode) {
 		dev_info(&f34->fn->dev, "%s: Device in bootloader mode\n",
 			 __func__);
 		return 0;
 	}
+=======
+	if (f34->v7.in_bl_mode)
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	init_completion(&f34->v7.cmd_done);
 
@@ -1118,7 +1477,11 @@ static int rmi_f34v7_enter_flash_prog(struct f34_data *f34)
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
 	ret = rmi_f34v7_check_command_status(f34, F34_ENABLE_WAIT_MS);
+=======
+	ret = rmi_f34v7_wait_for_idle(f34, F34_ENABLE_WAIT_MS);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 
@@ -1129,16 +1492,50 @@ int rmi_f34v7_start_reflash(struct f34_data *f34, const struct firmware *fw)
 {
 	int ret = 0;
 
+<<<<<<< HEAD
+=======
+	f34->fn->rmi_dev->driver->set_irq_bits(f34->fn->rmi_dev, f34->fn->irq_mask);
+
+>>>>>>> b7ba80a49124 (Commit)
 	f34->v7.config_area = v7_UI_CONFIG_AREA;
 	f34->v7.image = fw->data;
 
 	ret = rmi_f34v7_parse_image_info(f34);
 	if (ret < 0)
+<<<<<<< HEAD
 		return ret;
 
 	dev_info(&f34->fn->dev, "Firmware image OK\n");
 
 	return rmi_f34v7_enter_flash_prog(f34);
+=======
+		goto exit;
+
+	if (!f34->v7.force_update && f34->v7.new_partition_table) {
+		dev_err(&f34->fn->dev, "%s: Partition table mismatch\n",
+				__func__);
+		ret = -EINVAL;
+		goto exit;
+	}
+
+	dev_info(&f34->fn->dev, "Firmware image OK\n");
+
+	ret = rmi_f34v7_read_flash_status(f34);
+	if (ret < 0)
+		goto exit;
+
+	if (f34->v7.in_bl_mode) {
+		dev_info(&f34->fn->dev, "%s: Device in bootloader mode\n",
+				__func__);
+	}
+
+	rmi_f34v7_enter_flash_prog(f34);
+
+	return 0;
+
+exit:
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int rmi_f34v7_probe(struct f34_data *f34)
@@ -1182,5 +1579,9 @@ int rmi_f34v7_probe(struct f34_data *f34)
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
+=======
+	f34->v7.force_update = true;
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }

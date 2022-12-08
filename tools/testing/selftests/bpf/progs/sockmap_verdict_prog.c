@@ -1,7 +1,10 @@
 #include <linux/bpf.h>
 #include <bpf/bpf_helpers.h>
 #include <bpf/bpf_endian.h>
+<<<<<<< HEAD
 #include "bpf_misc.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct {
 	__uint(type, BPF_MAP_TYPE_SOCKMAP);
@@ -41,9 +44,12 @@ int bpf_prog2(struct __sk_buff *skb)
 	__u8 *d = data;
 	__u8 sk, map;
 
+<<<<<<< HEAD
 	__sink(lport);
 	__sink(rport);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (data + 8 > data_end)
 		return SK_DROP;
 

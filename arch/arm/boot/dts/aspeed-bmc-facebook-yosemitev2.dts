@@ -207,6 +207,7 @@
 
 &i2c12 {
 	status = "okay";
+<<<<<<< HEAD
 };
 
 &i2c13 {
@@ -217,6 +218,13 @@
 		compatible = "ipmb-dev";
 		reg = <(0x10 | I2C_OWN_SLAVE_ADDRESS)>;
 		i2c-protocol;
+=======
+	//MEZZ_FRU
+	eeprom@51 {
+		compatible = "atmel,24c64";
+		reg = <0x51>;
+		pagesize = <32>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 

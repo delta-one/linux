@@ -40,7 +40,11 @@ static inline void msm_mmu_init(struct msm_mmu *mmu, struct device *dev,
 	mmu->type = type;
 }
 
+<<<<<<< HEAD
 struct msm_mmu *msm_iommu_new(struct device *dev, unsigned long quirks);
+=======
+struct msm_mmu *msm_iommu_new(struct device *dev, struct iommu_domain *domain);
+>>>>>>> b7ba80a49124 (Commit)
 struct msm_mmu *msm_gpummu_new(struct device *dev, struct msm_gpu *gpu);
 
 static inline void msm_mmu_set_fault_handler(struct msm_mmu *mmu, void *arg,
@@ -58,6 +62,9 @@ void msm_gpummu_params(struct msm_mmu *mmu, dma_addr_t *pt_base,
 
 int msm_iommu_pagetable_params(struct msm_mmu *mmu, phys_addr_t *ttbr,
 		int *asid);
+<<<<<<< HEAD
 struct iommu_domain_geometry *msm_iommu_get_geometry(struct msm_mmu *mmu);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* __MSM_MMU_H__ */

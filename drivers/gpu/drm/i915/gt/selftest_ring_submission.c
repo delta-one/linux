@@ -50,7 +50,11 @@ static struct i915_vma *create_wally(struct intel_engine_cs *engine)
 	} else {
 		*cs++ = MI_STORE_DWORD_IMM | MI_MEM_VIRTUAL;
 	}
+<<<<<<< HEAD
 	*cs++ = i915_vma_offset(vma) + 4000;
+=======
+	*cs++ = vma->node.start + 4000;
+>>>>>>> b7ba80a49124 (Commit)
 	*cs++ = STACK_MAGIC;
 
 	*cs++ = MI_BATCH_BUFFER_END;
@@ -269,7 +273,11 @@ static int live_ctx_switch_wa(void *arg)
 		if (IS_GRAPHICS_VER(gt->i915, 4, 5))
 			continue; /* MI_STORE_DWORD is privileged! */
 
+<<<<<<< HEAD
 		saved_wa = __xchg(&engine->wa_ctx.vma, 0);
+=======
+		saved_wa = fetch_and_zero(&engine->wa_ctx.vma);
+>>>>>>> b7ba80a49124 (Commit)
 
 		intel_engine_pm_get(engine);
 		err = __live_ctx_switch_wa(engine);

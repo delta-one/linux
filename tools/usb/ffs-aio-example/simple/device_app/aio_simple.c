@@ -25,9 +25,13 @@
  * For more information, please refer to <http://unlicense.org/>
  */
 
+<<<<<<< HEAD
 /* $(CROSS_COMPILE)cc -g -o aio_simple aio_simple.c -laio */
 
 #define _DEFAULT_SOURCE /* for endian.h */
+=======
+#define _BSD_SOURCE /* for endian.h */
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <endian.h>
 #include <errno.h>
@@ -51,6 +55,7 @@
 
 #define BUF_LEN		8192
 
+<<<<<<< HEAD
 /*
  * cpu_to_le16/32 are used when initializing structures, a context where a
  * function call is not allowed. To solve this, we code cpu_to_le16/32 in a way
@@ -67,6 +72,8 @@
 	(((x) & 0x0000ff00u) <<  8) | (((x) & 0x000000ffu) << 24))
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /******************** Descriptors and Strings *******************************/
 
 static const struct {
@@ -80,12 +87,21 @@ static const struct {
 	} __attribute__ ((__packed__)) fs_descs, hs_descs;
 } __attribute__ ((__packed__)) descriptors = {
 	.header = {
+<<<<<<< HEAD
 		.magic = cpu_to_le32(FUNCTIONFS_DESCRIPTORS_MAGIC_V2),
 		.flags = cpu_to_le32(FUNCTIONFS_HAS_FS_DESC |
 				     FUNCTIONFS_HAS_HS_DESC),
 		.length = cpu_to_le32(sizeof(descriptors)),
 	},
 	.fs_count = cpu_to_le32(3),
+=======
+		.magic = htole32(FUNCTIONFS_DESCRIPTORS_MAGIC_V2),
+		.flags = htole32(FUNCTIONFS_HAS_FS_DESC |
+				     FUNCTIONFS_HAS_HS_DESC),
+		.length = htole32(sizeof(descriptors)),
+	},
+	.fs_count = htole32(3),
+>>>>>>> b7ba80a49124 (Commit)
 	.fs_descs = {
 		.intf = {
 			.bLength = sizeof(descriptors.fs_descs.intf),
@@ -107,7 +123,11 @@ static const struct {
 			.bmAttributes = USB_ENDPOINT_XFER_BULK,
 		},
 	},
+<<<<<<< HEAD
 	.hs_count = cpu_to_le32(3),
+=======
+	.hs_count = htole32(3),
+>>>>>>> b7ba80a49124 (Commit)
 	.hs_descs = {
 		.intf = {
 			.bLength = sizeof(descriptors.hs_descs.intf),
@@ -121,14 +141,22 @@ static const struct {
 			.bDescriptorType = USB_DT_ENDPOINT,
 			.bEndpointAddress = 1 | USB_DIR_IN,
 			.bmAttributes = USB_ENDPOINT_XFER_BULK,
+<<<<<<< HEAD
 			.wMaxPacketSize = cpu_to_le16(512),
+=======
+			.wMaxPacketSize = htole16(512),
+>>>>>>> b7ba80a49124 (Commit)
 		},
 		.bulk_source = {
 			.bLength = sizeof(descriptors.hs_descs.bulk_source),
 			.bDescriptorType = USB_DT_ENDPOINT,
 			.bEndpointAddress = 2 | USB_DIR_OUT,
 			.bmAttributes = USB_ENDPOINT_XFER_BULK,
+<<<<<<< HEAD
 			.wMaxPacketSize = cpu_to_le16(512),
+=======
+			.wMaxPacketSize = htole16(512),
+>>>>>>> b7ba80a49124 (Commit)
 		},
 	},
 };
@@ -143,6 +171,7 @@ static const struct {
 	} __attribute__ ((__packed__)) lang0;
 } __attribute__ ((__packed__)) strings = {
 	.header = {
+<<<<<<< HEAD
 		.magic = cpu_to_le32(FUNCTIONFS_STRINGS_MAGIC),
 		.length = cpu_to_le32(sizeof(strings)),
 		.str_count = cpu_to_le32(1),
@@ -150,6 +179,15 @@ static const struct {
 	},
 	.lang0 = {
 		cpu_to_le16(0x0409), /* en-us */
+=======
+		.magic = htole32(FUNCTIONFS_STRINGS_MAGIC),
+		.length = htole32(sizeof(strings)),
+		.str_count = htole32(1),
+		.lang_count = htole32(1),
+	},
+	.lang0 = {
+		htole16(0x0409), /* en-us */
+>>>>>>> b7ba80a49124 (Commit)
 		STR_INTERFACE,
 	},
 };

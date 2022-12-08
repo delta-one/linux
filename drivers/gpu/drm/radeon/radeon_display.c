@@ -38,7 +38,10 @@
 #include <drm/drm_fourcc.h>
 #include <drm/drm_framebuffer.h>
 #include <drm/drm_gem_framebuffer_helper.h>
+<<<<<<< HEAD
 #include <drm/drm_modeset_helper.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <drm/drm_probe_helper.h>
 #include <drm/drm_vblank.h>
 #include <drm/radeon_drm.h>
@@ -1605,6 +1608,11 @@ int radeon_modeset_init(struct radeon_device *rdev)
 
 	rdev->ddev->mode_config.fb_modifiers_not_supported = true;
 
+<<<<<<< HEAD
+=======
+	rdev->ddev->mode_config.fb_base = rdev->mc.aper_base;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = radeon_modeset_create_props(rdev);
 	if (ret) {
 		return ret;

@@ -148,7 +148,10 @@ static int mt76x0u_load_firmware(struct mt76x02_dev *dev)
 	mt76_wr(dev, MT_USB_DMA_CFG, val);
 
 	ret = mt76x0u_upload_firmware(dev, hdr);
+<<<<<<< HEAD
 	mt76x02_set_ethtool_fwver(dev, hdr);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	release_firmware(fw);
 
 	mt76_wr(dev, MT_FCE_PSE_CTRL, 1);

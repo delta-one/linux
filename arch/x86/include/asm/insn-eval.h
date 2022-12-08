@@ -32,6 +32,7 @@ int insn_fetch_from_user_inatomic(struct pt_regs *regs,
 bool insn_decode_from_regs(struct insn *insn, struct pt_regs *regs,
 			   unsigned char buf[MAX_INSN_SIZE], int buf_size);
 
+<<<<<<< HEAD
 enum insn_mmio_type {
 	INSN_MMIO_DECODE_FAILED,
 	INSN_MMIO_WRITE,
@@ -43,5 +44,18 @@ enum insn_mmio_type {
 };
 
 enum insn_mmio_type insn_decode_mmio(struct insn *insn, int *bytes);
+=======
+enum mmio_type {
+	MMIO_DECODE_FAILED,
+	MMIO_WRITE,
+	MMIO_WRITE_IMM,
+	MMIO_READ,
+	MMIO_READ_ZERO_EXTEND,
+	MMIO_READ_SIGN_EXTEND,
+	MMIO_MOVS,
+};
+
+enum mmio_type insn_decode_mmio(struct insn *insn, int *bytes);
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _ASM_X86_INSN_EVAL_H */

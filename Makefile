@@ -1,8 +1,14 @@
 # SPDX-License-Identifier: GPL-2.0
 VERSION = 6
+<<<<<<< HEAD
 PATCHLEVEL = 3
 SUBLEVEL = 0
 EXTRAVERSION = -rc3
+=======
+PATCHLEVEL = 0
+SUBLEVEL = 0
+EXTRAVERSION = -rc6
+>>>>>>> b7ba80a49124 (Commit)
 NAME = Hurr durr I'ma ninja sloth
 
 # *DOCUMENTATION*
@@ -11,10 +17,13 @@ NAME = Hurr durr I'ma ninja sloth
 # Comments in this file are targeted only to the developer, do not
 # expect to learn how to build the kernel reading this file.
 
+<<<<<<< HEAD
 ifeq ($(filter undefine,$(.FEATURES)),)
 $(error GNU Make >= 3.82 is required. Your Make version is $(MAKE_VERSION))
 endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 $(if $(filter __%, $(MAKECMDGOALS)), \
 	$(error targets prefixed with '__' are only for internal use))
 
@@ -56,6 +65,7 @@ unexport GREP_OPTIONS
 # Beautify output
 # ---------------------------------------------------------------------------
 #
+<<<<<<< HEAD
 # Most of build commands in Kbuild start with "cmd_". You can optionally define
 # "quiet_cmd_*". If defined, the short log is printed. Otherwise, no log from
 # that command is printed by default.
@@ -63,14 +73,35 @@ unexport GREP_OPTIONS
 # e.g.)
 #    quiet_cmd_depmod = DEPMOD  $(MODLIB)
 #          cmd_depmod = $(srctree)/scripts/depmod.sh $(DEPMOD) $(KERNELRELEASE)
+=======
+# Normally, we echo the whole command before executing it. By making
+# that echo $($(quiet)$(cmd)), we now have the possibility to set
+# $(quiet) to choose other forms of output instead, e.g.
+#
+#         quiet_cmd_cc_o_c = Compiling $(RELDIR)/$@
+#         cmd_cc_o_c       = $(CC) $(c_flags) -c -o $@ $<
+#
+# If $(quiet) is empty, the whole command will be printed.
+# If it is set to "quiet_", only the short version will be printed.
+# If it is set to "silent_", nothing will be printed at all, since
+# the variable $(silent_cmd_cc_o_c) doesn't exist.
+>>>>>>> b7ba80a49124 (Commit)
 #
 # A simple variant is to prefix commands with $(Q) - that's useful
 # for commands that shall be hidden in non-verbose mode.
 #
+<<<<<<< HEAD
 #    $(Q)$(MAKE) $(build)=scripts/basic
 #
 # If KBUILD_VERBOSE contains 1, the whole command is echoed.
 # If KBUILD_VERBOSE contains 2, the reason for rebuilding is printed.
+=======
+#	$(Q)ln $@ :<
+#
+# If KBUILD_VERBOSE equals 0 then the above command will be hidden.
+# If KBUILD_VERBOSE equals 1 then the above command is displayed.
+# If KBUILD_VERBOSE equals 2 then give the reason why each target is rebuilt.
+>>>>>>> b7ba80a49124 (Commit)
 #
 # To put more focus on warnings, be less verbose as default
 # Use 'make V=1' to see the full commands
@@ -78,6 +109,7 @@ unexport GREP_OPTIONS
 ifeq ("$(origin V)", "command line")
   KBUILD_VERBOSE = $(V)
 endif
+<<<<<<< HEAD
 
 quiet = quiet_
 Q = @
@@ -85,10 +117,23 @@ Q = @
 ifneq ($(findstring 1, $(KBUILD_VERBOSE)),)
   quiet =
   Q =
+=======
+ifndef KBUILD_VERBOSE
+  KBUILD_VERBOSE = 0
+endif
+
+ifeq ($(KBUILD_VERBOSE),1)
+  quiet =
+  Q =
+else
+  quiet=quiet_
+  Q = @
+>>>>>>> b7ba80a49124 (Commit)
 endif
 
 # If the user is running make -s (silent mode), suppress echoing of
 # commands
+<<<<<<< HEAD
 # make-4.0 (and later) keep single letter options in the 1st word of MAKEFLAGS.
 
 ifeq ($(filter 3.%,$(MAKE_VERSION)),)
@@ -100,6 +145,12 @@ endif
 ifneq ($(findstring s,$(short-opts)),)
 quiet=silent_
 override KBUILD_VERBOSE :=
+=======
+
+ifneq ($(findstring s,$(filter-out --%,$(MAKEFLAGS))),)
+  quiet=silent_
+  KBUILD_VERBOSE = 0
+>>>>>>> b7ba80a49124 (Commit)
 endif
 
 export quiet Q KBUILD_VERBOSE
@@ -203,6 +254,17 @@ ifneq ($(words $(subst :, ,$(abs_srctree))), 1)
 $(error source directory cannot contain spaces or colons)
 endif
 
+<<<<<<< HEAD
+=======
+ifneq ($(abs_srctree),$(abs_objtree))
+# Look for make include files relative to root of kernel src
+#
+# --included-dir is added for backward compatibility, but you should not rely on
+# it. Please add $(srctree)/ prefix to include Makefiles in the source tree.
+MAKEFLAGS += --include-dir=$(abs_srctree)
+endif
+
+>>>>>>> b7ba80a49124 (Commit)
 ifneq ($(filter 3.%,$(MAKE_VERSION)),)
 # 'MAKEFLAGS += -rR' does not immediately become effective for GNU Make 3.x
 # We need to invoke sub-make to avoid implicit rules in the top Makefile.
@@ -281,7 +343,11 @@ no-compiler-targets := $(no-dot-config-targets) install dtbs_install \
 			headers_install modules_install kernelrelease image_name
 no-sync-config-targets := $(no-dot-config-targets) %install kernelrelease \
 			  image_name
+<<<<<<< HEAD
 single-targets := %.a %.i %.ko %.lds %.ll %.lst %.mod %.o %.rsi %.s %.symtypes %/
+=======
+single-targets := %.a %.i %.rsi %.ko %.lds %.ll %.lst %.mod %.o %.s %.symtypes %/
+>>>>>>> b7ba80a49124 (Commit)
 
 config-build	:=
 mixed-build	:=
@@ -364,7 +430,11 @@ else # !mixed-build
 include $(srctree)/scripts/Kbuild.include
 
 # Read KERNELRELEASE from include/config/kernel.release (if it exists)
+<<<<<<< HEAD
 KERNELRELEASE = $(call read-file, include/config/kernel.release)
+=======
+KERNELRELEASE = $(shell cat include/config/kernel.release 2> /dev/null)
+>>>>>>> b7ba80a49124 (Commit)
 KERNELVERSION = $(VERSION)$(if $(PATCHLEVEL),.$(PATCHLEVEL)$(if $(SUBLEVEL),.$(SUBLEVEL)))$(EXTRAVERSION)
 export VERSION PATCHLEVEL SUBLEVEL KERNELRELEASE KERNELVERSION
 
@@ -557,11 +627,19 @@ KBUILD_AFLAGS   := -D__ASSEMBLY__ -fno-PIE
 KBUILD_CFLAGS   := -Wall -Wundef -Werror=strict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common -fshort-wchar -fno-PIE \
 		   -Werror=implicit-function-declaration -Werror=implicit-int \
+<<<<<<< HEAD
 		   -Werror=return-type -Wno-format-security -funsigned-char \
 		   -std=gnu11
 KBUILD_CPPFLAGS := -D__KERNEL__
 KBUILD_RUSTFLAGS := $(rust_common_flags) \
 		    --target=$(objtree)/scripts/target.json \
+=======
+		   -Werror=return-type -Wno-format-security \
+		   -std=gnu11
+KBUILD_CPPFLAGS := -D__KERNEL__
+KBUILD_RUSTFLAGS := $(rust_common_flags) \
+		    --target=$(objtree)/rust/target.json \
+>>>>>>> b7ba80a49124 (Commit)
 		    -Cpanic=abort -Cembed-bitcode=n -Clto=n \
 		    -Cforce-unwind-tables=n -Ccodegen-units=1 \
 		    -Csymbol-mangling-version=v0 \
@@ -591,7 +669,10 @@ ifdef RUST_LIB_SRC
 	export RUST_LIB_SRC
 endif
 
+<<<<<<< HEAD
 # Allows the usage of unstable features in stable compilers.
+=======
+>>>>>>> b7ba80a49124 (Commit)
 export RUSTC_BOOTSTRAP := 1
 
 export ARCH SRCARCH CONFIG_SHELL BASH HOSTCC KBUILD_HOSTCFLAGS CROSS_COMPILE LD CC HOSTPKG_CONFIG
@@ -643,7 +724,11 @@ quiet_cmd_makefile = GEN     Makefile
 	} > Makefile
 
 outputmakefile:
+<<<<<<< HEAD
 	@if [ -f $(srctree)/.config -o \
+=======
+	$(Q)if [ -f $(srctree)/.config -o \
+>>>>>>> b7ba80a49124 (Commit)
 		 -d $(srctree)/include/config -o \
 		 -d $(srctree)/arch/$(SRCARCH)/include/generated ]; then \
 		echo >&2 "***"; \
@@ -798,7 +883,11 @@ else # !may-sync-config
 PHONY += include/config/auto.conf
 
 include/config/auto.conf:
+<<<<<<< HEAD
 	@test -e include/generated/autoconf.h -a -e $@ || (		\
+=======
+	$(Q)test -e include/generated/autoconf.h -a -e $@ || (		\
+>>>>>>> b7ba80a49124 (Commit)
 	echo >&2;							\
 	echo >&2 "  ERROR: Kernel configuration is invalid.";		\
 	echo >&2 "         include/generated/autoconf.h or $@ are missing.";\
@@ -854,14 +943,24 @@ stackp-flags-$(CONFIG_STACKPROTECTOR_STRONG)      := -fstack-protector-strong
 
 KBUILD_CFLAGS += $(stackp-flags-y)
 
+<<<<<<< HEAD
 KBUILD_CPPFLAGS-$(CONFIG_WERROR) += -Werror
 KBUILD_CPPFLAGS += $(KBUILD_CPPFLAGS-y)
 KBUILD_CFLAGS-$(CONFIG_CC_NO_ARRAY_BOUNDS) += -Wno-array-bounds
+=======
+KBUILD_CFLAGS-$(CONFIG_WERROR) += -Werror
+KBUILD_CFLAGS-$(CONFIG_CC_NO_ARRAY_BOUNDS) += -Wno-array-bounds
+KBUILD_CFLAGS += $(KBUILD_CFLAGS-y) $(CONFIG_CC_IMPLICIT_FALLTHROUGH)
+>>>>>>> b7ba80a49124 (Commit)
 
 KBUILD_RUSTFLAGS-$(CONFIG_WERROR) += -Dwarnings
 KBUILD_RUSTFLAGS += $(KBUILD_RUSTFLAGS-y)
 
 ifdef CONFIG_CC_IS_CLANG
+<<<<<<< HEAD
+=======
+KBUILD_CPPFLAGS += -Qunused-arguments
+>>>>>>> b7ba80a49124 (Commit)
 # The kernel builds with '-std=gnu11' so use of GNU extensions is acceptable.
 KBUILD_CFLAGS += -Wno-gnu
 else
@@ -902,11 +1001,17 @@ endif
 # Initialize all stack variables with a zero value.
 ifdef CONFIG_INIT_STACK_ALL_ZERO
 KBUILD_CFLAGS	+= -ftrivial-auto-var-init=zero
+<<<<<<< HEAD
 ifdef CONFIG_CC_HAS_AUTO_VAR_INIT_ZERO_ENABLER
 # https://github.com/llvm/llvm-project/issues/44842
 CC_AUTO_VAR_INIT_ZERO_ENABLER := -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang
 export CC_AUTO_VAR_INIT_ZERO_ENABLER
 KBUILD_CFLAGS	+= $(CC_AUTO_VAR_INIT_ZERO_ENABLER)
+=======
+ifdef CONFIG_CC_IS_CLANG
+# https://bugs.llvm.org/show_bug.cgi?id=45497
+KBUILD_CFLAGS	+= -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang
+>>>>>>> b7ba80a49124 (Commit)
 endif
 endif
 
@@ -930,9 +1035,13 @@ ifdef CONFIG_FTRACE_MCOUNT_USE_CC
   endif
 endif
 ifdef CONFIG_FTRACE_MCOUNT_USE_OBJTOOL
+<<<<<<< HEAD
   ifdef CONFIG_HAVE_OBJTOOL_NOP_MCOUNT
     CC_FLAGS_USING	+= -DCC_USING_NOP_MCOUNT
   endif
+=======
+  CC_FLAGS_USING	+= -DCC_USING_NOP_MCOUNT
+>>>>>>> b7ba80a49124 (Commit)
 endif
 ifdef CONFIG_FTRACE_MCOUNT_USE_RECORDMCOUNT
   ifdef CONFIG_HAVE_C_RECORDMCOUNT
@@ -965,10 +1074,15 @@ LDFLAGS_vmlinux += --gc-sections
 endif
 
 ifdef CONFIG_SHADOW_CALL_STACK
+<<<<<<< HEAD
 ifndef CONFIG_DYNAMIC_SCS
 CC_FLAGS_SCS	:= -fsanitize=shadow-call-stack
 KBUILD_CFLAGS	+= $(CC_FLAGS_SCS)
 endif
+=======
+CC_FLAGS_SCS	:= -fsanitize=shadow-call-stack
+KBUILD_CFLAGS	+= $(CC_FLAGS_SCS)
+>>>>>>> b7ba80a49124 (Commit)
 export CC_FLAGS_SCS
 endif
 
@@ -987,7 +1101,11 @@ KBUILD_LDFLAGS += -mllvm -import-instr-limit=5
 # Check for frame size exceeding threshold during prolog/epilog insertion
 # when using lld < 13.0.0.
 ifneq ($(CONFIG_FRAME_WARN),0)
+<<<<<<< HEAD
 ifeq ($(call test-lt, $(CONFIG_LLD_VERSION), 130000),y)
+=======
+ifeq ($(shell test $(CONFIG_LLD_VERSION) -lt 130000; echo $$?),0)
+>>>>>>> b7ba80a49124 (Commit)
 KBUILD_LDFLAGS	+= -plugin-opt=-warn-stack-size=$(CONFIG_FRAME_WARN)
 endif
 endif
@@ -1000,13 +1118,33 @@ export CC_FLAGS_LTO
 endif
 
 ifdef CONFIG_CFI_CLANG
+<<<<<<< HEAD
 CC_FLAGS_CFI	:= -fsanitize=kcfi
+=======
+CC_FLAGS_CFI	:= -fsanitize=cfi \
+		   -fsanitize-cfi-cross-dso \
+		   -fno-sanitize-cfi-canonical-jump-tables \
+		   -fno-sanitize-trap=cfi \
+		   -fno-sanitize-blacklist
+
+ifdef CONFIG_CFI_PERMISSIVE
+CC_FLAGS_CFI	+= -fsanitize-recover=cfi
+endif
+
+# If LTO flags are filtered out, we must also filter out CFI.
+CC_FLAGS_LTO	+= $(CC_FLAGS_CFI)
+>>>>>>> b7ba80a49124 (Commit)
 KBUILD_CFLAGS	+= $(CC_FLAGS_CFI)
 export CC_FLAGS_CFI
 endif
 
+<<<<<<< HEAD
 ifneq ($(CONFIG_FUNCTION_ALIGNMENT),0)
 KBUILD_CFLAGS += -falign-functions=$(CONFIG_FUNCTION_ALIGNMENT)
+=======
+ifdef CONFIG_DEBUG_FORCE_FUNCTION_ALIGN_64B
+KBUILD_CFLAGS += -falign-functions=64
+>>>>>>> b7ba80a49124 (Commit)
 endif
 
 # arch Makefile may override CC so keep this after arch Makefile is included
@@ -1040,6 +1178,10 @@ ifdef CONFIG_CC_IS_GCC
 KBUILD_CFLAGS += -Wno-maybe-uninitialized
 endif
 
+<<<<<<< HEAD
+=======
+ifdef CONFIG_CC_IS_GCC
+>>>>>>> b7ba80a49124 (Commit)
 # The allocators already balk at large sizes, so silence the compiler
 # warnings for bounds checks involving those possible values. While
 # -Wno-alloc-size-larger-than would normally be used here, earlier versions
@@ -1051,8 +1193,13 @@ endif
 # ignored, continuing to default to PTRDIFF_MAX. So, left with no other
 # choice, we must perform a versioned check to disable this warning.
 # https://lore.kernel.org/lkml/20210824115859.187f272f@canb.auug.org.au
+<<<<<<< HEAD
 KBUILD_CFLAGS-$(call gcc-min-version, 90100) += -Wno-alloc-size-larger-than
 KBUILD_CFLAGS += $(KBUILD_CFLAGS-y) $(CONFIG_CC_IMPLICIT_FALLTHROUGH)
+=======
+KBUILD_CFLAGS += $(call cc-ifversion, -ge, 0901, -Wno-alloc-size-larger-than)
+endif
+>>>>>>> b7ba80a49124 (Commit)
 
 # disable invalid "can't wrap" optimizations for signed / pointers
 KBUILD_CFLAGS	+= -fno-strict-overflow
@@ -1109,7 +1256,11 @@ KBUILD_LDFLAGS	+= $(call ld-option,--no-warn-rwx-segments)
 endif
 
 ifeq ($(CONFIG_STRIP_ASM_SYMS),y)
+<<<<<<< HEAD
 LDFLAGS_vmlinux	+= -X
+=======
+LDFLAGS_vmlinux	+= $(call ld-option, -X,)
+>>>>>>> b7ba80a49124 (Commit)
 endif
 
 ifeq ($(CONFIG_RELR),y)
@@ -1119,7 +1270,11 @@ endif
 # We never want expected sections to be placed heuristically by the
 # linker. All sections should be explicitly named in the linker script.
 ifdef CONFIG_LD_ORPHAN_WARN
+<<<<<<< HEAD
 LDFLAGS_vmlinux += --orphan-handling=$(CONFIG_LD_ORPHAN_WARN_LEVEL)
+=======
+LDFLAGS_vmlinux += --orphan-handling=warn
+>>>>>>> b7ba80a49124 (Commit)
 endif
 
 # Align the bit size of userspace programs with the kernel
@@ -1171,6 +1326,7 @@ export MODULES_NSDEPS := $(extmod_prefix)modules.nsdeps
 
 ifeq ($(KBUILD_EXTMOD),)
 
+<<<<<<< HEAD
 build-dir	:= .
 clean-dirs	:= $(sort . Documentation \
 		     $(patsubst %/,%,$(filter %/, $(core-) \
@@ -1182,6 +1338,22 @@ export ARCH_DRIVERS	:= $(drivers-y) $(drivers-m)
 # Externally visible symbols (used by link-vmlinux.sh)
 
 KBUILD_VMLINUX_OBJS := ./built-in.a
+=======
+vmlinux-dirs	:= . $(patsubst %/,%,$(filter %/, $(libs-y) $(libs-m)))
+
+vmlinux-alldirs	:= $(sort $(vmlinux-dirs) Documentation \
+		     $(patsubst %/,%,$(filter %/, $(core-) \
+			$(drivers-) $(libs-))))
+
+build-dirs	:= $(vmlinux-dirs)
+clean-dirs	:= $(vmlinux-alldirs)
+
+export ARCH_CORE	:= $(core-y)
+export ARCH_DRIVERS	:= $(drivers-y) $(drivers-m)
+# Externally visible symbols (used by link-vmlinux.sh)
+KBUILD_VMLINUX_OBJS := ./built-in.a
+KBUILD_VMLINUX_OBJS += $(addsuffix built-in.a, $(filter %/, $(libs-y)))
+>>>>>>> b7ba80a49124 (Commit)
 ifdef CONFIG_MODULES
 KBUILD_VMLINUX_OBJS += $(patsubst %/, %/lib.a, $(filter %/, $(libs-y)))
 KBUILD_VMLINUX_LIBS := $(filter-out %/, $(libs-y))
@@ -1191,6 +1363,13 @@ endif
 
 export KBUILD_VMLINUX_LIBS
 export KBUILD_LDS          := arch/$(SRCARCH)/kernel/vmlinux.lds
+<<<<<<< HEAD
+=======
+# used by scripts/Makefile.package
+export KBUILD_ALLDIRS := $(sort $(filter-out arch/%,$(vmlinux-alldirs)) LICENSES arch include scripts tools)
+
+vmlinux-deps := $(KBUILD_LDS) $(KBUILD_VMLINUX_OBJS) $(KBUILD_VMLINUX_LIBS)
+>>>>>>> b7ba80a49124 (Commit)
 
 # Recurse until adjust_autoksyms.sh is satisfied
 PHONY += autoksyms_recursive
@@ -1200,7 +1379,11 @@ ifdef CONFIG_TRIM_UNUSED_KSYMS
 # (this can be evaluated only once include/config/auto.conf has been included)
 KBUILD_MODULES := 1
 
+<<<<<<< HEAD
 autoksyms_recursive: $(build-dir) modules.order
+=======
+autoksyms_recursive: descend modules.order
+>>>>>>> b7ba80a49124 (Commit)
 	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/adjust_autoksyms.sh \
 	  "$(MAKE) -f $(srctree)/Makefile autoksyms_recursive"
 endif
@@ -1214,11 +1397,15 @@ quiet_cmd_autoksyms_h = GEN     $@
 $(autoksyms_h):
 	$(call cmd,autoksyms_h)
 
+<<<<<<< HEAD
 # '$(AR) mPi' needs 'T' to workaround the bug of llvm-ar <= 14
+=======
+>>>>>>> b7ba80a49124 (Commit)
 quiet_cmd_ar_vmlinux.a = AR      $@
       cmd_ar_vmlinux.a = \
 	rm -f $@; \
 	$(AR) cDPrST $@ $(KBUILD_VMLINUX_OBJS); \
+<<<<<<< HEAD
 	$(AR) mPiT $$($(AR) t $@ | sed -n 1p) $@ $$($(AR) t $@ | grep -F -f $(srctree)/scripts/head-object-list.txt)
 
 targets += vmlinux.a
@@ -1257,6 +1444,35 @@ filechk_kernel.release = $(srctree)/scripts/setlocalversion $(srctree)
 else
 filechk_kernel.release = echo $(KERNELRELEASE)
 endif
+=======
+	$(AR) mPi $$($(AR) t $@ | head -n1) $@ $$($(AR) t $@ | grep -F --file=$(srctree)/scripts/head-object-list.txt)
+
+targets += vmlinux.a
+vmlinux.a: $(KBUILD_VMLINUX_OBJS) scripts/head-object-list.txt FORCE
+	$(call if_changed,ar_vmlinux.a)
+
+vmlinux.o: autoksyms_recursive vmlinux.a $(KBUILD_VMLINUX_LIBS) FORCE
+	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.vmlinux_o
+
+ARCH_POSTLINK := $(wildcard $(srctree)/arch/$(SRCARCH)/Makefile.postlink)
+
+# Final link of vmlinux with optional arch pass after final link
+cmd_link-vmlinux =                                                 \
+	$(CONFIG_SHELL) $< "$(LD)" "$(KBUILD_LDFLAGS)" "$(LDFLAGS_vmlinux)";    \
+	$(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) $@, true)
+
+vmlinux: scripts/link-vmlinux.sh vmlinux.o $(KBUILD_LDS) modpost FORCE
+	+$(call if_changed_dep,link-vmlinux)
+
+targets += vmlinux
+
+# The actual objects are generated when descending,
+# make sure no implicit rule kicks in
+$(sort $(vmlinux-deps)): descend ;
+
+filechk_kernel.release = \
+	echo "$(KERNELVERSION)$$($(CONFIG_SHELL) $(srctree)/scripts/setlocalversion $(srctree))"
+>>>>>>> b7ba80a49124 (Commit)
 
 # Store (new) KERNELRELEASE string in include/config/kernel.release
 include/config/kernel.release: FORCE
@@ -1481,10 +1697,14 @@ dtbs_prepare: include/config/kernel.release scripts_dtc
 
 ifneq ($(filter dtbs_check, $(MAKECMDGOALS)),)
 export CHECK_DTBS=y
+<<<<<<< HEAD
 endif
 
 ifneq ($(CHECK_DTBS),)
 dtbs_prepare: dt_binding_check
+=======
+dtbs: dt_binding_check
+>>>>>>> b7ba80a49124 (Commit)
 endif
 
 dtbs_check: dtbs
@@ -1510,10 +1730,13 @@ PHONY += dt_binding_check
 dt_binding_check: scripts_dtc
 	$(Q)$(MAKE) $(build)=Documentation/devicetree/bindings
 
+<<<<<<< HEAD
 PHONY += dt_compatible_check
 dt_compatible_check: dt_binding_check
 	$(Q)$(MAKE) $(build)=Documentation/devicetree/bindings $@
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 # ---------------------------------------------------------------------------
 # Modules
 
@@ -1533,10 +1756,16 @@ endif
 # Build modules
 #
 
+<<<<<<< HEAD
 # *.ko are usually independent of vmlinux, but CONFIG_DEBUG_INFO_BTF_MODULES
 # is an exception.
 ifdef CONFIG_DEBUG_INFO_BTF_MODULES
 KBUILD_BUILTIN := 1
+=======
+# *.ko are usually independent of vmlinux, but CONFIG_DEBUG_INFOBTF_MODULES
+# is an exception.
+ifdef CONFIG_DEBUG_INFO_BTF_MODULES
+>>>>>>> b7ba80a49124 (Commit)
 modules: vmlinux
 endif
 
@@ -1576,7 +1805,11 @@ __modinst_pre:
 		rm -f $(MODLIB)/build ; \
 		ln -s $(CURDIR) $(MODLIB)/build ; \
 	fi
+<<<<<<< HEAD
 	@sed 's:^\(.*\)\.o$$:kernel/\1.ko:' modules.order > $(MODLIB)/modules.order
+=======
+	@sed 's:^:kernel/:' modules.order > $(MODLIB)/modules.order
+>>>>>>> b7ba80a49124 (Commit)
 	@cp -f modules.builtin $(MODLIB)/
 	@cp -f $(objtree)/modules.builtin.modinfo $(MODLIB)/
 
@@ -1592,8 +1825,13 @@ endif # CONFIG_MODULES
 # Directories & files removed with 'make clean'
 CLEAN_FILES += include/ksym vmlinux.symvers modules-only.symvers \
 	       modules.builtin modules.builtin.modinfo modules.nsdeps \
+<<<<<<< HEAD
 	       compile_commands.json .thinlto-cache rust/test rust/doc \
 	       rust-project.json .vmlinux.objs .vmlinux.export.c
+=======
+	       compile_commands.json .thinlto-cache .vmlinux.objs \
+	       rust/test rust/doc
+>>>>>>> b7ba80a49124 (Commit)
 
 # Directories & files removed with 'make mrproper'
 MRPROPER_FILES += include/config include/generated          \
@@ -1604,8 +1842,13 @@ MRPROPER_FILES += include/config include/generated          \
 		  certs/signing_key.pem \
 		  certs/x509.genkey \
 		  vmlinux-gdb.py \
+<<<<<<< HEAD
 		  *.spec rpmbuild \
 		  rust/libmacros.so
+=======
+		  *.spec \
+		  rust/target.json rust/libmacros.so
+>>>>>>> b7ba80a49124 (Commit)
 
 # clean - Delete most, but leave enough to build external modules
 #
@@ -1770,9 +2013,14 @@ help:
 		printf "  %-16s - Show all of the above\\n" help-boards; \
 		echo '')
 
+<<<<<<< HEAD
 	@echo  '  make V=n   [targets] 1: verbose build'
 	@echo  '                       2: give reason for rebuild of target'
 	@echo  '                       V=1 and V=2 can be combined with V=12'
+=======
+	@echo  '  make V=0|1 [targets] 0 => quiet build (default), 1 => verbose build'
+	@echo  '  make V=2   [targets] 2 => give reason for rebuild of target'
+>>>>>>> b7ba80a49124 (Commit)
 	@echo  '  make O=dir [targets] Locate all output files in "dir", including .config'
 	@echo  '  make C=1   [targets] Check re-compiled c source with $$CHECK'
 	@echo  '                       (sparse by default)'
@@ -1784,10 +2032,13 @@ help:
 	@echo  '		3: more obscure warnings, can most likely be ignored'
 	@echo  '		e: warnings are being treated as errors'
 	@echo  '		Multiple levels can be combined with W=12 or W=123'
+<<<<<<< HEAD
 	@$(if $(dtstree), \
 		echo '  make CHECK_DTBS=1 [targets] Check all generated dtb files against schema'; \
 		echo '         This can be applied both to "dtbs" and to individual "foo.dtb" targets' ; \
 		)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	@echo  ''
 	@echo  'Execute "make" or "make all" to build all targets marked with [*] '
 	@echo  'For further info see the ./README file'
@@ -1810,7 +2061,11 @@ $(help-board-dirs): help-%:
 # Documentation targets
 # ---------------------------------------------------------------------------
 DOC_TARGETS := xmldocs latexdocs pdfdocs htmldocs epubdocs cleandocs \
+<<<<<<< HEAD
 	       linkcheckdocs dochelp refcheckdocs texinfodocs infodocs
+=======
+	       linkcheckdocs dochelp refcheckdocs
+>>>>>>> b7ba80a49124 (Commit)
 PHONY += $(DOC_TARGETS)
 $(DOC_TARGETS):
 	$(Q)$(MAKE) $(build)=Documentation $@
@@ -1864,12 +2119,15 @@ rust-analyzer:
 # Misc
 # ---------------------------------------------------------------------------
 
+<<<<<<< HEAD
 PHONY += misc-check
 misc-check:
 	$(Q)$(srctree)/scripts/misc-check
 
 all: misc-check
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 PHONY += scripts_gdb
 scripts_gdb: prepare0
 	$(Q)$(MAKE) $(build)=scripts/gdb
@@ -1881,8 +2139,11 @@ endif
 
 else # KBUILD_EXTMOD
 
+<<<<<<< HEAD
 filechk_kernel.release = echo $(KERNELRELEASE)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 ###
 # External module support.
 # When building external modules the kernel used as basis is considered
@@ -1894,7 +2155,11 @@ filechk_kernel.release = echo $(KERNELRELEASE)
 KBUILD_BUILTIN :=
 KBUILD_MODULES := 1
 
+<<<<<<< HEAD
 build-dir := $(KBUILD_EXTMOD)
+=======
+build-dirs := $(KBUILD_EXTMOD)
+>>>>>>> b7ba80a49124 (Commit)
 
 compile_commands.json: $(extmod_prefix)compile_commands.json
 PHONY += compile_commands.json
@@ -1926,14 +2191,33 @@ help:
 endif # KBUILD_EXTMOD
 
 # ---------------------------------------------------------------------------
+<<<<<<< HEAD
 # Modules
+=======
+# Modules (common for in-tree modules and external modules)
+>>>>>>> b7ba80a49124 (Commit)
 
 PHONY += modules modules_install modules_prepare
 
 ifdef CONFIG_MODULES
 
+<<<<<<< HEAD
 $(MODORDER): $(build-dir)
 	@:
+=======
+subdir-modorder := $(addsuffix /.modules.order, $(build-dirs))
+
+# Split ./.modules.order into a dedicate target to avoid
+# "doesn't match the target pattern" warning
+./.modules.order: . ;
+$(sort $(filter-out ./.modules.order, $(subdir-modorder))): %/.modules.order: % ;
+
+cmd_modules_order = cat $(real-prereqs) > $@
+
+targets += $(MODORDER)
+$(MODORDER): $(subdir-modorder) FORCE
+	$(call if_changed,modules_order)
+>>>>>>> b7ba80a49124 (Commit)
 
 # KBUILD_MODPOST_NOFINAL can be set to skip the final link of modules.
 # This is solely useful to speed up test compiles.
@@ -1997,6 +2281,7 @@ single-no-ko := $(filter-out $(single-ko), $(MAKECMDGOALS)) \
 
 $(single-ko): single_modules
 	@:
+<<<<<<< HEAD
 $(single-no-ko): $(build-dir)
 	@:
 
@@ -2004,25 +2289,55 @@ $(single-no-ko): $(build-dir)
 PHONY += single_modules
 single_modules: $(single-no-ko) modules_prepare
 	$(Q){ $(foreach m, $(single-ko), echo $(extmod_prefix)$(m:%.ko=%.o);) } > $(MODORDER)
+=======
+$(single-no-ko): descend
+	@:
+
+# Remove MODORDER when done because it is not the real one.
+PHONY += single_modpost
+single_modules: $(single-no-ko) modules_prepare
+	$(Q){ $(foreach m, $(single-ko), echo $(extmod_prefix)$m;) } > $(MODORDER)
+>>>>>>> b7ba80a49124 (Commit)
 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
 ifneq ($(KBUILD_MODPOST_NOFINAL),1)
 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modfinal
 endif
 	$(Q)rm -f $(MODORDER)
 
+<<<<<<< HEAD
 single-goals := $(addprefix $(build-dir)/, $(single-no-ko))
 
 KBUILD_MODULES := 1
 
 endif
 
+=======
+single-goals := $(foreach x, $(addprefix $(extmod_prefix), $(single-no-ko)), \
+		$(if $(filter $(addsuffix /%, $(build-dirs)), $x),,./)$x)
+
+# trim unrelated directories
+build-dirs := $(foreach d, $(build-dirs), \
+			$(if $(filter $d/%, $(single-goals)), $d))
+
+endif
+
+# Handle descending into subdirectories listed in $(build-dirs)
+>>>>>>> b7ba80a49124 (Commit)
 # Preset locale variables to speed up the build process. Limit locale
 # tweaks to this spot to avoid wrong language settings when running
 # make menuconfig etc.
 # Error messages still appears in the original language
+<<<<<<< HEAD
 PHONY += $(build-dir)
 $(build-dir): prepare
 	$(Q)$(MAKE) $(build)=$@ need-builtin=1 need-modorder=1 $(single-goals)
+=======
+PHONY += descend $(build-dirs)
+descend: $(build-dirs)
+$(build-dirs): prepare
+	$(Q)$(MAKE) $(build)=$@ need-builtin=1 need-modorder=1 \
+	$(filter $@/%, $(single-goals))
+>>>>>>> b7ba80a49124 (Commit)
 
 clean-dirs := $(addprefix _clean_, $(clean-dirs))
 PHONY += $(clean-dirs) clean
@@ -2034,14 +2349,19 @@ clean: $(clean-dirs)
 	@find $(or $(KBUILD_EXTMOD), .) $(RCS_FIND_IGNORE) \
 		\( -name '*.[aios]' -o -name '*.rsi' -o -name '*.ko' -o -name '.*.cmd' \
 		-o -name '*.ko.*' \
+<<<<<<< HEAD
 		-o -name '*.dtb' -o -name '*.dtbo' \
 		-o -name '*.dtb.S' -o -name '*.dtbo.S' \
 		-o -name '*.dt.yaml' \
+=======
+		-o -name '*.dtb' -o -name '*.dtbo' -o -name '*.dtb.S' -o -name '*.dt.yaml' \
+>>>>>>> b7ba80a49124 (Commit)
 		-o -name '*.dwo' -o -name '*.lst' \
 		-o -name '*.su' -o -name '*.mod' -o -name '*.usyms' \
 		-o -name '.*.d' -o -name '.*.tmp' -o -name '*.mod.c' \
 		-o -name '*.lex.c' -o -name '*.tab.[ch]' \
 		-o -name '*.asn1.[ch]' \
+<<<<<<< HEAD
 		-o -name '*.symtypes' -o -name 'modules.order' \
 		-o -name '*.c.[012]*.*' \
 		-o -name '*.ll' \
@@ -2049,6 +2369,14 @@ clean: $(clean-dirs)
 		-o -name '*.*.symversions' \) -type f -print \
 		-o -name '.tmp_*' -print \
 		| xargs rm -rf
+=======
+		-o -name '*.symtypes' -o -name '*modules.order' \
+		-o -name '.tmp_*' \
+		-o -name '*.c.[012]*.*' \
+		-o -name '*.ll' \
+		-o -name '*.gcno' \
+		-o -name '*.*.symversions' \) -type f -print | xargs rm -f
+>>>>>>> b7ba80a49124 (Commit)
 
 # Generate tags for editors
 # ---------------------------------------------------------------------------
@@ -2130,7 +2458,11 @@ checkstack:
 	$(PERL) $(srctree)/scripts/checkstack.pl $(CHECKSTACK_ARCH)
 
 kernelrelease:
+<<<<<<< HEAD
 	@$(filechk_kernel.release)
+=======
+	@echo "$(KERNELVERSION)$$($(CONFIG_SHELL) $(srctree)/scripts/setlocalversion $(srctree))"
+>>>>>>> b7ba80a49124 (Commit)
 
 kernelversion:
 	@echo $(KERNELVERSION)

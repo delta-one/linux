@@ -2626,7 +2626,11 @@ static int iwl_mvm_build_scan_cmd(struct iwl_mvm *mvm,
 	u8 scan_ver;
 
 	lockdep_assert_held(&mvm->mutex);
+<<<<<<< HEAD
 	memset(mvm->scan_cmd, 0, mvm->scan_cmd_size);
+=======
+	memset(mvm->scan_cmd, 0, ksize(mvm->scan_cmd));
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!fw_has_capa(&mvm->fw->ucode_capa, IWL_UCODE_TLV_CAPA_UMAC_SCAN)) {
 		hcmd->id = SCAN_OFFLOAD_REQUEST_CMD;
@@ -3091,7 +3095,11 @@ static int iwl_mvm_scan_stop_wait(struct iwl_mvm *mvm, int type)
 				     1 * HZ);
 }
 
+<<<<<<< HEAD
 static size_t iwl_scan_req_umac_get_size(u8 scan_ver)
+=======
+static int iwl_scan_req_umac_get_size(u8 scan_ver)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	switch (scan_ver) {
 	case 12:
@@ -3104,7 +3112,11 @@ static size_t iwl_scan_req_umac_get_size(u8 scan_ver)
 	return 0;
 }
 
+<<<<<<< HEAD
 size_t iwl_mvm_scan_size(struct iwl_mvm *mvm)
+=======
+int iwl_mvm_scan_size(struct iwl_mvm *mvm)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int base_size, tail_size;
 	u8 scan_ver = iwl_fw_lookup_cmd_ver(mvm->fw, SCAN_REQ_UMAC,

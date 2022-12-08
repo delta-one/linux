@@ -41,7 +41,11 @@ static bool __init efi_virtmap_init(void)
 
 		if (!(md->attribute & EFI_MEMORY_RUNTIME))
 			continue;
+<<<<<<< HEAD
 		if (md->virt_addr == U64_MAX)
+=======
+		if (md->virt_addr == 0)
+>>>>>>> b7ba80a49124 (Commit)
 			return false;
 
 		ret = efi_create_mapping(&efi_mm, md);

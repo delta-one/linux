@@ -12,8 +12,12 @@
 #include "ipc4-priv.h"
 #include "ipc4-topology.h"
 
+<<<<<<< HEAD
 static int sof_ipc4_set_get_kcontrol_data(struct snd_sof_control *scontrol,
 					  bool set, bool lock)
+=======
+static int sof_ipc4_set_get_kcontrol_data(struct snd_sof_control *scontrol, bool set)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sof_ipc4_control_data *cdata = scontrol->ipc_control_data;
 	struct snd_soc_component *scomp = scontrol->scomp;
@@ -22,7 +26,10 @@ static int sof_ipc4_set_get_kcontrol_data(struct snd_sof_control *scontrol,
 	struct sof_ipc4_msg *msg = &cdata->msg;
 	struct snd_sof_widget *swidget;
 	bool widget_found = false;
+<<<<<<< HEAD
 	int ret = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* find widget associated with the control */
 	list_for_each_entry(swidget, &sdev->widget_list, list) {
@@ -37,6 +44,7 @@ static int sof_ipc4_set_get_kcontrol_data(struct snd_sof_control *scontrol,
 		return -ENOENT;
 	}
 
+<<<<<<< HEAD
 	if (lock)
 		mutex_lock(&swidget->setup_mutex);
 	else
@@ -49,10 +57,20 @@ static int sof_ipc4_set_get_kcontrol_data(struct snd_sof_control *scontrol,
 	 */
 	if (!swidget->use_count)
 		goto unlock;
+=======
+	/*
+	 * Volatile controls should always be part of static pipelines and the widget use_count
+	 * would always be > 0 in this case. For the others, just return the cached value if the
+	 * widget is not set up.
+	 */
+	if (!swidget->use_count)
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	msg->primary &= ~SOF_IPC4_MOD_INSTANCE_MASK;
 	msg->primary |= SOF_IPC4_MOD_INSTANCE(swidget->instance_id);
 
+<<<<<<< HEAD
 	ret = iops->set_get_data(sdev, msg, msg->data_size, set);
 
 unlock:
@@ -60,11 +78,18 @@ unlock:
 		mutex_unlock(&swidget->setup_mutex);
 
 	return ret;
+=======
+	return iops->set_get_data(sdev, msg, msg->data_size, set);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int
 sof_ipc4_set_volume_data(struct snd_sof_dev *sdev, struct snd_sof_widget *swidget,
+<<<<<<< HEAD
 			 struct snd_sof_control *scontrol, bool lock)
+=======
+			 struct snd_sof_control *scontrol)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct sof_ipc4_control_data *cdata = scontrol->ipc_control_data;
 	struct sof_ipc4_gain *gain = swidget->private;
@@ -97,14 +122,22 @@ sof_ipc4_set_volume_data(struct snd_sof_dev *sdev, struct snd_sof_widget *swidge
 		}
 
 		/* set curve type and duration from topology */
+<<<<<<< HEAD
 		data.curve_duration_l = gain->data.curve_duration_l;
 		data.curve_duration_h = gain->data.curve_duration_h;
+=======
+		data.curve_duration = gain->data.curve_duration;
+>>>>>>> b7ba80a49124 (Commit)
 		data.curve_type = gain->data.curve_type;
 
 		msg->data_ptr = &data;
 		msg->data_size = sizeof(data);
 
+<<<<<<< HEAD
 		ret = sof_ipc4_set_get_kcontrol_data(scontrol, true, lock);
+=======
+		ret = sof_ipc4_set_get_kcontrol_data(scontrol, true);
+>>>>>>> b7ba80a49124 (Commit)
 		msg->data_ptr = NULL;
 		msg->data_size = 0;
 		if (ret < 0) {
@@ -159,7 +192,11 @@ static bool sof_ipc4_volume_put(struct snd_sof_control *scontrol,
 		return false;
 	}
 
+<<<<<<< HEAD
 	ret = sof_ipc4_set_volume_data(sdev, swidget, scontrol, true);
+=======
+	ret = sof_ipc4_set_volume_data(sdev, swidget, scontrol);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return false;
 
@@ -181,6 +218,7 @@ static int sof_ipc4_volume_get(struct snd_sof_control *scontrol,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int sof_ipc4_set_get_bytes_data(struct snd_sof_dev *sdev,
 				       struct snd_sof_control *scontrol,
 				       bool set, bool lock)
@@ -407,10 +445,13 @@ static int sof_ipc4_bytes_ext_volatile_get(struct snd_sof_control *scontrol,
 	return _sof_ipc4_bytes_ext_get(scontrol, binary_data, size, true);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* set up all controls for the widget */
 static int sof_ipc4_widget_kcontrol_setup(struct snd_sof_dev *sdev, struct snd_sof_widget *swidget)
 {
 	struct snd_sof_control *scontrol;
+<<<<<<< HEAD
 	int ret = 0;
 
 	list_for_each_entry(scontrol, &sdev->kcontrol_list, list) {
@@ -438,6 +479,19 @@ static int sof_ipc4_widget_kcontrol_setup(struct snd_sof_dev *sdev, struct snd_s
 			}
 		}
 	}
+=======
+	int ret;
+
+	list_for_each_entry(scontrol, &sdev->kcontrol_list, list)
+		if (scontrol->comp_id == swidget->comp_id) {
+			ret = sof_ipc4_set_volume_data(sdev, swidget, scontrol);
+			if (ret < 0) {
+				dev_err(sdev->dev, "%s: kcontrol %d set up failed for widget %s\n",
+					__func__, scontrol->comp_id, swidget->widget->name);
+				return ret;
+			}
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -467,11 +521,14 @@ sof_ipc4_set_up_volume_table(struct snd_sof_control *scontrol, int tlv[SOF_TLV_I
 const struct sof_ipc_tplg_control_ops tplg_ipc4_control_ops = {
 	.volume_put = sof_ipc4_volume_put,
 	.volume_get = sof_ipc4_volume_get,
+<<<<<<< HEAD
 	.bytes_put = sof_ipc4_bytes_put,
 	.bytes_get = sof_ipc4_bytes_get,
 	.bytes_ext_put = sof_ipc4_bytes_ext_put,
 	.bytes_ext_get = sof_ipc4_bytes_ext_get,
 	.bytes_ext_volatile_get = sof_ipc4_bytes_ext_volatile_get,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.widget_kcontrol_setup = sof_ipc4_widget_kcontrol_setup,
 	.set_up_volume_table = sof_ipc4_set_up_volume_table,
 };

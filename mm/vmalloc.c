@@ -33,19 +33,29 @@
 #include <linux/compiler.h>
 #include <linux/memcontrol.h>
 #include <linux/llist.h>
+<<<<<<< HEAD
 #include <linux/uio.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/bitops.h>
 #include <linux/rbtree_augmented.h>
 #include <linux/overflow.h>
 #include <linux/pgtable.h>
+<<<<<<< HEAD
+=======
+#include <linux/uaccess.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/hugetlb.h>
 #include <linux/sched/mm.h>
 #include <asm/tlbflush.h>
 #include <asm/shmparam.h>
 
+<<<<<<< HEAD
 #define CREATE_TRACE_POINTS
 #include <trace/events/vmalloc.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "internal.h"
 #include "pgalloc-track.h"
 
@@ -89,6 +99,20 @@ struct vfree_deferred {
 };
 static DEFINE_PER_CPU(struct vfree_deferred, vfree_deferred);
 
+<<<<<<< HEAD
+=======
+static void __vunmap(const void *, int);
+
+static void free_work(struct work_struct *w)
+{
+	struct vfree_deferred *p = container_of(w, struct vfree_deferred, wq);
+	struct llist_node *t, *llnode;
+
+	llist_for_each_safe(llnode, t, llist_del_all(&p->list))
+		__vunmap((void *)llnode, 1);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /*** Page table manipulation functions ***/
 static int vmap_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
 			phys_addr_t phys_addr, pgprot_t prot,
@@ -645,7 +669,10 @@ int is_vmalloc_or_module_addr(const void *x)
 #endif
 	return is_vmalloc_addr(x);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(is_vmalloc_or_module_addr);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Walk a vmap address to the struct page it maps. Huge vmap mappings will
@@ -1579,8 +1606,12 @@ preload_this_cpu_lock(spinlock_t *lock, gfp_t gfp_mask, int node)
 static struct vmap_area *alloc_vmap_area(unsigned long size,
 				unsigned long align,
 				unsigned long vstart, unsigned long vend,
+<<<<<<< HEAD
 				int node, gfp_t gfp_mask,
 				unsigned long va_flags)
+=======
+				int node, gfp_t gfp_mask)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct vmap_area *va;
 	unsigned long freed;
@@ -1588,8 +1619,14 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
 	int purged = 0;
 	int ret;
 
+<<<<<<< HEAD
 	if (unlikely(!size || offset_in_page(size) || !is_power_of_2(align)))
 		return ERR_PTR(-EINVAL);
+=======
+	BUG_ON(!size);
+	BUG_ON(offset_in_page(size));
+	BUG_ON(!is_power_of_2(align));
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (unlikely(!vmap_initialized))
 		return ERR_PTR(-EBUSY);
@@ -1613,8 +1650,11 @@ retry:
 		size, align, vstart, vend);
 	spin_unlock(&free_vmap_area_lock);
 
+<<<<<<< HEAD
 	trace_alloc_vmap_area(addr, size, align, vstart, vend, addr == vend);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * If an allocation fails, the "vend" address is
 	 * returned. Therefore trigger the overflow path.
@@ -1625,7 +1665,10 @@ retry:
 	va->va_start = addr;
 	va->va_end = addr + size;
 	va->vm = NULL;
+<<<<<<< HEAD
 	va->flags = va_flags;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock(&vmap_area_lock);
 	insert_vmap_area(va, &vmap_area_root, &vmap_area_list);
@@ -1721,7 +1764,10 @@ static void purge_fragmented_blocks_allcpus(void);
 static bool __purge_vmap_area_lazy(unsigned long start, unsigned long end)
 {
 	unsigned long resched_threshold;
+<<<<<<< HEAD
 	unsigned int num_purged_areas = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct list_head local_purge_list;
 	struct vmap_area *va, *n_va;
 
@@ -1733,7 +1779,11 @@ static bool __purge_vmap_area_lazy(unsigned long start, unsigned long end)
 	spin_unlock(&purge_vmap_area_lock);
 
 	if (unlikely(list_empty(&local_purge_list)))
+<<<<<<< HEAD
 		goto out;
+=======
+		return false;
+>>>>>>> b7ba80a49124 (Commit)
 
 	start = min(start,
 		list_first_entry(&local_purge_list,
@@ -1768,16 +1818,23 @@ static bool __purge_vmap_area_lazy(unsigned long start, unsigned long end)
 					      va->va_start, va->va_end);
 
 		atomic_long_sub(nr, &vmap_lazy_nr);
+<<<<<<< HEAD
 		num_purged_areas++;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (atomic_long_read(&vmap_lazy_nr) < resched_threshold)
 			cond_resched_lock(&free_vmap_area_lock);
 	}
 	spin_unlock(&free_vmap_area_lock);
+<<<<<<< HEAD
 
 out:
 	trace_purge_vmap_area_lazy(start, end, num_purged_areas);
 	return num_purged_areas > 0;
+=======
+	return true;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1806,6 +1863,7 @@ static void drain_vmap_area_work(struct work_struct *work)
 }
 
 /*
+<<<<<<< HEAD
  * Free a vmap area, caller ensuring that the area has been unmapped,
  * unlinked and flush_cache_vunmap had been called for the correct
  * range previously.
@@ -1818,6 +1876,19 @@ static void free_vmap_area_noflush(struct vmap_area *va)
 
 	if (WARN_ON_ONCE(!list_empty(&va->list)))
 		return;
+=======
+ * Free a vmap area, caller ensuring that the area has been unmapped
+ * and flush_cache_vunmap had been called for the correct range
+ * previously.
+ */
+static void free_vmap_area_noflush(struct vmap_area *va)
+{
+	unsigned long nr_lazy;
+
+	spin_lock(&vmap_area_lock);
+	unlink_va(va, &vmap_area_root);
+	spin_unlock(&vmap_area_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	nr_lazy = atomic_long_add_return((va->va_end - va->va_start) >>
 				PAGE_SHIFT, &vmap_lazy_nr);
@@ -1830,10 +1901,15 @@ static void free_vmap_area_noflush(struct vmap_area *va)
 		&purge_vmap_area_root, &purge_vmap_area_list);
 	spin_unlock(&purge_vmap_area_lock);
 
+<<<<<<< HEAD
 	trace_free_vmap_area_noflush(va_start, nr_lazy, nr_lazy_max);
 
 	/* After this point, we may free va at any time */
 	if (unlikely(nr_lazy > nr_lazy_max))
+=======
+	/* After this point, we may free va at any time */
+	if (unlikely(nr_lazy > lazy_max_pages()))
+>>>>>>> b7ba80a49124 (Commit)
 		schedule_work(&drain_vmap_work);
 }
 
@@ -1861,6 +1937,7 @@ struct vmap_area *find_vmap_area(unsigned long addr)
 	return va;
 }
 
+<<<<<<< HEAD
 static struct vmap_area *find_unlink_vmap_area(unsigned long addr)
 {
 	struct vmap_area *va;
@@ -1874,6 +1951,8 @@ static struct vmap_area *find_unlink_vmap_area(unsigned long addr)
 	return va;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*** Per cpu kva allocator ***/
 
 /*
@@ -1904,6 +1983,7 @@ static struct vmap_area *find_unlink_vmap_area(unsigned long addr)
 
 #define VMAP_BLOCK_SIZE		(VMAP_BBMAP_BITS * PAGE_SIZE)
 
+<<<<<<< HEAD
 #define VMAP_RAM		0x1 /* indicates vm_map_ram area*/
 #define VMAP_BLOCK		0x2 /* mark out the vmap_block sub-type*/
 #define VMAP_FLAGS_MASK		0x3
@@ -1912,13 +1992,21 @@ struct vmap_block_queue {
 	spinlock_t lock;
 	struct list_head free;
 	struct xarray vmap_blocks;
+=======
+struct vmap_block_queue {
+	spinlock_t lock;
+	struct list_head free;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct vmap_block {
 	spinlock_t lock;
 	struct vmap_area *va;
 	unsigned long free, dirty;
+<<<<<<< HEAD
 	DECLARE_BITMAP(used_map, VMAP_BBMAP_BITS);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long dirty_min, dirty_max; /*< dirty range */
 	struct list_head free_list;
 	struct rcu_head rcu_head;
@@ -1928,6 +2016,7 @@ struct vmap_block {
 /* Queue of free and dirty vmap blocks, for allocation and flushing purposes */
 static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
 
+<<<<<<< HEAD
 static struct vmap_block_queue *
 addr_to_vbq(unsigned long addr)
 {
@@ -1940,6 +2029,27 @@ addr_to_vb_va_start(unsigned long addr)
 {
 	/* A start address of block an address belongs to. */
 	return rounddown(addr, VMAP_BLOCK_SIZE);
+=======
+/*
+ * XArray of vmap blocks, indexed by address, to quickly find a vmap block
+ * in the free path. Could get rid of this if we change the API to return a
+ * "cookie" from alloc, to be passed to free. But no big deal yet.
+ */
+static DEFINE_XARRAY(vmap_blocks);
+
+/*
+ * We should probably have a fallback mechanism to allocate virtual memory
+ * out of partially filled vmap blocks. However vmap block sizing should be
+ * fairly reasonable according to the vmalloc size, so it shouldn't be a
+ * big problem.
+ */
+
+static unsigned long addr_to_vb_idx(unsigned long addr)
+{
+	addr -= VMALLOC_START & ~(VMAP_BLOCK_SIZE-1);
+	addr /= VMAP_BLOCK_SIZE;
+	return addr;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void *vmap_block_vaddr(unsigned long va_start, unsigned long pages_off)
@@ -1947,7 +2057,11 @@ static void *vmap_block_vaddr(unsigned long va_start, unsigned long pages_off)
 	unsigned long addr;
 
 	addr = va_start + (pages_off << PAGE_SHIFT);
+<<<<<<< HEAD
 	BUG_ON(addr_to_vb_va_start(addr) != addr_to_vb_va_start(va_start));
+=======
+	BUG_ON(addr_to_vb_idx(addr) != addr_to_vb_idx(va_start));
+>>>>>>> b7ba80a49124 (Commit)
 	return (void *)addr;
 }
 
@@ -1964,6 +2078,10 @@ static void *new_vmap_block(unsigned int order, gfp_t gfp_mask)
 	struct vmap_block_queue *vbq;
 	struct vmap_block *vb;
 	struct vmap_area *va;
+<<<<<<< HEAD
+=======
+	unsigned long vb_idx;
+>>>>>>> b7ba80a49124 (Commit)
 	int node, err;
 	void *vaddr;
 
@@ -1976,8 +2094,12 @@ static void *new_vmap_block(unsigned int order, gfp_t gfp_mask)
 
 	va = alloc_vmap_area(VMAP_BLOCK_SIZE, VMAP_BLOCK_SIZE,
 					VMALLOC_START, VMALLOC_END,
+<<<<<<< HEAD
 					node, gfp_mask,
 					VMAP_RAM|VMAP_BLOCK);
+=======
+					node, gfp_mask);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(va)) {
 		kfree(vb);
 		return ERR_CAST(va);
@@ -1988,16 +2110,26 @@ static void *new_vmap_block(unsigned int order, gfp_t gfp_mask)
 	vb->va = va;
 	/* At least something should be left free */
 	BUG_ON(VMAP_BBMAP_BITS <= (1UL << order));
+<<<<<<< HEAD
 	bitmap_zero(vb->used_map, VMAP_BBMAP_BITS);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	vb->free = VMAP_BBMAP_BITS - (1UL << order);
 	vb->dirty = 0;
 	vb->dirty_min = VMAP_BBMAP_BITS;
 	vb->dirty_max = 0;
+<<<<<<< HEAD
 	bitmap_set(vb->used_map, 0, (1UL << order));
 	INIT_LIST_HEAD(&vb->free_list);
 
 	vbq = addr_to_vbq(va->va_start);
 	err = xa_insert(&vbq->vmap_blocks, va->va_start, vb, gfp_mask);
+=======
+	INIT_LIST_HEAD(&vb->free_list);
+
+	vb_idx = addr_to_vb_idx(va->va_start);
+	err = xa_insert(&vmap_blocks, vb_idx, vb, gfp_mask);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err) {
 		kfree(vb);
 		free_vmap_area(va);
@@ -2014,6 +2146,7 @@ static void *new_vmap_block(unsigned int order, gfp_t gfp_mask)
 
 static void free_vmap_block(struct vmap_block *vb)
 {
+<<<<<<< HEAD
 	struct vmap_block_queue *vbq;
 	struct vmap_block *tmp;
 
@@ -2025,6 +2158,13 @@ static void free_vmap_block(struct vmap_block *vb)
 	unlink_va(vb->va, &vmap_area_root);
 	spin_unlock(&vmap_area_lock);
 
+=======
+	struct vmap_block *tmp;
+
+	tmp = xa_erase(&vmap_blocks, addr_to_vb_idx(vb->va->va_start));
+	BUG_ON(tmp != vb);
+
+>>>>>>> b7ba80a49124 (Commit)
 	free_vmap_area_noflush(vb->va);
 	kfree_rcu(vb, rcu_head);
 }
@@ -2105,7 +2245,10 @@ static void *vb_alloc(unsigned long size, gfp_t gfp_mask)
 		pages_off = VMAP_BBMAP_BITS - vb->free;
 		vaddr = vmap_block_vaddr(vb->va->va_start, pages_off);
 		vb->free -= 1UL << order;
+<<<<<<< HEAD
 		bitmap_set(vb->used_map, pages_off, (1UL << order));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (vb->free == 0) {
 			spin_lock(&vbq->lock);
 			list_del_rcu(&vb->free_list);
@@ -2130,7 +2273,10 @@ static void vb_free(unsigned long addr, unsigned long size)
 	unsigned long offset;
 	unsigned int order;
 	struct vmap_block *vb;
+<<<<<<< HEAD
 	struct vmap_block_queue *vbq;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	BUG_ON(offset_in_page(size));
 	BUG_ON(size > PAGE_SIZE*VMAP_MAX_ALLOC);
@@ -2139,6 +2285,7 @@ static void vb_free(unsigned long addr, unsigned long size)
 
 	order = get_order(size);
 	offset = (addr & (VMAP_BLOCK_SIZE - 1)) >> PAGE_SHIFT;
+<<<<<<< HEAD
 
 	vbq = addr_to_vbq(addr);
 	vb = xa_load(&vbq->vmap_blocks, addr_to_vb_va_start(addr));
@@ -2146,6 +2293,9 @@ static void vb_free(unsigned long addr, unsigned long size)
 	spin_lock(&vb->lock);
 	bitmap_clear(vb->used_map, offset, (1UL << order));
 	spin_unlock(&vb->lock);
+=======
+	vb = xa_load(&vmap_blocks, addr_to_vb_idx(addr));
+>>>>>>> b7ba80a49124 (Commit)
 
 	vunmap_range_noflush(addr, addr + size);
 
@@ -2254,10 +2404,15 @@ void vm_unmap_ram(const void *mem, unsigned int count)
 		return;
 	}
 
+<<<<<<< HEAD
 	va = find_unlink_vmap_area(addr);
 	if (WARN_ON_ONCE(!va))
 		return;
 
+=======
+	va = find_vmap_area(addr);
+	BUG_ON(!va);
+>>>>>>> b7ba80a49124 (Commit)
 	debug_check_no_locks_freed((void *)va->va_start,
 				    (va->va_end - va->va_start));
 	free_unmap_vmap_area(va);
@@ -2292,8 +2447,12 @@ void *vm_map_ram(struct page **pages, unsigned int count, int node)
 	} else {
 		struct vmap_area *va;
 		va = alloc_vmap_area(size, PAGE_SIZE,
+<<<<<<< HEAD
 				VMALLOC_START, VMALLOC_END,
 				node, GFP_KERNEL, VMAP_RAM);
+=======
+				VMALLOC_START, VMALLOC_END, node, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(va))
 			return NULL;
 
@@ -2437,6 +2596,51 @@ static void vmap_init_free_space(void)
 	}
 }
 
+<<<<<<< HEAD
+=======
+void __init vmalloc_init(void)
+{
+	struct vmap_area *va;
+	struct vm_struct *tmp;
+	int i;
+
+	/*
+	 * Create the cache for vmap_area objects.
+	 */
+	vmap_area_cachep = KMEM_CACHE(vmap_area, SLAB_PANIC);
+
+	for_each_possible_cpu(i) {
+		struct vmap_block_queue *vbq;
+		struct vfree_deferred *p;
+
+		vbq = &per_cpu(vmap_block_queue, i);
+		spin_lock_init(&vbq->lock);
+		INIT_LIST_HEAD(&vbq->free);
+		p = &per_cpu(vfree_deferred, i);
+		init_llist_head(&p->list);
+		INIT_WORK(&p->wq, free_work);
+	}
+
+	/* Import existing vmlist entries. */
+	for (tmp = vmlist; tmp; tmp = tmp->next) {
+		va = kmem_cache_zalloc(vmap_area_cachep, GFP_NOWAIT);
+		if (WARN_ON_ONCE(!va))
+			continue;
+
+		va->va_start = (unsigned long)tmp->addr;
+		va->va_end = va->va_start + tmp->size;
+		va->vm = tmp;
+		insert_vmap_area(va, &vmap_area_root, &vmap_area_list);
+	}
+
+	/*
+	 * Now we can initialize a free vmap space.
+	 */
+	vmap_init_free_space();
+	vmap_initialized = true;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline void setup_vmalloc_vm_locked(struct vm_struct *vm,
 	struct vmap_area *va, unsigned long flags, const void *caller)
 {
@@ -2491,7 +2695,11 @@ static struct vm_struct *__get_vm_area_node(unsigned long size,
 	if (!(flags & VM_NO_GUARD))
 		size += PAGE_SIZE;
 
+<<<<<<< HEAD
 	va = alloc_vmap_area(size, align, start, end, node, gfp_mask, 0);
+=======
+	va = alloc_vmap_area(size, align, start, end, node, gfp_mask);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(va)) {
 		kfree(area);
 		return NULL;
@@ -2583,6 +2791,7 @@ struct vm_struct *find_vm_area(const void *addr)
 struct vm_struct *remove_vm_area(const void *addr)
 {
 	struct vmap_area *va;
+<<<<<<< HEAD
 	struct vm_struct *vm;
 
 	might_sleep();
@@ -2603,6 +2812,27 @@ struct vm_struct *remove_vm_area(const void *addr)
 
 	free_unmap_vmap_area(va);
 	return vm;
+=======
+
+	might_sleep();
+
+	spin_lock(&vmap_area_lock);
+	va = __find_vmap_area((unsigned long)addr, &vmap_area_root);
+	if (va && va->vm) {
+		struct vm_struct *vm = va->vm;
+
+		va->vm = NULL;
+		spin_unlock(&vmap_area_lock);
+
+		kasan_free_module_shadow(vm);
+		free_unmap_vmap_area(va);
+
+		return vm;
+	}
+
+	spin_unlock(&vmap_area_lock);
+	return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void set_area_direct_map(const struct vm_struct *area,
@@ -2616,6 +2846,7 @@ static inline void set_area_direct_map(const struct vm_struct *area,
 			set_direct_map(area->pages[i]);
 }
 
+<<<<<<< HEAD
 /*
  * Flush the vm mapping and reset the direct map.
  */
@@ -2628,11 +2859,43 @@ static void vm_reset_perms(struct vm_struct *area)
 
 	/*
 	 * Find the start and end range of the direct mappings to make sure that
+=======
+/* Handle removing and resetting vm mappings related to the vm_struct. */
+static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
+{
+	unsigned long start = ULONG_MAX, end = 0;
+	unsigned int page_order = vm_area_page_order(area);
+	int flush_reset = area->flags & VM_FLUSH_RESET_PERMS;
+	int flush_dmap = 0;
+	int i;
+
+	remove_vm_area(area->addr);
+
+	/* If this is not VM_FLUSH_RESET_PERMS memory, no need for the below. */
+	if (!flush_reset)
+		return;
+
+	/*
+	 * If not deallocating pages, just do the flush of the VM area and
+	 * return.
+	 */
+	if (!deallocate_pages) {
+		vm_unmap_aliases();
+		return;
+	}
+
+	/*
+	 * If execution gets here, flush the vm mapping and reset the direct
+	 * map. Find the start and end range of the direct mappings to make sure
+>>>>>>> b7ba80a49124 (Commit)
 	 * the vm_unmap_aliases() flush includes the direct map.
 	 */
 	for (i = 0; i < area->nr_pages; i += 1U << page_order) {
 		unsigned long addr = (unsigned long)page_address(area->pages[i]);
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (addr) {
 			unsigned long page_size;
 
@@ -2653,6 +2916,7 @@ static void vm_reset_perms(struct vm_struct *area)
 	set_area_direct_map(area, set_direct_map_default_noflush);
 }
 
+<<<<<<< HEAD
 static void delayed_vfree_work(struct work_struct *w)
 {
 	struct vfree_deferred *p = container_of(w, struct vfree_deferred, wq);
@@ -2660,6 +2924,68 @@ static void delayed_vfree_work(struct work_struct *w)
 
 	llist_for_each_safe(llnode, t, llist_del_all(&p->list))
 		vfree(llnode);
+=======
+static void __vunmap(const void *addr, int deallocate_pages)
+{
+	struct vm_struct *area;
+
+	if (!addr)
+		return;
+
+	if (WARN(!PAGE_ALIGNED(addr), "Trying to vfree() bad address (%p)\n",
+			addr))
+		return;
+
+	area = find_vm_area(addr);
+	if (unlikely(!area)) {
+		WARN(1, KERN_ERR "Trying to vfree() nonexistent vm area (%p)\n",
+				addr);
+		return;
+	}
+
+	debug_check_no_locks_freed(area->addr, get_vm_area_size(area));
+	debug_check_no_obj_freed(area->addr, get_vm_area_size(area));
+
+	kasan_poison_vmalloc(area->addr, get_vm_area_size(area));
+
+	vm_remove_mappings(area, deallocate_pages);
+
+	if (deallocate_pages) {
+		int i;
+
+		for (i = 0; i < area->nr_pages; i++) {
+			struct page *page = area->pages[i];
+
+			BUG_ON(!page);
+			mod_memcg_page_state(page, MEMCG_VMALLOC, -1);
+			/*
+			 * High-order allocs for huge vmallocs are split, so
+			 * can be freed as an array of order-0 allocations
+			 */
+			__free_pages(page, 0);
+			cond_resched();
+		}
+		atomic_long_sub(area->nr_pages, &nr_vmalloc_pages);
+
+		kvfree(area->pages);
+	}
+
+	kfree(area);
+}
+
+static inline void __vfree_deferred(const void *addr)
+{
+	/*
+	 * Use raw_cpu_ptr() because this can be called from preemptible
+	 * context. Preemption is absolutely fine here, because the llist_add()
+	 * implementation is lockless, so it works even if we are adding to
+	 * another cpu's list. schedule_work() should be fine with this too.
+	 */
+	struct vfree_deferred *p = raw_cpu_ptr(&vfree_deferred);
+
+	if (llist_add((struct llist_node *)addr, &p->list))
+		schedule_work(&p->wq);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -2671,6 +2997,7 @@ static void delayed_vfree_work(struct work_struct *w)
  */
 void vfree_atomic(const void *addr)
 {
+<<<<<<< HEAD
 	struct vfree_deferred *p = raw_cpu_ptr(&vfree_deferred);
 
 	BUG_ON(in_nmi());
@@ -2684,6 +3011,23 @@ void vfree_atomic(const void *addr)
 	 */
 	if (addr && llist_add((struct llist_node *)addr, &p->list))
 		schedule_work(&p->wq);
+=======
+	BUG_ON(in_nmi());
+
+	kmemleak_free(addr);
+
+	if (!addr)
+		return;
+	__vfree_deferred(addr);
+}
+
+static void __vfree(const void *addr)
+{
+	if (unlikely(in_interrupt()))
+		__vfree_deferred(addr);
+	else
+		__vunmap(addr, 1);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -2705,6 +3049,7 @@ void vfree_atomic(const void *addr)
  */
 void vfree(const void *addr)
 {
+<<<<<<< HEAD
 	struct vm_struct *vm;
 	int i;
 
@@ -2716,10 +3061,18 @@ void vfree(const void *addr)
 	BUG_ON(in_nmi());
 	kmemleak_free(addr);
 	might_sleep();
+=======
+	BUG_ON(in_nmi());
+
+	kmemleak_free(addr);
+
+	might_sleep_if(!in_interrupt());
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!addr)
 		return;
 
+<<<<<<< HEAD
 	vm = remove_vm_area(addr);
 	if (unlikely(!vm)) {
 		WARN(1, KERN_ERR "Trying to vfree() nonexistent vm area (%p)\n",
@@ -2744,6 +3097,9 @@ void vfree(const void *addr)
 	atomic_long_sub(vm->nr_pages, &nr_vmalloc_pages);
 	kvfree(vm->pages);
 	kfree(vm);
+=======
+	__vfree(addr);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(vfree);
 
@@ -2758,6 +3114,7 @@ EXPORT_SYMBOL(vfree);
  */
 void vunmap(const void *addr)
 {
+<<<<<<< HEAD
 	struct vm_struct *vm;
 
 	BUG_ON(in_interrupt());
@@ -2772,6 +3129,12 @@ void vunmap(const void *addr)
 		return;
 	}
 	kfree(vm);
+=======
+	BUG_ON(in_interrupt());
+	might_sleep();
+	if (addr)
+		__vunmap(addr, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(vunmap);
 
@@ -2799,9 +3162,12 @@ void *vmap(struct page **pages, unsigned int count,
 
 	might_sleep();
 
+<<<<<<< HEAD
 	if (WARN_ON_ONCE(flags & VM_FLUSH_RESET_PERMS))
 		return NULL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Your top guard is someone else's bottom guard. Not having a top
 	 * guard compromises someone else's mappings too.
@@ -2882,8 +3248,11 @@ vm_area_alloc_pages(gfp_t gfp, int nid,
 		unsigned int order, unsigned int nr_pages, struct page **pages)
 {
 	unsigned int nr_allocated = 0;
+<<<<<<< HEAD
 	gfp_t alloc_gfp = gfp;
 	bool nofail = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct page *page;
 	int i;
 
@@ -2894,7 +3263,10 @@ vm_area_alloc_pages(gfp_t gfp, int nid,
 	 * more permissive.
 	 */
 	if (!order) {
+<<<<<<< HEAD
 		/* bulk allocator doesn't support nofail req. officially */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		gfp_t bulk_gfp = gfp & ~__GFP_NOFAIL;
 
 		while (nr_allocated < nr_pages) {
@@ -2933,6 +3305,7 @@ vm_area_alloc_pages(gfp_t gfp, int nid,
 			if (nr != nr_pages_request)
 				break;
 		}
+<<<<<<< HEAD
 	} else if (gfp & __GFP_NOFAIL) {
 		/*
 		 * Higher order nofail allocations are really expensive and
@@ -2944,11 +3317,18 @@ vm_area_alloc_pages(gfp_t gfp, int nid,
 	}
 
 	/* High-order pages or fallback path if "bulk" fails. */
+=======
+	}
+
+	/* High-order pages or fallback path if "bulk" fails. */
+
+>>>>>>> b7ba80a49124 (Commit)
 	while (nr_allocated < nr_pages) {
 		if (fatal_signal_pending(current))
 			break;
 
 		if (nid == NUMA_NO_NODE)
+<<<<<<< HEAD
 			page = alloc_pages(alloc_gfp, order);
 		else
 			page = alloc_pages_node(nid, alloc_gfp, order);
@@ -2962,6 +3342,13 @@ vm_area_alloc_pages(gfp_t gfp, int nid,
 			continue;
 		}
 
+=======
+			page = alloc_pages(gfp, order);
+		else
+			page = alloc_pages_node(nid, gfp, order);
+		if (unlikely(!page))
+			break;
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Higher order allocations must be able to be treated as
 		 * indepdenent small pages by callers (as they can with
@@ -3002,7 +3389,11 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
 	int ret;
 
 	array_size = (unsigned long)nr_small_pages * sizeof(struct page *);
+<<<<<<< HEAD
 
+=======
+	gfp_mask |= __GFP_NOWARN;
+>>>>>>> b7ba80a49124 (Commit)
 	if (!(gfp_mask & (GFP_DMA | GFP_DMA32)))
 		gfp_mask |= __GFP_HIGHMEM;
 
@@ -3038,7 +3429,11 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
 
 	/*
 	 * If not enough pages were obtained to accomplish an
+<<<<<<< HEAD
 	 * allocation request, free them via vfree() if any.
+=======
+	 * allocation request, free them via __vfree() if any.
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	if (area->nr_pages != nr_small_pages) {
 		warn_alloc(gfp_mask, NULL,
@@ -3078,7 +3473,11 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
 	return area->addr;
 
 fail:
+<<<<<<< HEAD
 	vfree(area->addr);
+=======
+	__vfree(area->addr);
+>>>>>>> b7ba80a49124 (Commit)
 	return NULL;
 }
 
@@ -3187,7 +3586,11 @@ again:
 			 * pages backing VM_ALLOC mapping. Memory is instead
 			 * poisoned and zeroed by kasan_unpoison_vmalloc().
 			 */
+<<<<<<< HEAD
 			gfp_mask |= __GFP_SKIP_KASAN | __GFP_SKIP_ZERO;
+=======
+			gfp_mask |= __GFP_SKIP_KASAN_UNPOISON | __GFP_SKIP_ZERO;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		/* Take note that the mapping is PAGE_KERNEL. */
@@ -3441,6 +3844,7 @@ void *vmalloc_32_user(unsigned long size)
 EXPORT_SYMBOL(vmalloc_32_user);
 
 /*
+<<<<<<< HEAD
  * Atomically zero bytes in the iterator.
  *
  * Returns the number of zeroed bytes.
@@ -3598,6 +4002,53 @@ finished:
  * @iter:         the iterator to which data should be written.
  * @addr:         vm address.
  * @count:        number of bytes to be read.
+=======
+ * small helper routine , copy contents to buf from addr.
+ * If the page is not present, fill zero.
+ */
+
+static int aligned_vread(char *buf, char *addr, unsigned long count)
+{
+	struct page *p;
+	int copied = 0;
+
+	while (count) {
+		unsigned long offset, length;
+
+		offset = offset_in_page(addr);
+		length = PAGE_SIZE - offset;
+		if (length > count)
+			length = count;
+		p = vmalloc_to_page(addr);
+		/*
+		 * To do safe access to this _mapped_ area, we need
+		 * lock. But adding lock here means that we need to add
+		 * overhead of vmalloc()/vfree() calls for this _debug_
+		 * interface, rarely used. Instead of that, we'll use
+		 * kmap() and get small overhead in this access function.
+		 */
+		if (p) {
+			/* We can expect USER0 is not used -- see vread() */
+			void *map = kmap_atomic(p);
+			memcpy(buf, map + offset, length);
+			kunmap_atomic(map);
+		} else
+			memset(buf, 0, length);
+
+		addr += length;
+		buf += length;
+		copied += length;
+		count -= length;
+	}
+	return copied;
+}
+
+/**
+ * vread() - read vmalloc area in a safe way.
+ * @buf:     buffer for reading data
+ * @addr:    vm address.
+ * @count:   number of bytes to be read.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This function checks that addr is a valid vmalloc'ed area, and
  * copy data from that area to a given buffer. If the given memory range
@@ -3617,12 +4068,22 @@ finished:
  * (same number as @count) or %0 if [addr...addr+count) doesn't
  * include any intersection with valid vmalloc area
  */
+<<<<<<< HEAD
 long vread_iter(struct iov_iter *iter, const char *addr, size_t count)
 {
 	struct vmap_area *va;
 	struct vm_struct *vm;
 	char *vaddr;
 	size_t n, size, flags, remains;
+=======
+long vread(char *buf, char *addr, unsigned long count)
+{
+	struct vmap_area *va;
+	struct vm_struct *vm;
+	char *vaddr, *buf_start = buf;
+	unsigned long buflen = count;
+	unsigned long n;
+>>>>>>> b7ba80a49124 (Commit)
 
 	addr = kasan_reset_tag(addr);
 
@@ -3630,6 +4091,7 @@ long vread_iter(struct iov_iter *iter, const char *addr, size_t count)
 	if ((unsigned long) addr + count < count)
 		count = -(unsigned long) addr;
 
+<<<<<<< HEAD
 	remains = count;
 
 	spin_lock(&vmap_area_lock);
@@ -3708,6 +4170,57 @@ finished:
 	spin_unlock(&vmap_area_lock);
 
 	return count - remains;
+=======
+	spin_lock(&vmap_area_lock);
+	va = find_vmap_area_exceed_addr((unsigned long)addr);
+	if (!va)
+		goto finished;
+
+	/* no intersects with alive vmap_area */
+	if ((unsigned long)addr + count <= va->va_start)
+		goto finished;
+
+	list_for_each_entry_from(va, &vmap_area_list, list) {
+		if (!count)
+			break;
+
+		if (!va->vm)
+			continue;
+
+		vm = va->vm;
+		vaddr = (char *) vm->addr;
+		if (addr >= vaddr + get_vm_area_size(vm))
+			continue;
+		while (addr < vaddr) {
+			if (count == 0)
+				goto finished;
+			*buf = '\0';
+			buf++;
+			addr++;
+			count--;
+		}
+		n = vaddr + get_vm_area_size(vm) - addr;
+		if (n > count)
+			n = count;
+		if (!(vm->flags & VM_IOREMAP))
+			aligned_vread(buf, addr, n);
+		else /* IOREMAP area is treated as memory hole */
+			memset(buf, 0, n);
+		buf += n;
+		addr += n;
+		count -= n;
+	}
+finished:
+	spin_unlock(&vmap_area_lock);
+
+	if (buf == buf_start)
+		return 0;
+	/* zero-fill memory holes */
+	if (buf != buf_start + buflen)
+		memset(buf, 0, buflen - (buf - buf_start));
+
+	return buflen;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -3768,7 +4281,11 @@ int remap_vmalloc_range_partial(struct vm_area_struct *vma, unsigned long uaddr,
 		size -= PAGE_SIZE;
 	} while (size > 0);
 
+<<<<<<< HEAD
 	vm_flags_set(vma, VM_DONTEXPAND | VM_DONTDUMP);
+=======
+	vma->vm_flags |= VM_DONTEXPAND | VM_DONTDUMP;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -4236,11 +4753,22 @@ static int s_show(struct seq_file *m, void *p)
 
 	va = list_entry(p, struct vmap_area, list);
 
+<<<<<<< HEAD
 	if (!va->vm) {
 		if (va->flags & VMAP_RAM)
 			seq_printf(m, "0x%pK-0x%pK %7ld vm_map_ram\n",
 				(void *)va->va_start, (void *)va->va_end,
 				va->va_end - va->va_start);
+=======
+	/*
+	 * s_show can encounter race with remove_vm_area, !vm on behalf
+	 * of vmap area is being tear down or vm_map_ram allocation.
+	 */
+	if (!va->vm) {
+		seq_printf(m, "0x%pK-0x%pK %7ld vm_map_ram\n",
+			(void *)va->va_start, (void *)va->va_end,
+			va->va_end - va->va_start);
+>>>>>>> b7ba80a49124 (Commit)
 
 		goto final;
 	}
@@ -4310,6 +4838,7 @@ static int __init proc_vmalloc_init(void)
 module_init(proc_vmalloc_init);
 
 #endif
+<<<<<<< HEAD
 
 void __init vmalloc_init(void)
 {
@@ -4353,3 +4882,5 @@ void __init vmalloc_init(void)
 	vmap_init_free_space();
 	vmap_initialized = true;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

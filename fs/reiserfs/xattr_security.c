@@ -22,7 +22,11 @@ security_get(const struct xattr_handler *handler, struct dentry *unused,
 
 static int
 security_set(const struct xattr_handler *handler,
+<<<<<<< HEAD
 	     struct mnt_idmap *idmap, struct dentry *unused,
+=======
+	     struct user_namespace *mnt_userns, struct dentry *unused,
+>>>>>>> b7ba80a49124 (Commit)
 	     struct inode *inode, const char *name, const void *buffer,
 	     size_t size, int flags)
 {
@@ -39,6 +43,7 @@ static bool security_list(struct dentry *dentry)
 	return !IS_PRIVATE(d_inode(dentry));
 }
 
+<<<<<<< HEAD
 static int
 reiserfs_initxattrs(struct inode *inode, const struct xattr *xattr_array,
 		    void *fs_info)
@@ -55,6 +60,8 @@ reiserfs_initxattrs(struct inode *inode, const struct xattr *xattr_array,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Initializes the security context for a new inode and returns the number
  * of blocks needed for the transaction. If successful, reiserfs_security
  * must be released using reiserfs_security_free when the caller is done. */
@@ -66,15 +73,27 @@ int reiserfs_security_init(struct inode *dir, struct inode *inode,
 	int error;
 
 	sec->name = NULL;
+<<<<<<< HEAD
 	sec->value = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Don't add selinux attributes on xattrs - they'll never get used */
 	if (IS_PRIVATE(dir))
 		return 0;
 
+<<<<<<< HEAD
 	error = security_inode_init_security(inode, dir, qstr,
 					     &reiserfs_initxattrs, sec);
 	if (error) {
+=======
+	error = security_old_inode_init_security(inode, dir, qstr, &sec->name,
+						 &sec->value, &sec->length);
+	if (error) {
+		if (error == -EOPNOTSUPP)
+			error = 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 		sec->name = NULL;
 		sec->value = NULL;
 		sec->length = 0;
@@ -109,6 +128,10 @@ int reiserfs_security_write(struct reiserfs_transaction_handle *th,
 
 void reiserfs_security_free(struct reiserfs_security_handle *sec)
 {
+<<<<<<< HEAD
+=======
+	kfree(sec->name);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(sec->value);
 	sec->name = NULL;
 	sec->value = NULL;

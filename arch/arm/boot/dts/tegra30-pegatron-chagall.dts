@@ -37,6 +37,7 @@
 	 */
 	chosen {};
 
+<<<<<<< HEAD
 	firmware {
 		trusted-foundations {
 			compatible = "tlm,trusted-foundations";
@@ -45,6 +46,8 @@
 		};
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	memory@80000000 {
 		reg = <0x80000000 0x40000000>;
 	};
@@ -142,7 +145,11 @@
 				nvidia,tristate = <TEGRA_PIN_DISABLE>;
 				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
 				nvidia,lock = <0>;
+<<<<<<< HEAD
 				nvidia,io-reset = <0>;
+=======
+				nvidia,ioreset = <0>;
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			/* SDMMC3 pinmux */
@@ -158,6 +165,10 @@
 				nvidia,pins = "sdmmc3_cmd_pa7",
 						"sdmmc3_dat3_pb4",
 						"sdmmc3_dat2_pb5",
+<<<<<<< HEAD
+=======
+						"sdmmc3_dat2_pb5",
+>>>>>>> b7ba80a49124 (Commit)
 						"sdmmc3_dat1_pb6",
 						"sdmmc3_dat0_pb7",
 						"sdmmc3_dat5_pd0",
@@ -629,7 +640,11 @@
 				nvidia,tristate = <TEGRA_PIN_ENABLE>;
 				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
 				nvidia,lock = <0>;
+<<<<<<< HEAD
 				nvidia,io-reset = <0>;
+=======
+				nvidia,ioreset = <0>;
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			pu1 {
@@ -696,7 +711,11 @@
 				nvidia,tristate = <TEGRA_PIN_DISABLE>;
 				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
 				nvidia,lock = <0>;
+<<<<<<< HEAD
 				nvidia,io-reset = <0>;
+=======
+				nvidia,ioreset = <0>;
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			vi_d10_pt2 {
@@ -871,7 +890,11 @@
 				nvidia,tristate = <TEGRA_PIN_DISABLE>;
 				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
 				nvidia,lock = <0>;
+<<<<<<< HEAD
 				nvidia,io-reset = <0>;
+=======
+				nvidia,ioreset = <0>;
+>>>>>>> b7ba80a49124 (Commit)
 			};
 
 			vi_mclk_pt1 {
@@ -1198,6 +1221,19 @@
 		status = "okay";
 		clock-frequency = <400000>;
 
+<<<<<<< HEAD
+=======
+		light-sensor@44 {
+			compatible = "isil,isl29023";
+			reg = <0x44>;
+
+			interrupt-parent = <&gpio>;
+			interrupts = <TEGRA_GPIO(Q, 3) IRQ_TYPE_LEVEL_HIGH>;
+
+			vcc-supply = <&vdd_3v3_sen>;
+		};
+
+>>>>>>> b7ba80a49124 (Commit)
 		/* AsahiKASEI AK8975 magnetometer sensor */
 		magnetometer@c {
 			compatible = "asahi-kasei,ak8975";
@@ -1211,6 +1247,7 @@
 					 "0",  "0", "-1";
 		};
 
+<<<<<<< HEAD
 		light-sensor@44 {
 			compatible = "isil,isl29023";
 			reg = <0x44>;
@@ -1221,6 +1258,8 @@
 			vcc-supply = <&vdd_3v3_sen>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		gyroscope@68 {
 			compatible = "invensense,mpu3050";
 			reg = <0x68>;
@@ -1267,6 +1306,20 @@
 		status = "okay";
 		clock-frequency = <400000>;
 
+<<<<<<< HEAD
+=======
+		nct72: temperature-sensor@4c {
+			compatible = "onnn,nct1008";
+			reg = <0x4c>;
+
+			interrupt-parent = <&gpio>;
+			interrupts = <TEGRA_GPIO(U, 5) IRQ_TYPE_EDGE_FALLING>;
+
+			vcc-supply = <&vdd_3v3_sys>;
+			#thermal-sensor-cells = <1>;
+		};
+
+>>>>>>> b7ba80a49124 (Commit)
 		/* Texas Instruments TPS659110 PMIC */
 		pmic: pmic@2d {
 			compatible = "ti,tps65911";
@@ -1397,6 +1450,7 @@
 			};
 		};
 
+<<<<<<< HEAD
 		nct72: temperature-sensor@4c {
 			compatible = "onnn,nct1008";
 			reg = <0x4c>;
@@ -1408,6 +1462,8 @@
 			#thermal-sensor-cells = <1>;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		vdd_core: core-regulator@60 {
 			compatible = "ti,tps62361";
 			reg = <0x60>;
@@ -2514,6 +2570,20 @@
 		vqmmc-supply = <&vddio_usd>; /* ldo3 */
 	};
 
+<<<<<<< HEAD
+=======
+	brcm_wifi_pwrseq: wifi-pwrseq {
+		compatible = "mmc-pwrseq-simple";
+
+		clocks = <&tegra_pmc TEGRA_PMC_CLK_BLINK>;
+		clock-names = "ext_clock";
+
+		reset-gpios = <&gpio TEGRA_GPIO(D, 3) GPIO_ACTIVE_LOW>;
+		post-power-on-delay-ms = <300>;
+		power-off-delay-us = <300>;
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	sdmmc3: mmc@78000400 {
 		status = "okay";
 
@@ -2649,6 +2719,10 @@
 
 	extcon-keys {
 		compatible = "gpio-keys";
+<<<<<<< HEAD
+=======
+		interrupt-parent = <&gpio>;
+>>>>>>> b7ba80a49124 (Commit)
 
 		switch-dock-insert {
 			label = "Chagall Dock";
@@ -2671,8 +2745,22 @@
 		};
 	};
 
+<<<<<<< HEAD
 	gpio-keys {
 		compatible = "gpio-keys";
+=======
+	firmware {
+		trusted-foundations {
+			compatible = "tlm,trusted-foundations";
+			tlm,version-major = <2>;
+			tlm,version-minor = <8>;
+		};
+	};
+
+	gpio-keys {
+		compatible = "gpio-keys";
+		interrupt-parent = <&gpio>;
+>>>>>>> b7ba80a49124 (Commit)
 
 		key-power {
 			label = "Power";
@@ -2683,6 +2771,7 @@
 			wakeup-source;
 		};
 
+<<<<<<< HEAD
 		key-volume-down {
 			label = "Volume Down";
 			gpios = <&gpio TEGRA_GPIO(Q, 1) GPIO_ACTIVE_LOW>;
@@ -2692,6 +2781,8 @@
 			wakeup-source;
 		};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		key-volume-up {
 			label = "Volume Up";
 			gpios = <&gpio TEGRA_GPIO(Q, 0) GPIO_ACTIVE_LOW>;
@@ -2700,6 +2791,18 @@
 			wakeup-event-action = <EV_ACT_ASSERTED>;
 			wakeup-source;
 		};
+<<<<<<< HEAD
+=======
+
+		key-volume-down {
+			label = "Volume Down";
+			gpios = <&gpio TEGRA_GPIO(Q, 1) GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_VOLUMEDOWN>;
+			debounce-interval = <10>;
+			wakeup-event-action = <EV_ACT_ASSERTED>;
+			wakeup-source;
+		};
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	haptic-feedback {
@@ -2708,6 +2811,7 @@
 		vcc-supply = <&vdd_3v3_sys>;
 	};
 
+<<<<<<< HEAD
 	opp-table-actmon {
 		/delete-node/ opp-625000000;
 		/delete-node/ opp-667000000;
@@ -2736,6 +2840,8 @@
 		power-off-delay-us = <300>;
 	};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sound {
 		compatible = "pegatron,tegra-audio-wm8903-chagall",
 			     "nvidia,tegra-audio-wm8903";
@@ -2856,3 +2962,23 @@
 		};
 	};
 };
+<<<<<<< HEAD
+=======
+
+&emc_icc_dvfs_opp_table {
+	/delete-node/ opp-625000000-1200;
+	/delete-node/ opp-625000000-1250;
+	/delete-node/ opp-667000000-1200;
+	/delete-node/ opp-750000000-1300;
+	/delete-node/ opp-800000000-1300;
+	/delete-node/ opp-900000000-1350;
+};
+
+&emc_bw_dfs_opp_table {
+	/delete-node/ opp-625000000;
+	/delete-node/ opp-667000000;
+	/delete-node/ opp-750000000;
+	/delete-node/ opp-800000000;
+	/delete-node/ opp-900000000;
+};
+>>>>>>> b7ba80a49124 (Commit)

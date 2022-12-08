@@ -373,10 +373,17 @@ nfp_flower_calculate_key_layers(struct nfp_app *app,
 			if (ipv6_tun) {
 				key_layer_two |= NFP_FLOWER_LAYER2_TUN_IPV6;
 				key_size +=
+<<<<<<< HEAD
 					sizeof(struct nfp_flower_ipv6_gre_tun);
 			} else {
 				key_size +=
 					sizeof(struct nfp_flower_ipv4_gre_tun);
+=======
+					sizeof(struct nfp_flower_ipv6_udp_tun);
+			} else {
+				key_size +=
+					sizeof(struct nfp_flower_ipv4_udp_tun);
+>>>>>>> b7ba80a49124 (Commit)
 			}
 
 			if (enc_op.key) {
@@ -1344,7 +1351,11 @@ nfp_flower_add_offload(struct nfp_app *app, struct net_device *netdev,
 		port = nfp_port_from_netdev(netdev);
 
 	if (is_pre_ct_flow(flow))
+<<<<<<< HEAD
 		return nfp_fl_ct_handle_pre_ct(priv, netdev, flow, extack, NULL);
+=======
+		return nfp_fl_ct_handle_pre_ct(priv, netdev, flow, extack);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (is_post_ct_flow(flow))
 		return nfp_fl_ct_handle_post_ct(priv, netdev, flow, extack);

@@ -234,7 +234,11 @@ static int rpi_exp_gpio_probe(struct platform_device *pdev)
 	return devm_gpiochip_add_data(dev, &rpi_gpio->gc, rpi_gpio);
 }
 
+<<<<<<< HEAD
 static const struct of_device_id rpi_exp_gpio_ids[] __maybe_unused = {
+=======
+static const struct of_device_id rpi_exp_gpio_ids[] = {
+>>>>>>> b7ba80a49124 (Commit)
 	{ .compatible = "raspberrypi,firmware-gpio" },
 	{ }
 };

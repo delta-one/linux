@@ -306,8 +306,13 @@ static u32 mxic_spi_prep_hc_cfg(struct spi_device *spi, u32 flags)
 		nio = 2;
 
 	return flags | HC_CFG_NIO(nio) |
+<<<<<<< HEAD
 	       HC_CFG_TYPE(spi_get_chipselect(spi, 0), HC_CFG_TYPE_SPI_NOR) |
 	       HC_CFG_SLV_ACT(spi_get_chipselect(spi, 0)) | HC_CFG_IDLE_SIO_LVL(1);
+=======
+	       HC_CFG_TYPE(spi->chip_select, HC_CFG_TYPE_SPI_NOR) |
+	       HC_CFG_SLV_ACT(spi->chip_select) | HC_CFG_IDLE_SIO_LVL(1);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static u32 mxic_spi_mem_prep_op_cfg(const struct spi_mem_op *op,
@@ -405,7 +410,11 @@ static ssize_t mxic_spi_mem_dirmap_read(struct spi_mem_dirmap_desc *desc,
 	len = min_t(size_t, len, mxic->linear.size);
 	writel(len, mxic->regs + LRD_RANGE);
 	writel(LMODE_CMD0(desc->info.op_tmpl.cmd.opcode) |
+<<<<<<< HEAD
 	       LMODE_SLV_ACT(spi_get_chipselect(desc->mem->spi, 0)) |
+=======
+	       LMODE_SLV_ACT(desc->mem->spi->chip_select) |
+>>>>>>> b7ba80a49124 (Commit)
 	       LMODE_EN,
 	       mxic->regs + LRD_CTRL);
 
@@ -449,7 +458,11 @@ static ssize_t mxic_spi_mem_dirmap_write(struct spi_mem_dirmap_desc *desc,
 	len = min_t(size_t, len, mxic->linear.size);
 	writel(len, mxic->regs + LWR_RANGE);
 	writel(LMODE_CMD0(desc->info.op_tmpl.cmd.opcode) |
+<<<<<<< HEAD
 	       LMODE_SLV_ACT(spi_get_chipselect(desc->mem->spi, 0)) |
+=======
+	       LMODE_SLV_ACT(desc->mem->spi->chip_select) |
+>>>>>>> b7ba80a49124 (Commit)
 	       LMODE_EN,
 	       mxic->regs + LWR_CTRL);
 
@@ -524,7 +537,11 @@ static int mxic_spi_mem_exec_op(struct spi_mem *mem,
 	writel(HC_EN_BIT, mxic->regs + HC_EN);
 
 	writel(mxic_spi_mem_prep_op_cfg(op, op->data.nbytes),
+<<<<<<< HEAD
 	       mxic->regs + SS_CTRL(spi_get_chipselect(mem->spi, 0)));
+=======
+	       mxic->regs + SS_CTRL(mem->spi->chip_select));
+>>>>>>> b7ba80a49124 (Commit)
 
 	writel(readl(mxic->regs + HC_CFG) | HC_CFG_MAN_CS_ASSERT,
 	       mxic->regs + HC_CFG);
@@ -772,7 +789,12 @@ static int mxic_spi_probe(struct platform_device *pdev)
 	if (IS_ERR(mxic->send_dly_clk))
 		return PTR_ERR(mxic->send_dly_clk);
 
+<<<<<<< HEAD
 	mxic->regs = devm_platform_ioremap_resource_byname(pdev, "regs");
+=======
+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
+	mxic->regs = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(mxic->regs))
 		return PTR_ERR(mxic->regs);
 
@@ -818,7 +840,11 @@ static int mxic_spi_probe(struct platform_device *pdev)
 	return ret;
 }
 
+<<<<<<< HEAD
 static void mxic_spi_remove(struct platform_device *pdev)
+=======
+static int mxic_spi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_master *master = platform_get_drvdata(pdev);
 	struct mxic_spi *mxic = spi_master_get_devdata(master);
@@ -826,6 +852,11 @@ static void mxic_spi_remove(struct platform_device *pdev)
 	pm_runtime_disable(&pdev->dev);
 	mxic_spi_mem_ecc_remove(mxic);
 	spi_unregister_master(master);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct of_device_id mxic_spi_of_ids[] = {
@@ -836,7 +867,11 @@ MODULE_DEVICE_TABLE(of, mxic_spi_of_ids);
 
 static struct platform_driver mxic_spi_driver = {
 	.probe = mxic_spi_probe,
+<<<<<<< HEAD
 	.remove_new = mxic_spi_remove,
+=======
+	.remove = mxic_spi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = "mxic-spi",
 		.of_match_table = mxic_spi_of_ids,

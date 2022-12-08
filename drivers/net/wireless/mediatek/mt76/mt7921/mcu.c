@@ -155,6 +155,7 @@ void mt7921_mcu_set_suspend_iter(void *priv, u8 *mac, struct ieee80211_vif *vif)
 #endif /* CONFIG_PM */
 
 static void
+<<<<<<< HEAD
 mt7921_mcu_uni_roc_event(struct mt7921_dev *dev, struct sk_buff *skb)
 {
 	struct mt7921_roc_grant_tlv *grant;
@@ -178,6 +179,8 @@ mt7921_mcu_uni_roc_event(struct mt7921_dev *dev, struct sk_buff *skb)
 }
 
 static void
+=======
+>>>>>>> b7ba80a49124 (Commit)
 mt7921_mcu_scan_event(struct mt7921_dev *dev, struct sk_buff *skb)
 {
 	struct mt76_phy *mphy = &dev->mt76.phy;
@@ -223,6 +226,23 @@ mt7921_mcu_connection_loss_event(struct mt7921_dev *dev, struct sk_buff *skb)
 }
 
 static void
+<<<<<<< HEAD
+=======
+mt7921_mcu_bss_event(struct mt7921_dev *dev, struct sk_buff *skb)
+{
+	struct mt76_phy *mphy = &dev->mt76.phy;
+	struct mt76_connac_mcu_bss_event *event;
+
+	skb_pull(skb, sizeof(struct mt76_connac2_mcu_rxd));
+	event = (struct mt76_connac_mcu_bss_event *)skb->data;
+	if (event->is_absent)
+		ieee80211_stop_queues(mphy->hw);
+	else
+		ieee80211_wake_queues(mphy->hw);
+}
+
+static void
+>>>>>>> b7ba80a49124 (Commit)
 mt7921_mcu_debug_msg_event(struct mt7921_dev *dev, struct sk_buff *skb)
 {
 	struct mt7921_debug_msg {
@@ -288,6 +308,12 @@ mt7921_mcu_rx_unsolicited_event(struct mt7921_dev *dev, struct sk_buff *skb)
 	case MCU_EVENT_SCAN_DONE:
 		mt7921_mcu_scan_event(dev, skb);
 		return;
+<<<<<<< HEAD
+=======
+	case MCU_EVENT_BSS_ABSENCE:
+		mt7921_mcu_bss_event(dev, skb);
+		break;
+>>>>>>> b7ba80a49124 (Commit)
 	case MCU_EVENT_DBG_MSG:
 		mt7921_mcu_debug_msg_event(dev, skb);
 		break;
@@ -308,6 +334,7 @@ mt7921_mcu_rx_unsolicited_event(struct mt7921_dev *dev, struct sk_buff *skb)
 	dev_kfree_skb(skb);
 }
 
+<<<<<<< HEAD
 static void
 mt7921_mcu_uni_rx_unsolicited_event(struct mt7921_dev *dev,
 				    struct sk_buff *skb)
@@ -326,6 +353,8 @@ mt7921_mcu_uni_rx_unsolicited_event(struct mt7921_dev *dev,
 	dev_kfree_skb(skb);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void mt7921_mcu_rx_event(struct mt7921_dev *dev, struct sk_buff *skb)
 {
 	struct mt76_connac2_mcu_rxd *rxd;
@@ -335,11 +364,14 @@ void mt7921_mcu_rx_event(struct mt7921_dev *dev, struct sk_buff *skb)
 
 	rxd = (struct mt76_connac2_mcu_rxd *)skb->data;
 
+<<<<<<< HEAD
 	if (rxd->option & MCU_UNI_CMD_UNSOLICITED_EVENT) {
 		mt7921_mcu_uni_rx_unsolicited_event(dev, skb);
 		return;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (rxd->eid == 0x6) {
 		mt76_mcu_rx_event(&dev->mt76, skb);
 		return;
@@ -348,6 +380,10 @@ void mt7921_mcu_rx_event(struct mt7921_dev *dev, struct sk_buff *skb)
 	if (rxd->ext_eid == MCU_EXT_EVENT_RATE_REPORT ||
 	    rxd->eid == MCU_EVENT_BSS_BEACON_LOSS ||
 	    rxd->eid == MCU_EVENT_SCHED_SCAN_DONE ||
+<<<<<<< HEAD
+=======
+	    rxd->eid == MCU_EVENT_BSS_ABSENCE ||
+>>>>>>> b7ba80a49124 (Commit)
 	    rxd->eid == MCU_EVENT_SCAN_DONE ||
 	    rxd->eid == MCU_EVENT_TX_DONE ||
 	    rxd->eid == MCU_EVENT_DBG_MSG ||
@@ -664,6 +700,7 @@ int mt7921_mcu_set_tx(struct mt7921_dev *dev, struct ieee80211_vif *vif)
 				 &req_mu, sizeof(req_mu), false);
 }
 
+<<<<<<< HEAD
 int mt7921_mcu_set_roc(struct mt7921_phy *phy, struct mt7921_vif *vif,
 		       struct ieee80211_channel *chan, int duration,
 		       enum mt7921_roc_req type, u8 token_id)
@@ -761,6 +798,8 @@ int mt7921_mcu_abort_roc(struct mt7921_phy *phy, struct mt7921_vif *vif,
 				 &req, sizeof(req), false);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int mt7921_mcu_set_chan_info(struct mt7921_phy *phy, int cmd)
 {
 	struct mt7921_dev *dev = phy->dev;
@@ -1019,8 +1058,11 @@ int mt7921_mcu_set_beacon_filter(struct mt7921_dev *dev,
 				 struct ieee80211_vif *vif,
 				 bool enable)
 {
+<<<<<<< HEAD
 #define MT7921_FIF_BIT_CLR		BIT(1)
 #define MT7921_FIF_BIT_SET		BIT(0)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	if (enable) {
@@ -1028,11 +1070,15 @@ int mt7921_mcu_set_beacon_filter(struct mt7921_dev *dev,
 		if (err)
 			return err;
 
+<<<<<<< HEAD
 		err = mt7921_mcu_set_rxfilter(dev, 0,
 					      MT7921_FIF_BIT_SET,
 					      MT_WF_RFCR_DROP_OTHER_BEACON);
 		if (err)
 			return err;
+=======
+		mt76_set(dev, MT_WF_RFCR(0), MT_WF_RFCR_DROP_OTHER_BEACON);
+>>>>>>> b7ba80a49124 (Commit)
 
 		return 0;
 	}
@@ -1041,11 +1087,15 @@ int mt7921_mcu_set_beacon_filter(struct mt7921_dev *dev,
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	err = mt7921_mcu_set_rxfilter(dev, 0,
 				      MT7921_FIF_BIT_CLR,
 				      MT_WF_RFCR_DROP_OTHER_BEACON);
 	if (err)
 		return err;
+=======
+	mt76_clear(dev, MT_WF_RFCR(0), MT_WF_RFCR_DROP_OTHER_BEACON);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -1103,6 +1153,7 @@ int mt7921_mcu_set_sniffer(struct mt7921_dev *dev, struct ieee80211_vif *vif,
 				 true);
 }
 
+<<<<<<< HEAD
 int mt7921_mcu_config_sniffer(struct mt7921_vif *vif,
 			      struct ieee80211_chanctx_conf *ctx)
 {
@@ -1171,6 +1222,8 @@ int mt7921_mcu_config_sniffer(struct mt7921_vif *vif,
 				 &req, sizeof(req), true);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int
 mt7921_mcu_uni_add_beacon_offload(struct mt7921_dev *dev,
 				  struct ieee80211_hw *hw,
@@ -1262,15 +1315,22 @@ int __mt7921_mcu_set_clc(struct mt7921_dev *dev, u8 *alpha2,
 		__le16 len;
 		u8 idx;
 		u8 env;
+<<<<<<< HEAD
 		u8 acpi_conf;
 		u8 pad1;
+=======
+		u8 pad1[2];
+>>>>>>> b7ba80a49124 (Commit)
 		u8 alpha2[2];
 		u8 type[2];
 		u8 rsvd[64];
 	} __packed req = {
 		.idx = idx,
 		.env = env_cap,
+<<<<<<< HEAD
 		.acpi_conf = mt7921_acpi_get_flags(&dev->phy),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 	int ret, valid_cnt = 0;
 	u8 i, *pos;
@@ -1333,6 +1393,7 @@ int mt7921_mcu_set_clc(struct mt7921_dev *dev, u8 *alpha2,
 	}
 	return 0;
 }
+<<<<<<< HEAD
 
 int mt7921_mcu_set_rxfilter(struct mt7921_dev *dev, u32 fif,
 			    u8 bit_op, u32 bit_map)
@@ -1355,3 +1416,5 @@ int mt7921_mcu_set_rxfilter(struct mt7921_dev *dev, u32 fif,
 	return mt76_mcu_send_msg(&dev->mt76, MCU_CE_CMD(SET_RX_FILTER),
 				 &data, sizeof(data), false);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

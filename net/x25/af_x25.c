@@ -482,12 +482,15 @@ static int x25_listen(struct socket *sock, int backlog)
 	int rc = -EOPNOTSUPP;
 
 	lock_sock(sk);
+<<<<<<< HEAD
 	if (sock->state != SS_UNCONNECTED) {
 		rc = -EINVAL;
 		release_sock(sk);
 		return rc;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (sk->sk_state != TCP_LISTEN) {
 		memset(&x25_sk(sk)->dest_addr, 0, X25_ADDR_LEN);
 		sk->sk_max_ack_backlog = backlog;

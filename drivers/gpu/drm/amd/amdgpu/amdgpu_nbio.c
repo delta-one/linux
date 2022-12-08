@@ -22,6 +22,7 @@
 #include "amdgpu.h"
 #include "amdgpu_ras.h"
 
+<<<<<<< HEAD
 int amdgpu_nbio_ras_sw_init(struct amdgpu_device *adev)
 {
 	int err;
@@ -45,6 +46,8 @@ int amdgpu_nbio_ras_sw_init(struct amdgpu_device *adev)
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int amdgpu_nbio_ras_late_init(struct amdgpu_device *adev, struct ras_common_if *ras_block)
 {
 	int r;

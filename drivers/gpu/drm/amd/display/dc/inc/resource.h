@@ -165,6 +165,13 @@ bool resource_validate_attach_surfaces(
 		struct dc_state *context,
 		const struct resource_pool *pool);
 
+<<<<<<< HEAD
+=======
+void resource_validate_ctx_update_pointer_after_copy(
+		const struct dc_state *src_ctx,
+		struct dc_state *dst_ctx);
+
+>>>>>>> b7ba80a49124 (Commit)
 enum dc_status resource_map_clock_resources(
 		const struct dc *dc,
 		struct dc_state *context,
@@ -201,7 +208,11 @@ bool get_temp_dp_link_res(struct dc_link *link,
 		struct link_resource *link_res,
 		struct dc_link_settings *link_settings);
 
+<<<<<<< HEAD
 #if defined(CONFIG_DRM_AMD_DC_FP)
+=======
+#if defined(CONFIG_DRM_AMD_DC_DCN)
+>>>>>>> b7ba80a49124 (Commit)
 struct hpo_dp_link_encoder *resource_get_hpo_dp_link_enc_for_det_lt(
 		const struct resource_context *res_ctx,
 		const struct resource_pool *pool,
@@ -226,6 +237,7 @@ const struct link_hwss *get_link_hwss(const struct dc_link *link,
 
 bool is_h_timing_divisible_by_2(struct dc_stream_state *stream);
 
+<<<<<<< HEAD
 bool dc_resource_acquire_secondary_pipe_for_mpc_odm(
 		const struct dc *dc,
 		struct dc_state *state,
@@ -241,4 +253,6 @@ bool dc_resource_acquire_secondary_pipe_for_mpc_odm(
 enum dc_status update_dp_encoder_resources_for_test_harness(const struct dc *dc,
 		struct dc_state *context,
 		struct pipe_ctx *pipe_ctx);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* DRIVERS_GPU_DRM_AMD_DC_DEV_DC_INC_RESOURCE_H_ */

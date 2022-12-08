@@ -212,6 +212,7 @@ void put_ucounts(struct ucounts *ucounts)
 	}
 }
 
+<<<<<<< HEAD
 static inline bool atomic_long_inc_below(atomic_long_t *v, long u)
 {
 	long c = atomic_long_read(v);
@@ -222,6 +223,20 @@ static inline bool atomic_long_inc_below(atomic_long_t *v, long u)
 	} while (!atomic_long_try_cmpxchg(v, &c, c+1));
 
 	return true;
+=======
+static inline bool atomic_long_inc_below(atomic_long_t *v, int u)
+{
+	long c, old;
+	c = atomic_long_read(v);
+	for (;;) {
+		if (unlikely(c >= u))
+			return false;
+		old = atomic_long_cmpxchg(v, c, c+1);
+		if (likely(old == c))
+			return true;
+		c = old;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct ucounts *inc_ucount(struct user_namespace *ns, kuid_t uid,

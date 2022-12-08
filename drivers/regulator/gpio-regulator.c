@@ -220,9 +220,12 @@ of_get_gpio_regulator_config(struct device *dev, struct device_node *np,
 				 regtype);
 	}
 
+<<<<<<< HEAD
 	if (of_property_present(np, "vin-supply"))
 		config->input_supply = "vin";
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return config;
 }
 
@@ -262,6 +265,7 @@ static int gpio_regulator_probe(struct platform_device *pdev)
 
 	drvdata->gpiods = devm_kzalloc(dev, sizeof(struct gpio_desc *),
 				       GFP_KERNEL);
+<<<<<<< HEAD
 
 	if (config->input_supply) {
 		drvdata->desc.supply_name = devm_kstrdup(&pdev->dev,
@@ -274,6 +278,8 @@ static int gpio_regulator_probe(struct platform_device *pdev)
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!drvdata->gpiods)
 		return -ENOMEM;
 	for (i = 0; i < config->ngpios; i++) {
@@ -368,7 +374,10 @@ static struct platform_driver gpio_regulator_driver = {
 	.probe		= gpio_regulator_probe,
 	.driver		= {
 		.name		= "gpio-regulator",
+<<<<<<< HEAD
 		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = of_match_ptr(regulator_gpio_of_match),
 	},
 };

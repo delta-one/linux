@@ -16,8 +16,11 @@
 
 #include "../tools/testing/selftests/kselftest_module.h"
 
+<<<<<<< HEAD
 #define EXP1_IN_BITS	(sizeof(exp1) * 8)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 KSTM_MODULE_GLOBALS();
 
 static char pbl_buffer[PAGE_SIZE] __initdata;
@@ -221,6 +224,7 @@ static void __init test_zero_clear(void)
 	expect_eq_pbl("", bmap, 1024);
 }
 
+<<<<<<< HEAD
 static void __init test_find_nth_bit(void)
 {
 	unsigned long b, bit, cnt = 0;
@@ -262,6 +266,8 @@ static void __init test_find_nth_bit(void)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void __init test_fill_set(void)
 {
 	DECLARE_BITMAP(bmap, 1024);
@@ -470,7 +476,10 @@ static void __init test_bitmap_parselist(void)
 		if (err != ptest.errno) {
 			pr_err("parselist: %d: input is %s, errno is %d, expected %d\n",
 					i, ptest.in, err, ptest.errno);
+<<<<<<< HEAD
 			failed_tests++;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		}
 
@@ -479,7 +488,10 @@ static void __init test_bitmap_parselist(void)
 			pr_err("parselist: %d: input is %s, result is 0x%lx, expected 0x%lx\n",
 					i, ptest.in, bmap[0],
 					*ptest.expected);
+<<<<<<< HEAD
 			failed_tests++;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		}
 
@@ -513,13 +525,19 @@ static void __init test_bitmap_printlist(void)
 
 	if (ret != slen + 1) {
 		pr_err("bitmap_print_to_pagebuf: result is %d, expected %d\n", ret, slen);
+<<<<<<< HEAD
 		failed_tests++;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
 	if (strncmp(buf, expected, slen)) {
 		pr_err("bitmap_print_to_pagebuf: result is %s, expected %s\n", buf, expected);
+<<<<<<< HEAD
 		failed_tests++;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		goto out;
 	}
 
@@ -587,7 +605,10 @@ static void __init test_bitmap_parse(void)
 		if (err != test.errno) {
 			pr_err("parse: %d: input is %s, errno is %d, expected %d\n",
 					i, test.in, err, test.errno);
+<<<<<<< HEAD
 			failed_tests++;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		}
 
@@ -596,7 +617,10 @@ static void __init test_bitmap_parse(void)
 			pr_err("parse: %d: input is %s, result is 0x%lx, expected 0x%lx\n",
 					i, test.in, bmap[0],
 					*test.expected);
+<<<<<<< HEAD
 			failed_tests++;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 		}
 
@@ -606,6 +630,11 @@ static void __init test_bitmap_parse(void)
 	}
 }
 
+<<<<<<< HEAD
+=======
+#define EXP1_IN_BITS	(sizeof(exp1) * 8)
+
+>>>>>>> b7ba80a49124 (Commit)
 static void __init test_bitmap_arr32(void)
 {
 	unsigned int nbits, next_bit;
@@ -621,12 +650,19 @@ static void __init test_bitmap_arr32(void)
 
 		next_bit = find_next_bit(bmap2,
 				round_up(nbits, BITS_PER_LONG), nbits);
+<<<<<<< HEAD
 		if (next_bit < round_up(nbits, BITS_PER_LONG)) {
 			pr_err("bitmap_copy_arr32(nbits == %d:"
 				" tail is not safely cleared: %d\n",
 				nbits, next_bit);
 			failed_tests++;
 		}
+=======
+		if (next_bit < round_up(nbits, BITS_PER_LONG))
+			pr_err("bitmap_copy_arr32(nbits == %d:"
+				" tail is not safely cleared: %d\n",
+				nbits, next_bit);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (nbits < EXP1_IN_BITS - 32)
 			expect_eq_uint(arr[DIV_ROUND_UP(nbits, 32)],
@@ -649,6 +685,7 @@ static void __init test_bitmap_arr64(void)
 		expect_eq_bitmap(bmap2, exp1, nbits);
 
 		next_bit = find_next_bit(bmap2, round_up(nbits, BITS_PER_LONG), nbits);
+<<<<<<< HEAD
 		if (next_bit < round_up(nbits, BITS_PER_LONG)) {
 			pr_err("bitmap_copy_arr64(nbits == %d:"
 				" tail is not safely cleared: %d\n", nbits, next_bit);
@@ -662,6 +699,17 @@ static void __init test_bitmap_arr64(void)
 			       GENMASK_ULL((nbits - 1) % 64, 0));
 			failed_tests++;
 		}
+=======
+		if (next_bit < round_up(nbits, BITS_PER_LONG))
+			pr_err("bitmap_copy_arr64(nbits == %d:"
+				" tail is not safely cleared: %d\n", nbits, next_bit);
+
+		if ((nbits % 64) &&
+		    (arr[(nbits - 1) / 64] & ~GENMASK_ULL((nbits - 1) % 64, 0)))
+			pr_err("bitmap_to_arr64(nbits == %d): tail is not safely cleared: 0x%016llx (must be 0x%016llx)\n",
+			       nbits, arr[(nbits - 1) / 64],
+			       GENMASK_ULL((nbits - 1) % 64, 0));
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (nbits < EXP1_IN_BITS - 64)
 			expect_eq_uint(arr[DIV_ROUND_UP(nbits, 64)], 0xa5a5a5a5);
@@ -738,6 +786,7 @@ static void __init test_for_each_set_clump8(void)
 		expect_eq_clump8(start, CLUMP_EXP_NUMBITS, clump_exp, &clump);
 }
 
+<<<<<<< HEAD
 static void __init test_for_each_set_bit_wrap(void)
 {
 	DECLARE_BITMAP(orig, 500);
@@ -971,6 +1020,8 @@ static void __init test_for_each_clear_bitrange_from(void)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct test_bitmap_cut {
 	unsigned int first;
 	unsigned int cut;
@@ -1234,6 +1285,7 @@ static void __init selftest(void)
 	test_bitmap_parselist();
 	test_bitmap_printlist();
 	test_mem_optimisations();
+<<<<<<< HEAD
 	test_bitmap_cut();
 	test_bitmap_print_buf();
 	test_bitmap_const_eval();
@@ -1249,6 +1301,12 @@ static void __init selftest(void)
 	test_for_each_clear_bitrange_from();
 	test_for_each_set_clump8();
 	test_for_each_set_bit_wrap();
+=======
+	test_for_each_set_clump8();
+	test_bitmap_cut();
+	test_bitmap_print_buf();
+	test_bitmap_const_eval();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 KSTM_MODULE_LOADERS(test_bitmap);

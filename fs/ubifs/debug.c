@@ -2467,7 +2467,11 @@ error_dump:
 
 static inline int chance(unsigned int n, unsigned int out_of)
 {
+<<<<<<< HEAD
 	return !!(get_random_u32_below(out_of) + 1 <= n);
+=======
+	return !!((prandom_u32() % out_of) + 1 <= n);
+>>>>>>> b7ba80a49124 (Commit)
 
 }
 
@@ -2485,13 +2489,21 @@ static int power_cut_emulated(struct ubifs_info *c, int lnum, int write)
 			if (chance(1, 2)) {
 				d->pc_delay = 1;
 				/* Fail within 1 minute */
+<<<<<<< HEAD
 				delay = get_random_u32_below(60000);
+=======
+				delay = prandom_u32() % 60000;
+>>>>>>> b7ba80a49124 (Commit)
 				d->pc_timeout = jiffies;
 				d->pc_timeout += msecs_to_jiffies(delay);
 				ubifs_warn(c, "failing after %lums", delay);
 			} else {
 				d->pc_delay = 2;
+<<<<<<< HEAD
 				delay = get_random_u32_below(10000);
+=======
+				delay = prandom_u32() % 10000;
+>>>>>>> b7ba80a49124 (Commit)
 				/* Fail within 10000 operations */
 				d->pc_cnt_max = delay;
 				ubifs_warn(c, "failing after %lu calls", delay);
@@ -2571,7 +2583,11 @@ static int corrupt_data(const struct ubifs_info *c, const void *buf,
 	unsigned int from, to, ffs = chance(1, 2);
 	unsigned char *p = (void *)buf;
 
+<<<<<<< HEAD
 	from = get_random_u32_below(len);
+=======
+	from = prandom_u32() % len;
+>>>>>>> b7ba80a49124 (Commit)
 	/* Corruption span max to end of write unit */
 	to = min(len, ALIGN(from + 1, c->max_write_size));
 
@@ -2581,7 +2597,11 @@ static int corrupt_data(const struct ubifs_info *c, const void *buf,
 	if (ffs)
 		memset(p + from, 0xFF, to - from);
 	else
+<<<<<<< HEAD
 		get_random_bytes(p + from, to - from);
+=======
+		prandom_bytes(p + from, to - from);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return to;
 }

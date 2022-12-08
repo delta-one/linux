@@ -5,7 +5,10 @@
 
 .. _process_index:
 
+<<<<<<< HEAD
 =============================================
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Working with the kernel development community
 =============================================
 
@@ -35,6 +38,7 @@ Below are the essential guides that every developer should read.
    kernel-enforcement-statement
    kernel-driver-statement
 
+<<<<<<< HEAD
 For security issues, see:
 
 .. toctree::
@@ -43,6 +47,8 @@ For security issues, see:
    security-bugs
    embargoed-hardware-issues
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Other guides to the community that are of interest to most developers are:
 
 .. toctree::
@@ -55,9 +61,15 @@ Other guides to the community that are of interest to most developers are:
    submit-checklist
    kernel-docs
    deprecated
+<<<<<<< HEAD
    maintainers
    researcher-guidelines
    contribution-maturity-model
+=======
+   embargoed-hardware-issues
+   maintainers
+   researcher-guidelines
+>>>>>>> b7ba80a49124 (Commit)
 
 These are some overall technical guides that have been put here for now for
 lack of a better place.

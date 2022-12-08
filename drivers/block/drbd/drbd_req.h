@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* SPDX-License-Identifier: GPL-2.0-only */
+=======
+/* SPDX-License-Identifier: GPL-2.0-or-later */
+>>>>>>> b7ba80a49124 (Commit)
 /*
    drbd_req.h
 

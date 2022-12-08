@@ -204,6 +204,7 @@ out:
 #undef COND
 }
 
+<<<<<<< HEAD
 static int pcode_init_wait(struct intel_uncore *uncore, int timeout_ms)
 {
 	if (__intel_wait_for_register_fw(uncore,
@@ -240,6 +241,17 @@ int intel_pcode_init(struct intel_uncore *uncore)
 	}
 
 	return err;
+=======
+int intel_pcode_init(struct intel_uncore *uncore)
+{
+	if (!IS_DGFX(uncore->i915))
+		return 0;
+
+	return skl_pcode_request(uncore, DG1_PCODE_STATUS,
+				 DG1_UNCORE_GET_INIT_STATUS,
+				 DG1_UNCORE_INIT_STATUS_COMPLETE,
+				 DG1_UNCORE_INIT_STATUS_COMPLETE, 180000);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int snb_pcode_read_p(struct intel_uncore *uncore, u32 mbcmd, u32 p1, u32 p2, u32 *val)

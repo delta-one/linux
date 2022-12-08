@@ -303,6 +303,12 @@ static int mtk_adda_ul_event(struct snd_soc_dapm_widget *w,
 	struct mt8192_afe_private *afe_priv = afe->platform_priv;
 	int mtkaif_dmic = afe_priv->mtkaif_dmic;
 
+<<<<<<< HEAD
+=======
+	dev_info(afe->dev, "%s(), name %s, event 0x%x, mtkaif_dmic %d\n",
+		 __func__, w->name, event, mtkaif_dmic);
+
+>>>>>>> b7ba80a49124 (Commit)
 	switch (event) {
 	case SND_SOC_DAPM_PRE_PMU:
 		mt8192_afe_gpio_request(afe->dev, true, MT8192_DAI_ADDA, 1);
@@ -342,6 +348,13 @@ static int mtk_adda_ch34_ul_event(struct snd_soc_dapm_widget *w,
 	int mtkaif_dmic = afe_priv->mtkaif_dmic_ch34;
 	int mtkaif_adda6_only = afe_priv->mtkaif_adda6_only;
 
+<<<<<<< HEAD
+=======
+	dev_info(afe->dev,
+		 "%s(), name %s, event 0x%x, mtkaif_dmic %d, mtkaif_adda6_only %d\n",
+		 __func__, w->name, event, mtkaif_dmic, mtkaif_adda6_only);
+
+>>>>>>> b7ba80a49124 (Commit)
 	switch (event) {
 	case SND_SOC_DAPM_PRE_PMU:
 		mt8192_afe_gpio_request(afe->dev, true, MT8192_DAI_ADDA_CH34,
@@ -531,6 +544,12 @@ static int mtk_adda_dl_event(struct snd_soc_dapm_widget *w,
 	struct snd_soc_component *cmpnt = snd_soc_dapm_to_component(w->dapm);
 	struct mtk_base_afe *afe = snd_soc_component_get_drvdata(cmpnt);
 
+<<<<<<< HEAD
+=======
+	dev_info(afe->dev, "%s(), name %s, event 0x%x\n",
+		 __func__, w->name, event);
+
+>>>>>>> b7ba80a49124 (Commit)
 	switch (event) {
 	case SND_SOC_DAPM_PRE_PMU:
 		mt8192_afe_gpio_request(afe->dev, true, MT8192_DAI_ADDA, 0);
@@ -554,6 +573,12 @@ static int mtk_adda_ch34_dl_event(struct snd_soc_dapm_widget *w,
 	struct snd_soc_component *cmpnt = snd_soc_dapm_to_component(w->dapm);
 	struct mtk_base_afe *afe = snd_soc_component_get_drvdata(cmpnt);
 
+<<<<<<< HEAD
+=======
+	dev_info(afe->dev, "%s(), name %s, event 0x%x\n",
+		 __func__, w->name, event);
+
+>>>>>>> b7ba80a49124 (Commit)
 	switch (event) {
 	case SND_SOC_DAPM_PRE_PMU:
 		mt8192_afe_gpio_request(afe->dev, true, MT8192_DAI_ADDA_CH34,
@@ -591,11 +616,15 @@ static int stf_positive_gain_set(struct snd_kcontrol *kcontrol,
 	struct mtk_base_afe *afe = snd_soc_component_get_drvdata(cmpnt);
 	struct mt8192_afe_private *afe_priv = afe->platform_priv;
 	int gain_db = ucontrol->value.integer.value[0];
+<<<<<<< HEAD
 	bool change = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	afe_priv->stf_positive_gain_db = gain_db;
 
 	if (gain_db >= 0 && gain_db <= 24) {
+<<<<<<< HEAD
 		regmap_update_bits_check(afe->regmap,
 					 AFE_SIDETONE_GAIN,
 					 POSITIVE_GAIN_MASK_SFT,
@@ -606,6 +635,17 @@ static int stf_positive_gain_set(struct snd_kcontrol *kcontrol,
 	}
 
 	return change;
+=======
+		regmap_update_bits(afe->regmap,
+				   AFE_SIDETONE_GAIN,
+				   POSITIVE_GAIN_MASK_SFT,
+				   (gain_db / 6) << POSITIVE_GAIN_SFT);
+	} else {
+		dev_warn(afe->dev, "%s(), gain_db %d invalid\n",
+			 __func__, gain_db);
+	}
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int mt8192_adda_dmic_get(struct snd_kcontrol *kcontrol,
@@ -626,6 +666,7 @@ static int mt8192_adda_dmic_set(struct snd_kcontrol *kcontrol,
 	struct mtk_base_afe *afe = snd_soc_component_get_drvdata(cmpnt);
 	struct mt8192_afe_private *afe_priv = afe->platform_priv;
 	int dmic_on;
+<<<<<<< HEAD
 	bool change;
 
 	dmic_on = ucontrol->value.integer.value[0];
@@ -637,6 +678,17 @@ static int mt8192_adda_dmic_set(struct snd_kcontrol *kcontrol,
 	afe_priv->mtkaif_dmic_ch34 = dmic_on;
 
 	return change;
+=======
+
+	dmic_on = ucontrol->value.integer.value[0];
+
+	dev_info(afe->dev, "%s(), kcontrol name %s, dmic_on %d\n",
+		 __func__, kcontrol->id.name, dmic_on);
+
+	afe_priv->mtkaif_dmic = dmic_on;
+	afe_priv->mtkaif_dmic_ch34 = dmic_on;
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int mt8192_adda6_only_get(struct snd_kcontrol *kcontrol,
@@ -657,6 +709,7 @@ static int mt8192_adda6_only_set(struct snd_kcontrol *kcontrol,
 	struct mtk_base_afe *afe = snd_soc_component_get_drvdata(cmpnt);
 	struct mt8192_afe_private *afe_priv = afe->platform_priv;
 	int mtkaif_adda6_only;
+<<<<<<< HEAD
 	bool change;
 
 	mtkaif_adda6_only = ucontrol->value.integer.value[0];
@@ -665,12 +718,26 @@ static int mt8192_adda6_only_set(struct snd_kcontrol *kcontrol,
 	afe_priv->mtkaif_adda6_only = mtkaif_adda6_only;
 
 	return change;
+=======
+
+	mtkaif_adda6_only = ucontrol->value.integer.value[0];
+
+	dev_info(afe->dev, "%s(), kcontrol name %s, mtkaif_adda6_only %d\n",
+		 __func__, kcontrol->id.name, mtkaif_adda6_only);
+
+	afe_priv->mtkaif_adda6_only = mtkaif_adda6_only;
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct snd_kcontrol_new mtk_adda_controls[] = {
 	SOC_SINGLE("Sidetone_Gain", AFE_SIDETONE_GAIN,
 		   SIDE_TONE_GAIN_SFT, SIDE_TONE_GAIN_MASK, 0),
+<<<<<<< HEAD
 	SOC_SINGLE_EXT("Sidetone_Positive_Gain_dB", SND_SOC_NOPM, 0, 24, 0,
+=======
+	SOC_SINGLE_EXT("Sidetone_Positive_Gain_dB", SND_SOC_NOPM, 0, 100, 0,
+>>>>>>> b7ba80a49124 (Commit)
 		       stf_positive_gain_get, stf_positive_gain_set),
 	SOC_SINGLE("ADDA_DL_GAIN", AFE_ADDA_DL_SRC2_CON1,
 		   DL_2_GAIN_CTL_PRE_SFT, DL_2_GAIN_CTL_PRE_MASK, 0),
@@ -741,6 +808,12 @@ static int mtk_stf_event(struct snd_soc_dapm_widget *w,
 
 	regmap_read(afe->regmap, AFE_SIDETONE_CON1, &reg_value);
 
+<<<<<<< HEAD
+=======
+	dev_info(afe->dev, "%s(), name %s, event 0x%x, ul_rate 0x%x, AFE_SIDETONE_CON1 0x%x\n",
+		 __func__, w->name, event, ul_rate, reg_value);
+
+>>>>>>> b7ba80a49124 (Commit)
 	switch (event) {
 	case SND_SOC_DAPM_PRE_PMU:
 		/* set side tone gain = 0 */
@@ -1151,6 +1224,15 @@ static int mtk_dai_adda_hw_params(struct snd_pcm_substream *substream,
 	unsigned int rate = params_rate(params);
 	int id = dai->id;
 
+<<<<<<< HEAD
+=======
+	dev_info(afe->dev, "%s(), id %d, stream %d, rate %d\n",
+		 __func__,
+		 id,
+		 substream->stream,
+		 rate);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
 		unsigned int dl_src2_con0 = 0;
 		unsigned int dl_src2_con1 = 0;
@@ -1423,6 +1505,11 @@ int mt8192_dai_adda_register(struct mtk_base_afe *afe)
 	struct mtk_base_afe_dai *dai;
 	struct mt8192_afe_private *afe_priv = afe->platform_priv;
 
+<<<<<<< HEAD
+=======
+	dev_info(afe->dev, "%s()\n", __func__);
+
+>>>>>>> b7ba80a49124 (Commit)
 	dai = devm_kzalloc(afe->dev, sizeof(*dai), GFP_KERNEL);
 	if (!dai)
 		return -ENOMEM;

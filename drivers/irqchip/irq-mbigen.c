@@ -245,6 +245,7 @@ static int mbigen_of_create_domain(struct platform_device *pdev,
 		if (!of_property_read_bool(np, "interrupt-controller"))
 			continue;
 
+<<<<<<< HEAD
 		parent = bus_get_dev_root(&platform_bus_type);
 		if (parent) {
 			child = of_platform_device_create(np, NULL, parent);
@@ -253,6 +254,13 @@ static int mbigen_of_create_domain(struct platform_device *pdev,
 				of_node_put(np);
 				return -ENOMEM;
 			}
+=======
+		parent = platform_bus_type.dev_root;
+		child = of_platform_device_create(np, NULL, parent);
+		if (!child) {
+			of_node_put(np);
+			return -ENOMEM;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		if (of_property_read_u32(child->dev.of_node, "num-pins",
@@ -392,4 +400,8 @@ module_platform_driver(mbigen_platform_driver);
 
 MODULE_AUTHOR("Jun Ma <majun258@huawei.com>");
 MODULE_AUTHOR("Yun Wu <wuyun.wu@huawei.com>");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_DESCRIPTION("HiSilicon MBI Generator driver");

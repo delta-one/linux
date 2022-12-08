@@ -174,9 +174,15 @@ static void abp060mg_init_device(struct iio_dev *indio_dev, unsigned long id)
 		state->offset -= ABP060MG_NUM_COUNTS >> 1;
 }
 
+<<<<<<< HEAD
 static int abp060mg_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int abp060mg_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct iio_dev *indio_dev;
 	struct abp_state *state;
 	unsigned long cfg_id = id->driver_data;
@@ -255,7 +261,11 @@ static struct i2c_driver abp060mg_driver = {
 	.driver = {
 		.name = "abp060mg",
 	},
+<<<<<<< HEAD
 	.probe_new = abp060mg_probe,
+=======
+	.probe = abp060mg_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table = abp060mg_id_table,
 };
 module_i2c_driver(abp060mg_driver);

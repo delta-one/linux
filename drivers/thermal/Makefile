@@ -4,8 +4,13 @@
 #
 
 obj-$(CONFIG_THERMAL)		+= thermal_sys.o
+<<<<<<< HEAD
 thermal_sys-y			+= thermal_core.o thermal_sysfs.o
 thermal_sys-y			+= thermal_trip.o thermal_helpers.o
+=======
+thermal_sys-y			+= thermal_core.o thermal_sysfs.o \
+					thermal_helpers.o
+>>>>>>> b7ba80a49124 (Commit)
 
 # netlink interface to manage the thermal framework
 thermal_sys-$(CONFIG_THERMAL_NETLINK)		+= thermal_netlink.o
@@ -13,7 +18,10 @@ thermal_sys-$(CONFIG_THERMAL_NETLINK)		+= thermal_netlink.o
 # interface to/from other layers providing sensors
 thermal_sys-$(CONFIG_THERMAL_HWMON)		+= thermal_hwmon.o
 thermal_sys-$(CONFIG_THERMAL_OF)		+= thermal_of.o
+<<<<<<< HEAD
 thermal_sys-$(CONFIG_THERMAL_ACPI)		+= thermal_acpi.o
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 # governors
 thermal_sys-$(CONFIG_THERMAL_GOV_FAIR_SHARE)	+= gov_fair_share.o
@@ -56,7 +64,11 @@ obj-y				+= st/
 obj-y				+= qcom/
 obj-y				+= tegra/
 obj-$(CONFIG_HISI_THERMAL)     += hisi_thermal.o
+<<<<<<< HEAD
 obj-y				+= mediatek/
+=======
+obj-$(CONFIG_MTK_THERMAL)	+= mtk_thermal.o
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_GENERIC_ADC_THERMAL)	+= thermal-generic-adc.o
 obj-$(CONFIG_UNIPHIER_THERMAL)	+= uniphier_thermal.o
 obj-$(CONFIG_AMLOGIC_THERMAL)     += amlogic_thermal.o

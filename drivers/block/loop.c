@@ -90,7 +90,11 @@ struct loop_cmd {
 };
 
 #define LOOP_IDLE_WORKER_TIMEOUT (60 * HZ)
+<<<<<<< HEAD
 #define LOOP_DEFAULT_HW_Q_DEPTH 128
+=======
+#define LOOP_DEFAULT_HW_Q_DEPTH (128)
+>>>>>>> b7ba80a49124 (Commit)
 
 static DEFINE_IDR(loop_index_idr);
 static DEFINE_MUTEX(loop_ctl_mutex);
@@ -243,7 +247,11 @@ static int lo_write_bvec(struct file *file, struct bio_vec *bvec, loff_t *ppos)
 	struct iov_iter i;
 	ssize_t bw;
 
+<<<<<<< HEAD
 	iov_iter_bvec(&i, ITER_SOURCE, bvec, 1, bvec->bv_len);
+=======
+	iov_iter_bvec(&i, WRITE, bvec, 1, bvec->bv_len);
+>>>>>>> b7ba80a49124 (Commit)
 
 	file_start_write(file);
 	bw = vfs_iter_write(file, &i, ppos, 0);
@@ -286,7 +294,11 @@ static int lo_read_simple(struct loop_device *lo, struct request *rq,
 	ssize_t len;
 
 	rq_for_each_segment(bvec, rq, iter) {
+<<<<<<< HEAD
 		iov_iter_bvec(&i, ITER_DEST, &bvec, 1, bvec.bv_len);
+=======
+		iov_iter_bvec(&i, READ, &bvec, 1, bvec.bv_len);
+>>>>>>> b7ba80a49124 (Commit)
 		len = vfs_iter_read(lo->lo_backing_file, &i, &pos, 0);
 		if (len < 0)
 			return len;
@@ -392,7 +404,11 @@ static void lo_rw_aio_complete(struct kiocb *iocb, long ret)
 }
 
 static int lo_rw_aio(struct loop_device *lo, struct loop_cmd *cmd,
+<<<<<<< HEAD
 		     loff_t pos, int rw)
+=======
+		     loff_t pos, bool rw)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct iov_iter iter;
 	struct req_iterator rq_iter;
@@ -448,7 +464,11 @@ static int lo_rw_aio(struct loop_device *lo, struct loop_cmd *cmd,
 	cmd->iocb.ki_flags = IOCB_DIRECT;
 	cmd->iocb.ki_ioprio = IOPRIO_PRIO_VALUE(IOPRIO_CLASS_NONE, 0);
 
+<<<<<<< HEAD
 	if (rw == ITER_SOURCE)
+=======
+	if (rw == WRITE)
+>>>>>>> b7ba80a49124 (Commit)
 		ret = call_write_iter(file, &cmd->iocb, &iter);
 	else
 		ret = call_read_iter(file, &cmd->iocb, &iter);
@@ -490,12 +510,20 @@ static int do_req_filebacked(struct loop_device *lo, struct request *rq)
 		return lo_fallocate(lo, rq, pos, FALLOC_FL_PUNCH_HOLE);
 	case REQ_OP_WRITE:
 		if (cmd->use_aio)
+<<<<<<< HEAD
 			return lo_rw_aio(lo, cmd, pos, ITER_SOURCE);
+=======
+			return lo_rw_aio(lo, cmd, pos, WRITE);
+>>>>>>> b7ba80a49124 (Commit)
 		else
 			return lo_write_simple(lo, rq, pos);
 	case REQ_OP_READ:
 		if (cmd->use_aio)
+<<<<<<< HEAD
 			return lo_rw_aio(lo, cmd, pos, ITER_DEST);
+=======
+			return lo_rw_aio(lo, cmd, pos, READ);
+>>>>>>> b7ba80a49124 (Commit)
 		else
 			return lo_read_simple(lo, rq, pos);
 	default:
@@ -977,6 +1005,7 @@ loop_set_status_from_info(struct loop_device *lo,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	/* Avoid assigning overflow values */
 	if (info->lo_offset > LLONG_MAX || info->lo_sizelimit > LLONG_MAX)
 		return -EOVERFLOW;
@@ -984,6 +1013,15 @@ loop_set_status_from_info(struct loop_device *lo,
 	lo->lo_offset = info->lo_offset;
 	lo->lo_sizelimit = info->lo_sizelimit;
 
+=======
+	lo->lo_offset = info->lo_offset;
+	lo->lo_sizelimit = info->lo_sizelimit;
+
+	/* loff_t vars have been assigned __u64 */
+	if (lo->lo_offset < 0 || lo->lo_sizelimit < 0)
+		return -EOVERFLOW;
+
+>>>>>>> b7ba80a49124 (Commit)
 	memcpy(lo->lo_file_name, info->lo_file_name, LO_NAME_SIZE);
 	lo->lo_file_name[LO_NAME_SIZE-1] = 0;
 	lo->lo_flags = info->lo_flags;
@@ -1755,7 +1793,11 @@ static void lo_free_disk(struct gendisk *disk)
 	if (lo->workqueue)
 		destroy_workqueue(lo->workqueue);
 	loop_free_idle_workers(lo, true);
+<<<<<<< HEAD
 	timer_shutdown_sync(&lo->timer);
+=======
+	del_timer_sync(&lo->timer);
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_destroy(&lo->lo_mutex);
 	kfree(lo);
 }
@@ -1773,6 +1815,7 @@ static const struct block_device_operations lo_fops = {
 /*
  * And now the modules code and kernel interface.
  */
+<<<<<<< HEAD
 
 /*
  * If max_loop is specified, create that many devices upfront.
@@ -1783,6 +1826,9 @@ static const struct block_device_operations lo_fops = {
  * a 'dead' device node.
  */
 static int max_loop = CONFIG_BLK_DEV_LOOP_MIN_COUNT;
+=======
+static int max_loop;
+>>>>>>> b7ba80a49124 (Commit)
 module_param(max_loop, int, 0444);
 MODULE_PARM_DESC(max_loop, "Maximum number of loop devices");
 module_param(max_part, int, 0444);
@@ -1792,6 +1838,7 @@ static int hw_queue_depth = LOOP_DEFAULT_HW_Q_DEPTH;
 
 static int loop_set_hw_queue_depth(const char *s, const struct kernel_param *p)
 {
+<<<<<<< HEAD
 	int qd, ret;
 
 	ret = kstrtoint(s, 0, &qd);
@@ -1801,6 +1848,11 @@ static int loop_set_hw_queue_depth(const char *s, const struct kernel_param *p)
 		return -EINVAL;
 	hw_queue_depth = qd;
 	return 0;
+=======
+	int ret = kstrtoint(s, 10, &hw_queue_depth);
+
+	return (ret || (hw_queue_depth < 1)) ? -EINVAL : 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct kernel_param_ops loop_hw_qdepth_param_ops = {
@@ -1809,7 +1861,11 @@ static const struct kernel_param_ops loop_hw_qdepth_param_ops = {
 };
 
 device_param_cb(hw_queue_depth, &loop_hw_qdepth_param_ops, &hw_queue_depth, 0444);
+<<<<<<< HEAD
 MODULE_PARM_DESC(hw_queue_depth, "Queue depth for each hardware queue. Default: " __stringify(LOOP_DEFAULT_HW_Q_DEPTH));
+=======
+MODULE_PARM_DESC(hw_queue_depth, "Queue depth for each hardware queue. Default: 128");
+>>>>>>> b7ba80a49124 (Commit)
 
 MODULE_LICENSE("GPL");
 MODULE_ALIAS_BLOCKDEV_MAJOR(LOOP_MAJOR);
@@ -1859,20 +1915,27 @@ static blk_status_t loop_queue_rq(struct blk_mq_hw_ctx *hctx,
 
 static void loop_handle_cmd(struct loop_cmd *cmd)
 {
+<<<<<<< HEAD
 	struct cgroup_subsys_state *cmd_blkcg_css = cmd->blkcg_css;
 	struct cgroup_subsys_state *cmd_memcg_css = cmd->memcg_css;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct request *rq = blk_mq_rq_from_pdu(cmd);
 	const bool write = op_is_write(req_op(rq));
 	struct loop_device *lo = rq->q->queuedata;
 	int ret = 0;
 	struct mem_cgroup *old_memcg = NULL;
+<<<<<<< HEAD
 	const bool use_aio = cmd->use_aio;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (write && (lo->lo_flags & LO_FLAGS_READ_ONLY)) {
 		ret = -EIO;
 		goto failed;
 	}
 
+<<<<<<< HEAD
 	if (cmd_blkcg_css)
 		kthread_associate_blkcg(cmd_blkcg_css);
 	if (cmd_memcg_css)
@@ -1897,6 +1960,26 @@ static void loop_handle_cmd(struct loop_cmd *cmd)
  failed:
 	/* complete non-aio request */
 	if (!use_aio || ret) {
+=======
+	if (cmd->blkcg_css)
+		kthread_associate_blkcg(cmd->blkcg_css);
+	if (cmd->memcg_css)
+		old_memcg = set_active_memcg(
+			mem_cgroup_from_css(cmd->memcg_css));
+
+	ret = do_req_filebacked(lo, rq);
+
+	if (cmd->blkcg_css)
+		kthread_associate_blkcg(NULL);
+
+	if (cmd->memcg_css) {
+		set_active_memcg(old_memcg);
+		css_put(cmd->memcg_css);
+	}
+ failed:
+	/* complete non-aio request */
+	if (!cmd->use_aio || ret) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret == -EOPNOTSUPP)
 			cmd->ret = ret;
 		else
@@ -2205,7 +2288,11 @@ MODULE_ALIAS("devname:loop-control");
 
 static int __init loop_init(void)
 {
+<<<<<<< HEAD
 	int i;
+=======
+	int i, nr;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	part_shift = 0;
@@ -2233,6 +2320,22 @@ static int __init loop_init(void)
 		goto err_out;
 	}
 
+<<<<<<< HEAD
+=======
+	/*
+	 * If max_loop is specified, create that many devices upfront.
+	 * This also becomes a hard limit. If max_loop is not specified,
+	 * create CONFIG_BLK_DEV_LOOP_MIN_COUNT loop devices at module
+	 * init time. Loop devices can be requested on-demand with the
+	 * /dev/loop-control interface, or be instantiated by accessing
+	 * a 'dead' device node.
+	 */
+	if (max_loop)
+		nr = max_loop;
+	else
+		nr = CONFIG_BLK_DEV_LOOP_MIN_COUNT;
+
+>>>>>>> b7ba80a49124 (Commit)
 	err = misc_register(&loop_misc);
 	if (err < 0)
 		goto err_out;
@@ -2244,7 +2347,11 @@ static int __init loop_init(void)
 	}
 
 	/* pre-create number of devices given by config or max_loop */
+<<<<<<< HEAD
 	for (i = 0; i < max_loop; i++)
+=======
+	for (i = 0; i < nr; i++)
+>>>>>>> b7ba80a49124 (Commit)
 		loop_add(i);
 
 	printk(KERN_INFO "loop: module loaded\n");

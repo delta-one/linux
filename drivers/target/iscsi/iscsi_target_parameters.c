@@ -1262,6 +1262,7 @@ static struct iscsi_param *iscsi_check_key(
 		return param;
 
 	if (!(param->phase & phase)) {
+<<<<<<< HEAD
 		char *phase_name;
 
 		switch (phase) {
@@ -1276,6 +1277,20 @@ static struct iscsi_param *iscsi_check_key(
 		}
 		pr_err("Key \"%s\" may not be negotiated during %s phase.\n",
 				param->name, phase_name);
+=======
+		pr_err("Key \"%s\" may not be negotiated during ",
+				param->name);
+		switch (phase) {
+		case PHASE_SECURITY:
+			pr_debug("Security phase.\n");
+			break;
+		case PHASE_OPERATIONAL:
+			pr_debug("Operational phase.\n");
+			break;
+		default:
+			pr_debug("Unknown phase.\n");
+		}
+>>>>>>> b7ba80a49124 (Commit)
 		return NULL;
 	}
 

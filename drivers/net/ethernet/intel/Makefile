@@ -12,6 +12,10 @@ obj-$(CONFIG_IGBVF) += igbvf/
 obj-$(CONFIG_IXGBE) += ixgbe/
 obj-$(CONFIG_IXGBEVF) += ixgbevf/
 obj-$(CONFIG_I40E) += i40e/
+<<<<<<< HEAD
+=======
+obj-$(CONFIG_IXGB) += ixgb/
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_IAVF) += iavf/
 obj-$(CONFIG_FM10K) += fm10k/
 obj-$(CONFIG_ICE) += ice/

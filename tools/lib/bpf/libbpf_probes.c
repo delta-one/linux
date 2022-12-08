@@ -12,12 +12,16 @@
 #include <linux/btf.h>
 #include <linux/filter.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/version.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "bpf.h"
 #include "libbpf.h"
 #include "libbpf_internal.h"
 
+<<<<<<< HEAD
 /* On Ubuntu LINUX_VERSION_CODE doesn't correspond to info.release,
  * but Ubuntu provides /proc/version_signature file, as described at
  * https://ubuntu.com/kernel, with an example contents below, which we
@@ -100,6 +104,8 @@ __u32 get_kernel_version(void)
 	return KERNEL_VERSION(major, minor, patch);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int probe_prog_load(enum bpf_prog_type prog_type,
 			   const struct bpf_insn *insns, size_t insns_cnt,
 			   char *log_buf, size_t log_buf_sz)
@@ -304,7 +310,10 @@ static int probe_map_create(enum bpf_map_type map_type)
 	case BPF_MAP_TYPE_SK_STORAGE:
 	case BPF_MAP_TYPE_INODE_STORAGE:
 	case BPF_MAP_TYPE_TASK_STORAGE:
+<<<<<<< HEAD
 	case BPF_MAP_TYPE_CGRP_STORAGE:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		btf_key_type_id = 1;
 		btf_value_type_id = 3;
 		value_size = 8;
@@ -318,7 +327,11 @@ static int probe_map_create(enum bpf_map_type map_type)
 	case BPF_MAP_TYPE_USER_RINGBUF:
 		key_size = 0;
 		value_size = 0;
+<<<<<<< HEAD
 		max_entries = sysconf(_SC_PAGE_SIZE);
+=======
+		max_entries = 4096;
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case BPF_MAP_TYPE_STRUCT_OPS:
 		/* we'll get -ENOTSUPP for invalid BTF type ID for struct_ops */

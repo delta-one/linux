@@ -95,8 +95,12 @@ struct rzg2l_pll5_mux_dsi_div_param {
  * @num_resets: Number of Module Resets in info->resets[]
  * @last_dt_core_clk: ID of the last Core Clock exported to DT
  * @info: Pointer to platform data
+<<<<<<< HEAD
  * @genpd: PM domain
  * @mux_dsi_div_params: pll5 mux and dsi div parameters
+=======
+ * @pll5_mux_dsi_div_params: pll5 mux and dsi div parameters
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct rzg2l_cpg_priv {
 	struct reset_controller_dev rcdev;
@@ -112,8 +116,11 @@ struct rzg2l_cpg_priv {
 
 	const struct rzg2l_cpg_info *info;
 
+<<<<<<< HEAD
 	struct generic_pm_domain genpd;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct rzg2l_pll5_mux_dsi_div_param mux_dsi_div_params;
 };
 
@@ -185,7 +192,11 @@ rzg2l_cpg_mux_clk_register(const struct cpg_core_clk *core,
 static int rzg2l_cpg_sd_clk_mux_determine_rate(struct clk_hw *hw,
 					       struct clk_rate_request *req)
 {
+<<<<<<< HEAD
 	return clk_mux_determine_rate_flags(hw, req, CLK_MUX_ROUND_CLOSEST);
+=======
+	return clk_mux_determine_rate_flags(hw, req, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int rzg2l_cpg_sd_clk_mux_set_parent(struct clk_hw *hw, u8 index)
@@ -1017,8 +1028,13 @@ static const struct clk_ops rzg2l_mod_clock_ops = {
 };
 
 static struct mstp_clock
+<<<<<<< HEAD
 *rzg2l_mod_clock_get_sibling(struct mstp_clock *clock,
 			     struct rzg2l_cpg_priv *priv)
+=======
+*rzg2l_mod_clock__get_sibling(struct mstp_clock *clock,
+			      struct rzg2l_cpg_priv *priv)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct clk_hw *hw;
 	unsigned int i;
@@ -1104,7 +1120,11 @@ rzg2l_cpg_register_mod_clk(const struct rzg2l_mod_clk *mod,
 		struct mstp_clock *sibling;
 
 		clock->enabled = rzg2l_mod_clock_is_enabled(&clock->hw);
+<<<<<<< HEAD
 		sibling = rzg2l_mod_clock_get_sibling(clock, priv);
+=======
+		sibling = rzg2l_mod_clock__get_sibling(clock, priv);
+>>>>>>> b7ba80a49124 (Commit)
 		if (sibling) {
 			clock->sibling = sibling;
 			sibling->sibling = clock;
@@ -1226,6 +1246,7 @@ static int rzg2l_cpg_reset_controller_register(struct rzg2l_cpg_priv *priv)
 	return devm_reset_controller_register(priv->dev, &priv->rcdev);
 }
 
+<<<<<<< HEAD
 static bool rzg2l_cpg_is_pm_clk(struct rzg2l_cpg_priv *priv,
 				const struct of_phandle_args *clkspec)
 {
@@ -1251,6 +1272,24 @@ static bool rzg2l_cpg_is_pm_clk(struct rzg2l_cpg_priv *priv,
 static int rzg2l_cpg_attach_dev(struct generic_pm_domain *domain, struct device *dev)
 {
 	struct rzg2l_cpg_priv *priv = container_of(domain, struct rzg2l_cpg_priv, genpd);
+=======
+static bool rzg2l_cpg_is_pm_clk(const struct of_phandle_args *clkspec)
+{
+	if (clkspec->args_count != 2)
+		return false;
+
+	switch (clkspec->args[0]) {
+	case CPG_MOD:
+		return true;
+
+	default:
+		return false;
+	}
+}
+
+static int rzg2l_cpg_attach_dev(struct generic_pm_domain *unused, struct device *dev)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct device_node *np = dev->of_node;
 	struct of_phandle_args clkspec;
 	bool once = true;
@@ -1260,7 +1299,11 @@ static int rzg2l_cpg_attach_dev(struct generic_pm_domain *domain, struct device 
 
 	while (!of_parse_phandle_with_args(np, "clocks", "#clock-cells", i,
 					   &clkspec)) {
+<<<<<<< HEAD
 		if (rzg2l_cpg_is_pm_clk(priv, &clkspec)) {
+=======
+		if (rzg2l_cpg_is_pm_clk(&clkspec)) {
+>>>>>>> b7ba80a49124 (Commit)
 			if (once) {
 				once = false;
 				error = pm_clk_create(dev);
@@ -1310,6 +1353,7 @@ static void rzg2l_cpg_genpd_remove(void *data)
 	pm_genpd_remove(data);
 }
 
+<<<<<<< HEAD
 static int __init rzg2l_cpg_add_clk_domain(struct rzg2l_cpg_priv *priv)
 {
 	struct device *dev = priv->dev;
@@ -1317,6 +1361,18 @@ static int __init rzg2l_cpg_add_clk_domain(struct rzg2l_cpg_priv *priv)
 	struct generic_pm_domain *genpd = &priv->genpd;
 	int ret;
 
+=======
+static int __init rzg2l_cpg_add_clk_domain(struct device *dev)
+{
+	struct device_node *np = dev->of_node;
+	struct generic_pm_domain *genpd;
+	int ret;
+
+	genpd = devm_kzalloc(dev, sizeof(*genpd), GFP_KERNEL);
+	if (!genpd)
+		return -ENOMEM;
+
+>>>>>>> b7ba80a49124 (Commit)
 	genpd->name = np->name;
 	genpd->flags = GENPD_FLAG_PM_CLK | GENPD_FLAG_ALWAYS_ON |
 		       GENPD_FLAG_ACTIVE_WAKEUP;
@@ -1386,7 +1442,11 @@ static int __init rzg2l_cpg_probe(struct platform_device *pdev)
 	if (error)
 		return error;
 
+<<<<<<< HEAD
 	error = rzg2l_cpg_add_clk_domain(priv);
+=======
+	error = rzg2l_cpg_add_clk_domain(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		return error;
 
@@ -1440,3 +1500,7 @@ static int __init rzg2l_cpg_init(void)
 subsys_initcall(rzg2l_cpg_init);
 
 MODULE_DESCRIPTION("Renesas RZ/G2L CPG Driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

@@ -46,9 +46,12 @@
 #define _CACHEMASK040		(~0x060)
 #define _PAGE_GLOBAL040		0x400   /* 68040 global bit, used for kva descs */
 
+<<<<<<< HEAD
 /* We borrow bit 24 to store the exclusive marker in swap PTEs. */
 #define _PAGE_SWP_EXCLUSIVE	CF_PAGE_NOCACHE
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Externally used page protection values.
  */
@@ -211,7 +214,11 @@ static inline pte_t pte_mkold(pte_t pte)
 	return pte;
 }
 
+<<<<<<< HEAD
 static inline pte_t pte_mkwrite(pte_t pte, struct vm_area_struct *vma)
+=======
+static inline pte_t pte_mkwrite(pte_t pte)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	pte_val(pte) |= CF_PAGE_WRITABLE;
 	return pte;
@@ -257,6 +264,7 @@ static inline pte_t pte_mkcache(pte_t pte)
 extern pgd_t kernel_pg_dir[PTRS_PER_PGD];
 
 /*
+<<<<<<< HEAD
  * Encode/decode swap entries and swap PTEs. Swap PTEs are all PTEs that
  * are !pte_none() && !pte_present().
  *
@@ -271,10 +279,18 @@ extern pgd_t kernel_pg_dir[PTRS_PER_PGD];
 #define __swp_type(x)		((x).val & 0x7f)
 #define __swp_offset(x)		((x).val >> 11)
 #define __swp_entry(typ, off)	((swp_entry_t) { ((typ) & 0x7f) | \
+=======
+ * Encode and de-code a swap entry (must be !pte_none(e) && !pte_present(e))
+ */
+#define __swp_type(x)		((x).val & 0xFF)
+#define __swp_offset(x)		((x).val >> 11)
+#define __swp_entry(typ, off)	((swp_entry_t) { (typ) | \
+>>>>>>> b7ba80a49124 (Commit)
 					(off << 11) })
 #define __pte_to_swp_entry(pte)	((swp_entry_t) { pte_val(pte) })
 #define __swp_entry_to_pte(x)	(__pte((x).val))
 
+<<<<<<< HEAD
 static inline int pte_swp_exclusive(pte_t pte)
 {
 	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
@@ -292,6 +308,8 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
 	return pte;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define pmd_pfn(pmd)		(pmd_val(pmd) >> PAGE_SHIFT)
 #define pmd_page(pmd)		(pfn_to_page(pmd_val(pmd) >> PAGE_SHIFT))
 

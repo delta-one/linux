@@ -198,11 +198,14 @@ fw.bundle_id
 
 Unique identifier of the entire firmware bundle.
 
+<<<<<<< HEAD
 fw.bootloader
 -------------
 
 Version of the bootloader.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Future work
 ===========
 

@@ -351,6 +351,10 @@ static const struct regmap_config msa311_regmap_config = {
  * @chip_name: Chip name in the format "msa311-%02x" % partid
  * @new_data_trig: Optional NEW_DATA interrupt driven trigger used
  *                 to notify external consumers a new sample is ready
+<<<<<<< HEAD
+=======
+ * @vdd: Optional external voltage regulator for the device power supply
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct msa311_priv {
 	struct regmap *regs;
@@ -361,6 +365,10 @@ struct msa311_priv {
 	char *chip_name;
 
 	struct iio_trigger *new_data_trig;
+<<<<<<< HEAD
+=======
+	struct regulator *vdd;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 enum msa311_si {
@@ -951,7 +959,11 @@ static irqreturn_t msa311_irq_thread(int irq, void *p)
 	}
 
 	if (new_data_int_enabled)
+<<<<<<< HEAD
 		iio_trigger_poll_nested(msa311->new_data_trig);
+=======
+		iio_trigger_poll_chained(msa311->new_data_trig);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return IRQ_HANDLED;
 }
@@ -1144,6 +1156,14 @@ static void msa311_powerdown(void *msa311)
 	msa311_set_pwr_mode(msa311, MSA311_PWR_MODE_SUSPEND);
 }
 
+<<<<<<< HEAD
+=======
+static void msa311_vdd_disable(void *vdd)
+{
+	regulator_disable(vdd);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int msa311_probe(struct i2c_client *i2c)
 {
 	struct device *dev = &i2c->dev;
@@ -1166,9 +1186,25 @@ static int msa311_probe(struct i2c_client *i2c)
 
 	mutex_init(&msa311->lock);
 
+<<<<<<< HEAD
 	err = devm_regulator_get_enable(dev, "vdd");
 	if (err)
 		return dev_err_probe(dev, err, "can't get vdd supply\n");
+=======
+	msa311->vdd = devm_regulator_get(dev, "vdd");
+	if (IS_ERR(msa311->vdd))
+		return dev_err_probe(dev, PTR_ERR(msa311->vdd),
+				     "can't get vdd supply\n");
+
+	err = regulator_enable(msa311->vdd);
+	if (err)
+		return dev_err_probe(dev, err, "can't enable vdd supply\n");
+
+	err = devm_add_action_or_reset(dev, msa311_vdd_disable, msa311->vdd);
+	if (err)
+		return dev_err_probe(dev, err,
+				     "can't add vdd disable action\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = msa311_check_partid(msa311);
 	if (err)

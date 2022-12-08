@@ -26,12 +26,18 @@
 #define CLE_PIN_CTL			15
 #define ALE_PIN_CTL			14
 
+<<<<<<< HEAD
 struct pasemi_ddata {
 	struct nand_chip chip;
 	unsigned int lpcctl;
 	struct nand_controller controller;
 };
 
+=======
+static unsigned int lpcctl;
+static struct mtd_info *pasemi_nand_mtd;
+static struct nand_controller controller;
+>>>>>>> b7ba80a49124 (Commit)
 static const char driver_name[] = "pasemi-nand";
 
 static void pasemi_read_buf(struct nand_chip *chip, u_char *buf, int len)
@@ -58,8 +64,11 @@ static void pasemi_write_buf(struct nand_chip *chip, const u_char *buf,
 static void pasemi_hwcontrol(struct nand_chip *chip, int cmd,
 			     unsigned int ctrl)
 {
+<<<<<<< HEAD
 	struct pasemi_ddata *ddata = container_of(chip, struct pasemi_ddata, chip);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (cmd == NAND_CMD_NONE)
 		return;
 
@@ -70,14 +79,22 @@ static void pasemi_hwcontrol(struct nand_chip *chip, int cmd,
 
 	/* Push out posted writes */
 	eieio();
+<<<<<<< HEAD
 	inl(ddata->lpcctl);
+=======
+	inl(lpcctl);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int pasemi_device_ready(struct nand_chip *chip)
 {
+<<<<<<< HEAD
 	struct pasemi_ddata *ddata = container_of(chip, struct pasemi_ddata, chip);
 
 	return !!(inl(ddata->lpcctl) & LBICTRL_LPCCTL_NR);
+=======
+	return !!(inl(lpcctl) & LBICTRL_LPCCTL_NR);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int pasemi_attach_chip(struct nand_chip *chip)
@@ -100,16 +117,21 @@ static int pasemi_nand_probe(struct platform_device *ofdev)
 	struct device_node *np = dev->of_node;
 	struct resource res;
 	struct nand_chip *chip;
+<<<<<<< HEAD
 	struct nand_controller *controller;
 	int err = 0;
 	struct pasemi_ddata *ddata;
 	struct mtd_info *pasemi_nand_mtd;
+=======
+	int err = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = of_address_to_resource(np, 0, &res);
 
 	if (err)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	dev_dbg(dev, "pasemi_nand at %pR\n", &res);
 
 	/* Allocate memory for MTD device structure and private data */
@@ -125,6 +147,24 @@ static int pasemi_nand_probe(struct platform_device *ofdev)
 	controller->ops = &pasemi_ops;
 	nand_controller_init(controller);
 	chip->controller = controller;
+=======
+	/* We only support one device at the moment */
+	if (pasemi_nand_mtd)
+		return -ENODEV;
+
+	dev_dbg(dev, "pasemi_nand at %pR\n", &res);
+
+	/* Allocate memory for MTD device structure and private data */
+	chip = kzalloc(sizeof(struct nand_chip), GFP_KERNEL);
+	if (!chip) {
+		err = -ENOMEM;
+		goto out;
+	}
+
+	controller.ops = &pasemi_ops;
+	nand_controller_init(&controller);
+	chip->controller = &controller;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pasemi_nand_mtd = nand_to_mtd(chip);
 
@@ -145,10 +185,17 @@ static int pasemi_nand_probe(struct platform_device *ofdev)
 		goto out_ior;
 	}
 
+<<<<<<< HEAD
 	ddata->lpcctl = pci_resource_start(pdev, 0);
 	pci_dev_put(pdev);
 
 	if (!request_region(ddata->lpcctl, 4, driver_name)) {
+=======
+	lpcctl = pci_resource_start(pdev, 0);
+	pci_dev_put(pdev);
+
+	if (!request_region(lpcctl, 4, driver_name)) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = -EBUSY;
 		goto out_ior;
 	}
@@ -181,24 +228,37 @@ static int pasemi_nand_probe(struct platform_device *ofdev)
 	}
 
 	dev_info(dev, "PA Semi NAND flash at %pR, control at I/O %x\n", &res,
+<<<<<<< HEAD
 		 ddata->lpcctl);
+=======
+		 lpcctl);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 
  out_cleanup_nand:
 	nand_cleanup(chip);
  out_lpc:
+<<<<<<< HEAD
 	release_region(ddata->lpcctl, 4);
  out_ior:
 	iounmap(chip->legacy.IO_ADDR_R);
  out_mtd:
 	kfree(ddata);
+=======
+	release_region(lpcctl, 4);
+ out_ior:
+	iounmap(chip->legacy.IO_ADDR_R);
+ out_mtd:
+	kfree(chip);
+>>>>>>> b7ba80a49124 (Commit)
  out:
 	return err;
 }
 
 static int pasemi_nand_remove(struct platform_device *ofdev)
 {
+<<<<<<< HEAD
 	struct pasemi_ddata *ddata = platform_get_drvdata(ofdev);
 	struct mtd_info *pasemi_nand_mtd;
 	int ret;
@@ -206,18 +266,37 @@ static int pasemi_nand_remove(struct platform_device *ofdev)
 
 	chip = &ddata->chip;
 	pasemi_nand_mtd = nand_to_mtd(chip);
+=======
+	struct nand_chip *chip;
+	int ret;
+
+	if (!pasemi_nand_mtd)
+		return 0;
+
+	chip = mtd_to_nand(pasemi_nand_mtd);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Release resources, unregister device */
 	ret = mtd_device_unregister(pasemi_nand_mtd);
 	WARN_ON(ret);
 	nand_cleanup(chip);
 
+<<<<<<< HEAD
 	release_region(ddata->lpcctl, 4);
+=======
+	release_region(lpcctl, 4);
+>>>>>>> b7ba80a49124 (Commit)
 
 	iounmap(chip->legacy.IO_ADDR_R);
 
 	/* Free the MTD device structure */
+<<<<<<< HEAD
 	kfree(ddata);
+=======
+	kfree(chip);
+
+	pasemi_nand_mtd = NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

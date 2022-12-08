@@ -4,7 +4,10 @@
  * Copyright (C) 2009 - 2016 STMicroelectronics
  */
 
+<<<<<<< HEAD
 #include <linux/acpi.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/fs.h>
 #include <linux/kernel.h>
@@ -13,7 +16,11 @@
 #include <linux/freezer.h>
 #include <linux/string.h>
 #include <linux/interrupt.h>
+<<<<<<< HEAD
 #include <linux/gpio/consumer.h>
+=======
+#include <linux/gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/sched.h>
 #include <linux/uaccess.h>
 #include <linux/io.h>
@@ -433,6 +440,7 @@ static const struct tpm_class_ops st33zp24_tpm = {
 	.req_canceled = st33zp24_req_canceled,
 };
 
+<<<<<<< HEAD
 static const struct acpi_gpio_params lpcpd_gpios = { 1, 0, false };
 
 static const struct acpi_gpio_mapping acpi_st33zp24_gpios[] = {
@@ -440,11 +448,17 @@ static const struct acpi_gpio_mapping acpi_st33zp24_gpios[] = {
 	{ },
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * initialize the TPM device
  */
 int st33zp24_probe(void *phy_id, const struct st33zp24_phy_ops *ops,
+<<<<<<< HEAD
 		   struct device *dev, int irq)
+=======
+		   struct device *dev, int irq, int io_lpcpd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 	u8 intmask = 0;
@@ -471,6 +485,7 @@ int st33zp24_probe(void *phy_id, const struct st33zp24_phy_ops *ops,
 
 	tpm_dev->locality = LOCALITY0;
 
+<<<<<<< HEAD
 	if (ACPI_COMPANION(dev)) {
 		ret = devm_acpi_dev_add_driver_gpios(dev, acpi_st33zp24_gpios);
 		if (ret)
@@ -490,6 +505,8 @@ int st33zp24_probe(void *phy_id, const struct st33zp24_phy_ops *ops,
 		return ret;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (irq) {
 		/* INTERRUPT Setup */
 		init_waitqueue_head(&tpm_dev->read_queue);
@@ -552,8 +569,13 @@ int st33zp24_pm_suspend(struct device *dev)
 
 	int ret = 0;
 
+<<<<<<< HEAD
 	if (tpm_dev->io_lpcpd)
 		gpiod_set_value_cansleep(tpm_dev->io_lpcpd, 0);
+=======
+	if (gpio_is_valid(tpm_dev->io_lpcpd))
+		gpio_set_value(tpm_dev->io_lpcpd, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	else
 		ret = tpm_pm_suspend(dev);
 
@@ -567,8 +589,13 @@ int st33zp24_pm_resume(struct device *dev)
 	struct st33zp24_dev *tpm_dev = dev_get_drvdata(&chip->dev);
 	int ret = 0;
 
+<<<<<<< HEAD
 	if (tpm_dev->io_lpcpd) {
 		gpiod_set_value_cansleep(tpm_dev->io_lpcpd, 1);
+=======
+	if (gpio_is_valid(tpm_dev->io_lpcpd)) {
+		gpio_set_value(tpm_dev->io_lpcpd, 1);
+>>>>>>> b7ba80a49124 (Commit)
 		ret = wait_for_stat(chip,
 				TPM_STS_VALID, chip->timeout_b,
 				&tpm_dev->read_queue, false);

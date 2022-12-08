@@ -38,11 +38,17 @@ extern struct start_info *xen_start_info;
 
 #include <asm/processor.h>
 
+<<<<<<< HEAD
 #define XEN_SIGNATURE "XenVMMXenVMM"
 
 static inline uint32_t xen_cpuid_base(void)
 {
 	return hypervisor_cpuid_base(XEN_SIGNATURE, 2);
+=======
+static inline uint32_t xen_cpuid_base(void)
+{
+	return hypervisor_cpuid_base("XenVMMXenVMM", 2);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct pci_dev;

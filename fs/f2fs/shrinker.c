@@ -28,6 +28,7 @@ static unsigned long __count_free_nids(struct f2fs_sb_info *sbi)
 	return count > 0 ? count : 0;
 }
 
+<<<<<<< HEAD
 static unsigned long __count_extent_cache(struct f2fs_sb_info *sbi,
 					enum extent_type type)
 {
@@ -35,6 +36,12 @@ static unsigned long __count_extent_cache(struct f2fs_sb_info *sbi,
 
 	return atomic_read(&eti->total_zombie_tree) +
 				atomic_read(&eti->total_ext_node);
+=======
+static unsigned long __count_extent_cache(struct f2fs_sb_info *sbi)
+{
+	return atomic_read(&sbi->total_zombie_tree) +
+				atomic_read(&sbi->total_ext_node);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 unsigned long f2fs_shrink_count(struct shrinker *shrink,
@@ -56,11 +63,16 @@ unsigned long f2fs_shrink_count(struct shrinker *shrink,
 		}
 		spin_unlock(&f2fs_list_lock);
 
+<<<<<<< HEAD
 		/* count read extent cache entries */
 		count += __count_extent_cache(sbi, EX_READ);
 
 		/* count block age extent cache entries */
 		count += __count_extent_cache(sbi, EX_BLOCK_AGE);
+=======
+		/* count extent cache entries */
+		count += __count_extent_cache(sbi);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* count clean nat cache entries */
 		count += __count_nat_entries(sbi);
@@ -106,10 +118,14 @@ unsigned long f2fs_shrink_scan(struct shrinker *shrink,
 		sbi->shrinker_run_no = run_no;
 
 		/* shrink extent cache entries */
+<<<<<<< HEAD
 		freed += f2fs_shrink_age_extent_tree(sbi, nr >> 2);
 
 		/* shrink read extent cache entries */
 		freed += f2fs_shrink_read_extent_tree(sbi, nr >> 2);
+=======
+		freed += f2fs_shrink_extent_tree(sbi, nr >> 1);
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* shrink clean nat cache entries */
 		if (freed < nr)
@@ -139,9 +155,13 @@ void f2fs_join_shrinker(struct f2fs_sb_info *sbi)
 
 void f2fs_leave_shrinker(struct f2fs_sb_info *sbi)
 {
+<<<<<<< HEAD
 	f2fs_shrink_read_extent_tree(sbi, __count_extent_cache(sbi, EX_READ));
 	f2fs_shrink_age_extent_tree(sbi,
 				__count_extent_cache(sbi, EX_BLOCK_AGE));
+=======
+	f2fs_shrink_extent_tree(sbi, __count_extent_cache(sbi));
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock(&f2fs_list_lock);
 	list_del_init(&sbi->s_list);

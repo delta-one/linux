@@ -226,7 +226,11 @@ static int nft_nat_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
 		priv->flags |= NF_NAT_RANGE_MAP_IPS;
 	}
 
+<<<<<<< HEAD
 	plen = sizeof_field(struct nf_nat_range, min_proto.all);
+=======
+	plen = sizeof_field(struct nf_nat_range, min_addr.all);
+>>>>>>> b7ba80a49124 (Commit)
 	if (tb[NFTA_NAT_REG_PROTO_MIN]) {
 		err = nft_parse_register_load(tb[NFTA_NAT_REG_PROTO_MIN],
 					      &priv->sreg_proto_min, plen);
@@ -255,8 +259,12 @@ static int nft_nat_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
 	return nf_ct_netns_get(ctx->net, family);
 }
 
+<<<<<<< HEAD
 static int nft_nat_dump(struct sk_buff *skb,
 			const struct nft_expr *expr, bool reset)
+=======
+static int nft_nat_dump(struct sk_buff *skb, const struct nft_expr *expr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct nft_nat *priv = nft_expr_priv(expr);
 

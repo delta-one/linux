@@ -30,6 +30,10 @@
 #include <linux/rbtree.h>
 #include <drm/gpu_scheduler.h>
 #include <drm/drm_file.h>
+<<<<<<< HEAD
+=======
+#include <drm/ttm/ttm_bo_driver.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/sched/mm.h>
 
 #include "amdgpu_sync.h"

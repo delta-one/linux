@@ -5,8 +5,11 @@
 
 #ifdef CONFIG_GPIO_SYSFS
 
+<<<<<<< HEAD
 struct gpio_device;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int gpiochip_sysfs_register(struct gpio_device *gdev);
 void gpiochip_sysfs_unregister(struct gpio_device *gdev);
 

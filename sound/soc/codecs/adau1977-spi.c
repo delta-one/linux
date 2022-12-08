@@ -55,7 +55,11 @@ static const struct spi_device_id adau1977_spi_ids[] = {
 };
 MODULE_DEVICE_TABLE(spi, adau1977_spi_ids);
 
+<<<<<<< HEAD
 static const struct of_device_id adau1977_spi_of_match[] __maybe_unused = {
+=======
+static const struct of_device_id adau1977_spi_of_match[] = {
+>>>>>>> b7ba80a49124 (Commit)
         { .compatible = "adi,adau1977" },
         { .compatible = "adi,adau1978" },
         { .compatible = "adi,adau1979" },

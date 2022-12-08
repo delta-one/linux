@@ -13,7 +13,11 @@
  * Takes the guest view of SPEC_CTRL MSR as a parameter and also
  * the guest's version of VIRT_SPEC_CTRL, if emulated.
  */
+<<<<<<< HEAD
 extern void x86_virt_spec_ctrl(u64 guest_virt_spec_ctrl, bool guest);
+=======
+extern void x86_virt_spec_ctrl(u64 guest_spec_ctrl, u64 guest_virt_spec_ctrl, bool guest);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * x86_spec_ctrl_set_guest - Set speculation control registers for the guest
@@ -24,9 +28,15 @@ extern void x86_virt_spec_ctrl(u64 guest_virt_spec_ctrl, bool guest);
  * Avoids writing to the MSR if the content/bits are the same
  */
 static inline
+<<<<<<< HEAD
 void x86_spec_ctrl_set_guest(u64 guest_virt_spec_ctrl)
 {
 	x86_virt_spec_ctrl(guest_virt_spec_ctrl, true);
+=======
+void x86_spec_ctrl_set_guest(u64 guest_spec_ctrl, u64 guest_virt_spec_ctrl)
+{
+	x86_virt_spec_ctrl(guest_spec_ctrl, guest_virt_spec_ctrl, true);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
@@ -38,9 +48,15 @@ void x86_spec_ctrl_set_guest(u64 guest_virt_spec_ctrl)
  * Avoids writing to the MSR if the content/bits are the same
  */
 static inline
+<<<<<<< HEAD
 void x86_spec_ctrl_restore_host(u64 guest_virt_spec_ctrl)
 {
 	x86_virt_spec_ctrl(guest_virt_spec_ctrl, false);
+=======
+void x86_spec_ctrl_restore_host(u64 guest_spec_ctrl, u64 guest_virt_spec_ctrl)
+{
+	x86_virt_spec_ctrl(guest_spec_ctrl, guest_virt_spec_ctrl, false);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* AMD specific Speculative Store Bypass MSR data */

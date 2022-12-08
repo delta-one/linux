@@ -300,7 +300,11 @@
 	/* Only MT8173 E1 needs USB power domain */
 	power-domains = <&spm MT8173_POWER_DOMAIN_USB>;
 
+<<<<<<< HEAD
 	pmic: pmic {
+=======
+	pmic: mt6397 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "mediatek,mt6397";
 		interrupt-parent = <&pio>;
 		interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;

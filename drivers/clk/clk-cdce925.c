@@ -603,6 +603,7 @@ of_clk_cdce925_get(struct of_phandle_args *clkspec, void *_data)
 	return &data->clk[idx].hw;
 }
 
+<<<<<<< HEAD
 static int cdce925_regulator_enable(struct device *dev, const char *name)
 {
 	int err;
@@ -612,6 +613,30 @@ static int cdce925_regulator_enable(struct device *dev, const char *name)
 		dev_err_probe(dev, err, "Failed to enable %s:\n", name);
 
 	return err;
+=======
+static void cdce925_regulator_disable(void *regulator)
+{
+	regulator_disable(regulator);
+}
+
+static int cdce925_regulator_enable(struct device *dev, const char *name)
+{
+	struct regulator *regulator;
+	int err;
+
+	regulator = devm_regulator_get(dev, name);
+	if (IS_ERR(regulator))
+		return PTR_ERR(regulator);
+
+	err = regulator_enable(regulator);
+	if (err) {
+		dev_err(dev, "Failed to enable %s: %d\n", name, err);
+		return err;
+	}
+
+	return devm_add_action_or_reset(dev, cdce925_regulator_disable,
+					regulator);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* The CDCE925 uses a funky way to read/write registers. Bulk mode is

@@ -13,16 +13,26 @@
 #include <linux/mfd/syscon.h>
 #include <linux/module.h>
 #include <linux/of.h>
+<<<<<<< HEAD
 #include <linux/of_address.h>
 #include <linux/of_device.h>
 #include <linux/regmap.h>
 #include <linux/seq_file.h>
 #include <linux/slab.h>
 
+=======
+#include <linux/of_device.h>
+#include <linux/of_address.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/pinctrl/machine.h>
 #include <linux/pinctrl/pinconf.h>
 #include <linux/pinctrl/pinctrl.h>
 #include <linux/pinctrl/pinmux.h>
+<<<<<<< HEAD
+=======
+#include <linux/slab.h>
+#include <linux/regmap.h>
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "../core.h"
 #include "../pinconf.h"
@@ -292,6 +302,65 @@ struct pinmux_ops imx_pmx_ops = {
 	.set_mux = imx_pmx_set,
 };
 
+<<<<<<< HEAD
+=======
+/* decode generic config into raw register values */
+static u32 imx_pinconf_decode_generic_config(struct imx_pinctrl *ipctl,
+					      unsigned long *configs,
+					      unsigned int num_configs)
+{
+	const struct imx_pinctrl_soc_info *info = ipctl->info;
+	const struct imx_cfg_params_decode *decode;
+	enum pin_config_param param;
+	u32 raw_config = 0;
+	u32 param_val;
+	int i, j;
+
+	WARN_ON(num_configs > info->num_decodes);
+
+	for (i = 0; i < num_configs; i++) {
+		param = pinconf_to_config_param(configs[i]);
+		param_val = pinconf_to_config_argument(configs[i]);
+		decode = info->decodes;
+		for (j = 0; j < info->num_decodes; j++) {
+			if (param == decode->param) {
+				if (decode->invert)
+					param_val = !param_val;
+				raw_config |= (param_val << decode->shift)
+					      & decode->mask;
+				break;
+			}
+			decode++;
+		}
+	}
+
+	if (info->fixup)
+		info->fixup(configs, num_configs, &raw_config);
+
+	return raw_config;
+}
+
+static u32 imx_pinconf_parse_generic_config(struct device_node *np,
+					    struct imx_pinctrl *ipctl)
+{
+	const struct imx_pinctrl_soc_info *info = ipctl->info;
+	struct pinctrl_dev *pctl = ipctl->pctl;
+	unsigned int num_configs;
+	unsigned long *configs;
+	int ret;
+
+	if (!info->generic_pinconf)
+		return 0;
+
+	ret = pinconf_generic_parse_dt_config(np, pctl, &configs,
+					      &num_configs);
+	if (ret)
+		return 0;
+
+	return imx_pinconf_decode_generic_config(ipctl, configs, num_configs);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int imx_pinconf_get_mmio(struct pinctrl_dev *pctldev, unsigned pin_id,
 				unsigned long *config)
 {
@@ -444,6 +513,10 @@ static const struct pinconf_ops imx_pinconf_ops = {
 /*
  * Each pin represented in fsl,pins consists of a number of u32 PIN_FUNC_ID
  * and 1 u32 CONFIG, the total size is PIN_FUNC_ID + CONFIG for each pin.
+<<<<<<< HEAD
+=======
+ * For generic_pinconf case, there's no extra u32 CONFIG.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * PIN_FUNC_ID format:
  * Default:
@@ -491,12 +564,27 @@ static void imx_pinctrl_parse_pin_mmio(struct imx_pinctrl *ipctl,
 	pin_mmio->mux_mode = be32_to_cpu(*list++);
 	pin_mmio->input_val = be32_to_cpu(*list++);
 
+<<<<<<< HEAD
 	config = be32_to_cpu(*list++);
 
 	/* SION bit is in mux register */
 	if (config & IMX_PAD_SION)
 		pin_mmio->mux_mode |= IOMUXC_CONFIG_SION;
 	pin_mmio->config = config & ~IMX_PAD_SION;
+=======
+	if (info->generic_pinconf) {
+		/* generic pin config decoded */
+		pin_mmio->config = imx_pinconf_parse_generic_config(np, ipctl);
+	} else {
+		/* legacy pin config read from devicetree */
+		config = be32_to_cpu(*list++);
+
+		/* SION bit is in mux register */
+		if (config & IMX_PAD_SION)
+			pin_mmio->mux_mode |= IOMUXC_CONFIG_SION;
+		pin_mmio->config = config & ~IMX_PAD_SION;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	*list_p = list;
 
@@ -524,6 +612,12 @@ static int imx_pinctrl_parse_groups(struct device_node *np,
 	else
 		pin_size = FSL_PIN_SIZE;
 
+<<<<<<< HEAD
+=======
+	if (info->generic_pinconf)
+		pin_size -= 4;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Initialise group */
 	grp->name = np->name;
 
@@ -789,6 +883,13 @@ int imx_pinctrl_probe(struct platform_device *pdev,
 	imx_pinctrl_desc->confops = &imx_pinconf_ops;
 	imx_pinctrl_desc->owner = THIS_MODULE;
 
+<<<<<<< HEAD
+=======
+	/* for generic pinconf */
+	imx_pinctrl_desc->custom_params = info->custom_params;
+	imx_pinctrl_desc->num_custom_params = info->num_custom_params;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* platform specific callback */
 	imx_pmx_ops.gpio_set_direction = info->gpio_set_direction;
 

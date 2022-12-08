@@ -33,13 +33,20 @@ static void __cpuidle r3081_wait(void)
 {
 	unsigned long cfg = read_c0_conf();
 	write_c0_conf(cfg | R30XX_CONF_HALT);
+<<<<<<< HEAD
+=======
+	raw_local_irq_enable();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void __cpuidle r4k_wait(void)
 {
 	raw_local_irq_enable();
 	__r4k_wait();
+<<<<<<< HEAD
 	raw_local_irq_disable();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -57,6 +64,10 @@ void __cpuidle r4k_wait_irqoff(void)
 		"	.set	arch=r4000	\n"
 		"	wait			\n"
 		"	.set	pop		\n");
+<<<<<<< HEAD
+=======
+	raw_local_irq_enable();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -76,6 +87,10 @@ static void __cpuidle rm7k_wait_irqoff(void)
 		"	wait						\n"
 		"	mtc0	$1, $12		# stalls until W stage	\n"
 		"	.set	pop					\n");
+<<<<<<< HEAD
+=======
+	raw_local_irq_enable();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -101,8 +116,11 @@ static void __cpuidle au1k_wait(void)
 	"	nop				\n"
 	"	.set	pop			\n"
 	: : "r" (au1k_wait), "r" (c0status));
+<<<<<<< HEAD
 
 	raw_local_irq_disable();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __initdata nowait;
@@ -241,16 +259,30 @@ void __init check_wait(void)
 	}
 }
 
+<<<<<<< HEAD
 __cpuidle void arch_cpu_idle(void)
 {
 	if (cpu_wait)
 		cpu_wait();
+=======
+void arch_cpu_idle(void)
+{
+	if (cpu_wait)
+		cpu_wait();
+	else
+		raw_local_irq_enable();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_CPU_IDLE
 
+<<<<<<< HEAD
 __cpuidle int mips_cpuidle_wait_enter(struct cpuidle_device *dev,
 				      struct cpuidle_driver *drv, int index)
+=======
+int mips_cpuidle_wait_enter(struct cpuidle_device *dev,
+			    struct cpuidle_driver *drv, int index)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	arch_cpu_idle();
 	return index;

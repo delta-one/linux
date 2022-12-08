@@ -45,6 +45,7 @@ struct xvip_pipeline {
 	struct xvip_dma *output;
 };
 
+<<<<<<< HEAD
 static inline struct xvip_pipeline *to_xvip_pipeline(struct video_device *vdev)
 {
 	struct media_pipeline *pipe = video_device_pipeline(vdev);
@@ -53,6 +54,11 @@ static inline struct xvip_pipeline *to_xvip_pipeline(struct video_device *vdev)
 		return NULL;
 
 	return container_of(pipe, struct xvip_pipeline, pipe);
+=======
+static inline struct xvip_pipeline *to_xvip_pipeline(struct media_entity *e)
+{
+	return container_of(e->pipe, struct xvip_pipeline, pipe);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

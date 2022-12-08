@@ -185,7 +185,11 @@ struct soundbus_driver {
 	/* we don't implement any matching at all */
 
 	int	(*probe)(struct soundbus_dev* dev);
+<<<<<<< HEAD
 	void	(*remove)(struct soundbus_dev *dev);
+=======
+	int	(*remove)(struct soundbus_dev* dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	int	(*shutdown)(struct soundbus_dev* dev);
 

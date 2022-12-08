@@ -158,16 +158,27 @@ static int mlx5i_pkey_dev_init(struct net_device *dev)
 	struct mlx5e_priv *priv = mlx5i_epriv(dev);
 	struct mlx5i_priv *ipriv, *parent_ipriv;
 	struct net_device *parent_dev;
+<<<<<<< HEAD
 
 	ipriv = priv->ppriv;
 
 	/* Link to parent */
 	parent_dev = mlx5i_parent_get(dev);
+=======
+	int parent_ifindex;
+
+	ipriv = priv->ppriv;
+
+	/* Get QPN to netdevice hash table from parent */
+	parent_ifindex = dev->netdev_ops->ndo_get_iflink(dev);
+	parent_dev = dev_get_by_index(dev_net(dev), parent_ifindex);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!parent_dev) {
 		mlx5_core_warn(priv->mdev, "failed to get parent device\n");
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	if (dev->num_rx_queues < parent_dev->real_num_rx_queues) {
 		mlx5_core_warn(priv->mdev,
 			       "failed to create child device with rx queues [%d] less than parent's [%d]\n",
@@ -180,6 +191,11 @@ static int mlx5i_pkey_dev_init(struct net_device *dev)
 	/* Get QPN to netdevice hash table from parent */
 	parent_ipriv = netdev_priv(parent_dev);
 	ipriv->qpn_htbl = parent_ipriv->qpn_htbl;
+=======
+	parent_ipriv = netdev_priv(parent_dev);
+	ipriv->qpn_htbl = parent_ipriv->qpn_htbl;
+	dev_put(parent_dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return mlx5i_dev_init(dev);
 }
@@ -191,7 +207,10 @@ static int mlx5i_pkey_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 
 static void mlx5i_pkey_dev_cleanup(struct net_device *netdev)
 {
+<<<<<<< HEAD
 	mlx5i_parent_put(netdev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return mlx5i_dev_cleanup(netdev);
 }
 
@@ -229,16 +248,23 @@ static int mlx5i_pkey_open(struct net_device *netdev)
 		mlx5_core_warn(mdev, "opening child channels failed, %d\n", err);
 		goto err_clear_state_opened_flag;
 	}
+<<<<<<< HEAD
 	err = epriv->profile->update_rx(epriv);
 	if (err)
 		goto err_close_channels;
+=======
+	epriv->profile->update_rx(epriv);
+>>>>>>> b7ba80a49124 (Commit)
 	mlx5e_activate_priv_channels(epriv);
 	mutex_unlock(&epriv->state_lock);
 
 	return 0;
 
+<<<<<<< HEAD
 err_close_channels:
 	mlx5e_close_channels(&epriv->channels);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err_clear_state_opened_flag:
 	mlx5e_destroy_tis(mdev, epriv->tisn[0][0]);
 err_remove_rx_uderlay_qp:
@@ -361,6 +387,10 @@ static const struct mlx5e_profile mlx5i_pkey_nic_profile = {
 	.update_stats	   = NULL,
 	.rx_handlers       = &mlx5i_rx_handlers,
 	.max_tc		   = MLX5I_MAX_NUM_TC,
+<<<<<<< HEAD
+=======
+	.rq_groups	   = MLX5E_NUM_RQ_GROUPS(REGULAR),
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 const struct mlx5e_profile *mlx5i_pkey_get_profile(void)

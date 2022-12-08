@@ -10,7 +10,10 @@
 #include <linux/device.h>
 #include <linux/mfd/mcp.h>
 #include <linux/gpio.h>
+<<<<<<< HEAD
 #include <linux/gpio/driver.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/mutex.h>
 
 #define UCB_IO_DATA	0x00

@@ -1049,7 +1049,11 @@ static int __init lp_init(void)
 		return -EIO;
 	}
 
+<<<<<<< HEAD
 	lp_class = class_create("printer");
+=======
+	lp_class = class_create(THIS_MODULE, "printer");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(lp_class)) {
 		err = PTR_ERR(lp_class);
 		goto out_reg;

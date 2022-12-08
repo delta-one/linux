@@ -33,7 +33,11 @@ Device driver can provide specific callbacks for each "health reporter", e.g.:
   * Recovery procedures
   * Diagnostics procedures
   * Object dump procedures
+<<<<<<< HEAD
   * Out Of Box initial parameters
+=======
+  * OOB initial parameters
+>>>>>>> b7ba80a49124 (Commit)
 
 Different parts of the driver can register different types of health reporters
 with different handlers.
@@ -46,12 +50,17 @@ Once an error is reported, devlink health will perform the following actions:
   * A log is being send to the kernel trace events buffer
   * Health status and statistics are being updated for the reporter instance
   * Object dump is being taken and saved at the reporter instance (as long as
+<<<<<<< HEAD
     auto-dump is set and there is no other dump which is already stored)
+=======
+    there is no other dump which is already stored)
+>>>>>>> b7ba80a49124 (Commit)
   * Auto recovery attempt is being done. Depends on:
 
     - Auto-recovery configuration
     - Grace period vs. time passed since last recover
 
+<<<<<<< HEAD
 Devlink formatted message
 =========================
 
@@ -71,6 +80,8 @@ different SKBs. In order to do this fragmentation, it uses virtual nests
 attributes, to avoid actual nesting use which cannot be divided between
 different SKBs.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 User Interface
 ==============
 

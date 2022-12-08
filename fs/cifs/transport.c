@@ -270,7 +270,30 @@ smb_rqst_len(struct TCP_Server_Info *server, struct smb_rqst *rqst)
 	for (i = 0; i < nvec; i++)
 		buflen += iov[i].iov_len;
 
+<<<<<<< HEAD
 	buflen += iov_iter_count(&rqst->rq_iter);
+=======
+	/*
+	 * Add in the page array if there is one. The caller needs to make
+	 * sure rq_offset and rq_tailsz are set correctly. If a buffer of
+	 * multiple pages ends at page boundary, rq_tailsz needs to be set to
+	 * PAGE_SIZE.
+	 */
+	if (rqst->rq_npages) {
+		if (rqst->rq_npages == 1)
+			buflen += rqst->rq_tailsz;
+		else {
+			/*
+			 * If there is more than one page, calculate the
+			 * buffer length based on rq_offset and rq_tailsz
+			 */
+			buflen += rqst->rq_pagesz * (rqst->rq_npages - 1) -
+					rqst->rq_offset;
+			buflen += rqst->rq_tailsz;
+		}
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return buflen;
 }
 
@@ -278,7 +301,11 @@ static int
 __smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
 		struct smb_rqst *rqst)
 {
+<<<<<<< HEAD
 	int rc;
+=======
+	int rc = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	struct kvec *iov;
 	int n_vec;
 	unsigned int send_length = 0;
@@ -289,7 +316,10 @@ __smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
 	struct msghdr smb_msg = {};
 	__be32 rfc1002_marker;
 
+<<<<<<< HEAD
 	cifs_in_send_inc(server);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (cifs_rdma_enabled(server)) {
 		/* return -EAGAIN when connecting or reconnecting */
 		rc = -EAGAIN;
@@ -298,6 +328,7 @@ __smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
 		goto smbd_done;
 	}
 
+<<<<<<< HEAD
 	rc = -EAGAIN;
 	if (ssocket == NULL)
 		goto out;
@@ -309,6 +340,16 @@ __smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
 	}
 
 	rc = 0;
+=======
+	if (ssocket == NULL)
+		return -EAGAIN;
+
+	if (fatal_signal_pending(current)) {
+		cifs_dbg(FYI, "signal pending before send request\n");
+		return -ERESTARTSYS;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* cork the socket */
 	tcp_sock_set_cork(ssocket->sk, true);
 
@@ -332,7 +373,11 @@ __smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
 			.iov_base = &rfc1002_marker,
 			.iov_len  = 4
 		};
+<<<<<<< HEAD
 		iov_iter_kvec(&smb_msg.msg_iter, ITER_SOURCE, &hiov, 1, 4);
+=======
+		iov_iter_kvec(&smb_msg.msg_iter, WRITE, &hiov, 1, 4);
+>>>>>>> b7ba80a49124 (Commit)
 		rc = smb_send_kvec(server, &smb_msg, &sent);
 		if (rc < 0)
 			goto unmask;
@@ -353,7 +398,11 @@ __smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
 			size += iov[i].iov_len;
 		}
 
+<<<<<<< HEAD
 		iov_iter_kvec(&smb_msg.msg_iter, ITER_SOURCE, iov, n_vec, size);
+=======
+		iov_iter_kvec(&smb_msg.msg_iter, WRITE, iov, n_vec, size);
+>>>>>>> b7ba80a49124 (Commit)
 
 		rc = smb_send_kvec(server, &smb_msg, &sent);
 		if (rc < 0)
@@ -361,6 +410,7 @@ __smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
 
 		total_len += sent;
 
+<<<<<<< HEAD
 		if (iov_iter_count(&rqst[j].rq_iter) > 0) {
 			smb_msg.msg_iter = rqst[j].rq_iter;
 			rc = smb_send_kvec(server, &smb_msg, &sent);
@@ -370,6 +420,25 @@ __smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
 		}
 
 }
+=======
+		/* now walk the page array and send each page in it */
+		for (i = 0; i < rqst[j].rq_npages; i++) {
+			struct bio_vec bvec;
+
+			bvec.bv_page = rqst[j].rq_pages[i];
+			rqst_page_get_length(&rqst[j], i, &bvec.bv_len,
+					     &bvec.bv_offset);
+
+			iov_iter_bvec(&smb_msg.msg_iter, WRITE,
+				      &bvec, 1, bvec.bv_len);
+			rc = smb_send_kvec(server, &smb_msg, &sent);
+			if (rc < 0)
+				break;
+
+			total_len += sent;
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 unmask:
 	sigprocmask(SIG_SETMASK, &oldmask, NULL);
@@ -411,8 +480,12 @@ smbd_done:
 			 rc);
 	else if (rc > 0)
 		rc = 0;
+<<<<<<< HEAD
 out:
 	cifs_in_send_dec(server);
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	return rc;
 }
 
@@ -831,7 +904,13 @@ cifs_call_async(struct TCP_Server_Info *server, struct smb_rqst *rqst,
 	 * I/O response may come back and free the mid entry on another thread.
 	 */
 	cifs_save_when_sent(mid);
+<<<<<<< HEAD
 	rc = smb_send_rqst(server, 1, rqst, flags);
+=======
+	cifs_in_send_inc(server);
+	rc = smb_send_rqst(server, 1, rqst, flags);
+	cifs_in_send_dec(server);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (rc < 0) {
 		revert_current_mid(server, mid->credits);
@@ -1010,13 +1089,17 @@ cifs_cancelled_callback(struct mid_q_entry *mid)
 struct TCP_Server_Info *cifs_pick_channel(struct cifs_ses *ses)
 {
 	uint index = 0;
+<<<<<<< HEAD
 	unsigned int min_in_flight = UINT_MAX, max_in_flight = 0;
 	struct TCP_Server_Info *server = NULL;
 	int i;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!ses)
 		return NULL;
 
+<<<<<<< HEAD
 	spin_lock(&ses->chan_lock);
 	for (i = 0; i < ses->chan_count; i++) {
 		server = ses->chans[i].server;
@@ -1044,6 +1127,13 @@ struct TCP_Server_Info *cifs_pick_channel(struct cifs_ses *ses)
 		index = (uint)atomic_inc_return(&ses->chan_seq);
 		index %= ses->chan_count;
 	}
+=======
+	/* round robin */
+	index = (uint)atomic_inc_return(&ses->chan_seq);
+
+	spin_lock(&ses->chan_lock);
+	index %= ses->chan_count;
+>>>>>>> b7ba80a49124 (Commit)
 	spin_unlock(&ses->chan_lock);
 
 	return ses->chans[index].server;
@@ -1147,7 +1237,13 @@ compound_send_recv(const unsigned int xid, struct cifs_ses *ses,
 		else
 			midQ[i]->callback = cifs_compound_last_callback;
 	}
+<<<<<<< HEAD
 	rc = smb_send_rqst(server, num_rqst, rqst, flags);
+=======
+	cifs_in_send_inc(server);
+	rc = smb_send_rqst(server, num_rqst, rqst, flags);
+	cifs_in_send_dec(server);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < num_rqst; i++)
 		cifs_save_when_sent(midQ[i]);
@@ -1397,7 +1493,13 @@ SendReceive(const unsigned int xid, struct cifs_ses *ses,
 
 	midQ->mid_state = MID_REQUEST_SUBMITTED;
 
+<<<<<<< HEAD
 	rc = smb_send(server, in_buf, len);
+=======
+	cifs_in_send_inc(server);
+	rc = smb_send(server, in_buf, len);
+	cifs_in_send_dec(server);
+>>>>>>> b7ba80a49124 (Commit)
 	cifs_save_when_sent(midQ);
 
 	if (rc < 0)
@@ -1538,7 +1640,13 @@ SendReceiveBlockingLock(const unsigned int xid, struct cifs_tcon *tcon,
 	}
 
 	midQ->mid_state = MID_REQUEST_SUBMITTED;
+<<<<<<< HEAD
 	rc = smb_send(server, in_buf, len);
+=======
+	cifs_in_send_inc(server);
+	rc = smb_send(server, in_buf, len);
+	cifs_in_send_dec(server);
+>>>>>>> b7ba80a49124 (Commit)
 	cifs_save_when_sent(midQ);
 
 	if (rc < 0)
@@ -1635,11 +1743,19 @@ int
 cifs_discard_remaining_data(struct TCP_Server_Info *server)
 {
 	unsigned int rfclen = server->pdu_size;
+<<<<<<< HEAD
 	size_t remaining = rfclen + HEADER_PREAMBLE_SIZE(server) -
 		server->total_read;
 
 	while (remaining > 0) {
 		ssize_t length;
+=======
+	int remaining = rfclen + HEADER_PREAMBLE_SIZE(server) -
+		server->total_read;
+
+	while (remaining > 0) {
+		int length;
+>>>>>>> b7ba80a49124 (Commit)
 
 		length = cifs_discard_from_socket(server,
 				min_t(size_t, remaining,
@@ -1785,6 +1901,7 @@ cifs_readv_receive(struct TCP_Server_Info *server, struct mid_q_entry *mid)
 		return cifs_readv_discard(server, mid);
 	}
 
+<<<<<<< HEAD
 #ifdef CONFIG_CIFS_SMB_DIRECT
 	if (rdata->mr)
 		length = data_len; /* An RDMA read is already done. */
@@ -1794,6 +1911,12 @@ cifs_readv_receive(struct TCP_Server_Info *server, struct mid_q_entry *mid)
 						    data_len);
 	if (length > 0)
 		rdata->got_bytes += length;
+=======
+	length = rdata->read_into_pages(server, rdata, data_len);
+	if (length < 0)
+		return length;
+
+>>>>>>> b7ba80a49124 (Commit)
 	server->total_read += length;
 
 	cifs_dbg(FYI, "total_read=%u buflen=%u remaining=%u\n",

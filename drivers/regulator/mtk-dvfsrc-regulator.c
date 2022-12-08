@@ -194,7 +194,10 @@ static int dvfsrc_vcore_regulator_probe(struct platform_device *pdev)
 static struct platform_driver mtk_dvfsrc_regulator_driver = {
 	.driver = {
 		.name  = "mtk-dvfsrc-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe = dvfsrc_vcore_regulator_probe,
 };

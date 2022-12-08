@@ -1386,11 +1386,23 @@ static int pm860x_codec_probe(struct platform_device *pdev)
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+static int pm860x_codec_remove(struct platform_device *pdev)
+{
+	return 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static struct platform_driver pm860x_codec_driver = {
 	.driver	= {
 		.name	= "88pm860x-codec",
 	},
 	.probe	= pm860x_codec_probe,
+<<<<<<< HEAD
+=======
+	.remove	= pm860x_codec_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 module_platform_driver(pm860x_codec_driver);

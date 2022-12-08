@@ -23,6 +23,10 @@
 		}								\
 		if (!--retry)							\
 			break;							\
+<<<<<<< HEAD
+=======
+		cpu_relax();							\
+>>>>>>> b7ba80a49124 (Commit)
 	}									\
 } while (0)
 

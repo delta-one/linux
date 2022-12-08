@@ -56,7 +56,10 @@ SYM_FUNC_START(caches_clean_inval_pou)
 	caches_clean_inval_pou_macro
 	ret
 SYM_FUNC_END(caches_clean_inval_pou)
+<<<<<<< HEAD
 SYM_FUNC_ALIAS(__pi_caches_clean_inval_pou, caches_clean_inval_pou)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  *	caches_clean_inval_user_pou(start,end)

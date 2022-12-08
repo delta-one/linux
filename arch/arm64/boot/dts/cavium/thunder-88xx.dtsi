@@ -389,10 +389,16 @@
 			      <0x8010 0x80000000 0x0 0x600000>; /* GICR */
 			interrupts = <1 9 0xf04>;
 
+<<<<<<< HEAD
 			its: msi-controller@801000020000 {
 				compatible = "arm,gic-v3-its";
 				msi-controller;
 				#msi-cells = <1>;
+=======
+			its: gic-its@8010,00020000 {
+				compatible = "arm,gic-v3-its";
+				msi-controller;
+>>>>>>> b7ba80a49124 (Commit)
 				reg = <0x8010 0x20000 0x0 0x200000>;
 			};
 		};

@@ -696,7 +696,10 @@ static int qat_hal_chip_init(struct icp_qat_fw_loader_handle *handle,
 	switch (handle->pci_dev->device) {
 	case ADF_4XXX_PCI_DEVICE_ID:
 	case ADF_401XX_PCI_DEVICE_ID:
+<<<<<<< HEAD
 	case ADF_402XX_PCI_DEVICE_ID:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		handle->chip_info->mmp_sram_size = 0;
 		handle->chip_info->nn = false;
 		handle->chip_info->lm2lm3 = true;

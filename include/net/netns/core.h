@@ -6,7 +6,10 @@
 
 struct ctl_table_header;
 struct prot_inuse;
+<<<<<<< HEAD
 struct cpumask;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct netns_core {
 	/* core sysctls */
@@ -18,10 +21,13 @@ struct netns_core {
 #ifdef CONFIG_PROC_FS
 	struct prot_inuse __percpu *prot_inuse;
 #endif
+<<<<<<< HEAD
 
 #if IS_ENABLED(CONFIG_RPS) && IS_ENABLED(CONFIG_SYSCTL)
 	struct cpumask *rps_default_mask;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #endif

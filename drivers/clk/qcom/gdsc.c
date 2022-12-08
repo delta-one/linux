@@ -11,6 +11,10 @@
 #include <linux/kernel.h>
 #include <linux/ktime.h>
 #include <linux/pm_domain.h>
+<<<<<<< HEAD
+=======
+#include <linux/pm_runtime.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/regmap.h>
 #include <linux/regulator/consumer.h>
 #include <linux/reset-controller.h>
@@ -46,7 +50,10 @@
 #define RETAIN_MEM		BIT(14)
 #define RETAIN_PERIPH		BIT(13)
 
+<<<<<<< HEAD
 #define STATUS_POLL_TIMEOUT_US	1500
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define TIMEOUT_US		500
 
 #define domain_to_gdsc(domain) container_of(domain, struct gdsc, pd)
@@ -56,6 +63,25 @@ enum gdsc_status {
 	GDSC_ON
 };
 
+<<<<<<< HEAD
+=======
+static int gdsc_pm_runtime_get(struct gdsc *sc)
+{
+	if (!sc->dev)
+		return 0;
+
+	return pm_runtime_resume_and_get(sc->dev);
+}
+
+static int gdsc_pm_runtime_put(struct gdsc *sc)
+{
+	if (!sc->dev)
+		return 0;
+
+	return pm_runtime_put_sync(sc->dev);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /* Returns 1 if GDSC status is status, 0 if not, and < 0 on error */
 static int gdsc_check_status(struct gdsc *sc, enum gdsc_status status)
 {
@@ -108,7 +134,11 @@ static int gdsc_poll_status(struct gdsc *sc, enum gdsc_status status)
 	do {
 		if (gdsc_check_status(sc, status))
 			return 0;
+<<<<<<< HEAD
 	} while (ktime_us_delta(ktime_get(), start) < STATUS_POLL_TIMEOUT_US);
+=======
+	} while (ktime_us_delta(ktime_get(), start) < TIMEOUT_US);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (gdsc_check_status(sc, status))
 		return 0;
@@ -136,8 +166,12 @@ static int gdsc_update_collapse_bit(struct gdsc *sc, bool val)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int gdsc_toggle_logic(struct gdsc *sc, enum gdsc_status status,
 		bool wait)
+=======
+static int gdsc_toggle_logic(struct gdsc *sc, enum gdsc_status status)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 
@@ -150,7 +184,11 @@ static int gdsc_toggle_logic(struct gdsc *sc, enum gdsc_status status,
 	ret = gdsc_update_collapse_bit(sc, status == GDSC_OFF);
 
 	/* If disabling votable gdscs, don't poll on status */
+<<<<<<< HEAD
 	if ((sc->flags & VOTABLE) && status == GDSC_OFF && !wait) {
+=======
+	if ((sc->flags & VOTABLE) && status == GDSC_OFF) {
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Add a short delay here to ensure that an enable
 		 * right after it was disabled does not put it in an
@@ -256,9 +294,14 @@ static void gdsc_retain_ff_on(struct gdsc *sc)
 	regmap_update_bits(sc->regmap, sc->gdscr, mask, mask);
 }
 
+<<<<<<< HEAD
 static int gdsc_enable(struct generic_pm_domain *domain)
 {
 	struct gdsc *sc = domain_to_gdsc(domain);
+=======
+static int _gdsc_enable(struct gdsc *sc)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	if (sc->pwrsts == PWRSTS_ON)
@@ -276,7 +319,11 @@ static int gdsc_enable(struct generic_pm_domain *domain)
 		gdsc_deassert_clamp_io(sc);
 	}
 
+<<<<<<< HEAD
 	ret = gdsc_toggle_logic(sc, GDSC_ON, false);
+=======
+	ret = gdsc_toggle_logic(sc, GDSC_ON);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -314,11 +361,29 @@ static int gdsc_enable(struct generic_pm_domain *domain)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int gdsc_disable(struct generic_pm_domain *domain)
+=======
+static int gdsc_enable(struct generic_pm_domain *domain)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct gdsc *sc = domain_to_gdsc(domain);
 	int ret;
 
+<<<<<<< HEAD
+=======
+	ret = gdsc_pm_runtime_get(sc);
+	if (ret)
+		return ret;
+
+	return _gdsc_enable(sc);
+}
+
+static int _gdsc_disable(struct gdsc *sc)
+{
+	int ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (sc->pwrsts == PWRSTS_ON)
 		return gdsc_assert_reset(sc);
 
@@ -343,6 +408,7 @@ static int gdsc_disable(struct generic_pm_domain *domain)
 	if (sc->pwrsts & PWRSTS_OFF)
 		gdsc_clear_mem_on(sc);
 
+<<<<<<< HEAD
 	/*
 	 * If the GDSC supports only a Retention state, apart from ON,
 	 * leave it in ON state.
@@ -354,6 +420,9 @@ static int gdsc_disable(struct generic_pm_domain *domain)
 		return 0;
 
 	ret = gdsc_toggle_logic(sc, GDSC_OFF, domain->synced_poweroff);
+=======
+	ret = gdsc_toggle_logic(sc, GDSC_OFF);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		return ret;
 
@@ -363,6 +432,21 @@ static int gdsc_disable(struct generic_pm_domain *domain)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int gdsc_disable(struct generic_pm_domain *domain)
+{
+	struct gdsc *sc = domain_to_gdsc(domain);
+	int ret;
+
+	ret = _gdsc_disable(sc);
+
+	gdsc_pm_runtime_put(sc);
+
+	return ret;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int gdsc_init(struct gdsc *sc)
 {
 	u32 mask, val;
@@ -393,7 +477,11 @@ static int gdsc_init(struct gdsc *sc)
 
 	/* Force gdsc ON if only ON state is supported */
 	if (sc->pwrsts == PWRSTS_ON) {
+<<<<<<< HEAD
 		ret = gdsc_toggle_logic(sc, GDSC_ON, false);
+=======
+		ret = gdsc_toggle_logic(sc, GDSC_ON);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			return ret;
 	}
@@ -410,6 +498,17 @@ static int gdsc_init(struct gdsc *sc)
 				return ret;
 		}
 
+<<<<<<< HEAD
+=======
+		/* ...and the power-domain */
+		ret = gdsc_pm_runtime_get(sc);
+		if (ret) {
+			if (sc->rsupply)
+				regulator_disable(sc->rsupply);
+			return ret;
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 		/*
 		 * Votable GDSCs can be ON due to Vote from other masters.
 		 * If a Votable GDSC is ON, make sure we have a Vote.
@@ -417,14 +516,22 @@ static int gdsc_init(struct gdsc *sc)
 		if (sc->flags & VOTABLE) {
 			ret = gdsc_update_collapse_bit(sc, false);
 			if (ret)
+<<<<<<< HEAD
 				goto err_disable_supply;
+=======
+				return ret;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		/* Turn on HW trigger mode if supported */
 		if (sc->flags & HW_CTRL) {
 			ret = gdsc_hwctrl(sc, true);
 			if (ret < 0)
+<<<<<<< HEAD
 				goto err_disable_supply;
+=======
+				return ret;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		/*
@@ -451,6 +558,7 @@ static int gdsc_init(struct gdsc *sc)
 		sc->pd.power_off = gdsc_disable;
 	if (!sc->pd.power_on)
 		sc->pd.power_on = gdsc_enable;
+<<<<<<< HEAD
 
 	ret = pm_genpd_init(&sc->pd, NULL, !on);
 	if (ret)
@@ -463,6 +571,11 @@ err_disable_supply:
 		regulator_disable(sc->rsupply);
 
 	return ret;
+=======
+	pm_genpd_init(&sc->pd, NULL, !on);
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int gdsc_register(struct gdsc_desc *desc,
@@ -496,6 +609,11 @@ int gdsc_register(struct gdsc_desc *desc,
 	for (i = 0; i < num; i++) {
 		if (!scs[i])
 			continue;
+<<<<<<< HEAD
+=======
+		if (pm_runtime_enabled(dev))
+			scs[i]->dev = dev;
+>>>>>>> b7ba80a49124 (Commit)
 		scs[i]->regmap = regmap;
 		scs[i]->rcdev = rcdev;
 		ret = gdsc_init(scs[i]);

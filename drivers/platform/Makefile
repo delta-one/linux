@@ -4,7 +4,10 @@
 #
 
 obj-$(CONFIG_X86)		+= x86/
+<<<<<<< HEAD
 obj-$(CONFIG_LOONGARCH)		+= loongarch/
+=======
+>>>>>>> b7ba80a49124 (Commit)
 obj-$(CONFIG_MELLANOX_PLATFORM)	+= mellanox/
 obj-$(CONFIG_MIPS)		+= mips/
 obj-$(CONFIG_OLPC_EC)		+= olpc/

@@ -27,7 +27,11 @@ struct alt_group {
 	struct alt_group *orig_group;
 
 	/* First and last instructions in the group */
+<<<<<<< HEAD
 	struct instruction *first_insn, *last_insn, *nop;
+=======
+	struct instruction *first_insn, *last_insn;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Byte-offset-addressed len-sized array of pointers to CFI structs.
@@ -36,15 +40,21 @@ struct alt_group {
 	struct cfi_state **cfi;
 };
 
+<<<<<<< HEAD
 #define INSN_CHUNK_BITS		8
 #define INSN_CHUNK_SIZE		(1 << INSN_CHUNK_BITS)
 #define INSN_CHUNK_MAX		(INSN_CHUNK_SIZE - 1)
 
 struct instruction {
+=======
+struct instruction {
+	struct list_head list;
+>>>>>>> b7ba80a49124 (Commit)
 	struct hlist_node hash;
 	struct list_head call_node;
 	struct section *sec;
 	unsigned long offset;
+<<<<<<< HEAD
 	unsigned long immediate;
 
 	u8 len;
@@ -89,6 +99,38 @@ static inline struct symbol *insn_func(struct instruction *insn)
 	return sym;
 }
 
+=======
+	unsigned int len;
+	enum insn_type type;
+	unsigned long immediate;
+
+	u16 dead_end		: 1,
+	   ignore		: 1,
+	   ignore_alts		: 1,
+	   hint			: 1,
+	   save			: 1,
+	   restore		: 1,
+	   retpoline_safe	: 1,
+	   noendbr		: 1,
+	   entry		: 1;
+		/* 7 bit hole */
+
+	s8 instr;
+	u8 visited;
+
+	struct alt_group *alt_group;
+	struct symbol *call_dest;
+	struct instruction *jump_dest;
+	struct instruction *first_jump_src;
+	struct reloc *jump_table;
+	struct reloc *reloc;
+	struct list_head alts;
+	struct symbol *func;
+	struct list_head stack_ops;
+	struct cfi_state *cfi;
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 #define VISITED_BRANCH		0x01
 #define VISITED_BRANCH_UACCESS	0x02
 #define VISITED_BRANCH_MASK	0x03
@@ -114,11 +156,22 @@ static inline bool is_jump(struct instruction *insn)
 struct instruction *find_insn(struct objtool_file *file,
 			      struct section *sec, unsigned long offset);
 
+<<<<<<< HEAD
 struct instruction *next_insn_same_sec(struct objtool_file *file, struct instruction *insn);
 
 #define sec_for_each_insn(file, _sec, insn)				\
 	for (insn = find_insn(file, _sec, 0);				\
 	     insn && insn->sec == _sec;					\
 	     insn = next_insn_same_sec(file, insn))
+=======
+#define for_each_insn(file, insn)					\
+	list_for_each_entry(insn, &file->insn_list, list)
+
+#define sec_for_each_insn(file, sec, insn)				\
+	for (insn = find_insn(file, sec, 0);				\
+	     insn && &insn->list != &file->insn_list &&			\
+			insn->sec == sec;				\
+	     insn = list_next_entry(insn, list))
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* _CHECK_H */

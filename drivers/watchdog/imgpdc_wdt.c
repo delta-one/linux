@@ -175,11 +175,23 @@ static const struct watchdog_ops pdc_wdt_ops = {
 	.restart        = pdc_wdt_restart,
 };
 
+<<<<<<< HEAD
+=======
+static void pdc_clk_disable_unprepare(void *data)
+{
+	clk_disable_unprepare(data);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int pdc_wdt_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
 	u64 div;
+<<<<<<< HEAD
 	int val;
+=======
+	int ret, val;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long clk_rate;
 	struct pdc_wdt_dev *pdc_wdt;
 
@@ -191,18 +203,49 @@ static int pdc_wdt_probe(struct platform_device *pdev)
 	if (IS_ERR(pdc_wdt->base))
 		return PTR_ERR(pdc_wdt->base);
 
+<<<<<<< HEAD
 	pdc_wdt->sys_clk = devm_clk_get_enabled(dev, "sys");
+=======
+	pdc_wdt->sys_clk = devm_clk_get(dev, "sys");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(pdc_wdt->sys_clk)) {
 		dev_err(dev, "failed to get the sys clock\n");
 		return PTR_ERR(pdc_wdt->sys_clk);
 	}
 
+<<<<<<< HEAD
 	pdc_wdt->wdt_clk = devm_clk_get_enabled(dev, "wdt");
+=======
+	pdc_wdt->wdt_clk = devm_clk_get(dev, "wdt");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(pdc_wdt->wdt_clk)) {
 		dev_err(dev, "failed to get the wdt clock\n");
 		return PTR_ERR(pdc_wdt->wdt_clk);
 	}
 
+<<<<<<< HEAD
+=======
+	ret = clk_prepare_enable(pdc_wdt->sys_clk);
+	if (ret) {
+		dev_err(dev, "could not prepare or enable sys clock\n");
+		return ret;
+	}
+	ret = devm_add_action_or_reset(dev, pdc_clk_disable_unprepare,
+				       pdc_wdt->sys_clk);
+	if (ret)
+		return ret;
+
+	ret = clk_prepare_enable(pdc_wdt->wdt_clk);
+	if (ret) {
+		dev_err(dev, "could not prepare or enable wdt clock\n");
+		return ret;
+	}
+	ret = devm_add_action_or_reset(dev, pdc_clk_disable_unprepare,
+				       pdc_wdt->wdt_clk);
+	if (ret)
+		return ret;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* We use the clock rate to calculate the max timeout */
 	clk_rate = clk_get_rate(pdc_wdt->wdt_clk);
 	if (clk_rate == 0) {

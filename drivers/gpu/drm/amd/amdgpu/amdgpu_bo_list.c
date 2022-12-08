@@ -209,7 +209,10 @@ void amdgpu_bo_list_get_list(struct amdgpu_bo_list *list,
 			list_add_tail(&e->tv.head, &bucket[priority]);
 
 		e->user_pages = NULL;
+<<<<<<< HEAD
 		e->range = NULL;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Connect the sorted buckets in the output list. */

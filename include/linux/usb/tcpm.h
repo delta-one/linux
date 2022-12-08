@@ -114,11 +114,14 @@ enum tcpm_transmit_type {
  *              Optional; The USB Communications Capable bit indicates if port
  *              partner is capable of communication over the USB data lines
  *              (e.g. D+/- or SS Tx/Rx). Called to notify the status of the bit.
+<<<<<<< HEAD
  * @check_contaminant:
  *		Optional; The callback is called when CC pins report open status
  *		at the end of the deboumce period or when the port is still
  *		toggling. Chip level drivers are expected to check for contaminant
  *		and call tcpm_clean_port when the port is clean.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  */
 struct tcpc_dev {
 	struct fwnode_handle *fwnode;
@@ -153,7 +156,10 @@ struct tcpc_dev {
 						 bool pps_active, u32 requested_vbus_voltage);
 	bool (*is_vbus_vsafe0v)(struct tcpc_dev *dev);
 	void (*set_partner_usb_comm_capable)(struct tcpc_dev *dev, bool enable);
+<<<<<<< HEAD
 	void (*check_contaminant)(struct tcpc_dev *dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct tcpm_port;
@@ -171,7 +177,10 @@ void tcpm_pd_transmit_complete(struct tcpm_port *port,
 			       enum tcpm_transmit_status status);
 void tcpm_pd_hard_reset(struct tcpm_port *port);
 void tcpm_tcpc_reset(struct tcpm_port *port);
+<<<<<<< HEAD
 void tcpm_port_clean(struct tcpm_port *port);
 bool tcpm_port_is_toggling(struct tcpm_port *port);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif /* __LINUX_USB_TCPM_H */

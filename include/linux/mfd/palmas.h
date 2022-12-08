@@ -16,6 +16,10 @@
 #include <linux/regmap.h>
 #include <linux/regulator/driver.h>
 #include <linux/extcon-provider.h>
+<<<<<<< HEAD
+=======
+#include <linux/of_gpio.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/usb/phy_companion.h>
 
 #define PALMAS_NUM_CLIENTS		3

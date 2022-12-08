@@ -1546,6 +1546,7 @@ int qib_create_rcvhdrq(struct qib_devdata *dd, struct qib_ctxtdata *rcd)
 
 	if (!rcd->rcvhdrq) {
 		dma_addr_t phys_hdrqtail;
+<<<<<<< HEAD
 
 		amt = ALIGN(dd->rcvhdrcnt * dd->rcvhdrentsize *
 			    sizeof(u32), PAGE_SIZE);
@@ -1554,6 +1555,20 @@ int qib_create_rcvhdrq(struct qib_devdata *dd, struct qib_ctxtdata *rcd)
 		set_dev_node(&dd->pcidev->dev, rcd->node_id);
 		rcd->rcvhdrq = dma_alloc_coherent(&dd->pcidev->dev, amt,
 				&rcd->rcvhdrq_phys, GFP_KERNEL);
+=======
+		gfp_t gfp_flags;
+
+		amt = ALIGN(dd->rcvhdrcnt * dd->rcvhdrentsize *
+			    sizeof(u32), PAGE_SIZE);
+		gfp_flags = (rcd->ctxt >= dd->first_user_ctxt) ?
+			GFP_USER : GFP_KERNEL;
+
+		old_node_id = dev_to_node(&dd->pcidev->dev);
+		set_dev_node(&dd->pcidev->dev, rcd->node_id);
+		rcd->rcvhdrq = dma_alloc_coherent(
+			&dd->pcidev->dev, amt, &rcd->rcvhdrq_phys,
+			gfp_flags | __GFP_COMP);
+>>>>>>> b7ba80a49124 (Commit)
 		set_dev_node(&dd->pcidev->dev, old_node_id);
 
 		if (!rcd->rcvhdrq) {
@@ -1573,7 +1588,11 @@ int qib_create_rcvhdrq(struct qib_devdata *dd, struct qib_ctxtdata *rcd)
 			set_dev_node(&dd->pcidev->dev, rcd->node_id);
 			rcd->rcvhdrtail_kvaddr = dma_alloc_coherent(
 				&dd->pcidev->dev, PAGE_SIZE, &phys_hdrqtail,
+<<<<<<< HEAD
 				GFP_KERNEL);
+=======
+				gfp_flags);
+>>>>>>> b7ba80a49124 (Commit)
 			set_dev_node(&dd->pcidev->dev, old_node_id);
 			if (!rcd->rcvhdrtail_kvaddr)
 				goto bail_free;
@@ -1617,8 +1636,22 @@ int qib_setup_eagerbufs(struct qib_ctxtdata *rcd)
 	struct qib_devdata *dd = rcd->dd;
 	unsigned e, egrcnt, egrperchunk, chunk, egrsize, egroff;
 	size_t size;
+<<<<<<< HEAD
 	int old_node_id;
 
+=======
+	gfp_t gfp_flags;
+	int old_node_id;
+
+	/*
+	 * GFP_USER, but without GFP_FS, so buffer cache can be
+	 * coalesced (we hope); otherwise, even at order 4,
+	 * heavy filesystem activity makes these fail, and we can
+	 * use compound pages.
+	 */
+	gfp_flags = __GFP_RECLAIM | __GFP_IO | __GFP_COMP;
+
+>>>>>>> b7ba80a49124 (Commit)
 	egrcnt = rcd->rcvegrcnt;
 	egroff = rcd->rcvegr_tid_base;
 	egrsize = dd->rcvegrbufsize;
@@ -1650,7 +1683,11 @@ int qib_setup_eagerbufs(struct qib_ctxtdata *rcd)
 		rcd->rcvegrbuf[e] =
 			dma_alloc_coherent(&dd->pcidev->dev, size,
 					   &rcd->rcvegrbuf_phys[e],
+<<<<<<< HEAD
 					   GFP_KERNEL);
+=======
+					   gfp_flags);
+>>>>>>> b7ba80a49124 (Commit)
 		set_dev_node(&dd->pcidev->dev, old_node_id);
 		if (!rcd->rcvegrbuf[e])
 			goto bail_rcvegrbuf_phys;

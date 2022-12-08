@@ -192,7 +192,11 @@ checked and found to be non-NULL, all copies can become PTR_TO_MAP_VALUEs.
 As well as range-checking, the tracked information is also used for enforcing
 alignment of pointer accesses.  For instance, on most systems the packet pointer
 is 2 bytes after a 4-byte alignment.  If a program adds 14 bytes to that to jump
+<<<<<<< HEAD
 over the Ethernet header, then reads IHL and adds (IHL * 4), the resulting
+=======
+over the Ethernet header, then reads IHL and addes (IHL * 4), the resulting
+>>>>>>> b7ba80a49124 (Commit)
 pointer will have a variable offset known to be 4n+2 for some n, so adding the 2
 bytes (NET_IP_ALIGN) gives a 4-byte alignment and so word-sized accesses through
 that pointer are safe.
@@ -316,6 +320,7 @@ Pruning considers not only the registers but also the stack (and any spilled
 registers it may hold).  They must all be safe for the branch to be pruned.
 This is implemented in states_equal().
 
+<<<<<<< HEAD
 Some technical details about state pruning implementation could be found below.
 
 Register liveness tracking
@@ -611,6 +616,8 @@ derived states, -> arrows show which state is derived from which)::
   ``C`` might get mistakenly marked as equivalent to state ``E`` even though
   values for register ``r1`` differ between ``C`` and ``E``.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Understanding eBPF verifier messages
 ====================================
 

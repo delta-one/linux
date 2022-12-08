@@ -18,7 +18,10 @@
 #include <linux/types.h>
 #include <linux/stddef.h>
 #include <linux/error-injection.h>
+<<<<<<< HEAD
 #include "messages.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "ctree.h"
 #include "tree-checker.h"
 #include "disk-io.h"
@@ -26,9 +29,12 @@
 #include "volumes.h"
 #include "misc.h"
 #include "btrfs_inode.h"
+<<<<<<< HEAD
 #include "fs.h"
 #include "accessors.h"
 #include "file-item.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Error message should follow the following format:
@@ -532,7 +538,11 @@ static int check_dir_item(struct extent_buffer *leaf,
 		}
 
 		/* dir type check */
+<<<<<<< HEAD
 		dir_type = btrfs_dir_ftype(leaf, di);
+=======
+		dir_type = btrfs_dir_type(leaf, di);
+>>>>>>> b7ba80a49124 (Commit)
 		if (unlikely(dir_type >= BTRFS_FT_MAX)) {
 			dir_item_err(leaf, slot,
 			"invalid dir item type, have %u expect [0, %u)",
@@ -1784,10 +1794,17 @@ static int check_leaf(struct extent_buffer *leaf, bool check_item_data)
 
 		/* Also check if the item pointer overlaps with btrfs item. */
 		if (unlikely(btrfs_item_ptr_offset(leaf, slot) <
+<<<<<<< HEAD
 			     btrfs_item_nr_offset(leaf, slot) + sizeof(struct btrfs_item))) {
 			generic_err(leaf, slot,
 		"slot overlaps with its data, item end %lu data start %lu",
 				btrfs_item_nr_offset(leaf, slot) +
+=======
+			     btrfs_item_nr_offset(slot) + sizeof(struct btrfs_item))) {
+			generic_err(leaf, slot,
+		"slot overlaps with its data, item end %lu data start %lu",
+				btrfs_item_nr_offset(slot) +
+>>>>>>> b7ba80a49124 (Commit)
 				sizeof(struct btrfs_item),
 				btrfs_item_ptr_offset(leaf, slot));
 			return -EUCLEAN;

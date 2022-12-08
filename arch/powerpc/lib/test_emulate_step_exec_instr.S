@@ -16,7 +16,11 @@ _GLOBAL(exec_instr)
 
 	/*
 	 * Stack frame layout (INT_FRAME_SIZE bytes)
+<<<<<<< HEAD
 	 *   In-memory pt_regs	(SP + STACK_INT_FRAME_REGS)
+=======
+	 *   In-memory pt_regs	(SP + STACK_FRAME_OVERHEAD)
+>>>>>>> b7ba80a49124 (Commit)
 	 *   Scratch space	(SP + 8)
 	 *   Back chain		(SP + 0)
 	 */

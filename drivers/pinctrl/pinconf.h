@@ -10,6 +10,7 @@
  * Author: Linus Walleij <linus.walleij@linaro.org>
  */
 
+<<<<<<< HEAD
 #include <linux/errno.h>
 
 struct dentry;
@@ -20,6 +21,8 @@ struct pinctrl_dev;
 struct pinctrl_map;
 struct pinctrl_setting;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_PINCONF
 
 int pinconf_check_ops(struct pinctrl_dev *pctldev);

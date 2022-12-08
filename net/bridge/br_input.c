@@ -109,6 +109,7 @@ int br_handle_frame_finish(struct net *net, struct sock *sk, struct sk_buff *skb
 		struct net_bridge_fdb_entry *fdb_src =
 			br_fdb_find_rcu(br, eth_hdr(skb)->h_source, vid);
 
+<<<<<<< HEAD
 		if (!fdb_src) {
 			/* FDB miss. Create locked FDB entry if MAB is enabled
 			 * and drop the packet.
@@ -129,6 +130,11 @@ int br_handle_frame_finish(struct net *net, struct sock *sk, struct sk_buff *skb
 				      BIT(BR_FDB_LOCKED));
 			goto drop;
 		}
+=======
+		if (!fdb_src || READ_ONCE(fdb_src->dst) != p ||
+		    test_bit(BR_FDB_LOCAL, &fdb_src->flags))
+			goto drop;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	nbp_switchdev_frame_mark(p, skb);

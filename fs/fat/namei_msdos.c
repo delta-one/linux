@@ -261,7 +261,11 @@ static int msdos_add_entry(struct inode *dir, const unsigned char *name,
 }
 
 /***** Create a file */
+<<<<<<< HEAD
 static int msdos_create(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int msdos_create(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 			struct dentry *dentry, umode_t mode, bool excl)
 {
 	struct super_block *sb = dir->i_sb;
@@ -339,7 +343,11 @@ out:
 }
 
 /***** Make a directory */
+<<<<<<< HEAD
 static int msdos_mkdir(struct mnt_idmap *idmap, struct inode *dir,
+=======
+static int msdos_mkdir(struct user_namespace *mnt_userns, struct inode *dir,
+>>>>>>> b7ba80a49124 (Commit)
 		       struct dentry *dentry, umode_t mode)
 {
 	struct super_block *sb = dir->i_sb;
@@ -594,7 +602,11 @@ error_inode:
 }
 
 /***** Rename, a wrapper for rename_same_dir & rename_diff_dir */
+<<<<<<< HEAD
 static int msdos_rename(struct mnt_idmap *idmap,
+=======
+static int msdos_rename(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 			struct inode *old_dir, struct dentry *old_dentry,
 			struct inode *new_dir, struct dentry *new_dentry,
 			unsigned int flags)

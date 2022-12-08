@@ -136,6 +136,7 @@ enum {
 #define REG_CGR3_GO1L_OFFSET		0
 #define REG_CGR3_GO1L_MASK		(0x1f << REG_CGR3_GO1L_OFFSET)
 
+<<<<<<< HEAD
 #define REG_CGR4_GO2R_OFFSET		0
 #define REG_CGR4_GO2R_MASK		(0x1f << REG_CGR4_GO2R_OFFSET)
 
@@ -157,12 +158,15 @@ enum {
 #define REG_CGR10_GIL_OFFSET		0
 #define REG_CGR10_GIR_OFFSET		4
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct jz_icdc {
 	struct regmap *regmap;
 	void __iomem *base;
 	struct clk *clk;
 };
 
+<<<<<<< HEAD
 static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(jz4725b_adc_tlv,     0, 150, 0);
 static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(jz4725b_dac_tlv, -2250, 150, 0);
 static const SNDRV_CTL_TLVD_DECLARE_DB_RANGE(jz4725b_mix_tlv,
@@ -187,10 +191,18 @@ static const struct soc_enum jz4725b_mic_mode_enum =
 
 static const struct snd_kcontrol_new jz4725b_codec_controls[] = {
 	SOC_DOUBLE_TLV("DAC Playback Volume",
+=======
+static const SNDRV_CTL_TLVD_DECLARE_DB_LINEAR(jz4725b_dac_tlv, -2250, 0);
+static const SNDRV_CTL_TLVD_DECLARE_DB_LINEAR(jz4725b_line_tlv, -1500, 600);
+
+static const struct snd_kcontrol_new jz4725b_codec_controls[] = {
+	SOC_DOUBLE_TLV("Master Playback Volume",
+>>>>>>> b7ba80a49124 (Commit)
 		       JZ4725B_CODEC_REG_CGR1,
 		       REG_CGR1_GODL_OFFSET,
 		       REG_CGR1_GODR_OFFSET,
 		       0xf, 1, jz4725b_dac_tlv),
+<<<<<<< HEAD
 	SOC_DOUBLE_TLV("Master Capture Volume",
 		       JZ4725B_CODEC_REG_CGR10,
 		       REG_CGR10_GIL_OFFSET,
@@ -219,6 +231,15 @@ static const struct snd_kcontrol_new jz4725b_codec_controls[] = {
 			 0x1f, 1, jz4725b_out_tlv),
 
 	SOC_SINGLE("DAC Playback Switch", JZ4725B_CODEC_REG_CR1,
+=======
+	SOC_DOUBLE_R_TLV("Master Capture Volume",
+			 JZ4725B_CODEC_REG_CGR3,
+			 JZ4725B_CODEC_REG_CGR2,
+			 REG_CGR2_GO1R_OFFSET,
+			 0x1f, 1, jz4725b_line_tlv),
+
+	SOC_SINGLE("Master Playback Switch", JZ4725B_CODEC_REG_CR1,
+>>>>>>> b7ba80a49124 (Commit)
 		   REG_CR1_DAC_MUTE_OFFSET, 1, 1),
 
 	SOC_SINGLE("Deemphasize Filter Playback Switch",
@@ -228,6 +249,7 @@ static const struct snd_kcontrol_new jz4725b_codec_controls[] = {
 	SOC_SINGLE("High-Pass Filter Capture Switch",
 		   JZ4725B_CODEC_REG_CR2,
 		   REG_CR2_ADC_HPF_OFFSET, 1, 0),
+<<<<<<< HEAD
 
 	SOC_ENUM("Mic Mode Capture Switch", jz4725b_mic_mode_enum),
 
@@ -235,6 +257,8 @@ static const struct snd_kcontrol_new jz4725b_codec_controls[] = {
 		       JZ4725B_CODEC_REG_PMR2,
 		       REG_PMR2_GIM_OFFSET,
 		       1, 0, jz4725b_mic_boost_tlv),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const char * const jz4725b_codec_adc_src_texts[] = {
@@ -248,6 +272,7 @@ static SOC_VALUE_ENUM_SINGLE_DECL(jz4725b_codec_adc_src_enum,
 				  jz4725b_codec_adc_src_texts,
 				  jz4725b_codec_adc_src_values);
 static const struct snd_kcontrol_new jz4725b_codec_adc_src_ctrl =
+<<<<<<< HEAD
 	SOC_DAPM_ENUM("ADC Source Capture Route", jz4725b_codec_adc_src_enum);
 
 static const struct snd_kcontrol_new jz4725b_codec_mixer_controls[] = {
@@ -257,6 +282,13 @@ static const struct snd_kcontrol_new jz4725b_codec_mixer_controls[] = {
 			REG_CR3_SIDETONE1_OFFSET, 1, 0),
 	SOC_DAPM_SINGLE("Mic 2 Bypass Playback Switch", JZ4725B_CODEC_REG_CR3,
 			REG_CR3_SIDETONE2_OFFSET, 1, 0),
+=======
+			SOC_DAPM_ENUM("Route", jz4725b_codec_adc_src_enum);
+
+static const struct snd_kcontrol_new jz4725b_codec_mixer_controls[] = {
+	SOC_DAPM_SINGLE("Line In Bypass", JZ4725B_CODEC_REG_CR1,
+			REG_CR1_BYPASS_OFFSET, 1, 0),
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int jz4725b_out_stage_enable(struct snd_soc_dapm_widget *w,
@@ -297,7 +329,11 @@ static const struct snd_soc_dapm_widget jz4725b_codec_dapm_widgets[] = {
 	SND_SOC_DAPM_ADC("ADC", "Capture",
 			 JZ4725B_CODEC_REG_PMR1, REG_PMR1_SB_ADC_OFFSET, 1),
 
+<<<<<<< HEAD
 	SND_SOC_DAPM_MUX("ADC Source Capture Route", SND_SOC_NOPM, 0, 0,
+=======
+	SND_SOC_DAPM_MUX("ADC Source", SND_SOC_NOPM, 0, 0,
+>>>>>>> b7ba80a49124 (Commit)
 			 &jz4725b_codec_adc_src_ctrl),
 
 	/* Mixer */
@@ -308,8 +344,12 @@ static const struct snd_soc_dapm_widget jz4725b_codec_dapm_widgets[] = {
 	SND_SOC_DAPM_MIXER("DAC to Mixer", JZ4725B_CODEC_REG_CR1,
 			   REG_CR1_DACSEL_OFFSET, 0, NULL, 0),
 
+<<<<<<< HEAD
 	SND_SOC_DAPM_MIXER("Line In", JZ4725B_CODEC_REG_PMR1,
 			   REG_PMR1_SB_LIN_OFFSET, 1, NULL, 0),
+=======
+	SND_SOC_DAPM_MIXER("Line In", SND_SOC_NOPM, 0, 0, NULL, 0),
+>>>>>>> b7ba80a49124 (Commit)
 	SND_SOC_DAPM_MIXER("HP Out", JZ4725B_CODEC_REG_CR1,
 			   REG_CR1_HP_DIS_OFFSET, 1, NULL, 0),
 
@@ -351,18 +391,30 @@ static const struct snd_soc_dapm_route jz4725b_codec_dapm_routes[] = {
 	{"Line In", NULL, "LLINEIN"},
 	{"Line In", NULL, "RLINEIN"},
 
+<<<<<<< HEAD
 	{"Mixer", "Mic 1 Bypass Playback Switch", "Mic 1"},
 	{"Mixer", "Mic 2 Bypass Playback Switch", "Mic 2"},
 	{"Mixer", "Line In Bypass Playback Switch", "Line In"},
+=======
+	{"Mixer", "Line In Bypass", "Line In"},
+>>>>>>> b7ba80a49124 (Commit)
 	{"DAC to Mixer", NULL, "DAC"},
 	{"Mixer", NULL, "DAC to Mixer"},
 
 	{"Mixer to ADC", NULL, "Mixer"},
+<<<<<<< HEAD
 	{"ADC Source Capture Route", "Mixer", "Mixer to ADC"},
 	{"ADC Source Capture Route", "Line In", "Line In"},
 	{"ADC Source Capture Route", "Mic 1", "Mic 1"},
 	{"ADC Source Capture Route", "Mic 2", "Mic 2"},
 	{"ADC", NULL, "ADC Source Capture Route"},
+=======
+	{"ADC Source", "Mixer", "Mixer to ADC"},
+	{"ADC Source", "Line In", "Line In"},
+	{"ADC Source", "Mic 1", "Mic 1"},
+	{"ADC Source", "Mic 2", "Mic 2"},
+	{"ADC", NULL, "ADC Source"},
+>>>>>>> b7ba80a49124 (Commit)
 
 	{"Out Stage", NULL, "Mixer"},
 	{"HP Out", NULL, "Out Stage"},

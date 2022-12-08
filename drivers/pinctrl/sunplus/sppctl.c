@@ -499,6 +499,10 @@ static int sppctl_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_DEBUG_FS
+>>>>>>> b7ba80a49124 (Commit)
 static void sppctl_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
 {
 	const char *label;
@@ -520,6 +524,10 @@ static void sppctl_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
 		seq_puts(s, "\n");
 	}
 }
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 static int sppctl_gpio_new(struct platform_device *pdev, struct sppctl_pdata *pctl)
 {
@@ -548,11 +556,21 @@ static int sppctl_gpio_new(struct platform_device *pdev, struct sppctl_pdata *pc
 	gchip->get              = sppctl_gpio_get;
 	gchip->set              = sppctl_gpio_set;
 	gchip->set_config       = sppctl_gpio_set_config;
+<<<<<<< HEAD
 	gchip->dbg_show         = IS_ENABLED(CONFIG_DEBUG_FS) ?
 				  sppctl_gpio_dbg_show : NULL;
 	gchip->base             = -1;
 	gchip->ngpio            = sppctl_gpio_list_sz;
 	gchip->names            = sppctl_gpio_list_s;
+=======
+#ifdef CONFIG_DEBUG_FS
+	gchip->dbg_show         = sppctl_gpio_dbg_show;
+#endif
+	gchip->base             = -1;
+	gchip->ngpio            = sppctl_gpio_list_sz;
+	gchip->names            = sppctl_gpio_list_s;
+	gchip->of_gpio_n_cells  = 2;
+>>>>>>> b7ba80a49124 (Commit)
 
 	pctl->pctl_grange.npins = gchip->ngpio;
 	pctl->pctl_grange.name  = gchip->label;

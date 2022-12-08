@@ -9,9 +9,15 @@
 #include <asm/simd.h>
 #include <asm/unaligned.h>
 #include <crypto/aes.h>
+<<<<<<< HEAD
 #include <crypto/algapi.h>
 #include <crypto/internal/simd.h>
 #include <linux/cpufeature.h>
+=======
+#include <crypto/internal/simd.h>
+#include <linux/cpufeature.h>
+#include <linux/crypto.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 
 #include "aes-ce-setkey.h"

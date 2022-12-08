@@ -23,9 +23,15 @@
 #include <media/v4l2-event.h>
 #include <media/v4l2-common.h>
 
+<<<<<<< HEAD
 #include "../vchiq-mmal/mmal-common.h"
 #include "../vchiq-mmal/mmal-vchiq.h"
 #include "../vchiq-mmal/mmal-parameters.h"
+=======
+#include "mmal-common.h"
+#include "mmal-vchiq.h"
+#include "mmal-parameters.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "bcm2835-camera.h"
 
 /* The supported V4L2_CID_AUTO_EXPOSURE_BIAS values are from -4.0 to +4.0.

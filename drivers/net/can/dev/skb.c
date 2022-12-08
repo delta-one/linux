@@ -5,6 +5,10 @@
  */
 
 #include <linux/can/dev.h>
+<<<<<<< HEAD
+=======
+#include <linux/can/netlink.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 
 #define MOD_DESC "CAN device driver interface"
@@ -336,6 +340,11 @@ static bool can_skb_headroom_valid(struct net_device *dev, struct sk_buff *skb)
 /* Drop a given socketbuffer if it does not contain a valid CAN frame. */
 bool can_dropped_invalid_skb(struct net_device *dev, struct sk_buff *skb)
 {
+<<<<<<< HEAD
+=======
+	struct can_priv *priv = netdev_priv(dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	switch (ntohs(skb->protocol)) {
 	case ETH_P_CAN:
 		if (!can_is_can_skb(skb))
@@ -356,8 +365,18 @@ bool can_dropped_invalid_skb(struct net_device *dev, struct sk_buff *skb)
 		goto inval_skb;
 	}
 
+<<<<<<< HEAD
 	if (!can_skb_headroom_valid(dev, skb))
 		goto inval_skb;
+=======
+	if (!can_skb_headroom_valid(dev, skb)) {
+		goto inval_skb;
+	} else if (priv->ctrlmode & CAN_CTRLMODE_LISTENONLY) {
+		netdev_info_once(dev,
+				 "interface in listen only mode, dropping skb\n");
+		goto inval_skb;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return false;
 

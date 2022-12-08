@@ -18,6 +18,7 @@ config PCS_LYNX
 	  This module provides helpers to phylink for managing the Lynx PCS
 	  which is part of the Layerscape and QorIQ Ethernet SERDES.
 
+<<<<<<< HEAD
 config PCS_MTK_LYNXI
 	tristate
 	select REGMAP
@@ -25,6 +26,8 @@ config PCS_MTK_LYNXI
 	  This module provides helpers to phylink for managing the LynxI PCS
 	  which is part of MediaTek's SoC and Ethernet switch ICs.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config PCS_RZN1_MIIC
 	tristate "Renesas RZ/N1 MII converter"
 	depends on OF && (ARCH_RZN1 || COMPILE_TEST)

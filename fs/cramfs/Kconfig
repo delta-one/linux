@@ -38,7 +38,11 @@ config CRAMFS_MTD
 	default y if !CRAMFS_BLOCKDEV
 	help
 	  This option allows the CramFs driver to load data directly from
+<<<<<<< HEAD
 	  a linear addressed memory range (usually non-volatile memory
+=======
+	  a linear adressed memory range (usually non volatile memory
+>>>>>>> b7ba80a49124 (Commit)
 	  like flash) instead of going through the block device layer.
 	  This saves some memory since no intermediate buffering is
 	  necessary.

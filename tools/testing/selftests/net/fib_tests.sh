@@ -9,7 +9,11 @@ ret=0
 ksft_skip=4
 
 # all tests in this script. Can be overridden with -t option
+<<<<<<< HEAD
 TESTS="unregister down carrier nexthop suppress ipv6_notify ipv4_notify ipv6_rt ipv4_rt ipv6_addr_metric ipv4_addr_metric ipv6_route_metrics ipv4_route_metrics ipv4_route_v6_gw rp_filter ipv4_del_addr ipv4_mangle ipv6_mangle ipv4_bcast_neigh"
+=======
+TESTS="unregister down carrier nexthop suppress ipv6_rt ipv4_rt ipv6_addr_metric ipv4_addr_metric ipv6_route_metrics ipv4_route_metrics ipv4_route_v6_gw rp_filter ipv4_del_addr ipv4_mangle ipv6_mangle ipv4_bcast_neigh"
+>>>>>>> b7ba80a49124 (Commit)
 
 VERBOSE=0
 PAUSE_ON_FAIL=no
@@ -655,6 +659,7 @@ fib_nexthop_test()
 	cleanup
 }
 
+<<<<<<< HEAD
 fib6_notify_test()
 {
 	setup
@@ -747,6 +752,8 @@ fib_notify_test()
 	cleanup &> /dev/null
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 fib_suppress_test()
 {
 	echo
@@ -1803,6 +1810,7 @@ ipv4_del_addr_test()
 
 	$IP addr add dev dummy1 172.16.104.1/24
 	$IP addr add dev dummy1 172.16.104.11/24
+<<<<<<< HEAD
 	$IP addr add dev dummy1 172.16.104.12/24
 	$IP addr add dev dummy1 172.16.104.13/24
 	$IP addr add dev dummy2 172.16.104.1/24
@@ -1818,6 +1826,15 @@ ipv4_del_addr_test()
 	# removing address from device in vrf should only remove route from vrf table
 	echo "    Regular FIB info"
 
+=======
+	$IP addr add dev dummy2 172.16.104.1/24
+	$IP addr add dev dummy2 172.16.104.11/24
+	$IP route add 172.16.105.0/24 via 172.16.104.2 src 172.16.104.11
+	$IP route add vrf red 172.16.105.0/24 via 172.16.104.2 src 172.16.104.11
+	set +e
+
+	# removing address from device in vrf should only remove route from vrf table
+>>>>>>> b7ba80a49124 (Commit)
 	$IP addr del dev dummy2 172.16.104.11/24
 	$IP ro ls vrf red | grep -q 172.16.105.0/24
 	log_test $? 1 "Route removed from VRF when source address deleted"
@@ -1835,6 +1852,7 @@ ipv4_del_addr_test()
 	$IP ro ls vrf red | grep -q 172.16.105.0/24
 	log_test $? 0 "Route in VRF is not removed by address delete"
 
+<<<<<<< HEAD
 	# removing address from device in vrf should only remove route from vrf
 	# table even when the associated fib info only differs in table ID
 	echo "    Identical FIB info with different table ID"
@@ -1864,6 +1882,8 @@ ipv4_del_addr_test()
 	$IP ro ls | grep -q 172.16.107.0/24
 	log_test $? 1 "Route removed in default VRF when source address deleted"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	$IP li del dummy1
 	$IP li del dummy2
 	cleanup
@@ -2157,8 +2177,11 @@ EOF
 ################################################################################
 # main
 
+<<<<<<< HEAD
 trap cleanup EXIT
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 while getopts :t:pPhv o
 do
 	case $o in
@@ -2203,8 +2226,11 @@ do
 	fib_carrier_test|carrier)	fib_carrier_test;;
 	fib_rp_filter_test|rp_filter)	fib_rp_filter_test;;
 	fib_nexthop_test|nexthop)	fib_nexthop_test;;
+<<<<<<< HEAD
 	fib_notify_test|ipv4_notify)	fib_notify_test;;
 	fib6_notify_test|ipv6_notify)	fib6_notify_test;;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	fib_suppress_test|suppress)	fib_suppress_test;;
 	ipv6_route_test|ipv6_rt)	ipv6_route_test;;
 	ipv4_route_test|ipv4_rt)	ipv4_route_test;;

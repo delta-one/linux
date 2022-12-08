@@ -4,7 +4,10 @@ config HFSPLUS_FS
 	depends on BLOCK
 	select NLS
 	select NLS_UTF8
+<<<<<<< HEAD
 	select LEGACY_DIRECT_IO
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	help
 	  If you say Y here, you will be able to mount extended format
 	  Macintosh-formatted hard drive partitions with full read-write access.

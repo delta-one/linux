@@ -11,7 +11,10 @@
 #define __ASM_ARM_CHECKSUM_H
 
 #include <linux/in6.h>
+<<<<<<< HEAD
 #include <linux/uaccess.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * computes the checksum of a memory block at buff, length len,

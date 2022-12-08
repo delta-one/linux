@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0
+<<<<<<< HEAD
 
 #include <dt-bindings/pinctrl/pinctrl-tegra.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 / {
 	model = "NVIDIA Tegra210 P2595 I/O board";
 	compatible = "nvidia,p2595", "nvidia,tegra210";

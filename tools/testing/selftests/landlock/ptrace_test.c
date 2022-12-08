@@ -19,12 +19,15 @@
 
 #include "common.h"
 
+<<<<<<< HEAD
 /* Copied from security/yama/yama_lsm.c */
 #define YAMA_SCOPE_DISABLED 0
 #define YAMA_SCOPE_RELATIONAL 1
 #define YAMA_SCOPE_CAPABILITY 2
 #define YAMA_SCOPE_NO_ATTACH 3
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void create_domain(struct __test_metadata *const _metadata)
 {
 	int ruleset_fd;
@@ -66,6 +69,7 @@ static int test_ptrace_read(const pid_t pid)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int get_yama_ptrace_scope(void)
 {
 	int ret;
@@ -85,6 +89,8 @@ static int get_yama_ptrace_scope(void)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* clang-format off */
 FIXTURE(hierarchy) {};
 /* clang-format on */
@@ -257,6 +263,7 @@ TEST_F(hierarchy, trace)
 	pid_t child, parent;
 	int status, err_proc_read;
 	int pipe_child[2], pipe_parent[2];
+<<<<<<< HEAD
 	int yama_ptrace_scope;
 	char buf_parent;
 	long ret;
@@ -302,6 +309,10 @@ TEST_F(hierarchy, trace)
 	 */
 	can_trace_parent = can_read_parent &&
 			   yama_ptrace_scope <= YAMA_SCOPE_DISABLED;
+=======
+	char buf_parent;
+	long ret;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Removes all effective and permitted capabilities to not interfere
@@ -332,6 +343,7 @@ TEST_F(hierarchy, trace)
 		/* Waits for the parent to be in a domain, if any. */
 		ASSERT_EQ(1, read(pipe_parent[0], &buf_child, 1));
 
+<<<<<<< HEAD
 		/* Tests PTRACE_MODE_READ on the parent. */
 		err_proc_read = test_ptrace_read(parent);
 		if (can_read_parent) {
@@ -347,6 +359,18 @@ TEST_F(hierarchy, trace)
 		} else {
 			EXPECT_EQ(-1, ret);
 			EXPECT_EQ(EPERM, errno);
+=======
+		/* Tests PTRACE_ATTACH and PTRACE_MODE_READ on the parent. */
+		err_proc_read = test_ptrace_read(parent);
+		ret = ptrace(PTRACE_ATTACH, parent, NULL, 0);
+		if (variant->domain_child) {
+			EXPECT_EQ(-1, ret);
+			EXPECT_EQ(EPERM, errno);
+			EXPECT_EQ(EACCES, err_proc_read);
+		} else {
+			EXPECT_EQ(0, ret);
+			EXPECT_EQ(0, err_proc_read);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		if (ret == 0) {
 			ASSERT_EQ(parent, waitpid(parent, &status, 0));
@@ -356,11 +380,19 @@ TEST_F(hierarchy, trace)
 
 		/* Tests child PTRACE_TRACEME. */
 		ret = ptrace(PTRACE_TRACEME);
+<<<<<<< HEAD
 		if (can_trace_child) {
 			EXPECT_EQ(0, ret);
 		} else {
 			EXPECT_EQ(-1, ret);
 			EXPECT_EQ(EPERM, errno);
+=======
+		if (variant->domain_parent) {
+			EXPECT_EQ(-1, ret);
+			EXPECT_EQ(EPERM, errno);
+		} else {
+			EXPECT_EQ(0, ret);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		/*
@@ -369,7 +401,11 @@ TEST_F(hierarchy, trace)
 		 */
 		ASSERT_EQ(1, write(pipe_child[1], ".", 1));
 
+<<<<<<< HEAD
 		if (can_trace_child) {
+=======
+		if (!variant->domain_parent) {
+>>>>>>> b7ba80a49124 (Commit)
 			ASSERT_EQ(0, raise(SIGSTOP));
 		}
 
@@ -394,7 +430,11 @@ TEST_F(hierarchy, trace)
 	ASSERT_EQ(1, read(pipe_child[0], &buf_parent, 1));
 
 	/* Tests child PTRACE_TRACEME. */
+<<<<<<< HEAD
 	if (can_trace_child) {
+=======
+	if (!variant->domain_parent) {
+>>>>>>> b7ba80a49124 (Commit)
 		ASSERT_EQ(child, waitpid(child, &status, 0));
 		ASSERT_EQ(1, WIFSTOPPED(status));
 		ASSERT_EQ(0, ptrace(PTRACE_DETACH, child, NULL, 0));
@@ -404,6 +444,7 @@ TEST_F(hierarchy, trace)
 		EXPECT_EQ(ESRCH, errno);
 	}
 
+<<<<<<< HEAD
 	/* Tests PTRACE_MODE_READ on the child. */
 	err_proc_read = test_ptrace_read(child);
 	if (can_read_child) {
@@ -421,6 +462,19 @@ TEST_F(hierarchy, trace)
 		EXPECT_EQ(EPERM, errno);
 	}
 
+=======
+	/* Tests PTRACE_ATTACH and PTRACE_MODE_READ on the child. */
+	err_proc_read = test_ptrace_read(child);
+	ret = ptrace(PTRACE_ATTACH, child, NULL, 0);
+	if (variant->domain_parent) {
+		EXPECT_EQ(-1, ret);
+		EXPECT_EQ(EPERM, errno);
+		EXPECT_EQ(EACCES, err_proc_read);
+	} else {
+		EXPECT_EQ(0, ret);
+		EXPECT_EQ(0, err_proc_read);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret == 0) {
 		ASSERT_EQ(child, waitpid(child, &status, 0));
 		ASSERT_EQ(1, WIFSTOPPED(status));

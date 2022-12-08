@@ -25,6 +25,7 @@
 #include "blk-rq-qos.h"
 #include "blk-cgroup.h"
 
+<<<<<<< HEAD
 #define ALLOC_CACHE_THRESHOLD	16
 #define ALLOC_CACHE_MAX		256
 
@@ -33,6 +34,11 @@ struct bio_alloc_cache {
 	struct bio		*free_list_irq;
 	unsigned int		nr;
 	unsigned int		nr_irq;
+=======
+struct bio_alloc_cache {
+	struct bio		*free_list;
+	unsigned int		nr;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static struct biovec_slab {
@@ -413,6 +419,7 @@ static void punt_bios_to_rescuer(struct bio_set *bs)
 	queue_work(bs->rescue_workqueue, &bs->rescue_work);
 }
 
+<<<<<<< HEAD
 static void bio_alloc_irq_cache_splice(struct bio_alloc_cache *cache)
 {
 	unsigned long flags;
@@ -429,6 +436,8 @@ static void bio_alloc_irq_cache_splice(struct bio_alloc_cache *cache)
 	local_irq_restore(flags);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct bio *bio_alloc_percpu_cache(struct block_device *bdev,
 		unsigned short nr_vecs, blk_opf_t opf, gfp_t gfp,
 		struct bio_set *bs)
@@ -438,12 +447,17 @@ static struct bio *bio_alloc_percpu_cache(struct block_device *bdev,
 
 	cache = per_cpu_ptr(bs->cache, get_cpu());
 	if (!cache->free_list) {
+<<<<<<< HEAD
 		if (READ_ONCE(cache->nr_irq) >= ALLOC_CACHE_THRESHOLD)
 			bio_alloc_irq_cache_splice(cache);
 		if (!cache->free_list) {
 			put_cpu();
 			return NULL;
 		}
+=======
+		put_cpu();
+		return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	bio = cache->free_list;
 	cache->free_list = bio->bi_next;
@@ -487,6 +501,12 @@ static struct bio *bio_alloc_percpu_cache(struct block_device *bdev,
  * submit_bio_noacct() should be avoided - instead, use bio_set's front_pad
  * for per bio allocations.
  *
+<<<<<<< HEAD
+=======
+ * If REQ_ALLOC_CACHE is set, the final put of the bio MUST be done from process
+ * context, not hard/soft IRQ.
+ *
+>>>>>>> b7ba80a49124 (Commit)
  * Returns: Pointer to new bio on success, NULL on failure.
  */
 struct bio *bio_alloc_bioset(struct block_device *bdev, unsigned short nr_vecs,
@@ -548,8 +568,11 @@ struct bio *bio_alloc_bioset(struct block_device *bdev, unsigned short nr_vecs,
 	}
 	if (unlikely(!p))
 		return NULL;
+<<<<<<< HEAD
 	if (!mempool_is_saturated(&bs->bio_pool))
 		opf &= ~REQ_ALLOC_CACHE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	bio = p + bs->front_pad;
 	if (nr_vecs > BIO_INLINE_VECS) {
@@ -591,7 +614,11 @@ EXPORT_SYMBOL(bio_alloc_bioset);
  * be reused by calling bio_uninit() before calling bio_init() again.
  *
  * Note that unlike bio_alloc() or bio_alloc_bioset() allocations from this
+<<<<<<< HEAD
  * function are not backed by a mempool can fail.  Do not use this function
+=======
+ * function are not backed by a mempool can can fail.  Do not use this function
+>>>>>>> b7ba80a49124 (Commit)
  * for allocations in the file system I/O path.
  *
  * Returns: Pointer to new bio on success, NULL on failure.
@@ -700,8 +727,16 @@ void guard_bio_eod(struct bio *bio)
 	bio_truncate(bio, maxsector << 9);
 }
 
+<<<<<<< HEAD
 static int __bio_alloc_cache_prune(struct bio_alloc_cache *cache,
 				   unsigned int nr)
+=======
+#define ALLOC_CACHE_MAX		512
+#define ALLOC_CACHE_SLACK	 64
+
+static void bio_alloc_cache_prune(struct bio_alloc_cache *cache,
+				  unsigned int nr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int i = 0;
 	struct bio *bio;
@@ -713,6 +748,7 @@ static int __bio_alloc_cache_prune(struct bio_alloc_cache *cache,
 		if (++i == nr)
 			break;
 	}
+<<<<<<< HEAD
 	return i;
 }
 
@@ -724,6 +760,8 @@ static void bio_alloc_cache_prune(struct bio_alloc_cache *cache,
 		bio_alloc_irq_cache_splice(cache);
 		__bio_alloc_cache_prune(cache, nr);
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int bio_cpu_dead(unsigned int cpu, struct hlist_node *node)
@@ -757,6 +795,7 @@ static void bio_alloc_cache_destroy(struct bio_set *bs)
 	bs->cache = NULL;
 }
 
+<<<<<<< HEAD
 static inline void bio_put_percpu_cache(struct bio *bio)
 {
 	struct bio_alloc_cache *cache;
@@ -787,6 +826,8 @@ static inline void bio_put_percpu_cache(struct bio *bio)
 	put_cpu();
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * bio_put - release a reference to a bio
  * @bio:   bio to release reference to
@@ -802,10 +843,27 @@ void bio_put(struct bio *bio)
 		if (!atomic_dec_and_test(&bio->__bi_cnt))
 			return;
 	}
+<<<<<<< HEAD
 	if (bio->bi_opf & REQ_ALLOC_CACHE)
 		bio_put_percpu_cache(bio);
 	else
 		bio_free(bio);
+=======
+
+	if (bio->bi_opf & REQ_ALLOC_CACHE) {
+		struct bio_alloc_cache *cache;
+
+		bio_uninit(bio);
+		cache = per_cpu_ptr(bio->bi_pool->cache, get_cpu());
+		bio->bi_next = cache->free_list;
+		cache->free_list = bio;
+		if (++cache->nr > ALLOC_CACHE_MAX + ALLOC_CACHE_SLACK)
+			bio_alloc_cache_prune(cache, ALLOC_CACHE_SLACK);
+		put_cpu();
+	} else {
+		bio_free(bio);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(bio_put);
 
@@ -915,8 +973,11 @@ static inline bool page_is_mergeable(const struct bio_vec *bv,
 		return false;
 	if (xen_domain() && !xen_biovec_phys_mergeable(bv, page))
 		return false;
+<<<<<<< HEAD
 	if (!zone_device_pages_have_same_pgmap(bv->bv_page, page))
 		return false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	*same_page = ((vec_end_addr & PAGE_MASK) == page_addr);
 	if (*same_page)
@@ -1029,7 +1090,14 @@ int bio_add_hw_page(struct request_queue *q, struct bio *bio,
 	if (bio->bi_vcnt >= queue_max_segments(q))
 		return 0;
 
+<<<<<<< HEAD
 	bvec_set_page(&bio->bi_io_vec[bio->bi_vcnt], page, len, offset);
+=======
+	bvec = &bio->bi_io_vec[bio->bi_vcnt];
+	bvec->bv_page = page;
+	bvec->bv_len = len;
+	bvec->bv_offset = offset;
+>>>>>>> b7ba80a49124 (Commit)
 	bio->bi_vcnt++;
 	bio->bi_iter.bi_size += len;
 	return len;
@@ -1105,10 +1173,22 @@ EXPORT_SYMBOL_GPL(bio_add_zone_append_page);
 void __bio_add_page(struct bio *bio, struct page *page,
 		unsigned int len, unsigned int off)
 {
+<<<<<<< HEAD
 	WARN_ON_ONCE(bio_flagged(bio, BIO_CLONED));
 	WARN_ON_ONCE(bio_full(bio, len));
 
 	bvec_set_page(&bio->bi_io_vec[bio->bi_vcnt], page, len, off);
+=======
+	struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt];
+
+	WARN_ON_ONCE(bio_flagged(bio, BIO_CLONED));
+	WARN_ON_ONCE(bio_full(bio, len));
+
+	bv->bv_page = page;
+	bv->bv_offset = off;
+	bv->bv_len = len;
+
+>>>>>>> b7ba80a49124 (Commit)
 	bio->bi_iter.bi_size += len;
 	bio->bi_vcnt++;
 }
@@ -1168,7 +1248,11 @@ void __bio_release_pages(struct bio *bio, bool mark_dirty)
 	bio_for_each_segment_all(bvec, bio, iter_all) {
 		if (mark_dirty && !PageCompound(bvec->bv_page))
 			set_page_dirty_lock(bvec->bv_page);
+<<<<<<< HEAD
 		bio_release_page(bio, bvec->bv_page);
+=======
+		dio_w_unpin_user_page(bvec->bv_page);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 EXPORT_SYMBOL_GPL(__bio_release_pages);
@@ -1190,6 +1274,10 @@ void bio_iov_bvec_set(struct bio *bio, struct iov_iter *iter)
 	bio->bi_io_vec = (struct bio_vec *)iter->bvec;
 	bio->bi_iter.bi_bvec_done = iter->iov_offset;
 	bio->bi_iter.bi_size = size;
+<<<<<<< HEAD
+=======
+	bio_set_flag(bio, BIO_NO_PAGE_REF);
+>>>>>>> b7ba80a49124 (Commit)
 	bio_set_flag(bio, BIO_CLONED);
 }
 
@@ -1204,7 +1292,11 @@ static int bio_iov_add_page(struct bio *bio, struct page *page,
 	}
 
 	if (same_page)
+<<<<<<< HEAD
 		bio_release_page(bio, page);
+=======
+		dio_w_unpin_user_page(page);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1218,7 +1310,11 @@ static int bio_iov_add_zone_append_page(struct bio *bio, struct page *page,
 			queue_max_zone_append_sectors(q), &same_page) != len)
 		return -EINVAL;
 	if (same_page)
+<<<<<<< HEAD
 		bio_release_page(bio, page);
+=======
+		dio_w_unpin_user_page(page);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1229,6 +1325,7 @@ static int bio_iov_add_zone_append_page(struct bio *bio, struct page *page,
  * @bio: bio to add pages to
  * @iter: iov iterator describing the region to be mapped
  *
+<<<<<<< HEAD
  * Extracts pages from *iter and appends them to @bio's bvec array.  The pages
  * will have to be cleaned up in the way indicated by the BIO_PAGE_PINNED flag.
  * For a multi-segment *iter, this function only adds pages from the next
@@ -1237,6 +1334,15 @@ static int bio_iov_add_zone_append_page(struct bio *bio, struct page *page,
 static int __bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
 {
 	iov_iter_extraction_t extraction_flags = 0;
+=======
+ * Pins pages from *iter and appends them to @bio's bvec array. The pages will
+ * have to be released using dio_w_unpin_user_page when done. For multi-segment
+ * *iter, this function only adds pages from the next non-empty segment of the
+ * iov iterator.
+ */
+static int __bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned short nr_pages = bio->bi_max_vecs - bio->bi_vcnt;
 	unsigned short entries_left = bio->bi_max_vecs - bio->bi_vcnt;
 	struct bio_vec *bv = bio->bi_io_vec + bio->bi_vcnt;
@@ -1254,9 +1360,12 @@ static int __bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
 	BUILD_BUG_ON(PAGE_PTRS_PER_BVEC < 2);
 	pages += entries_left * (PAGE_PTRS_PER_BVEC - 1);
 
+<<<<<<< HEAD
 	if (bio->bi_bdev && blk_queue_pci_p2pdma(bio->bi_bdev->bd_disk->queue))
 		extraction_flags |= ITER_ALLOW_P2PDMA;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * Each segment in the iov is required to be a block size multiple.
 	 * However, we may not be able to get the entire segment if it spans
@@ -1264,9 +1373,15 @@ static int __bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
 	 * result to ensure the bio's total size is correct. The remainder of
 	 * the iov data will be picked up in the next bio iteration.
 	 */
+<<<<<<< HEAD
 	size = iov_iter_extract_pages(iter, &pages,
 				      UINT_MAX - bio->bi_iter.bi_size,
 				      nr_pages, extraction_flags, &offset);
+=======
+	size = dio_w_iov_iter_pin_pages(iter, pages,
+					UINT_MAX - bio->bi_iter.bi_size,
+					nr_pages, &offset);
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(size <= 0))
 		return size ? size : -EFAULT;
 
@@ -1299,7 +1414,11 @@ static int __bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
 	iov_iter_revert(iter, left);
 out:
 	while (i < nr_pages)
+<<<<<<< HEAD
 		bio_release_page(bio, pages[i++]);
+=======
+		dio_w_unpin_user_page(pages[i++]);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return ret;
 }
@@ -1334,8 +1453,11 @@ int bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
 		return 0;
 	}
 
+<<<<<<< HEAD
 	if (iov_iter_extract_will_pin(iter))
 		bio_set_flag(bio, BIO_PAGE_PINNED);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	do {
 		ret = __bio_iov_iter_get_pages(bio, iter);
 	} while (!ret && iov_iter_count(iter) && !bio_full(bio, 0));
@@ -1488,9 +1610,15 @@ void bio_set_pages_dirty(struct bio *bio)
  * have been written out during the direct-IO read.  So we take another ref on
  * the BIO and re-dirty the pages in process context.
  *
+<<<<<<< HEAD
  * It is expected that bio_check_pages_dirty() will wholly own the BIO from
  * here on.  It will unpin each page and will run one bio_put() against the
  * BIO.
+=======
+ * It is expected that bio_check_pages_dirty() will wholly own the BIO from here
+ * on.  It will run one dio_w_unpin_user_page() against each page and will run
+ * one bio_put() against the BIO.
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 static void bio_dirty_fn(struct work_struct *work);
@@ -1785,8 +1913,11 @@ static int __init init_bio(void)
 {
 	int i;
 
+<<<<<<< HEAD
 	BUILD_BUG_ON(BIO_FLAG_LAST > 8 * sizeof_field(struct bio, bi_flags));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bio_integrity_init();
 
 	for (i = 0; i < ARRAY_SIZE(bvec_slabs); i++) {

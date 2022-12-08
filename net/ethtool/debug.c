@@ -63,6 +63,7 @@ static int debug_fill_reply(struct sk_buff *skb,
 				  netif_msg_class_names, compact);
 }
 
+<<<<<<< HEAD
 /* DEBUG_SET */
 
 const struct nla_policy ethnl_debug_set_policy[] = {
@@ -100,6 +101,8 @@ ethnl_set_debug(struct ethnl_req_info *req_info, struct genl_info *info)
 	return 1;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 const struct ethnl_request_ops ethnl_debug_request_ops = {
 	.request_cmd		= ETHTOOL_MSG_DEBUG_GET,
 	.reply_cmd		= ETHTOOL_MSG_DEBUG_GET_REPLY,
@@ -110,8 +113,64 @@ const struct ethnl_request_ops ethnl_debug_request_ops = {
 	.prepare_data		= debug_prepare_data,
 	.reply_size		= debug_reply_size,
 	.fill_reply		= debug_fill_reply,
+<<<<<<< HEAD
 
 	.set_validate		= ethnl_set_debug_validate,
 	.set			= ethnl_set_debug,
 	.set_ntf_cmd		= ETHTOOL_MSG_DEBUG_NTF,
 };
+=======
+};
+
+/* DEBUG_SET */
+
+const struct nla_policy ethnl_debug_set_policy[] = {
+	[ETHTOOL_A_DEBUG_HEADER]	=
+		NLA_POLICY_NESTED(ethnl_header_policy),
+	[ETHTOOL_A_DEBUG_MSGMASK]	= { .type = NLA_NESTED },
+};
+
+int ethnl_set_debug(struct sk_buff *skb, struct genl_info *info)
+{
+	struct ethnl_req_info req_info = {};
+	struct nlattr **tb = info->attrs;
+	struct net_device *dev;
+	bool mod = false;
+	u32 msg_mask;
+	int ret;
+
+	ret = ethnl_parse_header_dev_get(&req_info,
+					 tb[ETHTOOL_A_DEBUG_HEADER],
+					 genl_info_net(info), info->extack,
+					 true);
+	if (ret < 0)
+		return ret;
+	dev = req_info.dev;
+	ret = -EOPNOTSUPP;
+	if (!dev->ethtool_ops->get_msglevel || !dev->ethtool_ops->set_msglevel)
+		goto out_dev;
+
+	rtnl_lock();
+	ret = ethnl_ops_begin(dev);
+	if (ret < 0)
+		goto out_rtnl;
+
+	msg_mask = dev->ethtool_ops->get_msglevel(dev);
+	ret = ethnl_update_bitset32(&msg_mask, NETIF_MSG_CLASS_COUNT,
+				    tb[ETHTOOL_A_DEBUG_MSGMASK],
+				    netif_msg_class_names, info->extack, &mod);
+	if (ret < 0 || !mod)
+		goto out_ops;
+
+	dev->ethtool_ops->set_msglevel(dev, msg_mask);
+	ethtool_notify(dev, ETHTOOL_MSG_DEBUG_NTF, NULL);
+
+out_ops:
+	ethnl_ops_complete(dev);
+out_rtnl:
+	rtnl_unlock();
+out_dev:
+	ethnl_parse_header_dev_put(&req_info);
+	return ret;
+}
+>>>>>>> b7ba80a49124 (Commit)

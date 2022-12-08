@@ -1243,12 +1243,15 @@ static const struct rk_gmac_ops rk3588_ops = {
 	.set_rgmii_speed = rk3588_set_gmac_speed,
 	.set_rmii_speed = rk3588_set_gmac_speed,
 	.set_clock_selection = rk3588_set_clock_selection,
+<<<<<<< HEAD
 	.regs_valid = true,
 	.regs = {
 		0xfe1b0000, /* gmac0 */
 		0xfe1c0000, /* gmac1 */
 		0x0, /* sentinel */
 	},
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define RV1108_GRF_GMAC_CON0		0X0900
@@ -1303,6 +1306,7 @@ static const struct rk_gmac_ops rv1108_ops = {
 	.set_rmii_speed = rv1108_set_rmii_speed,
 };
 
+<<<<<<< HEAD
 #define RV1126_GRF_GMAC_CON0		0X0070
 #define RV1126_GRF_GMAC_CON1		0X0074
 #define RV1126_GRF_GMAC_CON2		0X0078
@@ -1427,6 +1431,8 @@ static const struct rk_gmac_ops rv1126_ops = {
 	.set_rmii_speed = rv1126_set_rmii_speed,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define RK_GRF_MACPHY_CON0		0xb00
 #define RK_GRF_MACPHY_CON1		0xb04
 #define RK_GRF_MACPHY_CON2		0xb08
@@ -1915,12 +1921,20 @@ err_remove_config_dt:
 static int rk_gmac_remove(struct platform_device *pdev)
 {
 	struct rk_priv_data *bsp_priv = get_stmmac_bsp_priv(&pdev->dev);
+<<<<<<< HEAD
 
 	stmmac_dvr_remove(&pdev->dev);
 
 	rk_gmac_powerdown(bsp_priv);
 
 	return 0;
+=======
+	int ret = stmmac_dvr_remove(&pdev->dev);
+
+	rk_gmac_powerdown(bsp_priv);
+
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -1967,7 +1981,10 @@ static const struct of_device_id rk_gmac_dwmac_match[] = {
 	{ .compatible = "rockchip,rk3568-gmac", .data = &rk3568_ops },
 	{ .compatible = "rockchip,rk3588-gmac", .data = &rk3588_ops },
 	{ .compatible = "rockchip,rv1108-gmac", .data = &rv1108_ops },
+<<<<<<< HEAD
 	{ .compatible = "rockchip,rv1126-gmac", .data = &rv1126_ops },
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ }
 };
 MODULE_DEVICE_TABLE(of, rk_gmac_dwmac_match);

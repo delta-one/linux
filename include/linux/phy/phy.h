@@ -250,12 +250,19 @@ static inline void phy_set_bus_width(struct phy *phy, int bus_width)
 	phy->attrs.bus_width = bus_width;
 }
 struct phy *phy_get(struct device *dev, const char *string);
+<<<<<<< HEAD
+=======
+struct phy *phy_optional_get(struct device *dev, const char *string);
+>>>>>>> b7ba80a49124 (Commit)
 struct phy *devm_phy_get(struct device *dev, const char *string);
 struct phy *devm_phy_optional_get(struct device *dev, const char *string);
 struct phy *devm_of_phy_get(struct device *dev, struct device_node *np,
 			    const char *con_id);
+<<<<<<< HEAD
 struct phy *devm_of_phy_optional_get(struct device *dev, struct device_node *np,
 				     const char *con_id);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct phy *devm_of_phy_get_by_index(struct device *dev, struct device_node *np,
 				     int index);
 void of_phy_put(struct phy *phy);
@@ -427,6 +434,15 @@ static inline struct phy *phy_get(struct device *dev, const char *string)
 	return ERR_PTR(-ENOSYS);
 }
 
+<<<<<<< HEAD
+=======
+static inline struct phy *phy_optional_get(struct device *dev,
+					   const char *string)
+{
+	return ERR_PTR(-ENOSYS);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct phy *devm_phy_get(struct device *dev, const char *string)
 {
 	return ERR_PTR(-ENOSYS);
@@ -445,6 +461,7 @@ static inline struct phy *devm_of_phy_get(struct device *dev,
 	return ERR_PTR(-ENOSYS);
 }
 
+<<<<<<< HEAD
 static inline struct phy *devm_of_phy_optional_get(struct device *dev,
 						   struct device_node *np,
 						   const char *con_id)
@@ -452,6 +469,8 @@ static inline struct phy *devm_of_phy_optional_get(struct device *dev,
 	return NULL;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline struct phy *devm_of_phy_get_by_index(struct device *dev,
 						   struct device_node *np,
 						   int index)

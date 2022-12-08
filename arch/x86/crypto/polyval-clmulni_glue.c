@@ -27,17 +27,24 @@
 #include <asm/cpu_device_id.h>
 #include <asm/simd.h>
 
+<<<<<<< HEAD
 #define POLYVAL_ALIGN	16
 #define POLYVAL_ALIGN_ATTR __aligned(POLYVAL_ALIGN)
 #define POLYVAL_ALIGN_EXTRA ((POLYVAL_ALIGN - 1) & ~(CRYPTO_MINALIGN - 1))
 #define POLYVAL_CTX_SIZE (sizeof(struct polyval_tfm_ctx) + POLYVAL_ALIGN_EXTRA)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define NUM_KEY_POWERS	8
 
 struct polyval_tfm_ctx {
 	/*
 	 * These powers must be in the order h^8, ..., h^1.
 	 */
+<<<<<<< HEAD
 	u8 key_powers[NUM_KEY_POWERS][POLYVAL_BLOCK_SIZE] POLYVAL_ALIGN_ATTR;
+=======
+	u8 key_powers[NUM_KEY_POWERS][POLYVAL_BLOCK_SIZE];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct polyval_desc_ctx {
@@ -49,11 +56,14 @@ asmlinkage void clmul_polyval_update(const struct polyval_tfm_ctx *keys,
 	const u8 *in, size_t nblocks, u8 *accumulator);
 asmlinkage void clmul_polyval_mul(u8 *op1, const u8 *op2);
 
+<<<<<<< HEAD
 static inline struct polyval_tfm_ctx *polyval_tfm_ctx(struct crypto_shash *tfm)
 {
 	return PTR_ALIGN(crypto_shash_ctx(tfm), POLYVAL_ALIGN);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void internal_polyval_update(const struct polyval_tfm_ctx *keys,
 	const u8 *in, size_t nblocks, u8 *accumulator)
 {
@@ -81,7 +91,11 @@ static void internal_polyval_mul(u8 *op1, const u8 *op2)
 static int polyval_x86_setkey(struct crypto_shash *tfm,
 			const u8 *key, unsigned int keylen)
 {
+<<<<<<< HEAD
 	struct polyval_tfm_ctx *tctx = polyval_tfm_ctx(tfm);
+=======
+	struct polyval_tfm_ctx *tctx = crypto_shash_ctx(tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 
 	if (keylen != POLYVAL_BLOCK_SIZE)
@@ -111,7 +125,11 @@ static int polyval_x86_update(struct shash_desc *desc,
 			 const u8 *src, unsigned int srclen)
 {
 	struct polyval_desc_ctx *dctx = shash_desc_ctx(desc);
+<<<<<<< HEAD
 	const struct polyval_tfm_ctx *tctx = polyval_tfm_ctx(desc->tfm);
+=======
+	const struct polyval_tfm_ctx *tctx = crypto_shash_ctx(desc->tfm);
+>>>>>>> b7ba80a49124 (Commit)
 	u8 *pos;
 	unsigned int nblocks;
 	unsigned int n;
@@ -152,7 +170,11 @@ static int polyval_x86_update(struct shash_desc *desc,
 static int polyval_x86_final(struct shash_desc *desc, u8 *dst)
 {
 	struct polyval_desc_ctx *dctx = shash_desc_ctx(desc);
+<<<<<<< HEAD
 	const struct polyval_tfm_ctx *tctx = polyval_tfm_ctx(desc->tfm);
+=======
+	const struct polyval_tfm_ctx *tctx = crypto_shash_ctx(desc->tfm);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (dctx->bytes) {
 		internal_polyval_mul(dctx->buffer,
@@ -176,7 +198,11 @@ static struct shash_alg polyval_alg = {
 		.cra_driver_name	= "polyval-clmulni",
 		.cra_priority		= 200,
 		.cra_blocksize		= POLYVAL_BLOCK_SIZE,
+<<<<<<< HEAD
 		.cra_ctxsize		= POLYVAL_CTX_SIZE,
+=======
+		.cra_ctxsize		= sizeof(struct polyval_tfm_ctx),
+>>>>>>> b7ba80a49124 (Commit)
 		.cra_module		= THIS_MODULE,
 	},
 };

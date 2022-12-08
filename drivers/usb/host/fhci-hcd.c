@@ -651,7 +651,11 @@ static int of_fhci_probe(struct platform_device *ofdev)
 	}
 
 	for (j = 0; j < NUM_PINS; j++) {
+<<<<<<< HEAD
 		fhci->pins[j] = qe_pin_request(dev, j);
+=======
+		fhci->pins[j] = qe_pin_request(node, j);
+>>>>>>> b7ba80a49124 (Commit)
 		if (IS_ERR(fhci->pins[j])) {
 			ret = PTR_ERR(fhci->pins[j]);
 			dev_err(dev, "can't get pin %d: %d\n", j, ret);
@@ -676,7 +680,11 @@ static int of_fhci_probe(struct platform_device *ofdev)
 
 	/* USB Host interrupt. */
 	usb_irq = irq_of_parse_and_map(node, 0);
+<<<<<<< HEAD
 	if (!usb_irq) {
+=======
+	if (usb_irq == NO_IRQ) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_err(dev, "could not get usb irq\n");
 		ret = -EINVAL;
 		goto err_usb_irq;

@@ -157,7 +157,11 @@ again:
 			      &masked_prod, masked_cons,
 			      XEN_9PFS_RING_SIZE(ring));
 
+<<<<<<< HEAD
 	WRITE_ONCE(p9_req->status, REQ_STATUS_SENT);
+=======
+	p9_req->status = REQ_STATUS_SENT;
+>>>>>>> b7ba80a49124 (Commit)
 	virt_wmb();			/* write ring before updating pointer */
 	prod += size;
 	ring->intf->out_prod = prod;
@@ -208,6 +212,7 @@ static void p9_xen_response(struct work_struct *work)
 			continue;
 		}
 
+<<<<<<< HEAD
 		if (h.size > req->rc.capacity) {
 			dev_warn(&priv->dev->dev,
 				 "requested packet size too big: %d for tag %d with capacity %zd\n",
@@ -219,6 +224,9 @@ static void p9_xen_response(struct work_struct *work)
 		req->rc.size = h.size;
 		req->rc.id = h.id;
 		req->rc.tag = h.tag;
+=======
+		memcpy(&req->rc, &h, sizeof(h));
+>>>>>>> b7ba80a49124 (Commit)
 		req->rc.offset = 0;
 
 		masked_cons = xen_9pfs_mask(cons, XEN_9PFS_RING_SIZE(ring));
@@ -227,7 +235,10 @@ static void p9_xen_response(struct work_struct *work)
 				     masked_prod, &masked_cons,
 				     XEN_9PFS_RING_SIZE(ring));
 
+<<<<<<< HEAD
 recv_error:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		virt_mb();
 		cons += h.size;
 		ring->intf->in_cons = cons;
@@ -305,12 +316,20 @@ static void xen_9pfs_front_free(struct xen_9pfs_front_priv *priv)
 	kfree(priv);
 }
 
+<<<<<<< HEAD
 static void xen_9pfs_front_remove(struct xenbus_device *dev)
+=======
+static int xen_9pfs_front_remove(struct xenbus_device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct xen_9pfs_front_priv *priv = dev_get_drvdata(&dev->dev);
 
 	dev_set_drvdata(&dev->dev, NULL);
 	xen_9pfs_front_free(priv);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int xen_9pfs_front_alloc_dataring(struct xenbus_device *dev,
@@ -372,17 +391,28 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int xen_9pfs_front_init(struct xenbus_device *dev)
 {
 	int ret, i;
 	struct xenbus_transaction xbt;
 	struct xen_9pfs_front_priv *priv = dev_get_drvdata(&dev->dev);
 	char *versions, *v;
+=======
+static int xen_9pfs_front_probe(struct xenbus_device *dev,
+				const struct xenbus_device_id *id)
+{
+	int ret, i;
+	struct xenbus_transaction xbt;
+	struct xen_9pfs_front_priv *priv = NULL;
+	char *versions;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int max_rings, max_ring_order, len = 0;
 
 	versions = xenbus_read(XBT_NIL, dev->otherend, "versions", &len);
 	if (IS_ERR(versions))
 		return PTR_ERR(versions);
+<<<<<<< HEAD
 	for (v = versions; *v; v++) {
 		if (simple_strtoul(v, &v, 10) == 1) {
 			v = NULL;
@@ -390,6 +420,9 @@ static int xen_9pfs_front_init(struct xenbus_device *dev)
 		}
 	}
 	if (v) {
+=======
+	if (strcmp(versions, "1")) {
+>>>>>>> b7ba80a49124 (Commit)
 		kfree(versions);
 		return -EINVAL;
 	}
@@ -404,6 +437,14 @@ static int xen_9pfs_front_init(struct xenbus_device *dev)
 	if (p9_xen_trans.maxsize > XEN_FLEX_RING_SIZE(max_ring_order))
 		p9_xen_trans.maxsize = XEN_FLEX_RING_SIZE(max_ring_order) / 2;
 
+<<<<<<< HEAD
+=======
+	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+	if (!priv)
+		return -ENOMEM;
+
+	priv->dev = dev;
+>>>>>>> b7ba80a49124 (Commit)
 	priv->num_rings = XEN_9PFS_NUM_RINGS;
 	priv->rings = kcalloc(priv->num_rings, sizeof(*priv->rings),
 			      GFP_KERNEL);
@@ -462,16 +503,30 @@ static int xen_9pfs_front_init(struct xenbus_device *dev)
 		goto error;
 	}
 
+<<<<<<< HEAD
+=======
+	write_lock(&xen_9pfs_lock);
+	list_add_tail(&priv->list, &xen_9pfs_devs);
+	write_unlock(&xen_9pfs_lock);
+	dev_set_drvdata(&dev->dev, priv);
+	xenbus_switch_state(dev, XenbusStateInitialised);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 
  error_xenbus:
 	xenbus_transaction_end(xbt, 1);
 	xenbus_dev_fatal(dev, ret, "writing xenstore");
  error:
+<<<<<<< HEAD
+=======
+	dev_set_drvdata(&dev->dev, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	xen_9pfs_front_free(priv);
 	return ret;
 }
 
+<<<<<<< HEAD
 static int xen_9pfs_front_probe(struct xenbus_device *dev,
 				const struct xenbus_device_id *id)
 {
@@ -491,6 +546,8 @@ static int xen_9pfs_front_probe(struct xenbus_device *dev,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int xen_9pfs_front_resume(struct xenbus_device *dev)
 {
 	dev_warn(&dev->dev, "suspend/resume unsupported\n");
@@ -509,8 +566,11 @@ static void xen_9pfs_front_changed(struct xenbus_device *dev,
 		break;
 
 	case XenbusStateInitWait:
+<<<<<<< HEAD
 		if (!xen_9pfs_front_init(dev))
 			xenbus_switch_state(dev, XenbusStateInitialised);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	case XenbusStateConnected:
@@ -535,7 +595,11 @@ static struct xenbus_driver xen_9pfs_front_driver = {
 	.otherend_changed = xen_9pfs_front_changed,
 };
 
+<<<<<<< HEAD
 static int __init p9_trans_xen_init(void)
+=======
+static int p9_trans_xen_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int rc;
 
@@ -554,7 +618,11 @@ static int __init p9_trans_xen_init(void)
 module_init(p9_trans_xen_init);
 MODULE_ALIAS_9P("xen");
 
+<<<<<<< HEAD
 static void __exit p9_trans_xen_exit(void)
+=======
+static void p9_trans_xen_exit(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	v9fs_unregister_trans(&p9_xen_trans);
 	return xenbus_unregister_driver(&xen_9pfs_front_driver);

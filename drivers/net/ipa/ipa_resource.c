@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0
 
 /* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
+<<<<<<< HEAD
  * Copyright (C) 2018-2022 Linaro Ltd.
+=======
+ * Copyright (C) 2018-2021 Linaro Ltd.
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include <linux/types.h>
@@ -69,13 +73,18 @@ static bool ipa_resource_limits_valid(struct ipa *ipa,
 }
 
 static void
+<<<<<<< HEAD
 ipa_resource_config_common(struct ipa *ipa, u32 resource_type,
 			   const struct reg *reg,
+=======
+ipa_resource_config_common(struct ipa *ipa, u32 offset,
+>>>>>>> b7ba80a49124 (Commit)
 			   const struct ipa_resource_limits *xlimits,
 			   const struct ipa_resource_limits *ylimits)
 {
 	u32 val;
 
+<<<<<<< HEAD
 	val = reg_encode(reg, X_MIN_LIM, xlimits->min);
 	val |= reg_encode(reg, X_MAX_LIM, xlimits->max);
 	if (ylimits) {
@@ -84,6 +93,16 @@ ipa_resource_config_common(struct ipa *ipa, u32 resource_type,
 	}
 
 	iowrite32(val, ipa->reg_virt + reg_n_offset(reg, resource_type));
+=======
+	val = u32_encode_bits(xlimits->min, X_MIN_LIM_FMASK);
+	val |= u32_encode_bits(xlimits->max, X_MAX_LIM_FMASK);
+	if (ylimits) {
+		val |= u32_encode_bits(ylimits->min, Y_MIN_LIM_FMASK);
+		val |= u32_encode_bits(ylimits->max, Y_MAX_LIM_FMASK);
+	}
+
+	iowrite32(val, ipa->reg_virt + offset);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ipa_resource_config_src(struct ipa *ipa, u32 resource_type,
@@ -92,6 +111,7 @@ static void ipa_resource_config_src(struct ipa *ipa, u32 resource_type,
 	u32 group_count = data->rsrc_group_src_count;
 	const struct ipa_resource_limits *ylimits;
 	const struct ipa_resource *resource;
+<<<<<<< HEAD
 	const struct reg *reg;
 
 	resource = &data->resource_src[resource_type];
@@ -121,6 +141,36 @@ static void ipa_resource_config_src(struct ipa *ipa, u32 resource_type,
 	ylimits = group_count == 7 ? NULL : &resource->limits[7];
 	ipa_resource_config_common(ipa, resource_type, reg,
 				   &resource->limits[6], ylimits);
+=======
+	u32 offset;
+
+	resource = &data->resource_src[resource_type];
+
+	offset = IPA_REG_SRC_RSRC_GRP_01_RSRC_TYPE_N_OFFSET(resource_type);
+	ylimits = group_count == 1 ? NULL : &resource->limits[1];
+	ipa_resource_config_common(ipa, offset, &resource->limits[0], ylimits);
+
+	if (group_count < 3)
+		return;
+
+	offset = IPA_REG_SRC_RSRC_GRP_23_RSRC_TYPE_N_OFFSET(resource_type);
+	ylimits = group_count == 3 ? NULL : &resource->limits[3];
+	ipa_resource_config_common(ipa, offset, &resource->limits[2], ylimits);
+
+	if (group_count < 5)
+		return;
+
+	offset = IPA_REG_SRC_RSRC_GRP_45_RSRC_TYPE_N_OFFSET(resource_type);
+	ylimits = group_count == 5 ? NULL : &resource->limits[5];
+	ipa_resource_config_common(ipa, offset, &resource->limits[4], ylimits);
+
+	if (group_count < 7)
+		return;
+
+	offset = IPA_REG_SRC_RSRC_GRP_67_RSRC_TYPE_N_OFFSET(resource_type);
+	ylimits = group_count == 7 ? NULL : &resource->limits[7];
+	ipa_resource_config_common(ipa, offset, &resource->limits[6], ylimits);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void ipa_resource_config_dst(struct ipa *ipa, u32 resource_type,
@@ -129,6 +179,7 @@ static void ipa_resource_config_dst(struct ipa *ipa, u32 resource_type,
 	u32 group_count = data->rsrc_group_dst_count;
 	const struct ipa_resource_limits *ylimits;
 	const struct ipa_resource *resource;
+<<<<<<< HEAD
 	const struct reg *reg;
 
 	resource = &data->resource_dst[resource_type];
@@ -158,6 +209,36 @@ static void ipa_resource_config_dst(struct ipa *ipa, u32 resource_type,
 	ylimits = group_count == 7 ? NULL : &resource->limits[7];
 	ipa_resource_config_common(ipa, resource_type, reg,
 				   &resource->limits[6], ylimits);
+=======
+	u32 offset;
+
+	resource = &data->resource_dst[resource_type];
+
+	offset = IPA_REG_DST_RSRC_GRP_01_RSRC_TYPE_N_OFFSET(resource_type);
+	ylimits = group_count == 1 ? NULL : &resource->limits[1];
+	ipa_resource_config_common(ipa, offset, &resource->limits[0], ylimits);
+
+	if (group_count < 3)
+		return;
+
+	offset = IPA_REG_DST_RSRC_GRP_23_RSRC_TYPE_N_OFFSET(resource_type);
+	ylimits = group_count == 3 ? NULL : &resource->limits[3];
+	ipa_resource_config_common(ipa, offset, &resource->limits[2], ylimits);
+
+	if (group_count < 5)
+		return;
+
+	offset = IPA_REG_DST_RSRC_GRP_45_RSRC_TYPE_N_OFFSET(resource_type);
+	ylimits = group_count == 5 ? NULL : &resource->limits[5];
+	ipa_resource_config_common(ipa, offset, &resource->limits[4], ylimits);
+
+	if (group_count < 7)
+		return;
+
+	offset = IPA_REG_DST_RSRC_GRP_67_RSRC_TYPE_N_OFFSET(resource_type);
+	ylimits = group_count == 7 ? NULL : &resource->limits[7];
+	ipa_resource_config_common(ipa, offset, &resource->limits[6], ylimits);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Configure resources; there is no ipa_resource_deconfig() */

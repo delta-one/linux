@@ -145,6 +145,7 @@
 /* Number of lines received and committed to memory. */
 #define TXP_PROGRESS		0x10
 
+<<<<<<< HEAD
 #define TXP_READ(offset)								\
 	({										\
 		kunit_fail_current_test("Accessing a register in a unit test!\n");	\
@@ -156,13 +157,20 @@
 		kunit_fail_current_test("Accessing a register in a unit test!\n");	\
 		writel(val, txp->regs + (offset));					\
 	} while (0)
+=======
+#define TXP_READ(offset) readl(txp->regs + (offset))
+#define TXP_WRITE(offset, val) writel(val, txp->regs + (offset))
+>>>>>>> b7ba80a49124 (Commit)
 
 struct vc4_txp {
 	struct vc4_crtc	base;
 
 	struct platform_device *pdev;
 
+<<<<<<< HEAD
 	struct vc4_encoder encoder;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct drm_writeback_connector connector;
 
 	void __iomem *regs;
@@ -170,7 +178,11 @@ struct vc4_txp {
 
 static inline struct vc4_txp *encoder_to_vc4_txp(struct drm_encoder *encoder)
 {
+<<<<<<< HEAD
 	return container_of(encoder, struct vc4_txp, encoder.base);
+=======
+	return container_of(encoder, struct vc4_txp, connector.encoder);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline struct vc4_txp *connector_to_vc4_txp(struct drm_connector *conn)
@@ -488,8 +500,12 @@ static irqreturn_t vc4_txp_interrupt(int irq, void *data)
 	return IRQ_HANDLED;
 }
 
+<<<<<<< HEAD
 const struct vc4_crtc_data vc4_txp_crtc_data = {
 	.name = "txp",
+=======
+static const struct vc4_crtc_data vc4_txp_crtc_data = {
+>>>>>>> b7ba80a49124 (Commit)
 	.debugfs_name = "txp_regs",
 	.hvs_available_channels = BIT(2),
 	.hvs_output = 2,
@@ -499,10 +515,17 @@ static int vc4_txp_bind(struct device *dev, struct device *master, void *data)
 {
 	struct platform_device *pdev = to_platform_device(dev);
 	struct drm_device *drm = dev_get_drvdata(master);
+<<<<<<< HEAD
 	struct vc4_encoder *vc4_encoder;
 	struct drm_encoder *encoder;
 	struct vc4_crtc *vc4_crtc;
 	struct vc4_txp *txp;
+=======
+	struct vc4_crtc *vc4_crtc;
+	struct vc4_txp *txp;
+	struct drm_crtc *crtc;
+	struct drm_encoder *encoder;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret, irq;
 
 	irq = platform_get_irq(pdev, 0);
@@ -512,6 +535,7 @@ static int vc4_txp_bind(struct device *dev, struct device *master, void *data)
 	txp = drmm_kzalloc(drm, sizeof(*txp), GFP_KERNEL);
 	if (!txp)
 		return -ENOMEM;
+<<<<<<< HEAD
 
 	txp->pdev = pdev;
 	txp->regs = vc4_ioremap_regs(pdev, 0);
@@ -519,10 +543,25 @@ static int vc4_txp_bind(struct device *dev, struct device *master, void *data)
 		return PTR_ERR(txp->regs);
 
 	vc4_crtc = &txp->base;
+=======
+	vc4_crtc = &txp->base;
+	crtc = &vc4_crtc->base;
+
+	vc4_crtc->pdev = pdev;
+	vc4_crtc->data = &vc4_txp_crtc_data;
+	vc4_crtc->feeds_txp = true;
+
+	txp->pdev = pdev;
+
+	txp->regs = vc4_ioremap_regs(pdev, 0);
+	if (IS_ERR(txp->regs))
+		return PTR_ERR(txp->regs);
+>>>>>>> b7ba80a49124 (Commit)
 	vc4_crtc->regset.base = txp->regs;
 	vc4_crtc->regset.regs = txp_regs;
 	vc4_crtc->regset.nregs = ARRAY_SIZE(txp_regs);
 
+<<<<<<< HEAD
 	ret = vc4_crtc_init(drm, pdev, vc4_crtc, &vc4_txp_crtc_data,
 			    &vc4_txp_crtc_funcs, &vc4_txp_crtc_helper_funcs, true);
 	if (ret)
@@ -549,6 +588,26 @@ static int vc4_txp_bind(struct device *dev, struct device *master, void *data)
 	if (ret)
 		return ret;
 
+=======
+	drm_connector_helper_add(&txp->connector.base,
+				 &vc4_txp_connector_helper_funcs);
+	ret = drm_writeback_connector_init(drm, &txp->connector,
+					   &vc4_txp_connector_funcs,
+					   &vc4_txp_encoder_helper_funcs,
+					   drm_fmts, ARRAY_SIZE(drm_fmts),
+					   0);
+	if (ret)
+		return ret;
+
+	ret = vc4_crtc_init(drm, vc4_crtc,
+			    &vc4_txp_crtc_funcs, &vc4_txp_crtc_helper_funcs);
+	if (ret)
+		return ret;
+
+	encoder = &txp->connector.encoder;
+	encoder->possible_crtcs = drm_crtc_mask(crtc);
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = devm_request_irq(dev, irq, vc4_txp_interrupt, 0,
 			       dev_name(dev), txp);
 	if (ret)

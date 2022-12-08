@@ -18,7 +18,10 @@
 #ifndef _UAPI_LINUX_IP_H
 #define _UAPI_LINUX_IP_H
 #include <linux/types.h>
+<<<<<<< HEAD
 #include <linux/stddef.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/byteorder.h>
 
 #define IPTOS_TOS_MASK		0x1E
@@ -101,10 +104,15 @@ struct iphdr {
 	__u8	ttl;
 	__u8	protocol;
 	__sum16	check;
+<<<<<<< HEAD
 	__struct_group(/* no tag */, addrs, /* no attrs */,
 		__be32	saddr;
 		__be32	daddr;
 	);
+=======
+	__be32	saddr;
+	__be32	daddr;
+>>>>>>> b7ba80a49124 (Commit)
 	/*The options start here. */
 };
 

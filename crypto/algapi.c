@@ -222,6 +222,7 @@ void crypto_remove_spawns(struct crypto_alg *alg, struct list_head *list,
 }
 EXPORT_SYMBOL_GPL(crypto_remove_spawns);
 
+<<<<<<< HEAD
 static void crypto_alg_finish_registration(struct crypto_alg *alg,
 					   bool fulfill_requests,
 					   struct list_head *algs_to_put)
@@ -273,14 +274,21 @@ static void crypto_alg_finish_registration(struct crypto_alg *alg,
 	crypto_notify(CRYPTO_MSG_ALG_LOADED, alg);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct crypto_larval *crypto_alloc_test_larval(struct crypto_alg *alg)
 {
 	struct crypto_larval *larval;
 
+<<<<<<< HEAD
 	if (!IS_ENABLED(CONFIG_CRYPTO_MANAGER) ||
 	    IS_ENABLED(CONFIG_CRYPTO_MANAGER_DISABLE_TESTS) ||
 	    (alg->cra_flags & CRYPTO_ALG_INTERNAL))
 		return NULL; /* No self-test needed */
+=======
+	if (!IS_ENABLED(CONFIG_CRYPTO_MANAGER))
+		return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	larval = crypto_larval_alloc(alg->cra_name,
 				     alg->cra_flags | CRYPTO_ALG_TESTED, 0);
@@ -301,8 +309,12 @@ static struct crypto_larval *crypto_alloc_test_larval(struct crypto_alg *alg)
 	return larval;
 }
 
+<<<<<<< HEAD
 static struct crypto_larval *
 __crypto_register_alg(struct crypto_alg *alg, struct list_head *algs_to_put)
+=======
+static struct crypto_larval *__crypto_register_alg(struct crypto_alg *alg)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct crypto_alg *q;
 	struct crypto_larval *larval;
@@ -313,6 +325,12 @@ __crypto_register_alg(struct crypto_alg *alg, struct list_head *algs_to_put)
 
 	INIT_LIST_HEAD(&alg->cra_users);
 
+<<<<<<< HEAD
+=======
+	/* No cheating! */
+	alg->cra_flags &= ~CRYPTO_ALG_TESTED;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = -EEXIST;
 
 	list_for_each_entry(q, &crypto_alg_list, cra_list) {
@@ -339,6 +357,7 @@ __crypto_register_alg(struct crypto_alg *alg, struct list_head *algs_to_put)
 
 	list_add(&alg->cra_list, &crypto_alg_list);
 
+<<<<<<< HEAD
 	if (larval) {
 		/* No cheating! */
 		alg->cra_flags &= ~CRYPTO_ALG_TESTED;
@@ -348,6 +367,14 @@ __crypto_register_alg(struct crypto_alg *alg, struct list_head *algs_to_put)
 		alg->cra_flags |= CRYPTO_ALG_TESTED;
 		crypto_alg_finish_registration(alg, true, algs_to_put);
 	}
+=======
+	if (larval)
+		list_add(&larval->alg.cra_list, &crypto_alg_list);
+	else
+		alg->cra_flags |= CRYPTO_ALG_TESTED;
+
+	crypto_stats_init(alg);
+>>>>>>> b7ba80a49124 (Commit)
 
 out:
 	return larval;
@@ -395,10 +422,14 @@ found:
 
 	alg->cra_flags |= CRYPTO_ALG_TESTED;
 
+<<<<<<< HEAD
 	/*
 	 * If a higher-priority implementation of the same algorithm is
 	 * currently being tested, then don't fulfill request larvals.
 	 */
+=======
+	/* Only satisfy larval waiters if we are the best. */
+>>>>>>> b7ba80a49124 (Commit)
 	best = true;
 	list_for_each_entry(q, &crypto_alg_list, cra_list) {
 		if (crypto_is_moribund(q) || !crypto_is_larval(q))
@@ -413,7 +444,51 @@ found:
 		}
 	}
 
+<<<<<<< HEAD
 	crypto_alg_finish_registration(alg, best, &list);
+=======
+	list_for_each_entry(q, &crypto_alg_list, cra_list) {
+		if (q == alg)
+			continue;
+
+		if (crypto_is_moribund(q))
+			continue;
+
+		if (crypto_is_larval(q)) {
+			struct crypto_larval *larval = (void *)q;
+
+			/*
+			 * Check to see if either our generic name or
+			 * specific name can satisfy the name requested
+			 * by the larval entry q.
+			 */
+			if (strcmp(alg->cra_name, q->cra_name) &&
+			    strcmp(alg->cra_driver_name, q->cra_name))
+				continue;
+
+			if (larval->adult)
+				continue;
+			if ((q->cra_flags ^ alg->cra_flags) & larval->mask)
+				continue;
+
+			if (best && crypto_mod_get(alg))
+				larval->adult = alg;
+			else
+				larval->adult = ERR_PTR(-EAGAIN);
+
+			continue;
+		}
+
+		if (strcmp(alg->cra_name, q->cra_name))
+			continue;
+
+		if (strcmp(alg->cra_driver_name, q->cra_driver_name) &&
+		    q->cra_priority > alg->cra_priority)
+			continue;
+
+		crypto_remove_spawns(q, &list, alg);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 complete:
 	complete_all(&test->completion);
@@ -440,8 +515,12 @@ EXPORT_SYMBOL_GPL(crypto_remove_final);
 int crypto_register_alg(struct crypto_alg *alg)
 {
 	struct crypto_larval *larval;
+<<<<<<< HEAD
 	LIST_HEAD(algs_to_put);
 	bool test_started = false;
+=======
+	bool test_started;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	alg->cra_flags &= ~CRYPTO_ALG_DEAD;
@@ -450,6 +529,7 @@ int crypto_register_alg(struct crypto_alg *alg)
 		return err;
 
 	down_write(&crypto_alg_sem);
+<<<<<<< HEAD
 	larval = __crypto_register_alg(alg, &algs_to_put);
 	if (!IS_ERR_OR_NULL(larval)) {
 		test_started = crypto_boot_test_finished();
@@ -462,6 +542,19 @@ int crypto_register_alg(struct crypto_alg *alg)
 	if (test_started)
 		crypto_wait_for_test(larval);
 	crypto_remove_final(&algs_to_put);
+=======
+	larval = __crypto_register_alg(alg);
+	test_started = static_key_enabled(&crypto_boot_test_finished);
+	if (!IS_ERR_OR_NULL(larval))
+		larval->test_started = test_started;
+	up_write(&crypto_alg_sem);
+
+	if (IS_ERR_OR_NULL(larval))
+		return PTR_ERR(larval);
+
+	if (test_started)
+		crypto_wait_for_test(larval);
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 EXPORT_SYMBOL_GPL(crypto_register_alg);
@@ -638,7 +731,10 @@ int crypto_register_instance(struct crypto_template *tmpl,
 	struct crypto_larval *larval;
 	struct crypto_spawn *spawn;
 	u32 fips_internal = 0;
+<<<<<<< HEAD
 	LIST_HEAD(algs_to_put);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	err = crypto_check_alg(&inst->alg);
@@ -670,7 +766,11 @@ int crypto_register_instance(struct crypto_template *tmpl,
 
 	inst->alg.cra_flags |= (fips_internal & CRYPTO_ALG_FIPS_INTERNAL);
 
+<<<<<<< HEAD
 	larval = __crypto_register_alg(&inst->alg, &algs_to_put);
+=======
+	larval = __crypto_register_alg(&inst->alg);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(larval))
 		goto unlock;
 	else if (larval)
@@ -682,12 +782,24 @@ int crypto_register_instance(struct crypto_template *tmpl,
 unlock:
 	up_write(&crypto_alg_sem);
 
+<<<<<<< HEAD
 	if (IS_ERR(larval))
 		return PTR_ERR(larval);
 	if (larval)
 		crypto_wait_for_test(larval);
 	crypto_remove_final(&algs_to_put);
 	return 0;
+=======
+	err = PTR_ERR(larval);
+	if (IS_ERR_OR_NULL(larval))
+		goto err;
+
+	crypto_wait_for_test(larval);
+	err = 0;
+
+err:
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(crypto_register_instance);
 
@@ -1036,11 +1148,229 @@ int crypto_type_has_alg(const char *name, const struct crypto_type *frontend,
 }
 EXPORT_SYMBOL_GPL(crypto_type_has_alg);
 
+<<<<<<< HEAD
 static void __init crypto_start_tests(void)
 {
 	if (IS_ENABLED(CONFIG_CRYPTO_MANAGER_DISABLE_TESTS))
 		return;
 
+=======
+#ifdef CONFIG_CRYPTO_STATS
+void crypto_stats_init(struct crypto_alg *alg)
+{
+	memset(&alg->stats, 0, sizeof(alg->stats));
+}
+EXPORT_SYMBOL_GPL(crypto_stats_init);
+
+void crypto_stats_get(struct crypto_alg *alg)
+{
+	crypto_alg_get(alg);
+}
+EXPORT_SYMBOL_GPL(crypto_stats_get);
+
+void crypto_stats_aead_encrypt(unsigned int cryptlen, struct crypto_alg *alg,
+			       int ret)
+{
+	if (ret && ret != -EINPROGRESS && ret != -EBUSY) {
+		atomic64_inc(&alg->stats.aead.err_cnt);
+	} else {
+		atomic64_inc(&alg->stats.aead.encrypt_cnt);
+		atomic64_add(cryptlen, &alg->stats.aead.encrypt_tlen);
+	}
+	crypto_alg_put(alg);
+}
+EXPORT_SYMBOL_GPL(crypto_stats_aead_encrypt);
+
+void crypto_stats_aead_decrypt(unsigned int cryptlen, struct crypto_alg *alg,
+			       int ret)
+{
+	if (ret && ret != -EINPROGRESS && ret != -EBUSY) {
+		atomic64_inc(&alg->stats.aead.err_cnt);
+	} else {
+		atomic64_inc(&alg->stats.aead.decrypt_cnt);
+		atomic64_add(cryptlen, &alg->stats.aead.decrypt_tlen);
+	}
+	crypto_alg_put(alg);
+}
+EXPORT_SYMBOL_GPL(crypto_stats_aead_decrypt);
+
+void crypto_stats_akcipher_encrypt(unsigned int src_len, int ret,
+				   struct crypto_alg *alg)
+{
+	if (ret && ret != -EINPROGRESS && ret != -EBUSY) {
+		atomic64_inc(&alg->stats.akcipher.err_cnt);
+	} else {
+		atomic64_inc(&alg->stats.akcipher.encrypt_cnt);
+		atomic64_add(src_len, &alg->stats.akcipher.encrypt_tlen);
+	}
+	crypto_alg_put(alg);
+}
+EXPORT_SYMBOL_GPL(crypto_stats_akcipher_encrypt);
+
+void crypto_stats_akcipher_decrypt(unsigned int src_len, int ret,
+				   struct crypto_alg *alg)
+{
+	if (ret && ret != -EINPROGRESS && ret != -EBUSY) {
+		atomic64_inc(&alg->stats.akcipher.err_cnt);
+	} else {
+		atomic64_inc(&alg->stats.akcipher.decrypt_cnt);
+		atomic64_add(src_len, &alg->stats.akcipher.decrypt_tlen);
+	}
+	crypto_alg_put(alg);
+}
+EXPORT_SYMBOL_GPL(crypto_stats_akcipher_decrypt);
+
+void crypto_stats_akcipher_sign(int ret, struct crypto_alg *alg)
+{
+	if (ret && ret != -EINPROGRESS && ret != -EBUSY)
+		atomic64_inc(&alg->stats.akcipher.err_cnt);
+	else
+		atomic64_inc(&alg->stats.akcipher.sign_cnt);
+	crypto_alg_put(alg);
+}
+EXPORT_SYMBOL_GPL(crypto_stats_akcipher_sign);
+
+void crypto_stats_akcipher_verify(int ret, struct crypto_alg *alg)
+{
+	if (ret && ret != -EINPROGRESS && ret != -EBUSY)
+		atomic64_inc(&alg->stats.akcipher.err_cnt);
+	else
+		atomic64_inc(&alg->stats.akcipher.verify_cnt);
+	crypto_alg_put(alg);
+}
+EXPORT_SYMBOL_GPL(crypto_stats_akcipher_verify);
+
+void crypto_stats_compress(unsigned int slen, int ret, struct crypto_alg *alg)
+{
+	if (ret && ret != -EINPROGRESS && ret != -EBUSY) {
+		atomic64_inc(&alg->stats.compress.err_cnt);
+	} else {
+		atomic64_inc(&alg->stats.compress.compress_cnt);
+		atomic64_add(slen, &alg->stats.compress.compress_tlen);
+	}
+	crypto_alg_put(alg);
+}
+EXPORT_SYMBOL_GPL(crypto_stats_compress);
+
+void crypto_stats_decompress(unsigned int slen, int ret, struct crypto_alg *alg)
+{
+	if (ret && ret != -EINPROGRESS && ret != -EBUSY) {
+		atomic64_inc(&alg->stats.compress.err_cnt);
+	} else {
+		atomic64_inc(&alg->stats.compress.decompress_cnt);
+		atomic64_add(slen, &alg->stats.compress.decompress_tlen);
+	}
+	crypto_alg_put(alg);
+}
+EXPORT_SYMBOL_GPL(crypto_stats_decompress);
+
+void crypto_stats_ahash_update(unsigned int nbytes, int ret,
+			       struct crypto_alg *alg)
+{
+	if (ret && ret != -EINPROGRESS && ret != -EBUSY)
+		atomic64_inc(&alg->stats.hash.err_cnt);
+	else
+		atomic64_add(nbytes, &alg->stats.hash.hash_tlen);
+	crypto_alg_put(alg);
+}
+EXPORT_SYMBOL_GPL(crypto_stats_ahash_update);
+
+void crypto_stats_ahash_final(unsigned int nbytes, int ret,
+			      struct crypto_alg *alg)
+{
+	if (ret && ret != -EINPROGRESS && ret != -EBUSY) {
+		atomic64_inc(&alg->stats.hash.err_cnt);
+	} else {
+		atomic64_inc(&alg->stats.hash.hash_cnt);
+		atomic64_add(nbytes, &alg->stats.hash.hash_tlen);
+	}
+	crypto_alg_put(alg);
+}
+EXPORT_SYMBOL_GPL(crypto_stats_ahash_final);
+
+void crypto_stats_kpp_set_secret(struct crypto_alg *alg, int ret)
+{
+	if (ret)
+		atomic64_inc(&alg->stats.kpp.err_cnt);
+	else
+		atomic64_inc(&alg->stats.kpp.setsecret_cnt);
+	crypto_alg_put(alg);
+}
+EXPORT_SYMBOL_GPL(crypto_stats_kpp_set_secret);
+
+void crypto_stats_kpp_generate_public_key(struct crypto_alg *alg, int ret)
+{
+	if (ret)
+		atomic64_inc(&alg->stats.kpp.err_cnt);
+	else
+		atomic64_inc(&alg->stats.kpp.generate_public_key_cnt);
+	crypto_alg_put(alg);
+}
+EXPORT_SYMBOL_GPL(crypto_stats_kpp_generate_public_key);
+
+void crypto_stats_kpp_compute_shared_secret(struct crypto_alg *alg, int ret)
+{
+	if (ret)
+		atomic64_inc(&alg->stats.kpp.err_cnt);
+	else
+		atomic64_inc(&alg->stats.kpp.compute_shared_secret_cnt);
+	crypto_alg_put(alg);
+}
+EXPORT_SYMBOL_GPL(crypto_stats_kpp_compute_shared_secret);
+
+void crypto_stats_rng_seed(struct crypto_alg *alg, int ret)
+{
+	if (ret && ret != -EINPROGRESS && ret != -EBUSY)
+		atomic64_inc(&alg->stats.rng.err_cnt);
+	else
+		atomic64_inc(&alg->stats.rng.seed_cnt);
+	crypto_alg_put(alg);
+}
+EXPORT_SYMBOL_GPL(crypto_stats_rng_seed);
+
+void crypto_stats_rng_generate(struct crypto_alg *alg, unsigned int dlen,
+			       int ret)
+{
+	if (ret && ret != -EINPROGRESS && ret != -EBUSY) {
+		atomic64_inc(&alg->stats.rng.err_cnt);
+	} else {
+		atomic64_inc(&alg->stats.rng.generate_cnt);
+		atomic64_add(dlen, &alg->stats.rng.generate_tlen);
+	}
+	crypto_alg_put(alg);
+}
+EXPORT_SYMBOL_GPL(crypto_stats_rng_generate);
+
+void crypto_stats_skcipher_encrypt(unsigned int cryptlen, int ret,
+				   struct crypto_alg *alg)
+{
+	if (ret && ret != -EINPROGRESS && ret != -EBUSY) {
+		atomic64_inc(&alg->stats.cipher.err_cnt);
+	} else {
+		atomic64_inc(&alg->stats.cipher.encrypt_cnt);
+		atomic64_add(cryptlen, &alg->stats.cipher.encrypt_tlen);
+	}
+	crypto_alg_put(alg);
+}
+EXPORT_SYMBOL_GPL(crypto_stats_skcipher_encrypt);
+
+void crypto_stats_skcipher_decrypt(unsigned int cryptlen, int ret,
+				   struct crypto_alg *alg)
+{
+	if (ret && ret != -EINPROGRESS && ret != -EBUSY) {
+		atomic64_inc(&alg->stats.cipher.err_cnt);
+	} else {
+		atomic64_inc(&alg->stats.cipher.decrypt_cnt);
+		atomic64_add(cryptlen, &alg->stats.cipher.decrypt_tlen);
+	}
+	crypto_alg_put(alg);
+}
+EXPORT_SYMBOL_GPL(crypto_stats_skcipher_decrypt);
+#endif
+
+static void __init crypto_start_tests(void)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	for (;;) {
 		struct crypto_larval *larval = NULL;
 		struct crypto_alg *q;
@@ -1074,7 +1404,11 @@ static void __init crypto_start_tests(void)
 		crypto_wait_for_test(larval);
 	}
 
+<<<<<<< HEAD
 	set_crypto_boot_test_finished();
+=======
+	static_branch_enable(&crypto_boot_test_finished);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __init crypto_algapi_init(void)

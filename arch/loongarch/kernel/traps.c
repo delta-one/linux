@@ -10,7 +10,10 @@
 #include <linux/entry-common.h>
 #include <linux/init.h>
 #include <linux/kernel.h>
+<<<<<<< HEAD
 #include <linux/kexec.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/module.h>
 #include <linux/extable.h>
 #include <linux/mm.h>
@@ -72,6 +75,12 @@ static void show_backtrace(struct task_struct *task, const struct pt_regs *regs,
 	if (!task)
 		task = current;
 
+<<<<<<< HEAD
+=======
+	if (user_mode(regs))
+		state.type = UNWINDER_GUESS;
+
+>>>>>>> b7ba80a49124 (Commit)
 	printk("%sCall Trace:", loglvl);
 	for (unwind_start(&state, task, pregs);
 	      !unwind_done(&state); unwind_next_frame(&state)) {
@@ -244,9 +253,12 @@ void __noreturn die(const char *str, struct pt_regs *regs)
 
 	oops_exit();
 
+<<<<<<< HEAD
 	if (regs && kexec_should_crash(current))
 		crash_kexec(regs);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (in_interrupt())
 		panic("Fatal exception in interrupt");
 
@@ -365,14 +377,18 @@ asmlinkage void noinstr do_ade(struct pt_regs *regs)
 	irqentry_exit(regs, state);
 }
 
+<<<<<<< HEAD
 /* sysctl hooks */
 int unaligned_enabled __read_mostly = 1;	/* Enabled by default */
 int no_unaligned_warning __read_mostly = 1;	/* Only 1 warning by default */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 asmlinkage void noinstr do_ale(struct pt_regs *regs)
 {
 	irqentry_state_t state = irqentry_enter(regs);
 
+<<<<<<< HEAD
 #ifndef CONFIG_ARCH_STRICT_ALIGN
 	die_if_kernel("Kernel ale access", regs);
 	force_sig_fault(SIGBUS, BUS_ADRALN, (void __user *)regs->csr_badvaddr);
@@ -430,6 +446,14 @@ static void bug_handler(struct pt_regs *regs)
 	}
 }
 
+=======
+	die_if_kernel("Kernel ale access", regs);
+	force_sig_fault(SIGBUS, BUS_ADRALN, (void __user *)regs->csr_badvaddr);
+
+	irqentry_exit(regs, state);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 asmlinkage void noinstr do_bp(struct pt_regs *regs)
 {
 	bool user = user_mode(regs);
@@ -437,9 +461,13 @@ asmlinkage void noinstr do_bp(struct pt_regs *regs)
 	unsigned long era = exception_era(regs);
 	irqentry_state_t state = irqentry_enter(regs);
 
+<<<<<<< HEAD
 	if (regs->csr_prmd & CSR_PRMD_PIE)
 		local_irq_enable();
 
+=======
+	local_irq_enable();
+>>>>>>> b7ba80a49124 (Commit)
 	current->thread.trap_nr = read_csr_excode();
 	if (__get_inst(&opcode, (u32 *)era, user))
 		goto out_sigsegv;
@@ -452,12 +480,22 @@ asmlinkage void noinstr do_bp(struct pt_regs *regs)
 	 */
 	switch (bcode) {
 	case BRK_KPROBE_BP:
+<<<<<<< HEAD
 		if (kprobe_breakpoint_handler(regs))
+=======
+		if (notify_die(DIE_BREAK, "Kprobe", regs, bcode,
+			       current->thread.trap_nr, SIGTRAP) == NOTIFY_STOP)
+>>>>>>> b7ba80a49124 (Commit)
 			goto out;
 		else
 			break;
 	case BRK_KPROBE_SSTEPBP:
+<<<<<<< HEAD
 		if (kprobe_singlestep_handler(regs))
+=======
+		if (notify_die(DIE_SSTEPBP, "Kprobe_SingleStep", regs, bcode,
+			       current->thread.trap_nr, SIGTRAP) == NOTIFY_STOP)
+>>>>>>> b7ba80a49124 (Commit)
 			goto out;
 		else
 			break;
@@ -483,7 +521,12 @@ asmlinkage void noinstr do_bp(struct pt_regs *regs)
 
 	switch (bcode) {
 	case BRK_BUG:
+<<<<<<< HEAD
 		bug_handler(regs);
+=======
+		die_if_kernel("Kernel bug detected", regs);
+		force_sig(SIGTRAP);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 	case BRK_DIVZERO:
 		die_if_kernel("Break instruction in kernel code", regs);
@@ -500,9 +543,13 @@ asmlinkage void noinstr do_bp(struct pt_regs *regs)
 	}
 
 out:
+<<<<<<< HEAD
 	if (regs->csr_prmd & CSR_PRMD_PIE)
 		local_irq_disable();
 
+=======
+	local_irq_disable();
+>>>>>>> b7ba80a49124 (Commit)
 	irqentry_exit(regs, state);
 	return;
 
@@ -513,6 +560,7 @@ out_sigsegv:
 
 asmlinkage void noinstr do_watch(struct pt_regs *regs)
 {
+<<<<<<< HEAD
 	irqentry_state_t state = irqentry_enter(regs);
 
 #ifndef CONFIG_HAVE_HW_BREAKPOINT
@@ -559,13 +607,24 @@ asmlinkage void noinstr do_watch(struct pt_regs *regs)
 out:
 #endif
 	irqentry_exit(regs, state);
+=======
+	pr_warn("Hardware watch point handler not implemented!\n");
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 asmlinkage void noinstr do_ri(struct pt_regs *regs)
 {
+<<<<<<< HEAD
 	int status = SIGILL;
 	unsigned int opcode = 0;
 	unsigned int __user *era = (unsigned int __user *)exception_era(regs);
+=======
+	int status = -1;
+	unsigned int opcode = 0;
+	unsigned int __user *era = (unsigned int __user *)exception_era(regs);
+	unsigned long old_era = regs->csr_era;
+	unsigned long old_ra = regs->regs[1];
+>>>>>>> b7ba80a49124 (Commit)
 	irqentry_state_t state = irqentry_enter(regs);
 
 	local_irq_enable();
@@ -577,12 +636,28 @@ asmlinkage void noinstr do_ri(struct pt_regs *regs)
 
 	die_if_kernel("Reserved instruction in kernel code", regs);
 
+<<<<<<< HEAD
+=======
+	compute_return_era(regs);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(get_user(opcode, era) < 0)) {
 		status = SIGSEGV;
 		current->thread.error_code = 1;
 	}
 
+<<<<<<< HEAD
 	force_sig(status);
+=======
+	if (status < 0)
+		status = SIGILL;
+
+	if (unlikely(status > 0)) {
+		regs->csr_era = old_era;		/* Undo skip-over.  */
+		regs->regs[1] = old_ra;
+		force_sig(status);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 out:
 	local_irq_disable();
@@ -722,6 +797,12 @@ asmlinkage void noinstr do_vint(struct pt_regs *regs, unsigned long sp)
 	irqentry_exit(regs, state);
 }
 
+<<<<<<< HEAD
+=======
+extern void tlb_init(int cpu);
+extern void cache_error_setup(void);
+
+>>>>>>> b7ba80a49124 (Commit)
 unsigned long eentry;
 unsigned long tlbrentry;
 

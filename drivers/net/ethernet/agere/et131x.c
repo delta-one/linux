@@ -3969,7 +3969,11 @@ static int et131x_pci_setup(struct pci_dev *pdev,
 
 	et131x_init_send(adapter);
 
+<<<<<<< HEAD
 	netif_napi_add(netdev, &adapter->napi, et131x_poll);
+=======
+	netif_napi_add(netdev, &adapter->napi, et131x_poll, 64);
+>>>>>>> b7ba80a49124 (Commit)
 
 	eth_hw_addr_set(netdev, adapter->addr);
 

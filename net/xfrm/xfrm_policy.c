@@ -336,7 +336,11 @@ static void xfrm_policy_timer(struct timer_list *t)
 	}
 	if (xp->lft.hard_use_expires_seconds) {
 		time64_t tmo = xp->lft.hard_use_expires_seconds +
+<<<<<<< HEAD
 			(READ_ONCE(xp->curlft.use_time) ? : xp->curlft.add_time) - now;
+=======
+			(xp->curlft.use_time ? : xp->curlft.add_time) - now;
+>>>>>>> b7ba80a49124 (Commit)
 		if (tmo <= 0)
 			goto expired;
 		if (tmo < next)
@@ -354,7 +358,11 @@ static void xfrm_policy_timer(struct timer_list *t)
 	}
 	if (xp->lft.soft_use_expires_seconds) {
 		time64_t tmo = xp->lft.soft_use_expires_seconds +
+<<<<<<< HEAD
 			(READ_ONCE(xp->curlft.use_time) ? : xp->curlft.add_time) - now;
+=======
+			(xp->curlft.use_time ? : xp->curlft.add_time) - now;
+>>>>>>> b7ba80a49124 (Commit)
 		if (tmo <= 0) {
 			warn = 1;
 			tmo = XFRM_KM_TIMEOUT;
@@ -425,7 +433,10 @@ void xfrm_policy_destroy(struct xfrm_policy *policy)
 	if (del_timer(&policy->timer) || del_timer(&policy->polq.hold_timer))
 		BUG();
 
+<<<<<<< HEAD
 	xfrm_dev_policy_free(policy);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	call_rcu(&policy->rcu, xfrm_policy_destroy_rcu);
 }
 EXPORT_SYMBOL(xfrm_policy_destroy);
@@ -536,7 +547,11 @@ redo:
 		__get_hash_thresh(net, pol->family, dir, &dbits, &sbits);
 		h = __addr_hash(&pol->selector.daddr, &pol->selector.saddr,
 				pol->family, nhashmask, dbits, sbits);
+<<<<<<< HEAD
 		if (!entry0 || pol->xdo.type == XFRM_DEV_OFFLOAD_PACKET) {
+=======
+		if (!entry0) {
+>>>>>>> b7ba80a49124 (Commit)
 			hlist_del_rcu(&pol->bydst);
 			hlist_add_head_rcu(&pol->bydst, ndsttable + h);
 			h0 = h;
@@ -606,7 +621,11 @@ static void xfrm_bydst_resize(struct net *net, int dir)
 	xfrm_hash_free(odst, (hmask + 1) * sizeof(struct hlist_head));
 }
 
+<<<<<<< HEAD
 static void xfrm_byidx_resize(struct net *net)
+=======
+static void xfrm_byidx_resize(struct net *net, int total)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int hmask = net->xfrm.policy_idx_hmask;
 	unsigned int nhashmask = xfrm_new_hash_mask(hmask);
@@ -684,7 +703,11 @@ static void xfrm_hash_resize(struct work_struct *work)
 			xfrm_bydst_resize(net, dir);
 	}
 	if (xfrm_byidx_should_resize(net, total))
+<<<<<<< HEAD
 		xfrm_byidx_resize(net);
+=======
+		xfrm_byidx_resize(net, total);
+>>>>>>> b7ba80a49124 (Commit)
 
 	mutex_unlock(&hash_resize_mutex);
 }
@@ -867,7 +890,11 @@ static void xfrm_policy_inexact_list_reinsert(struct net *net,
 				break;
 		}
 
+<<<<<<< HEAD
 		if (newpos && policy->xdo.type != XFRM_DEV_OFFLOAD_PACKET)
+=======
+		if (newpos)
+>>>>>>> b7ba80a49124 (Commit)
 			hlist_add_behind_rcu(&policy->bydst, newpos);
 		else
 			hlist_add_head_rcu(&policy->bydst, &n->hhead);
@@ -1348,7 +1375,11 @@ static void xfrm_hash_rebuild(struct work_struct *work)
 			else
 				break;
 		}
+<<<<<<< HEAD
 		if (newpos && policy->xdo.type != XFRM_DEV_OFFLOAD_PACKET)
+=======
+		if (newpos)
+>>>>>>> b7ba80a49124 (Commit)
 			hlist_add_behind_rcu(&policy->bydst, newpos);
 		else
 			hlist_add_head_rcu(&policy->bydst, chain);
@@ -1525,7 +1556,11 @@ static void xfrm_policy_insert_inexact_list(struct hlist_head *chain,
 			break;
 	}
 
+<<<<<<< HEAD
 	if (newpos && policy->xdo.type != XFRM_DEV_OFFLOAD_PACKET)
+=======
+	if (newpos)
+>>>>>>> b7ba80a49124 (Commit)
 		hlist_add_behind_rcu(&policy->bydst_inexact_list, newpos);
 	else
 		hlist_add_head_rcu(&policy->bydst_inexact_list, chain);
@@ -1562,12 +1597,18 @@ static struct xfrm_policy *xfrm_policy_insert_list(struct hlist_head *chain,
 			break;
 	}
 
+<<<<<<< HEAD
 	if (newpos && policy->xdo.type != XFRM_DEV_OFFLOAD_PACKET)
 		hlist_add_behind_rcu(&policy->bydst, &newpos->bydst);
 	else
 		/* Packet offload policies enter to the head
 		 * to speed-up lookups.
 		 */
+=======
+	if (newpos)
+		hlist_add_behind_rcu(&policy->bydst, &newpos->bydst);
+	else
+>>>>>>> b7ba80a49124 (Commit)
 		hlist_add_head_rcu(&policy->bydst, chain);
 
 	return delpol;
@@ -1773,6 +1814,7 @@ xfrm_policy_flush_secctx_check(struct net *net, u8 type, bool task_valid)
 	}
 	return err;
 }
+<<<<<<< HEAD
 
 static inline int xfrm_dev_policy_flush_secctx_check(struct net *net,
 						     struct net_device *dev,
@@ -1795,12 +1837,15 @@ static inline int xfrm_dev_policy_flush_secctx_check(struct net *net,
 	}
 	return err;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else
 static inline int
 xfrm_policy_flush_secctx_check(struct net *net, u8 type, bool task_valid)
 {
 	return 0;
 }
+<<<<<<< HEAD
 
 static inline int xfrm_dev_policy_flush_secctx_check(struct net *net,
 						     struct net_device *dev,
@@ -1808,6 +1853,8 @@ static inline int xfrm_dev_policy_flush_secctx_check(struct net *net,
 {
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 int xfrm_policy_flush(struct net *net, u8 type, bool task_valid)
@@ -1847,6 +1894,7 @@ out:
 }
 EXPORT_SYMBOL(xfrm_policy_flush);
 
+<<<<<<< HEAD
 int xfrm_dev_policy_flush(struct net *net, struct net_device *dev,
 			  bool task_valid)
 {
@@ -1885,6 +1933,8 @@ out:
 }
 EXPORT_SYMBOL(xfrm_dev_policy_flush);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int xfrm_policy_walk(struct net *net, struct xfrm_policy_walk *walk,
 		     int (*func)(struct xfrm_policy *, int, int, void*),
 		     void *data)
@@ -2184,9 +2234,12 @@ static struct xfrm_policy *xfrm_policy_lookup_bytype(struct net *net, u8 type,
 			break;
 		}
 	}
+<<<<<<< HEAD
 	if (ret && ret->xdo.type == XFRM_DEV_OFFLOAD_PACKET)
 		goto skip_inexact;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	bin = xfrm_policy_inexact_lookup_rcu(net, type, family, dir, if_id);
 	if (!bin || !xfrm_policy_find_inexact_candidates(&cand, bin, saddr,
 							 daddr))
@@ -2319,7 +2372,10 @@ int xfrm_policy_delete(struct xfrm_policy *pol, int dir)
 	pol = __xfrm_policy_unlink(pol, dir);
 	spin_unlock_bh(&net->xfrm.xfrm_policy_lock);
 	if (pol) {
+<<<<<<< HEAD
 		xfrm_dev_policy_delete(pol);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		xfrm_policy_kill(pol);
 		return 0;
 	}
@@ -3661,8 +3717,12 @@ int __xfrm_policy_check(struct sock *sk, int dir, struct sk_buff *skb,
 		return 1;
 	}
 
+<<<<<<< HEAD
 	/* This lockless write can happen from different cpus. */
 	WRITE_ONCE(pol->curlft.use_time, ktime_get_real_seconds());
+=======
+	pol->curlft.use_time = ktime_get_real_seconds();
+>>>>>>> b7ba80a49124 (Commit)
 
 	pols[0] = pol;
 	npols++;
@@ -3677,9 +3737,13 @@ int __xfrm_policy_check(struct sock *sk, int dir, struct sk_buff *skb,
 				xfrm_pol_put(pols[0]);
 				return 0;
 			}
+<<<<<<< HEAD
 			/* This write can happen from different cpus. */
 			WRITE_ONCE(pols[1]->curlft.use_time,
 				   ktime_get_real_seconds());
+=======
+			pols[1]->curlft.use_time = ktime_get_real_seconds();
+>>>>>>> b7ba80a49124 (Commit)
 			npols++;
 		}
 	}
@@ -3745,9 +3809,12 @@ int __xfrm_policy_check(struct sock *sk, int dir, struct sk_buff *skb,
 			goto reject;
 		}
 
+<<<<<<< HEAD
 		if (if_id)
 			secpath_reset(skb);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		xfrm_pols_put(pols, npols);
 		return 1;
 	}
@@ -4414,8 +4481,12 @@ static int migrate_tmpl_match(const struct xfrm_migrate *m, const struct xfrm_tm
 
 /* update endpoint address(es) of template(s) */
 static int xfrm_policy_migrate(struct xfrm_policy *pol,
+<<<<<<< HEAD
 			       struct xfrm_migrate *m, int num_migrate,
 			       struct netlink_ext_ack *extack)
+=======
+			       struct xfrm_migrate *m, int num_migrate)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct xfrm_migrate *mp;
 	int i, j, n = 0;
@@ -4423,7 +4494,10 @@ static int xfrm_policy_migrate(struct xfrm_policy *pol,
 	write_lock_bh(&pol->lock);
 	if (unlikely(pol->walk.dead)) {
 		/* target policy has been deleted */
+<<<<<<< HEAD
 		NL_SET_ERR_MSG(extack, "Target policy not found");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		write_unlock_bh(&pol->lock);
 		return -ENOENT;
 	}
@@ -4455,6 +4529,7 @@ static int xfrm_policy_migrate(struct xfrm_policy *pol,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int xfrm_migrate_check(const struct xfrm_migrate *m, int num_migrate,
 			      struct netlink_ext_ack *extack)
 {
@@ -4471,6 +4546,19 @@ static int xfrm_migrate_check(const struct xfrm_migrate *m, int num_migrate,
 			NL_SET_ERR_MSG(extack, "Addresses in the MIGRATE attribute's list cannot be null");
 			return -EINVAL;
 		}
+=======
+static int xfrm_migrate_check(const struct xfrm_migrate *m, int num_migrate)
+{
+	int i, j;
+
+	if (num_migrate < 1 || num_migrate > XFRM_MAX_DEPTH)
+		return -EINVAL;
+
+	for (i = 0; i < num_migrate; i++) {
+		if (xfrm_addr_any(&m[i].new_daddr, m[i].new_family) ||
+		    xfrm_addr_any(&m[i].new_saddr, m[i].new_family))
+			return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* check if there is any duplicated entry */
 		for (j = i + 1; j < num_migrate; j++) {
@@ -4481,10 +4569,15 @@ static int xfrm_migrate_check(const struct xfrm_migrate *m, int num_migrate,
 			    m[i].proto == m[j].proto &&
 			    m[i].mode == m[j].mode &&
 			    m[i].reqid == m[j].reqid &&
+<<<<<<< HEAD
 			    m[i].old_family == m[j].old_family) {
 				NL_SET_ERR_MSG(extack, "Entries in the MIGRATE attribute's list must be unique");
 				return -EINVAL;
 			}
+=======
+			    m[i].old_family == m[j].old_family)
+				return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 
@@ -4494,8 +4587,12 @@ static int xfrm_migrate_check(const struct xfrm_migrate *m, int num_migrate,
 int xfrm_migrate(const struct xfrm_selector *sel, u8 dir, u8 type,
 		 struct xfrm_migrate *m, int num_migrate,
 		 struct xfrm_kmaddress *k, struct net *net,
+<<<<<<< HEAD
 		 struct xfrm_encap_tmpl *encap, u32 if_id,
 		 struct netlink_ext_ack *extack)
+=======
+		 struct xfrm_encap_tmpl *encap, u32 if_id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int i, err, nx_cur = 0, nx_new = 0;
 	struct xfrm_policy *pol = NULL;
@@ -4505,20 +4602,31 @@ int xfrm_migrate(const struct xfrm_selector *sel, u8 dir, u8 type,
 	struct xfrm_migrate *mp;
 
 	/* Stage 0 - sanity checks */
+<<<<<<< HEAD
 	err = xfrm_migrate_check(m, num_migrate, extack);
 	if (err < 0)
 		goto out;
 
 	if (dir >= XFRM_POLICY_MAX) {
 		NL_SET_ERR_MSG(extack, "Invalid policy direction");
+=======
+	if ((err = xfrm_migrate_check(m, num_migrate)) < 0)
+		goto out;
+
+	if (dir >= XFRM_POLICY_MAX) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = -EINVAL;
 		goto out;
 	}
 
 	/* Stage 1 - find policy */
+<<<<<<< HEAD
 	pol = xfrm_migrate_policy_find(sel, dir, type, net, if_id);
 	if (!pol) {
 		NL_SET_ERR_MSG(extack, "Target policy not found");
+=======
+	if ((pol = xfrm_migrate_policy_find(sel, dir, type, net, if_id)) == NULL) {
+>>>>>>> b7ba80a49124 (Commit)
 		err = -ENOENT;
 		goto out;
 	}
@@ -4540,8 +4648,12 @@ int xfrm_migrate(const struct xfrm_selector *sel, u8 dir, u8 type,
 	}
 
 	/* Stage 3 - update policy */
+<<<<<<< HEAD
 	err = xfrm_policy_migrate(pol, m, num_migrate, extack);
 	if (err < 0)
+=======
+	if ((err = xfrm_policy_migrate(pol, m, num_migrate)) < 0)
+>>>>>>> b7ba80a49124 (Commit)
 		goto restore_state;
 
 	/* Stage 4 - delete old state(s) */

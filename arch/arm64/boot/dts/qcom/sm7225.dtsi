@@ -14,6 +14,7 @@
 &CPU5 { compatible = "qcom,kryo570"; };
 &CPU6 { compatible = "qcom,kryo570"; };
 &CPU7 { compatible = "qcom,kryo570"; };
+<<<<<<< HEAD
 
 &cpu0_opp_table {
 	opp-1804800000 {
@@ -33,3 +34,5 @@
 		opp-peak-kBps = <(2092000 * 4 * 2 * 2) (1459200 * 16 * 2)>;
 	};
 };
+=======
+>>>>>>> b7ba80a49124 (Commit)

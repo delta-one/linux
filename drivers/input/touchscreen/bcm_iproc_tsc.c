@@ -511,7 +511,11 @@ static struct platform_driver iproc_ts_driver = {
 	.probe = iproc_ts_probe,
 	.driver = {
 		.name	= IPROC_TS_NAME,
+<<<<<<< HEAD
 		.of_match_table = iproc_ts_of_match,
+=======
+		.of_match_table = of_match_ptr(iproc_ts_of_match),
+>>>>>>> b7ba80a49124 (Commit)
 	},
 };
 

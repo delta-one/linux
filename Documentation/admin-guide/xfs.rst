@@ -296,7 +296,11 @@ The following sysctls are available for the XFS filesystem:
 		XFS_ERRLEVEL_LOW:       1
 		XFS_ERRLEVEL_HIGH:      5
 
+<<<<<<< HEAD
   fs.xfs.panic_mask		(Min: 0  Default: 0  Max: 511)
+=======
+  fs.xfs.panic_mask		(Min: 0  Default: 0  Max: 256)
+>>>>>>> b7ba80a49124 (Commit)
 	Causes certain error conditions to call BUG(). Value is a bitmask;
 	OR together the tags which represent errors which should cause panics:
 

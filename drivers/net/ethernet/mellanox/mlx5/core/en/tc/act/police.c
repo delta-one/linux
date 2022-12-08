@@ -3,6 +3,7 @@
 
 #include "act.h"
 #include "en/tc_priv.h"
+<<<<<<< HEAD
 #include "fs_core.h"
 
 static bool police_act_validate_control(enum flow_action_id act_id,
@@ -36,6 +37,8 @@ static int police_act_validate(const struct flow_action_entry *act,
 
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static bool
 tc_act_can_offload_police(struct mlx5e_tc_act_parse_state *parse_state,
@@ -43,10 +46,21 @@ tc_act_can_offload_police(struct mlx5e_tc_act_parse_state *parse_state,
 			  int act_index,
 			  struct mlx5_flow_attr *attr)
 {
+<<<<<<< HEAD
 	int err;
 
 	err = police_act_validate(act, parse_state->extack);
 	if (err)
+=======
+	if (act->police.notexceed.act_id != FLOW_ACTION_PIPE &&
+	    act->police.notexceed.act_id != FLOW_ACTION_ACCEPT) {
+		NL_SET_ERR_MSG_MOD(parse_state->extack,
+				   "Offload not supported when conform action is not pipe or ok");
+		return false;
+	}
+	if (mlx5e_policer_validate(parse_state->flow_action, act,
+				   parse_state->extack))
+>>>>>>> b7ba80a49124 (Commit)
 		return false;
 
 	return !!mlx5e_get_flow_meters(parse_state->flow->priv->mdev);
@@ -66,8 +80,11 @@ fill_meter_params_from_act(const struct flow_action_entry *act,
 		params->mode = MLX5_RATE_LIMIT_PPS;
 		params->rate = act->police.rate_pkt_ps;
 		params->burst = act->police.burst_pkt;
+<<<<<<< HEAD
 	} else if (act->police.mtu) {
 		params->mtu = act->police.mtu;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		return -EOPNOTSUPP;
 	}
@@ -81,6 +98,7 @@ tc_act_parse_police(struct mlx5e_tc_act_parse_state *parse_state,
 		    struct mlx5e_priv *priv,
 		    struct mlx5_flow_attr *attr)
 {
+<<<<<<< HEAD
 	enum mlx5_flow_namespace_type ns =  mlx5e_get_flow_namespace(parse_state->flow);
 	struct mlx5e_flow_meter_params *params = &attr->meter_attr.params;
 	int err;
@@ -100,6 +118,16 @@ tc_act_parse_police(struct mlx5e_tc_act_parse_state *parse_state,
 		attr->action |= MLX5_FLOW_CONTEXT_ACTION_EXECUTE_ASO;
 		attr->exe_aso_type = MLX5_EXE_ASO_FLOW_METER;
 	}
+=======
+	int err;
+
+	err = fill_meter_params_from_act(act, &attr->meter_attr.params);
+	if (err)
+		return err;
+
+	attr->action |= MLX5_FLOW_CONTEXT_ACTION_EXECUTE_ASO;
+	attr->exe_aso_type = MLX5_EXE_ASO_FLOW_METER;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -121,7 +149,11 @@ tc_act_police_offload(struct mlx5e_priv *priv,
 	struct mlx5e_flow_meter_handle *meter;
 	int err = 0;
 
+<<<<<<< HEAD
 	err = police_act_validate(act, fl_act->extack);
+=======
+	err = mlx5e_policer_validate(&fl_act->action, act, fl_act->extack);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		return err;
 
@@ -178,6 +210,10 @@ tc_act_police_stats(struct mlx5e_priv *priv,
 	meter = mlx5e_tc_meter_get(priv->mdev, &params);
 	if (IS_ERR(meter)) {
 		NL_SET_ERR_MSG_MOD(fl_act->extack, "Failed to get flow meter");
+<<<<<<< HEAD
+=======
+		mlx5_core_err(priv->mdev, "Failed to get flow meter %d\n", params.index);
+>>>>>>> b7ba80a49124 (Commit)
 		return PTR_ERR(meter);
 	}
 
@@ -188,6 +224,7 @@ tc_act_police_stats(struct mlx5e_priv *priv,
 	return 0;
 }
 
+<<<<<<< HEAD
 static bool
 tc_act_police_get_branch_ctrl(const struct flow_action_entry *act,
 			      struct mlx5e_tc_act_branch_ctrl *cond_true,
@@ -201,6 +238,8 @@ tc_act_police_get_branch_ctrl(const struct flow_action_entry *act,
 	return true;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mlx5e_tc_act mlx5e_tc_act_police = {
 	.can_offload = tc_act_can_offload_police,
 	.parse_action = tc_act_parse_police,
@@ -208,5 +247,8 @@ struct mlx5e_tc_act mlx5e_tc_act_police = {
 	.offload_action = tc_act_police_offload,
 	.destroy_action = tc_act_police_destroy,
 	.stats_action = tc_act_police_stats,
+<<<<<<< HEAD
 	.get_branch_ctrl = tc_act_police_get_branch_ctrl,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };

@@ -398,7 +398,11 @@ int nilfs_btree_broken_node_block(struct buffer_head *bh)
 	if (buffer_nilfs_checked(bh))
 		return 0;
 
+<<<<<<< HEAD
 	inode = bh->b_folio->mapping->host;
+=======
+	inode = bh->b_page->mapping->host;
+>>>>>>> b7ba80a49124 (Commit)
 	ret = nilfs_btree_node_broken((struct nilfs_btree_node *)bh->b_data,
 				      bh->b_size, inode, bh->b_blocknr);
 	if (likely(!ret))
@@ -480,6 +484,7 @@ static int __nilfs_btree_get_block(const struct nilfs_bmap *btree, __u64 ptr,
 	ret = nilfs_btnode_submit_block(btnc, ptr, 0, REQ_OP_READ, &bh,
 					&submit_ptr);
 	if (ret) {
+<<<<<<< HEAD
 		if (likely(ret == -EEXIST))
 			goto out_check;
 		if (ret == -ENOENT) {
@@ -492,6 +497,11 @@ static int __nilfs_btree_get_block(const struct nilfs_bmap *btree, __u64 ptr,
 			ret = -EINVAL;
 		}
 		return ret;
+=======
+		if (ret != -EEXIST)
+			return ret;
+		goto out_check;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	if (ra) {
@@ -2150,7 +2160,11 @@ static void nilfs_btree_lookup_dirty_buffers(struct nilfs_bmap *btree,
 	struct inode *btnc_inode = NILFS_BMAP_I(btree)->i_assoc_inode;
 	struct address_space *btcache = btnc_inode->i_mapping;
 	struct list_head lists[NILFS_BTREE_LEVEL_MAX];
+<<<<<<< HEAD
 	struct folio_batch fbatch;
+=======
+	struct pagevec pvec;
+>>>>>>> b7ba80a49124 (Commit)
 	struct buffer_head *bh, *head;
 	pgoff_t index = 0;
 	int level, i;
@@ -2160,19 +2174,32 @@ static void nilfs_btree_lookup_dirty_buffers(struct nilfs_bmap *btree,
 	     level++)
 		INIT_LIST_HEAD(&lists[level]);
 
+<<<<<<< HEAD
 	folio_batch_init(&fbatch);
 
 	while (filemap_get_folios_tag(btcache, &index, (pgoff_t)-1,
 				PAGECACHE_TAG_DIRTY, &fbatch)) {
 		for (i = 0; i < folio_batch_count(&fbatch); i++) {
 			bh = head = folio_buffers(fbatch.folios[i]);
+=======
+	pagevec_init(&pvec);
+
+	while (pagevec_lookup_tag(&pvec, btcache, &index,
+					PAGECACHE_TAG_DIRTY)) {
+		for (i = 0; i < pagevec_count(&pvec); i++) {
+			bh = head = page_buffers(pvec.pages[i]);
+>>>>>>> b7ba80a49124 (Commit)
 			do {
 				if (buffer_dirty(bh))
 					nilfs_btree_add_dirty_buffer(btree,
 								     lists, bh);
 			} while ((bh = bh->b_this_page) != head);
 		}
+<<<<<<< HEAD
 		folio_batch_release(&fbatch);
+=======
+		pagevec_release(&pvec);
+>>>>>>> b7ba80a49124 (Commit)
 		cond_resched();
 	}
 

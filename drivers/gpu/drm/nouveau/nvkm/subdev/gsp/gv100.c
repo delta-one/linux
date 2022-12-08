@@ -23,6 +23,7 @@
 
 static const struct nvkm_falcon_func
 gv100_gsp_flcn = {
+<<<<<<< HEAD
 	.disable = gm200_flcn_disable,
 	.enable = gm200_flcn_enable,
 	.reset_eng = gp102_flcn_reset_eng,
@@ -37,6 +38,19 @@ gv100_gsp_flcn = {
 static const struct nvkm_gsp_func
 gv100_gsp = {
 	.flcn = &gv100_gsp_flcn,
+=======
+	.fbif = 0x600,
+	.load_imem = nvkm_falcon_v1_load_imem,
+	.load_dmem = nvkm_falcon_v1_load_dmem,
+	.read_dmem = nvkm_falcon_v1_read_dmem,
+	.bind_context = gp102_sec2_flcn_bind_context,
+	.wait_for_halt = nvkm_falcon_v1_wait_for_halt,
+	.clear_interrupt = nvkm_falcon_v1_clear_interrupt,
+	.set_start_addr = nvkm_falcon_v1_set_start_addr,
+	.start = nvkm_falcon_v1_start,
+	.enable = gp102_sec2_flcn_enable,
+	.disable = nvkm_falcon_v1_disable,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int
@@ -46,8 +60,13 @@ gv100_gsp_nofw(struct nvkm_gsp *gsp, int ver, const struct nvkm_gsp_fwif *fwif)
 }
 
 static struct nvkm_gsp_fwif
+<<<<<<< HEAD
 gv100_gsps[] = {
 	{ -1, gv100_gsp_nofw, &gv100_gsp },
+=======
+gv100_gsp[] = {
+	{ -1, gv100_gsp_nofw, &gv100_gsp_flcn },
+>>>>>>> b7ba80a49124 (Commit)
 	{}
 };
 
@@ -55,5 +74,9 @@ int
 gv100_gsp_new(struct nvkm_device *device, enum nvkm_subdev_type type, int inst,
 	      struct nvkm_gsp **pgsp)
 {
+<<<<<<< HEAD
 	return nvkm_gsp_new_(gv100_gsps, device, type, inst, pgsp);
+=======
+	return nvkm_gsp_new_(gv100_gsp, device, type, inst, pgsp);
+>>>>>>> b7ba80a49124 (Commit)
 }

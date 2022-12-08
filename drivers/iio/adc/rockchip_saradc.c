@@ -5,7 +5,10 @@
  */
 
 #include <linux/module.h>
+<<<<<<< HEAD
 #include <linux/mutex.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/platform_device.h>
 #include <linux/interrupt.h>
 #include <linux/io.h>
@@ -50,8 +53,11 @@ struct rockchip_saradc {
 	struct clk		*clk;
 	struct completion	completion;
 	struct regulator	*vref;
+<<<<<<< HEAD
 	/* lock to protect against multiple access to the device */
 	struct mutex		lock;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int			uv_vref;
 	struct reset_control	*reset;
 	const struct rockchip_saradc_data *data;
@@ -97,17 +103,29 @@ static int rockchip_saradc_read_raw(struct iio_dev *indio_dev,
 
 	switch (mask) {
 	case IIO_CHAN_INFO_RAW:
+<<<<<<< HEAD
 		mutex_lock(&info->lock);
+=======
+		mutex_lock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 
 		ret = rockchip_saradc_conversion(info, chan);
 		if (ret) {
 			rockchip_saradc_power_down(info);
+<<<<<<< HEAD
 			mutex_unlock(&info->lock);
+=======
+			mutex_unlock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 			return ret;
 		}
 
 		*val = info->last_val;
+<<<<<<< HEAD
 		mutex_unlock(&info->lock);
+=======
+		mutex_unlock(&indio_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 		return IIO_VAL_INT;
 	case IIO_CHAN_INFO_SCALE:
 		*val = info->uv_vref / 1000;
@@ -273,7 +291,11 @@ static irqreturn_t rockchip_saradc_trigger_handler(int irq, void *p)
 	int ret;
 	int i, j = 0;
 
+<<<<<<< HEAD
 	mutex_lock(&info->lock);
+=======
+	mutex_lock(&i_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	for_each_set_bit(i, i_dev->active_scan_mask, i_dev->masklength) {
 		const struct iio_chan_spec *chan = &i_dev->channels[i];
@@ -290,7 +312,11 @@ static irqreturn_t rockchip_saradc_trigger_handler(int irq, void *p)
 
 	iio_push_to_buffers_with_timestamp(i_dev, &data, iio_get_time_ns(i_dev));
 out:
+<<<<<<< HEAD
 	mutex_unlock(&info->lock);
+=======
+	mutex_unlock(&i_dev->mlock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	iio_trigger_notify_done(i_dev->trig);
 
@@ -481,8 +507,11 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	mutex_init(&info->lock);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return devm_iio_device_register(&pdev->dev, indio_dev);
 }
 

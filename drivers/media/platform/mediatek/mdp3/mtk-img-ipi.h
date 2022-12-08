@@ -51,6 +51,7 @@ struct img_sw_addr {
 
 struct img_plane_format {
 	u32 size;
+<<<<<<< HEAD
 	u32 stride;
 } __packed;
 
@@ -59,6 +60,16 @@ struct img_pix_format {
 	u32 height;
 	u32 colorformat; /* enum mdp_color */
 	u32 ycbcr_prof; /* enum mdp_ycbcr_profile */
+=======
+	u16 stride;
+} __packed;
+
+struct img_pix_format {
+	u16 width;
+	u16 height;
+	u32 colorformat; /* enum mdp_color */
+	u16 ycbcr_prof; /* enum mdp_ycbcr_profile */
+>>>>>>> b7ba80a49124 (Commit)
 	struct img_plane_format plane_fmt[IMG_MAX_PLANES];
 } __packed;
 
@@ -72,10 +83,17 @@ struct img_image_buffer {
 #define IMG_SUBPIXEL_SHIFT	20
 
 struct img_crop {
+<<<<<<< HEAD
 	s32 left;
 	s32 top;
 	u32 width;
 	u32 height;
+=======
+	s16 left;
+	s16 top;
+	u16 width;
+	u16 height;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 left_subpix;
 	u32 top_subpix;
 	u32 width_subpix;
@@ -90,24 +108,40 @@ struct img_crop {
 
 struct img_input {
 	struct img_image_buffer buffer;
+<<<<<<< HEAD
 	u32 flags; /* HDR, DRE, dither */
+=======
+	u16 flags; /* HDR, DRE, dither */
+>>>>>>> b7ba80a49124 (Commit)
 } __packed;
 
 struct img_output {
 	struct img_image_buffer buffer;
 	struct img_crop crop;
+<<<<<<< HEAD
 	s32 rotation;
 	u32 flags; /* H-flip, sharpness, dither */
+=======
+	s16 rotation;
+	u16 flags; /* H-flip, sharpness, dither */
+>>>>>>> b7ba80a49124 (Commit)
 } __packed;
 
 struct img_ipi_frameparam {
 	u32 index;
 	u32 frame_no;
 	struct img_timeval timestamp;
+<<<<<<< HEAD
 	u32 type; /* enum mdp_stream_type */
 	u32 state;
 	u32 num_inputs;
 	u32 num_outputs;
+=======
+	u8 type; /* enum mdp_stream_type */
+	u8 state;
+	u8 num_inputs;
+	u8 num_outputs;
+>>>>>>> b7ba80a49124 (Commit)
 	u64 drv_data;
 	struct img_input inputs[IMG_MAX_HW_INPUTS];
 	struct img_output outputs[IMG_MAX_HW_OUTPUTS];
@@ -123,18 +157,27 @@ struct img_sw_buffer {
 } __packed;
 
 struct img_ipi_param {
+<<<<<<< HEAD
 	u32 usage;
+=======
+	u8 usage;
+>>>>>>> b7ba80a49124 (Commit)
 	struct img_sw_buffer frm_param;
 } __packed;
 
 struct img_frameparam {
 	struct list_head list_entry;
 	struct img_ipi_frameparam frameparam;
+<<<<<<< HEAD
 } __packed;
+=======
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 /* ISP-MDP generic output information */
 
 struct img_comp_frame {
+<<<<<<< HEAD
 	u32 output_disable;
 	u32 bypass;
 	u32 in_width;
@@ -156,18 +199,50 @@ struct img_region {
 struct img_offset {
 	s32 left;
 	s32 top;
+=======
+	u32 output_disable:1;
+	u32 bypass:1;
+	u16 in_width;
+	u16 in_height;
+	u16 out_width;
+	u16 out_height;
+	struct img_crop crop;
+	u16 in_total_width;
+	u16 out_total_width;
+} __packed;
+
+struct img_region {
+	s16 left;
+	s16 right;
+	s16 top;
+	s16 bottom;
+} __packed;
+
+struct img_offset {
+	s16 left;
+	s16 top;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 left_subpix;
 	u32 top_subpix;
 } __packed;
 
 struct img_comp_subfrm {
+<<<<<<< HEAD
 	u32 tile_disable;
+=======
+	u32 tile_disable:1;
+>>>>>>> b7ba80a49124 (Commit)
 	struct img_region in;
 	struct img_region out;
 	struct img_offset luma;
 	struct img_offset chroma;
+<<<<<<< HEAD
 	s32 out_vertical; /* Output vertical index */
 	s32 out_horizontal; /* Output horizontal index */
+=======
+	s16 out_vertical; /* Output vertical index */
+	s16 out_horizontal; /* Output horizontal index */
+>>>>>>> b7ba80a49124 (Commit)
 } __packed;
 
 #define IMG_MAX_SUBFRAMES	14
@@ -250,8 +325,13 @@ struct isp_data {
 } __packed;
 
 struct img_compparam {
+<<<<<<< HEAD
 	u32 type; /* enum mdp_comp_id */
 	u32 id; /* engine alias_id */
+=======
+	u16 type; /* enum mdp_comp_type */
+	u16 id; /* enum mtk_mdp_comp_id */
+>>>>>>> b7ba80a49124 (Commit)
 	u32 input;
 	u32 outputs[IMG_MAX_HW_OUTPUTS];
 	u32 num_outputs;
@@ -273,12 +353,20 @@ struct img_mux {
 	u32 reg;
 	u32 value;
 	u32 subsys_id;
+<<<<<<< HEAD
 } __packed;
+=======
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 struct img_mmsys_ctrl {
 	struct img_mux sets[IMG_MAX_COMPONENTS * 2];
 	u32 num_sets;
+<<<<<<< HEAD
 } __packed;
+=======
+};
+>>>>>>> b7ba80a49124 (Commit)
 
 struct img_config {
 	struct img_compparam components[IMG_MAX_COMPONENTS];

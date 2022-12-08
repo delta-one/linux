@@ -24,6 +24,7 @@ properties:
               - qcom,apq8084-tcsr-mutex
               - qcom,ipq6018-tcsr-mutex
               - qcom,msm8226-tcsr-mutex
+<<<<<<< HEAD
               - qcom,msm8994-tcsr-mutex
           - const: qcom,tcsr-mutex
       - items:
@@ -31,6 +32,11 @@ properties:
               - qcom,msm8974-tcsr-mutex
           - const: qcom,tcsr-mutex
           - const: syscon
+=======
+              - qcom,msm8974-tcsr-mutex
+              - qcom,msm8994-tcsr-mutex
+          - const: qcom,tcsr-mutex
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1

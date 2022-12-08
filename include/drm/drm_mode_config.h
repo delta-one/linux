@@ -345,6 +345,10 @@ struct drm_mode_config_funcs {
  * @max_width: maximum fb pixel width on this device
  * @max_height: maximum fb pixel height on this device
  * @funcs: core driver provided mode setting functions
+<<<<<<< HEAD
+=======
+ * @fb_base: base address of the framebuffer
+>>>>>>> b7ba80a49124 (Commit)
  * @poll_enabled: track polling support for this device
  * @poll_running: track polling status for this device
  * @delayed_event: track delayed poll uevent deliver for this device
@@ -541,6 +545,10 @@ struct drm_mode_config {
 	int min_width, min_height;
 	int max_width, max_height;
 	const struct drm_mode_config_funcs *funcs;
+<<<<<<< HEAD
+=======
+	resource_size_t fb_base;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* output poll support */
 	bool poll_enabled;
@@ -712,6 +720,7 @@ struct drm_mode_config {
 	 * between different TV connector types.
 	 */
 	struct drm_property *tv_select_subconnector_property;
+<<<<<<< HEAD
 
 	/**
 	 * @legacy_tv_mode_property: Optional TV property to select
@@ -727,6 +736,13 @@ struct drm_mode_config {
 	 */
 	struct drm_property *tv_mode_property;
 
+=======
+	/**
+	 * @tv_mode_property: Optional TV property to select
+	 * the output TV mode.
+	 */
+	struct drm_property *tv_mode_property;
+>>>>>>> b7ba80a49124 (Commit)
 	/**
 	 * @tv_left_margin_property: Optional TV property to set the left
 	 * margin (expressed in pixels).
@@ -891,6 +907,16 @@ struct drm_mode_config {
 	uint32_t preferred_depth, prefer_shadow;
 
 	/**
+<<<<<<< HEAD
+=======
+	 * @prefer_shadow_fbdev:
+	 *
+	 * Hint to framebuffer emulation to prefer shadow-fb rendering.
+	 */
+	bool prefer_shadow_fbdev;
+
+	/**
+>>>>>>> b7ba80a49124 (Commit)
 	 * @quirk_addfb_prefer_xbgr_30bpp:
 	 *
 	 * Special hack for legacy ADDFB to keep nouveau userspace happy. Should

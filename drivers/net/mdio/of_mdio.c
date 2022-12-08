@@ -68,9 +68,14 @@ static int of_mdiobus_register_device(struct mii_bus *mdio,
 	/* All data is now stored in the mdiodev struct; register it. */
 	rc = mdio_device_register(mdiodev);
 	if (rc) {
+<<<<<<< HEAD
 		device_set_node(&mdiodev->dev, NULL);
 		fwnode_handle_put(fwnode);
 		mdio_device_free(mdiodev);
+=======
+		mdio_device_free(mdiodev);
+		of_node_put(child);
+>>>>>>> b7ba80a49124 (Commit)
 		return rc;
 	}
 
@@ -131,7 +136,11 @@ bool of_mdiobus_child_is_phy(struct device_node *child)
 		return true;
 	}
 
+<<<<<<< HEAD
 	if (!of_property_present(child, "compatible"))
+=======
+	if (!of_find_property(child, "compatible", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 		return true;
 
 	return false;
@@ -139,23 +148,37 @@ bool of_mdiobus_child_is_phy(struct device_node *child)
 EXPORT_SYMBOL(of_mdiobus_child_is_phy);
 
 /**
+<<<<<<< HEAD
  * __of_mdiobus_register - Register mii_bus and create PHYs from the device tree
  * @mdio: pointer to mii_bus structure
  * @np: pointer to device_node of MDIO bus.
  * @owner: module owning the @mdio object.
+=======
+ * of_mdiobus_register - Register mii_bus and create PHYs from the device tree
+ * @mdio: pointer to mii_bus structure
+ * @np: pointer to device_node of MDIO bus.
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This function registers the mii_bus structure and registers a phy_device
  * for each child node of @np.
  */
+<<<<<<< HEAD
 int __of_mdiobus_register(struct mii_bus *mdio, struct device_node *np,
 			  struct module *owner)
+=======
+int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device_node *child;
 	bool scanphys = false;
 	int addr, rc;
 
 	if (!np)
+<<<<<<< HEAD
 		return __mdiobus_register(mdio, owner);
+=======
+		return mdiobus_register(mdio);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Do not continue if the node is disabled */
 	if (!of_device_is_available(np))
@@ -174,7 +197,11 @@ int __of_mdiobus_register(struct mii_bus *mdio, struct device_node *np,
 	of_property_read_u32(np, "reset-post-delay-us", &mdio->reset_post_delay_us);
 
 	/* Register the MDIO bus */
+<<<<<<< HEAD
 	rc = __mdiobus_register(mdio, owner);
+=======
+	rc = mdiobus_register(mdio);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		return rc;
 
@@ -205,7 +232,11 @@ int __of_mdiobus_register(struct mii_bus *mdio, struct device_node *np,
 	/* auto scan for PHYs with empty reg property */
 	for_each_available_child_of_node(np, child) {
 		/* Skip PHYs with reg property set */
+<<<<<<< HEAD
 		if (of_property_present(child, "reg"))
+=======
+		if (of_find_property(child, "reg", NULL))
+>>>>>>> b7ba80a49124 (Commit)
 			continue;
 
 		for (addr = 0; addr < PHY_MAX_ADDR; addr++) {
@@ -238,7 +269,11 @@ unregister:
 	mdiobus_unregister(mdio);
 	return rc;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(__of_mdiobus_register);
+=======
+EXPORT_SYMBOL(of_mdiobus_register);
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * of_mdio_find_device - Given a device tree node, find the mdio_device

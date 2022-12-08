@@ -372,10 +372,13 @@ void dpp3_set_cursor_attributes(
 		REG_UPDATE(CURSOR0_COLOR1,
 				CUR0_COLOR1, 0xFFFFFFFF);
 	}
+<<<<<<< HEAD
 
 	dpp_base->att.cur0_ctl.bits.expansion_mode = 0;
 	dpp_base->att.cur0_ctl.bits.cur0_rom_en = cur_rom_en;
 	dpp_base->att.cur0_ctl.bits.mode = color_format;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 

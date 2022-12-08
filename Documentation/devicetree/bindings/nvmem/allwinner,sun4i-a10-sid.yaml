@@ -11,7 +11,11 @@ maintainers:
   - Maxime Ripard <mripard@kernel.org>
 
 allOf:
+<<<<<<< HEAD
   - $ref: nvmem.yaml#
+=======
+  - $ref: "nvmem.yaml#"
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:

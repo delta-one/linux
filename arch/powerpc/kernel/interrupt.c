@@ -50,18 +50,29 @@ static inline bool exit_must_hard_disable(void)
  */
 static notrace __always_inline bool prep_irq_for_enabled_exit(bool restartable)
 {
+<<<<<<< HEAD
 	bool must_hard_disable = (exit_must_hard_disable() || !restartable);
 
 	/* This must be done with RI=1 because tracing may touch vmaps */
 	trace_hardirqs_on();
 
 	if (must_hard_disable)
+=======
+	/* This must be done with RI=1 because tracing may touch vmaps */
+	trace_hardirqs_on();
+
+	if (exit_must_hard_disable() || !restartable)
+>>>>>>> b7ba80a49124 (Commit)
 		__hard_EE_RI_disable();
 
 #ifdef CONFIG_PPC64
 	/* This pattern matches prep_irq_for_idle */
 	if (unlikely(lazy_irq_pending_nocheck())) {
+<<<<<<< HEAD
 		if (must_hard_disable) {
+=======
+		if (exit_must_hard_disable() || !restartable) {
+>>>>>>> b7ba80a49124 (Commit)
 			local_paca->irq_happened |= PACA_IRQ_HARD_DIS;
 			__hard_RI_enable();
 		}
@@ -376,6 +387,7 @@ notrace unsigned long interrupt_exit_kernel_prepare(struct pt_regs *regs)
 	if (regs_is_unrecoverable(regs))
 		unrecoverable_exception(regs);
 	/*
+<<<<<<< HEAD
 	 * CT_WARN_ON comes here via program_check_exception, so avoid
 	 * recursion.
 	 *
@@ -388,6 +400,12 @@ notrace unsigned long interrupt_exit_kernel_prepare(struct pt_regs *regs)
 	if (!IS_ENABLED(CONFIG_PPC_BOOK3E_64) &&
 	    TRAP(regs) != INTERRUPT_PROGRAM &&
 	    TRAP(regs) != INTERRUPT_PERFMON)
+=======
+	 * CT_WARN_ON comes here via program_check_exception,
+	 * so avoid recursion.
+	 */
+	if (TRAP(regs) != INTERRUPT_PROGRAM)
+>>>>>>> b7ba80a49124 (Commit)
 		CT_WARN_ON(ct_state() == CONTEXT_USER);
 
 	kuap = kuap_get_and_assert_locked();
@@ -441,6 +459,19 @@ again:
 
 		if (unlikely(stack_store))
 			__hard_EE_RI_disable();
+<<<<<<< HEAD
+=======
+		/*
+		 * Returning to a kernel context with local irqs disabled.
+		 * Here, if EE was enabled in the interrupted context, enable
+		 * it on return as well. A problem exists here where a soft
+		 * masked interrupt may have cleared MSR[EE] and set HARD_DIS
+		 * here, and it will still exist on return to the caller. This
+		 * will be resolved by the masked interrupt firing again.
+		 */
+		if (regs->msr & MSR_EE)
+			local_paca->irq_happened &= ~PACA_IRQ_HARD_DIS;
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_PPC64 */
 	}
 

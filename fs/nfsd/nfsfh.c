@@ -40,7 +40,11 @@ static int nfsd_acceptable(void *expv, struct dentry *dentry)
 		/* make sure parents give x permission to user */
 		int err;
 		parent = dget_parent(tdentry);
+<<<<<<< HEAD
 		err = inode_permission(&nop_mnt_idmap,
+=======
+		err = inode_permission(&init_user_ns,
+>>>>>>> b7ba80a49124 (Commit)
 				       d_inode(parent), MAY_EXEC);
 		if (err < 0) {
 			dput(parent);
@@ -392,8 +396,13 @@ fh_verify(struct svc_rqst *rqstp, struct svc_fh *fhp, umode_t type, int access)
 skip_pseudoflavor_check:
 	/* Finally, check access permissions. */
 	error = nfsd_permission(rqstp, exp, dentry, access);
+<<<<<<< HEAD
 out:
 	trace_nfsd_fh_verify_err(rqstp, fhp, type, access, error);
+=======
+	trace_nfsd_fh_verify_err(rqstp, fhp, type, access, error);
+out:
+>>>>>>> b7ba80a49124 (Commit)
 	if (error == nfserr_stale)
 		nfsd_stats_fh_stale_inc(exp);
 	return error;
@@ -628,10 +637,13 @@ void fh_fill_pre_attrs(struct svc_fh *fhp)
 		stat.mtime = inode->i_mtime;
 		stat.ctime = inode->i_ctime;
 		stat.size  = inode->i_size;
+<<<<<<< HEAD
 		if (v4 && IS_I_VERSION(inode)) {
 			stat.change_cookie = inode_query_iversion(inode);
 			stat.result_mask |= STATX_CHANGE_COOKIE;
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	if (v4)
 		fhp->fh_pre_change = nfsd4_change_attribute(&stat, inode);
@@ -663,10 +675,13 @@ void fh_fill_post_attrs(struct svc_fh *fhp)
 	if (err) {
 		fhp->fh_post_saved = false;
 		fhp->fh_post_attr.ctime = inode->i_ctime;
+<<<<<<< HEAD
 		if (v4 && IS_I_VERSION(inode)) {
 			fhp->fh_post_attr.change_cookie = inode_query_iversion(inode);
 			fhp->fh_post_attr.result_mask |= STATX_CHANGE_COOKIE;
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} else
 		fhp->fh_post_saved = true;
 	if (v4)
@@ -756,6 +771,7 @@ enum fsid_source fsid_source(const struct svc_fh *fhp)
 		return FSIDSOURCE_UUID;
 	return FSIDSOURCE_DEV;
 }
+<<<<<<< HEAD
 
 /*
  * We could use i_version alone as the change attribute.  However, i_version
@@ -790,3 +806,5 @@ u64 nfsd4_change_attribute(struct kstat *stat, struct inode *inode)
 	}
 	return chattr;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

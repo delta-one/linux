@@ -855,7 +855,11 @@ static int pdc_softreset(struct ata_link *link, unsigned int *class,
 
 static void pdc_error_handler(struct ata_port *ap)
 {
+<<<<<<< HEAD
 	if (!ata_port_is_frozen(ap))
+=======
+	if (!(ap->pflags & ATA_PFLAG_FROZEN))
+>>>>>>> b7ba80a49124 (Commit)
 		pdc_reset_port(ap);
 
 	ata_sff_error_handler(ap);
@@ -866,7 +870,11 @@ static void pdc_post_internal_cmd(struct ata_queued_cmd *qc)
 	struct ata_port *ap = qc->ap;
 
 	/* make DMA engine forget about the failed command */
+<<<<<<< HEAD
 	if (qc->flags & ATA_QCFLAG_EH)
+=======
+	if (qc->flags & ATA_QCFLAG_FAILED)
+>>>>>>> b7ba80a49124 (Commit)
 		pdc_reset_port(ap);
 }
 

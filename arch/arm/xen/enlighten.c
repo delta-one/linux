@@ -445,7 +445,11 @@ static int __init xen_guest_init(void)
 		return 0;
 
 	if (IS_ENABLED(CONFIG_XEN_VIRTIO))
+<<<<<<< HEAD
 		virtio_set_mem_acc_cb(xen_virtio_restricted_mem_acc);
+=======
+		virtio_set_mem_acc_cb(xen_virtio_mem_acc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!acpi_disabled)
 		xen_acpi_guest_init();

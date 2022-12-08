@@ -209,7 +209,12 @@ static const struct regmap_irq max14577_irqs[] = {
 static const struct regmap_irq_chip max14577_irq_chip = {
 	.name			= "max14577",
 	.status_base		= MAX14577_REG_INT1,
+<<<<<<< HEAD
 	.unmask_base		= MAX14577_REG_INTMASK1,
+=======
+	.mask_base		= MAX14577_REG_INTMASK1,
+	.mask_invert		= true,
+>>>>>>> b7ba80a49124 (Commit)
 	.num_regs		= 3,
 	.irqs			= max14577_irqs,
 	.num_irqs		= ARRAY_SIZE(max14577_irqs),
@@ -238,7 +243,12 @@ static const struct regmap_irq max77836_muic_irqs[] = {
 static const struct regmap_irq_chip max77836_muic_irq_chip = {
 	.name			= "max77836-muic",
 	.status_base		= MAX14577_REG_INT1,
+<<<<<<< HEAD
 	.unmask_base		= MAX14577_REG_INTMASK1,
+=======
+	.mask_base		= MAX14577_REG_INTMASK1,
+	.mask_invert		= true,
+>>>>>>> b7ba80a49124 (Commit)
 	.num_regs		= 3,
 	.irqs			= max77836_muic_irqs,
 	.num_irqs		= ARRAY_SIZE(max77836_muic_irqs),
@@ -253,6 +263,10 @@ static const struct regmap_irq_chip max77836_pmic_irq_chip = {
 	.name			= "max77836-pmic",
 	.status_base		= MAX77836_PMIC_REG_TOPSYS_INT,
 	.mask_base		= MAX77836_PMIC_REG_TOPSYS_INT_MASK,
+<<<<<<< HEAD
+=======
+	.mask_invert		= false,
+>>>>>>> b7ba80a49124 (Commit)
 	.num_regs		= 1,
 	.irqs			= max77836_pmic_irqs,
 	.num_irqs		= ARRAY_SIZE(max77836_pmic_irqs),
@@ -355,9 +369,15 @@ static void max77836_remove(struct max14577 *max14577)
 	i2c_unregister_device(max14577->i2c_pmic);
 }
 
+<<<<<<< HEAD
 static int max14577_i2c_probe(struct i2c_client *i2c)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(i2c);
+=======
+static int max14577_i2c_probe(struct i2c_client *i2c,
+			      const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct max14577 *max14577;
 	struct max14577_platform_data *pdata = dev_get_platdata(&i2c->dev);
 	struct device_node *np = i2c->dev.of_node;
@@ -477,6 +497,10 @@ static const struct i2c_device_id max14577_i2c_id[] = {
 };
 MODULE_DEVICE_TABLE(i2c, max14577_i2c_id);
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM_SLEEP
+>>>>>>> b7ba80a49124 (Commit)
 static int max14577_suspend(struct device *dev)
 {
 	struct i2c_client *i2c = to_i2c_client(dev);
@@ -509,16 +533,29 @@ static int max14577_resume(struct device *dev)
 
 	return 0;
 }
+<<<<<<< HEAD
 
 static DEFINE_SIMPLE_DEV_PM_OPS(max14577_pm, max14577_suspend, max14577_resume);
+=======
+#endif /* CONFIG_PM_SLEEP */
+
+static SIMPLE_DEV_PM_OPS(max14577_pm, max14577_suspend, max14577_resume);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct i2c_driver max14577_i2c_driver = {
 	.driver = {
 		.name = "max14577",
+<<<<<<< HEAD
 		.pm = pm_sleep_ptr(&max14577_pm),
 		.of_match_table = max14577_dt_match,
 	},
 	.probe_new = max14577_i2c_probe,
+=======
+		.pm = &max14577_pm,
+		.of_match_table = max14577_dt_match,
+	},
+	.probe = max14577_i2c_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = max14577_i2c_remove,
 	.id_table = max14577_i2c_id,
 };

@@ -236,12 +236,21 @@ THUMB(	fpreg	.req	r7	)
 	sub	\tmp, \tmp, #1			@ decrement it
 	str	\tmp, [\ti, #TI_PREEMPT]
 	.endm
+<<<<<<< HEAD
+=======
+
+	.macro	dec_preempt_count_ti, ti, tmp
+	get_thread_info \ti
+	dec_preempt_count \ti, \tmp
+	.endm
+>>>>>>> b7ba80a49124 (Commit)
 #else
 	.macro	inc_preempt_count, ti, tmp
 	.endm
 
 	.macro	dec_preempt_count, ti, tmp
 	.endm
+<<<<<<< HEAD
 #endif
 
 	.macro	local_bh_disable, ti, tmp
@@ -257,6 +266,13 @@ THUMB(	fpreg	.req	r7	)
 	str	\tmp, [\ti, #TI_PREEMPT]
 	.endm
 
+=======
+
+	.macro	dec_preempt_count_ti, ti, tmp
+	.endm
+#endif
+
+>>>>>>> b7ba80a49124 (Commit)
 #define USERL(l, x...)				\
 9999:	x;					\
 	.pushsection __ex_table,"a";		\
@@ -766,12 +782,15 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
 	.endif
 	.endm
 
+<<<<<<< HEAD
 	.if		__LINUX_ARM_ARCH__ < 6
 	.set		.Lrev_l_uses_tmp, 1
 	.else
 	.set		.Lrev_l_uses_tmp, 0
 	.endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * bl_r - branch and link to register
 	 *

@@ -47,6 +47,7 @@ Description:
 		USB SuperSpeed protocol. From user perspective pin assignments C
 		and E are equal, where all channels on the connector are used
 		for carrying DisplayPort protocol (allowing higher resolutions).
+<<<<<<< HEAD
 
 What:		/sys/bus/typec/devices/.../displayport/hpd
 Date:		Dec 2022
@@ -62,3 +63,5 @@ Description:
 			     by VESA DisplayPort Alt Mode on USB Type-C Standard.
 			- 0 when HPD’s logical state is low (HPD_Low) as defined by
 			     VESA DisplayPort Alt Mode on USB Type-C Standard.
+=======
+>>>>>>> b7ba80a49124 (Commit)

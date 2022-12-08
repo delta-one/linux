@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2001-2002 Sistina Software (UK) Limited.
  * Copyright (C) 2006-2008 Red Hat GmbH
@@ -17,11 +20,17 @@
 
 #define DM_MSG_PREFIX "transient snapshot"
 
+<<<<<<< HEAD
 /*
  *---------------------------------------------------------------
  * Implementation of the store for non-persistent snapshots.
  *---------------------------------------------------------------
  */
+=======
+/*-----------------------------------------------------------------
+ * Implementation of the store for non-persistent snapshots.
+ *---------------------------------------------------------------*/
+>>>>>>> b7ba80a49124 (Commit)
 struct transient_c {
 	sector_t next_free;
 };
@@ -56,7 +65,11 @@ static int transient_prepare_exception(struct dm_exception_store *store,
 
 static void transient_commit_exception(struct dm_exception_store *store,
 				       struct dm_exception *e, int valid,
+<<<<<<< HEAD
 				       void (*callback)(void *, int success),
+=======
+				       void (*callback) (void *, int success),
+>>>>>>> b7ba80a49124 (Commit)
 				       void *callback_context)
 {
 	/* Just succeed */
@@ -87,11 +100,19 @@ static int transient_ctr(struct dm_exception_store *store, char *options)
 	return 0;
 }
 
+<<<<<<< HEAD
 static unsigned int transient_status(struct dm_exception_store *store,
 				 status_type_t status, char *result,
 				 unsigned int maxlen)
 {
 	unsigned int sz = 0;
+=======
+static unsigned transient_status(struct dm_exception_store *store,
+				 status_type_t status, char *result,
+				 unsigned maxlen)
+{
+	unsigned sz = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	switch (status) {
 	case STATUSTYPE_INFO:
@@ -143,7 +164,12 @@ int dm_transient_snapshot_init(void)
 
 	r = dm_exception_store_type_register(&_transient_compat_type);
 	if (r) {
+<<<<<<< HEAD
 		DMWARN("Unable to register old-style transient exception store type");
+=======
+		DMWARN("Unable to register old-style transient "
+		       "exception store type");
+>>>>>>> b7ba80a49124 (Commit)
 		dm_exception_store_type_unregister(&_transient_type);
 		return r;
 	}

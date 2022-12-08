@@ -82,7 +82,11 @@ LABEL:
   Metadata stored on a DIMM device that partitions and identifies
   (persistently names) capacity allocated to different PMEM namespaces. It
   also indicates whether an address abstraction like a BTT is applied to
+<<<<<<< HEAD
   the namespace.  Note that traditional partition tables, GPT/MBR, are
+=======
+  the namepsace.  Note that traditional partition tables, GPT/MBR, are
+>>>>>>> b7ba80a49124 (Commit)
   layered on top of a PMEM namespace, or an address abstraction like BTT
   if present, but partition support is deprecated going forward.
 

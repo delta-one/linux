@@ -8,6 +8,7 @@
 
 /* RX data path */
 
+<<<<<<< HEAD
 static struct mlx5e_xdp_buff *xsk_buff_to_mxbuf(struct xdp_buff *xdp)
 {
 	/* mlx5e_xdp_buff shares its layout with xdp_buff_xsk
@@ -229,29 +230,48 @@ static struct sk_buff *mlx5e_xsk_construct_skb(struct mlx5e_rq *rq, struct xdp_b
 	struct sk_buff *skb;
 
 	skb = napi_alloc_skb(rq->cq.napi, totallen);
+=======
+static struct sk_buff *mlx5e_xsk_construct_skb(struct mlx5e_rq *rq, void *data,
+					       u32 cqe_bcnt)
+{
+	struct sk_buff *skb;
+
+	skb = napi_alloc_skb(rq->cq.napi, cqe_bcnt);
+>>>>>>> b7ba80a49124 (Commit)
 	if (unlikely(!skb)) {
 		rq->stats->buff_alloc_err++;
 		return NULL;
 	}
 
+<<<<<<< HEAD
 	skb_put_data(skb, xdp->data_meta, totallen);
 
 	if (metalen) {
 		skb_metadata_set(skb, metalen);
 		__skb_pull(skb, metalen);
 	}
+=======
+	skb_put_data(skb, data, cqe_bcnt);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return skb;
 }
 
 struct sk_buff *mlx5e_xsk_skb_from_cqe_mpwrq_linear(struct mlx5e_rq *rq,
 						    struct mlx5e_mpw_info *wi,
+<<<<<<< HEAD
 						    struct mlx5_cqe64 *cqe,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 						    u16 cqe_bcnt,
 						    u32 head_offset,
 						    u32 page_idx)
 {
+<<<<<<< HEAD
 	struct mlx5e_xdp_buff *mxbuf = xsk_buff_to_mxbuf(wi->alloc_units[page_idx].xsk);
+=======
+	struct xdp_buff *xdp = wi->umr.dma_info[page_idx].xsk;
+>>>>>>> b7ba80a49124 (Commit)
 	struct bpf_prog *prog;
 
 	/* Check packet size. Note LRO doesn't use linear SKB */
@@ -267,11 +287,18 @@ struct sk_buff *mlx5e_xsk_skb_from_cqe_mpwrq_linear(struct mlx5e_rq *rq,
 	 */
 	WARN_ON_ONCE(head_offset);
 
+<<<<<<< HEAD
 	/* mxbuf->rq is set on allocation, but cqe is per-packet so set it here */
 	mxbuf->cqe = cqe;
 	xsk_buff_set_size(&mxbuf->xdp, cqe_bcnt);
 	xsk_buff_dma_sync_for_cpu(&mxbuf->xdp, rq->xsk_pool);
 	net_prefetch(mxbuf->xdp.data);
+=======
+	xdp->data_end = xdp->data + cqe_bcnt;
+	xdp_set_data_meta_invalid(xdp);
+	xsk_buff_dma_sync_for_cpu(xdp, rq->xsk_pool);
+	net_prefetch(xdp->data);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Possible flows:
 	 * - XDP_REDIRECT to XSKMAP:
@@ -289,7 +316,11 @@ struct sk_buff *mlx5e_xsk_skb_from_cqe_mpwrq_linear(struct mlx5e_rq *rq,
 	 */
 
 	prog = rcu_dereference(rq->xdp_prog);
+<<<<<<< HEAD
 	if (likely(prog && mlx5e_xdp_handle(rq, prog, mxbuf))) {
+=======
+	if (likely(prog && mlx5e_xdp_handle(rq, NULL, prog, xdp))) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (likely(__test_and_clear_bit(MLX5E_RQ_FLAG_XDP_XMIT, rq->flags)))
 			__set_bit(page_idx, wi->xdp_xmit_bitmap); /* non-atomic */
 		return NULL; /* page/packet was consumed by XDP */
@@ -298,15 +329,25 @@ struct sk_buff *mlx5e_xsk_skb_from_cqe_mpwrq_linear(struct mlx5e_rq *rq,
 	/* XDP_PASS: copy the data from the UMEM to a new SKB and reuse the
 	 * frame. On SKB allocation failure, NULL is returned.
 	 */
+<<<<<<< HEAD
 	return mlx5e_xsk_construct_skb(rq, &mxbuf->xdp);
+=======
+	return mlx5e_xsk_construct_skb(rq, xdp->data, xdp->data_end - xdp->data);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct sk_buff *mlx5e_xsk_skb_from_cqe_linear(struct mlx5e_rq *rq,
 					      struct mlx5e_wqe_frag_info *wi,
+<<<<<<< HEAD
 					      struct mlx5_cqe64 *cqe,
 					      u32 cqe_bcnt)
 {
 	struct mlx5e_xdp_buff *mxbuf = xsk_buff_to_mxbuf(wi->au->xsk);
+=======
+					      u32 cqe_bcnt)
+{
+	struct xdp_buff *xdp = wi->di->xsk;
+>>>>>>> b7ba80a49124 (Commit)
 	struct bpf_prog *prog;
 
 	/* wi->offset is not used in this function, because xdp->data and the
@@ -316,6 +357,7 @@ struct sk_buff *mlx5e_xsk_skb_from_cqe_linear(struct mlx5e_rq *rq,
 	 */
 	WARN_ON_ONCE(wi->offset);
 
+<<<<<<< HEAD
 	/* mxbuf->rq is set on allocation, but cqe is per-packet so set it here */
 	mxbuf->cqe = cqe;
 	xsk_buff_set_size(&mxbuf->xdp, cqe_bcnt);
@@ -331,4 +373,20 @@ struct sk_buff *mlx5e_xsk_skb_from_cqe_linear(struct mlx5e_rq *rq,
 	 * On SKB allocation failure, NULL is returned.
 	 */
 	return mlx5e_xsk_construct_skb(rq, &mxbuf->xdp);
+=======
+	xdp->data_end = xdp->data + cqe_bcnt;
+	xdp_set_data_meta_invalid(xdp);
+	xsk_buff_dma_sync_for_cpu(xdp, rq->xsk_pool);
+	net_prefetch(xdp->data);
+
+	prog = rcu_dereference(rq->xdp_prog);
+	if (likely(prog && mlx5e_xdp_handle(rq, NULL, prog, xdp)))
+		return NULL; /* page/packet was consumed by XDP */
+
+	/* XDP_PASS: copy the data from the UMEM to a new SKB. The frame reuse
+	 * will be handled by mlx5e_put_rx_frag.
+	 * On SKB allocation failure, NULL is returned.
+	 */
+	return mlx5e_xsk_construct_skb(rq, xdp->data, xdp->data_end - xdp->data);
+>>>>>>> b7ba80a49124 (Commit)
 }

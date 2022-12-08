@@ -2,7 +2,11 @@
 
 .. include:: ../disclaimer-zh_TW.rst
 
+<<<<<<< HEAD
 :Original: :doc:`../../../process/security-bugs`
+=======
+:Original: :doc:`../../../admin-guide/security-bugs`
+>>>>>>> b7ba80a49124 (Commit)
 
 :譯者:
 

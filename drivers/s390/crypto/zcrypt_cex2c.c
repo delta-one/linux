@@ -75,7 +75,11 @@ static ssize_t cca_serialnr_show(struct device *dev,
 	if (ap_domain_index >= 0)
 		cca_get_info(ac->id, ap_domain_index, &ci, zc->online);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%s\n", ci.serial);
+=======
+	return scnprintf(buf, PAGE_SIZE, "%s\n", ci.serial);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct device_attribute dev_attr_cca_serialnr =
@@ -110,6 +114,7 @@ static ssize_t cca_mkvps_show(struct device *dev,
 		     &ci, zq->online);
 
 	if (ci.new_aes_mk_state >= '1' && ci.new_aes_mk_state <= '3')
+<<<<<<< HEAD
 		n = sysfs_emit(buf, "AES NEW: %s 0x%016llx\n",
 			       new_state[ci.new_aes_mk_state - '1'],
 			       ci.new_aes_mkvp);
@@ -150,6 +155,53 @@ static ssize_t cca_mkvps_show(struct device *dev,
 				   ci.old_apka_mkvp);
 	else
 		n += sysfs_emit_at(buf, n, "APKA OLD: - -\n");
+=======
+		n = scnprintf(buf, PAGE_SIZE, "AES NEW: %s 0x%016llx\n",
+			      new_state[ci.new_aes_mk_state - '1'],
+			      ci.new_aes_mkvp);
+	else
+		n = scnprintf(buf, PAGE_SIZE, "AES NEW: - -\n");
+
+	if (ci.cur_aes_mk_state >= '1' && ci.cur_aes_mk_state <= '2')
+		n += scnprintf(buf + n, PAGE_SIZE - n,
+			       "AES CUR: %s 0x%016llx\n",
+			       cao_state[ci.cur_aes_mk_state - '1'],
+			       ci.cur_aes_mkvp);
+	else
+		n += scnprintf(buf + n, PAGE_SIZE - n, "AES CUR: - -\n");
+
+	if (ci.old_aes_mk_state >= '1' && ci.old_aes_mk_state <= '2')
+		n += scnprintf(buf + n, PAGE_SIZE - n,
+			       "AES OLD: %s 0x%016llx\n",
+			       cao_state[ci.old_aes_mk_state - '1'],
+			       ci.old_aes_mkvp);
+	else
+		n += scnprintf(buf + n, PAGE_SIZE - n, "AES OLD: - -\n");
+
+	if (ci.new_apka_mk_state >= '1' && ci.new_apka_mk_state <= '3')
+		n += scnprintf(buf + n, PAGE_SIZE - n,
+			       "APKA NEW: %s 0x%016llx\n",
+			       new_state[ci.new_apka_mk_state - '1'],
+			       ci.new_apka_mkvp);
+	else
+		n += scnprintf(buf + n, PAGE_SIZE - n, "APKA NEW: - -\n");
+
+	if (ci.cur_apka_mk_state >= '1' && ci.cur_apka_mk_state <= '2')
+		n += scnprintf(buf + n, PAGE_SIZE - n,
+			       "APKA CUR: %s 0x%016llx\n",
+			       cao_state[ci.cur_apka_mk_state - '1'],
+			       ci.cur_apka_mkvp);
+	else
+		n += scnprintf(buf + n, PAGE_SIZE - n, "APKA CUR: - -\n");
+
+	if (ci.old_apka_mk_state >= '1' && ci.old_apka_mk_state <= '2')
+		n += scnprintf(buf + n, PAGE_SIZE - n,
+			       "APKA OLD: %s 0x%016llx\n",
+			       cao_state[ci.old_apka_mk_state - '1'],
+			       ci.old_apka_mkvp);
+	else
+		n += scnprintf(buf + n, PAGE_SIZE - n, "APKA OLD: - -\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	return n;
 }
@@ -176,7 +228,11 @@ static const struct attribute_group cca_queue_attr_grp = {
 static int zcrypt_cex2c_rng_supported(struct ap_queue *aq)
 {
 	struct ap_message ap_msg;
+<<<<<<< HEAD
 	unsigned long psmid;
+=======
+	unsigned long long psmid;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int domain;
 	struct {
 		struct type86_hdr hdr;
@@ -198,22 +254,34 @@ static int zcrypt_cex2c_rng_supported(struct ap_queue *aq)
 	ap_msg.msg = (void *)get_zeroed_page(GFP_KERNEL);
 	if (!ap_msg.msg)
 		return -ENOMEM;
+<<<<<<< HEAD
 	ap_msg.bufsize = PAGE_SIZE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	rng_type6cprb_msgx(&ap_msg, 4, &domain);
 
 	msg = ap_msg.msg;
 	msg->cprbx.domain = AP_QID_QUEUE(aq->qid);
 
+<<<<<<< HEAD
 	rc = ap_send(aq->qid, 0x0102030405060708UL, ap_msg.msg, ap_msg.len);
+=======
+	rc = ap_send(aq->qid, 0x0102030405060708ULL, ap_msg.msg, ap_msg.len);
+>>>>>>> b7ba80a49124 (Commit)
 	if (rc)
 		goto out_free;
 
 	/* Wait for the test message to complete. */
 	for (i = 0; i < 2 * HZ; i++) {
 		msleep(1000 / HZ);
+<<<<<<< HEAD
 		rc = ap_recv(aq->qid, &psmid, ap_msg.msg, ap_msg.bufsize);
 		if (rc == 0 && psmid == 0x0102030405060708UL)
+=======
+		rc = ap_recv(aq->qid, &psmid, ap_msg.msg, 4096);
+		if (rc == 0 && psmid == 0x0102030405060708ULL)
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 	}
 
@@ -338,7 +406,11 @@ static int zcrypt_cex2c_queue_probe(struct ap_device *ap_dev)
 	zq->queue = aq;
 	zq->online = 1;
 	atomic_set(&zq->load, 0);
+<<<<<<< HEAD
 	ap_rapq(aq->qid, 0);
+=======
+	ap_rapq(aq->qid);
+>>>>>>> b7ba80a49124 (Commit)
 	rc = zcrypt_cex2c_rng_supported(aq);
 	if (rc < 0) {
 		zcrypt_queue_free(zq);

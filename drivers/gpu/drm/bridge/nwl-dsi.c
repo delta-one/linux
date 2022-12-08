@@ -1199,7 +1199,11 @@ static int nwl_dsi_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void nwl_dsi_remove(struct platform_device *pdev)
+=======
+static int nwl_dsi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nwl_dsi *dsi = platform_get_drvdata(pdev);
 
@@ -1207,11 +1211,19 @@ static void nwl_dsi_remove(struct platform_device *pdev)
 	mipi_dsi_host_unregister(&dsi->dsi_host);
 	drm_bridge_remove(&dsi->bridge);
 	pm_runtime_disable(&pdev->dev);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver nwl_dsi_driver = {
 	.probe		= nwl_dsi_probe,
+<<<<<<< HEAD
 	.remove_new	= nwl_dsi_remove,
+=======
+	.remove		= nwl_dsi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.of_match_table = nwl_dsi_dt_ids,
 		.name	= DRV_NAME,

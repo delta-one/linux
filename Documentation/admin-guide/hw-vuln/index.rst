@@ -18,4 +18,7 @@ are configurable at compile, boot or run time.
    core-scheduling.rst
    l1d_flush.rst
    processor_mmio_stale_data.rst
+<<<<<<< HEAD
    cross-thread-rsb.rst
+=======
+>>>>>>> b7ba80a49124 (Commit)

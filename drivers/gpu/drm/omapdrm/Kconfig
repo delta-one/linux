@@ -2,7 +2,11 @@
 config DRM_OMAP
 	tristate "OMAP DRM"
 	depends on DRM && OF
+<<<<<<< HEAD
 	depends on ARCH_OMAP2PLUS
+=======
+	depends on ARCH_OMAP2PLUS || ARCH_MULTIPLATFORM
+>>>>>>> b7ba80a49124 (Commit)
 	select DRM_KMS_HELPER
 	select VIDEOMODE_HELPERS
 	select HDMI

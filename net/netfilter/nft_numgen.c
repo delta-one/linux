@@ -112,8 +112,12 @@ nla_put_failure:
 	return -1;
 }
 
+<<<<<<< HEAD
 static int nft_ng_inc_dump(struct sk_buff *skb,
 			   const struct nft_expr *expr, bool reset)
+=======
+static int nft_ng_inc_dump(struct sk_buff *skb, const struct nft_expr *expr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct nft_ng_inc *priv = nft_expr_priv(expr);
 
@@ -169,8 +173,12 @@ static int nft_ng_random_init(const struct nft_ctx *ctx,
 					NULL, NFT_DATA_VALUE, sizeof(u32));
 }
 
+<<<<<<< HEAD
 static int nft_ng_random_dump(struct sk_buff *skb,
 			      const struct nft_expr *expr, bool reset)
+=======
+static int nft_ng_random_dump(struct sk_buff *skb, const struct nft_expr *expr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct nft_ng_random *priv = nft_expr_priv(expr);
 

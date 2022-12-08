@@ -4,7 +4,11 @@
 # subdirectories here. Add them in the ".gitignore" file
 # in that subdirectory instead.
 #
+<<<<<<< HEAD
 # NOTE! Please use 'git ls-files -i -c --exclude-per-directory=.gitignore'
+=======
+# NOTE! Please use 'git ls-files -i --exclude-standard'
+>>>>>>> b7ba80a49124 (Commit)
 # command after changing this file, to see if there are
 # any tracked files which get ignored after the change.
 #
@@ -16,12 +20,18 @@
 *.bin
 *.bz2
 *.c.[012]*.*
+<<<<<<< HEAD
 *.cover
+=======
+>>>>>>> b7ba80a49124 (Commit)
 *.dt.yaml
 *.dtb
 *.dtbo
 *.dtb.S
+<<<<<<< HEAD
 *.dtbo.S
+=======
+>>>>>>> b7ba80a49124 (Commit)
 *.dwo
 *.elf
 *.gcno
@@ -34,14 +44,20 @@
 *.lz4
 *.lzma
 *.lzo
+<<<<<<< HEAD
 *.mbx
+=======
+>>>>>>> b7ba80a49124 (Commit)
 *.mod
 *.mod.c
 *.o
 *.o.*
 *.patch
 *.rmeta
+<<<<<<< HEAD
 *.rpm
+=======
+>>>>>>> b7ba80a49124 (Commit)
 *.rsi
 *.s
 *.so
@@ -78,7 +94,10 @@ modules.order
 # RPM spec file (make rpm-pkg)
 #
 /*.spec
+<<<<<<< HEAD
 /rpmbuild/
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #
 # Debian directory (make deb-pkg)

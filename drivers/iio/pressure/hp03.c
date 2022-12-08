@@ -208,9 +208,15 @@ static const struct iio_info hp03_info = {
 	.read_raw	= &hp03_read_raw,
 };
 
+<<<<<<< HEAD
 static int hp03_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int hp03_probe(struct i2c_client *client,
+		      const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct device *dev = &client->dev;
 	struct iio_dev *indio_dev;
 	struct hp03_priv *priv;
@@ -282,7 +288,11 @@ static struct i2c_driver hp03_driver = {
 		.name	= "hp03",
 		.of_match_table = hp03_of_match,
 	},
+<<<<<<< HEAD
 	.probe_new	= hp03_probe,
+=======
+	.probe		= hp03_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= hp03_id,
 };
 module_i2c_driver(hp03_driver);

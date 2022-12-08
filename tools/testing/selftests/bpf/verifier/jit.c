@@ -21,6 +21,7 @@
 	.retval = 2,
 },
 {
+<<<<<<< HEAD
 	"jit: lsh, rsh, arsh by reg",
 	.insns = {
 	BPF_MOV64_IMM(BPF_REG_0, 1),
@@ -45,6 +46,8 @@
 	.retval = 2,
 },
 {
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	"jit: mov32 for ldimm64, 1",
 	.insns = {
 	BPF_MOV64_IMM(BPF_REG_0, 2),

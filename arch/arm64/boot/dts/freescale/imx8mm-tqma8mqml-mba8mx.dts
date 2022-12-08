@@ -34,6 +34,7 @@
 		off-on-delay-us = <12000>;
 	};
 
+<<<<<<< HEAD
 	connector {
 		compatible = "gpio-usb-b-connector", "usb-b-connector";
 		type = "micro";
@@ -53,6 +54,13 @@
 				};
 			};
 		};
+=======
+	extcon_usbotg1: extcon-usbotg1 {
+		compatible = "linux,extcon-usb-gpio";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_usb1_extcon>;
+		id-gpio = <&gpio1 10 GPIO_ACTIVE_HIGH>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
@@ -79,8 +87,14 @@
 
 &pcie0 {
 	reset-gpio = <&expander0 14 GPIO_ACTIVE_LOW>;
+<<<<<<< HEAD
 	clocks = <&clk IMX8MM_CLK_PCIE1_ROOT>, <&pcie0_refclk>,
 		 <&clk IMX8MM_CLK_PCIE1_AUX>;
+=======
+	clocks = <&clk IMX8MM_CLK_PCIE1_ROOT>, <&clk IMX8MM_CLK_PCIE1_AUX>,
+		<&pcie0_refclk>;
+	clock-names = "pcie", "pcie_aux", "pcie_bus";
+>>>>>>> b7ba80a49124 (Commit)
 	assigned-clocks = <&clk IMX8MM_CLK_PCIE1_AUX>,
 				<&clk IMX8MM_CLK_PCIE1_CTRL>;
 	assigned-clock-rates = <10000000>, <250000000>;
@@ -118,11 +132,16 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_usbotg1>;
 	dr_mode = "otg";
+<<<<<<< HEAD
+=======
+	extcon = <&extcon_usbotg1>;
+>>>>>>> b7ba80a49124 (Commit)
 	srp-disable;
 	hnp-disable;
 	adp-disable;
 	power-active-high;
 	over-current-active-low;
+<<<<<<< HEAD
 	usb-role-switch;
 	status = "okay";
 
@@ -131,6 +150,9 @@
 			remote-endpoint = <&usb_dr_connector>;
 		};
 	};
+=======
+	status = "okay";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &usbotg2 {
@@ -250,7 +272,11 @@
 			   <MX8MM_IOMUXC_GPIO1_IO13_USB1_OTG_OC		0x84>;
 	};
 
+<<<<<<< HEAD
 	pinctrl_usb1_connector: usb1-connectorgrp {
+=======
+	pinctrl_usb1_extcon: usb1-extcongrp {
+>>>>>>> b7ba80a49124 (Commit)
 		fsl,pins = <MX8MM_IOMUXC_GPIO1_IO10_GPIO1_IO10		0x1c0>;
 	};
 

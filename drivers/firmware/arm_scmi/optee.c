@@ -328,11 +328,19 @@ static int scmi_optee_link_supplier(struct device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static bool scmi_optee_chan_available(struct device_node *of_node, int idx)
 {
 	u32 channel_id;
 
 	return !of_property_read_u32_index(of_node, "linaro,optee-channel-id",
+=======
+static bool scmi_optee_chan_available(struct device *dev, int idx)
+{
+	u32 channel_id;
+
+	return !of_property_read_u32_index(dev->of_node, "linaro,optee-channel-id",
+>>>>>>> b7ba80a49124 (Commit)
 					   idx, &channel_id);
 }
 
@@ -481,6 +489,11 @@ static int scmi_optee_chan_free(int id, void *p, void *data)
 	cinfo->transport_info = NULL;
 	channel->cinfo = NULL;
 
+<<<<<<< HEAD
+=======
+	scmi_free_channel(cinfo, data, id);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -496,7 +509,11 @@ static int scmi_optee_send_message(struct scmi_chan_info *cinfo,
 		msg_tx_prepare(channel->req.msg, xfer);
 		ret = invoke_process_msg_channel(channel, msg_command_size(xfer));
 	} else {
+<<<<<<< HEAD
 		shmem_tx_prepare(channel->req.shmem, xfer, cinfo);
+=======
+		shmem_tx_prepare(channel->req.shmem, xfer);
+>>>>>>> b7ba80a49124 (Commit)
 		ret = invoke_process_smt_channel(channel);
 	}
 

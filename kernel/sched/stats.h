@@ -128,9 +128,17 @@ static inline void psi_enqueue(struct task_struct *p, bool wakeup)
 	if (p->in_memstall)
 		set |= TSK_MEMSTALL_RUNNING;
 
+<<<<<<< HEAD
 	if (!wakeup) {
 		if (p->in_memstall)
 			set |= TSK_MEMSTALL;
+=======
+	if (!wakeup || p->sched_psi_wake_requeue) {
+		if (p->in_memstall)
+			set |= TSK_MEMSTALL;
+		if (p->sched_psi_wake_requeue)
+			p->sched_psi_wake_requeue = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		if (p->in_iowait)
 			clear |= TSK_IOWAIT;
@@ -141,6 +149,11 @@ static inline void psi_enqueue(struct task_struct *p, bool wakeup)
 
 static inline void psi_dequeue(struct task_struct *p, bool sleep)
 {
+<<<<<<< HEAD
+=======
+	int clear = TSK_RUNNING;
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (static_branch_likely(&psi_disabled))
 		return;
 
@@ -153,7 +166,14 @@ static inline void psi_dequeue(struct task_struct *p, bool sleep)
 	if (sleep)
 		return;
 
+<<<<<<< HEAD
 	psi_task_change(p, p->psi_flags, 0);
+=======
+	if (p->in_memstall)
+		clear |= (TSK_MEMSTALL | TSK_MEMSTALL_RUNNING);
+
+	psi_task_change(p, clear, 0);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static inline void psi_ttwu_dequeue(struct task_struct *p)
@@ -165,12 +185,28 @@ static inline void psi_ttwu_dequeue(struct task_struct *p)
 	 * deregister its sleep-persistent psi states from the old
 	 * queue, and let psi_enqueue() know it has to requeue.
 	 */
+<<<<<<< HEAD
 	if (unlikely(p->psi_flags)) {
 		struct rq_flags rf;
 		struct rq *rq;
 
 		rq = __task_rq_lock(p, &rf);
 		psi_task_change(p, p->psi_flags, 0);
+=======
+	if (unlikely(p->in_iowait || p->in_memstall)) {
+		struct rq_flags rf;
+		struct rq *rq;
+		int clear = 0;
+
+		if (p->in_iowait)
+			clear |= TSK_IOWAIT;
+		if (p->in_memstall)
+			clear |= TSK_MEMSTALL;
+
+		rq = __task_rq_lock(p, &rf);
+		psi_task_change(p, clear, 0);
+		p->sched_psi_wake_requeue = 1;
+>>>>>>> b7ba80a49124 (Commit)
 		__task_rq_unlock(rq, &rf);
 	}
 }

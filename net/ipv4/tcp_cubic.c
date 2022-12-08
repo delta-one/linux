@@ -126,7 +126,11 @@ static inline void bictcp_hystart_reset(struct sock *sk)
 	ca->sample_cnt = 0;
 }
 
+<<<<<<< HEAD
 __bpf_kfunc static void cubictcp_init(struct sock *sk)
+=======
+static void cubictcp_init(struct sock *sk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bictcp *ca = inet_csk_ca(sk);
 
@@ -139,7 +143,11 @@ __bpf_kfunc static void cubictcp_init(struct sock *sk)
 		tcp_sk(sk)->snd_ssthresh = initial_ssthresh;
 }
 
+<<<<<<< HEAD
 __bpf_kfunc static void cubictcp_cwnd_event(struct sock *sk, enum tcp_ca_event event)
+=======
+static void cubictcp_cwnd_event(struct sock *sk, enum tcp_ca_event event)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (event == CA_EVENT_TX_START) {
 		struct bictcp *ca = inet_csk_ca(sk);
@@ -321,7 +329,11 @@ tcp_friendliness:
 	ca->cnt = max(ca->cnt, 2U);
 }
 
+<<<<<<< HEAD
 __bpf_kfunc static void cubictcp_cong_avoid(struct sock *sk, u32 ack, u32 acked)
+=======
+static void cubictcp_cong_avoid(struct sock *sk, u32 ack, u32 acked)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct tcp_sock *tp = tcp_sk(sk);
 	struct bictcp *ca = inet_csk_ca(sk);
@@ -338,7 +350,11 @@ __bpf_kfunc static void cubictcp_cong_avoid(struct sock *sk, u32 ack, u32 acked)
 	tcp_cong_avoid_ai(tp, ca->cnt, acked);
 }
 
+<<<<<<< HEAD
 __bpf_kfunc static u32 cubictcp_recalc_ssthresh(struct sock *sk)
+=======
+static u32 cubictcp_recalc_ssthresh(struct sock *sk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct tcp_sock *tp = tcp_sk(sk);
 	struct bictcp *ca = inet_csk_ca(sk);
@@ -355,7 +371,11 @@ __bpf_kfunc static u32 cubictcp_recalc_ssthresh(struct sock *sk)
 	return max((tcp_snd_cwnd(tp) * beta) / BICTCP_BETA_SCALE, 2U);
 }
 
+<<<<<<< HEAD
 __bpf_kfunc static void cubictcp_state(struct sock *sk, u8 new_state)
+=======
+static void cubictcp_state(struct sock *sk, u8 new_state)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (new_state == TCP_CA_Loss) {
 		bictcp_reset(inet_csk_ca(sk));
@@ -445,7 +465,11 @@ static void hystart_update(struct sock *sk, u32 delay)
 	}
 }
 
+<<<<<<< HEAD
 __bpf_kfunc static void cubictcp_acked(struct sock *sk, const struct ack_sample *sample)
+=======
+static void cubictcp_acked(struct sock *sk, const struct ack_sample *sample)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct tcp_sock *tp = tcp_sk(sk);
 	struct bictcp *ca = inet_csk_ca(sk);

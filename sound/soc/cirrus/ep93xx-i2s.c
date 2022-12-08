@@ -202,8 +202,13 @@ static int ep93xx_i2s_dai_probe(struct snd_soc_dai *dai)
 	info->dma_params_rx.filter_data =
 		&ep93xx_i2s_dma_data[SNDRV_PCM_STREAM_CAPTURE];
 
+<<<<<<< HEAD
 	snd_soc_dai_init_dma_data(dai,	&info->dma_params_tx,
 					&info->dma_params_rx);
+=======
+	dai->playback_dma_data = &info->dma_params_tx;
+	dai->capture_dma_data = &info->dma_params_rx;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -359,8 +364,11 @@ static int ep93xx_i2s_set_sysclk(struct snd_soc_dai *cpu_dai, int clk_id,
 
 	if (dir == SND_SOC_CLOCK_IN || clk_id != 0)
 		return -EINVAL;
+<<<<<<< HEAD
 	if (!freq)
 		return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return clk_set_rate(info->mclk, freq);
 }
@@ -495,18 +503,30 @@ fail:
 	return err;
 }
 
+<<<<<<< HEAD
 static void ep93xx_i2s_remove(struct platform_device *pdev)
+=======
+static int ep93xx_i2s_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ep93xx_i2s_info *info = dev_get_drvdata(&pdev->dev);
 
 	clk_put(info->lrclk);
 	clk_put(info->sclk);
 	clk_put(info->mclk);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct platform_driver ep93xx_i2s_driver = {
 	.probe	= ep93xx_i2s_probe,
+<<<<<<< HEAD
 	.remove_new = ep93xx_i2s_remove,
+=======
+	.remove	= ep93xx_i2s_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.name	= "ep93xx-i2s",
 	},

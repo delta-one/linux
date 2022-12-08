@@ -32,7 +32,11 @@
 		keyup-threshold-microvolt = <2500000>;
 		poll-interval = <100>;
 
+<<<<<<< HEAD
 		button-recovery {
+=======
+		recovery {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "recovery";
 			linux,code = <KEY_VENDOR>;
 			press-threshold-microvolt = <0>;
@@ -157,6 +161,7 @@
 	pinctrl-0 = <&sd1_clk &sd1_cmd &sd1_bus4>;
 	pinctrl-names = "default";
 	vmmc-supply = <&vcc_wifi>;
+<<<<<<< HEAD
 	#address-cells = <1>;
 	#size-cells = <0>;
 	status = "okay";
@@ -165,6 +170,9 @@
 		compatible = "brcm,bcm4329-fmac";
 		reg = <1>;
 	};
+=======
+	status = "okay";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &nfc {

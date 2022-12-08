@@ -108,12 +108,20 @@ static inline void xen_uninit_lock_cpu(int cpu)
 
 struct dom0_vga_console_info;
 
+<<<<<<< HEAD
 #ifdef CONFIG_XEN_DOM0
 void __init xen_init_vga(const struct dom0_vga_console_info *, size_t size,
 			 struct screen_info *);
 #else
 static inline void __init xen_init_vga(const struct dom0_vga_console_info *info,
 				       size_t size, struct screen_info *si)
+=======
+#ifdef CONFIG_XEN_PV_DOM0
+void __init xen_init_vga(const struct dom0_vga_console_info *, size_t size);
+#else
+static inline void __init xen_init_vga(const struct dom0_vga_console_info *info,
+				       size_t size)
+>>>>>>> b7ba80a49124 (Commit)
 {
 }
 #endif

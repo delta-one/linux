@@ -130,32 +130,49 @@ static int pad_spc(int llen, int cnt, const char *fmt, ...)
  */
 
 #define EXPECT_ZR(cond, expr)				\
+<<<<<<< HEAD
 	do { if (!cond) pad_spc(llen, 64, "[SKIPPED]\n"); else ret += expect_zr(expr, llen); } while (0)
+=======
+	do { if (!cond) pad_spc(llen, 40, "[SKIPPED]\n"); else ret += expect_zr(expr, llen); } while (0)
+>>>>>>> b7ba80a49124 (Commit)
 
 static int expect_zr(int expr, int llen)
 {
 	int ret = !(expr == 0);
 
 	llen += printf(" = %d ", expr);
+<<<<<<< HEAD
 	pad_spc(llen, 64, ret ? "[FAIL]\n" : " [OK]\n");
+=======
+	pad_spc(llen, 40, ret ? "[FAIL]\n" : " [OK]\n");
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
 
 #define EXPECT_NZ(cond, expr, val)			\
+<<<<<<< HEAD
 	do { if (!cond) pad_spc(llen, 64, "[SKIPPED]\n"); else ret += expect_nz(expr, llen; } while (0)
+=======
+	do { if (!cond) pad_spc(llen, 40, "[SKIPPED]\n"); else ret += expect_nz(expr, llen; } while (0)
+>>>>>>> b7ba80a49124 (Commit)
 
 static int expect_nz(int expr, int llen)
 {
 	int ret = !(expr != 0);
 
 	llen += printf(" = %d ", expr);
+<<<<<<< HEAD
 	pad_spc(llen, 64, ret ? "[FAIL]\n" : " [OK]\n");
+=======
+	pad_spc(llen, 40, ret ? "[FAIL]\n" : " [OK]\n");
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
 
 #define EXPECT_EQ(cond, expr, val)				\
+<<<<<<< HEAD
 	do { if (!cond) pad_spc(llen, 64, "[SKIPPED]\n"); else ret += expect_eq(expr, llen, val); } while (0)
 
 static int expect_eq(uint64_t expr, int llen, uint64_t val)
@@ -164,77 +181,131 @@ static int expect_eq(uint64_t expr, int llen, uint64_t val)
 
 	llen += printf(" = %lld ", expr);
 	pad_spc(llen, 64, ret ? "[FAIL]\n" : " [OK]\n");
+=======
+	do { if (!cond) pad_spc(llen, 40, "[SKIPPED]\n"); else ret += expect_eq(expr, llen, val); } while (0)
+
+static int expect_eq(int expr, int llen, int val)
+{
+	int ret = !(expr == val);
+
+	llen += printf(" = %d ", expr);
+	pad_spc(llen, 40, ret ? "[FAIL]\n" : " [OK]\n");
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
 
 #define EXPECT_NE(cond, expr, val)				\
+<<<<<<< HEAD
 	do { if (!cond) pad_spc(llen, 64, "[SKIPPED]\n"); else ret += expect_ne(expr, llen, val); } while (0)
+=======
+	do { if (!cond) pad_spc(llen, 40, "[SKIPPED]\n"); else ret += expect_ne(expr, llen, val); } while (0)
+>>>>>>> b7ba80a49124 (Commit)
 
 static int expect_ne(int expr, int llen, int val)
 {
 	int ret = !(expr != val);
 
 	llen += printf(" = %d ", expr);
+<<<<<<< HEAD
 	pad_spc(llen, 64, ret ? "[FAIL]\n" : " [OK]\n");
+=======
+	pad_spc(llen, 40, ret ? "[FAIL]\n" : " [OK]\n");
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
 
 #define EXPECT_GE(cond, expr, val)				\
+<<<<<<< HEAD
 	do { if (!cond) pad_spc(llen, 64, "[SKIPPED]\n"); else ret += expect_ge(expr, llen, val); } while (0)
+=======
+	do { if (!cond) pad_spc(llen, 40, "[SKIPPED]\n"); else ret += expect_ge(expr, llen, val); } while (0)
+>>>>>>> b7ba80a49124 (Commit)
 
 static int expect_ge(int expr, int llen, int val)
 {
 	int ret = !(expr >= val);
 
 	llen += printf(" = %d ", expr);
+<<<<<<< HEAD
 	pad_spc(llen, 64, ret ? "[FAIL]\n" : " [OK]\n");
+=======
+	pad_spc(llen, 40, ret ? "[FAIL]\n" : " [OK]\n");
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
 
 #define EXPECT_GT(cond, expr, val)				\
+<<<<<<< HEAD
 	do { if (!cond) pad_spc(llen, 64, "[SKIPPED]\n"); else ret += expect_gt(expr, llen, val); } while (0)
+=======
+	do { if (!cond) pad_spc(llen, 40, "[SKIPPED]\n"); else ret += expect_gt(expr, llen, val); } while (0)
+>>>>>>> b7ba80a49124 (Commit)
 
 static int expect_gt(int expr, int llen, int val)
 {
 	int ret = !(expr > val);
 
 	llen += printf(" = %d ", expr);
+<<<<<<< HEAD
 	pad_spc(llen, 64, ret ? "[FAIL]\n" : " [OK]\n");
+=======
+	pad_spc(llen, 40, ret ? "[FAIL]\n" : " [OK]\n");
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
 
 #define EXPECT_LE(cond, expr, val)				\
+<<<<<<< HEAD
 	do { if (!cond) pad_spc(llen, 64, "[SKIPPED]\n"); else ret += expect_le(expr, llen, val); } while (0)
+=======
+	do { if (!cond) pad_spc(llen, 40, "[SKIPPED]\n"); else ret += expect_le(expr, llen, val); } while (0)
+>>>>>>> b7ba80a49124 (Commit)
 
 static int expect_le(int expr, int llen, int val)
 {
 	int ret = !(expr <= val);
 
 	llen += printf(" = %d ", expr);
+<<<<<<< HEAD
 	pad_spc(llen, 64, ret ? "[FAIL]\n" : " [OK]\n");
+=======
+	pad_spc(llen, 40, ret ? "[FAIL]\n" : " [OK]\n");
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
 
 #define EXPECT_LT(cond, expr, val)				\
+<<<<<<< HEAD
 	do { if (!cond) pad_spc(llen, 64, "[SKIPPED]\n"); else ret += expect_lt(expr, llen, val); } while (0)
+=======
+	do { if (!cond) pad_spc(llen, 40, "[SKIPPED]\n"); else ret += expect_lt(expr, llen, val); } while (0)
+>>>>>>> b7ba80a49124 (Commit)
 
 static int expect_lt(int expr, int llen, int val)
 {
 	int ret = !(expr < val);
 
 	llen += printf(" = %d ", expr);
+<<<<<<< HEAD
 	pad_spc(llen, 64, ret ? "[FAIL]\n" : " [OK]\n");
+=======
+	pad_spc(llen, 40, ret ? "[FAIL]\n" : " [OK]\n");
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
 
 #define EXPECT_SYSZR(cond, expr)				\
+<<<<<<< HEAD
 	do { if (!cond) pad_spc(llen, 64, "[SKIPPED]\n"); else ret += expect_syszr(expr, llen); } while (0)
+=======
+	do { if (!cond) pad_spc(llen, 40, "[SKIPPED]\n"); else ret += expect_syszr(expr, llen); } while (0)
+>>>>>>> b7ba80a49124 (Commit)
 
 static int expect_syszr(int expr, int llen)
 {
@@ -243,17 +314,28 @@ static int expect_syszr(int expr, int llen)
 	if (expr) {
 		ret = 1;
 		llen += printf(" = %d %s ", expr, errorname(errno));
+<<<<<<< HEAD
 		llen += pad_spc(llen, 64, "[FAIL]\n");
 	} else {
 		llen += printf(" = %d ", expr);
 		llen += pad_spc(llen, 64, " [OK]\n");
+=======
+		llen += pad_spc(llen, 40, "[FAIL]\n");
+	} else {
+		llen += printf(" = %d ", expr);
+		llen += pad_spc(llen, 40, " [OK]\n");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return ret;
 }
 
 
 #define EXPECT_SYSEQ(cond, expr, val)				\
+<<<<<<< HEAD
 	do { if (!cond) pad_spc(llen, 64, "[SKIPPED]\n"); else ret += expect_syseq(expr, llen, val); } while (0)
+=======
+	do { if (!cond) pad_spc(llen, 40, "[SKIPPED]\n"); else ret += expect_syseq(expr, llen, val); } while (0)
+>>>>>>> b7ba80a49124 (Commit)
 
 static int expect_syseq(int expr, int llen, int val)
 {
@@ -262,17 +344,28 @@ static int expect_syseq(int expr, int llen, int val)
 	if (expr != val) {
 		ret = 1;
 		llen += printf(" = %d %s ", expr, errorname(errno));
+<<<<<<< HEAD
 		llen += pad_spc(llen, 64, "[FAIL]\n");
 	} else {
 		llen += printf(" = %d ", expr);
 		llen += pad_spc(llen, 64, " [OK]\n");
+=======
+		llen += pad_spc(llen, 40, "[FAIL]\n");
+	} else {
+		llen += printf(" = %d ", expr);
+		llen += pad_spc(llen, 40, " [OK]\n");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return ret;
 }
 
 
 #define EXPECT_SYSNE(cond, expr, val)				\
+<<<<<<< HEAD
 	do { if (!cond) pad_spc(llen, 64, "[SKIPPED]\n"); else ret += expect_sysne(expr, llen, val); } while (0)
+=======
+	do { if (!cond) pad_spc(llen, 40, "[SKIPPED]\n"); else ret += expect_sysne(expr, llen, val); } while (0)
+>>>>>>> b7ba80a49124 (Commit)
 
 static int expect_sysne(int expr, int llen, int val)
 {
@@ -281,17 +374,28 @@ static int expect_sysne(int expr, int llen, int val)
 	if (expr == val) {
 		ret = 1;
 		llen += printf(" = %d %s ", expr, errorname(errno));
+<<<<<<< HEAD
 		llen += pad_spc(llen, 64, "[FAIL]\n");
 	} else {
 		llen += printf(" = %d ", expr);
 		llen += pad_spc(llen, 64, " [OK]\n");
+=======
+		llen += pad_spc(llen, 40, "[FAIL]\n");
+	} else {
+		llen += printf(" = %d ", expr);
+		llen += pad_spc(llen, 40, " [OK]\n");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return ret;
 }
 
 
 #define EXPECT_SYSER(cond, expr, expret, experr)			\
+<<<<<<< HEAD
 	do { if (!cond) pad_spc(llen, 64, "[SKIPPED]\n"); else ret += expect_syserr(expr, expret, experr, llen); } while (0)
+=======
+	do { if (!cond) pad_spc(llen, 40, "[SKIPPED]\n"); else ret += expect_syserr(expr, expret, experr, llen); } while (0)
+>>>>>>> b7ba80a49124 (Commit)
 
 static int expect_syserr(int expr, int expret, int experr, int llen)
 {
@@ -302,16 +406,26 @@ static int expect_syserr(int expr, int expret, int experr, int llen)
 	if (expr != expret || _errno != experr) {
 		ret = 1;
 		llen += printf(" != (%d %s) ", expret, errorname(experr));
+<<<<<<< HEAD
 		llen += pad_spc(llen, 64, "[FAIL]\n");
 	} else {
 		llen += pad_spc(llen, 64, " [OK]\n");
+=======
+		llen += pad_spc(llen, 40, "[FAIL]\n");
+	} else {
+		llen += pad_spc(llen, 40, " [OK]\n");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return ret;
 }
 
 
 #define EXPECT_PTRZR(cond, expr)				\
+<<<<<<< HEAD
 	do { if (!cond) pad_spc(llen, 64, "[SKIPPED]\n"); else ret += expect_ptrzr(expr, llen); } while (0)
+=======
+	do { if (!cond) pad_spc(llen, 40, "[SKIPPED]\n"); else ret += expect_ptrzr(expr, llen); } while (0)
+>>>>>>> b7ba80a49124 (Commit)
 
 static int expect_ptrzr(const void *expr, int llen)
 {
@@ -320,16 +434,26 @@ static int expect_ptrzr(const void *expr, int llen)
 	llen += printf(" = <%p> ", expr);
 	if (expr) {
 		ret = 1;
+<<<<<<< HEAD
 		llen += pad_spc(llen, 64, "[FAIL]\n");
 	} else {
 		llen += pad_spc(llen, 64, " [OK]\n");
+=======
+		llen += pad_spc(llen, 40, "[FAIL]\n");
+	} else {
+		llen += pad_spc(llen, 40, " [OK]\n");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return ret;
 }
 
 
 #define EXPECT_PTRNZ(cond, expr)				\
+<<<<<<< HEAD
 	do { if (!cond) pad_spc(llen, 64, "[SKIPPED]\n"); else ret += expect_ptrnz(expr, llen); } while (0)
+=======
+	do { if (!cond) pad_spc(llen, 40, "[SKIPPED]\n"); else ret += expect_ptrnz(expr, llen); } while (0)
+>>>>>>> b7ba80a49124 (Commit)
 
 static int expect_ptrnz(const void *expr, int llen)
 {
@@ -338,16 +462,26 @@ static int expect_ptrnz(const void *expr, int llen)
 	llen += printf(" = <%p> ", expr);
 	if (!expr) {
 		ret = 1;
+<<<<<<< HEAD
 		llen += pad_spc(llen, 64, "[FAIL]\n");
 	} else {
 		llen += pad_spc(llen, 64, " [OK]\n");
+=======
+		llen += pad_spc(llen, 40, "[FAIL]\n");
+	} else {
+		llen += pad_spc(llen, 40, " [OK]\n");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return ret;
 }
 
 
 #define EXPECT_STRZR(cond, expr)				\
+<<<<<<< HEAD
 	do { if (!cond) pad_spc(llen, 64, "[SKIPPED]\n"); else ret += expect_strzr(expr, llen); } while (0)
+=======
+	do { if (!cond) pad_spc(llen, 40, "[SKIPPED]\n"); else ret += expect_strzr(expr, llen); } while (0)
+>>>>>>> b7ba80a49124 (Commit)
 
 static int expect_strzr(const char *expr, int llen)
 {
@@ -356,16 +490,26 @@ static int expect_strzr(const char *expr, int llen)
 	llen += printf(" = <%s> ", expr);
 	if (expr) {
 		ret = 1;
+<<<<<<< HEAD
 		llen += pad_spc(llen, 64, "[FAIL]\n");
 	} else {
 		llen += pad_spc(llen, 64, " [OK]\n");
+=======
+		llen += pad_spc(llen, 40, "[FAIL]\n");
+	} else {
+		llen += pad_spc(llen, 40, " [OK]\n");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return ret;
 }
 
 
 #define EXPECT_STRNZ(cond, expr)				\
+<<<<<<< HEAD
 	do { if (!cond) pad_spc(llen, 64, "[SKIPPED]\n"); else ret += expect_strnz(expr, llen); } while (0)
+=======
+	do { if (!cond) pad_spc(llen, 40, "[SKIPPED]\n"); else ret += expect_strnz(expr, llen); } while (0)
+>>>>>>> b7ba80a49124 (Commit)
 
 static int expect_strnz(const char *expr, int llen)
 {
@@ -374,16 +518,26 @@ static int expect_strnz(const char *expr, int llen)
 	llen += printf(" = <%s> ", expr);
 	if (!expr) {
 		ret = 1;
+<<<<<<< HEAD
 		llen += pad_spc(llen, 64, "[FAIL]\n");
 	} else {
 		llen += pad_spc(llen, 64, " [OK]\n");
+=======
+		llen += pad_spc(llen, 40, "[FAIL]\n");
+	} else {
+		llen += pad_spc(llen, 40, " [OK]\n");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return ret;
 }
 
 
 #define EXPECT_STREQ(cond, expr, cmp)				\
+<<<<<<< HEAD
 	do { if (!cond) pad_spc(llen, 64, "[SKIPPED]\n"); else ret += expect_streq(expr, llen, cmp); } while (0)
+=======
+	do { if (!cond) pad_spc(llen, 40, "[SKIPPED]\n"); else ret += expect_streq(expr, llen, cmp); } while (0)
+>>>>>>> b7ba80a49124 (Commit)
 
 static int expect_streq(const char *expr, int llen, const char *cmp)
 {
@@ -392,16 +546,26 @@ static int expect_streq(const char *expr, int llen, const char *cmp)
 	llen += printf(" = <%s> ", expr);
 	if (strcmp(expr, cmp) != 0) {
 		ret = 1;
+<<<<<<< HEAD
 		llen += pad_spc(llen, 64, "[FAIL]\n");
 	} else {
 		llen += pad_spc(llen, 64, " [OK]\n");
+=======
+		llen += pad_spc(llen, 40, "[FAIL]\n");
+	} else {
+		llen += pad_spc(llen, 40, " [OK]\n");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return ret;
 }
 
 
 #define EXPECT_STRNE(cond, expr, cmp)				\
+<<<<<<< HEAD
 	do { if (!cond) pad_spc(llen, 64, "[SKIPPED]\n"); else ret += expect_strne(expr, llen, cmp); } while (0)
+=======
+	do { if (!cond) pad_spc(llen, 40, "[SKIPPED]\n"); else ret += expect_strne(expr, llen, cmp); } while (0)
+>>>>>>> b7ba80a49124 (Commit)
 
 static int expect_strne(const char *expr, int llen, const char *cmp)
 {
@@ -410,9 +574,15 @@ static int expect_strne(const char *expr, int llen, const char *cmp)
 	llen += printf(" = <%s> ", expr);
 	if (strcmp(expr, cmp) == 0) {
 		ret = 1;
+<<<<<<< HEAD
 		llen += pad_spc(llen, 64, "[FAIL]\n");
 	} else {
 		llen += pad_spc(llen, 64, " [OK]\n");
+=======
+		llen += pad_spc(llen, 40, "[FAIL]\n");
+	} else {
+		llen += pad_spc(llen, 40, " [OK]\n");
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return ret;
 }
@@ -442,6 +612,7 @@ int test_getdents64(const char *dir)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int test_getpagesize(void)
 {
 	long x = getpagesize();
@@ -471,13 +642,18 @@ static int test_getpagesize(void)
 	return !c;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Run syscall tests between IDs <min> and <max>.
  * Return 0 on success, non-zero on failure.
  */
 int run_syscall(int min, int max)
 {
 	struct stat stat_buf;
+<<<<<<< HEAD
 	int euid0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int proc;
 	int test;
 	int tmp;
@@ -487,9 +663,12 @@ int run_syscall(int min, int max)
 	/* <proc> indicates whether or not /proc is mounted */
 	proc = stat("/proc", &stat_buf) == 0;
 
+<<<<<<< HEAD
 	/* this will be used to skip certain tests that can't be run unprivileged */
 	euid0 = geteuid() == 0;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	for (test = min; test >= 0 && test <= max; test++) {
 		int llen = 0; // line length
 
@@ -515,7 +694,11 @@ int run_syscall(int min, int max)
 		CASE_TEST(chmod_net);         EXPECT_SYSZR(proc, chmod("/proc/self/net", 0555)); break;
 		CASE_TEST(chmod_self);        EXPECT_SYSER(proc, chmod("/proc/self", 0555), -1, EPERM); break;
 		CASE_TEST(chown_self);        EXPECT_SYSER(proc, chown("/proc/self", 0, 0), -1, EPERM); break;
+<<<<<<< HEAD
 		CASE_TEST(chroot_root);       EXPECT_SYSZR(euid0, chroot("/")); break;
+=======
+		CASE_TEST(chroot_root);       EXPECT_SYSZR(1, chroot("/")); break;
+>>>>>>> b7ba80a49124 (Commit)
 		CASE_TEST(chroot_blah);       EXPECT_SYSER(1, chroot("/proc/self/blah"), -1, ENOENT); break;
 		CASE_TEST(chroot_exe);        EXPECT_SYSER(proc, chroot("/proc/self/exe"), -1, ENOTDIR); break;
 		CASE_TEST(close_m1);          EXPECT_SYSER(1, close(-1), -1, EBADF); break;
@@ -535,12 +718,19 @@ int run_syscall(int min, int max)
 		CASE_TEST(gettimeofday_bad2); EXPECT_SYSER(1, gettimeofday(NULL, (void *)1), -1, EFAULT); break;
 		CASE_TEST(gettimeofday_bad2); EXPECT_SYSER(1, gettimeofday(NULL, (void *)1), -1, EFAULT); break;
 #endif
+<<<<<<< HEAD
 		CASE_TEST(getpagesize);       EXPECT_SYSZR(1, test_getpagesize()); break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		CASE_TEST(ioctl_tiocinq);     EXPECT_SYSZR(1, ioctl(0, TIOCINQ, &tmp)); break;
 		CASE_TEST(ioctl_tiocinq);     EXPECT_SYSZR(1, ioctl(0, TIOCINQ, &tmp)); break;
 		CASE_TEST(link_root1);        EXPECT_SYSER(1, link("/", "/"), -1, EEXIST); break;
 		CASE_TEST(link_blah);         EXPECT_SYSER(1, link("/proc/self/blah", "/blah"), -1, ENOENT); break;
+<<<<<<< HEAD
 		CASE_TEST(link_dir);          EXPECT_SYSER(euid0, link("/", "/blah"), -1, EPERM); break;
+=======
+		CASE_TEST(link_dir);          EXPECT_SYSER(1, link("/", "/blah"), -1, EPERM); break;
+>>>>>>> b7ba80a49124 (Commit)
 		CASE_TEST(link_cross);        EXPECT_SYSER(proc, link("/proc/self/net", "/blah"), -1, EXDEV); break;
 		CASE_TEST(lseek_m1);          EXPECT_SYSER(1, lseek(-1, 0, SEEK_SET), -1, EBADF); break;
 		CASE_TEST(lseek_0);           EXPECT_SYSER(1, lseek(0, 0, SEEK_SET), -1, ESPIPE); break;
@@ -599,6 +789,7 @@ int run_stdlib(int min, int max)
 		CASE_TEST(strchr_foobar_z);    EXPECT_STRZR(1, strchr("foobar", 'z')); break;
 		CASE_TEST(strrchr_foobar_o);   EXPECT_STREQ(1, strrchr("foobar", 'o'), "obar"); break;
 		CASE_TEST(strrchr_foobar_z);   EXPECT_STRZR(1, strrchr("foobar", 'z')); break;
+<<<<<<< HEAD
 		CASE_TEST(memcmp_20_20);       EXPECT_EQ(1, memcmp("aaa\x20", "aaa\x20", 4), 0); break;
 		CASE_TEST(memcmp_20_60);       EXPECT_LT(1, memcmp("aaa\x20", "aaa\x60", 4), 0); break;
 		CASE_TEST(memcmp_60_20);       EXPECT_GT(1, memcmp("aaa\x60", "aaa\x20", 4), 0); break;
@@ -659,6 +850,8 @@ int run_stdlib(int min, int max)
 #else
 # warning "__SIZEOF_LONG__ is undefined"
 #endif /* __SIZEOF_LONG__ */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		case __LINE__:
 			return ret; /* must be last */
 		/* note: do not set any defaults so as to permit holes above */

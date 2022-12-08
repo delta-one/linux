@@ -16,6 +16,10 @@
 #include <linux/pci_regs.h>
 #include <linux/platform_device.h>
 
+<<<<<<< HEAD
+=======
+#include "../../pci.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "pcie-designware.h"
 
 static struct pci_ops dw_pcie_ops;
@@ -366,6 +370,7 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
 						    dw_chained_msi_isr, pp);
 	}
 
+<<<<<<< HEAD
 	/*
 	 * Even though the iMSI-RX Module supports 64-bit addresses some
 	 * peripheral PCIe devices may lack 64-bit message support. In
@@ -377,15 +382,38 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
 	 * memory.
 	 */
 	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
+=======
+	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
 
 	msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
 					GFP_KERNEL);
 	if (!msi_vaddr) {
+<<<<<<< HEAD
 		dev_err(dev, "Failed to alloc and map MSI data\n");
 		dw_pcie_free_msi(pp);
 		return -ENOMEM;
+=======
+		u16 msi_capabilities;
+
+		/* Retry the allocation with a 64-bit mask if supported. */
+		msi_capabilities = dw_pcie_msi_capabilities(pci);
+		if ((msi_capabilities & PCI_MSI_FLAGS_ENABLE) &&
+		    (msi_capabilities & PCI_MSI_FLAGS_64BIT)) {
+			dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
+			msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64),
+							&pp->msi_data,
+							GFP_KERNEL);
+		}
+
+		if (!msi_vaddr) {
+			dev_err(dev, "Failed to alloc and map MSI data\n");
+			dw_pcie_free_msi(pp);
+			return -ENOMEM;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -404,10 +432,13 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
 
 	raw_spin_lock_init(&pp->lock);
 
+<<<<<<< HEAD
 	ret = dw_pcie_get_resources(pci);
 	if (ret)
 		return ret;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
 	if (res) {
 		pp->cfg0_size = resource_size(res);
@@ -421,6 +452,16 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
 		return -ENODEV;
 	}
 
+<<<<<<< HEAD
+=======
+	if (!pci->dbi_base) {
+		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+		pci->dbi_base = devm_pci_remap_cfg_resource(dev, res);
+		if (IS_ERR(pci->dbi_base))
+			return PTR_ERR(pci->dbi_base);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	bridge = devm_pci_alloc_host_bridge(dev, 0);
 	if (!bridge)
 		return -ENOMEM;
@@ -435,6 +476,12 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
 		pp->io_base = pci_pio_to_address(win->res->start);
 	}
 
+<<<<<<< HEAD
+=======
+	if (pci->link_gen < 1)
+		pci->link_gen = of_pci_get_max_link_speed(np);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Set default bus ops */
 	bridge->ops = &dw_pcie_ops;
 	bridge->child_ops = &dw_child_pcie_ops;
@@ -477,6 +524,7 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
 
 	dw_pcie_iatu_detect(pci);
 
+<<<<<<< HEAD
 	ret = dw_pcie_edma_detect(pci);
 	if (ret)
 		goto err_free_msi;
@@ -484,11 +532,20 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
 	ret = dw_pcie_setup_rc(pp);
 	if (ret)
 		goto err_remove_edma;
+=======
+	ret = dw_pcie_setup_rc(pp);
+	if (ret)
+		goto err_free_msi;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!dw_pcie_link_up(pci)) {
 		ret = dw_pcie_start_link(pci);
 		if (ret)
+<<<<<<< HEAD
 			goto err_remove_edma;
+=======
+			goto err_free_msi;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Ignore errors, the link may come up later */
@@ -505,9 +562,12 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
 err_stop_link:
 	dw_pcie_stop_link(pci);
 
+<<<<<<< HEAD
 err_remove_edma:
 	dw_pcie_edma_remove(pci);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 err_free_msi:
 	if (pp->has_msi_ctrl)
 		dw_pcie_free_msi(pp);
@@ -529,8 +589,11 @@ void dw_pcie_host_deinit(struct dw_pcie_rp *pp)
 
 	dw_pcie_stop_link(pci);
 
+<<<<<<< HEAD
 	dw_pcie_edma_remove(pci);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (pp->has_msi_ctrl)
 		dw_pcie_free_msi(pp);
 
@@ -655,15 +718,23 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
 	}
 
 	/*
+<<<<<<< HEAD
 	 * Ensure all out/inbound windows are disabled before proceeding with
 	 * the MEM/IO (dma-)ranges setups.
+=======
+	 * Ensure all outbound windows are disabled before proceeding with
+	 * the MEM/IO ranges setups.
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	for (i = 0; i < pci->num_ob_windows; i++)
 		dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_OB, i);
 
+<<<<<<< HEAD
 	for (i = 0; i < pci->num_ib_windows; i++)
 		dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_IB, i);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	i = 0;
 	resource_list_for_each_entry(entry, &pp->bridge->windows) {
 		if (resource_type(entry->res) != IORESOURCE_MEM)
@@ -700,6 +771,7 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
 	}
 
 	if (pci->num_ob_windows <= i)
+<<<<<<< HEAD
 		dev_warn(pci->dev, "Ranges exceed outbound iATU size (%d)\n",
 			 pci->num_ob_windows);
 
@@ -726,6 +798,11 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
 		dev_warn(pci->dev, "Dma-ranges exceed inbound iATU size (%u)\n",
 			 pci->num_ib_windows);
 
+=======
+		dev_warn(pci->dev, "Resources exceed number of ATU entries (%d)\n",
+			 pci->num_ob_windows);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

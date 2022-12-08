@@ -46,6 +46,7 @@ struct {
 	__type(value, struct elem);
 } lru SEC(".maps");
 
+<<<<<<< HEAD
 struct {
 	__uint(type, BPF_MAP_TYPE_ARRAY);
 	__uint(max_entries, 1);
@@ -55,6 +56,9 @@ struct {
 
 __u64 bss_data;
 __u64 abs_data;
+=======
+__u64 bss_data;
+>>>>>>> b7ba80a49124 (Commit)
 __u64 err;
 __u64 ok;
 __u64 callback_check = 52;
@@ -292,6 +296,7 @@ int BPF_PROG2(test2, int, a, int, b)
 
 	return bpf_timer_test();
 }
+<<<<<<< HEAD
 
 /* callback for absolute timer */
 static int timer_cb3(void *map, int *key, struct bpf_timer *timer)
@@ -329,3 +334,5 @@ int BPF_PROG2(test3, int, a)
 
 	return 0;
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)

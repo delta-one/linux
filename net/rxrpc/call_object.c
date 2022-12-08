@@ -45,6 +45,7 @@ static struct semaphore rxrpc_call_limiter =
 static struct semaphore rxrpc_kernel_call_limiter =
 	__SEMAPHORE_INITIALIZER(rxrpc_kernel_call_limiter, 1000);
 
+<<<<<<< HEAD
 void rxrpc_poke_call(struct rxrpc_call *call, enum rxrpc_call_poke_trace what)
 {
 	struct rxrpc_local *local = call->local;
@@ -65,15 +66,25 @@ void rxrpc_poke_call(struct rxrpc_call *call, enum rxrpc_call_poke_trace what)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void rxrpc_call_timer_expired(struct timer_list *t)
 {
 	struct rxrpc_call *call = from_timer(call, t, timer);
 
 	_enter("%d", call->debug_id);
 
+<<<<<<< HEAD
 	if (!__rxrpc_call_is_complete(call)) {
 		trace_rxrpc_timer_expired(call, jiffies);
 		rxrpc_poke_call(call, rxrpc_call_poke_timer);
+=======
+	if (call->state < RXRPC_CALL_COMPLETE) {
+		trace_rxrpc_timer(call, rxrpc_timer_expired, jiffies);
+		__rxrpc_queue_call(call);
+	} else {
+		rxrpc_put_call(call, rxrpc_call_put);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -82,14 +93,31 @@ void rxrpc_reduce_call_timer(struct rxrpc_call *call,
 			     unsigned long now,
 			     enum rxrpc_timer_trace why)
 {
+<<<<<<< HEAD
 	trace_rxrpc_timer(call, why, now);
 	timer_reduce(&call->timer, expire_at);
+=======
+	if (rxrpc_try_get_call(call, rxrpc_call_got_timer)) {
+		trace_rxrpc_timer(call, why, now);
+		if (timer_reduce(&call->timer, expire_at))
+			rxrpc_put_call(call, rxrpc_call_put_notimer);
+	}
+}
+
+void rxrpc_delete_call_timer(struct rxrpc_call *call)
+{
+	if (del_timer_sync(&call->timer))
+		rxrpc_put_call(call, rxrpc_call_put_timer);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static struct lock_class_key rxrpc_call_user_mutex_lock_class_key;
 
+<<<<<<< HEAD
 static void rxrpc_destroy_call(struct work_struct *);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * find an extant server call
  * - called in process context with IRQs enabled
@@ -121,7 +149,11 @@ struct rxrpc_call *rxrpc_find_call_by_user_ID(struct rxrpc_sock *rx,
 	return NULL;
 
 found_extant_call:
+<<<<<<< HEAD
 	rxrpc_get_call(call, rxrpc_call_get_sendmsg);
+=======
+	rxrpc_get_call(call, rxrpc_call_got);
+>>>>>>> b7ba80a49124 (Commit)
 	read_unlock(&rx->call_lock);
 	_leave(" = %p [%d]", call, refcount_read(&call->ref));
 	return call;
@@ -140,6 +172,19 @@ struct rxrpc_call *rxrpc_alloc_call(struct rxrpc_sock *rx, gfp_t gfp,
 	if (!call)
 		return NULL;
 
+<<<<<<< HEAD
+=======
+	call->rxtx_buffer = kcalloc(RXRPC_RXTX_BUFF_SIZE,
+				    sizeof(struct sk_buff *),
+				    gfp);
+	if (!call->rxtx_buffer)
+		goto nomem;
+
+	call->rxtx_annotations = kcalloc(RXRPC_RXTX_BUFF_SIZE, sizeof(u8), gfp);
+	if (!call->rxtx_annotations)
+		goto nomem_2;
+
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_init(&call->user_mutex);
 
 	/* Prevent lockdep reporting a deadlock false positive between the afs
@@ -150,6 +195,7 @@ struct rxrpc_call *rxrpc_alloc_call(struct rxrpc_sock *rx, gfp_t gfp,
 				  &rxrpc_call_user_mutex_lock_class_key);
 
 	timer_setup(&call->timer, rxrpc_call_timer_expired, 0);
+<<<<<<< HEAD
 	INIT_WORK(&call->destroyer, rxrpc_destroy_call);
 	INIT_LIST_HEAD(&call->link);
 	INIT_LIST_HEAD(&call->wait_link);
@@ -164,11 +210,25 @@ struct rxrpc_call *rxrpc_alloc_call(struct rxrpc_sock *rx, gfp_t gfp,
 	init_waitqueue_head(&call->waitq);
 	spin_lock_init(&call->notify_lock);
 	spin_lock_init(&call->tx_lock);
+=======
+	INIT_WORK(&call->processor, &rxrpc_process_call);
+	INIT_LIST_HEAD(&call->link);
+	INIT_LIST_HEAD(&call->chan_wait_link);
+	INIT_LIST_HEAD(&call->accept_link);
+	INIT_LIST_HEAD(&call->recvmsg_link);
+	INIT_LIST_HEAD(&call->sock_link);
+	init_waitqueue_head(&call->waitq);
+	spin_lock_init(&call->lock);
+	spin_lock_init(&call->notify_lock);
+	spin_lock_init(&call->input_lock);
+	rwlock_init(&call->state_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	refcount_set(&call->ref, 1);
 	call->debug_id = debug_id;
 	call->tx_total_len = -1;
 	call->next_rx_timo = 20 * HZ;
 	call->next_req_timo = 1 * HZ;
+<<<<<<< HEAD
 	call->ackr_window = 1;
 	call->ackr_wtop = 1;
 
@@ -184,11 +244,32 @@ struct rxrpc_call *rxrpc_alloc_call(struct rxrpc_sock *rx, gfp_t gfp,
 	else
 		call->cong_cwnd = 4;
 	call->cong_ssthresh = RXRPC_TX_MAX_WINDOW;
+=======
+
+	memset(&call->sock_node, 0xed, sizeof(call->sock_node));
+
+	/* Leave space in the ring to handle a maxed-out jumbo packet */
+	call->rx_winsize = rxrpc_rx_window_size;
+	call->tx_winsize = 16;
+	call->rx_expect_next = 1;
+
+	call->cong_cwnd = 2;
+	call->cong_ssthresh = RXRPC_RXTX_BUFF_SIZE - 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	call->rxnet = rxnet;
 	call->rtt_avail = RXRPC_CALL_RTT_AVAIL_MASK;
 	atomic_inc(&rxnet->nr_calls);
 	return call;
+<<<<<<< HEAD
+=======
+
+nomem_2:
+	kfree(call->rxtx_buffer);
+nomem:
+	kmem_cache_free(rxrpc_call_jar, call);
+	return NULL;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -196,20 +277,27 @@ struct rxrpc_call *rxrpc_alloc_call(struct rxrpc_sock *rx, gfp_t gfp,
  */
 static struct rxrpc_call *rxrpc_alloc_client_call(struct rxrpc_sock *rx,
 						  struct sockaddr_rxrpc *srx,
+<<<<<<< HEAD
 						  struct rxrpc_conn_parameters *cp,
 						  struct rxrpc_call_params *p,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 						  gfp_t gfp,
 						  unsigned int debug_id)
 {
 	struct rxrpc_call *call;
 	ktime_t now;
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	_enter("");
 
 	call = rxrpc_alloc_call(rx, gfp, debug_id);
 	if (!call)
 		return ERR_PTR(-ENOMEM);
+<<<<<<< HEAD
 	now = ktime_get_real();
 	call->acks_latest_ts	= now;
 	call->cong_tstamp	= now;
@@ -237,6 +325,14 @@ static struct rxrpc_call *rxrpc_alloc_client_call(struct rxrpc_sock *rx,
 
 	trace_rxrpc_call(call->debug_id, refcount_read(&call->ref),
 			 p->user_call_ID, rxrpc_call_new_client);
+=======
+	call->state = RXRPC_CALL_CLIENT_AWAIT_CONN;
+	call->service_id = srx->srx_service;
+	call->tx_phase = true;
+	now = ktime_get_real();
+	call->acks_latest_ts = now;
+	call->cong_tstamp = now;
+>>>>>>> b7ba80a49124 (Commit)
 
 	_leave(" = %p", call);
 	return call;
@@ -245,16 +341,27 @@ static struct rxrpc_call *rxrpc_alloc_client_call(struct rxrpc_sock *rx,
 /*
  * Initiate the call ack/resend/expiry timer.
  */
+<<<<<<< HEAD
 void rxrpc_start_call_timer(struct rxrpc_call *call)
+=======
+static void rxrpc_start_call_timer(struct rxrpc_call *call)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned long now = jiffies;
 	unsigned long j = now + MAX_JIFFY_OFFSET;
 
+<<<<<<< HEAD
 	call->delay_ack_at = j;
 	call->ack_lost_at = j;
 	call->resend_at = j;
 	call->ping_at = j;
 	call->keepalive_at = j;
+=======
+	call->ack_at = j;
+	call->ack_lost_at = j;
+	call->resend_at = j;
+	call->ping_at = j;
+>>>>>>> b7ba80a49124 (Commit)
 	call->expect_rx_by = j;
 	call->expect_req_by = j;
 	call->expect_term_by = j;
@@ -290,6 +397,7 @@ static void rxrpc_put_call_slot(struct rxrpc_call *call)
 }
 
 /*
+<<<<<<< HEAD
  * Start the process of connecting a call.  We obtain a peer and a connection
  * bundle, but the actual association of a call with a connection is offloaded
  * to the I/O thread to simplify locking.
@@ -323,6 +431,8 @@ error:
 }
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * Set up a call for the given parameters.
  * - Called with the socket lock held, which it must release.
  * - If it returns a call, the call's lock will need releasing by the caller.
@@ -340,6 +450,10 @@ struct rxrpc_call *rxrpc_new_client_call(struct rxrpc_sock *rx,
 	struct rxrpc_net *rxnet;
 	struct semaphore *limiter;
 	struct rb_node *parent, **pp;
+<<<<<<< HEAD
+=======
+	const void *here = __builtin_return_address(0);
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	_enter("%p,%lx", rx, p->user_call_ID);
@@ -350,7 +464,11 @@ struct rxrpc_call *rxrpc_new_client_call(struct rxrpc_sock *rx,
 		return ERR_PTR(-ERESTARTSYS);
 	}
 
+<<<<<<< HEAD
 	call = rxrpc_alloc_client_call(rx, srx, cp, p, gfp, debug_id);
+=======
+	call = rxrpc_alloc_client_call(rx, srx, gfp, debug_id);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(call)) {
 		release_sock(&rx->sk);
 		up(limiter);
@@ -358,6 +476,17 @@ struct rxrpc_call *rxrpc_new_client_call(struct rxrpc_sock *rx,
 		return call;
 	}
 
+<<<<<<< HEAD
+=======
+	call->interruptibility = p->interruptibility;
+	call->tx_total_len = p->tx_total_len;
+	trace_rxrpc_call(call->debug_id, rxrpc_call_new_client,
+			 refcount_read(&call->ref),
+			 here, (const void *)p->user_call_ID);
+	if (p->kernel)
+		__set_bit(RXRPC_CALL_KERNEL, &call->flags);
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* We need to protect a partially set up call against the user as we
 	 * will be acting outside the socket lock.
 	 */
@@ -383,7 +512,11 @@ struct rxrpc_call *rxrpc_new_client_call(struct rxrpc_sock *rx,
 	rcu_assign_pointer(call->socket, rx);
 	call->user_call_ID = p->user_call_ID;
 	__set_bit(RXRPC_CALL_HAS_USERID, &call->flags);
+<<<<<<< HEAD
 	rxrpc_get_call(call, rxrpc_call_get_userid);
+=======
+	rxrpc_get_call(call, rxrpc_call_got_userid);
+>>>>>>> b7ba80a49124 (Commit)
 	rb_link_node(&call->sock_node, parent, pp);
 	rb_insert_color(&call->sock_node, &rx->calls);
 	list_add(&call->sock_link, &rx->sock_calls);
@@ -391,9 +524,15 @@ struct rxrpc_call *rxrpc_new_client_call(struct rxrpc_sock *rx,
 	write_unlock(&rx->call_lock);
 
 	rxnet = call->rxnet;
+<<<<<<< HEAD
 	spin_lock(&rxnet->call_lock);
 	list_add_tail_rcu(&call->link, &rxnet->calls);
 	spin_unlock(&rxnet->call_lock);
+=======
+	spin_lock_bh(&rxnet->call_lock);
+	list_add_tail_rcu(&call->link, &rxnet->calls);
+	spin_unlock_bh(&rxnet->call_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* From this point on, the call is protected by its own lock. */
 	release_sock(&rx->sk);
@@ -401,10 +540,24 @@ struct rxrpc_call *rxrpc_new_client_call(struct rxrpc_sock *rx,
 	/* Set up or get a connection record and set the protocol parameters,
 	 * including channel number and call ID.
 	 */
+<<<<<<< HEAD
 	ret = rxrpc_connect_call(call, gfp);
 	if (ret < 0)
 		goto error_attached_to_socket;
 
+=======
+	ret = rxrpc_connect_call(rx, call, cp, srx, gfp);
+	if (ret < 0)
+		goto error_attached_to_socket;
+
+	trace_rxrpc_call(call->debug_id, rxrpc_call_connected,
+			 refcount_read(&call->ref), here, NULL);
+
+	rxrpc_start_call_timer(call);
+
+	_net("CALL new %d on CONN %d", call->debug_id, call->conn->debug_id);
+
+>>>>>>> b7ba80a49124 (Commit)
 	_leave(" = %p [new]", call);
 	return call;
 
@@ -416,15 +569,26 @@ struct rxrpc_call *rxrpc_new_client_call(struct rxrpc_sock *rx,
 error_dup_user_ID:
 	write_unlock(&rx->call_lock);
 	release_sock(&rx->sk);
+<<<<<<< HEAD
 	rxrpc_prefail_call(call, RXRPC_CALL_LOCAL_ERROR, -EEXIST);
 	trace_rxrpc_call(call->debug_id, refcount_read(&call->ref), 0,
 			 rxrpc_call_see_userid_exists);
 	mutex_unlock(&call->user_mutex);
 	rxrpc_put_call(call, rxrpc_call_put_userid_exists);
+=======
+	__rxrpc_set_call_completion(call, RXRPC_CALL_LOCAL_ERROR,
+				    RX_CALL_DEAD, -EEXIST);
+	trace_rxrpc_call(call->debug_id, rxrpc_call_error,
+			 refcount_read(&call->ref), here, ERR_PTR(-EEXIST));
+	rxrpc_release_call(rx, call);
+	mutex_unlock(&call->user_mutex);
+	rxrpc_put_call(call, rxrpc_call_put);
+>>>>>>> b7ba80a49124 (Commit)
 	_leave(" = -EEXIST");
 	return ERR_PTR(-EEXIST);
 
 	/* We got an error, but the call is attached to the socket and is in
+<<<<<<< HEAD
 	 * need of release.  However, we might now race with recvmsg() when it
 	 * completion notifies the socket.  Return 0 from sys_sendmsg() and
 	 * leave the error to recvmsg() to deal with.
@@ -433,6 +597,18 @@ error_attached_to_socket:
 	trace_rxrpc_call(call->debug_id, refcount_read(&call->ref), ret,
 			 rxrpc_call_see_connect_failed);
 	rxrpc_set_call_completion(call, RXRPC_CALL_LOCAL_ERROR, 0, ret);
+=======
+	 * need of release.  However, we might now race with recvmsg() when
+	 * completing the call queues it.  Return 0 from sys_sendmsg() and
+	 * leave the error to recvmsg() to deal with.
+	 */
+error_attached_to_socket:
+	trace_rxrpc_call(call->debug_id, rxrpc_call_error,
+			 refcount_read(&call->ref), here, ERR_PTR(ret));
+	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
+	__rxrpc_set_call_completion(call, RXRPC_CALL_LOCAL_ERROR,
+				    RX_CALL_DEAD, ret);
+>>>>>>> b7ba80a49124 (Commit)
 	_leave(" = c=%08x [err]", call->debug_id);
 	return call;
 }
@@ -453,6 +629,7 @@ void rxrpc_incoming_call(struct rxrpc_sock *rx,
 
 	rcu_assign_pointer(call->socket, rx);
 	call->call_id		= sp->hdr.callNumber;
+<<<<<<< HEAD
 	call->dest_srx.srx_service = sp->hdr.serviceId;
 	call->cid		= sp->hdr.cid;
 	call->cong_tstamp	= skb->tstamp;
@@ -481,6 +658,13 @@ void rxrpc_incoming_call(struct rxrpc_sock *rx,
 
 	rxrpc_get_call(call, rxrpc_call_get_io_thread);
 
+=======
+	call->service_id	= sp->hdr.serviceId;
+	call->cid		= sp->hdr.cid;
+	call->state		= RXRPC_CALL_SERVER_SECURING;
+	call->cong_tstamp	= skb->tstamp;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* Set the channel for this call.  We don't get channel_lock as we're
 	 * only defending against the data_ready handler (which we're called
 	 * from) and the RESPONSE packet parser (which is only really
@@ -490,18 +674,29 @@ void rxrpc_incoming_call(struct rxrpc_sock *rx,
 	chan = sp->hdr.cid & RXRPC_CHANNELMASK;
 	conn->channels[chan].call_counter = call->call_id;
 	conn->channels[chan].call_id = call->call_id;
+<<<<<<< HEAD
 	conn->channels[chan].call = call;
 	spin_unlock(&conn->state_lock);
 
 	spin_lock(&conn->peer->lock);
 	hlist_add_head(&call->error_link, &conn->peer->error_targets);
 	spin_unlock(&conn->peer->lock);
+=======
+	rcu_assign_pointer(conn->channels[chan].call, call);
+
+	spin_lock(&conn->params.peer->lock);
+	hlist_add_head_rcu(&call->error_link, &conn->params.peer->error_targets);
+	spin_unlock(&conn->params.peer->lock);
+
+	_net("CALL incoming %d on CONN %d", call->debug_id, call->conn->debug_id);
+>>>>>>> b7ba80a49124 (Commit)
 
 	rxrpc_start_call_timer(call);
 	_leave("");
 }
 
 /*
+<<<<<<< HEAD
  * Note the re-emergence of a call.
  */
 void rxrpc_see_call(struct rxrpc_call *call, enum rxrpc_call_trace why)
@@ -522,11 +717,70 @@ struct rxrpc_call *rxrpc_try_get_call(struct rxrpc_call *call,
 		return NULL;
 	trace_rxrpc_call(call->debug_id, r + 1, 0, why);
 	return call;
+=======
+ * Queue a call's work processor, getting a ref to pass to the work queue.
+ */
+bool rxrpc_queue_call(struct rxrpc_call *call)
+{
+	const void *here = __builtin_return_address(0);
+	int n;
+
+	if (!__refcount_inc_not_zero(&call->ref, &n))
+		return false;
+	if (rxrpc_queue_work(&call->processor))
+		trace_rxrpc_call(call->debug_id, rxrpc_call_queued, n + 1,
+				 here, NULL);
+	else
+		rxrpc_put_call(call, rxrpc_call_put_noqueue);
+	return true;
+}
+
+/*
+ * Queue a call's work processor, passing the callers ref to the work queue.
+ */
+bool __rxrpc_queue_call(struct rxrpc_call *call)
+{
+	const void *here = __builtin_return_address(0);
+	int n = refcount_read(&call->ref);
+	ASSERTCMP(n, >=, 1);
+	if (rxrpc_queue_work(&call->processor))
+		trace_rxrpc_call(call->debug_id, rxrpc_call_queued_ref, n,
+				 here, NULL);
+	else
+		rxrpc_put_call(call, rxrpc_call_put_noqueue);
+	return true;
+}
+
+/*
+ * Note the re-emergence of a call.
+ */
+void rxrpc_see_call(struct rxrpc_call *call)
+{
+	const void *here = __builtin_return_address(0);
+	if (call) {
+		int n = refcount_read(&call->ref);
+
+		trace_rxrpc_call(call->debug_id, rxrpc_call_seen, n,
+				 here, NULL);
+	}
+}
+
+bool rxrpc_try_get_call(struct rxrpc_call *call, enum rxrpc_call_trace op)
+{
+	const void *here = __builtin_return_address(0);
+	int n;
+
+	if (!__refcount_inc_not_zero(&call->ref, &n))
+		return false;
+	trace_rxrpc_call(call->debug_id, op, n + 1, here, NULL);
+	return true;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
  * Note the addition of a ref on a call.
  */
+<<<<<<< HEAD
 void rxrpc_get_call(struct rxrpc_call *call, enum rxrpc_call_trace why)
 {
 	int r;
@@ -542,6 +796,28 @@ static void rxrpc_cleanup_ring(struct rxrpc_call *call)
 {
 	skb_queue_purge(&call->recvmsg_queue);
 	skb_queue_purge(&call->rx_oos_queue);
+=======
+void rxrpc_get_call(struct rxrpc_call *call, enum rxrpc_call_trace op)
+{
+	const void *here = __builtin_return_address(0);
+	int n;
+
+	__refcount_inc(&call->ref, &n);
+	trace_rxrpc_call(call->debug_id, op, n + 1, here, NULL);
+}
+
+/*
+ * Clean up the RxTx skb ring.
+ */
+static void rxrpc_cleanup_ring(struct rxrpc_call *call)
+{
+	int i;
+
+	for (i = 0; i < RXRPC_RXTX_BUFF_SIZE; i++) {
+		rxrpc_free_skb(call->rxtx_buffer[i], rxrpc_skb_cleaned);
+		call->rxtx_buffer[i] = NULL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -549,6 +825,7 @@ static void rxrpc_cleanup_ring(struct rxrpc_call *call)
  */
 void rxrpc_release_call(struct rxrpc_sock *rx, struct rxrpc_call *call)
 {
+<<<<<<< HEAD
 	struct rxrpc_connection *conn = call->conn;
 	bool put = false, putu = false;
 
@@ -564,6 +841,30 @@ void rxrpc_release_call(struct rxrpc_sock *rx, struct rxrpc_call *call)
 
 	/* Make sure we don't get any more notifications */
 	spin_lock(&rx->recvmsg_lock);
+=======
+	const void *here = __builtin_return_address(0);
+	struct rxrpc_connection *conn = call->conn;
+	bool put = false;
+
+	_enter("{%d,%d}", call->debug_id, refcount_read(&call->ref));
+
+	trace_rxrpc_call(call->debug_id, rxrpc_call_release,
+			 refcount_read(&call->ref),
+			 here, (const void *)call->flags);
+
+	ASSERTCMP(call->state, ==, RXRPC_CALL_COMPLETE);
+
+	spin_lock_bh(&call->lock);
+	if (test_and_set_bit(RXRPC_CALL_RELEASED, &call->flags))
+		BUG();
+	spin_unlock_bh(&call->lock);
+
+	rxrpc_put_call_slot(call);
+	rxrpc_delete_call_timer(call);
+
+	/* Make sure we don't get any more notifications */
+	write_lock_bh(&rx->recvmsg_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!list_empty(&call->recvmsg_link)) {
 		_debug("unlinking once-pending call %p { e=%lx f=%lx }",
@@ -576,16 +877,26 @@ void rxrpc_release_call(struct rxrpc_sock *rx, struct rxrpc_call *call)
 	call->recvmsg_link.next = NULL;
 	call->recvmsg_link.prev = NULL;
 
+<<<<<<< HEAD
 	spin_unlock(&rx->recvmsg_lock);
 	if (put)
 		rxrpc_put_call(call, rxrpc_call_put_unnotify);
+=======
+	write_unlock_bh(&rx->recvmsg_lock);
+	if (put)
+		rxrpc_put_call(call, rxrpc_call_put);
+>>>>>>> b7ba80a49124 (Commit)
 
 	write_lock(&rx->call_lock);
 
 	if (test_and_clear_bit(RXRPC_CALL_HAS_USERID, &call->flags)) {
 		rb_erase(&call->sock_node, &rx->calls);
 		memset(&call->sock_node, 0xdd, sizeof(call->sock_node));
+<<<<<<< HEAD
 		putu = true;
+=======
+		rxrpc_put_call(call, rxrpc_call_put_userid);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	list_del(&call->sock_link);
@@ -593,9 +904,16 @@ void rxrpc_release_call(struct rxrpc_sock *rx, struct rxrpc_call *call)
 
 	_debug("RELEASE CALL %p (%d CONN %p)", call, call->debug_id, conn);
 
+<<<<<<< HEAD
 	if (putu)
 		rxrpc_put_call(call, rxrpc_call_put_userid);
 
+=======
+	if (conn && !test_bit(RXRPC_CALL_DISCONNECTED, &call->flags))
+		rxrpc_disconnect_call(call);
+	if (call->security)
+		call->security->free_call_crypto(call);
+>>>>>>> b7ba80a49124 (Commit)
 	_leave("");
 }
 
@@ -612,19 +930,32 @@ void rxrpc_release_calls_on_socket(struct rxrpc_sock *rx)
 		call = list_entry(rx->to_be_accepted.next,
 				  struct rxrpc_call, accept_link);
 		list_del(&call->accept_link);
+<<<<<<< HEAD
 		rxrpc_propose_abort(call, RX_CALL_DEAD, -ECONNRESET,
 				    rxrpc_abort_call_sock_release_tba);
 		rxrpc_put_call(call, rxrpc_call_put_release_sock_tba);
+=======
+		rxrpc_abort_call("SKR", call, 0, RX_CALL_DEAD, -ECONNRESET);
+		rxrpc_put_call(call, rxrpc_call_put);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	while (!list_empty(&rx->sock_calls)) {
 		call = list_entry(rx->sock_calls.next,
 				  struct rxrpc_call, sock_link);
+<<<<<<< HEAD
 		rxrpc_get_call(call, rxrpc_call_get_release_sock);
 		rxrpc_propose_abort(call, RX_CALL_DEAD, -ECONNRESET,
 				    rxrpc_abort_call_sock_release);
 		rxrpc_release_call(rx, call);
 		rxrpc_put_call(call, rxrpc_call_put_release_sock);
+=======
+		rxrpc_get_call(call, rxrpc_call_got);
+		rxrpc_abort_call("SKT", call, 0, RX_CALL_DEAD, -ECONNRESET);
+		rxrpc_send_abort_packet(call);
+		rxrpc_release_call(rx, call);
+		rxrpc_put_call(call, rxrpc_call_put);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	_leave("");
@@ -633,6 +964,7 @@ void rxrpc_release_calls_on_socket(struct rxrpc_sock *rx)
 /*
  * release a call
  */
+<<<<<<< HEAD
 void rxrpc_put_call(struct rxrpc_call *call, enum rxrpc_call_trace why)
 {
 	struct rxrpc_net *rxnet = call->rxnet;
@@ -651,6 +983,28 @@ void rxrpc_put_call(struct rxrpc_call *call, enum rxrpc_call_trace why)
 			spin_lock(&rxnet->call_lock);
 			list_del_init(&call->link);
 			spin_unlock(&rxnet->call_lock);
+=======
+void rxrpc_put_call(struct rxrpc_call *call, enum rxrpc_call_trace op)
+{
+	struct rxrpc_net *rxnet = call->rxnet;
+	const void *here = __builtin_return_address(0);
+	unsigned int debug_id = call->debug_id;
+	bool dead;
+	int n;
+
+	ASSERT(call != NULL);
+
+	dead = __refcount_dec_and_test(&call->ref, &n);
+	trace_rxrpc_call(debug_id, op, n, here, NULL);
+	if (dead) {
+		_debug("call %d dead", call->debug_id);
+		ASSERTCMP(call->state, ==, RXRPC_CALL_COMPLETE);
+
+		if (!list_empty(&call->link)) {
+			spin_lock_bh(&rxnet->call_lock);
+			list_del_init(&call->link);
+			spin_unlock_bh(&rxnet->call_lock);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 
 		rxrpc_cleanup_call(call);
@@ -658,6 +1012,7 @@ void rxrpc_put_call(struct rxrpc_call *call, enum rxrpc_call_trace why)
 }
 
 /*
+<<<<<<< HEAD
  * Free up the call under RCU.
  */
 static void rxrpc_rcu_free_call(struct rcu_head *rcu)
@@ -665,12 +1020,28 @@ static void rxrpc_rcu_free_call(struct rcu_head *rcu)
 	struct rxrpc_call *call = container_of(rcu, struct rxrpc_call, rcu);
 	struct rxrpc_net *rxnet = READ_ONCE(call->rxnet);
 
+=======
+ * Final call destruction - but must be done in process context.
+ */
+static void rxrpc_destroy_call(struct work_struct *work)
+{
+	struct rxrpc_call *call = container_of(work, struct rxrpc_call, processor);
+	struct rxrpc_net *rxnet = call->rxnet;
+
+	rxrpc_delete_call_timer(call);
+
+	rxrpc_put_connection(call->conn);
+	rxrpc_put_peer(call->peer);
+	kfree(call->rxtx_buffer);
+	kfree(call->rxtx_annotations);
+>>>>>>> b7ba80a49124 (Commit)
 	kmem_cache_free(rxrpc_call_jar, call);
 	if (atomic_dec_and_test(&rxnet->nr_calls))
 		wake_up_var(&rxnet->nr_calls);
 }
 
 /*
+<<<<<<< HEAD
  * Final call destruction - but must be done in process context.
  */
 static void rxrpc_destroy_call(struct work_struct *work)
@@ -699,6 +1070,21 @@ static void rxrpc_destroy_call(struct work_struct *work)
 	rxrpc_put_peer(call->peer, rxrpc_peer_put_call);
 	rxrpc_put_local(call->local, rxrpc_local_put_call);
 	call_rcu(&call->rcu, rxrpc_rcu_free_call);
+=======
+ * Final call destruction under RCU.
+ */
+static void rxrpc_rcu_destroy_call(struct rcu_head *rcu)
+{
+	struct rxrpc_call *call = container_of(rcu, struct rxrpc_call, rcu);
+
+	if (in_softirq()) {
+		INIT_WORK(&call->processor, rxrpc_destroy_call);
+		if (!rxrpc_queue_work(&call->processor))
+			BUG();
+	} else {
+		rxrpc_destroy_call(&call->processor);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -706,6 +1092,7 @@ static void rxrpc_destroy_call(struct work_struct *work)
  */
 void rxrpc_cleanup_call(struct rxrpc_call *call)
 {
+<<<<<<< HEAD
 	memset(&call->sock_node, 0xcd, sizeof(call->sock_node));
 
 	ASSERTCMP(__rxrpc_call_state(call), ==, RXRPC_CALL_COMPLETE);
@@ -720,6 +1107,19 @@ void rxrpc_cleanup_call(struct rxrpc_call *call)
 		schedule_work(&call->destroyer);
 	else
 		rxrpc_destroy_call(&call->destroyer);
+=======
+	_net("DESTROY CALL %d", call->debug_id);
+
+	memset(&call->sock_node, 0xcd, sizeof(call->sock_node));
+
+	ASSERTCMP(call->state, ==, RXRPC_CALL_COMPLETE);
+	ASSERT(test_bit(RXRPC_CALL_RELEASED, &call->flags));
+
+	rxrpc_cleanup_ring(call);
+	rxrpc_free_skb(call->tx_pending, rxrpc_skb_cleaned);
+
+	call_rcu(&call->rcu, rxrpc_rcu_destroy_call);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -734,18 +1134,27 @@ void rxrpc_destroy_all_calls(struct rxrpc_net *rxnet)
 	_enter("");
 
 	if (!list_empty(&rxnet->calls)) {
+<<<<<<< HEAD
 		spin_lock(&rxnet->call_lock);
+=======
+		spin_lock_bh(&rxnet->call_lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 		while (!list_empty(&rxnet->calls)) {
 			call = list_entry(rxnet->calls.next,
 					  struct rxrpc_call, link);
 			_debug("Zapping call %p", call);
 
+<<<<<<< HEAD
 			rxrpc_see_call(call, rxrpc_call_see_zap);
+=======
+			rxrpc_see_call(call);
+>>>>>>> b7ba80a49124 (Commit)
 			list_del_init(&call->link);
 
 			pr_err("Call %p still in use (%d,%s,%lx,%lx)!\n",
 			       call, refcount_read(&call->ref),
+<<<<<<< HEAD
 			       rxrpc_call_states[__rxrpc_call_state(call)],
 			       call->flags, call->events);
 
@@ -755,6 +1164,17 @@ void rxrpc_destroy_all_calls(struct rxrpc_net *rxnet)
 		}
 
 		spin_unlock(&rxnet->call_lock);
+=======
+			       rxrpc_call_states[call->state],
+			       call->flags, call->events);
+
+			spin_unlock_bh(&rxnet->call_lock);
+			cond_resched();
+			spin_lock_bh(&rxnet->call_lock);
+		}
+
+		spin_unlock_bh(&rxnet->call_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	atomic_dec(&rxnet->nr_calls);

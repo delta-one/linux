@@ -190,7 +190,11 @@ static int pkcs1pad_encrypt_sign_complete(struct akcipher_request *req, int err)
 	if (likely(!pad_len))
 		goto out;
 
+<<<<<<< HEAD
 	out_buf = kzalloc(ctx->key_size, GFP_ATOMIC);
+=======
+	out_buf = kzalloc(ctx->key_size, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	err = -ENOMEM;
 	if (!out_buf)
 		goto out;
@@ -210,6 +214,7 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 static void pkcs1pad_encrypt_sign_complete_cb(void *data, int err)
 {
 	struct akcipher_request *req = data;
@@ -221,6 +226,22 @@ static void pkcs1pad_encrypt_sign_complete_cb(void *data, int err)
 
 out:
 	akcipher_request_complete(req, err);
+=======
+static void pkcs1pad_encrypt_sign_complete_cb(
+		struct crypto_async_request *child_async_req, int err)
+{
+	struct akcipher_request *req = child_async_req->data;
+	struct crypto_async_request async_req;
+
+	if (err == -EINPROGRESS)
+		return;
+
+	async_req.data = req->base.data;
+	async_req.tfm = crypto_akcipher_tfm(crypto_akcipher_reqtfm(req));
+	async_req.flags = child_async_req->flags;
+	req->base.complete(&async_req,
+			pkcs1pad_encrypt_sign_complete(req, err));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int pkcs1pad_encrypt(struct akcipher_request *req)
@@ -250,7 +271,11 @@ static int pkcs1pad_encrypt(struct akcipher_request *req)
 	ps_end = ctx->key_size - req->src_len - 2;
 	req_ctx->in_buf[0] = 0x02;
 	for (i = 1; i < ps_end; i++)
+<<<<<<< HEAD
 		req_ctx->in_buf[i] = get_random_u32_inclusive(1, 255);
+=======
+		req_ctx->in_buf[i] = 1 + prandom_u32_max(255);
+>>>>>>> b7ba80a49124 (Commit)
 	req_ctx->in_buf[ps_end] = 0x00;
 
 	pkcs1pad_sg_set_buf(req_ctx->in_sg, req_ctx->in_buf,
@@ -325,6 +350,7 @@ done:
 	return err;
 }
 
+<<<<<<< HEAD
 static void pkcs1pad_decrypt_complete_cb(void *data, int err)
 {
 	struct akcipher_request *req = data;
@@ -336,6 +362,21 @@ static void pkcs1pad_decrypt_complete_cb(void *data, int err)
 
 out:
 	akcipher_request_complete(req, err);
+=======
+static void pkcs1pad_decrypt_complete_cb(
+		struct crypto_async_request *child_async_req, int err)
+{
+	struct akcipher_request *req = child_async_req->data;
+	struct crypto_async_request async_req;
+
+	if (err == -EINPROGRESS)
+		return;
+
+	async_req.data = req->base.data;
+	async_req.tfm = crypto_akcipher_tfm(crypto_akcipher_reqtfm(req));
+	async_req.flags = child_async_req->flags;
+	req->base.complete(&async_req, pkcs1pad_decrypt_complete(req, err));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int pkcs1pad_decrypt(struct akcipher_request *req)
@@ -504,6 +545,7 @@ done:
 	return err;
 }
 
+<<<<<<< HEAD
 static void pkcs1pad_verify_complete_cb(void *data, int err)
 {
 	struct akcipher_request *req = data;
@@ -515,6 +557,21 @@ static void pkcs1pad_verify_complete_cb(void *data, int err)
 
 out:
 	akcipher_request_complete(req, err);
+=======
+static void pkcs1pad_verify_complete_cb(
+		struct crypto_async_request *child_async_req, int err)
+{
+	struct akcipher_request *req = child_async_req->data;
+	struct crypto_async_request async_req;
+
+	if (err == -EINPROGRESS)
+		return;
+
+	async_req.data = req->base.data;
+	async_req.tfm = crypto_akcipher_tfm(crypto_akcipher_reqtfm(req));
+	async_req.flags = child_async_req->flags;
+	req->base.complete(&async_req, pkcs1pad_verify_complete(req, err));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -572,10 +629,13 @@ static int pkcs1pad_init_tfm(struct crypto_akcipher *tfm)
 		return PTR_ERR(child_tfm);
 
 	ctx->child = child_tfm;
+<<<<<<< HEAD
 
 	akcipher_set_reqsize(tfm, sizeof(struct pkcs1pad_request) +
 				  crypto_akcipher_reqsize(child_tfm));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -671,6 +731,10 @@ static int pkcs1pad_create(struct crypto_template *tmpl, struct rtattr **tb)
 	inst->alg.set_pub_key = pkcs1pad_set_pub_key;
 	inst->alg.set_priv_key = pkcs1pad_set_priv_key;
 	inst->alg.max_size = pkcs1pad_get_max_size;
+<<<<<<< HEAD
+=======
+	inst->alg.reqsize = sizeof(struct pkcs1pad_request) + rsa_alg->reqsize;
+>>>>>>> b7ba80a49124 (Commit)
 
 	inst->free = pkcs1pad_free;
 

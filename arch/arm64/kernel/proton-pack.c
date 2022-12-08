@@ -521,6 +521,7 @@ bool has_spectre_v4(const struct arm64_cpu_capabilities *cap, int scope)
 	return state != SPECTRE_UNAFFECTED;
 }
 
+<<<<<<< HEAD
 bool try_emulate_el1_ssbs(struct pt_regs *regs, u32 instr)
 {
 	const u32 instr_mask = ~(1U << PSTATE_Imm_shift);
@@ -528,6 +529,12 @@ bool try_emulate_el1_ssbs(struct pt_regs *regs, u32 instr)
 
 	if ((instr & instr_mask) != instr_val)
 		return false;
+=======
+static int ssbs_emulation_handler(struct pt_regs *regs, u32 instr)
+{
+	if (user_mode(regs))
+		return 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (instr & BIT(PSTATE_Imm_shift))
 		regs->pstate |= PSR_SSBS_BIT;
@@ -535,11 +542,27 @@ bool try_emulate_el1_ssbs(struct pt_regs *regs, u32 instr)
 		regs->pstate &= ~PSR_SSBS_BIT;
 
 	arm64_skip_faulting_instruction(regs, 4);
+<<<<<<< HEAD
 	return true;
 }
 
 static enum mitigation_state spectre_v4_enable_hw_mitigation(void)
 {
+=======
+	return 0;
+}
+
+static struct undef_hook ssbs_emulation_hook = {
+	.instr_mask	= ~(1U << PSTATE_Imm_shift),
+	.instr_val	= 0xd500401f | PSTATE_SSBS,
+	.fn		= ssbs_emulation_handler,
+};
+
+static enum mitigation_state spectre_v4_enable_hw_mitigation(void)
+{
+	static bool undef_hook_registered = false;
+	static DEFINE_RAW_SPINLOCK(hook_lock);
+>>>>>>> b7ba80a49124 (Commit)
 	enum mitigation_state state;
 
 	/*
@@ -550,6 +573,16 @@ static enum mitigation_state spectre_v4_enable_hw_mitigation(void)
 	if (state != SPECTRE_MITIGATED || !this_cpu_has_cap(ARM64_SSBS))
 		return state;
 
+<<<<<<< HEAD
+=======
+	raw_spin_lock(&hook_lock);
+	if (!undef_hook_registered) {
+		register_undef_hook(&ssbs_emulation_hook);
+		undef_hook_registered = true;
+	}
+	raw_spin_unlock(&hook_lock);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (spectre_v4_mitigations_off()) {
 		sysreg_clear_set(sctlr_el1, 0, SCTLR_ELx_DSSBS);
 		set_pstate_ssbs(1);
@@ -856,10 +889,13 @@ u8 spectre_bhb_loop_affected(int scope)
 			MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1),
 			{},
 		};
+<<<<<<< HEAD
 		static const struct midr_range spectre_bhb_k11_list[] = {
 			MIDR_ALL_VERSIONS(MIDR_AMPERE1),
 			{},
 		};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		static const struct midr_range spectre_bhb_k8_list[] = {
 			MIDR_ALL_VERSIONS(MIDR_CORTEX_A72),
 			MIDR_ALL_VERSIONS(MIDR_CORTEX_A57),
@@ -870,8 +906,11 @@ u8 spectre_bhb_loop_affected(int scope)
 			k = 32;
 		else if (is_midr_in_range_list(read_cpuid_id(), spectre_bhb_k24_list))
 			k = 24;
+<<<<<<< HEAD
 		else if (is_midr_in_range_list(read_cpuid_id(), spectre_bhb_k11_list))
 			k = 11;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		else if (is_midr_in_range_list(read_cpuid_id(), spectre_bhb_k8_list))
 			k =  8;
 

@@ -7,7 +7,10 @@
 #define ocelot_to_felix(o)		container_of((o), struct felix, ocelot)
 #define FELIX_MAC_QUIRKS		OCELOT_QUIRK_PCS_PERFORMS_RATE_ADAPTATION
 
+<<<<<<< HEAD
 #define OCELOT_PORT_MODE_NONE		0
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define OCELOT_PORT_MODE_INTERNAL	BIT(0)
 #define OCELOT_PORT_MODE_SGMII		BIT(1)
 #define OCELOT_PORT_MODE_QSGMII		BIT(2)
@@ -15,6 +18,7 @@
 #define OCELOT_PORT_MODE_USXGMII	BIT(4)
 #define OCELOT_PORT_MODE_1000BASEX	BIT(5)
 
+<<<<<<< HEAD
 struct device_node;
 
 /* Platform-specific information */
@@ -26,11 +30,22 @@ struct felix_info {
 	 * probe. Must have TARGET_MAX elements, since it is indexed by target.
 	 */
 	const char *const		*resource_names;
+=======
+/* Platform-specific information */
+struct felix_info {
+	const struct resource		*target_io_res;
+	const struct resource		*port_io_res;
+	const struct resource		*imdio_res;
+>>>>>>> b7ba80a49124 (Commit)
 	const struct reg_field		*regfields;
 	const u32 *const		*map;
 	const struct ocelot_ops		*ops;
 	const u32			*port_modes;
 	int				num_mact_rows;
+<<<<<<< HEAD
+=======
+	const struct ocelot_stat_layout	*stats_layout;
+>>>>>>> b7ba80a49124 (Commit)
 	int				num_ports;
 	int				num_tx_queues;
 	struct vcap_props		*vcap;
@@ -39,7 +54,10 @@ struct felix_info {
 	u16				vcap_pol_base2;
 	u16				vcap_pol_max2;
 	const struct ptp_clock_info	*ptp_caps;
+<<<<<<< HEAD
 	unsigned long			quirks;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Some Ocelot switches are integrated into the SoC without the
 	 * extraction IRQ line connected to the ARM GIC. By enabling this
@@ -55,16 +73,27 @@ struct felix_info {
 
 	int	(*mdio_bus_alloc)(struct ocelot *ocelot);
 	void	(*mdio_bus_free)(struct ocelot *ocelot);
+<<<<<<< HEAD
+=======
+	void	(*phylink_validate)(struct ocelot *ocelot, int port,
+				    unsigned long *supported,
+				    struct phylink_link_state *state);
+>>>>>>> b7ba80a49124 (Commit)
 	int	(*port_setup_tc)(struct dsa_switch *ds, int port,
 				 enum tc_setup_type type, void *type_data);
 	void	(*tas_guard_bands_update)(struct ocelot *ocelot, int port);
 	void	(*port_sched_speed_set)(struct ocelot *ocelot, int port,
 					u32 speed);
+<<<<<<< HEAD
 	void	(*phylink_mac_config)(struct ocelot *ocelot, int port,
 				      unsigned int mode,
 				      const struct phylink_link_state *state);
 	int	(*configure_serdes)(struct ocelot *ocelot, int port,
 				    struct device_node *portnp);
+=======
+	struct regmap *(*init_regmap)(struct ocelot *ocelot,
+				      struct resource *res);
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Methods for initializing the hardware resources specific to a tagging
@@ -93,6 +122,10 @@ struct felix {
 	struct mii_bus			*imdio;
 	struct phylink_pcs		**pcs;
 	resource_size_t			switch_base;
+<<<<<<< HEAD
+=======
+	resource_size_t			imdio_base;
+>>>>>>> b7ba80a49124 (Commit)
 	enum dsa_tag_protocol		tag_proto;
 	const struct felix_tag_proto_ops *tag_proto_ops;
 	struct kthread_worker		*xmit_worker;

@@ -18,7 +18,10 @@
 #include <linux/netdevice.h>
 #include <linux/device.h>
 #include <linux/spinlock.h>
+<<<<<<< HEAD
 #include <net/ieee802154_netdev.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <net/mac802154.h>
 #include <net/cfg802154.h>
 #include <net/genetlink.h>
@@ -48,8 +51,11 @@ static const struct genl_multicast_group hwsim_mcgrps[] = {
 struct hwsim_pib {
 	u8 page;
 	u8 channel;
+<<<<<<< HEAD
 	struct ieee802154_hw_addr_filt filt;
 	enum ieee802154_filtering_level filt_level;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct rcu_head rcu;
 };
@@ -91,13 +97,18 @@ static int hwsim_hw_ed(struct ieee802154_hw *hw, u8 *level)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int hwsim_update_pib(struct ieee802154_hw *hw, u8 page, u8 channel,
 			    struct ieee802154_hw_addr_filt *filt,
 			    enum ieee802154_filtering_level filt_level)
+=======
+static int hwsim_hw_channel(struct ieee802154_hw *hw, u8 page, u8 channel)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct hwsim_phy *phy = hw->priv;
 	struct hwsim_pib *pib, *pib_old;
 
+<<<<<<< HEAD
 	pib = kzalloc(sizeof(*pib), GFP_ATOMIC);
 	if (!pib)
 		return -ENOMEM;
@@ -112,11 +123,22 @@ static int hwsim_update_pib(struct ieee802154_hw *hw, u8 page, u8 channel,
 	pib->filt.pan_coord = filt->pan_coord;
 	pib->filt_level = filt_level;
 
+=======
+	pib = kzalloc(sizeof(*pib), GFP_KERNEL);
+	if (!pib)
+		return -ENOMEM;
+
+	pib->page = page;
+	pib->channel = channel;
+
+	pib_old = rtnl_dereference(phy->pib);
+>>>>>>> b7ba80a49124 (Commit)
 	rcu_assign_pointer(phy->pib, pib);
 	kfree_rcu(pib_old, rcu);
 	return 0;
 }
 
+<<<<<<< HEAD
 static int hwsim_hw_channel(struct ieee802154_hw *hw, u8 page, u8 channel)
 {
 	struct hwsim_phy *phy = hw->priv;
@@ -253,6 +275,8 @@ drop:
 	kfree_skb(skb);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int hwsim_hw_xmit(struct ieee802154_hw *hw, struct sk_buff *skb)
 {
 	struct hwsim_phy *current_phy = hw->priv;
@@ -280,7 +304,12 @@ static int hwsim_hw_xmit(struct ieee802154_hw *hw, struct sk_buff *skb)
 
 			einfo = rcu_dereference(e->info);
 			if (newskb)
+<<<<<<< HEAD
 				hwsim_hw_receive(e->endpoint->hw, newskb, einfo->lqi);
+=======
+				ieee802154_rx_irqsafe(e->endpoint->hw, newskb,
+						      einfo->lqi);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 	}
 	rcu_read_unlock();
@@ -294,7 +323,10 @@ static int hwsim_hw_start(struct ieee802154_hw *hw)
 	struct hwsim_phy *phy = hw->priv;
 
 	phy->suspended = false;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -308,6 +340,7 @@ static void hwsim_hw_stop(struct ieee802154_hw *hw)
 static int
 hwsim_set_promiscuous_mode(struct ieee802154_hw *hw, const bool on)
 {
+<<<<<<< HEAD
 	enum ieee802154_filtering_level filt_level;
 	struct hwsim_phy *phy = hw->priv;
 	struct hwsim_pib *pib;
@@ -324,6 +357,9 @@ hwsim_set_promiscuous_mode(struct ieee802154_hw *hw, const bool on)
 	rcu_read_unlock();
 
 	return ret;
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct ieee802154_ops hwsim_ops = {
@@ -334,7 +370,10 @@ static const struct ieee802154_ops hwsim_ops = {
 	.start = hwsim_hw_start,
 	.stop = hwsim_hw_stop,
 	.set_promiscuous_mode = hwsim_set_promiscuous_mode,
+<<<<<<< HEAD
 	.set_hw_addr_filt = hwsim_hw_addr_filt,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int hwsim_new_radio_nl(struct sk_buff *msg, struct genl_info *info)
@@ -951,13 +990,20 @@ static int hwsim_add_one(struct genl_info *info, struct device *dev,
 	}
 
 	pib->channel = 13;
+<<<<<<< HEAD
 	pib->filt.short_addr = cpu_to_le16(IEEE802154_ADDR_BROADCAST);
 	pib->filt.pan_id = cpu_to_le16(IEEE802154_PANID_BROADCAST);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rcu_assign_pointer(phy->pib, pib);
 	phy->idx = idx;
 	INIT_LIST_HEAD(&phy->edges);
 
+<<<<<<< HEAD
 	hw->flags = IEEE802154_HW_PROMISCUOUS;
+=======
+	hw->flags = IEEE802154_HW_PROMISCUOUS | IEEE802154_HW_RX_DROP_BAD_CKSUM;
+>>>>>>> b7ba80a49124 (Commit)
 	hw->parent = dev;
 
 	err = ieee802154_register_hw(hw);

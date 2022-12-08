@@ -1841,7 +1841,11 @@ static enum mvumi_qc_result mvumi_send_command(struct mvumi_hba *mhba,
 	cmd->frame->request_id = mhba->io_seq++;
 	cmd->request_id = cmd->frame->request_id;
 	mhba->tag_cmd[cmd->frame->tag] = cmd;
+<<<<<<< HEAD
 	frame_len = sizeof(*ib_frame) +
+=======
+	frame_len = sizeof(*ib_frame) - 4 +
+>>>>>>> b7ba80a49124 (Commit)
 				ib_frame->sg_counts * sizeof(struct mvumi_sgl);
 	if (mhba->hba_capability & HS_CAPABILITY_SUPPORT_DYN_SRC) {
 		struct mvumi_dyn_list_entry *dle;
@@ -2109,7 +2113,11 @@ out_return_cmd:
 	return 0;
 }
 
+<<<<<<< HEAD
 static enum scsi_timeout_action mvumi_timed_out(struct scsi_cmnd *scmd)
+=======
+static enum blk_eh_timer_return mvumi_timed_out(struct scsi_cmnd *scmd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct mvumi_cmd *cmd = mvumi_priv(scmd)->cmd_priv;
 	struct Scsi_Host *host = scmd->device->host;
@@ -2137,7 +2145,11 @@ static enum scsi_timeout_action mvumi_timed_out(struct scsi_cmnd *scmd)
 	mvumi_return_cmd(mhba, cmd);
 	spin_unlock_irqrestore(mhba->shost->host_lock, flags);
 
+<<<<<<< HEAD
 	return SCSI_EH_NOT_HANDLED;
+=======
+	return BLK_EH_DONE;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int
@@ -2387,7 +2399,11 @@ static int mvumi_io_attach(struct mvumi_hba *mhba)
 	struct Scsi_Host *host = mhba->shost;
 	struct scsi_device *sdev = NULL;
 	int ret;
+<<<<<<< HEAD
 	unsigned int max_sg = (mhba->ib_max_size -
+=======
+	unsigned int max_sg = (mhba->ib_max_size + 4 -
+>>>>>>> b7ba80a49124 (Commit)
 		sizeof(struct mvumi_msg_frame)) / sizeof(struct mvumi_sgl);
 
 	host->irq = mhba->pdev->irq;

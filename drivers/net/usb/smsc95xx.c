@@ -66,7 +66,10 @@ struct smsc95xx_priv {
 	spinlock_t mac_cr_lock;
 	u8 features;
 	u8 suspend_flags;
+<<<<<<< HEAD
 	bool is_internal_phy;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct irq_chip irqchip;
 	struct irq_domain *irqdomain;
 	struct fwnode_handle *irqfwnode;
@@ -253,6 +256,7 @@ done:
 	mutex_unlock(&dev->phy_mutex);
 }
 
+<<<<<<< HEAD
 static int smsc95xx_mdiobus_reset(struct mii_bus *bus)
 {
 	struct smsc95xx_priv *pdata;
@@ -290,6 +294,8 @@ reset_out:
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int smsc95xx_mdiobus_read(struct mii_bus *bus, int phy_id, int idx)
 {
 	struct usbnet *dev = bus->priv;
@@ -1090,6 +1096,10 @@ static void smsc95xx_handle_link_change(struct net_device *net)
 static int smsc95xx_bind(struct usbnet *dev, struct usb_interface *intf)
 {
 	struct smsc95xx_priv *pdata;
+<<<<<<< HEAD
+=======
+	bool is_internal_phy;
+>>>>>>> b7ba80a49124 (Commit)
 	char usb_path[64];
 	int ret, phy_irq;
 	u32 val;
@@ -1170,14 +1180,22 @@ static int smsc95xx_bind(struct usbnet *dev, struct usb_interface *intf)
 	if (ret < 0)
 		goto free_mdio;
 
+<<<<<<< HEAD
 	pdata->is_internal_phy = !(val & HW_CFG_PSEL_);
 	if (pdata->is_internal_phy)
+=======
+	is_internal_phy = !(val & HW_CFG_PSEL_);
+	if (is_internal_phy)
+>>>>>>> b7ba80a49124 (Commit)
 		pdata->mdiobus->phy_mask = ~(1u << SMSC95XX_INTERNAL_PHY_ID);
 
 	pdata->mdiobus->priv = dev;
 	pdata->mdiobus->read = smsc95xx_mdiobus_read;
 	pdata->mdiobus->write = smsc95xx_mdiobus_write;
+<<<<<<< HEAD
 	pdata->mdiobus->reset = smsc95xx_mdiobus_reset;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pdata->mdiobus->name = "smsc95xx-mdiobus";
 	pdata->mdiobus->parent = &dev->udev->dev;
 
@@ -1198,7 +1216,11 @@ static int smsc95xx_bind(struct usbnet *dev, struct usb_interface *intf)
 	}
 
 	pdata->phydev->irq = phy_irq;
+<<<<<<< HEAD
 	pdata->phydev->is_internal = pdata->is_internal_phy;
+=======
+	pdata->phydev->is_internal = is_internal_phy;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* detect device revision as different features may be available */
 	ret = smsc95xx_read_reg(dev, ID_REV, &val);
@@ -1833,12 +1855,15 @@ static int smsc95xx_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
 		size = (u16)((header & RX_STS_FL_) >> 16);
 		align_count = (4 - ((size + NET_IP_ALIGN) % 4)) % 4;
 
+<<<<<<< HEAD
 		if (unlikely(size > skb->len)) {
 			netif_dbg(dev, rx_err, dev->net,
 				  "size err header=0x%08x\n", header);
 			return 0;
 		}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (unlikely(header & RX_STS_ES_)) {
 			netif_dbg(dev, rx_err, dev->net,
 				  "Error header=0x%08x\n", header);

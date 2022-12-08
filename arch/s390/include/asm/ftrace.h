@@ -54,6 +54,7 @@ static __always_inline struct pt_regs *arch_ftrace_get_regs(struct ftrace_regs *
 	return NULL;
 }
 
+<<<<<<< HEAD
 static __always_inline unsigned long
 ftrace_regs_get_instruction_pointer(const struct ftrace_regs *fregs)
 {
@@ -63,10 +64,15 @@ ftrace_regs_get_instruction_pointer(const struct ftrace_regs *fregs)
 static __always_inline void
 ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs,
 				    unsigned long ip)
+=======
+static __always_inline void ftrace_instruction_pointer_set(struct ftrace_regs *fregs,
+							   unsigned long ip)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	fregs->regs.psw.addr = ip;
 }
 
+<<<<<<< HEAD
 #define ftrace_regs_get_argument(fregs, n) \
 	regs_get_kernel_argument(&(fregs)->regs, n)
 #define ftrace_regs_get_stack_pointer(fregs) \
@@ -81,6 +87,8 @@ ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs,
 	regs_query_register_offset(name)
 
 #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * When an ftrace registered caller is tracing a function that is
  * also set by a register_ftrace_direct() call, it needs to be
@@ -88,12 +96,19 @@ ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs,
  * place the direct caller in the ORIG_GPR2 part of pt_regs. This
  * tells the ftrace_caller that there's a direct caller.
  */
+<<<<<<< HEAD
 static inline void arch_ftrace_set_direct_caller(struct ftrace_regs *fregs, unsigned long addr)
 {
 	struct pt_regs *regs = &fregs->regs;
 	regs->orig_gpr2 = addr;
 }
 #endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
+=======
+static inline void arch_ftrace_set_direct_caller(struct pt_regs *regs, unsigned long addr)
+{
+	regs->orig_gpr2 = addr;
+}
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Even though the system call numbers are identical for s390/s390x a

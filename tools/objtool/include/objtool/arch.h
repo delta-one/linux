@@ -62,20 +62,35 @@ struct op_src {
 };
 
 struct stack_op {
+<<<<<<< HEAD
 	struct stack_op *next;
 	struct op_dest dest;
 	struct op_src src;
+=======
+	struct op_dest dest;
+	struct op_src src;
+	struct list_head list;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct instruction;
 
+<<<<<<< HEAD
 int arch_ftrace_match(char *name);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void arch_initial_func_cfi_state(struct cfi_init_state *state);
 
 int arch_decode_instruction(struct objtool_file *file, const struct section *sec,
 			    unsigned long offset, unsigned int maxlen,
+<<<<<<< HEAD
 			    struct instruction *insn);
+=======
+			    unsigned int *len, enum insn_type *type,
+			    unsigned long *immediate,
+			    struct list_head *ops_list);
+>>>>>>> b7ba80a49124 (Commit)
 
 bool arch_callee_saved_reg(unsigned char reg);
 
@@ -93,6 +108,9 @@ bool arch_is_rethunk(struct symbol *sym);
 
 int arch_rewrite_retpolines(struct objtool_file *file);
 
+<<<<<<< HEAD
 bool arch_pc_relative_reloc(struct reloc *reloc);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _ARCH_H */

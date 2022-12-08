@@ -36,10 +36,17 @@
  ******************************************************************************/
 
 static int
+<<<<<<< HEAD
 gf100_sw_chan_vblsem_release(struct nvkm_event_ntfy *notify, u32 bits)
 {
 	struct nv50_sw_chan *chan =
 		container_of(notify, typeof(*chan), vblank.notify[notify->id]);
+=======
+gf100_sw_chan_vblsem_release(struct nvkm_notify *notify)
+{
+	struct nv50_sw_chan *chan =
+		container_of(notify, typeof(*chan), vblank.notify[notify->index]);
+>>>>>>> b7ba80a49124 (Commit)
 	struct nvkm_sw *sw = chan->base.sw;
 	struct nvkm_device *device = sw->engine.subdev.device;
 	u32 inst = chan->base.fifo->inst->addr >> 12;
@@ -50,7 +57,11 @@ gf100_sw_chan_vblsem_release(struct nvkm_event_ntfy *notify, u32 bits)
 	nvkm_wr32(device, 0x060010, lower_32_bits(chan->vblank.offset));
 	nvkm_wr32(device, 0x060014, chan->vblank.value);
 
+<<<<<<< HEAD
 	return NVKM_EVENT_DROP;
+=======
+	return NVKM_NOTIFY_DROP;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool
@@ -73,7 +84,11 @@ gf100_sw_chan_mthd(struct nvkm_sw_chan *base, int subc, u32 mthd, u32 data)
 		return true;
 	case 0x040c:
 		if (data < device->disp->vblank.index_nr) {
+<<<<<<< HEAD
 			nvkm_event_ntfy_allow(&chan->vblank.notify[data]);
+=======
+			nvkm_notify_get(&chan->vblank.notify[data]);
+>>>>>>> b7ba80a49124 (Commit)
 			return true;
 		}
 		break;
@@ -120,8 +135,21 @@ gf100_sw_chan_new(struct nvkm_sw *sw, struct nvkm_fifo_chan *fifoch,
 		return ret;
 
 	for (i = 0; disp && i < disp->vblank.index_nr; i++) {
+<<<<<<< HEAD
 		nvkm_event_ntfy_add(&disp->vblank, i, NVKM_DISP_HEAD_EVENT_VBLANK, true,
 				    gf100_sw_chan_vblsem_release, &chan->vblank.notify[i]);
+=======
+		ret = nvkm_notify_init(NULL, &disp->vblank,
+				       gf100_sw_chan_vblsem_release, false,
+				       &(struct nvif_notify_head_req_v0) {
+					.head = i,
+				       },
+				       sizeof(struct nvif_notify_head_req_v0),
+				       sizeof(struct nvif_notify_head_rep_v0),
+				       &chan->vblank.notify[i]);
+		if (ret)
+			return ret;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;

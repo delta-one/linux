@@ -1047,5 +1047,9 @@ static void __exit shdma_exit(void)
 }
 module_exit(shdma_exit);
 
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)
 MODULE_DESCRIPTION("SH-DMA driver base library");
 MODULE_AUTHOR("Guennadi Liakhovetski <g.liakhovetski@gmx.de>");

@@ -660,6 +660,7 @@ int fdt_next_property_offset(const void *fdt, int offset);
 const struct fdt_property *fdt_get_property_by_offset(const void *fdt,
 						      int offset,
 						      int *lenp);
+<<<<<<< HEAD
 static inline struct fdt_property *fdt_get_property_by_offset_w(void *fdt,
 								int offset,
 								int *lenp)
@@ -667,6 +668,8 @@ static inline struct fdt_property *fdt_get_property_by_offset_w(void *fdt,
 	return (struct fdt_property *)(uintptr_t)
 		fdt_get_property_by_offset(fdt, offset, lenp);
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * fdt_get_property_namelen - find a property based on substring
@@ -2123,6 +2126,7 @@ int fdt_del_node(void *fdt, int nodeoffset);
  */
 int fdt_overlay_apply(void *fdt, void *fdto);
 
+<<<<<<< HEAD
 /**
  * fdt_overlay_target_offset - retrieves the offset of a fragment's target
  * @fdt: Base device tree blob
@@ -2141,6 +2145,8 @@ int fdt_overlay_apply(void *fdt, void *fdto);
 int fdt_overlay_target_offset(const void *fdt, const void *fdto,
 			      int fragment_offset, char const **pathp);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**********************************************************************/
 /* Debugging / informational functions                                */
 /**********************************************************************/

@@ -143,6 +143,7 @@ enum mlx5_semaphore_space_address {
 
 #define MLX5_DEFAULT_PROF       2
 
+<<<<<<< HEAD
 static inline int mlx5_flexible_inlen(struct mlx5_core_dev *dev, size_t fixed,
 				      size_t item_size, size_t num_items,
 				      const char *func, int line)
@@ -173,6 +174,8 @@ static inline int mlx5_flexible_inlen(struct mlx5_core_dev *dev, size_t fixed,
 #define MLX5_FLEXIBLE_INLEN(dev, fixed, item_size, num_items) \
 	mlx5_flexible_inlen(dev, fixed, item_size, num_items, __func__, __LINE__)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int mlx5_query_hca_caps(struct mlx5_core_dev *dev);
 int mlx5_query_board_id(struct mlx5_core_dev *dev);
 int mlx5_cmd_init(struct mlx5_core_dev *dev);
@@ -236,7 +239,11 @@ void mlx5_adev_cleanup(struct mlx5_core_dev *dev);
 int mlx5_adev_init(struct mlx5_core_dev *dev);
 
 int mlx5_attach_device(struct mlx5_core_dev *dev);
+<<<<<<< HEAD
 void mlx5_detach_device(struct mlx5_core_dev *dev, bool suspend);
+=======
+void mlx5_detach_device(struct mlx5_core_dev *dev);
+>>>>>>> b7ba80a49124 (Commit)
 int mlx5_register_device(struct mlx5_core_dev *dev);
 void mlx5_unregister_device(struct mlx5_core_dev *dev);
 struct mlx5_core_dev *mlx5_get_next_phys_dev_lag(struct mlx5_core_dev *dev);
@@ -319,6 +326,7 @@ int mlx5_mdev_init(struct mlx5_core_dev *dev, int profile_idx);
 void mlx5_mdev_uninit(struct mlx5_core_dev *dev);
 int mlx5_init_one(struct mlx5_core_dev *dev);
 void mlx5_uninit_one(struct mlx5_core_dev *dev);
+<<<<<<< HEAD
 void mlx5_unload_one(struct mlx5_core_dev *dev, bool suspend);
 void mlx5_unload_one_devl_locked(struct mlx5_core_dev *dev, bool suspend);
 int mlx5_load_one(struct mlx5_core_dev *dev);
@@ -328,6 +336,14 @@ int mlx5_vport_set_other_func_cap(struct mlx5_core_dev *dev, const void *hca_cap
 				  u16 opmod);
 #define mlx5_vport_get_other_func_general_cap(dev, fid, out)		\
 	mlx5_vport_get_other_func_cap(dev, fid, out, MLX5_CAP_GENERAL)
+=======
+void mlx5_unload_one(struct mlx5_core_dev *dev);
+void mlx5_unload_one_devl_locked(struct mlx5_core_dev *dev);
+int mlx5_load_one(struct mlx5_core_dev *dev, bool recovery);
+int mlx5_load_one_devl_locked(struct mlx5_core_dev *dev, bool recovery);
+
+int mlx5_vport_get_other_func_cap(struct mlx5_core_dev *dev, u16 function_id, void *out);
+>>>>>>> b7ba80a49124 (Commit)
 
 void mlx5_events_work_enqueue(struct mlx5_core_dev *dev, struct work_struct *work);
 static inline u32 mlx5_sriov_get_vf_total_msix(struct pci_dev *pdev)

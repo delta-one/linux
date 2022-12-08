@@ -10,7 +10,10 @@
 
 #include <net/net_namespace.h>
 #include <net/netns/generic.h>
+<<<<<<< HEAD
 #include <linux/filelock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/percpu_counter.h>
 #include <linux/siphash.h>
 
@@ -196,7 +199,11 @@ struct nfsd_net {
 
 	atomic_t		nfsd_courtesy_clients;
 	struct shrinker		nfsd_client_shrinker;
+<<<<<<< HEAD
 	struct work_struct	nfsd_shrinker_work;
+=======
+	struct delayed_work	nfsd_shrinker_work;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* Simple check to find out if a given net was properly initialized */

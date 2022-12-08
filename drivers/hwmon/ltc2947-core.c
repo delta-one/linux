@@ -396,7 +396,11 @@ static int ltc2947_read_temp(struct device *dev, const u32 attr, long *val,
 		return ret;
 
 	/* in milidegrees celcius, temp is given by: */
+<<<<<<< HEAD
 	*val = (__val * 204) + 5500;
+=======
+	*val = (__val * 204) + 550;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -956,6 +960,16 @@ static struct attribute *ltc2947_attrs[] = {
 };
 ATTRIBUTE_GROUPS(ltc2947);
 
+<<<<<<< HEAD
+=======
+static void ltc2947_clk_disable(void *data)
+{
+	struct clk *extclk = data;
+
+	clk_disable_unprepare(extclk);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int ltc2947_setup(struct ltc2947_data *st)
 {
 	int ret;
@@ -982,7 +996,11 @@ static int ltc2947_setup(struct ltc2947_data *st)
 		return ret;
 
 	/* check external clock presence */
+<<<<<<< HEAD
 	extclk = devm_clk_get_optional_enabled(st->dev, NULL);
+=======
+	extclk = devm_clk_get_optional(st->dev, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(extclk))
 		return dev_err_probe(st->dev, PTR_ERR(extclk),
 				     "Failed to get external clock\n");
@@ -1000,6 +1018,17 @@ static int ltc2947_setup(struct ltc2947_data *st)
 			return -EINVAL;
 		}
 
+<<<<<<< HEAD
+=======
+		ret = clk_prepare_enable(extclk);
+		if (ret)
+			return ret;
+
+		ret = devm_add_action_or_reset(st->dev, ltc2947_clk_disable,
+					       extclk);
+		if (ret)
+			return ret;
+>>>>>>> b7ba80a49124 (Commit)
 		/* as in table 1 of the datasheet */
 		if (rate_hz >= LTC2947_CLK_MIN && rate_hz <= 1000000)
 			pre = 0;
@@ -1120,7 +1149,11 @@ int ltc2947_core_probe(struct regmap *map, const char *name)
 }
 EXPORT_SYMBOL_GPL(ltc2947_core_probe);
 
+<<<<<<< HEAD
 static int ltc2947_resume(struct device *dev)
+=======
+static int __maybe_unused ltc2947_resume(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ltc2947_data *st = dev_get_drvdata(dev);
 	u32 ctrl = 0;
@@ -1149,7 +1182,11 @@ static int ltc2947_resume(struct device *dev)
 				  LTC2947_CONT_MODE_MASK, LTC2947_CONT_MODE(1));
 }
 
+<<<<<<< HEAD
 static int ltc2947_suspend(struct device *dev)
+=======
+static int __maybe_unused ltc2947_suspend(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ltc2947_data *st = dev_get_drvdata(dev);
 
@@ -1157,7 +1194,12 @@ static int ltc2947_suspend(struct device *dev)
 				  LTC2947_SHUTDOWN_MASK, 1);
 }
 
+<<<<<<< HEAD
 EXPORT_SIMPLE_DEV_PM_OPS(ltc2947_pm_ops, ltc2947_suspend, ltc2947_resume);
+=======
+SIMPLE_DEV_PM_OPS(ltc2947_pm_ops, ltc2947_suspend, ltc2947_resume);
+EXPORT_SYMBOL_GPL(ltc2947_pm_ops);
+>>>>>>> b7ba80a49124 (Commit)
 
 const struct of_device_id ltc2947_of_match[] = {
 	{ .compatible = "adi,ltc2947" },

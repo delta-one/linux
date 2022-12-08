@@ -1,4 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-only
+<<<<<<< HEAD
+=======
+#include <linux/aer.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/delay.h>
 #include <linux/firmware.h>
 #include <linux/list.h>

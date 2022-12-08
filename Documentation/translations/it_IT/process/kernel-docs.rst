@@ -6,8 +6,13 @@
 
 .. _it_kernel_docs:
 
+<<<<<<< HEAD
 Ulteriore Documentazione Del Kernel Linux
 =========================================
+=======
+Indice di documenti per le persone interessate a capire e/o scrivere per il kernel Linux
+========================================================================================
+>>>>>>> b7ba80a49124 (Commit)
 
 .. note::
    Questo documento contiene riferimenti a documenti in lingua inglese; inoltre

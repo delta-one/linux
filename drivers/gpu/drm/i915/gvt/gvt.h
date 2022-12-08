@@ -36,7 +36,10 @@
 #include <uapi/linux/pci_regs.h>
 #include <linux/kvm_host.h>
 #include <linux/vfio.h>
+<<<<<<< HEAD
 #include <linux/mdev.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "i915_drv.h"
 #include "intel_gvt.h"
@@ -172,18 +175,26 @@ struct intel_vgpu_submission {
 
 #define KVMGT_DEBUGFS_FILENAME		"kvmgt_nr_cache_entries"
 
+<<<<<<< HEAD
 enum {
 	INTEL_VGPU_STATUS_ATTACHED = 0,
 	INTEL_VGPU_STATUS_ACTIVE,
 	INTEL_VGPU_STATUS_NR_BITS,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct intel_vgpu {
 	struct vfio_device vfio_device;
 	struct intel_gvt *gvt;
 	struct mutex vgpu_lock;
 	int id;
+<<<<<<< HEAD
 	DECLARE_BITMAP(status, INTEL_VGPU_STATUS_NR_BITS);
+=======
+	bool active;
+	bool attached;
+>>>>>>> b7ba80a49124 (Commit)
 	bool pv_notified;
 	bool failsafe;
 	unsigned int resetting_eng;
@@ -232,6 +243,11 @@ struct intel_vgpu {
 	unsigned long nr_cache_entries;
 	struct mutex cache_lock;
 
+<<<<<<< HEAD
+=======
+	atomic_t released;
+
+>>>>>>> b7ba80a49124 (Commit)
 	struct kvm_page_track_notifier_node track_node;
 #define NR_BKT (1 << 18)
 	struct hlist_head ptable[NR_BKT];
@@ -298,6 +314,7 @@ struct intel_gvt_firmware {
 	bool firmware_loaded;
 };
 
+<<<<<<< HEAD
 struct intel_vgpu_config {
 	unsigned int low_mm;
 	unsigned int high_mm;
@@ -317,6 +334,17 @@ struct intel_vgpu_type {
 	struct mdev_type type;
 	char name[16];
 	const struct intel_vgpu_config *conf;
+=======
+#define NR_MAX_INTEL_VGPU_TYPES 20
+struct intel_vgpu_type {
+	char name[16];
+	unsigned int avail_instance;
+	unsigned int low_gm_size;
+	unsigned int high_gm_size;
+	unsigned int fence;
+	unsigned int weight;
+	enum intel_vgpu_edid resolution;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct intel_gvt {
@@ -340,8 +368,11 @@ struct intel_gvt {
 	struct intel_gvt_workload_scheduler scheduler;
 	struct notifier_block shadow_ctx_notifier_block[I915_NUM_ENGINES];
 	DECLARE_HASHTABLE(cmd_table, GVT_CMD_HASH_BITS);
+<<<<<<< HEAD
 	struct mdev_parent parent;
 	struct mdev_type **mdev_types;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct intel_vgpu_type *types;
 	unsigned int num_types;
 	struct intel_vgpu *idle_vgpu;
@@ -452,8 +483,24 @@ int intel_gvt_load_firmware(struct intel_gvt *gvt);
 /* ring context size i.e. the first 0x50 dwords*/
 #define RING_CTX_SIZE 320
 
+<<<<<<< HEAD
 int intel_vgpu_alloc_resource(struct intel_vgpu *vgpu,
 			      const struct intel_vgpu_config *conf);
+=======
+struct intel_vgpu_creation_params {
+	__u64 low_gm_sz;  /* in MB */
+	__u64 high_gm_sz; /* in MB */
+	__u64 fence_sz;
+	__u64 resolution;
+	__s32 primary;
+	__u64 vgpu_id;
+
+	__u32 weight;
+};
+
+int intel_vgpu_alloc_resource(struct intel_vgpu *vgpu,
+			      struct intel_vgpu_creation_params *param);
+>>>>>>> b7ba80a49124 (Commit)
 void intel_vgpu_reset_resource(struct intel_vgpu *vgpu);
 void intel_vgpu_free_resource(struct intel_vgpu *vgpu);
 void intel_vgpu_write_fence(struct intel_vgpu *vgpu,
@@ -472,7 +519,11 @@ void intel_vgpu_write_fence(struct intel_vgpu *vgpu,
 
 #define for_each_active_vgpu(gvt, vgpu, id) \
 	idr_for_each_entry((&(gvt)->vgpu_idr), (vgpu), (id)) \
+<<<<<<< HEAD
 		for_each_if(test_bit(INTEL_VGPU_STATUS_ACTIVE, vgpu->status))
+=======
+		for_each_if(vgpu->active)
+>>>>>>> b7ba80a49124 (Commit)
 
 static inline void intel_vgpu_write_pci_bar(struct intel_vgpu *vgpu,
 					    u32 offset, u32 val, bool low)
@@ -499,8 +550,12 @@ void intel_gvt_clean_vgpu_types(struct intel_gvt *gvt);
 
 struct intel_vgpu *intel_gvt_create_idle_vgpu(struct intel_gvt *gvt);
 void intel_gvt_destroy_idle_vgpu(struct intel_vgpu *vgpu);
+<<<<<<< HEAD
 int intel_gvt_create_vgpu(struct intel_vgpu *vgpu,
 			  const struct intel_vgpu_config *conf);
+=======
+int intel_gvt_create_vgpu(struct intel_vgpu *vgpu, struct intel_vgpu_type *type);
+>>>>>>> b7ba80a49124 (Commit)
 void intel_gvt_destroy_vgpu(struct intel_vgpu *vgpu);
 void intel_gvt_release_vgpu(struct intel_vgpu *vgpu);
 void intel_gvt_reset_vgpu_locked(struct intel_vgpu *vgpu, bool dmlr,
@@ -730,7 +785,11 @@ static inline bool intel_gvt_mmio_is_cmd_write_patch(
 static inline int intel_gvt_read_gpa(struct intel_vgpu *vgpu, unsigned long gpa,
 		void *buf, unsigned long len)
 {
+<<<<<<< HEAD
 	if (!test_bit(INTEL_VGPU_STATUS_ATTACHED, vgpu->status))
+=======
+	if (!vgpu->attached)
+>>>>>>> b7ba80a49124 (Commit)
 		return -ESRCH;
 	return vfio_dma_rw(&vgpu->vfio_device, gpa, buf, len, false);
 }
@@ -748,7 +807,11 @@ static inline int intel_gvt_read_gpa(struct intel_vgpu *vgpu, unsigned long gpa,
 static inline int intel_gvt_write_gpa(struct intel_vgpu *vgpu,
 		unsigned long gpa, void *buf, unsigned long len)
 {
+<<<<<<< HEAD
 	if (!test_bit(INTEL_VGPU_STATUS_ATTACHED, vgpu->status))
+=======
+	if (!vgpu->attached)
+>>>>>>> b7ba80a49124 (Commit)
 		return -ESRCH;
 	return vfio_dma_rw(&vgpu->vfio_device, gpa, buf, len, true);
 }

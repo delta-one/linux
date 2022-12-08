@@ -20,7 +20,10 @@
 #include <linux/cpu_pm.h>
 #include <linux/sched/clock.h>
 
+<<<<<<< HEAD
 #include <asm/errata_list.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/sbi.h>
 #include <asm/hwcap.h>
 
@@ -44,6 +47,7 @@ static const struct attribute_group *riscv_pmu_attr_groups[] = {
 };
 
 /*
+<<<<<<< HEAD
  * RISC-V doesn't have heterogeneous harts yet. This need to be part of
  * per_cpu in case of harts with different pmu counters
  */
@@ -55,6 +59,14 @@ static unsigned int riscv_pmu_irq;
 /* Cache the available counters in a bitmask */
 static unsigned long cmask;
 
+=======
+ * RISC-V doesn't have hetergenous harts yet. This need to be part of
+ * per_cpu in case of harts with different pmu counters
+ */
+static union sbi_pmu_ctr_info *pmu_ctr_list;
+static unsigned int riscv_pmu_irq;
+
+>>>>>>> b7ba80a49124 (Commit)
 struct sbi_pmu_event_data {
 	union {
 		union {
@@ -270,6 +282,7 @@ static bool pmu_sbi_ctr_is_fw(int cidx)
 	return (info->type == SBI_PMU_CTR_TYPE_FW) ? true : false;
 }
 
+<<<<<<< HEAD
 /*
  * Returns the counter width of a programmable counter and number of hardware
  * counters. As we don't support heterogeneous CPUs yet, it is okay to just
@@ -322,6 +335,8 @@ static unsigned long pmu_sbi_get_filter_flags(struct perf_event *event)
 	return cflags;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int pmu_sbi_ctr_get_idx(struct perf_event *event)
 {
 	struct hw_perf_event *hwc = &event->hw;
@@ -332,7 +347,15 @@ static int pmu_sbi_ctr_get_idx(struct perf_event *event)
 	uint64_t cbase = 0;
 	unsigned long cflags = 0;
 
+<<<<<<< HEAD
 	cflags = pmu_sbi_get_filter_flags(event);
+=======
+	if (event->attr.exclude_kernel)
+		cflags |= SBI_PMU_CFG_FLAG_SET_SINH;
+	if (event->attr.exclude_user)
+		cflags |= SBI_PMU_CFG_FLAG_SET_UINH;
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* retrieve the available counter index */
 #if defined(CONFIG_32BIT)
 	ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_CFG_MATCH, cbase,
@@ -436,8 +459,16 @@ static int pmu_sbi_event_map(struct perf_event *event, u64 *econfig)
 		bSoftware = config >> 63;
 		raw_config_val = config & RISCV_PMU_RAW_EVENT_MASK;
 		if (bSoftware) {
+<<<<<<< HEAD
 			ret = (raw_config_val & 0xFFFF) |
 				(SBI_PMU_EVENT_TYPE_FW << 16);
+=======
+			if (raw_config_val < SBI_PMU_FW_MAX)
+				ret = (raw_config_val & 0xFFFF) |
+				      (SBI_PMU_EVENT_TYPE_FW << 16);
+			else
+				return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 		} else {
 			ret = RISCV_PMU_RAW_EVENT_IDX;
 			*econfig = raw_config_val;
@@ -631,7 +662,11 @@ static irqreturn_t pmu_sbi_ovf_handler(int irq, void *dev)
 	fidx = find_first_bit(cpu_hw_evt->used_hw_ctrs, RISCV_MAX_COUNTERS);
 	event = cpu_hw_evt->events[fidx];
 	if (!event) {
+<<<<<<< HEAD
 		csr_clear(CSR_SIP, BIT(riscv_pmu_irq_num));
+=======
+		csr_clear(CSR_SIP, SIP_LCOFIP);
+>>>>>>> b7ba80a49124 (Commit)
 		return IRQ_NONE;
 	}
 
@@ -639,13 +674,21 @@ static irqreturn_t pmu_sbi_ovf_handler(int irq, void *dev)
 	pmu_sbi_stop_hw_ctrs(pmu);
 
 	/* Overflow status register should only be read after counter are stopped */
+<<<<<<< HEAD
 	ALT_SBI_PMU_OVERFLOW(overflow);
+=======
+	overflow = csr_read(CSR_SSCOUNTOVF);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * Overflow interrupt pending bit should only be cleared after stopping
 	 * all the counters to avoid any race condition.
 	 */
+<<<<<<< HEAD
 	csr_clear(CSR_SIP, BIT(riscv_pmu_irq_num));
+=======
+	csr_clear(CSR_SIP, SIP_LCOFIP);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* No overflow bit is set */
 	if (!overflow)
@@ -703,19 +746,31 @@ static int pmu_sbi_starting_cpu(unsigned int cpu, struct hlist_node *node)
 	struct riscv_pmu *pmu = hlist_entry_safe(node, struct riscv_pmu, node);
 	struct cpu_hw_events *cpu_hw_evt = this_cpu_ptr(pmu->hw_events);
 
+<<<<<<< HEAD
 	/*
 	 * Enable the access for CYCLE, TIME, and INSTRET CSRs from userspace,
 	 * as is necessary to maintain uABI compatibility.
 	 */
 	csr_write(CSR_SCOUNTEREN, 0x7);
+=======
+	/* Enable the access for TIME csr only from the user mode now */
+	csr_write(CSR_SCOUNTEREN, 0x2);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Stop all the counters so that they can be enabled from perf */
 	pmu_sbi_stop_all(pmu);
 
+<<<<<<< HEAD
 	if (riscv_pmu_use_irq) {
 		cpu_hw_evt->irq = riscv_pmu_irq;
 		csr_clear(CSR_IP, BIT(riscv_pmu_irq_num));
 		csr_set(CSR_IE, BIT(riscv_pmu_irq_num));
+=======
+	if (riscv_isa_extension_available(NULL, SSCOFPMF)) {
+		cpu_hw_evt->irq = riscv_pmu_irq;
+		csr_clear(CSR_IP, BIT(RV_IRQ_PMU));
+		csr_set(CSR_IE, BIT(RV_IRQ_PMU));
+>>>>>>> b7ba80a49124 (Commit)
 		enable_percpu_irq(riscv_pmu_irq, IRQ_TYPE_NONE);
 	}
 
@@ -724,9 +779,15 @@ static int pmu_sbi_starting_cpu(unsigned int cpu, struct hlist_node *node)
 
 static int pmu_sbi_dying_cpu(unsigned int cpu, struct hlist_node *node)
 {
+<<<<<<< HEAD
 	if (riscv_pmu_use_irq) {
 		disable_percpu_irq(riscv_pmu_irq);
 		csr_clear(CSR_IE, BIT(riscv_pmu_irq_num));
+=======
+	if (riscv_isa_extension_available(NULL, SSCOFPMF)) {
+		disable_percpu_irq(riscv_pmu_irq);
+		csr_clear(CSR_IE, BIT(RV_IRQ_PMU));
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Disable all counters access for user mode now */
@@ -742,6 +803,7 @@ static int pmu_sbi_setup_irqs(struct riscv_pmu *pmu, struct platform_device *pde
 	struct device_node *cpu, *child;
 	struct irq_domain *domain = NULL;
 
+<<<<<<< HEAD
 	if (riscv_isa_extension_available(NULL, SSCOFPMF)) {
 		riscv_pmu_irq_num = RV_IRQ_PMU;
 		riscv_pmu_use_irq = true;
@@ -754,6 +816,9 @@ static int pmu_sbi_setup_irqs(struct riscv_pmu *pmu, struct platform_device *pde
 	}
 
 	if (!riscv_pmu_use_irq)
+=======
+	if (!riscv_isa_extension_available(NULL, SSCOFPMF))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EOPNOTSUPP;
 
 	for_each_of_cpu_node(cpu) {
@@ -775,7 +840,11 @@ static int pmu_sbi_setup_irqs(struct riscv_pmu *pmu, struct platform_device *pde
 		return -ENODEV;
 	}
 
+<<<<<<< HEAD
 	riscv_pmu_irq = irq_create_mapping(domain, riscv_pmu_irq_num);
+=======
+	riscv_pmu_irq = irq_create_mapping(domain, RV_IRQ_PMU);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!riscv_pmu_irq) {
 		pr_err("Failed to map PMU interrupt for node\n");
 		return -ENODEV;
@@ -819,8 +888,19 @@ static int riscv_pm_pmu_notify(struct notifier_block *b, unsigned long cmd,
 		case CPU_PM_ENTER_FAILED:
 			/*
 			 * Restore and enable the counter.
+<<<<<<< HEAD
 			 */
 			riscv_pmu_start(event, PERF_EF_RELOAD);
+=======
+			 *
+			 * Requires RCU read locking to be functional,
+			 * wrap the call within RCU_NONIDLE to make the
+			 * RCU subsystem aware this cpu is not idle from
+			 * an RCU perspective for the riscv_pmu_start() call
+			 * duration.
+			 */
+			RCU_NONIDLE(riscv_pmu_start(event, PERF_EF_RELOAD));
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		default:
 			break;
@@ -854,6 +934,10 @@ static void riscv_pmu_destroy(struct riscv_pmu *pmu)
 static int pmu_sbi_device_probe(struct platform_device *pdev)
 {
 	struct riscv_pmu *pmu = NULL;
+<<<<<<< HEAD
+=======
+	unsigned long cmask = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = -ENODEV;
 	int num_counters;
 

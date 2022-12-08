@@ -34,7 +34,11 @@ state upon the last _LID evaluation. There won't be difference when the
 _LID control method is evaluated during the runtime, the problem is its
 initial returning value. When the AML tables implement this control method
 with cached value, the initial returning value is likely not reliable.
+<<<<<<< HEAD
 There are platforms always return "closed" as initial lid state.
+=======
+There are platforms always retun "closed" as initial lid state.
+>>>>>>> b7ba80a49124 (Commit)
 
 Restrictions of the lid state change notifications
 ==================================================

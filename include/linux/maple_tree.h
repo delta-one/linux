@@ -12,6 +12,10 @@
 #include <linux/rcupdate.h>
 #include <linux/spinlock.h>
 /* #define CONFIG_MAPLE_RCU_DISABLED */
+<<<<<<< HEAD
+=======
+/* #define CONFIG_DEBUG_MAPLE_TREE_VERBOSE */
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Allocated nodes are mutable until they have been inserted into the tree,
@@ -432,7 +436,10 @@ struct ma_wr_state {
 		.min = 0,						\
 		.max = ULONG_MAX,					\
 		.alloc = NULL,						\
+<<<<<<< HEAD
 		.mas_flags = 0,						\
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 #define MA_WR_STATE(name, ma_state, wr_entry)				\
@@ -456,7 +463,11 @@ int mas_store_gfp(struct ma_state *mas, void *entry, gfp_t gfp);
 void mas_store_prealloc(struct ma_state *mas, void *entry);
 void *mas_find(struct ma_state *mas, unsigned long max);
 void *mas_find_rev(struct ma_state *mas, unsigned long min);
+<<<<<<< HEAD
 int mas_preallocate(struct ma_state *mas, gfp_t gfp);
+=======
+int mas_preallocate(struct ma_state *mas, void *entry, gfp_t gfp);
+>>>>>>> b7ba80a49124 (Commit)
 bool mas_is_err(struct ma_state *mas);
 
 bool mas_nomem(struct ma_state *mas, gfp_t gfp);
@@ -471,6 +482,7 @@ void *mas_next(struct ma_state *mas, unsigned long max);
 int mas_empty_area(struct ma_state *mas, unsigned long min, unsigned long max,
 		   unsigned long size);
 
+<<<<<<< HEAD
 static inline void mas_init(struct ma_state *mas, struct maple_tree *tree,
 			    unsigned long addr)
 {
@@ -481,6 +493,8 @@ static inline void mas_init(struct ma_state *mas, struct maple_tree *tree,
 	mas->node = MAS_START;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Checks if a mas has not found anything */
 static inline bool mas_is_none(struct ma_state *mas)
 {
@@ -493,6 +507,12 @@ static inline bool mas_is_paused(struct ma_state *mas)
 	return mas->node == MAS_PAUSE;
 }
 
+<<<<<<< HEAD
+=======
+void mas_dup_tree(struct ma_state *oldmas, struct ma_state *mas);
+void mas_dup_store(struct ma_state *mas, void *entry);
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * This finds an empty area from the highest address to the lowest.
  * AKA "Topdown" version,
@@ -524,6 +544,10 @@ static inline void mas_reset(struct ma_state *mas)
  * entry.
  *
  * Note: may return the zero entry.
+<<<<<<< HEAD
+=======
+ *
+>>>>>>> b7ba80a49124 (Commit)
  */
 #define mas_for_each(__mas, __entry, __max) \
 	while (((__entry) = mas_find((__mas), (__max))) != NULL)
@@ -644,11 +668,14 @@ static inline void mt_set_in_rcu(struct maple_tree *mt)
 	}
 }
 
+<<<<<<< HEAD
 static inline unsigned int mt_height(const struct maple_tree *mt)
 {
 	return (mt->ma_flags & MT_FLAGS_HEIGHT_MASK) >> MT_FLAGS_HEIGHT_OFFSET;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void *mt_find(struct maple_tree *mt, unsigned long *index, unsigned long max);
 void *mt_find_after(struct maple_tree *mt, unsigned long *index,
 		    unsigned long max);
@@ -675,7 +702,10 @@ extern atomic_t maple_tree_tests_passed;
 
 void mt_dump(const struct maple_tree *mt);
 void mt_validate(struct maple_tree *mt);
+<<<<<<< HEAD
 void mt_cache_shrink(void);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define MT_BUG_ON(__tree, __x) do {					\
 	atomic_inc(&maple_tree_tests_run);				\
 	if (__x) {							\

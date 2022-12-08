@@ -4,11 +4,15 @@
  * Copyright (c) 2020 Linaro Ltd.
  */
 
+<<<<<<< HEAD
 #include <linux/bitfield.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/clk.h>
 #include <linux/gpio/driver.h>
 #include <linux/module.h>
 #include <linux/of_device.h>
+<<<<<<< HEAD
 #include <linux/seq_file.h>
 
 #include <linux/pinctrl/pinconf-generic.h>
@@ -21,6 +25,14 @@
 
 #define MAX_NR_GPIO		23
 #define GPIO_FUNC		0
+=======
+#include <linux/pinctrl/pinconf-generic.h>
+#include <linux/pinctrl/pinconf.h>
+#include <linux/pinctrl/pinmux.h>
+#include "../pinctrl-utils.h"
+#include "pinctrl-lpass-lpi.h"
+
+>>>>>>> b7ba80a49124 (Commit)
 #define MAX_LPI_NUM_CLKS	2
 
 struct lpi_pinctrl {
@@ -32,7 +44,10 @@ struct lpi_pinctrl {
 	char __iomem *slew_base;
 	struct clk_bulk_data clks[MAX_LPI_NUM_CLKS];
 	struct mutex slew_access_lock;
+<<<<<<< HEAD
 	DECLARE_BITMAP(ever_gpio, MAX_NR_GPIO);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const struct lpi_pinctrl_variant_data *data;
 };
 
@@ -87,10 +102,17 @@ static int lpi_gpio_get_function_groups(struct pinctrl_dev *pctldev,
 }
 
 static int lpi_gpio_set_mux(struct pinctrl_dev *pctldev, unsigned int function,
+<<<<<<< HEAD
 			    unsigned int group)
 {
 	struct lpi_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
 	const struct lpi_pingroup *g = &pctrl->data->groups[group];
+=======
+			    unsigned int group_num)
+{
+	struct lpi_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+	const struct lpi_pingroup *g = &pctrl->data->groups[group_num];
+>>>>>>> b7ba80a49124 (Commit)
 	u32 val;
 	int i, pin = g->pin;
 
@@ -103,6 +125,7 @@ static int lpi_gpio_set_mux(struct pinctrl_dev *pctldev, unsigned int function,
 		return -EINVAL;
 
 	val = lpi_gpio_read(pctrl, pin, LPI_GPIO_CFG_REG);
+<<<<<<< HEAD
 
 	/*
 	 * If this is the first time muxing to GPIO and the direction is
@@ -125,6 +148,8 @@ static int lpi_gpio_set_mux(struct pinctrl_dev *pctldev, unsigned int function,
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32p_replace_bits(&val, i, LPI_GPIO_FUNCTION_MASK);
 	lpi_gpio_write(pctrl, pin, LPI_GPIO_CFG_REG, val);
 
@@ -246,6 +271,7 @@ static int lpi_config_set(struct pinctrl_dev *pctldev, unsigned int group,
 		}
 	}
 
+<<<<<<< HEAD
 	/*
 	 * As per Hardware Programming Guide, when configuring pin as output,
 	 * set the pin value before setting output-enable (OE).
@@ -255,6 +281,8 @@ static int lpi_config_set(struct pinctrl_dev *pctldev, unsigned int group,
 		lpi_gpio_write(pctrl, group, LPI_GPIO_VALUE_REG, val);
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	val = lpi_gpio_read(pctrl, group, LPI_GPIO_CFG_REG);
 
 	u32p_replace_bits(&val, pullup, LPI_GPIO_PULL_MASK);
@@ -264,6 +292,14 @@ static int lpi_config_set(struct pinctrl_dev *pctldev, unsigned int group,
 
 	lpi_gpio_write(pctrl, group, LPI_GPIO_CFG_REG, val);
 
+<<<<<<< HEAD
+=======
+	if (output_enabled) {
+		val = u32_encode_bits(value ? 1 : 0, LPI_GPIO_VALUE_OUT_MASK);
+		lpi_gpio_write(pctrl, group, LPI_GPIO_VALUE_REG, val);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -419,9 +455,12 @@ int lpi_pinctrl_probe(struct platform_device *pdev)
 	if (!data)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (WARN_ON(data->npins > MAX_NR_GPIO))
 		return -EINVAL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	pctrl->data = data;
 	pctrl->dev = &pdev->dev;
 
@@ -462,6 +501,10 @@ int lpi_pinctrl_probe(struct platform_device *pdev)
 	pctrl->chip.base = -1;
 	pctrl->chip.ngpio = data->npins;
 	pctrl->chip.label = dev_name(dev);
+<<<<<<< HEAD
+=======
+	pctrl->chip.of_gpio_n_cells = 2;
+>>>>>>> b7ba80a49124 (Commit)
 	pctrl->chip.can_sleep = false;
 
 	mutex_init(&pctrl->slew_access_lock);

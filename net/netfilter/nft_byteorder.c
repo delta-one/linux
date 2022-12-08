@@ -148,8 +148,12 @@ static int nft_byteorder_init(const struct nft_ctx *ctx,
 					priv->len);
 }
 
+<<<<<<< HEAD
 static int nft_byteorder_dump(struct sk_buff *skb,
 			      const struct nft_expr *expr, bool reset)
+=======
+static int nft_byteorder_dump(struct sk_buff *skb, const struct nft_expr *expr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct nft_byteorder *priv = nft_expr_priv(expr);
 

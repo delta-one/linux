@@ -1207,7 +1207,11 @@ static int smack_inode_getattr(const struct path *path)
 
 /**
  * smack_inode_setxattr - Smack check for setting xattrs
+<<<<<<< HEAD
  * @idmap: idmap of the mount
+=======
+ * @mnt_userns: active user namespace
+>>>>>>> b7ba80a49124 (Commit)
  * @dentry: the object
  * @name: name of the attribute
  * @value: value of the attribute
@@ -1218,7 +1222,11 @@ static int smack_inode_getattr(const struct path *path)
  *
  * Returns 0 if access is permitted, an error code otherwise
  */
+<<<<<<< HEAD
 static int smack_inode_setxattr(struct mnt_idmap *idmap,
+=======
+static int smack_inode_setxattr(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 				struct dentry *dentry, const char *name,
 				const void *value, size_t size, int flags)
 {
@@ -1334,7 +1342,11 @@ static int smack_inode_getxattr(struct dentry *dentry, const char *name)
 
 /**
  * smack_inode_removexattr - Smack check on removexattr
+<<<<<<< HEAD
  * @idmap: idmap of the mount
+=======
+ * @mnt_userns: active user namespace
+>>>>>>> b7ba80a49124 (Commit)
  * @dentry: the object
  * @name: name of the attribute
  *
@@ -1342,7 +1354,11 @@ static int smack_inode_getxattr(struct dentry *dentry, const char *name)
  *
  * Returns 0 if access is permitted, an error code otherwise
  */
+<<<<<<< HEAD
 static int smack_inode_removexattr(struct mnt_idmap *idmap,
+=======
+static int smack_inode_removexattr(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 				   struct dentry *dentry, const char *name)
 {
 	struct inode_smack *isp;
@@ -1358,7 +1374,11 @@ static int smack_inode_removexattr(struct mnt_idmap *idmap,
 		if (!smack_privileged(CAP_MAC_ADMIN))
 			rc = -EPERM;
 	} else
+<<<<<<< HEAD
 		rc = cap_inode_removexattr(idmap, dentry, name);
+=======
+		rc = cap_inode_removexattr(mnt_userns, dentry, name);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (rc != 0)
 		return rc;
@@ -1393,6 +1413,7 @@ static int smack_inode_removexattr(struct mnt_idmap *idmap,
 }
 
 /**
+<<<<<<< HEAD
  * smack_inode_set_acl - Smack check for setting posix acls
  * @idmap: idmap of the mnt this request came from
  * @dentry: the object
@@ -1463,6 +1484,10 @@ static int smack_inode_remove_acl(struct mnt_idmap *idmap,
 /**
  * smack_inode_getsecurity - get smack xattrs
  * @idmap: idmap of the mount
+=======
+ * smack_inode_getsecurity - get smack xattrs
+ * @mnt_userns: active user namespace
+>>>>>>> b7ba80a49124 (Commit)
  * @inode: the object
  * @name: attribute name
  * @buffer: where to put the result
@@ -1470,14 +1495,22 @@ static int smack_inode_remove_acl(struct mnt_idmap *idmap,
  *
  * Returns the size of the attribute or an error code
  */
+<<<<<<< HEAD
 static int smack_inode_getsecurity(struct mnt_idmap *idmap,
+=======
+static int smack_inode_getsecurity(struct user_namespace *mnt_userns,
+>>>>>>> b7ba80a49124 (Commit)
 				   struct inode *inode, const char *name,
 				   void **buffer, bool alloc)
 {
 	struct socket_smack *ssp;
 	struct socket *sock;
 	struct super_block *sbp;
+<<<<<<< HEAD
 	struct inode *ip = inode;
+=======
+	struct inode *ip = (struct inode *)inode;
+>>>>>>> b7ba80a49124 (Commit)
 	struct smack_known *isp;
 
 	if (strcmp(name, XATTR_SMACK_SUFFIX) == 0)
@@ -3507,7 +3540,11 @@ static void smack_d_instantiate(struct dentry *opt_dentry, struct inode *inode)
 			 */
 			if (isp->smk_flags & SMK_INODE_CHANGED) {
 				isp->smk_flags &= ~SMK_INODE_CHANGED;
+<<<<<<< HEAD
 				rc = __vfs_setxattr(&nop_mnt_idmap, dp, inode,
+=======
+				rc = __vfs_setxattr(&init_user_ns, dp, inode,
+>>>>>>> b7ba80a49124 (Commit)
 					XATTR_NAME_SMACKTRANSMUTE,
 					TRANS_TRUE, TRANS_TRUE_SIZE,
 					0);
@@ -4074,12 +4111,21 @@ static int smack_socket_sock_rcv_skb(struct sock *sk, struct sk_buff *skb)
  * returns zero on success, an error code otherwise
  */
 static int smack_socket_getpeersec_stream(struct socket *sock,
+<<<<<<< HEAD
 					  sockptr_t optval, sockptr_t optlen,
 					  unsigned int len)
 {
 	struct socket_smack *ssp;
 	char *rcp = "";
 	u32 slen = 1;
+=======
+					  char __user *optval,
+					  int __user *optlen, unsigned len)
+{
+	struct socket_smack *ssp;
+	char *rcp = "";
+	int slen = 1;
+>>>>>>> b7ba80a49124 (Commit)
 	int rc = 0;
 
 	ssp = sock->sk->sk_security;
@@ -4087,6 +4133,7 @@ static int smack_socket_getpeersec_stream(struct socket *sock,
 		rcp = ssp->smk_packet->smk_known;
 		slen = strlen(rcp) + 1;
 	}
+<<<<<<< HEAD
 	if (slen > len) {
 		rc = -ERANGE;
 		goto out_len;
@@ -4097,6 +4144,17 @@ static int smack_socket_getpeersec_stream(struct socket *sock,
 out_len:
 	if (copy_to_sockptr(optlen, &slen, sizeof(slen)))
 		rc = -EFAULT;
+=======
+
+	if (slen > len)
+		rc = -ERANGE;
+	else if (copy_to_user(optval, rcp, slen) != 0)
+		rc = -EFAULT;
+
+	if (put_user(slen, optlen) != 0)
+		rc = -EFAULT;
+
+>>>>>>> b7ba80a49124 (Commit)
 	return rc;
 }
 
@@ -4686,7 +4744,11 @@ static int smack_inode_notifysecctx(struct inode *inode, void *ctx, u32 ctxlen)
 
 static int smack_inode_setsecctx(struct dentry *dentry, void *ctx, u32 ctxlen)
 {
+<<<<<<< HEAD
 	return __vfs_setxattr_noperm(&nop_mnt_idmap, dentry, XATTR_NAME_SMACK,
+=======
+	return __vfs_setxattr_noperm(&init_user_ns, dentry, XATTR_NAME_SMACK,
+>>>>>>> b7ba80a49124 (Commit)
 				     ctx, ctxlen, 0);
 }
 
@@ -4847,7 +4909,11 @@ static int smack_uring_cmd(struct io_uring_cmd *ioucmd)
 
 #endif /* CONFIG_IO_URING */
 
+<<<<<<< HEAD
 struct lsm_blob_sizes smack_blob_sizes __ro_after_init = {
+=======
+struct lsm_blob_sizes smack_blob_sizes __lsm_ro_after_init = {
+>>>>>>> b7ba80a49124 (Commit)
 	.lbs_cred = sizeof(struct task_smack),
 	.lbs_file = sizeof(struct smack_known *),
 	.lbs_inode = sizeof(struct inode_smack),
@@ -4856,7 +4922,11 @@ struct lsm_blob_sizes smack_blob_sizes __ro_after_init = {
 	.lbs_superblock = sizeof(struct superblock_smack),
 };
 
+<<<<<<< HEAD
 static struct security_hook_list smack_hooks[] __ro_after_init = {
+=======
+static struct security_hook_list smack_hooks[] __lsm_ro_after_init = {
+>>>>>>> b7ba80a49124 (Commit)
 	LSM_HOOK_INIT(ptrace_access_check, smack_ptrace_access_check),
 	LSM_HOOK_INIT(ptrace_traceme, smack_ptrace_traceme),
 	LSM_HOOK_INIT(syslog, smack_syslog),
@@ -4885,9 +4955,12 @@ static struct security_hook_list smack_hooks[] __ro_after_init = {
 	LSM_HOOK_INIT(inode_post_setxattr, smack_inode_post_setxattr),
 	LSM_HOOK_INIT(inode_getxattr, smack_inode_getxattr),
 	LSM_HOOK_INIT(inode_removexattr, smack_inode_removexattr),
+<<<<<<< HEAD
 	LSM_HOOK_INIT(inode_set_acl, smack_inode_set_acl),
 	LSM_HOOK_INIT(inode_get_acl, smack_inode_get_acl),
 	LSM_HOOK_INIT(inode_remove_acl, smack_inode_remove_acl),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	LSM_HOOK_INIT(inode_getsecurity, smack_inode_getsecurity),
 	LSM_HOOK_INIT(inode_setsecurity, smack_inode_setsecurity),
 	LSM_HOOK_INIT(inode_listsecurity, smack_inode_listsecurity),

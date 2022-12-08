@@ -44,16 +44,25 @@
 
 typedef long (*sys_call_ptr_t)(struct pt_regs *regs);
 
+<<<<<<< HEAD
 static __always_inline void set_cpu_flag(int flag)
+=======
+static inline void set_cpu_flag(int flag)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	S390_lowcore.cpu_flags |= (1UL << flag);
 }
 
+<<<<<<< HEAD
 static __always_inline void clear_cpu_flag(int flag)
+=======
+static inline void clear_cpu_flag(int flag)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	S390_lowcore.cpu_flags &= ~(1UL << flag);
 }
 
+<<<<<<< HEAD
 static __always_inline bool test_cpu_flag(int flag)
 {
 	return S390_lowcore.cpu_flags & (1UL << flag);
@@ -73,17 +82,29 @@ static __always_inline bool test_and_clear_cpu_flag(int flag)
 		return false;
 	clear_cpu_flag(flag);
 	return true;
+=======
+static inline int test_cpu_flag(int flag)
+{
+	return !!(S390_lowcore.cpu_flags & (1UL << flag));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
  * Test CIF flag of another CPU. The caller needs to ensure that
  * CPU hotplug can not happen, e.g. by disabling preemption.
  */
+<<<<<<< HEAD
 static __always_inline bool test_cpu_flag_of(int flag, int cpu)
 {
 	struct lowcore *lc = lowcore_ptr[cpu];
 
 	return lc->cpu_flags & (1UL << flag);
+=======
+static inline int test_cpu_flag_of(int flag, int cpu)
+{
+	struct lowcore *lc = lowcore_ptr[cpu];
+	return !!(lc->cpu_flags & (1UL << flag));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #define arch_needs_cpu() test_cpu_flag(CIF_NOHZ_DELAY)
@@ -99,6 +120,10 @@ void cpu_detect_mhz_feature(void);
 
 extern const struct seq_operations cpuinfo_op;
 extern void execve_tail(void);
+<<<<<<< HEAD
+=======
+extern void __bpon(void);
+>>>>>>> b7ba80a49124 (Commit)
 unsigned long vdso_size(void);
 
 /*
@@ -215,6 +240,7 @@ unsigned long __get_wchan(struct task_struct *p);
 /* Has task runtime instrumentation enabled ? */
 #define is_ri_task(tsk) (!!(tsk)->thread.ri_cb)
 
+<<<<<<< HEAD
 /* avoid using global register due to gcc bug in versions < 8.4 */
 #define current_stack_pointer (__current_stack_pointer())
 
@@ -225,6 +251,9 @@ static __always_inline unsigned long __current_stack_pointer(void)
 	asm volatile("lgr %0,15" : "=d" (sp));
 	return sp;
 }
+=======
+register unsigned long current_stack_pointer asm("r15");
+>>>>>>> b7ba80a49124 (Commit)
 
 static __always_inline unsigned short stap(void)
 {
@@ -328,6 +357,12 @@ static __always_inline void __noreturn disabled_wait(void)
 
 #define ARCH_LOW_ADDRESS_LIMIT	0x7fffffffUL
 
+<<<<<<< HEAD
+=======
+extern int s390_isolate_bp(void);
+extern int s390_isolate_bp_guest(void);
+
+>>>>>>> b7ba80a49124 (Commit)
 static __always_inline bool regs_irqs_disabled(struct pt_regs *regs)
 {
 	return arch_irqs_disabled_flags(regs->psw.mask);

@@ -31,6 +31,7 @@
 static struct tsens_features tsens_v2_feat = {
 	.ver_major	= VER_2_X,
 	.crit_int	= 1,
+<<<<<<< HEAD
 	.combo_int	= 0,
 	.adc		= 0,
 	.srot_split	= 1,
@@ -48,6 +49,11 @@ static struct tsens_features ipq8074_feat = {
 	.max_sensors	= 16,
 	.trip_min_temp	= 0,
 	.trip_max_temp	= 204000,
+=======
+	.adc		= 0,
+	.srot_split	= 1,
+	.max_sensors	= 16,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct reg_field tsens_v2_regfields[MAX_REGFIELDS] = {
@@ -115,12 +121,15 @@ struct tsens_plat_data data_tsens_v2 = {
 	.fields	= tsens_v2_regfields,
 };
 
+<<<<<<< HEAD
 struct tsens_plat_data data_ipq8074 = {
 	.ops		= &ops_generic_v2,
 	.feat		= &ipq8074_feat,
 	.fields	= tsens_v2_regfields,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Kept around for backward compatibility with old msm8996.dtsi */
 struct tsens_plat_data data_8996 = {
 	.num_sensors	= 13,

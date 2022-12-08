@@ -44,11 +44,14 @@ config MTK_PMIC_WRAP
 	  on different MediaTek SoCs. The PMIC wrapper is a proprietary
 	  hardware to connect the PMIC.
 
+<<<<<<< HEAD
 config MTK_REGULATOR_COUPLER
 	bool "MediaTek SoC Regulator Coupler" if COMPILE_TEST
 	default ARCH_MEDIATEK
 	depends on REGULATOR
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config MTK_SCPSYS
 	bool "MediaTek SCPSYS Support"
 	default ARCH_MEDIATEK
@@ -73,7 +76,11 @@ config MTK_SCPSYS_PM_DOMAINS
 	  tasks in the system.
 
 config MTK_MMSYS
+<<<<<<< HEAD
 	tristate "MediaTek MMSYS Support"
+=======
+	bool "MediaTek MMSYS Support"
+>>>>>>> b7ba80a49124 (Commit)
 	default ARCH_MEDIATEK
 	depends on HAS_IOMEM
 	help

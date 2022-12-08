@@ -1345,7 +1345,11 @@ static netdev_tx_t grcan_start_xmit(struct sk_buff *skb,
 	unsigned long flags;
 	u32 oneshotmode = priv->can.ctrlmode & CAN_CTRLMODE_ONE_SHOT;
 
+<<<<<<< HEAD
 	if (can_dev_dropped_skb(dev, skb))
+=======
+	if (can_dropped_invalid_skb(dev, skb))
+>>>>>>> b7ba80a49124 (Commit)
 		return NETDEV_TX_OK;
 
 	/* Trying to transmit in silent mode will generate error interrupts, but

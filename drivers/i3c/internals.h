@@ -15,7 +15,10 @@ extern struct bus_type i3c_bus_type;
 void i3c_bus_normaluse_lock(struct i3c_bus *bus);
 void i3c_bus_normaluse_unlock(struct i3c_bus *bus);
 
+<<<<<<< HEAD
 int i3c_dev_setdasa_locked(struct i3c_dev_desc *dev);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int i3c_dev_do_priv_xfers_locked(struct i3c_dev_desc *dev,
 				 struct i3c_priv_xfer *xfers,
 				 int nxfers);

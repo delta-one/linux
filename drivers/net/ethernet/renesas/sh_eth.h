@@ -560,6 +560,10 @@ struct sh_eth_private {
 
 	unsigned no_ether_link:1;
 	unsigned ether_link_active_low:1;
+<<<<<<< HEAD
+=======
+	unsigned is_opened:1;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned wol_enabled:1;
 };
 

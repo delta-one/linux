@@ -43,7 +43,11 @@ static int nft_masq_init(const struct nft_ctx *ctx,
 			 const struct nft_expr *expr,
 			 const struct nlattr * const tb[])
 {
+<<<<<<< HEAD
 	u32 plen = sizeof_field(struct nf_nat_range, min_proto.all);
+=======
+	u32 plen = sizeof_field(struct nf_nat_range, min_addr.all);
+>>>>>>> b7ba80a49124 (Commit)
 	struct nft_masq *priv = nft_expr_priv(expr);
 	int err;
 
@@ -73,8 +77,12 @@ static int nft_masq_init(const struct nft_ctx *ctx,
 	return nf_ct_netns_get(ctx->net, ctx->family);
 }
 
+<<<<<<< HEAD
 static int nft_masq_dump(struct sk_buff *skb,
 			 const struct nft_expr *expr, bool reset)
+=======
+static int nft_masq_dump(struct sk_buff *skb, const struct nft_expr *expr)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct nft_masq *priv = nft_expr_priv(expr);
 
@@ -96,16 +104,25 @@ nla_put_failure:
 	return -1;
 }
 
+<<<<<<< HEAD
 static void nft_masq_eval(const struct nft_expr *expr,
 			  struct nft_regs *regs,
 			  const struct nft_pktinfo *pkt)
 {
 	const struct nft_masq *priv = nft_expr_priv(expr);
+=======
+static void nft_masq_ipv4_eval(const struct nft_expr *expr,
+			       struct nft_regs *regs,
+			       const struct nft_pktinfo *pkt)
+{
+	struct nft_masq *priv = nft_expr_priv(expr);
+>>>>>>> b7ba80a49124 (Commit)
 	struct nf_nat_range2 range;
 
 	memset(&range, 0, sizeof(range));
 	range.flags = priv->flags;
 	if (priv->sreg_proto_min) {
+<<<<<<< HEAD
 		range.min_proto.all = (__force __be16)
 			nft_reg_load16(&regs->data[priv->sreg_proto_min]);
 		range.max_proto.all = (__force __be16)
@@ -129,6 +146,15 @@ static void nft_masq_eval(const struct nft_expr *expr,
 		WARN_ON_ONCE(1);
 		break;
 	}
+=======
+		range.min_proto.all = (__force __be16)nft_reg_load16(
+			&regs->data[priv->sreg_proto_min]);
+		range.max_proto.all = (__force __be16)nft_reg_load16(
+			&regs->data[priv->sreg_proto_max]);
+	}
+	regs->verdict.code = nf_nat_masquerade_ipv4(pkt->skb, nft_hook(pkt),
+						    &range, nft_out(pkt));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void
@@ -141,7 +167,11 @@ static struct nft_expr_type nft_masq_ipv4_type;
 static const struct nft_expr_ops nft_masq_ipv4_ops = {
 	.type		= &nft_masq_ipv4_type,
 	.size		= NFT_EXPR_SIZE(sizeof(struct nft_masq)),
+<<<<<<< HEAD
 	.eval		= nft_masq_eval,
+=======
+	.eval		= nft_masq_ipv4_eval,
+>>>>>>> b7ba80a49124 (Commit)
 	.init		= nft_masq_init,
 	.destroy	= nft_masq_ipv4_destroy,
 	.dump		= nft_masq_dump,
@@ -159,6 +189,28 @@ static struct nft_expr_type nft_masq_ipv4_type __read_mostly = {
 };
 
 #ifdef CONFIG_NF_TABLES_IPV6
+<<<<<<< HEAD
+=======
+static void nft_masq_ipv6_eval(const struct nft_expr *expr,
+			       struct nft_regs *regs,
+			       const struct nft_pktinfo *pkt)
+{
+	struct nft_masq *priv = nft_expr_priv(expr);
+	struct nf_nat_range2 range;
+
+	memset(&range, 0, sizeof(range));
+	range.flags = priv->flags;
+	if (priv->sreg_proto_min) {
+		range.min_proto.all = (__force __be16)nft_reg_load16(
+			&regs->data[priv->sreg_proto_min]);
+		range.max_proto.all = (__force __be16)nft_reg_load16(
+			&regs->data[priv->sreg_proto_max]);
+	}
+	regs->verdict.code = nf_nat_masquerade_ipv6(pkt->skb, &range,
+						    nft_out(pkt));
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void
 nft_masq_ipv6_destroy(const struct nft_ctx *ctx, const struct nft_expr *expr)
 {
@@ -169,7 +221,11 @@ static struct nft_expr_type nft_masq_ipv6_type;
 static const struct nft_expr_ops nft_masq_ipv6_ops = {
 	.type		= &nft_masq_ipv6_type,
 	.size		= NFT_EXPR_SIZE(sizeof(struct nft_masq)),
+<<<<<<< HEAD
 	.eval		= nft_masq_eval,
+=======
+	.eval		= nft_masq_ipv6_eval,
+>>>>>>> b7ba80a49124 (Commit)
 	.init		= nft_masq_init,
 	.destroy	= nft_masq_ipv6_destroy,
 	.dump		= nft_masq_dump,
@@ -201,6 +257,23 @@ static inline void nft_masq_module_exit_ipv6(void) {}
 #endif
 
 #ifdef CONFIG_NF_TABLES_INET
+<<<<<<< HEAD
+=======
+static void nft_masq_inet_eval(const struct nft_expr *expr,
+			       struct nft_regs *regs,
+			       const struct nft_pktinfo *pkt)
+{
+	switch (nft_pf(pkt)) {
+	case NFPROTO_IPV4:
+		return nft_masq_ipv4_eval(expr, regs, pkt);
+	case NFPROTO_IPV6:
+		return nft_masq_ipv6_eval(expr, regs, pkt);
+	}
+
+	WARN_ON_ONCE(1);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static void
 nft_masq_inet_destroy(const struct nft_ctx *ctx, const struct nft_expr *expr)
 {
@@ -211,7 +284,11 @@ static struct nft_expr_type nft_masq_inet_type;
 static const struct nft_expr_ops nft_masq_inet_ops = {
 	.type		= &nft_masq_inet_type,
 	.size		= NFT_EXPR_SIZE(sizeof(struct nft_masq)),
+<<<<<<< HEAD
 	.eval		= nft_masq_eval,
+=======
+	.eval		= nft_masq_inet_eval,
+>>>>>>> b7ba80a49124 (Commit)
 	.init		= nft_masq_init,
 	.destroy	= nft_masq_inet_destroy,
 	.dump		= nft_masq_dump,

@@ -7,6 +7,7 @@
 #define __INTEL_PCI_CONFIG_H__
 
 /* PCI BARs */
+<<<<<<< HEAD
 #define GEN2_GMADR_BAR				0
 #define GEN2_MMADR_BAR				1 /* MMIO+GTT, despite the name */
 #define GEN2_IO_BAR				2 /* 85x/865 */
@@ -30,6 +31,13 @@ static inline int intel_mmio_bar(int graphics_ver)
 	default: return GEN4_GTTMMADR_BAR;
 	}
 }
+=======
+#define GTTMMADR_BAR				0
+#define GEN2_GTTMMADR_BAR			1
+#define GFXMEM_BAR				2
+#define GTT_APERTURE_BAR			GFXMEM_BAR
+#define GEN12_LMEM_BAR				GFXMEM_BAR
+>>>>>>> b7ba80a49124 (Commit)
 
 /* BSM in include/drm/i915_drm.h */
 

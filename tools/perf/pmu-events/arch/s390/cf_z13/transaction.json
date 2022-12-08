@@ -3,6 +3,7 @@
     "BriefDescription": "Transaction count",
     "MetricName": "transaction",
     "MetricExpr": "TX_C_TEND + TX_NC_TEND + TX_NC_TABORT + TX_C_TABORT_SPECIAL + TX_C_TABORT_NO_SPECIAL"
+<<<<<<< HEAD
   },
   {
     "BriefDescription": "Cycles per Instruction",
@@ -73,5 +74,7 @@
     "BriefDescription": "Page Table Entry misses",
     "MetricName": "pte_miss",
     "MetricExpr": "(TLB2_PTE_WRITES / (DTLB1_WRITES + ITLB1_WRITES)) * 100"
+=======
+>>>>>>> b7ba80a49124 (Commit)
   }
 ]

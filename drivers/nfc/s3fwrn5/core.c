@@ -105,12 +105,16 @@ static int s3fwrn5_nci_send(struct nci_dev *ndev, struct sk_buff *skb)
 	mutex_lock(&info->mutex);
 
 	if (s3fwrn5_get_mode(info) != S3FWRN5_MODE_NCI) {
+<<<<<<< HEAD
 		kfree_skb(skb);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		mutex_unlock(&info->mutex);
 		return -EINVAL;
 	}
 
 	ret = s3fwrn5_write(info, skb);
+<<<<<<< HEAD
 	if (ret < 0) {
 		kfree_skb(skb);
 		mutex_unlock(&info->mutex);
@@ -120,6 +124,13 @@ static int s3fwrn5_nci_send(struct nci_dev *ndev, struct sk_buff *skb)
 	consume_skb(skb);
 	mutex_unlock(&info->mutex);
 	return 0;
+=======
+	if (ret < 0)
+		kfree_skb(skb);
+
+	mutex_unlock(&info->mutex);
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int s3fwrn5_nci_post_setup(struct nci_dev *ndev)

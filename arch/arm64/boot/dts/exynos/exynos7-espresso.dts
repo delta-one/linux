@@ -17,9 +17,15 @@
 	compatible = "samsung,exynos7-espresso", "samsung,exynos7";
 
 	aliases {
+<<<<<<< HEAD
 		mmc0 = &mmc_0;
 		mmc2 = &mmc_2;
 		serial0 = &serial_2;
+=======
+		serial0 = &serial_2;
+		mshc0 = &mmc_0;
+		mshc2 = &mmc_2;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	chosen {
@@ -28,7 +34,11 @@
 
 	memory@40000000 {
 		device_type = "memory";
+<<<<<<< HEAD
 		reg = <0x0 0x40000000 0x0 0xc0000000>;
+=======
+		reg = <0x0 0x40000000 0x0 0xC0000000>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	usb30_vbus_reg: regulator-usb30 {
@@ -61,6 +71,10 @@
 
 &gpu {
 	mali-supply = <&buck6_reg>;
+<<<<<<< HEAD
+=======
+	status = "okay";
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &serial_2 {
@@ -78,11 +92,19 @@
 };
 
 &adc {
+<<<<<<< HEAD
 	vdd-supply = <&ldo3_reg>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 };
 
 &hsi2c_4 {
+<<<<<<< HEAD
+=======
+	samsung,i2c-sda-delay = <100>;
+	samsung,i2c-max-bus-freq = <200000>;
+>>>>>>> b7ba80a49124 (Commit)
 	status = "okay";
 
 	pmic@66 {
@@ -362,7 +384,10 @@
 &mmc_0 {
 	status = "okay";
 	cap-mmc-highspeed;
+<<<<<<< HEAD
 	mmc-ddr-1_8v;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mmc-hs200-1_8v;
 	non-removable;
 	card-detect-delay = <200>;

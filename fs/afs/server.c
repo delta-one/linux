@@ -406,7 +406,11 @@ void afs_put_server(struct afs_net *net, struct afs_server *server,
 	if (!server)
 		return;
 
+<<<<<<< HEAD
 	a = atomic_read(&server->active);
+=======
+	a = atomic_inc_return(&server->active);
+>>>>>>> b7ba80a49124 (Commit)
 	zero = __refcount_dec_and_test(&server->ref, &r);
 	trace_afs_server(debug_id, r - 1, a, reason);
 	if (unlikely(zero))

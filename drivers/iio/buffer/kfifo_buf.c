@@ -270,7 +270,11 @@ static struct iio_buffer *devm_iio_kfifo_allocate(struct device *dev)
 int devm_iio_kfifo_buffer_setup_ext(struct device *dev,
 				    struct iio_dev *indio_dev,
 				    const struct iio_buffer_setup_ops *setup_ops,
+<<<<<<< HEAD
 				    const struct iio_dev_attr **buffer_attrs)
+=======
+				    const struct attribute **buffer_attrs)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct iio_buffer *buffer;
 

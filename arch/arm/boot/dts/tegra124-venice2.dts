@@ -52,7 +52,10 @@
 			aux-bus {
 				panel: panel {
 					compatible = "lg,lp129qe";
+<<<<<<< HEAD
 					power-supply = <&vdd_3v3_panel>;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 					backlight = <&backlight>;
 				};
 			};
@@ -71,7 +74,11 @@
 		pinctrl-names = "boot";
 		pinctrl-0 = <&pinmux_boot>;
 
+<<<<<<< HEAD
 		pinmux_boot: pinmux {
+=======
+		pinmux_boot: common {
+>>>>>>> b7ba80a49124 (Commit)
 			dap_mclk1_pw4 {
 				nvidia,pins = "dap_mclk1_pw4";
 				nvidia,function = "extperiph1";

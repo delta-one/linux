@@ -23,8 +23,11 @@
 &fman0 {
 	/* these aliases provide the FMan ports mapping */
 	enet0: ethernet@e0000 {
+<<<<<<< HEAD
 		pcsphy-handle = <&qsgmiib_pcs3>;
 		pcs-handle-names = "qsgmii";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	enet1: ethernet@e2000 {
@@ -37,6 +40,7 @@
 	};
 
 	enet4: ethernet@e8000 {
+<<<<<<< HEAD
 		pcsphy-handle = <&pcsphy4>, <&qsgmiib_pcs1>;
 		pcs-handle-names = "sgmii", "qsgmii";
 	};
@@ -44,12 +48,18 @@
 	enet5: ethernet@ea000 {
 		pcsphy-handle = <&pcsphy5>, <&pcsphy5>;
 		pcs-handle-names = "sgmii", "qsgmii";
+=======
+	};
+
+	enet5: ethernet@ea000 {
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	enet6: ethernet@f0000 {
 	};
 
 	enet7: ethernet@f2000 {
+<<<<<<< HEAD
 		pcsphy-handle = <&pcsphy7>, <&qsgmiib_pcs2>, <&pcsphy7>;
 		pcs-handle-names = "sgmii", "qsgmii", "xfi";
 	};
@@ -69,5 +79,7 @@
 			compatible = "fsl,lynx-pcs";
 			reg = <0x3>;
 		};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };

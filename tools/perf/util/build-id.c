@@ -715,6 +715,7 @@ build_id_cache__add(const char *sbuild_id, const char *name, const char *realnam
 		} else if (nsi && nsinfo__need_setns(nsi)) {
 			if (copyfile_ns(name, filename, nsi))
 				goto out_free;
+<<<<<<< HEAD
 		} else if (link(realname, filename) && errno != EEXIST) {
 			struct stat f_stat;
 
@@ -722,6 +723,11 @@ build_id_cache__add(const char *sbuild_id, const char *name, const char *realnam
 					copyfile_mode(name, filename, f_stat.st_mode))
 				goto out_free;
 		}
+=======
+		} else if (link(realname, filename) && errno != EEXIST &&
+				copyfile(name, filename))
+			goto out_free;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Some binaries are stripped, but have .debug files with their symbol

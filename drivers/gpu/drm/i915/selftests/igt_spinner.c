@@ -116,7 +116,27 @@ static unsigned int seqno_offset(u64 fence)
 static u64 hws_address(const struct i915_vma *hws,
 		       const struct i915_request *rq)
 {
+<<<<<<< HEAD
 	return i915_vma_offset(hws) + seqno_offset(rq->fence.context);
+=======
+	return hws->node.start + seqno_offset(rq->fence.context);
+}
+
+static int move_to_active(struct i915_vma *vma,
+			  struct i915_request *rq,
+			  unsigned int flags)
+{
+	int err;
+
+	i915_vma_lock(vma);
+	err = i915_request_await_object(rq, vma->obj,
+					flags & EXEC_OBJECT_WRITE);
+	if (err == 0)
+		err = i915_vma_move_to_active(vma, rq, flags);
+	i915_vma_unlock(vma);
+
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 struct i915_request *
@@ -149,11 +169,19 @@ igt_spinner_create_request(struct igt_spinner *spin,
 	if (IS_ERR(rq))
 		return ERR_CAST(rq);
 
+<<<<<<< HEAD
 	err = igt_vma_move_to_active_unlocked(vma, rq, 0);
 	if (err)
 		goto cancel_rq;
 
 	err = igt_vma_move_to_active_unlocked(hws, rq, 0);
+=======
+	err = move_to_active(vma, rq, 0);
+	if (err)
+		goto cancel_rq;
+
+	err = move_to_active(hws, rq, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	if (err)
 		goto cancel_rq;
 
@@ -187,8 +215,13 @@ igt_spinner_create_request(struct igt_spinner *spin,
 		*batch++ = MI_BATCH_BUFFER_START;
 	else
 		*batch++ = MI_BATCH_BUFFER_START | MI_BATCH_GTT;
+<<<<<<< HEAD
 	*batch++ = lower_32_bits(i915_vma_offset(vma));
 	*batch++ = upper_32_bits(i915_vma_offset(vma));
+=======
+	*batch++ = lower_32_bits(vma->node.start);
+	*batch++ = upper_32_bits(vma->node.start);
+>>>>>>> b7ba80a49124 (Commit)
 
 	*batch++ = MI_BATCH_BUFFER_END; /* not reached */
 
@@ -203,7 +236,11 @@ igt_spinner_create_request(struct igt_spinner *spin,
 	flags = 0;
 	if (GRAPHICS_VER(rq->engine->i915) <= 5)
 		flags |= I915_DISPATCH_SECURE;
+<<<<<<< HEAD
 	err = engine->emit_bb_start(rq, i915_vma_offset(vma), PAGE_SIZE, flags);
+=======
+	err = engine->emit_bb_start(rq, vma->node.start, PAGE_SIZE, flags);
+>>>>>>> b7ba80a49124 (Commit)
 
 cancel_rq:
 	if (err) {

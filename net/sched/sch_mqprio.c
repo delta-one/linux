@@ -17,8 +17,11 @@
 #include <net/sch_generic.h>
 #include <net/pkt_cls.h>
 
+<<<<<<< HEAD
 #include "sch_mqprio_lib.h"
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct mqprio_sched {
 	struct Qdisc		**qdiscs;
 	u16 mode;
@@ -29,6 +32,7 @@ struct mqprio_sched {
 	u64 max_rate[TC_QOPT_MAX_QUEUE];
 };
 
+<<<<<<< HEAD
 static int mqprio_enable_offload(struct Qdisc *sch,
 				 const struct tc_mqprio_qopt *qopt,
 				 struct netlink_ext_ack *extack)
@@ -85,6 +89,8 @@ static void mqprio_disable_offload(struct Qdisc *sch)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void mqprio_destroy(struct Qdisc *sch)
 {
 	struct net_device *dev = qdisc_dev(sch);
@@ -99,6 +105,7 @@ static void mqprio_destroy(struct Qdisc *sch)
 		kfree(priv->qdiscs);
 	}
 
+<<<<<<< HEAD
 	if (priv->hw_offload && dev->netdev_ops->ndo_setup_tc)
 		mqprio_disable_offload(sch);
 	else
@@ -110,6 +117,39 @@ static int mqprio_parse_opt(struct net_device *dev, struct tc_mqprio_qopt *qopt,
 			    struct netlink_ext_ack *extack)
 {
 	int err;
+=======
+	if (priv->hw_offload && dev->netdev_ops->ndo_setup_tc) {
+		struct tc_mqprio_qopt_offload mqprio = { { 0 } };
+
+		switch (priv->mode) {
+		case TC_MQPRIO_MODE_DCB:
+		case TC_MQPRIO_MODE_CHANNEL:
+			dev->netdev_ops->ndo_setup_tc(dev,
+						      TC_SETUP_QDISC_MQPRIO,
+						      &mqprio);
+			break;
+		default:
+			return;
+		}
+	} else {
+		netdev_set_num_tc(dev, 0);
+	}
+}
+
+static int mqprio_parse_opt(struct net_device *dev, struct tc_mqprio_qopt *qopt)
+{
+	int i, j;
+
+	/* Verify num_tc is not out of max range */
+	if (qopt->num_tc > TC_MAX_QUEUE)
+		return -EINVAL;
+
+	/* Verify priority mapping uses valid tcs */
+	for (i = 0; i < TC_BITMASK + 1; i++) {
+		if (qopt->prio_tc_map[i] >= qopt->num_tc)
+			return -EINVAL;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Limit qopt->hw to maximum supported offload value.  Drivers have
 	 * the option of overriding this later if they don't support the a
@@ -118,6 +158,7 @@ static int mqprio_parse_opt(struct net_device *dev, struct tc_mqprio_qopt *qopt,
 	if (qopt->hw > TC_MQPRIO_HW_OFFLOAD_MAX)
 		qopt->hw = TC_MQPRIO_HW_OFFLOAD_MAX;
 
+<<<<<<< HEAD
 	/* If hardware offload is requested, we will leave 3 options to the
 	 * device driver:
 	 * - populate the queue counts itself (and ignore what was requested)
@@ -135,6 +176,33 @@ static int mqprio_parse_opt(struct net_device *dev, struct tc_mqprio_qopt *qopt,
 	 */
 	if (qopt->hw && !dev->netdev_ops->ndo_setup_tc)
 		return -EINVAL;
+=======
+	/* If hardware offload is requested we will leave it to the device
+	 * to either populate the queue counts itself or to validate the
+	 * provided queue counts.  If ndo_setup_tc is not present then
+	 * hardware doesn't support offload and we should return an error.
+	 */
+	if (qopt->hw)
+		return dev->netdev_ops->ndo_setup_tc ? 0 : -EINVAL;
+
+	for (i = 0; i < qopt->num_tc; i++) {
+		unsigned int last = qopt->offset[i] + qopt->count[i];
+
+		/* Verify the queue count is in tx range being equal to the
+		 * real_num_tx_queues indicates the last queue is in use.
+		 */
+		if (qopt->offset[i] >= dev->real_num_tx_queues ||
+		    !qopt->count[i] ||
+		    last > dev->real_num_tx_queues)
+			return -EINVAL;
+
+		/* Verify that the offset and counts do not overlap */
+		for (j = i + 1; j < qopt->num_tc; j++) {
+			if (last > qopt->offset[j])
+				return -EINVAL;
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -160,6 +228,7 @@ static int parse_attr(struct nlattr *tb[], int maxtype, struct nlattr *nla,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int mqprio_parse_nlattr(struct Qdisc *sch, struct tc_mqprio_qopt *qopt,
 			       struct nlattr *opt)
 {
@@ -221,6 +290,8 @@ static int mqprio_parse_nlattr(struct Qdisc *sch, struct tc_mqprio_qopt *qopt,
 	return 0;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int mqprio_init(struct Qdisc *sch, struct nlattr *opt,
 		       struct netlink_ext_ack *extack)
 {
@@ -230,7 +301,13 @@ static int mqprio_init(struct Qdisc *sch, struct nlattr *opt,
 	struct Qdisc *qdisc;
 	int i, err = -EOPNOTSUPP;
 	struct tc_mqprio_qopt *qopt = NULL;
+<<<<<<< HEAD
 	struct tc_mqprio_caps caps;
+=======
+	struct nlattr *tb[TCA_MQPRIO_MAX + 1];
+	struct nlattr *attr;
+	int rem;
+>>>>>>> b7ba80a49124 (Commit)
 	int len;
 
 	BUILD_BUG_ON(TC_MAX_QUEUE != TC_QOPT_MAX_QUEUE);
@@ -249,18 +326,75 @@ static int mqprio_init(struct Qdisc *sch, struct nlattr *opt,
 	if (!opt || nla_len(opt) < sizeof(*qopt))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	qdisc_offload_query_caps(dev, TC_SETUP_QDISC_MQPRIO,
 				 &caps, sizeof(caps));
 
 	qopt = nla_data(opt);
 	if (mqprio_parse_opt(dev, qopt, &caps, extack))
+=======
+	qopt = nla_data(opt);
+	if (mqprio_parse_opt(dev, qopt))
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 
 	len = nla_len(opt) - NLA_ALIGN(sizeof(*qopt));
 	if (len > 0) {
+<<<<<<< HEAD
 		err = mqprio_parse_nlattr(sch, qopt, opt);
 		if (err)
 			return err;
+=======
+		err = parse_attr(tb, TCA_MQPRIO_MAX, opt, mqprio_policy,
+				 sizeof(*qopt));
+		if (err < 0)
+			return err;
+
+		if (!qopt->hw)
+			return -EINVAL;
+
+		if (tb[TCA_MQPRIO_MODE]) {
+			priv->flags |= TC_MQPRIO_F_MODE;
+			priv->mode = *(u16 *)nla_data(tb[TCA_MQPRIO_MODE]);
+		}
+
+		if (tb[TCA_MQPRIO_SHAPER]) {
+			priv->flags |= TC_MQPRIO_F_SHAPER;
+			priv->shaper = *(u16 *)nla_data(tb[TCA_MQPRIO_SHAPER]);
+		}
+
+		if (tb[TCA_MQPRIO_MIN_RATE64]) {
+			if (priv->shaper != TC_MQPRIO_SHAPER_BW_RATE)
+				return -EINVAL;
+			i = 0;
+			nla_for_each_nested(attr, tb[TCA_MQPRIO_MIN_RATE64],
+					    rem) {
+				if (nla_type(attr) != TCA_MQPRIO_MIN_RATE64)
+					return -EINVAL;
+				if (i >= qopt->num_tc)
+					break;
+				priv->min_rate[i] = *(u64 *)nla_data(attr);
+				i++;
+			}
+			priv->flags |= TC_MQPRIO_F_MIN_RATE;
+		}
+
+		if (tb[TCA_MQPRIO_MAX_RATE64]) {
+			if (priv->shaper != TC_MQPRIO_SHAPER_BW_RATE)
+				return -EINVAL;
+			i = 0;
+			nla_for_each_nested(attr, tb[TCA_MQPRIO_MAX_RATE64],
+					    rem) {
+				if (nla_type(attr) != TCA_MQPRIO_MAX_RATE64)
+					return -EINVAL;
+				if (i >= qopt->num_tc)
+					break;
+				priv->max_rate[i] = *(u64 *)nla_data(attr);
+				i++;
+			}
+			priv->flags |= TC_MQPRIO_F_MAX_RATE;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* pre-allocate qdisc, attachment can't fail */
@@ -287,9 +421,42 @@ static int mqprio_init(struct Qdisc *sch, struct nlattr *opt,
 	 * supplied and verified mapping
 	 */
 	if (qopt->hw) {
+<<<<<<< HEAD
 		err = mqprio_enable_offload(sch, qopt, extack);
 		if (err)
 			return err;
+=======
+		struct tc_mqprio_qopt_offload mqprio = {.qopt = *qopt};
+
+		switch (priv->mode) {
+		case TC_MQPRIO_MODE_DCB:
+			if (priv->shaper != TC_MQPRIO_SHAPER_DCB)
+				return -EINVAL;
+			break;
+		case TC_MQPRIO_MODE_CHANNEL:
+			mqprio.flags = priv->flags;
+			if (priv->flags & TC_MQPRIO_F_MODE)
+				mqprio.mode = priv->mode;
+			if (priv->flags & TC_MQPRIO_F_SHAPER)
+				mqprio.shaper = priv->shaper;
+			if (priv->flags & TC_MQPRIO_F_MIN_RATE)
+				for (i = 0; i < mqprio.qopt.num_tc; i++)
+					mqprio.min_rate[i] = priv->min_rate[i];
+			if (priv->flags & TC_MQPRIO_F_MAX_RATE)
+				for (i = 0; i < mqprio.qopt.num_tc; i++)
+					mqprio.max_rate[i] = priv->max_rate[i];
+			break;
+		default:
+			return -EINVAL;
+		}
+		err = dev->netdev_ops->ndo_setup_tc(dev,
+						    TC_SETUP_QDISC_MQPRIO,
+						    &mqprio);
+		if (err)
+			return err;
+
+		priv->hw_offload = mqprio.qopt.hw;
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		netdev_set_num_tc(dev, qopt->num_tc);
 		for (i = 0; i < qopt->num_tc; i++)
@@ -406,7 +573,11 @@ static int mqprio_dump(struct Qdisc *sch, struct sk_buff *skb)
 	struct nlattr *nla = (struct nlattr *)skb_tail_pointer(skb);
 	struct tc_mqprio_qopt opt = { 0 };
 	struct Qdisc *qdisc;
+<<<<<<< HEAD
 	unsigned int ntx;
+=======
+	unsigned int ntx, tc;
+>>>>>>> b7ba80a49124 (Commit)
 
 	sch->q.qlen = 0;
 	gnet_stats_basic_sync_init(&sch->bstats);
@@ -430,9 +601,21 @@ static int mqprio_dump(struct Qdisc *sch, struct sk_buff *skb)
 		spin_unlock_bh(qdisc_lock(qdisc));
 	}
 
+<<<<<<< HEAD
 	mqprio_qopt_reconstruct(dev, &opt);
 	opt.hw = priv->hw_offload;
 
+=======
+	opt.num_tc = netdev_get_num_tc(dev);
+	memcpy(opt.prio_tc_map, dev->prio_tc_map, sizeof(opt.prio_tc_map));
+	opt.hw = priv->hw_offload;
+
+	for (tc = 0; tc < netdev_get_num_tc(dev); tc++) {
+		opt.count[tc] = dev->tc_to_txq[tc].count;
+		opt.offset[tc] = dev->tc_to_txq[tc].offset;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (nla_put(skb, TCA_OPTIONS, sizeof(opt), &opt))
 		goto nla_put_failure;
 
@@ -571,8 +754,16 @@ static void mqprio_walk(struct Qdisc *sch, struct qdisc_walker *arg)
 	/* Walk hierarchy with a virtual class per tc */
 	arg->count = arg->skip;
 	for (ntx = arg->skip; ntx < netdev_get_num_tc(dev); ntx++) {
+<<<<<<< HEAD
 		if (!tc_qdisc_stats_dump(sch, ntx + TC_H_MIN_PRIORITY, arg))
 			return;
+=======
+		if (arg->fn(sch, ntx + TC_H_MIN_PRIORITY, arg) < 0) {
+			arg->stop = 1;
+			return;
+		}
+		arg->count++;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	/* Pad the values and skip over unused traffic classes */

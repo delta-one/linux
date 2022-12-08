@@ -13,6 +13,7 @@
 /* privid for wpan_phys to determine whether they belong to us or not */
 const void *const mac802154_wpan_phy_privid = &mac802154_wpan_phy_privid;
 
+<<<<<<< HEAD
 /**
  * ieee802154_wake_queue - wake ieee802154 queue
  * @hw: main hardware object
@@ -24,12 +25,18 @@ const void *const mac802154_wpan_phy_privid = &mac802154_wpan_phy_privid;
  * woken up after the operation.
  */
 static void ieee802154_wake_queue(struct ieee802154_hw *hw)
+=======
+void ieee802154_wake_queue(struct ieee802154_hw *hw)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ieee802154_local *local = hw_to_local(hw);
 	struct ieee802154_sub_if_data *sdata;
 
 	rcu_read_lock();
+<<<<<<< HEAD
 	clear_bit(WPAN_PHY_FLAG_STATE_QUEUE_STOPPED, &local->phy->flags);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	list_for_each_entry_rcu(sdata, &local->interfaces, list) {
 		if (!sdata->dev)
 			continue;
@@ -38,6 +45,7 @@ static void ieee802154_wake_queue(struct ieee802154_hw *hw)
 	}
 	rcu_read_unlock();
 }
+<<<<<<< HEAD
 
 /**
  * ieee802154_stop_queue - stop ieee802154 queue
@@ -50,6 +58,11 @@ static void ieee802154_wake_queue(struct ieee802154_hw *hw)
  * must then be stopped before transmitting.
  */
 static void ieee802154_stop_queue(struct ieee802154_hw *hw)
+=======
+EXPORT_SYMBOL(ieee802154_wake_queue);
+
+void ieee802154_stop_queue(struct ieee802154_hw *hw)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct ieee802154_local *local = hw_to_local(hw);
 	struct ieee802154_sub_if_data *sdata;
@@ -63,6 +76,7 @@ static void ieee802154_stop_queue(struct ieee802154_hw *hw)
 	}
 	rcu_read_unlock();
 }
+<<<<<<< HEAD
 
 void ieee802154_hold_queue(struct ieee802154_local *local)
 {
@@ -97,13 +111,20 @@ void ieee802154_disable_queue(struct ieee802154_local *local)
 	}
 	rcu_read_unlock();
 }
+=======
+EXPORT_SYMBOL(ieee802154_stop_queue);
+>>>>>>> b7ba80a49124 (Commit)
 
 enum hrtimer_restart ieee802154_xmit_ifs_timer(struct hrtimer *timer)
 {
 	struct ieee802154_local *local =
 		container_of(timer, struct ieee802154_local, ifs_timer);
 
+<<<<<<< HEAD
 	ieee802154_release_queue(local);
+=======
+	ieee802154_wake_queue(&local->hw);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return HRTIMER_NORESTART;
 }
@@ -137,12 +158,19 @@ void ieee802154_xmit_complete(struct ieee802154_hw *hw, struct sk_buff *skb,
 				      hw->phy->sifs_period * NSEC_PER_USEC,
 				      HRTIMER_MODE_REL);
 	} else {
+<<<<<<< HEAD
 		ieee802154_release_queue(local);
 	}
 
 	dev_consume_skb_any(skb);
 	if (atomic_dec_and_test(&hw->phy->ongoing_txs))
 		wake_up(&hw->phy->sync_txq);
+=======
+		ieee802154_wake_queue(hw);
+	}
+
+	dev_consume_skb_any(skb);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(ieee802154_xmit_complete);
 
@@ -152,10 +180,15 @@ void ieee802154_xmit_error(struct ieee802154_hw *hw, struct sk_buff *skb,
 	struct ieee802154_local *local = hw_to_local(hw);
 
 	local->tx_result = reason;
+<<<<<<< HEAD
 	ieee802154_release_queue(local);
 	dev_kfree_skb_any(skb);
 	if (atomic_dec_and_test(&hw->phy->ongoing_txs))
 		wake_up(&hw->phy->sync_txq);
+=======
+	ieee802154_wake_queue(hw);
+	dev_kfree_skb_any(skb);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(ieee802154_xmit_error);
 

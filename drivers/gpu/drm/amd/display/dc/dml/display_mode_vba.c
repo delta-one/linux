@@ -202,7 +202,10 @@ dml_get_pipe_attr_func(vm_group_size_in_bytes, mode_lib->vba.vm_group_bytes);
 dml_get_pipe_attr_func(dpte_row_height_linear_l, mode_lib->vba.dpte_row_height_linear);
 dml_get_pipe_attr_func(pte_buffer_mode, mode_lib->vba.PTE_BUFFER_MODE);
 dml_get_pipe_attr_func(subviewport_lines_needed_in_mall, mode_lib->vba.SubViewportLinesNeededInMALL);
+<<<<<<< HEAD
 dml_get_pipe_attr_func(surface_size_in_mall, mode_lib->vba.SurfaceSizeInMALL)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 double get_total_immediate_flip_bytes(
 		struct display_mode_lib *mode_lib,
@@ -412,7 +415,10 @@ static void fetch_socbb_params(struct display_mode_lib *mode_lib)
 		soc->urgent_latency_adjustment_fabric_clock_component_us;
 	mode_lib->vba.UrgentLatencyAdjustmentFabricClockReference =
 		soc->urgent_latency_adjustment_fabric_clock_reference_mhz;
+<<<<<<< HEAD
 	mode_lib->vba.MaxVRatioPre = soc->max_vratio_pre;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void fetch_ip_params(struct display_mode_lib *mode_lib)
@@ -627,7 +633,11 @@ static void fetch_pipe_params(struct display_mode_lib *mode_lib)
 		mode_lib->vba.skip_dio_check[mode_lib->vba.NumberOfActivePlanes] =
 				dout->is_virtual;
 
+<<<<<<< HEAD
 		if (dout->dsc_enable)
+=======
+		if (!dout->dsc_enable)
+>>>>>>> b7ba80a49124 (Commit)
 			mode_lib->vba.ForcedOutputLinkBPP[mode_lib->vba.NumberOfActivePlanes] = dout->output_bpp;
 		else
 			mode_lib->vba.ForcedOutputLinkBPP[mode_lib->vba.NumberOfActivePlanes] = 0.0;

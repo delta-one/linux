@@ -23,7 +23,10 @@
 #include <linux/slab.h>
 #include <linux/uaccess.h>
 #include <linux/uio.h>
+<<<<<<< HEAD
 #include <linux/splice.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/coda.h>
 #include "coda_psdev.h"
@@ -95,6 +98,7 @@ finish_write:
 	return ret;
 }
 
+<<<<<<< HEAD
 static ssize_t
 coda_file_splice_read(struct file *coda_file, loff_t *ppos,
 		      struct pipe_inode_info *pipe,
@@ -121,6 +125,8 @@ finish_read:
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void
 coda_vm_open(struct vm_area_struct *vma)
 {
@@ -329,5 +335,9 @@ const struct file_operations coda_file_operations = {
 	.open		= coda_open,
 	.release	= coda_release,
 	.fsync		= coda_fsync,
+<<<<<<< HEAD
 	.splice_read	= coda_file_splice_read,
+=======
+	.splice_read	= generic_file_splice_read,
+>>>>>>> b7ba80a49124 (Commit)
 };

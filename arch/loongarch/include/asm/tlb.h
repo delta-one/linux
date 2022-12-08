@@ -149,7 +149,11 @@ static inline void tlb_flush(struct mmu_gather *tlb)
 	struct vm_area_struct vma;
 
 	vma.vm_mm = tlb->mm;
+<<<<<<< HEAD
 	vm_flags_init(&vma, 0);
+=======
+	vma.vm_flags = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	if (tlb->fullmm) {
 		flush_tlb_mm(tlb->mm);
 		return;

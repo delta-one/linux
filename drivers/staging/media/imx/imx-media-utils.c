@@ -814,6 +814,42 @@ imx_media_pipeline_video_device(struct media_entity *start_entity,
 EXPORT_SYMBOL_GPL(imx_media_pipeline_video_device);
 
 /*
+<<<<<<< HEAD
+=======
+ * Find a fwnode endpoint that maps to the given subdevice's pad.
+ * If there are multiple endpoints that map to the pad, only the
+ * first endpoint encountered is returned.
+ *
+ * On success the refcount of the returned fwnode endpoint is
+ * incremented.
+ */
+struct fwnode_handle *imx_media_get_pad_fwnode(struct media_pad *pad)
+{
+	struct fwnode_handle *endpoint;
+	struct v4l2_subdev *sd;
+
+	if (!is_media_entity_v4l2_subdev(pad->entity))
+		return ERR_PTR(-ENODEV);
+
+	sd = media_entity_to_v4l2_subdev(pad->entity);
+
+	fwnode_graph_for_each_endpoint(dev_fwnode(sd->dev), endpoint) {
+		int pad_idx = media_entity_get_fwnode_pad(&sd->entity,
+							  endpoint,
+							  pad->flags);
+		if (pad_idx < 0)
+			continue;
+
+		if (pad_idx == pad->index)
+			return endpoint;
+	}
+
+	return ERR_PTR(-ENODEV);
+}
+EXPORT_SYMBOL_GPL(imx_media_get_pad_fwnode);
+
+/*
+>>>>>>> b7ba80a49124 (Commit)
  * Turn current pipeline streaming on/off starting from entity.
  */
 int imx_media_pipeline_set_stream(struct imx_media_dev *imxmd,
@@ -830,16 +866,28 @@ int imx_media_pipeline_set_stream(struct imx_media_dev *imxmd,
 	mutex_lock(&imxmd->md.graph_mutex);
 
 	if (on) {
+<<<<<<< HEAD
 		ret = __media_pipeline_start(entity->pads, &imxmd->pipe);
+=======
+		ret = __media_pipeline_start(entity, &imxmd->pipe);
+>>>>>>> b7ba80a49124 (Commit)
 		if (ret)
 			goto out;
 		ret = v4l2_subdev_call(sd, video, s_stream, 1);
 		if (ret)
+<<<<<<< HEAD
 			__media_pipeline_stop(entity->pads);
 	} else {
 		v4l2_subdev_call(sd, video, s_stream, 0);
 		if (media_pad_pipeline(entity->pads))
 			__media_pipeline_stop(entity->pads);
+=======
+			__media_pipeline_stop(entity);
+	} else {
+		v4l2_subdev_call(sd, video, s_stream, 0);
+		if (entity->pipe)
+			__media_pipeline_stop(entity);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 out:

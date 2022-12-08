@@ -971,6 +971,7 @@ static const struct i2c_device_id wm8961_i2c_id[] = {
 };
 MODULE_DEVICE_TABLE(i2c, wm8961_i2c_id);
 
+<<<<<<< HEAD
 static const struct of_device_id wm8961_of_match[] __maybe_unused = {
 	{ .compatible = "wlf,wm8961", },
 	{ }
@@ -981,6 +982,11 @@ static struct i2c_driver wm8961_i2c_driver = {
 	.driver = {
 		.name = "wm8961",
 		.of_match_table = of_match_ptr(wm8961_of_match),
+=======
+static struct i2c_driver wm8961_i2c_driver = {
+	.driver = {
+		.name = "wm8961",
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.probe_new = wm8961_i2c_probe,
 	.id_table = wm8961_i2c_id,

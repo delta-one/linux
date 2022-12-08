@@ -14,11 +14,18 @@
 
 #define JUMP_LABEL_NOP_SIZE 4
 
+<<<<<<< HEAD
 static __always_inline bool arch_static_branch(struct static_key * const key,
 					       const bool branch)
 {
 	asm_volatile_goto(
 		"	.align		2			\n\t"
+=======
+static __always_inline bool arch_static_branch(struct static_key *key,
+					       bool branch)
+{
+	asm_volatile_goto(
+>>>>>>> b7ba80a49124 (Commit)
 		"	.option push				\n\t"
 		"	.option norelax				\n\t"
 		"	.option norvc				\n\t"
@@ -36,11 +43,18 @@ label:
 	return true;
 }
 
+<<<<<<< HEAD
 static __always_inline bool arch_static_branch_jump(struct static_key * const key,
 						    const bool branch)
 {
 	asm_volatile_goto(
 		"	.align		2			\n\t"
+=======
+static __always_inline bool arch_static_branch_jump(struct static_key *key,
+						    bool branch)
+{
+	asm_volatile_goto(
+>>>>>>> b7ba80a49124 (Commit)
 		"	.option push				\n\t"
 		"	.option norelax				\n\t"
 		"	.option norvc				\n\t"

@@ -20,6 +20,7 @@ properties:
   compatible:
     oneOf:
       - description:
+<<<<<<< HEAD
           For implementations of the EC connected through I2C.
         const: google,cros-ec-i2c
       - description:
@@ -38,6 +39,21 @@ properties:
         const: google,cros-ec-uart
 
   controller-data: true
+=======
+          For implementations of the EC is connected through I2C.
+        const: google,cros-ec-i2c
+      - description:
+          For implementations of the EC is connected through SPI.
+        const: google,cros-ec-spi
+      - description:
+          For implementations of the EC is connected through RPMSG.
+        const: google,cros-ec-rpmsg
+
+  controller-data:
+    description:
+      SPI controller data, see bindings/spi/samsung,spi-peripheral-props.yaml
+    type: object
+>>>>>>> b7ba80a49124 (Commit)
 
   google,cros-ec-spi-pre-delay:
     description:
@@ -67,7 +83,12 @@ properties:
       the SCP.
     $ref: "/schemas/types.yaml#/definitions/string"
 
+<<<<<<< HEAD
   spi-max-frequency: true
+=======
+  spi-max-frequency:
+    description: Maximum SPI frequency of the device in Hz.
+>>>>>>> b7ba80a49124 (Commit)
 
   reg:
     maxItems: 1
@@ -75,6 +96,7 @@ properties:
   interrupts:
     maxItems: 1
 
+<<<<<<< HEAD
   reset-gpios:
     maxItems: 1
 
@@ -84,6 +106,8 @@ properties:
 
   vdd-supply: true
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   wakeup-source:
     description: Button can wake-up the system.
 
@@ -168,18 +192,28 @@ allOf:
   - if:
       properties:
         compatible:
+<<<<<<< HEAD
           not:
             contains:
               const: google,cros-ec-spi
     then:
       properties:
         controller-data: false
+=======
+          contains:
+            enum:
+              - google,cros-ec-i2c
+              - google,cros-ec-rpmsg
+    then:
+      properties:
+>>>>>>> b7ba80a49124 (Commit)
         google,cros-ec-spi-pre-delay: false
         google,cros-ec-spi-msg-delay: false
         spi-max-frequency: false
     else:
       $ref: /schemas/spi/spi-peripheral-props.yaml
 
+<<<<<<< HEAD
   - if:
       properties:
         compatible:
@@ -238,6 +272,8 @@ allOf:
         boot0-gpios: false
         vdd-supply: false
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 additionalProperties: false
 
 examples:
@@ -246,7 +282,11 @@ examples:
     #include <dt-bindings/gpio/gpio.h>
     #include <dt-bindings/interrupt-controller/irq.h>
 
+<<<<<<< HEAD
     i2c {
+=======
+    i2c0 {
+>>>>>>> b7ba80a49124 (Commit)
         #address-cells = <1>;
         #size-cells = <0>;
 
@@ -263,7 +303,11 @@ examples:
     #include <dt-bindings/gpio/gpio.h>
     #include <dt-bindings/interrupt-controller/irq.h>
 
+<<<<<<< HEAD
     spi {
+=======
+    spi0 {
+>>>>>>> b7ba80a49124 (Commit)
         #address-cells = <1>;
         #size-cells = <0>;
 
@@ -293,6 +337,7 @@ examples:
             compatible = "google,cros-ec-rpmsg";
         };
     };
+<<<<<<< HEAD
 
   # Example for FPMCU
   - |
@@ -319,4 +364,6 @@ examples:
             compatible = "google,cros-ec-uart";
         };
     };
+=======
+>>>>>>> b7ba80a49124 (Commit)
 ...

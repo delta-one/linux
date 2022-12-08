@@ -315,9 +315,15 @@ static void sbsm_del_mux_adapter(void *data)
 	i2c_mux_del_adapters(sbsm->muxc);
 }
 
+<<<<<<< HEAD
 static int sbsm_probe(struct i2c_client *client)
 {
 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+=======
+static int sbsm_probe(struct i2c_client *client,
+		      const struct i2c_device_id *id)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct i2c_adapter *adapter = client->adapter;
 	struct sbsm_data *data;
 	struct device *dev = &client->dev;
@@ -409,7 +415,11 @@ static struct i2c_driver sbsm_driver = {
 		.name = "sbsm",
 		.of_match_table = of_match_ptr(sbsm_dt_ids),
 	},
+<<<<<<< HEAD
 	.probe_new	= sbsm_probe,
+=======
+	.probe		= sbsm_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.alert		= sbsm_alert,
 	.id_table	= sbsm_ids
 };

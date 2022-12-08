@@ -23,11 +23,14 @@
 #define NVM_MAX_SIZE		SZ_512K
 #define NVM_DATA_DWORDS		16
 
+<<<<<<< HEAD
 /* Keep link controller awake during update */
 #define QUIRK_FORCE_POWER_LINK_CONTROLLER		BIT(0)
 /* Disable CLx if not supported */
 #define QUIRK_NO_CLX					BIT(1)
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * struct tb_nvm - Structure holding NVM information
  * @dev: Owner of the NVM
@@ -229,6 +232,7 @@ struct tb_switch {
 };
 
 /**
+<<<<<<< HEAD
  * struct tb_bandwidth_group - Bandwidth management group
  * @tb: Pointer to the domain the group belongs to
  * @index: Index of the group (aka Group_ID). Valid values %1-%7
@@ -246,6 +250,8 @@ struct tb_bandwidth_group {
 };
 
 /**
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * struct tb_port - a thunderbolt port, part of a tb_switch
  * @config: Cached port configuration read from registers
  * @sw: Switch the port belongs to
@@ -269,11 +275,14 @@ struct tb_bandwidth_group {
  * @ctl_credits: Buffers reserved for control path
  * @dma_credits: Number of credits allocated for DMA tunneling for all
  *		 DMA paths through this port.
+<<<<<<< HEAD
  * @group: Bandwidth allocation group the adapter is assigned to. Only
  *	   used for DP IN adapters for now.
  * @group_list: The adapter is linked to the group's list of ports through this
  * @max_bw: Maximum possible bandwidth through this adapter if set to
  *	    non-zero.
+=======
+>>>>>>> b7ba80a49124 (Commit)
  *
  * In USB4 terminology this structure represents an adapter (protocol or
  * lane adapter).
@@ -299,9 +308,12 @@ struct tb_port {
 	unsigned int total_credits;
 	unsigned int ctl_credits;
 	unsigned int dma_credits;
+<<<<<<< HEAD
 	struct tb_bandwidth_group *group;
 	struct list_head group_list;
 	unsigned int max_bw;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**
@@ -845,7 +857,11 @@ static inline bool tb_is_switch(const struct device *dev)
 	return dev->type == &tb_switch_type;
 }
 
+<<<<<<< HEAD
 static inline struct tb_switch *tb_to_switch(const struct device *dev)
+=======
+static inline struct tb_switch *tb_to_switch(struct device *dev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	if (tb_is_switch(dev))
 		return container_of(dev, struct tb_switch, dev);
@@ -1027,9 +1043,12 @@ static inline bool tb_switch_is_clx_enabled(const struct tb_switch *sw,
  */
 static inline bool tb_switch_is_clx_supported(const struct tb_switch *sw)
 {
+<<<<<<< HEAD
 	if (sw->quirks & QUIRK_NO_CLX)
 		return false;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return tb_switch_is_usb4(sw) || tb_switch_is_titan_ridge(sw);
 }
 
@@ -1080,7 +1099,11 @@ void tb_port_lane_bonding_disable(struct tb_port *port);
 int tb_port_wait_for_link_width(struct tb_port *port, int width,
 				int timeout_msec);
 int tb_port_update_credits(struct tb_port *port);
+<<<<<<< HEAD
 bool tb_port_is_clx_enabled(struct tb_port *port, unsigned int clx);
+=======
+bool tb_port_is_clx_enabled(struct tb_port *port, enum tb_clx clx);
+>>>>>>> b7ba80a49124 (Commit)
 
 int tb_switch_find_vse_cap(struct tb_switch *sw, enum tb_switch_vse_cap vsec);
 int tb_switch_find_cap(struct tb_switch *sw, enum tb_switch_cap cap);
@@ -1227,7 +1250,10 @@ int usb4_switch_add_ports(struct tb_switch *sw);
 void usb4_switch_remove_ports(struct tb_switch *sw);
 
 int usb4_port_unlock(struct tb_port *port);
+<<<<<<< HEAD
 int usb4_port_hotplug_enable(struct tb_port *port);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int usb4_port_configure(struct tb_port *port);
 void usb4_port_unconfigure(struct tb_port *port);
 int usb4_port_configure_xdomain(struct tb_port *port, struct tb_xdomain *xd);
@@ -1245,7 +1271,10 @@ int usb4_port_sw_margin(struct tb_port *port, unsigned int lanes, bool timing,
 int usb4_port_sw_margin_errors(struct tb_port *port, u32 *errors);
 
 int usb4_port_retimer_set_inbound_sbtx(struct tb_port *port, u8 index);
+<<<<<<< HEAD
 int usb4_port_retimer_unset_inbound_sbtx(struct tb_port *port, u8 index);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int usb4_port_retimer_read(struct tb_port *port, u8 index, u8 reg, void *buf,
 			   u8 size);
 int usb4_port_retimer_write(struct tb_port *port, u8 index, u8 reg,
@@ -1272,6 +1301,7 @@ int usb4_usb3_port_allocate_bandwidth(struct tb_port *port, int *upstream_bw,
 int usb4_usb3_port_release_bandwidth(struct tb_port *port, int *upstream_bw,
 				     int *downstream_bw);
 
+<<<<<<< HEAD
 int usb4_dp_port_set_cm_id(struct tb_port *port, int cm_id);
 bool usb4_dp_port_bw_mode_supported(struct tb_port *port);
 bool usb4_dp_port_bw_mode_enabled(struct tb_port *port);
@@ -1287,6 +1317,8 @@ int usb4_dp_port_allocated_bw(struct tb_port *port);
 int usb4_dp_port_allocate_bw(struct tb_port *port, int bw);
 int usb4_dp_port_requested_bw(struct tb_port *port);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline bool tb_is_usb4_port_device(const struct device *dev)
 {
 	return dev->type == &usb4_port_device_type;
@@ -1303,6 +1335,12 @@ struct usb4_port *usb4_port_device_add(struct tb_port *port);
 void usb4_port_device_remove(struct usb4_port *usb4);
 int usb4_port_device_resume(struct usb4_port *usb4);
 
+<<<<<<< HEAD
+=======
+/* Keep link controller awake during update */
+#define QUIRK_FORCE_POWER_LINK_CONTROLLER		BIT(0)
+
+>>>>>>> b7ba80a49124 (Commit)
 void tb_check_quirks(struct tb_switch *sw);
 
 #ifdef CONFIG_ACPI

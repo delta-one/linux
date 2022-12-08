@@ -12,6 +12,10 @@
 
 #include <linux/module.h>
 #include <linux/init.h>
+<<<<<<< HEAD
+=======
+#include <linux/device.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/slab.h>
 #include <linux/mdev.h>
 
@@ -23,10 +27,17 @@
 #include "vfio_ccw_private.h"
 
 struct workqueue_struct *vfio_ccw_work_q;
+<<<<<<< HEAD
 struct kmem_cache *vfio_ccw_io_region;
 struct kmem_cache *vfio_ccw_cmd_region;
 struct kmem_cache *vfio_ccw_schib_region;
 struct kmem_cache *vfio_ccw_crw_region;
+=======
+static struct kmem_cache *vfio_ccw_io_region;
+static struct kmem_cache *vfio_ccw_cmd_region;
+static struct kmem_cache *vfio_ccw_schib_region;
+static struct kmem_cache *vfio_ccw_crw_region;
+>>>>>>> b7ba80a49124 (Commit)
 
 debug_info_t *vfio_ccw_debug_msg_id;
 debug_info_t *vfio_ccw_debug_trace_id;
@@ -36,6 +47,7 @@ debug_info_t *vfio_ccw_debug_trace_id;
  */
 int vfio_ccw_sch_quiesce(struct subchannel *sch)
 {
+<<<<<<< HEAD
 	struct vfio_ccw_parent *parent = dev_get_drvdata(&sch->dev);
 	struct vfio_ccw_private *private = dev_get_drvdata(&parent->dev);
 	DECLARE_COMPLETION_ONSTACK(completion);
@@ -49,6 +61,12 @@ int vfio_ccw_sch_quiesce(struct subchannel *sch)
 	if (WARN_ON(!private))
 		return 0;
 
+=======
+	struct vfio_ccw_private *private = dev_get_drvdata(&sch->dev);
+	DECLARE_COMPLETION_ONSTACK(completion);
+	int iretry, ret = 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	iretry = 255;
 	do {
 
@@ -79,7 +97,11 @@ int vfio_ccw_sch_quiesce(struct subchannel *sch)
 	return ret;
 }
 
+<<<<<<< HEAD
 void vfio_ccw_sch_io_todo(struct work_struct *work)
+=======
+static void vfio_ccw_sch_io_todo(struct work_struct *work)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct vfio_ccw_private *private;
 	struct irb *irb;
@@ -115,7 +137,11 @@ void vfio_ccw_sch_io_todo(struct work_struct *work)
 		eventfd_signal(private->io_trigger, 1);
 }
 
+<<<<<<< HEAD
 void vfio_ccw_crw_todo(struct work_struct *work)
+=======
+static void vfio_ccw_crw_todo(struct work_struct *work)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct vfio_ccw_private *private;
 
@@ -130,6 +156,7 @@ void vfio_ccw_crw_todo(struct work_struct *work)
  */
 static void vfio_ccw_sch_irq(struct subchannel *sch)
 {
+<<<<<<< HEAD
 	struct vfio_ccw_parent *parent = dev_get_drvdata(&sch->dev);
 	struct vfio_ccw_private *private = dev_get_drvdata(&parent->dev);
 
@@ -147,22 +174,106 @@ static void vfio_ccw_sch_irq(struct subchannel *sch)
 		cio_disable_subchannel(sch);
 		return;
 	}
+=======
+	struct vfio_ccw_private *private = dev_get_drvdata(&sch->dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	inc_irq_stat(IRQIO_CIO);
 	vfio_ccw_fsm_event(private, VFIO_CCW_EVENT_INTERRUPT);
 }
 
+<<<<<<< HEAD
 static void vfio_ccw_free_parent(struct device *dev)
 {
 	struct vfio_ccw_parent *parent = container_of(dev, struct vfio_ccw_parent, dev);
 
 	kfree(parent);
+=======
+static struct vfio_ccw_private *vfio_ccw_alloc_private(struct subchannel *sch)
+{
+	struct vfio_ccw_private *private;
+
+	private = kzalloc(sizeof(*private), GFP_KERNEL);
+	if (!private)
+		return ERR_PTR(-ENOMEM);
+
+	private->sch = sch;
+	mutex_init(&private->io_mutex);
+	private->state = VFIO_CCW_STATE_STANDBY;
+	INIT_LIST_HEAD(&private->crw);
+	INIT_WORK(&private->io_work, vfio_ccw_sch_io_todo);
+	INIT_WORK(&private->crw_work, vfio_ccw_crw_todo);
+	atomic_set(&private->avail, 1);
+
+	private->cp.guest_cp = kcalloc(CCWCHAIN_LEN_MAX, sizeof(struct ccw1),
+				       GFP_KERNEL);
+	if (!private->cp.guest_cp)
+		goto out_free_private;
+
+	private->io_region = kmem_cache_zalloc(vfio_ccw_io_region,
+					       GFP_KERNEL | GFP_DMA);
+	if (!private->io_region)
+		goto out_free_cp;
+
+	private->cmd_region = kmem_cache_zalloc(vfio_ccw_cmd_region,
+						GFP_KERNEL | GFP_DMA);
+	if (!private->cmd_region)
+		goto out_free_io;
+
+	private->schib_region = kmem_cache_zalloc(vfio_ccw_schib_region,
+						  GFP_KERNEL | GFP_DMA);
+
+	if (!private->schib_region)
+		goto out_free_cmd;
+
+	private->crw_region = kmem_cache_zalloc(vfio_ccw_crw_region,
+						GFP_KERNEL | GFP_DMA);
+
+	if (!private->crw_region)
+		goto out_free_schib;
+	return private;
+
+out_free_schib:
+	kmem_cache_free(vfio_ccw_schib_region, private->schib_region);
+out_free_cmd:
+	kmem_cache_free(vfio_ccw_cmd_region, private->cmd_region);
+out_free_io:
+	kmem_cache_free(vfio_ccw_io_region, private->io_region);
+out_free_cp:
+	kfree(private->cp.guest_cp);
+out_free_private:
+	mutex_destroy(&private->io_mutex);
+	kfree(private);
+	return ERR_PTR(-ENOMEM);
+}
+
+static void vfio_ccw_free_private(struct vfio_ccw_private *private)
+{
+	struct vfio_ccw_crw *crw, *temp;
+
+	list_for_each_entry_safe(crw, temp, &private->crw, next) {
+		list_del(&crw->next);
+		kfree(crw);
+	}
+
+	kmem_cache_free(vfio_ccw_crw_region, private->crw_region);
+	kmem_cache_free(vfio_ccw_schib_region, private->schib_region);
+	kmem_cache_free(vfio_ccw_cmd_region, private->cmd_region);
+	kmem_cache_free(vfio_ccw_io_region, private->io_region);
+	kfree(private->cp.guest_cp);
+	mutex_destroy(&private->io_mutex);
+	kfree(private);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int vfio_ccw_sch_probe(struct subchannel *sch)
 {
 	struct pmcw *pmcw = &sch->schib.pmcw;
+<<<<<<< HEAD
 	struct vfio_ccw_parent *parent;
+=======
+	struct vfio_ccw_private *private;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret = -ENOMEM;
 
 	if (pmcw->qf) {
@@ -171,6 +282,7 @@ static int vfio_ccw_sch_probe(struct subchannel *sch)
 		return -ENODEV;
 	}
 
+<<<<<<< HEAD
 	parent = kzalloc(sizeof(*parent), GFP_KERNEL);
 	if (!parent)
 		return -ENOMEM;
@@ -193,21 +305,40 @@ static int vfio_ccw_sch_probe(struct subchannel *sch)
 	if (ret)
 		goto out_unreg;
 
+=======
+	private = vfio_ccw_alloc_private(sch);
+	if (IS_ERR(private))
+		return PTR_ERR(private);
+
+	dev_set_drvdata(&sch->dev, private);
+
+	ret = mdev_register_device(&sch->dev, &vfio_ccw_mdev_driver);
+	if (ret)
+		goto out_free;
+
+>>>>>>> b7ba80a49124 (Commit)
 	VFIO_CCW_MSG_EVENT(4, "bound to subchannel %x.%x.%04x\n",
 			   sch->schid.cssid, sch->schid.ssid,
 			   sch->schid.sch_no);
 	return 0;
 
+<<<<<<< HEAD
 out_unreg:
 	device_del(&parent->dev);
 out_free:
 	put_device(&parent->dev);
 	dev_set_drvdata(&sch->dev, NULL);
+=======
+out_free:
+	dev_set_drvdata(&sch->dev, NULL);
+	vfio_ccw_free_private(private);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
 static void vfio_ccw_sch_remove(struct subchannel *sch)
 {
+<<<<<<< HEAD
 	struct vfio_ccw_parent *parent = dev_get_drvdata(&sch->dev);
 
 	mdev_unregister_parent(&parent->parent);
@@ -215,6 +346,16 @@ static void vfio_ccw_sch_remove(struct subchannel *sch)
 	device_unregister(&parent->dev);
 	dev_set_drvdata(&sch->dev, NULL);
 
+=======
+	struct vfio_ccw_private *private = dev_get_drvdata(&sch->dev);
+
+	mdev_unregister_device(&sch->dev);
+
+	dev_set_drvdata(&sch->dev, NULL);
+
+	vfio_ccw_free_private(private);
+
+>>>>>>> b7ba80a49124 (Commit)
 	VFIO_CCW_MSG_EVENT(4, "unbound from subchannel %x.%x.%04x\n",
 			   sch->schid.cssid, sch->schid.ssid,
 			   sch->schid.sch_no);
@@ -222,11 +363,15 @@ static void vfio_ccw_sch_remove(struct subchannel *sch)
 
 static void vfio_ccw_sch_shutdown(struct subchannel *sch)
 {
+<<<<<<< HEAD
 	struct vfio_ccw_parent *parent = dev_get_drvdata(&sch->dev);
 	struct vfio_ccw_private *private = dev_get_drvdata(&parent->dev);
 
 	if (!private)
 		return;
+=======
+	struct vfio_ccw_private *private = dev_get_drvdata(&sch->dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 	vfio_ccw_fsm_event(private, VFIO_CCW_EVENT_CLOSE);
 	vfio_ccw_fsm_event(private, VFIO_CCW_EVENT_NOT_OPER);
@@ -244,8 +389,12 @@ static void vfio_ccw_sch_shutdown(struct subchannel *sch)
  */
 static int vfio_ccw_sch_event(struct subchannel *sch, int process)
 {
+<<<<<<< HEAD
 	struct vfio_ccw_parent *parent = dev_get_drvdata(&sch->dev);
 	struct vfio_ccw_private *private = dev_get_drvdata(&parent->dev);
+=======
+	struct vfio_ccw_private *private = dev_get_drvdata(&sch->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long flags;
 	int rc = -EAGAIN;
 
@@ -258,10 +407,15 @@ static int vfio_ccw_sch_event(struct subchannel *sch, int process)
 
 	rc = 0;
 
+<<<<<<< HEAD
 	if (cio_update_schib(sch)) {
 		if (private)
 			vfio_ccw_fsm_event(private, VFIO_CCW_EVENT_NOT_OPER);
 	}
+=======
+	if (cio_update_schib(sch))
+		vfio_ccw_fsm_event(private, VFIO_CCW_EVENT_NOT_OPER);
+>>>>>>> b7ba80a49124 (Commit)
 
 out_unlock:
 	spin_unlock_irqrestore(sch->lock, flags);
@@ -299,15 +453,23 @@ static void vfio_ccw_queue_crw(struct vfio_ccw_private *private,
 static int vfio_ccw_chp_event(struct subchannel *sch,
 			      struct chp_link *link, int event)
 {
+<<<<<<< HEAD
 	struct vfio_ccw_parent *parent = dev_get_drvdata(&sch->dev);
 	struct vfio_ccw_private *private = dev_get_drvdata(&parent->dev);
+=======
+	struct vfio_ccw_private *private = dev_get_drvdata(&sch->dev);
+>>>>>>> b7ba80a49124 (Commit)
 	int mask = chp_ssd_get_mask(&sch->ssd_info, link);
 	int retry = 255;
 
 	if (!private || !mask)
 		return 0;
 
+<<<<<<< HEAD
 	trace_vfio_ccw_chp_event(sch->schid, mask, event);
+=======
+	trace_vfio_ccw_chp_event(private->sch->schid, mask, event);
+>>>>>>> b7ba80a49124 (Commit)
 	VFIO_CCW_MSG_EVENT(2, "sch %x.%x.%04x: mask=0x%x event=%d\n",
 			   sch->schid.cssid,
 			   sch->schid.ssid, sch->schid.sch_no,

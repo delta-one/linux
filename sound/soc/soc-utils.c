@@ -264,7 +264,11 @@ int __init snd_soc_util_init(void)
 	return ret;
 }
 
+<<<<<<< HEAD
 void snd_soc_util_exit(void)
+=======
+void __exit snd_soc_util_exit(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	platform_driver_unregister(&soc_dummy_driver);
 	platform_device_unregister(soc_dummy_dev);

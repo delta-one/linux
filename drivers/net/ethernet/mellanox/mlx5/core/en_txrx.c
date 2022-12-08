@@ -31,7 +31,10 @@
  */
 
 #include <linux/irq.h>
+<<<<<<< HEAD
 #include <net/xdp_sock_drv.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "en.h"
 #include "en/txrx.h"
 #include "en/xdp.h"
@@ -51,7 +54,11 @@ static void mlx5e_handle_tx_dim(struct mlx5e_txqsq *sq)
 	struct mlx5e_sq_stats *stats = sq->stats;
 	struct dim_sample dim_sample = {};
 
+<<<<<<< HEAD
 	if (unlikely(!test_bit(MLX5E_SQ_STATE_DIM, &sq->state)))
+=======
+	if (unlikely(!test_bit(MLX5E_SQ_STATE_AM, &sq->state)))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	dim_update_sample(sq->cq.event_ctr, stats->packets, stats->bytes, &dim_sample);
@@ -63,7 +70,11 @@ static void mlx5e_handle_rx_dim(struct mlx5e_rq *rq)
 	struct mlx5e_rq_stats *stats = rq->stats;
 	struct dim_sample dim_sample = {};
 
+<<<<<<< HEAD
 	if (unlikely(!test_bit(MLX5E_RQ_STATE_DIM, &rq->state)))
+=======
+	if (unlikely(!test_bit(MLX5E_RQ_STATE_AM, &rq->state)))
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	dim_update_sample(rq->cq.event_ctr, stats->packets, stats->bytes, &dim_sample);
@@ -87,6 +98,7 @@ void mlx5e_trigger_irq(struct mlx5e_icosq *sq)
 
 static bool mlx5e_napi_xsk_post(struct mlx5e_xdpsq *xsksq, struct mlx5e_rq *xskrq)
 {
+<<<<<<< HEAD
 	bool need_wakeup = xsk_uses_need_wakeup(xskrq->xsk_pool);
 	bool busy_xsk = false, xsk_rx_alloc_err;
 
@@ -106,10 +118,28 @@ static bool mlx5e_napi_xsk_post(struct mlx5e_xdpsq *xsksq, struct mlx5e_rq *xskr
 	 */
 	if (need_wakeup && !mlx5e_rqwq_get_cur_sz(xskrq))
 		xsk_set_rx_need_wakeup(xskrq->xsk_pool);
+=======
+	bool busy_xsk = false, xsk_rx_alloc_err;
+
+	/* Handle the race between the application querying need_wakeup and the
+	 * driver setting it:
+	 * 1. Update need_wakeup both before and after the TX. If it goes to
+	 * "yes", it can only happen with the first update.
+	 * 2. If the application queried need_wakeup before we set it, the
+	 * packets will be transmitted anyway, even w/o a wakeup.
+	 * 3. Give a chance to clear need_wakeup after new packets were queued
+	 * for TX.
+	 */
+	mlx5e_xsk_update_tx_wakeup(xsksq);
+	busy_xsk |= mlx5e_xsk_tx(xsksq, MLX5E_TX_XSK_POLL_BUDGET);
+	mlx5e_xsk_update_tx_wakeup(xsksq);
+
+>>>>>>> b7ba80a49124 (Commit)
 	xsk_rx_alloc_err = INDIRECT_CALL_2(xskrq->post_wqes,
 					   mlx5e_post_rx_mpwqes,
 					   mlx5e_post_rx_wqes,
 					   xskrq);
+<<<<<<< HEAD
 	/* Ask for wakeup if WQ is not full after refill. */
 	if (!need_wakeup)
 		busy_xsk |= xsk_rx_alloc_err;
@@ -117,6 +147,9 @@ static bool mlx5e_napi_xsk_post(struct mlx5e_xdpsq *xsksq, struct mlx5e_rq *xskr
 		xsk_set_rx_need_wakeup(xskrq->xsk_pool);
 	else
 		xsk_clear_rx_need_wakeup(xskrq->xsk_pool);
+=======
+	busy_xsk |= mlx5e_xsk_update_rx_wakeup(xskrq, xsk_rx_alloc_err);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return busy_xsk;
 }

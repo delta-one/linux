@@ -446,10 +446,18 @@ int can_rx_register(struct net *net, struct net_device *dev, canid_t can_id,
 	struct hlist_head *rcv_list;
 	struct can_dev_rcv_lists *dev_rcv_lists;
 	struct can_rcv_lists_stats *rcv_lists_stats = net->can.rcv_lists_stats;
+<<<<<<< HEAD
 
 	/* insert new receiver  (dev,canid,mask) -> (func,data) */
 
 	if (dev && (dev->type != ARPHRD_CAN || !can_get_ml_priv(dev)))
+=======
+	int err = 0;
+
+	/* insert new receiver  (dev,canid,mask) -> (func,data) */
+
+	if (dev && dev->type != ARPHRD_CAN)
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENODEV;
 
 	if (dev && !net_eq(net, dev_net(dev)))
@@ -480,7 +488,11 @@ int can_rx_register(struct net *net, struct net_device *dev, canid_t can_id,
 					       rcv_lists_stats->rcv_entries);
 	spin_unlock_bh(&net->can.rcvlists_lock);
 
+<<<<<<< HEAD
 	return 0;
+=======
+	return err;
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL(can_rx_register);
 
@@ -676,7 +688,11 @@ static void can_receive(struct sk_buff *skb, struct net_device *dev)
 static int can_rcv(struct sk_buff *skb, struct net_device *dev,
 		   struct packet_type *pt, struct net_device *orig_dev)
 {
+<<<<<<< HEAD
 	if (unlikely(dev->type != ARPHRD_CAN || !can_get_ml_priv(dev) || !can_is_can_skb(skb))) {
+=======
+	if (unlikely(dev->type != ARPHRD_CAN || (!can_is_can_skb(skb)))) {
+>>>>>>> b7ba80a49124 (Commit)
 		pr_warn_once("PF_CAN: dropped non conform CAN skbuff: dev type %d, len %d\n",
 			     dev->type, skb->len);
 
@@ -691,7 +707,11 @@ static int can_rcv(struct sk_buff *skb, struct net_device *dev,
 static int canfd_rcv(struct sk_buff *skb, struct net_device *dev,
 		     struct packet_type *pt, struct net_device *orig_dev)
 {
+<<<<<<< HEAD
 	if (unlikely(dev->type != ARPHRD_CAN || !can_get_ml_priv(dev) || !can_is_canfd_skb(skb))) {
+=======
+	if (unlikely(dev->type != ARPHRD_CAN || (!can_is_canfd_skb(skb)))) {
+>>>>>>> b7ba80a49124 (Commit)
 		pr_warn_once("PF_CAN: dropped non conform CAN FD skbuff: dev type %d, len %d\n",
 			     dev->type, skb->len);
 
@@ -706,7 +726,11 @@ static int canfd_rcv(struct sk_buff *skb, struct net_device *dev,
 static int canxl_rcv(struct sk_buff *skb, struct net_device *dev,
 		     struct packet_type *pt, struct net_device *orig_dev)
 {
+<<<<<<< HEAD
 	if (unlikely(dev->type != ARPHRD_CAN || !can_get_ml_priv(dev) || !can_is_canxl_skb(skb))) {
+=======
+	if (unlikely(dev->type != ARPHRD_CAN || (!can_is_canxl_skb(skb)))) {
+>>>>>>> b7ba80a49124 (Commit)
 		pr_warn_once("PF_CAN: dropped non conform CAN XL skbuff: dev type %d, len %d\n",
 			     dev->type, skb->len);
 
@@ -901,7 +925,10 @@ out_pernet:
 static __exit void can_exit(void)
 {
 	/* protocol unregister */
+<<<<<<< HEAD
 	dev_remove_pack(&canxl_packet);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	dev_remove_pack(&canfd_packet);
 	dev_remove_pack(&can_packet);
 	sock_unregister(PF_CAN);

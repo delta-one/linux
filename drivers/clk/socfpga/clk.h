@@ -50,6 +50,10 @@ struct socfpga_gate_clk {
 	u32 width;	/* only valid if div_reg != 0 */
 	u32 shift;	/* only valid if div_reg != 0 */
 	u32 bypass_shift;      /* only valid if bypass_reg != 0 */
+<<<<<<< HEAD
+=======
+	u32 clk_phase[2];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct socfpga_periph_clk {

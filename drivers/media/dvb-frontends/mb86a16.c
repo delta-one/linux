@@ -1498,7 +1498,10 @@ static int mb86a16_send_diseqc_msg(struct dvb_frontend *fe,
 				   struct dvb_diseqc_master_cmd *cmd)
 {
 	struct mb86a16_state *state = fe->demodulator_priv;
+<<<<<<< HEAD
 	int ret = -EREMOTEIO;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int i;
 	u8 regs;
 
@@ -1511,10 +1514,15 @@ static int mb86a16_send_diseqc_msg(struct dvb_frontend *fe,
 
 	regs = 0x18;
 
+<<<<<<< HEAD
 	if (cmd->msg_len > 5 || cmd->msg_len < 4) {
 		ret = -EINVAL;
 		goto err;
 	}
+=======
+	if (cmd->msg_len > 5 || cmd->msg_len < 4)
+		return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	for (i = 0; i < cmd->msg_len; i++) {
 		if (mb86a16_write(state, regs, cmd->msg[i]) < 0)
@@ -1535,7 +1543,11 @@ static int mb86a16_send_diseqc_msg(struct dvb_frontend *fe,
 
 err:
 	dprintk(verbose, MB86A16_ERROR, 1, "I2C transfer error");
+<<<<<<< HEAD
 	return ret;
+=======
+	return -EREMOTEIO;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int mb86a16_send_diseqc_burst(struct dvb_frontend *fe,

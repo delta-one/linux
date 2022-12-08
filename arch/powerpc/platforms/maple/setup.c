@@ -162,8 +162,13 @@ static struct smp_ops_t maple_smp_ops = {
 
 static void __init maple_use_rtas_reboot_and_halt_if_present(void)
 {
+<<<<<<< HEAD
 	if (rtas_function_implemented(RTAS_FN_SYSTEM_REBOOT) &&
 	    rtas_function_implemented(RTAS_FN_POWER_OFF)) {
+=======
+	if (rtas_service_present("system-reboot") &&
+	    rtas_service_present("power-off")) {
+>>>>>>> b7ba80a49124 (Commit)
 		ppc_md.restart = rtas_restart;
 		pm_power_off = rtas_power_off;
 		ppc_md.halt = rtas_halt;
@@ -357,6 +362,10 @@ define_machine(maple) {
 	.get_boot_time		= maple_get_boot_time,
 	.set_rtc_time		= maple_set_rtc_time,
 	.get_rtc_time		= maple_get_rtc_time,
+<<<<<<< HEAD
+=======
+	.calibrate_decr		= generic_calibrate_decr,
+>>>>>>> b7ba80a49124 (Commit)
 	.progress		= maple_progress,
 	.power_save		= power4_idle,
 };

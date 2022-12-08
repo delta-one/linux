@@ -25,7 +25,10 @@
 #include <linux/freezer.h>
 #include <linux/wait.h>
 #include <linux/iversion.h>
+<<<<<<< HEAD
 #include <linux/filelock.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <linux/uaccess.h>
 #include <linux/sched/mm.h>
@@ -64,7 +67,11 @@ static void nfs_init_cinfo_from_inode(struct nfs_commit_info *cinfo,
 				      struct inode *inode);
 static struct nfs_page *
 nfs_page_search_commits_for_head_request_locked(struct nfs_inode *nfsi,
+<<<<<<< HEAD
 						struct folio *folio);
+=======
+						struct page *page);
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct kmem_cache *nfs_wdata_cachep;
 static mempool_t *nfs_wdata_mempool;
@@ -171,6 +178,7 @@ nfs_cancel_remove_inode(struct nfs_page *req, struct inode *inode)
 	return 0;
 }
 
+<<<<<<< HEAD
 static struct nfs_page *nfs_folio_private_request(struct folio *folio)
 {
 	return folio_get_private(folio);
@@ -179,11 +187,24 @@ static struct nfs_page *nfs_folio_private_request(struct folio *folio)
 /**
  * nfs_folio_find_private_request - find head request associated with a folio
  * @folio: pointer to folio
+=======
+static struct nfs_page *
+nfs_page_private_request(struct page *page)
+{
+	if (!PagePrivate(page))
+		return NULL;
+	return (struct nfs_page *)page_private(page);
+}
+
+/*
+ * nfs_page_find_head_request_locked - find head request associated with @page
+>>>>>>> b7ba80a49124 (Commit)
  *
  * must be called while holding the inode lock.
  *
  * returns matching head request with reference held, or NULL if not found.
  */
+<<<<<<< HEAD
 static struct nfs_page *nfs_folio_find_private_request(struct folio *folio)
 {
 	struct address_space *mapping = folio_file_mapping(folio);
@@ -193,6 +214,18 @@ static struct nfs_page *nfs_folio_find_private_request(struct folio *folio)
 		return NULL;
 	spin_lock(&mapping->private_lock);
 	req = nfs_folio_private_request(folio);
+=======
+static struct nfs_page *
+nfs_page_find_private_request(struct page *page)
+{
+	struct address_space *mapping = page_file_mapping(page);
+	struct nfs_page *req;
+
+	if (!PagePrivate(page))
+		return NULL;
+	spin_lock(&mapping->private_lock);
+	req = nfs_page_private_request(page);
+>>>>>>> b7ba80a49124 (Commit)
 	if (req) {
 		WARN_ON_ONCE(req->wb_head != req);
 		kref_get(&req->wb_kref);
@@ -201,6 +234,7 @@ static struct nfs_page *nfs_folio_find_private_request(struct folio *folio)
 	return req;
 }
 
+<<<<<<< HEAD
 static struct nfs_page *nfs_folio_find_swap_request(struct folio *folio)
 {
 	struct inode *inode = folio_file_mapping(folio)->host;
@@ -212,6 +246,20 @@ static struct nfs_page *nfs_folio_find_swap_request(struct folio *folio)
 	if (folio_test_swapcache(folio)) {
 		req = nfs_page_search_commits_for_head_request_locked(nfsi,
 								      folio);
+=======
+static struct nfs_page *
+nfs_page_find_swap_request(struct page *page)
+{
+	struct inode *inode = page_file_mapping(page)->host;
+	struct nfs_inode *nfsi = NFS_I(inode);
+	struct nfs_page *req = NULL;
+	if (!PageSwapCache(page))
+		return NULL;
+	mutex_lock(&nfsi->commit_mutex);
+	if (PageSwapCache(page)) {
+		req = nfs_page_search_commits_for_head_request_locked(nfsi,
+			page);
+>>>>>>> b7ba80a49124 (Commit)
 		if (req) {
 			WARN_ON_ONCE(req->wb_head != req);
 			kref_get(&req->wb_kref);
@@ -221,6 +269,7 @@ static struct nfs_page *nfs_folio_find_swap_request(struct folio *folio)
 	return req;
 }
 
+<<<<<<< HEAD
 /**
  * nfs_folio_find_head_request - find head request associated with a folio
  * @folio: pointer to folio
@@ -240,11 +289,35 @@ static struct nfs_page *nfs_folio_find_head_request(struct folio *folio)
 static struct nfs_page *nfs_folio_find_and_lock_request(struct folio *folio)
 {
 	struct inode *inode = folio_file_mapping(folio)->host;
+=======
+/*
+ * nfs_page_find_head_request - find head request associated with @page
+ *
+ * returns matching head request with reference held, or NULL if not found.
+ */
+static struct nfs_page *nfs_page_find_head_request(struct page *page)
+{
+	struct nfs_page *req;
+
+	req = nfs_page_find_private_request(page);
+	if (!req)
+		req = nfs_page_find_swap_request(page);
+	return req;
+}
+
+static struct nfs_page *nfs_find_and_lock_page_request(struct page *page)
+{
+	struct inode *inode = page_file_mapping(page)->host;
+>>>>>>> b7ba80a49124 (Commit)
 	struct nfs_page *req, *head;
 	int ret;
 
 	for (;;) {
+<<<<<<< HEAD
 		req = nfs_folio_find_head_request(folio);
+=======
+		req = nfs_page_find_head_request(page);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!req)
 			return req;
 		head = nfs_page_group_lock_head(req);
@@ -258,9 +331,15 @@ static struct nfs_page *nfs_folio_find_and_lock_request(struct folio *folio)
 			return ERR_PTR(ret);
 		}
 		/* Ensure that nobody removed the request before we locked it */
+<<<<<<< HEAD
 		if (head == nfs_folio_private_request(folio))
 			break;
 		if (folio_test_swapcache(folio))
+=======
+		if (head == nfs_page_private_request(page))
+			break;
+		if (PageSwapCache(page))
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		nfs_unlock_and_release_request(head);
 	}
@@ -268,19 +347,32 @@ static struct nfs_page *nfs_folio_find_and_lock_request(struct folio *folio)
 }
 
 /* Adjust the file length if we're writing beyond the end */
+<<<<<<< HEAD
 static void nfs_grow_file(struct folio *folio, unsigned int offset,
 			  unsigned int count)
 {
 	struct inode *inode = folio_file_mapping(folio)->host;
+=======
+static void nfs_grow_file(struct page *page, unsigned int offset, unsigned int count)
+{
+	struct inode *inode = page_file_mapping(page)->host;
+>>>>>>> b7ba80a49124 (Commit)
 	loff_t end, i_size;
 	pgoff_t end_index;
 
 	spin_lock(&inode->i_lock);
 	i_size = i_size_read(inode);
+<<<<<<< HEAD
 	end_index = ((i_size - 1) >> folio_shift(folio)) << folio_order(folio);
 	if (i_size > 0 && folio_index(folio) < end_index)
 		goto out;
 	end = folio_file_pos(folio) + (loff_t)offset + (loff_t)count;
+=======
+	end_index = (i_size - 1) >> PAGE_SHIFT;
+	if (i_size > 0 && page_index(page) < end_index)
+		goto out;
+	end = page_file_offset(page) + ((loff_t)offset+count);
+>>>>>>> b7ba80a49124 (Commit)
 	if (i_size >= end)
 		goto out;
 	trace_nfs_size_grow(inode, end);
@@ -306,11 +398,19 @@ static void nfs_set_pageerror(struct address_space *mapping)
 	spin_unlock(&inode->i_lock);
 }
 
+<<<<<<< HEAD
 static void nfs_mapping_set_error(struct folio *folio, int error)
 {
 	struct address_space *mapping = folio_file_mapping(folio);
 
 	folio_set_error(folio);
+=======
+static void nfs_mapping_set_error(struct page *page, int error)
+{
+	struct address_space *mapping = page_file_mapping(page);
+
+	SetPageError(page);
+>>>>>>> b7ba80a49124 (Commit)
 	filemap_set_wb_err(mapping, error);
 	if (mapping->host)
 		errseq_set(&mapping->host->i_sb->s_wb_err,
@@ -357,9 +457,15 @@ nfs_page_group_search_locked(struct nfs_page *head, unsigned int page_offset)
  */
 static bool nfs_page_group_covers_page(struct nfs_page *req)
 {
+<<<<<<< HEAD
 	unsigned int len = nfs_folio_length(nfs_page_to_folio(req));
 	struct nfs_page *tmp;
 	unsigned int pos = 0;
+=======
+	struct nfs_page *tmp;
+	unsigned int pos = 0;
+	unsigned int len = nfs_page_length(req->wb_page);
+>>>>>>> b7ba80a49124 (Commit)
 
 	nfs_page_group_lock(req);
 
@@ -379,6 +485,7 @@ static bool nfs_page_group_covers_page(struct nfs_page *req)
  */
 static void nfs_mark_uptodate(struct nfs_page *req)
 {
+<<<<<<< HEAD
 	struct folio *folio = nfs_page_to_folio(req);
 
 	if (folio_test_uptodate(folio))
@@ -386,6 +493,13 @@ static void nfs_mark_uptodate(struct nfs_page *req)
 	if (!nfs_page_group_covers_page(req))
 		return;
 	folio_mark_uptodate(folio);
+=======
+	if (PageUptodate(req->wb_page))
+		return;
+	if (!nfs_page_group_covers_page(req))
+		return;
+	SetPageUptodate(req->wb_page);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int wb_priority(struct writeback_control *wbc)
@@ -407,6 +521,7 @@ int nfs_congestion_kb;
 #define NFS_CONGESTION_OFF_THRESH	\
 	(NFS_CONGESTION_ON_THRESH - (NFS_CONGESTION_ON_THRESH >> 2))
 
+<<<<<<< HEAD
 static void nfs_folio_set_writeback(struct folio *folio)
 {
 	struct nfs_server *nfss = NFS_SERVER(folio_file_mapping(folio)->host);
@@ -435,6 +550,37 @@ static void nfs_page_end_writeback(struct nfs_page *req)
 		nfs_unlock_request(req);
 }
 
+=======
+static void nfs_set_page_writeback(struct page *page)
+{
+	struct inode *inode = page_file_mapping(page)->host;
+	struct nfs_server *nfss = NFS_SERVER(inode);
+	int ret = test_set_page_writeback(page);
+
+	WARN_ON_ONCE(ret != 0);
+
+	if (atomic_long_inc_return(&nfss->writeback) >
+			NFS_CONGESTION_ON_THRESH)
+		nfss->write_congested = 1;
+}
+
+static void nfs_end_page_writeback(struct nfs_page *req)
+{
+	struct inode *inode = page_file_mapping(req->wb_page)->host;
+	struct nfs_server *nfss = NFS_SERVER(inode);
+	bool is_done;
+
+	is_done = nfs_page_group_sync_on_bit(req, PG_WB_END);
+	nfs_unlock_request(req);
+	if (!is_done)
+		return;
+
+	end_page_writeback(req->wb_page);
+	if (atomic_long_dec_return(&nfss->writeback) < NFS_CONGESTION_OFF_THRESH)
+		nfss->write_congested = 0;
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * nfs_destroy_unlinked_subrequests - destroy recently unlinked subrequests
  *
@@ -549,7 +695,11 @@ nfs_join_page_group(struct nfs_page *head, struct inode *inode)
 
 /*
  * nfs_lock_and_join_requests - join all subreqs to the head req
+<<<<<<< HEAD
  * @folio: the folio used to lookup the "page group" of nfs_page structures
+=======
+ * @page: the page used to lookup the "page group" of nfs_page structures
+>>>>>>> b7ba80a49124 (Commit)
  *
  * This function joins all sub requests to the head request by first
  * locking all requests in the group, cancelling any pending operations
@@ -559,12 +709,22 @@ nfs_join_page_group(struct nfs_page *head, struct inode *inode)
  *
  * Returns a locked, referenced pointer to the head request - which after
  * this call is guaranteed to be the only request associated with the page.
+<<<<<<< HEAD
  * Returns NULL if no requests are found for @folio, or a ERR_PTR if an
  * error was encountered.
  */
 static struct nfs_page *nfs_lock_and_join_requests(struct folio *folio)
 {
 	struct inode *inode = folio_file_mapping(folio)->host;
+=======
+ * Returns NULL if no requests are found for @page, or a ERR_PTR if an
+ * error was encountered.
+ */
+static struct nfs_page *
+nfs_lock_and_join_requests(struct page *page)
+{
+	struct inode *inode = page_file_mapping(page)->host;
+>>>>>>> b7ba80a49124 (Commit)
 	struct nfs_page *head;
 	int ret;
 
@@ -573,7 +733,11 @@ static struct nfs_page *nfs_lock_and_join_requests(struct folio *folio)
 	 * reference to the whole page group - the group will not be destroyed
 	 * until the head reference is released.
 	 */
+<<<<<<< HEAD
 	head = nfs_folio_find_and_lock_request(folio);
+=======
+	head = nfs_find_and_lock_page_request(page);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR_OR_NULL(head))
 		return head;
 
@@ -591,10 +755,18 @@ static struct nfs_page *nfs_lock_and_join_requests(struct folio *folio)
 
 static void nfs_write_error(struct nfs_page *req, int error)
 {
+<<<<<<< HEAD
 	trace_nfs_write_error(nfs_page_to_inode(req), req, error);
 	nfs_mapping_set_error(nfs_page_to_folio(req), error);
 	nfs_inode_remove_request(req);
 	nfs_page_end_writeback(req);
+=======
+	trace_nfs_write_error(page_file_mapping(req->wb_page)->host, req,
+			      error);
+	nfs_mapping_set_error(req->wb_page, error);
+	nfs_inode_remove_request(req);
+	nfs_end_page_writeback(req);
+>>>>>>> b7ba80a49124 (Commit)
 	nfs_release_request(req);
 }
 
@@ -602,21 +774,33 @@ static void nfs_write_error(struct nfs_page *req, int error)
  * Find an associated nfs write request, and prepare to flush it out
  * May return an error if the user signalled nfs_wait_on_request().
  */
+<<<<<<< HEAD
 static int nfs_page_async_flush(struct folio *folio,
+=======
+static int nfs_page_async_flush(struct page *page,
+>>>>>>> b7ba80a49124 (Commit)
 				struct writeback_control *wbc,
 				struct nfs_pageio_descriptor *pgio)
 {
 	struct nfs_page *req;
 	int ret = 0;
 
+<<<<<<< HEAD
 	req = nfs_lock_and_join_requests(folio);
+=======
+	req = nfs_lock_and_join_requests(page);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!req)
 		goto out;
 	ret = PTR_ERR(req);
 	if (IS_ERR(req))
 		goto out;
 
+<<<<<<< HEAD
 	nfs_folio_set_writeback(folio);
+=======
+	nfs_set_page_writeback(page);
+>>>>>>> b7ba80a49124 (Commit)
 	WARN_ON_ONCE(test_bit(PG_CLEAN, &req->wb_flags));
 
 	/* If there is a fatal error that covers this write, just exit */
@@ -634,12 +818,21 @@ static int nfs_page_async_flush(struct folio *folio,
 			goto out_launder;
 		if (wbc->sync_mode == WB_SYNC_NONE)
 			ret = AOP_WRITEPAGE_ACTIVATE;
+<<<<<<< HEAD
 		folio_redirty_for_writepage(wbc, folio);
 		nfs_redirty_request(req);
 		pgio->pg_error = 0;
 	} else
 		nfs_add_stats(folio_file_mapping(folio)->host,
 			      NFSIOS_WRITEPAGES, 1);
+=======
+		redirty_page_for_writepage(wbc, page);
+		nfs_redirty_request(req);
+		pgio->pg_error = 0;
+	} else
+		nfs_add_stats(page_file_mapping(page)->host,
+				NFSIOS_WRITEPAGES, 1);
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	return ret;
 out_launder:
@@ -647,21 +840,37 @@ out_launder:
 	return 0;
 }
 
+<<<<<<< HEAD
 static int nfs_do_writepage(struct folio *folio, struct writeback_control *wbc,
 			    struct nfs_pageio_descriptor *pgio)
 {
 	nfs_pageio_cond_complete(pgio, folio_index(folio));
 	return nfs_page_async_flush(folio, wbc, pgio);
+=======
+static int nfs_do_writepage(struct page *page, struct writeback_control *wbc,
+			    struct nfs_pageio_descriptor *pgio)
+{
+	nfs_pageio_cond_complete(pgio, page_index(page));
+	return nfs_page_async_flush(page, wbc, pgio);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
  * Write an mmapped page to the server.
  */
+<<<<<<< HEAD
 static int nfs_writepage_locked(struct folio *folio,
 				struct writeback_control *wbc)
 {
 	struct nfs_pageio_descriptor pgio;
 	struct inode *inode = folio_file_mapping(folio)->host;
+=======
+static int nfs_writepage_locked(struct page *page,
+				struct writeback_control *wbc)
+{
+	struct nfs_pageio_descriptor pgio;
+	struct inode *inode = page_file_mapping(page)->host;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	if (wbc->sync_mode == WB_SYNC_NONE &&
@@ -669,9 +878,15 @@ static int nfs_writepage_locked(struct folio *folio,
 		return AOP_WRITEPAGE_ACTIVATE;
 
 	nfs_inc_stats(inode, NFSIOS_VFSWRITEPAGE);
+<<<<<<< HEAD
 	nfs_pageio_init_write(&pgio, inode, 0, false,
 			      &nfs_async_write_completion_ops);
 	err = nfs_do_writepage(folio, wbc, &pgio);
+=======
+	nfs_pageio_init_write(&pgio, inode, 0,
+				false, &nfs_async_write_completion_ops);
+	err = nfs_do_writepage(page, wbc, &pgio);
+>>>>>>> b7ba80a49124 (Commit)
 	pgio.pg_error = 0;
 	nfs_pageio_complete(&pgio);
 	return err;
@@ -679,15 +894,22 @@ static int nfs_writepage_locked(struct folio *folio,
 
 int nfs_writepage(struct page *page, struct writeback_control *wbc)
 {
+<<<<<<< HEAD
 	struct folio *folio = page_folio(page);
 	int ret;
 
 	ret = nfs_writepage_locked(folio, wbc);
+=======
+	int ret;
+
+	ret = nfs_writepage_locked(page, wbc);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret != AOP_WRITEPAGE_ACTIVATE)
 		unlock_page(page);
 	return ret;
 }
 
+<<<<<<< HEAD
 static int nfs_writepages_callback(struct folio *folio,
 				   struct writeback_control *wbc, void *data)
 {
@@ -696,6 +918,15 @@ static int nfs_writepages_callback(struct folio *folio,
 	ret = nfs_do_writepage(folio, wbc, data);
 	if (ret != AOP_WRITEPAGE_ACTIVATE)
 		folio_unlock(folio);
+=======
+static int nfs_writepages_callback(struct page *page, struct writeback_control *wbc, void *data)
+{
+	int ret;
+
+	ret = nfs_do_writepage(page, wbc, data);
+	if (ret != AOP_WRITEPAGE_ACTIVATE)
+		unlock_page(page);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 
@@ -749,11 +980,18 @@ out_err:
 /*
  * Insert a write request into an inode
  */
+<<<<<<< HEAD
 static void nfs_inode_add_request(struct nfs_page *req)
 {
 	struct folio *folio = nfs_page_to_folio(req);
 	struct address_space *mapping = folio_file_mapping(folio);
 	struct nfs_inode *nfsi = NFS_I(mapping->host);
+=======
+static void nfs_inode_add_request(struct inode *inode, struct nfs_page *req)
+{
+	struct address_space *mapping = page_file_mapping(req->wb_page);
+	struct nfs_inode *nfsi = NFS_I(inode);
+>>>>>>> b7ba80a49124 (Commit)
 
 	WARN_ON_ONCE(req->wb_this_page != req);
 
@@ -765,10 +1003,17 @@ static void nfs_inode_add_request(struct nfs_page *req)
 	 * with invalidate/truncate.
 	 */
 	spin_lock(&mapping->private_lock);
+<<<<<<< HEAD
 	if (likely(!folio_test_swapcache(folio))) {
 		set_bit(PG_MAPPED, &req->wb_flags);
 		folio_set_private(folio);
 		folio->private = req;
+=======
+	if (likely(!PageSwapCache(req->wb_page))) {
+		set_bit(PG_MAPPED, &req->wb_flags);
+		SetPagePrivate(req->wb_page);
+		set_page_private(req->wb_page, (unsigned long)req);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	spin_unlock(&mapping->private_lock);
 	atomic_long_inc(&nfsi->nrequests);
@@ -785,6 +1030,7 @@ static void nfs_inode_add_request(struct nfs_page *req)
  */
 static void nfs_inode_remove_request(struct nfs_page *req)
 {
+<<<<<<< HEAD
 	if (nfs_page_group_sync_on_bit(req, PG_REMOVE)) {
 		struct folio *folio = nfs_page_to_folio(req->wb_head);
 		struct address_space *mapping = folio_file_mapping(folio);
@@ -794,12 +1040,28 @@ static void nfs_inode_remove_request(struct nfs_page *req)
 			folio->private = NULL;
 			folio_clear_private(folio);
 			clear_bit(PG_MAPPED, &req->wb_head->wb_flags);
+=======
+	struct address_space *mapping = page_file_mapping(req->wb_page);
+	struct inode *inode = mapping->host;
+	struct nfs_inode *nfsi = NFS_I(inode);
+	struct nfs_page *head;
+
+	if (nfs_page_group_sync_on_bit(req, PG_REMOVE)) {
+		head = req->wb_head;
+
+		spin_lock(&mapping->private_lock);
+		if (likely(head->wb_page && !PageSwapCache(head->wb_page))) {
+			set_page_private(head->wb_page, 0);
+			ClearPagePrivate(head->wb_page);
+			clear_bit(PG_MAPPED, &head->wb_flags);
+>>>>>>> b7ba80a49124 (Commit)
 		}
 		spin_unlock(&mapping->private_lock);
 	}
 
 	if (test_and_clear_bit(PG_INODE_REF, &req->wb_flags)) {
 		nfs_release_request(req);
+<<<<<<< HEAD
 		atomic_long_dec(&NFS_I(nfs_page_to_inode(req))->nrequests);
 	}
 }
@@ -809,19 +1071,38 @@ static void nfs_mark_request_dirty(struct nfs_page *req)
 	struct folio *folio = nfs_page_to_folio(req);
 	if (folio)
 		filemap_dirty_folio(folio_mapping(folio), folio);
+=======
+		atomic_long_dec(&nfsi->nrequests);
+	}
+}
+
+static void
+nfs_mark_request_dirty(struct nfs_page *req)
+{
+	if (req->wb_page)
+		__set_page_dirty_nobuffers(req->wb_page);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
  * nfs_page_search_commits_for_head_request_locked
  *
+<<<<<<< HEAD
  * Search through commit lists on @inode for the head request for @folio.
+=======
+ * Search through commit lists on @inode for the head request for @page.
+>>>>>>> b7ba80a49124 (Commit)
  * Must be called while holding the inode (which is cinfo) lock.
  *
  * Returns the head request if found, or NULL if not found.
  */
 static struct nfs_page *
 nfs_page_search_commits_for_head_request_locked(struct nfs_inode *nfsi,
+<<<<<<< HEAD
 						struct folio *folio)
+=======
+						struct page *page)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nfs_page *freq, *t;
 	struct nfs_commit_info cinfo;
@@ -830,13 +1111,21 @@ nfs_page_search_commits_for_head_request_locked(struct nfs_inode *nfsi,
 	nfs_init_cinfo_from_inode(&cinfo, inode);
 
 	/* search through pnfs commit lists */
+<<<<<<< HEAD
 	freq = pnfs_search_commit_reqs(inode, &cinfo, folio);
+=======
+	freq = pnfs_search_commit_reqs(inode, &cinfo, page);
+>>>>>>> b7ba80a49124 (Commit)
 	if (freq)
 		return freq->wb_head;
 
 	/* Linearly search the commit list for the correct request */
 	list_for_each_entry_safe(freq, t, &cinfo.mds->list, wb_list) {
+<<<<<<< HEAD
 		if (nfs_page_to_folio(freq) == folio)
+=======
+		if (freq->wb_page == page)
+>>>>>>> b7ba80a49124 (Commit)
 			return freq->wb_head;
 	}
 
@@ -884,7 +1173,12 @@ nfs_request_add_commit_list(struct nfs_page *req, struct nfs_commit_info *cinfo)
 	mutex_lock(&NFS_I(cinfo->inode)->commit_mutex);
 	nfs_request_add_commit_list_locked(req, &cinfo->mds->list, cinfo);
 	mutex_unlock(&NFS_I(cinfo->inode)->commit_mutex);
+<<<<<<< HEAD
 	nfs_folio_mark_unstable(nfs_page_to_folio(req), cinfo);
+=======
+	if (req->wb_page)
+		nfs_mark_page_unstable(req->wb_page, cinfo);
+>>>>>>> b7ba80a49124 (Commit)
 }
 EXPORT_SYMBOL_GPL(nfs_request_add_commit_list);
 
@@ -943,6 +1237,7 @@ nfs_mark_request_commit(struct nfs_page *req, struct pnfs_layout_segment *lseg,
 	nfs_request_add_commit_list(req, cinfo);
 }
 
+<<<<<<< HEAD
 static void nfs_folio_clear_commit(struct folio *folio)
 {
 	if (folio) {
@@ -952,6 +1247,14 @@ static void nfs_folio_clear_commit(struct folio *folio)
 		wb_stat_mod(&inode_to_bdi(folio_file_mapping(folio)->host)->wb,
 			    WB_WRITEBACK, -nr);
 	}
+=======
+static void
+nfs_clear_page_commit(struct page *page)
+{
+	dec_node_page_state(page, NR_WRITEBACK);
+	dec_wb_stat(&inode_to_bdi(page_file_mapping(page)->host)->wb,
+		    WB_WRITEBACK);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Called holding the request lock on @req */
@@ -969,7 +1272,11 @@ nfs_clear_request_commit(struct nfs_page *req)
 			nfs_request_remove_commit_list(req, &cinfo);
 		}
 		mutex_unlock(&NFS_I(inode)->commit_mutex);
+<<<<<<< HEAD
 		nfs_folio_clear_commit(nfs_page_to_folio(req));
+=======
+		nfs_clear_page_commit(req->wb_page);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 }
 
@@ -1001,8 +1308,12 @@ static void nfs_write_completion(struct nfs_pgio_header *hdr)
 		if (test_bit(NFS_IOHDR_ERROR, &hdr->flags) &&
 		    (hdr->good_bytes < bytes)) {
 			trace_nfs_comp_error(hdr->inode, req, hdr->error);
+<<<<<<< HEAD
 			nfs_mapping_set_error(nfs_page_to_folio(req),
 					      hdr->error);
+=======
+			nfs_mapping_set_error(req->wb_page, hdr->error);
+>>>>>>> b7ba80a49124 (Commit)
 			goto remove_req;
 		}
 		if (nfs_write_need_commit(hdr)) {
@@ -1016,7 +1327,11 @@ static void nfs_write_completion(struct nfs_pgio_header *hdr)
 remove_req:
 		nfs_inode_remove_request(req);
 next:
+<<<<<<< HEAD
 		nfs_page_end_writeback(req);
+=======
+		nfs_end_page_writeback(req);
+>>>>>>> b7ba80a49124 (Commit)
 		nfs_release_request(req);
 	}
 out:
@@ -1092,9 +1407,16 @@ nfs_scan_commit(struct inode *inode, struct list_head *dst,
  * If the attempt fails, then the existing request is flushed out
  * to disk.
  */
+<<<<<<< HEAD
 static struct nfs_page *nfs_try_to_update_request(struct folio *folio,
 						  unsigned int offset,
 						  unsigned int bytes)
+=======
+static struct nfs_page *nfs_try_to_update_request(struct inode *inode,
+		struct page *page,
+		unsigned int offset,
+		unsigned int bytes)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct nfs_page *req;
 	unsigned int rqend;
@@ -1103,7 +1425,11 @@ static struct nfs_page *nfs_try_to_update_request(struct folio *folio,
 
 	end = offset + bytes;
 
+<<<<<<< HEAD
 	req = nfs_lock_and_join_requests(folio);
+=======
+	req = nfs_lock_and_join_requests(page);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR_OR_NULL(req))
 		return req;
 
@@ -1136,7 +1462,11 @@ out_flushme:
 	 */
 	nfs_mark_request_dirty(req);
 	nfs_unlock_and_release_request(req);
+<<<<<<< HEAD
 	error = nfs_wb_folio(folio_file_mapping(folio)->host, folio);
+=======
+	error = nfs_wb_page(inode, page);
+>>>>>>> b7ba80a49124 (Commit)
 	return (error < 0) ? ERR_PTR(error) : NULL;
 }
 
@@ -1147,6 +1477,7 @@ out_flushme:
  * if we have to add a new request. Also assumes that the caller has
  * already called nfs_flush_incompatible() if necessary.
  */
+<<<<<<< HEAD
 static struct nfs_page *nfs_setup_write_request(struct nfs_open_context *ctx,
 						struct folio *folio,
 						unsigned int offset,
@@ -1161,10 +1492,26 @@ static struct nfs_page *nfs_setup_write_request(struct nfs_open_context *ctx,
 	if (IS_ERR(req))
 		goto out;
 	nfs_inode_add_request(req);
+=======
+static struct nfs_page * nfs_setup_write_request(struct nfs_open_context* ctx,
+		struct page *page, unsigned int offset, unsigned int bytes)
+{
+	struct inode *inode = page_file_mapping(page)->host;
+	struct nfs_page	*req;
+
+	req = nfs_try_to_update_request(inode, page, offset, bytes);
+	if (req != NULL)
+		goto out;
+	req = nfs_create_request(ctx, page, offset, bytes);
+	if (IS_ERR(req))
+		goto out;
+	nfs_inode_add_request(inode, req);
+>>>>>>> b7ba80a49124 (Commit)
 out:
 	return req;
 }
 
+<<<<<<< HEAD
 static int nfs_writepage_setup(struct nfs_open_context *ctx,
 			       struct folio *folio, unsigned int offset,
 			       unsigned int count)
@@ -1176,17 +1523,37 @@ static int nfs_writepage_setup(struct nfs_open_context *ctx,
 		return PTR_ERR(req);
 	/* Update file length */
 	nfs_grow_file(folio, offset, count);
+=======
+static int nfs_writepage_setup(struct nfs_open_context *ctx, struct page *page,
+		unsigned int offset, unsigned int count)
+{
+	struct nfs_page	*req;
+
+	req = nfs_setup_write_request(ctx, page, offset, count);
+	if (IS_ERR(req))
+		return PTR_ERR(req);
+	/* Update file length */
+	nfs_grow_file(page, offset, count);
+>>>>>>> b7ba80a49124 (Commit)
 	nfs_mark_uptodate(req);
 	nfs_mark_request_dirty(req);
 	nfs_unlock_and_release_request(req);
 	return 0;
 }
 
+<<<<<<< HEAD
 int nfs_flush_incompatible(struct file *file, struct folio *folio)
 {
 	struct nfs_open_context *ctx = nfs_file_open_context(file);
 	struct nfs_lock_context *l_ctx;
 	struct file_lock_context *flctx = locks_inode_context(file_inode(file));
+=======
+int nfs_flush_incompatible(struct file *file, struct page *page)
+{
+	struct nfs_open_context *ctx = nfs_file_open_context(file);
+	struct nfs_lock_context *l_ctx;
+	struct file_lock_context *flctx = file_inode(file)->i_flctx;
+>>>>>>> b7ba80a49124 (Commit)
 	struct nfs_page	*req;
 	int do_flush, status;
 	/*
@@ -1198,12 +1565,21 @@ int nfs_flush_incompatible(struct file *file, struct folio *folio)
 	 * dropped page.
 	 */
 	do {
+<<<<<<< HEAD
 		req = nfs_folio_find_head_request(folio);
 		if (req == NULL)
 			return 0;
 		l_ctx = req->wb_lock_context;
 		do_flush = nfs_page_to_folio(req) != folio ||
 			   !nfs_match_open_context(nfs_req_openctx(req), ctx);
+=======
+		req = nfs_page_find_head_request(page);
+		if (req == NULL)
+			return 0;
+		l_ctx = req->wb_lock_context;
+		do_flush = req->wb_page != page ||
+			!nfs_match_open_context(nfs_req_openctx(req), ctx);
+>>>>>>> b7ba80a49124 (Commit)
 		if (l_ctx && flctx &&
 		    !(list_empty_careful(&flctx->flc_posix) &&
 		      list_empty_careful(&flctx->flc_flock))) {
@@ -1212,7 +1588,11 @@ int nfs_flush_incompatible(struct file *file, struct folio *folio)
 		nfs_release_request(req);
 		if (!do_flush)
 			return 0;
+<<<<<<< HEAD
 		status = nfs_wb_folio(folio_file_mapping(folio)->host, folio);
+=======
+		status = nfs_wb_page(page_file_mapping(page)->host, page);
+>>>>>>> b7ba80a49124 (Commit)
 	} while (status == 0);
 	return status;
 }
@@ -1284,9 +1664,15 @@ out:
  * the PageUptodate() flag. In this case, we will need to turn off
  * write optimisations that depend on the page contents being correct.
  */
+<<<<<<< HEAD
 static bool nfs_folio_write_uptodate(struct folio *folio, unsigned int pagelen)
 {
 	struct inode *inode = folio_file_mapping(folio)->host;
+=======
+static bool nfs_write_pageuptodate(struct page *page, struct inode *inode,
+				   unsigned int pagelen)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct nfs_inode *nfsi = NFS_I(inode);
 
 	if (nfs_have_delegated_attributes(inode))
@@ -1300,7 +1686,11 @@ static bool nfs_folio_write_uptodate(struct folio *folio, unsigned int pagelen)
 out:
 	if (nfsi->cache_validity & NFS_INO_INVALID_DATA && pagelen != 0)
 		return false;
+<<<<<<< HEAD
 	return folio_test_uptodate(folio) != 0;
+=======
+	return PageUptodate(page) != 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool
@@ -1318,6 +1708,7 @@ is_whole_file_wrlock(struct file_lock *fl)
  * If the file is opened for synchronous writes then we can just skip the rest
  * of the checks.
  */
+<<<<<<< HEAD
 static int nfs_can_extend_write(struct file *file, struct folio *folio,
 				unsigned int pagelen)
 {
@@ -1329,6 +1720,18 @@ static int nfs_can_extend_write(struct file *file, struct folio *folio,
 	if (file->f_flags & O_DSYNC)
 		return 0;
 	if (!nfs_folio_write_uptodate(folio, pagelen))
+=======
+static int nfs_can_extend_write(struct file *file, struct page *page,
+				struct inode *inode, unsigned int pagelen)
+{
+	int ret;
+	struct file_lock_context *flctx = inode->i_flctx;
+	struct file_lock *fl;
+
+	if (file->f_flags & O_DSYNC)
+		return 0;
+	if (!nfs_write_pageuptodate(page, inode, pagelen))
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	if (NFS_PROTO(inode)->have_delegation(inode, FMODE_WRITE))
 		return 1;
@@ -1360,6 +1763,7 @@ static int nfs_can_extend_write(struct file *file, struct folio *folio,
  * XXX: Keep an eye on generic_file_read to make sure it doesn't do bad
  * things with a page scheduled for an RPC call (e.g. invalidate it).
  */
+<<<<<<< HEAD
 int nfs_update_folio(struct file *file, struct folio *folio,
 		     unsigned int offset, unsigned int count)
 {
@@ -1367,26 +1771,52 @@ int nfs_update_folio(struct file *file, struct folio *folio,
 	struct address_space *mapping = folio_file_mapping(folio);
 	struct inode *inode = mapping->host;
 	unsigned int pagelen = nfs_folio_length(folio);
+=======
+int nfs_updatepage(struct file *file, struct page *page,
+		unsigned int offset, unsigned int count)
+{
+	struct nfs_open_context *ctx = nfs_file_open_context(file);
+	struct address_space *mapping = page_file_mapping(page);
+	struct inode	*inode = mapping->host;
+	unsigned int	pagelen = nfs_page_length(page);
+>>>>>>> b7ba80a49124 (Commit)
 	int		status = 0;
 
 	nfs_inc_stats(inode, NFSIOS_VFSUPDATEPAGE);
 
+<<<<<<< HEAD
 	dprintk("NFS:       nfs_update_folio(%pD2 %d@%lld)\n", file, count,
 		(long long)(folio_file_pos(folio) + offset));
+=======
+	dprintk("NFS:       nfs_updatepage(%pD2 %d@%lld)\n",
+		file, count, (long long)(page_file_offset(page) + offset));
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!count)
 		goto out;
 
+<<<<<<< HEAD
 	if (nfs_can_extend_write(file, folio, pagelen)) {
+=======
+	if (nfs_can_extend_write(file, page, inode, pagelen)) {
+>>>>>>> b7ba80a49124 (Commit)
 		count = max(count + offset, pagelen);
 		offset = 0;
 	}
 
+<<<<<<< HEAD
 	status = nfs_writepage_setup(ctx, folio, offset, count);
 	if (status < 0)
 		nfs_set_pageerror(mapping);
 out:
 	dprintk("NFS:       nfs_update_folio returns %d (isize %lld)\n",
+=======
+	status = nfs_writepage_setup(ctx, page, offset, count);
+	if (status < 0)
+		nfs_set_pageerror(mapping);
+out:
+	dprintk("NFS:       nfs_updatepage returns %d (isize %lld)\n",
+>>>>>>> b7ba80a49124 (Commit)
 			status, (long long)i_size_read(inode));
 	return status;
 }
@@ -1422,13 +1852,21 @@ static void nfs_initiate_write(struct nfs_pgio_header *hdr,
  */
 static void nfs_redirty_request(struct nfs_page *req)
 {
+<<<<<<< HEAD
 	struct nfs_inode *nfsi = NFS_I(nfs_page_to_inode(req));
+=======
+	struct nfs_inode *nfsi = NFS_I(page_file_mapping(req->wb_page)->host);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Bump the transmission count */
 	req->wb_nio++;
 	nfs_mark_request_dirty(req);
 	atomic_long_inc(&nfsi->redirtied_pages);
+<<<<<<< HEAD
 	nfs_page_end_writeback(req);
+=======
+	nfs_end_page_writeback(req);
+>>>>>>> b7ba80a49124 (Commit)
 	nfs_release_request(req);
 }
 
@@ -1786,18 +2224,31 @@ void nfs_retry_commit(struct list_head *page_list,
 		req = nfs_list_entry(page_list->next);
 		nfs_list_remove_request(req);
 		nfs_mark_request_commit(req, lseg, cinfo, ds_commit_idx);
+<<<<<<< HEAD
 		nfs_folio_clear_commit(nfs_page_to_folio(req));
+=======
+		if (!cinfo->dreq)
+			nfs_clear_page_commit(req->wb_page);
+>>>>>>> b7ba80a49124 (Commit)
 		nfs_unlock_and_release_request(req);
 	}
 }
 EXPORT_SYMBOL_GPL(nfs_retry_commit);
 
+<<<<<<< HEAD
 static void nfs_commit_resched_write(struct nfs_commit_info *cinfo,
 				     struct nfs_page *req)
 {
 	struct folio *folio = nfs_page_to_folio(req);
 
 	filemap_dirty_folio(folio_mapping(folio), folio);
+=======
+static void
+nfs_commit_resched_write(struct nfs_commit_info *cinfo,
+		struct nfs_page *req)
+{
+	__set_page_dirty_nobuffers(req->wb_page);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -1848,13 +2299,21 @@ static void nfs_commit_release_pages(struct nfs_commit_data *data)
 	int status = data->task.tk_status;
 	struct nfs_commit_info cinfo;
 	struct nfs_server *nfss;
+<<<<<<< HEAD
 	struct folio *folio;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	while (!list_empty(&data->pages)) {
 		req = nfs_list_entry(data->pages.next);
 		nfs_list_remove_request(req);
+<<<<<<< HEAD
 		folio = nfs_page_to_folio(req);
 		nfs_folio_clear_commit(folio);
+=======
+		if (req->wb_page)
+			nfs_clear_page_commit(req->wb_page);
+>>>>>>> b7ba80a49124 (Commit)
 
 		dprintk("NFS:       commit (%s/%llu %d@%lld)",
 			nfs_req_openctx(req)->dentry->d_sb->s_id,
@@ -1862,10 +2321,17 @@ static void nfs_commit_release_pages(struct nfs_commit_data *data)
 			req->wb_bytes,
 			(long long)req_offset(req));
 		if (status < 0) {
+<<<<<<< HEAD
 			if (folio) {
 				trace_nfs_commit_error(data->inode, req,
 						       status);
 				nfs_mapping_set_error(folio, status);
+=======
+			if (req->wb_page) {
+				trace_nfs_commit_error(data->inode, req,
+						       status);
+				nfs_mapping_set_error(req->wb_page, status);
+>>>>>>> b7ba80a49124 (Commit)
 				nfs_inode_remove_request(req);
 			}
 			dprintk_cont(", error = %d\n", status);
@@ -1876,7 +2342,11 @@ static void nfs_commit_release_pages(struct nfs_commit_data *data)
 		 * returned by the server against all stored verfs. */
 		if (nfs_write_match_verf(verf, req)) {
 			/* We have a match */
+<<<<<<< HEAD
 			if (folio)
+=======
+			if (req->wb_page)
+>>>>>>> b7ba80a49124 (Commit)
 				nfs_inode_remove_request(req);
 			dprintk_cont(" OK\n");
 			goto next;
@@ -2057,7 +2527,11 @@ int nfs_wb_folio_cancel(struct inode *inode, struct folio *folio)
 
 	/* blocking call to cancel all requests and join to a single (head)
 	 * request */
+<<<<<<< HEAD
 	req = nfs_lock_and_join_requests(folio);
+=======
+	req = nfs_lock_and_join_requests(&folio->page);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (IS_ERR(req)) {
 		ret = PTR_ERR(req);
@@ -2073,6 +2547,7 @@ int nfs_wb_folio_cancel(struct inode *inode, struct folio *folio)
 	return ret;
 }
 
+<<<<<<< HEAD
 /**
  * nfs_wb_folio - Write back all requests on one page
  * @inode: pointer to page
@@ -2085,6 +2560,15 @@ int nfs_wb_folio(struct inode *inode, struct folio *folio)
 {
 	loff_t range_start = folio_file_pos(folio);
 	loff_t range_end = range_start + (loff_t)folio_size(folio) - 1;
+=======
+/*
+ * Write back all requests on one page - we do this before reading it.
+ */
+int nfs_wb_page(struct inode *inode, struct page *page)
+{
+	loff_t range_start = page_file_offset(page);
+	loff_t range_end = range_start + (loff_t)(PAGE_SIZE - 1);
+>>>>>>> b7ba80a49124 (Commit)
 	struct writeback_control wbc = {
 		.sync_mode = WB_SYNC_ALL,
 		.nr_to_write = 0,
@@ -2093,25 +2577,42 @@ int nfs_wb_folio(struct inode *inode, struct folio *folio)
 	};
 	int ret;
 
+<<<<<<< HEAD
 	trace_nfs_writeback_folio(inode, folio);
 
 	for (;;) {
 		folio_wait_writeback(folio);
 		if (folio_clear_dirty_for_io(folio)) {
 			ret = nfs_writepage_locked(folio, &wbc);
+=======
+	trace_nfs_writeback_page_enter(inode);
+
+	for (;;) {
+		wait_on_page_writeback(page);
+		if (clear_page_dirty_for_io(page)) {
+			ret = nfs_writepage_locked(page, &wbc);
+>>>>>>> b7ba80a49124 (Commit)
 			if (ret < 0)
 				goto out_error;
 			continue;
 		}
 		ret = 0;
+<<<<<<< HEAD
 		if (!folio_test_private(folio))
+=======
+		if (!PagePrivate(page))
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 		ret = nfs_commit_inode(inode, FLUSH_SYNC);
 		if (ret < 0)
 			goto out_error;
 	}
 out_error:
+<<<<<<< HEAD
 	trace_nfs_writeback_folio_done(inode, folio, ret);
+=======
+	trace_nfs_writeback_page_exit(inode, ret);
+>>>>>>> b7ba80a49124 (Commit)
 	return ret;
 }
 

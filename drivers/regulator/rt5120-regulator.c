@@ -409,7 +409,10 @@ MODULE_DEVICE_TABLE(platform, rt5120_regulator_dev_table);
 static struct platform_driver rt5120_regulator_driver = {
 	.driver = {
 		.name = "rt5120-regulator",
+<<<<<<< HEAD
 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	},
 	.id_table = rt5120_regulator_dev_table,
 	.probe = rt5120_regulator_probe,

@@ -299,7 +299,11 @@ acpi_tb_parse_root_table(acpi_physical_address rsdp_address)
 
 	/* Validate the root table checksum */
 
+<<<<<<< HEAD
 	status = acpi_ut_verify_checksum(table, length);
+=======
+	status = acpi_tb_verify_checksum(table, length);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ACPI_FAILURE(status)) {
 		acpi_os_unmap_memory(table, length);
 		return_ACPI_STATUS(status);

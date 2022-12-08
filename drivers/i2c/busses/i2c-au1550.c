@@ -302,6 +302,10 @@ static int
 i2c_au1550_probe(struct platform_device *pdev)
 {
 	struct i2c_au1550_data *priv;
+<<<<<<< HEAD
+=======
+	struct resource *r;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret;
 
 	priv = devm_kzalloc(&pdev->dev, sizeof(struct i2c_au1550_data),
@@ -309,7 +313,12 @@ i2c_au1550_probe(struct platform_device *pdev)
 	if (!priv)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	priv->psc_base = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
+=======
+	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	priv->psc_base = devm_ioremap_resource(&pdev->dev, r);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(priv->psc_base))
 		return PTR_ERR(priv->psc_base);
 

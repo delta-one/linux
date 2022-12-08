@@ -47,7 +47,11 @@ static struct hard_trap_info
 	{ 0x0c00, 0x14 /* SIGCHLD */ },		/* system call */
 #ifdef CONFIG_BOOKE_OR_40x
 	{ 0x2002, 0x05 /* SIGTRAP */ },		/* debug */
+<<<<<<< HEAD
 #if defined(CONFIG_PPC_85xx)
+=======
+#if defined(CONFIG_FSL_BOOKE)
+>>>>>>> b7ba80a49124 (Commit)
 	{ 0x2010, 0x08 /* SIGFPE */  },		/* spe unavailable */
 	{ 0x2020, 0x08 /* SIGFPE */  },		/* spe unavailable */
 	{ 0x2030, 0x08 /* SIGFPE */  },		/* spe fp data */
@@ -57,7 +61,11 @@ static struct hard_trap_info
 	{ 0x2900, 0x08 /* SIGFPE */  },		/* apu unavailable */
 	{ 0x3100, 0x0e /* SIGALRM */ },		/* fixed interval timer */
 	{ 0x3200, 0x02 /* SIGINT */  }, 	/* watchdog */
+<<<<<<< HEAD
 #else /* ! CONFIG_PPC_85xx */
+=======
+#else /* ! CONFIG_FSL_BOOKE */
+>>>>>>> b7ba80a49124 (Commit)
 	{ 0x1000, 0x0e /* SIGALRM */ },		/* prog interval timer */
 	{ 0x1010, 0x0e /* SIGALRM */ },		/* fixed interval timer */
 	{ 0x1020, 0x02 /* SIGINT */  }, 	/* watchdog */
@@ -191,7 +199,11 @@ static int kgdb_break_match(struct pt_regs *regs)
 void sleeping_thread_to_gdb_regs(unsigned long *gdb_regs, struct task_struct *p)
 {
 	struct pt_regs *regs = (struct pt_regs *)(p->thread.ksp +
+<<<<<<< HEAD
 						  STACK_INT_FRAME_REGS);
+=======
+						  STACK_FRAME_OVERHEAD);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned long *ptr = gdb_regs;
 	int reg;
 
@@ -208,7 +220,11 @@ void sleeping_thread_to_gdb_regs(unsigned long *gdb_regs, struct task_struct *p)
 	for (reg = 14; reg < 32; reg++)
 		PACK64(ptr, regs->gpr[reg]);
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_85xx
+=======
+#ifdef CONFIG_FSL_BOOKE
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_SPE
 	for (reg = 0; reg < 32; reg++)
 		PACK64(ptr, p->thread.evr[reg]);
@@ -234,7 +250,11 @@ void sleeping_thread_to_gdb_regs(unsigned long *gdb_regs, struct task_struct *p)
 #define GDB_SIZEOF_REG sizeof(unsigned long)
 #define GDB_SIZEOF_REG_U32 sizeof(u32)
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_85xx
+=======
+#ifdef CONFIG_FSL_BOOKE
+>>>>>>> b7ba80a49124 (Commit)
 #define GDB_SIZEOF_FLOAT_REG sizeof(unsigned long)
 #else
 #define GDB_SIZEOF_FLOAT_REG sizeof(u64)
@@ -329,7 +349,11 @@ char *dbg_get_reg(int regno, void *mem, struct pt_regs *regs)
 
 	if (regno >= 32 && regno < 64) {
 		/* FP registers 32 -> 63 */
+<<<<<<< HEAD
 #if defined(CONFIG_PPC_85xx) && defined(CONFIG_SPE)
+=======
+#if defined(CONFIG_FSL_BOOKE) && defined(CONFIG_SPE)
+>>>>>>> b7ba80a49124 (Commit)
 		if (current)
 			memcpy(mem, &current->thread.evr[regno-32],
 					dbg_reg_def[regno].size);
@@ -355,7 +379,11 @@ int dbg_set_reg(int regno, void *mem, struct pt_regs *regs)
 
 	if (regno >= 32 && regno < 64) {
 		/* FP registers 32 -> 63 */
+<<<<<<< HEAD
 #if defined(CONFIG_PPC_85xx) && defined(CONFIG_SPE)
+=======
+#if defined(CONFIG_FSL_BOOKE) && defined(CONFIG_SPE)
+>>>>>>> b7ba80a49124 (Commit)
 		memcpy(&current->thread.evr[regno-32], mem,
 				dbg_reg_def[regno].size);
 #else

@@ -1295,8 +1295,11 @@ static int pn533_poll_dep_complete(struct pn533 *dev, void *arg,
 	if (IS_ERR(resp))
 		return PTR_ERR(resp);
 
+<<<<<<< HEAD
 	memset(&nfc_target, 0, sizeof(struct nfc_target));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rsp = (struct pn533_cmd_jump_dep_response *)resp->data;
 
 	rc = rsp->status & PN533_CMD_RET_MASK;
@@ -1928,8 +1931,11 @@ static int pn533_in_dep_link_up_complete(struct pn533 *dev, void *arg,
 
 		dev_dbg(dev->dev, "Creating new target\n");
 
+<<<<<<< HEAD
 		memset(&nfc_target, 0, sizeof(struct nfc_target));
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		nfc_target.supported_protocols = NFC_PROTO_NFC_DEP_MASK;
 		nfc_target.nfcid1_len = 10;
 		memcpy(nfc_target.nfcid1, rsp->nfcid3t, nfc_target.nfcid1_len);
@@ -2792,7 +2798,11 @@ void pn53x_common_clean(struct pn533 *priv)
 	struct pn533_cmd *cmd, *n;
 
 	/* delete the timer before cleanup the worker */
+<<<<<<< HEAD
 	timer_shutdown_sync(&priv->listen_timer);
+=======
+	del_timer_sync(&priv->listen_timer);
+>>>>>>> b7ba80a49124 (Commit)
 
 	flush_delayed_work(&priv->poll_work);
 	destroy_workqueue(priv->wq);

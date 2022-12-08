@@ -27,12 +27,18 @@
 #define MRVL_ACK 0x5A
 #define MRVL_NAK 0xBF
 #define MRVL_RAW_DATA 0x1F
+<<<<<<< HEAD
 #define MRVL_SET_BAUDRATE 0xFC09
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 enum {
 	STATE_CHIP_VER_PENDING,
 	STATE_FW_REQ_PENDING,
+<<<<<<< HEAD
 	STATE_FW_LOADED,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct mrvl_data {
@@ -256,6 +262,7 @@ static int mrvl_recv(struct hci_uart *hu, const void *data, int count)
 	if (!test_bit(HCI_UART_REGISTERED, &hu->flags))
 		return -EUNATCH;
 
+<<<<<<< HEAD
 	/* We might receive some noise when there is no firmware loaded. Therefore,
 	 * we drop data if the firmware is not loaded yet and if there is no fw load
 	 * request pending.
@@ -264,6 +271,8 @@ static int mrvl_recv(struct hci_uart *hu, const void *data, int count)
 				!test_bit(STATE_FW_LOADED, &mrvl->flags))
 		return count;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	mrvl->rx_skb = h4_recv_buf(hu->hdev, mrvl->rx_skb, data, count,
 				    mrvl_recv_pkts,
 				    ARRAY_SIZE(mrvl_recv_pkts));
@@ -364,7 +373,10 @@ static int mrvl_load_firmware(struct hci_dev *hdev, const char *name)
 static int mrvl_setup(struct hci_uart *hu)
 {
 	int err;
+<<<<<<< HEAD
 	struct mrvl_data *mrvl = hu->priv;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	hci_uart_set_flow_control(hu, true);
 
@@ -378,9 +390,15 @@ static int mrvl_setup(struct hci_uart *hu)
 	hci_uart_wait_until_sent(hu);
 
 	if (hu->serdev)
+<<<<<<< HEAD
 		serdev_device_set_baudrate(hu->serdev, hu->oper_speed);
 	else
 		hci_uart_set_baudrate(hu, hu->oper_speed);
+=======
+		serdev_device_set_baudrate(hu->serdev, 3000000);
+	else
+		hci_uart_set_baudrate(hu, 3000000);
+>>>>>>> b7ba80a49124 (Commit)
 
 	hci_uart_set_flow_control(hu, false);
 
@@ -388,6 +406,7 @@ static int mrvl_setup(struct hci_uart *hu)
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	set_bit(STATE_FW_LOADED, &mrvl->flags);
 
 	return 0;
@@ -436,6 +455,15 @@ static const struct hci_uart_proto mrvl_proto_8897 = {
 	.name		= "Marvell",
 	.init_speed	= 115200,
 	.oper_speed	= 3000000,
+=======
+	return 0;
+}
+
+static const struct hci_uart_proto mrvl_proto = {
+	.id		= HCI_UART_MRVL,
+	.name		= "Marvell",
+	.init_speed	= 115200,
+>>>>>>> b7ba80a49124 (Commit)
 	.open		= mrvl_open,
 	.close		= mrvl_close,
 	.flush		= mrvl_flush,
@@ -445,6 +473,7 @@ static const struct hci_uart_proto mrvl_proto_8897 = {
 	.dequeue	= mrvl_dequeue,
 };
 
+<<<<<<< HEAD
 static const struct hci_uart_proto mrvl_proto_8997 = {
 	.id		= HCI_UART_MRVL,
 	.name		= "Marvell 8997",
@@ -463,11 +492,17 @@ static int mrvl_serdev_probe(struct serdev_device *serdev)
 {
 	struct mrvl_serdev *mrvldev;
 	const struct hci_uart_proto *mrvl_proto = device_get_match_data(&serdev->dev);
+=======
+static int mrvl_serdev_probe(struct serdev_device *serdev)
+{
+	struct mrvl_serdev *mrvldev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	mrvldev = devm_kzalloc(&serdev->dev, sizeof(*mrvldev), GFP_KERNEL);
 	if (!mrvldev)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	mrvldev->hu.oper_speed = mrvl_proto->oper_speed;
 	if (mrvl_proto->set_baudrate)
 		of_property_read_u32(serdev->dev.of_node, "max-speed", &mrvldev->hu.oper_speed);
@@ -476,6 +511,12 @@ static int mrvl_serdev_probe(struct serdev_device *serdev)
 	serdev_device_set_drvdata(serdev, mrvldev);
 
 	return hci_uart_register_device(&mrvldev->hu, mrvl_proto);
+=======
+	mrvldev->hu.serdev = serdev;
+	serdev_device_set_drvdata(serdev, mrvldev);
+
+	return hci_uart_register_device(&mrvldev->hu, &mrvl_proto);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void mrvl_serdev_remove(struct serdev_device *serdev)
@@ -485,12 +526,22 @@ static void mrvl_serdev_remove(struct serdev_device *serdev)
 	hci_uart_unregister_device(&mrvldev->hu);
 }
 
+<<<<<<< HEAD
 static const struct of_device_id __maybe_unused mrvl_bluetooth_of_match[] = {
 	{ .compatible = "mrvl,88w8897", .data = &mrvl_proto_8897},
 	{ .compatible = "mrvl,88w8997", .data = &mrvl_proto_8997},
 	{ },
 };
 MODULE_DEVICE_TABLE(of, mrvl_bluetooth_of_match);
+=======
+#ifdef CONFIG_OF
+static const struct of_device_id mrvl_bluetooth_of_match[] = {
+	{ .compatible = "mrvl,88w8897" },
+	{ },
+};
+MODULE_DEVICE_TABLE(of, mrvl_bluetooth_of_match);
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct serdev_device_driver mrvl_serdev_driver = {
 	.probe = mrvl_serdev_probe,
@@ -505,12 +556,20 @@ int __init mrvl_init(void)
 {
 	serdev_device_driver_register(&mrvl_serdev_driver);
 
+<<<<<<< HEAD
 	return hci_uart_register_proto(&mrvl_proto_8897);
+=======
+	return hci_uart_register_proto(&mrvl_proto);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int __exit mrvl_deinit(void)
 {
 	serdev_device_driver_unregister(&mrvl_serdev_driver);
 
+<<<<<<< HEAD
 	return hci_uart_unregister_proto(&mrvl_proto_8897);
+=======
+	return hci_uart_unregister_proto(&mrvl_proto);
+>>>>>>> b7ba80a49124 (Commit)
 }

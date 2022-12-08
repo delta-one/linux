@@ -188,6 +188,7 @@ struct drm_panel {
 	 * Panel entry in registry.
 	 */
 	struct list_head list;
+<<<<<<< HEAD
 
 	/**
 	 * @prepare_prev_first:
@@ -198,6 +199,8 @@ struct drm_panel {
 	 * the panel is powered up.
 	 */
 	bool prepare_prev_first;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 void drm_panel_init(struct drm_panel *panel, struct device *dev,

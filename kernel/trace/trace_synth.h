@@ -18,7 +18,10 @@ struct synth_field {
 	bool is_signed;
 	bool is_string;
 	bool is_dynamic;
+<<<<<<< HEAD
 	bool is_stack;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct synth_event {

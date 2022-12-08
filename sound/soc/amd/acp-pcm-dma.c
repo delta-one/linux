@@ -1323,7 +1323,11 @@ static int acp_audio_probe(struct platform_device *pdev)
 	return status;
 }
 
+<<<<<<< HEAD
 static void acp_audio_remove(struct platform_device *pdev)
+=======
+static int acp_audio_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int status;
 	struct audio_drv_data *adata = dev_get_drvdata(&pdev->dev);
@@ -1332,6 +1336,11 @@ static void acp_audio_remove(struct platform_device *pdev)
 	if (status)
 		dev_err(&pdev->dev, "ACP Deinit failed status:%d\n", status);
 	pm_runtime_disable(&pdev->dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int acp_pcm_resume(struct device *dev)
@@ -1426,7 +1435,11 @@ static const struct dev_pm_ops acp_pm_ops = {
 
 static struct platform_driver acp_dma_driver = {
 	.probe = acp_audio_probe,
+<<<<<<< HEAD
 	.remove_new = acp_audio_remove,
+=======
+	.remove = acp_audio_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver = {
 		.name = DRV_NAME,
 		.pm = &acp_pm_ops,

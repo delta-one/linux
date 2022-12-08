@@ -313,6 +313,7 @@ static void do_signal(struct pt_regs *regs)
 }
 
 /*
+<<<<<<< HEAD
  * Handle any pending work on the resume-to-userspace path, as indicated by
  * _TIF_WORK_MASK. Entered from assembly with IRQs off.
  */
@@ -336,4 +337,21 @@ asmlinkage __visible void do_work_pending(struct pt_regs *regs,
 		local_irq_disable();
 		thread_info_flags = read_thread_flags();
 	} while (thread_info_flags & _TIF_WORK_MASK);
+=======
+ * notification of userspace execution resumption
+ * - triggered by the _TIF_WORK_MASK flags
+ */
+asmlinkage __visible void do_notify_resume(struct pt_regs *regs,
+					   unsigned long thread_info_flags)
+{
+	if (thread_info_flags & _TIF_UPROBE)
+		uprobe_notify_resume(regs);
+
+	/* Handle pending signal delivery */
+	if (thread_info_flags & (_TIF_SIGPENDING | _TIF_NOTIFY_SIGNAL))
+		do_signal(regs);
+
+	if (thread_info_flags & _TIF_NOTIFY_RESUME)
+		resume_user_mode_work(regs);
+>>>>>>> b7ba80a49124 (Commit)
 }

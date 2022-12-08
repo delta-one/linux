@@ -310,8 +310,14 @@ static int imx_scu_probe(struct platform_device *pdev)
 		sc_chan->ch = mbox_request_channel_byname(cl, chan_name);
 		if (IS_ERR(sc_chan->ch)) {
 			ret = PTR_ERR(sc_chan->ch);
+<<<<<<< HEAD
 			dev_err_probe(dev, ret, "Failed to request mbox chan %s\n",
 				      chan_name);
+=======
+			if (ret != -EPROBE_DEFER)
+				dev_err(dev, "Failed to request mbox chan %s ret %d\n",
+					chan_name, ret);
+>>>>>>> b7ba80a49124 (Commit)
 			kfree(chan_name);
 			return ret;
 		}
@@ -357,3 +363,7 @@ builtin_platform_driver(imx_scu_driver);
 
 MODULE_AUTHOR("Dong Aisheng <aisheng.dong@nxp.com>");
 MODULE_DESCRIPTION("IMX SCU firmware protocol driver");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

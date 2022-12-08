@@ -16,7 +16,10 @@
 #include <asm/bootinfo.h>
 #include <asm/idle.h>
 #include <asm/reboot.h>
+<<<<<<< HEAD
 #include <asm/bug.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <loongson.h>
 #include <boot_param.h>
@@ -160,6 +163,7 @@ static int __init mips_reboot_setup(void)
 
 #ifdef CONFIG_KEXEC
 	kexec_argv = kmalloc(KEXEC_ARGV_SIZE, GFP_KERNEL);
+<<<<<<< HEAD
 	if (WARN_ON(!kexec_argv))
 		return -ENOMEM;
 
@@ -171,6 +175,10 @@ static int __init mips_reboot_setup(void)
 	if (WARN_ON(!kexec_envp))
 		return -ENOMEM;
 
+=======
+	kdump_argv = kmalloc(KEXEC_ARGV_SIZE, GFP_KERNEL);
+	kexec_envp = kmalloc(KEXEC_ENVP_SIZE, GFP_KERNEL);
+>>>>>>> b7ba80a49124 (Commit)
 	fw_arg1 = KEXEC_ARGV_ADDR;
 	memcpy(kexec_envp, (void *)fw_arg2, KEXEC_ENVP_SIZE);
 

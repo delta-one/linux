@@ -4,10 +4,17 @@
 $id: http://devicetree.org/schemas/net/dsa/arrow,xrs700x.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Arrow SpeedChips XRS7000 Series Switch
 
 allOf:
   - $ref: dsa.yaml#/$defs/ethernet-ports
+=======
+title: Arrow SpeedChips XRS7000 Series Switch Device Tree Bindings
+
+allOf:
+  - $ref: dsa.yaml#
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - George McCollister <george.mccollister@gmail.com>

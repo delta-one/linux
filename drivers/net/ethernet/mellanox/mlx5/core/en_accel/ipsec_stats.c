@@ -37,6 +37,7 @@
 #include "en.h"
 #include "ipsec.h"
 
+<<<<<<< HEAD
 static const struct counter_desc mlx5e_ipsec_hw_stats_desc[] = {
 	{ MLX5E_DECLARE_STAT(struct mlx5e_ipsec_hw_stats, ipsec_rx_pkts) },
 	{ MLX5E_DECLARE_STAT(struct mlx5e_ipsec_hw_stats, ipsec_rx_bytes) },
@@ -48,6 +49,8 @@ static const struct counter_desc mlx5e_ipsec_hw_stats_desc[] = {
 	{ MLX5E_DECLARE_STAT(struct mlx5e_ipsec_hw_stats, ipsec_tx_drop_bytes) },
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const struct counter_desc mlx5e_ipsec_sw_stats_desc[] = {
 	{ MLX5E_DECLARE_STAT(struct mlx5e_ipsec_sw_stats, ipsec_rx_drop_sp_alloc) },
 	{ MLX5E_DECLARE_STAT(struct mlx5e_ipsec_sw_stats, ipsec_rx_drop_sadb_miss) },
@@ -61,6 +64,7 @@ static const struct counter_desc mlx5e_ipsec_sw_stats_desc[] = {
 #define MLX5E_READ_CTR_ATOMIC64(ptr, dsc, i) \
 	atomic64_read((atomic64_t *)((char *)(ptr) + (dsc)[i].offset))
 
+<<<<<<< HEAD
 #define NUM_IPSEC_HW_COUNTERS ARRAY_SIZE(mlx5e_ipsec_hw_stats_desc)
 #define NUM_IPSEC_SW_COUNTERS ARRAY_SIZE(mlx5e_ipsec_sw_stats_desc)
 
@@ -103,6 +107,10 @@ static MLX5E_DECLARE_STATS_GRP_OP_FILL_STATS(ipsec_hw)
 	return idx;
 }
 
+=======
+#define NUM_IPSEC_SW_COUNTERS ARRAY_SIZE(mlx5e_ipsec_sw_stats_desc)
+
+>>>>>>> b7ba80a49124 (Commit)
 static MLX5E_DECLARE_STATS_GRP_OP_NUM_STATS(ipsec_sw)
 {
 	return priv->ipsec ? NUM_IPSEC_SW_COUNTERS : 0;
@@ -132,5 +140,8 @@ static MLX5E_DECLARE_STATS_GRP_OP_FILL_STATS(ipsec_sw)
 	return idx;
 }
 
+<<<<<<< HEAD
 MLX5E_DEFINE_STATS_GRP(ipsec_hw, 0);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 MLX5E_DEFINE_STATS_GRP(ipsec_sw, 0);

@@ -200,7 +200,11 @@ int c0_compare_int_usable(void)
 	 */
 	if (c0_compare_int_pending()) {
 		cnt = read_c0_count();
+<<<<<<< HEAD
 		write_c0_compare(cnt - 1);
+=======
+		write_c0_compare(cnt);
+>>>>>>> b7ba80a49124 (Commit)
 		back_to_back_c0_hazard();
 		while (read_c0_count() < (cnt  + COMPARE_INT_SEEN_TICKS))
 			if (!c0_compare_int_pending())
@@ -228,7 +232,11 @@ int c0_compare_int_usable(void)
 	if (!c0_compare_int_pending())
 		return 0;
 	cnt = read_c0_count();
+<<<<<<< HEAD
 	write_c0_compare(cnt - 1);
+=======
+	write_c0_compare(cnt);
+>>>>>>> b7ba80a49124 (Commit)
 	back_to_back_c0_hazard();
 	while (read_c0_count() < (cnt + COMPARE_INT_SEEN_TICKS))
 		if (!c0_compare_int_pending())

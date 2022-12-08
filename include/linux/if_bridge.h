@@ -59,7 +59,10 @@ struct br_ip_list {
 #define BR_MRP_LOST_IN_CONT	BIT(19)
 #define BR_TX_FWD_OFFLOAD	BIT(20)
 #define BR_PORT_LOCKED		BIT(21)
+<<<<<<< HEAD
 #define BR_PORT_MAB		BIT(22)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define BR_DEFAULT_AGEING_TIME	(300 * HZ)
 

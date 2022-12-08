@@ -990,12 +990,15 @@
 			/* ADC converstion time: 80 clocks */
 			st,sample-time = <4>;
 
+<<<<<<< HEAD
 			stmpe_adc {
 				compatible = "st,stmpe-adc";
 				/* forbid to use ADC channels 3-0 (touch) */
 				st,norequest-mask = <0x0F>;
 			};
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			stmpe_touchscreen {
 				compatible = "st,stmpe-ts";
 				/* 8 sample average control */
@@ -1012,6 +1015,15 @@
 				/* 5 ms touch detect interrupt delay */
 				st,touch-det-delay = <5>;
 			};
+<<<<<<< HEAD
+=======
+
+			stmpe_adc {
+				compatible = "st,stmpe-adc";
+				/* forbid to use ADC channels 3-0 (touch) */
+				st,norequest-mask = <0x0F>;
+			};
+>>>>>>> b7ba80a49124 (Commit)
 		};
 
 		/*
@@ -1105,6 +1117,7 @@
 		mmc-ddr-1_8v;
 	};
 
+<<<<<<< HEAD
 	clk16m: clock-osc4 {
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
@@ -1112,11 +1125,23 @@
 	};
 
 	clk32k_in: clock-xtal1 {
+=======
+	clk32k_in: xtal1 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
 		clock-frequency = <32768>;
 	};
 
+<<<<<<< HEAD
+=======
+	clk16m: osc4 {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <16000000>;
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	reg_1v8_avdd_hdmi_pll: regulator-1v8-avdd-hdmi-pll {
 		compatible = "regulator-fixed";
 		regulator-name = "+V1.8_AVDD_HDMI_PLL";

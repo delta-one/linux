@@ -115,6 +115,7 @@ enum sgx_miscselect {
  * %SGX_ATTR_EINITTOKENKEY:	Allow to use token signing key that is used to
  *				sign cryptographic tokens that can be passed to
  *				EINIT as an authorization to run an enclave.
+<<<<<<< HEAD
  * %SGX_ATTR_ASYNC_EXIT_NOTIFY:	Allow enclaves to be notified after an
  *				asynchronous exit has occurred.
  */
@@ -145,6 +146,19 @@ enum sgx_attribute {
 
 #define SGX_ATTR_PRIV_MASK	(SGX_ATTR_PROVISIONKEY	| \
 				 SGX_ATTR_EINITTOKENKEY)
+=======
+ */
+enum sgx_attribute {
+	SGX_ATTR_INIT		= BIT(0),
+	SGX_ATTR_DEBUG		= BIT(1),
+	SGX_ATTR_MODE64BIT	= BIT(2),
+	SGX_ATTR_PROVISIONKEY	= BIT(4),
+	SGX_ATTR_EINITTOKENKEY	= BIT(5),
+	SGX_ATTR_KSS		= BIT(7),
+};
+
+#define SGX_ATTR_RESERVED_MASK	(BIT_ULL(3) | BIT_ULL(6) | GENMASK_ULL(63, 8))
+>>>>>>> b7ba80a49124 (Commit)
 
 /**
  * struct sgx_secs - SGX Enclave Control Structure (SECS)

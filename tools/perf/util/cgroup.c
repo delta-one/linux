@@ -224,6 +224,7 @@ static int add_cgroup_name(const char *fpath, const struct stat *sb __maybe_unus
 	return 0;
 }
 
+<<<<<<< HEAD
 static int check_and_add_cgroup_name(const char *fpath)
 {
 	struct cgroup_name *cn;
@@ -237,6 +238,8 @@ static int check_and_add_cgroup_name(const char *fpath)
 	return add_cgroup_name(fpath, NULL, FTW_D, NULL);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void release_cgroup_list(void)
 {
 	struct cgroup_name *cn;
@@ -255,7 +258,11 @@ static int list_cgroups(const char *str)
 	struct cgroup_name *cn;
 	char *s;
 
+<<<<<<< HEAD
 	/* use given name as is when no regex is given */
+=======
+	/* use given name as is - for testing purpose */
+>>>>>>> b7ba80a49124 (Commit)
 	for (;;) {
 		p = strchr(str, ',');
 		e = p ? p : eos;
@@ -266,6 +273,7 @@ static int list_cgroups(const char *str)
 			s = strndup(str, e - str);
 			if (!s)
 				return -1;
+<<<<<<< HEAD
 
 			ret = check_and_add_cgroup_name(s);
 			free(s);
@@ -273,6 +281,15 @@ static int list_cgroups(const char *str)
 				return -1;
 		} else {
 			if (check_and_add_cgroup_name("/") < 0)
+=======
+			/* pretend if it's added by ftw() */
+			ret = add_cgroup_name(s, NULL, FTW_D, NULL);
+			free(s);
+			if (ret)
+				return -1;
+		} else {
+			if (add_cgroup_name("", NULL, FTW_D, NULL) < 0)
+>>>>>>> b7ba80a49124 (Commit)
 				return -1;
 		}
 
@@ -481,6 +498,10 @@ int evlist__expand_cgroup(struct evlist *evlist, const char *str,
 		nr_cgroups++;
 
 		if (metric_events) {
+<<<<<<< HEAD
+=======
+			perf_stat__collect_metric_expr(tmp_list);
+>>>>>>> b7ba80a49124 (Commit)
 			if (metricgroup__copy_metric_events(tmp_list, cgrp,
 							    metric_events,
 							    &orig_metric_events) < 0)

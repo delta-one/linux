@@ -14,6 +14,12 @@
 #include <linux/platform_device.h>
 #include "nvec.h"
 
+<<<<<<< HEAD
+=======
+#define to_nvec_led(led_cdev) \
+	container_of(led_cdev, struct nvec_led, cdev)
+
+>>>>>>> b7ba80a49124 (Commit)
 #define NVEC_LED_REQ {'\x0d', '\x10', '\x45', '\x10', '\x00'}
 
 #define NVEC_LED_MAX 8
@@ -26,7 +32,11 @@ struct nvec_led {
 static void nvec_led_brightness_set(struct led_classdev *led_cdev,
 				    enum led_brightness value)
 {
+<<<<<<< HEAD
 	struct nvec_led *led = container_of(led_cdev, struct nvec_led, cdev);
+=======
+	struct nvec_led *led = to_nvec_led(led_cdev);
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned char buf[] = NVEC_LED_REQ;
 
 	buf[4] = value;

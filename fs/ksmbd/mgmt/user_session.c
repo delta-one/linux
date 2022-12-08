@@ -25,10 +25,15 @@ static DECLARE_RWSEM(sessions_table_lock);
 struct ksmbd_session_rpc {
 	int			id;
 	unsigned int		method;
+<<<<<<< HEAD
+=======
+	struct list_head	list;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void free_channel_list(struct ksmbd_session *sess)
 {
+<<<<<<< HEAD
 	struct channel *chann;
 	unsigned long index;
 
@@ -38,6 +43,17 @@ static void free_channel_list(struct ksmbd_session *sess)
 	}
 
 	xa_destroy(&sess->ksmbd_chann_list);
+=======
+	struct channel *chann, *tmp;
+
+	write_lock(&sess->chann_lock);
+	list_for_each_entry_safe(chann, tmp, &sess->ksmbd_chann_list,
+				 chann_list) {
+		list_del(&chann->chann_list);
+		kfree(chann);
+	}
+	write_unlock(&sess->chann_lock);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void __session_rpc_close(struct ksmbd_session *sess,
@@ -57,6 +73,7 @@ static void __session_rpc_close(struct ksmbd_session *sess,
 static void ksmbd_session_rpc_clear_list(struct ksmbd_session *sess)
 {
 	struct ksmbd_session_rpc *entry;
+<<<<<<< HEAD
 	long index;
 
 	xa_for_each(&sess->rpc_handle_list, index, entry) {
@@ -65,6 +82,17 @@ static void ksmbd_session_rpc_clear_list(struct ksmbd_session *sess)
 	}
 
 	xa_destroy(&sess->rpc_handle_list);
+=======
+
+	while (!list_empty(&sess->rpc_handle_list)) {
+		entry = list_entry(sess->rpc_handle_list.next,
+				   struct ksmbd_session_rpc,
+				   list);
+
+		list_del(&entry->list);
+		__session_rpc_close(sess, entry);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int __rpc_method(char *rpc_name)
@@ -100,6 +128,7 @@ int ksmbd_session_rpc_open(struct ksmbd_session *sess, char *rpc_name)
 
 	entry = kzalloc(sizeof(struct ksmbd_session_rpc), GFP_KERNEL);
 	if (!entry)
+<<<<<<< HEAD
 		return -ENOMEM;
 
 	entry->method = method;
@@ -118,6 +147,24 @@ free_id:
 	xa_erase(&sess->rpc_handle_list, entry->id);
 	ksmbd_rpc_id_free(entry->id);
 free_entry:
+=======
+		return -EINVAL;
+
+	list_add(&entry->list, &sess->rpc_handle_list);
+	entry->method = method;
+	entry->id = ksmbd_ipc_id_alloc();
+	if (entry->id < 0)
+		goto error;
+
+	resp = ksmbd_rpc_open(sess, entry->id);
+	if (!resp)
+		goto error;
+
+	kvfree(resp);
+	return entry->id;
+error:
+	list_del(&entry->list);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(entry);
 	return -EINVAL;
 }
@@ -126,17 +173,35 @@ void ksmbd_session_rpc_close(struct ksmbd_session *sess, int id)
 {
 	struct ksmbd_session_rpc *entry;
 
+<<<<<<< HEAD
 	entry = xa_erase(&sess->rpc_handle_list, id);
 	if (entry)
 		__session_rpc_close(sess, entry);
+=======
+	list_for_each_entry(entry, &sess->rpc_handle_list, list) {
+		if (entry->id == id) {
+			list_del(&entry->list);
+			__session_rpc_close(sess, entry);
+			break;
+		}
+	}
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 int ksmbd_session_rpc_method(struct ksmbd_session *sess, int id)
 {
 	struct ksmbd_session_rpc *entry;
 
+<<<<<<< HEAD
 	entry = xa_load(&sess->rpc_handle_list, id);
 	return entry ? entry->method : 0;
+=======
+	list_for_each_entry(entry, &sess->rpc_handle_list, list) {
+		if (entry->id == id)
+			return entry->method;
+	}
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void ksmbd_session_destroy(struct ksmbd_session *sess)
@@ -181,6 +246,7 @@ int ksmbd_session_register(struct ksmbd_conn *conn,
 
 static int ksmbd_chann_del(struct ksmbd_conn *conn, struct ksmbd_session *sess)
 {
+<<<<<<< HEAD
 	struct channel *chann;
 
 	chann = xa_erase(&sess->ksmbd_chann_list, (long)conn);
@@ -190,6 +256,23 @@ static int ksmbd_chann_del(struct ksmbd_conn *conn, struct ksmbd_session *sess)
 	kfree(chann);
 
 	return 0;
+=======
+	struct channel *chann, *tmp;
+
+	write_lock(&sess->chann_lock);
+	list_for_each_entry_safe(chann, tmp, &sess->ksmbd_chann_list,
+				 chann_list) {
+		if (chann->conn == conn) {
+			list_del(&chann->chann_list);
+			kfree(chann);
+			write_unlock(&sess->chann_lock);
+			return 0;
+		}
+	}
+	write_unlock(&sess->chann_lock);
+
+	return -ENOENT;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void ksmbd_sessions_deregister(struct ksmbd_conn *conn)
@@ -219,7 +302,11 @@ void ksmbd_sessions_deregister(struct ksmbd_conn *conn)
 	return;
 
 sess_destroy:
+<<<<<<< HEAD
 	if (xa_empty(&sess->ksmbd_chann_list)) {
+=======
+	if (list_empty(&sess->ksmbd_chann_list)) {
+>>>>>>> b7ba80a49124 (Commit)
 		xa_erase(&conn->sessions, sess->id);
 		ksmbd_session_destroy(sess);
 	}
@@ -305,9 +392,12 @@ static struct ksmbd_session *__session_create(int protocol)
 	struct ksmbd_session *sess;
 	int ret;
 
+<<<<<<< HEAD
 	if (protocol != CIFDS_SESSION_FLAG_SMB2)
 		return NULL;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sess = kzalloc(sizeof(struct ksmbd_session), GFP_KERNEL);
 	if (!sess)
 		return NULL;
@@ -317,20 +407,45 @@ static struct ksmbd_session *__session_create(int protocol)
 
 	set_session_flag(sess, protocol);
 	xa_init(&sess->tree_conns);
+<<<<<<< HEAD
 	xa_init(&sess->ksmbd_chann_list);
 	xa_init(&sess->rpc_handle_list);
 	sess->sequence_number = 1;
 
 	ret = __init_smb2_session(sess);
+=======
+	INIT_LIST_HEAD(&sess->ksmbd_chann_list);
+	INIT_LIST_HEAD(&sess->rpc_handle_list);
+	sess->sequence_number = 1;
+	rwlock_init(&sess->chann_lock);
+
+	switch (protocol) {
+	case CIFDS_SESSION_FLAG_SMB2:
+		ret = __init_smb2_session(sess);
+		break;
+	default:
+		ret = -EINVAL;
+		break;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret)
 		goto error;
 
 	ida_init(&sess->tree_conn_ida);
 
+<<<<<<< HEAD
 	down_write(&sessions_table_lock);
 	hash_add(sessions_table, &sess->hlist, sess->id);
 	up_write(&sessions_table_lock);
 
+=======
+	if (protocol == CIFDS_SESSION_FLAG_SMB2) {
+		down_write(&sessions_table_lock);
+		hash_add(sessions_table, &sess->hlist, sess->id);
+		up_write(&sessions_table_lock);
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return sess;
 
 error:

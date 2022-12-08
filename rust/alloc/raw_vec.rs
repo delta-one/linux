@@ -20,11 +20,18 @@ use crate::collections::TryReserveErrorKind::*;
 #[cfg(test)]
 mod tests;
 
+<<<<<<< HEAD
+=======
+#[cfg(not(no_global_oom_handling))]
+>>>>>>> b7ba80a49124 (Commit)
 enum AllocInit {
     /// The contents of the new memory are uninitialized.
     Uninitialized,
     /// The new memory is guaranteed to be zeroed.
+<<<<<<< HEAD
     #[allow(dead_code)]
+=======
+>>>>>>> b7ba80a49124 (Commit)
     Zeroed,
 }
 
@@ -133,6 +140,7 @@ impl<T, A: Allocator> RawVec<T, A> {
         Self::allocate_in(capacity, AllocInit::Uninitialized, alloc)
     }
 
+<<<<<<< HEAD
     /// Like `try_with_capacity`, but parameterized over the choice of
     /// allocator for the returned `RawVec`.
     #[inline]
@@ -140,6 +148,8 @@ impl<T, A: Allocator> RawVec<T, A> {
         Self::try_allocate_in(capacity, AllocInit::Uninitialized, alloc)
     }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
     /// Like `with_capacity_zeroed`, but parameterized over the choice
     /// of allocator for the returned `RawVec`.
     #[cfg(not(no_global_oom_handling))]
@@ -210,6 +220,7 @@ impl<T, A: Allocator> RawVec<T, A> {
         }
     }
 
+<<<<<<< HEAD
     fn try_allocate_in(capacity: usize, init: AllocInit, alloc: A) -> Result<Self, TryReserveError> {
         // Don't allocate here because `Drop` will not deallocate when `capacity` is 0.
         if mem::size_of::<T>() == 0 || capacity == 0 {
@@ -234,6 +245,8 @@ impl<T, A: Allocator> RawVec<T, A> {
         })
     }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
     /// Reconstitutes a `RawVec` from a pointer, capacity, and allocator.
     ///
     /// # Safety

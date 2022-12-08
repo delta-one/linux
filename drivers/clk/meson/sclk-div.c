@@ -96,17 +96,28 @@ static int sclk_div_bestdiv(struct clk_hw *hw, unsigned long rate,
 	return bestdiv;
 }
 
+<<<<<<< HEAD
 static int sclk_div_determine_rate(struct clk_hw *hw,
 				   struct clk_rate_request *req)
+=======
+static long sclk_div_round_rate(struct clk_hw *hw, unsigned long rate,
+				unsigned long *prate)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct clk_regmap *clk = to_clk_regmap(hw);
 	struct meson_sclk_div_data *sclk = meson_sclk_div_data(clk);
 	int div;
 
+<<<<<<< HEAD
 	div = sclk_div_bestdiv(hw, req->rate, &req->best_parent_rate, sclk);
 	req->rate = DIV_ROUND_UP_ULL((u64)req->best_parent_rate, div);
 
 	return 0;
+=======
+	div = sclk_div_bestdiv(hw, rate, prate, sclk);
+
+	return DIV_ROUND_UP_ULL((u64)*prate, div);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void sclk_apply_ratio(struct clk_regmap *clk,
@@ -238,7 +249,11 @@ static int sclk_div_init(struct clk_hw *hw)
 
 const struct clk_ops meson_sclk_div_ops = {
 	.recalc_rate	= sclk_div_recalc_rate,
+<<<<<<< HEAD
 	.determine_rate	= sclk_div_determine_rate,
+=======
+	.round_rate	= sclk_div_round_rate,
+>>>>>>> b7ba80a49124 (Commit)
 	.set_rate	= sclk_div_set_rate,
 	.enable		= sclk_div_enable,
 	.disable	= sclk_div_disable,

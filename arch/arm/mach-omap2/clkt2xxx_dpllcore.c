@@ -20,7 +20,10 @@
 #include <linux/kernel.h>
 #include <linux/errno.h>
 #include <linux/clk.h>
+<<<<<<< HEAD
 #include <linux/clk/ti.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/io.h>
 
 #include "clock.h"

@@ -300,7 +300,11 @@ void __cpu_die(unsigned int cpu)
 	pr_notice("CPU%u: shutdown\n", cpu);
 }
 
+<<<<<<< HEAD
 void __noreturn arch_cpu_idle_dead(void)
+=======
+void arch_cpu_idle_dead(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	idle_task_exit();
 
@@ -309,7 +313,11 @@ void __noreturn arch_cpu_idle_dead(void)
 	while (!secondary_stack)
 		arch_cpu_idle();
 
+<<<<<<< HEAD
 	raw_local_irq_disable();
+=======
+	local_irq_disable();
+>>>>>>> b7ba80a49124 (Commit)
 
 	asm volatile(
 		"mov	sp, %0\n"
@@ -317,7 +325,10 @@ void __noreturn arch_cpu_idle_dead(void)
 		"jmpi	csky_start_secondary"
 		:
 		: "r" (secondary_stack));
+<<<<<<< HEAD
 
 	BUG();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 #endif

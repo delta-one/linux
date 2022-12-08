@@ -24,6 +24,7 @@ config ARM_PSCI_CPUIDLE
 	  It provides an idle driver that is capable of detecting and
 	  managing idle states through the PSCI firmware interface.
 
+<<<<<<< HEAD
 	  The driver has limitations when used with PREEMPT_RT:
 	  - If the idle states are described with the non-hierarchical layout,
 	    all idle states are still available.
@@ -32,6 +33,8 @@ config ARM_PSCI_CPUIDLE
 	    only the idle states defined per CPU are available, but not the ones
 	    being shared among a group of CPUs (aka cluster idle states).
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 config ARM_PSCI_CPUIDLE_DOMAIN
 	bool "PSCI CPU idle Domain"
 	depends on ARM_PSCI_CPUIDLE
@@ -110,7 +113,10 @@ config ARM_MVEBU_V7_CPUIDLE
 config ARM_TEGRA_CPUIDLE
 	bool "CPU Idle Driver for NVIDIA Tegra SoCs"
 	depends on (ARCH_TEGRA || COMPILE_TEST) && !ARM64 && MMU
+<<<<<<< HEAD
 	depends on ARCH_SUSPEND_POSSIBLE
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select ARCH_NEEDS_CPU_IDLE_COUPLED if SMP
 	select ARM_CPU_SUSPEND
 	help
@@ -119,7 +125,10 @@ config ARM_TEGRA_CPUIDLE
 config ARM_QCOM_SPM_CPUIDLE
 	bool "CPU Idle Driver for Qualcomm Subsystem Power Manager (SPM)"
 	depends on (ARCH_QCOM || COMPILE_TEST) && !ARM64 && MMU
+<<<<<<< HEAD
 	depends on ARCH_SUSPEND_POSSIBLE
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	select ARM_CPU_SUSPEND
 	select CPU_IDLE_MULTIPLE_DRIVERS
 	select DT_IDLE_STATES

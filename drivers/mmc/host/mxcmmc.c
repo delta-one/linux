@@ -1143,9 +1143,13 @@ static int mxcmci_probe(struct platform_device *pdev)
 
 	timer_setup(&host->watchdog, mxcmci_watchdog, 0);
 
+<<<<<<< HEAD
 	ret = mmc_add_host(mmc);
 	if (ret)
 		goto out_free_dma;
+=======
+	mmc_add_host(mmc);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 

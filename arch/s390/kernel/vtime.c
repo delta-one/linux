@@ -7,13 +7,20 @@
  */
 
 #include <linux/kernel_stat.h>
+<<<<<<< HEAD
+=======
+#include <linux/sched/cputime.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/export.h>
 #include <linux/kernel.h>
 #include <linux/timex.h>
 #include <linux/types.h>
 #include <linux/time.h>
 #include <asm/alternative.h>
+<<<<<<< HEAD
 #include <asm/cputime.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/vtimer.h>
 #include <asm/vtime.h>
 #include <asm/cpu_mf.h>

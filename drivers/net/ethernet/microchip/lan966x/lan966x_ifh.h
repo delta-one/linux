@@ -8,7 +8,10 @@
  */
 
 #define IFH_LEN                      7
+<<<<<<< HEAD
 #define IFH_LEN_BYTES                (IFH_LEN * sizeof(u32))
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Timestamp for frame */
 #define IFH_POS_TIMESTAMP            192

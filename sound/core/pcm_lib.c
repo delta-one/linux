@@ -186,7 +186,11 @@ int snd_pcm_update_state(struct snd_pcm_substream *substream,
 	avail = snd_pcm_avail(substream);
 	if (avail > runtime->avail_max)
 		runtime->avail_max = avail;
+<<<<<<< HEAD
 	if (runtime->state == SNDRV_PCM_STATE_DRAINING) {
+=======
+	if (runtime->status->state == SNDRV_PCM_STATE_DRAINING) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (avail >= runtime->buffer_size) {
 			snd_pcm_drain_done(substream);
 			return -EPIPE;
@@ -1911,7 +1915,11 @@ static int wait_for_avail(struct snd_pcm_substream *substream,
 
 		snd_pcm_stream_lock_irq(substream);
 		set_current_state(TASK_INTERRUPTIBLE);
+<<<<<<< HEAD
 		switch (runtime->state) {
+=======
+		switch (runtime->status->state) {
+>>>>>>> b7ba80a49124 (Commit)
 		case SNDRV_PCM_STATE_SUSPENDED:
 			err = -ESTRPIPE;
 			goto _endloop;
@@ -2099,14 +2107,22 @@ static int pcm_sanity_check(struct snd_pcm_substream *substream)
 	runtime = substream->runtime;
 	if (snd_BUG_ON(!substream->ops->copy_user && !runtime->dma_area))
 		return -EINVAL;
+<<<<<<< HEAD
 	if (runtime->state == SNDRV_PCM_STATE_OPEN)
+=======
+	if (runtime->status->state == SNDRV_PCM_STATE_OPEN)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EBADFD;
 	return 0;
 }
 
 static int pcm_accessible_state(struct snd_pcm_runtime *runtime)
 {
+<<<<<<< HEAD
 	switch (runtime->state) {
+=======
+	switch (runtime->status->state) {
+>>>>>>> b7ba80a49124 (Commit)
 	case SNDRV_PCM_STATE_PREPARED:
 	case SNDRV_PCM_STATE_RUNNING:
 	case SNDRV_PCM_STATE_PAUSED:
@@ -2155,8 +2171,11 @@ int pcm_lib_apply_appl_ptr(struct snd_pcm_substream *substream,
 		ret = substream->ops->ack(substream);
 		if (ret < 0) {
 			runtime->control->appl_ptr = old_appl_ptr;
+<<<<<<< HEAD
 			if (ret == -EPIPE)
 				__snd_pcm_xrun(substream);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			return ret;
 		}
 	}
@@ -2227,7 +2246,11 @@ snd_pcm_sframes_t __snd_pcm_lib_xfer(struct snd_pcm_substream *substream,
 		goto _end_unlock;
 
 	runtime->twake = runtime->control->avail_min ? : 1;
+<<<<<<< HEAD
 	if (runtime->state == SNDRV_PCM_STATE_RUNNING)
+=======
+	if (runtime->status->state == SNDRV_PCM_STATE_RUNNING)
+>>>>>>> b7ba80a49124 (Commit)
 		snd_pcm_update_hw_ptr(substream);
 
 	/*
@@ -2235,7 +2258,11 @@ snd_pcm_sframes_t __snd_pcm_lib_xfer(struct snd_pcm_substream *substream,
 	 * thread may start capture
 	 */
 	if (!is_playback &&
+<<<<<<< HEAD
 	    runtime->state == SNDRV_PCM_STATE_PREPARED &&
+=======
+	    runtime->status->state == SNDRV_PCM_STATE_PREPARED &&
+>>>>>>> b7ba80a49124 (Commit)
 	    size >= runtime->start_threshold) {
 		err = snd_pcm_start(substream);
 		if (err < 0)
@@ -2249,7 +2276,11 @@ snd_pcm_sframes_t __snd_pcm_lib_xfer(struct snd_pcm_substream *substream,
 		snd_pcm_uframes_t cont;
 		if (!avail) {
 			if (!is_playback &&
+<<<<<<< HEAD
 			    runtime->state == SNDRV_PCM_STATE_DRAINING) {
+=======
+			    runtime->status->state == SNDRV_PCM_STATE_DRAINING) {
+>>>>>>> b7ba80a49124 (Commit)
 				snd_pcm_stop(substream, SNDRV_PCM_STATE_SETUP);
 				goto _end_unlock;
 			}
@@ -2305,7 +2336,11 @@ snd_pcm_sframes_t __snd_pcm_lib_xfer(struct snd_pcm_substream *substream,
 		xfer += frames;
 		avail -= frames;
 		if (is_playback &&
+<<<<<<< HEAD
 		    runtime->state == SNDRV_PCM_STATE_PREPARED &&
+=======
+		    runtime->status->state == SNDRV_PCM_STATE_PREPARED &&
+>>>>>>> b7ba80a49124 (Commit)
 		    snd_pcm_playback_hw_avail(runtime) >= (snd_pcm_sframes_t)runtime->start_threshold) {
 			err = snd_pcm_start(substream);
 			if (err < 0)

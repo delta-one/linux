@@ -207,7 +207,11 @@ void __init setup_power_save(void)
 		ppc_md.power_save = ppc6xx_idle;
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_PPC_E500
+=======
+#ifdef CONFIG_E500
+>>>>>>> b7ba80a49124 (Commit)
 	if (cpu_has_feature(CPU_FTR_CAN_DOZE) ||
 	    cpu_has_feature(CPU_FTR_CAN_NAP))
 		ppc_md.power_save = e500_idle;

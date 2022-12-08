@@ -622,6 +622,7 @@ struct cpumask *tick_get_broadcast_oneshot_mask(void)
  * to avoid a deep idle transition as we are about to get the
  * broadcast IPI right away.
  */
+<<<<<<< HEAD
 noinstr int tick_check_broadcast_expired(void)
 {
 #ifdef _ASM_GENERIC_BITOPS_INSTRUMENTED_NON_ATOMIC_H
@@ -629,6 +630,11 @@ noinstr int tick_check_broadcast_expired(void)
 #else
 	return cpumask_test_cpu(smp_processor_id(), tick_broadcast_force_mask);
 #endif
+=======
+int tick_check_broadcast_expired(void)
+{
+	return cpumask_test_cpu(smp_processor_id(), tick_broadcast_force_mask);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*

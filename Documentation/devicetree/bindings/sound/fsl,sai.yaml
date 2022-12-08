@@ -18,12 +18,23 @@ description: |
 properties:
   compatible:
     oneOf:
+<<<<<<< HEAD
       - items:
           - enum:
               - fsl,imx6ul-sai
               - fsl,imx7d-sai
           - const: fsl,imx6sx-sai
 
+=======
+      - enum:
+          - fsl,vf610-sai
+          - fsl,imx6sx-sai
+          - fsl,imx6ul-sai
+          - fsl,imx7ulp-sai
+          - fsl,imx8mq-sai
+          - fsl,imx8qm-sai
+          - fsl,imx8ulp-sai
+>>>>>>> b7ba80a49124 (Commit)
       - items:
           - enum:
               - fsl,imx8mm-sai
@@ -31,6 +42,7 @@ properties:
               - fsl,imx8mp-sai
           - const: fsl,imx8mq-sai
 
+<<<<<<< HEAD
       - items:
           - enum:
               - fsl,imx6sx-sai
@@ -44,6 +56,21 @@ properties:
   reg:
     maxItems: 1
 
+=======
+  reg:
+    maxItems: 1
+
+  interrupts:
+    items:
+      - description: receive and transmit interrupt
+
+  dmas:
+    maxItems: 2
+
+  dma-names:
+    maxItems: 2
+
+>>>>>>> b7ba80a49124 (Commit)
   clocks:
     items:
       - description: The ipg clock for register access
@@ -65,7 +92,11 @@ properties:
           - const: mclk3
           - const: pll8k
           - const: pll11k
+<<<<<<< HEAD
         minItems: 5
+=======
+        minItems: 4
+>>>>>>> b7ba80a49124 (Commit)
       - items:
           - const: bus
           - const: mclk1
@@ -75,6 +106,7 @@ properties:
           - const: pll11k
         minItems: 4
 
+<<<<<<< HEAD
   dmas:
     items:
       - description: DMA controller phandle and request line for RX
@@ -88,12 +120,22 @@ properties:
   interrupts:
     items:
       - description: receive and transmit interrupt
+=======
+  lsb-first:
+    description: |
+      Configures whether the LSB or the MSB is transmitted
+      first for the fifo data. If this property is absent,
+      the MSB is transmitted first as default, or the LSB
+      is transmitted first.
+    type: boolean
+>>>>>>> b7ba80a49124 (Commit)
 
   big-endian:
     description: |
       required if all the SAI registers are big-endian rather than little-endian.
     type: boolean
 
+<<<<<<< HEAD
   fsl,dataline:
     $ref: /schemas/types.yaml#/definitions/uint32-matrix
     description: |
@@ -110,6 +152,8 @@ properties:
     description: SAI will output the SAI MCLK clock.
     type: boolean
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   fsl,sai-synchronous-rx:
     description: |
       SAI will work in the synchronous mode (sync Tx with Rx) which means
@@ -128,6 +172,7 @@ properties:
       of transmitter.
     type: boolean
 
+<<<<<<< HEAD
   fsl,shared-interrupt:
     description: Interrupt is shared with other modules.
     type: boolean
@@ -138,6 +183,26 @@ properties:
       first for the fifo data. If this property is absent,
       the MSB is transmitted first as default, or the LSB
       is transmitted first.
+=======
+  fsl,dataline:
+    $ref: /schemas/types.yaml#/definitions/uint32-matrix
+    description: |
+      Configure the dataline. It has 3 value for each configuration
+    maxItems: 16
+    items:
+      items:
+        - description: format Default(0), I2S(1) or PDM(2)
+          enum: [0, 1, 2]
+        - description: dataline mask for 'rx'
+        - description: dataline mask for 'tx'
+
+  fsl,sai-mclk-direction-output:
+    description: SAI will output the SAI MCLK clock.
+    type: boolean
+
+  fsl,shared-interrupt:
+    description: Interrupt is shared with other modules.
+>>>>>>> b7ba80a49124 (Commit)
     type: boolean
 
   "#sound-dai-cells":
@@ -145,7 +210,35 @@ properties:
     description: optional, some dts node didn't add it.
 
 allOf:
+<<<<<<< HEAD
   - $ref: dai-common.yaml#
+=======
+  - if:
+      properties:
+        compatible:
+          contains:
+            const: fsl,vf610-sai
+    then:
+      properties:
+        dmas:
+          items:
+            - description: DMA controller phandle and request line for TX
+            - description: DMA controller phandle and request line for RX
+        dma-names:
+          items:
+            - const: tx
+            - const: rx
+    else:
+      properties:
+        dmas:
+          items:
+            - description: DMA controller phandle and request line for RX
+            - description: DMA controller phandle and request line for TX
+        dma-names:
+          items:
+            - const: rx
+            - const: tx
+>>>>>>> b7ba80a49124 (Commit)
   - if:
       required:
         - fsl,sai-asynchronous
@@ -156,6 +249,7 @@ allOf:
 required:
   - compatible
   - reg
+<<<<<<< HEAD
   - clocks
   - clock-names
   - dmas
@@ -163,6 +257,15 @@ required:
   - interrupts
 
 unevaluatedProperties: false
+=======
+  - interrupts
+  - dmas
+  - dma-names
+  - clocks
+  - clock-names
+
+additionalProperties: false
+>>>>>>> b7ba80a49124 (Commit)
 
 examples:
   - |
@@ -178,8 +281,14 @@ examples:
                  <&clks VF610_CLK_SAI2>,
                  <&clks 0>, <&clks 0>;
         clock-names = "bus", "mclk1", "mclk2", "mclk3";
+<<<<<<< HEAD
         dma-names = "rx", "tx";
         dmas = <&edma0 0 20>, <&edma0 0 21>;
+=======
+        dma-names = "tx", "rx";
+        dmas = <&edma0 0 21>,
+               <&edma0 0 20>;
+>>>>>>> b7ba80a49124 (Commit)
         big-endian;
         lsb-first;
     };

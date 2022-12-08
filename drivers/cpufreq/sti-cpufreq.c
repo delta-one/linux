@@ -252,7 +252,11 @@ static int sti_cpufreq_fetch_syscon_registers(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int __init sti_cpufreq_init(void)
+=======
+static int sti_cpufreq_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int ret;
 

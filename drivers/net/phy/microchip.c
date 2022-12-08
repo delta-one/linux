@@ -342,6 +342,7 @@ static int lan88xx_config_aneg(struct phy_device *phydev)
 	return genphy_config_aneg(phydev);
 }
 
+<<<<<<< HEAD
 static void lan88xx_link_change_notify(struct phy_device *phydev)
 {
 	int temp;
@@ -373,6 +374,8 @@ static void lan88xx_link_change_notify(struct phy_device *phydev)
 	}
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct phy_driver microchip_phy_driver[] = {
 {
 	.phy_id		= 0x0007c132,
@@ -390,7 +393,10 @@ static struct phy_driver microchip_phy_driver[] = {
 
 	.config_init	= lan88xx_config_init,
 	.config_aneg	= lan88xx_config_aneg,
+<<<<<<< HEAD
 	.link_change_notify = lan88xx_link_change_notify,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	.config_intr	= lan88xx_phy_config_intr,
 	.handle_interrupt = lan88xx_handle_interrupt,

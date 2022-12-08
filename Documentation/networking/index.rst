@@ -104,7 +104,10 @@ Contents:
    switchdev
    sysfs-tagging
    tc-actions-env-rules
+<<<<<<< HEAD
    tc-queue-filters
+=======
+>>>>>>> b7ba80a49124 (Commit)
    tcp-thin
    team
    timestamping
@@ -120,7 +123,10 @@ Contents:
    xfrm_proc
    xfrm_sync
    xfrm_sysctl
+<<<<<<< HEAD
    xdp-rx-metadata
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 .. only::  subproject and html
 

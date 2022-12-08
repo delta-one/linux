@@ -41,6 +41,7 @@ unsigned int ioread32(const void __iomem *addr)
 	return ret;
 }
 
+<<<<<<< HEAD
 u64 ioread64(const void __iomem *addr)
 {
 	unsigned int ret;
@@ -50,6 +51,8 @@ u64 ioread64(const void __iomem *addr)
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void iowrite8(u8 b, void __iomem *addr)
 {
 	mb();
@@ -68,6 +71,7 @@ void iowrite32(u32 b, void __iomem *addr)
 	IO_CONCAT(__IO_PREFIX,iowrite32)(b, addr);
 }
 
+<<<<<<< HEAD
 void iowrite64(u64 b, void __iomem *addr)
 {
 	mb();
@@ -82,6 +86,14 @@ EXPORT_SYMBOL(iowrite8);
 EXPORT_SYMBOL(iowrite16);
 EXPORT_SYMBOL(iowrite32);
 EXPORT_SYMBOL(iowrite64);
+=======
+EXPORT_SYMBOL(ioread8);
+EXPORT_SYMBOL(ioread16);
+EXPORT_SYMBOL(ioread32);
+EXPORT_SYMBOL(iowrite8);
+EXPORT_SYMBOL(iowrite16);
+EXPORT_SYMBOL(iowrite32);
+>>>>>>> b7ba80a49124 (Commit)
 
 u8 inb(unsigned long port)
 {

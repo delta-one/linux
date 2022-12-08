@@ -6,7 +6,10 @@
 #include "remoteproc_internal.h"
 #include <linux/soc/qcom/qmi.h>
 
+<<<<<<< HEAD
 struct qcom_glink_smem;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 struct qcom_sysmon;
 
 struct qcom_rproc_glink {
@@ -16,7 +19,11 @@ struct qcom_rproc_glink {
 
 	struct device *dev;
 	struct device_node *node;
+<<<<<<< HEAD
 	struct qcom_glink_smem *edge;
+=======
+	struct qcom_glink *edge;
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct qcom_rproc_subdev {
@@ -34,10 +41,14 @@ struct qcom_rproc_ssr {
 	struct qcom_ssr_subsystem *info;
 };
 
+<<<<<<< HEAD
 void qcom_minidump(struct rproc *rproc, unsigned int minidump_id,
 			void (*rproc_dumpfn_t)(struct rproc *rproc,
 				struct rproc_dump_segment *segment, void *dest, size_t offset,
 				size_t size));
+=======
+void qcom_minidump(struct rproc *rproc, unsigned int minidump_id);
+>>>>>>> b7ba80a49124 (Commit)
 
 void qcom_add_glink_subdev(struct rproc *rproc, struct qcom_rproc_glink *glink,
 			   const char *ssr_name);

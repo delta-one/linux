@@ -584,6 +584,15 @@ ssize_t cx18_v4l2_read(struct file *filp, char __user *buf, size_t count,
 	if (rc)
 		return rc;
 
+<<<<<<< HEAD
+=======
+	if ((s->vb_type == V4L2_BUF_TYPE_VIDEO_CAPTURE) &&
+		(id->type == CX18_ENC_STREAM_TYPE_YUV)) {
+		return videobuf_read_stream(&s->vbuf_q, buf, count, pos, 0,
+			filp->f_flags & O_NONBLOCK);
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	return cx18_read_pos(s, buf, count, pos, filp->f_flags & O_NONBLOCK);
 }
 
@@ -612,6 +621,20 @@ __poll_t cx18_v4l2_enc_poll(struct file *filp, poll_table *wait)
 		CX18_DEBUG_FILE("Encoder poll started capture\n");
 	}
 
+<<<<<<< HEAD
+=======
+	if ((s->vb_type == V4L2_BUF_TYPE_VIDEO_CAPTURE) &&
+		(id->type == CX18_ENC_STREAM_TYPE_YUV)) {
+		__poll_t videobuf_poll = videobuf_poll_stream(filp, &s->vbuf_q, wait);
+
+		if (v4l2_event_pending(&id->fh))
+			res |= EPOLLPRI;
+		if (eof && videobuf_poll == EPOLLERR)
+			return res | EPOLLHUP;
+		return res | videobuf_poll;
+	}
+
+>>>>>>> b7ba80a49124 (Commit)
 	/* add stream's waitq to the poll list */
 	CX18_DEBUG_HI_FILE("Encoder poll\n");
 	if (v4l2_event_pending(&id->fh))
@@ -626,6 +649,7 @@ __poll_t cx18_v4l2_enc_poll(struct file *filp, poll_table *wait)
 	return res;
 }
 
+<<<<<<< HEAD
 void cx18_vb_timeout(struct timer_list *t)
 {
 	struct cx18_stream *s = from_timer(s, t, vb_timeout);
@@ -640,6 +664,64 @@ void cx18_vb_timeout(struct timer_list *t)
 void cx18_stop_capture(struct cx18_stream *s, int gop_end)
 {
 	struct cx18 *cx = s->cx;
+=======
+int cx18_v4l2_mmap(struct file *file, struct vm_area_struct *vma)
+{
+	struct cx18_open_id *id = file->private_data;
+	struct cx18 *cx = id->cx;
+	struct cx18_stream *s = &cx->streams[id->type];
+	int eof = test_bit(CX18_F_S_STREAMOFF, &s->s_flags);
+
+	if ((s->vb_type == V4L2_BUF_TYPE_VIDEO_CAPTURE) &&
+		(id->type == CX18_ENC_STREAM_TYPE_YUV)) {
+
+		/* Start a capture if there is none */
+		if (!eof && !test_bit(CX18_F_S_STREAMING, &s->s_flags)) {
+			int rc;
+
+			mutex_lock(&cx->serialize_lock);
+			rc = cx18_start_capture(id);
+			mutex_unlock(&cx->serialize_lock);
+			if (rc) {
+				CX18_DEBUG_INFO(
+					"Could not start capture for %s (%d)\n",
+					s->name, rc);
+				return -EINVAL;
+			}
+			CX18_DEBUG_FILE("Encoder mmap started capture\n");
+		}
+
+		return videobuf_mmap_mapper(&s->vbuf_q, vma);
+	}
+
+	return -EINVAL;
+}
+
+void cx18_vb_timeout(struct timer_list *t)
+{
+	struct cx18_stream *s = from_timer(s, t, vb_timeout);
+	struct cx18_videobuf_buffer *buf;
+	unsigned long flags;
+
+	/* Return all of the buffers in error state, so the vbi/vid inode
+	 * can return from blocking.
+	 */
+	spin_lock_irqsave(&s->vb_lock, flags);
+	while (!list_empty(&s->vb_capture)) {
+		buf = list_entry(s->vb_capture.next,
+			struct cx18_videobuf_buffer, vb.queue);
+		list_del(&buf->vb.queue);
+		buf->vb.state = VIDEOBUF_ERROR;
+		wake_up(&buf->vb.done);
+	}
+	spin_unlock_irqrestore(&s->vb_lock, flags);
+}
+
+void cx18_stop_capture(struct cx18_open_id *id, int gop_end)
+{
+	struct cx18 *cx = id->cx;
+	struct cx18_stream *s = &cx->streams[id->type];
+>>>>>>> b7ba80a49124 (Commit)
 	struct cx18_stream *s_vbi = &cx->streams[CX18_ENC_STREAM_TYPE_VBI];
 	struct cx18_stream *s_idx = &cx->streams[CX18_ENC_STREAM_TYPE_IDX];
 
@@ -650,7 +732,11 @@ void cx18_stop_capture(struct cx18_stream *s, int gop_end)
 	/* Stop capturing */
 	if (test_bit(CX18_F_S_STREAMING, &s->s_flags)) {
 		CX18_DEBUG_INFO("close stopping capture\n");
+<<<<<<< HEAD
 		if (s->type == CX18_ENC_STREAM_TYPE_MPG) {
+=======
+		if (id->type == CX18_ENC_STREAM_TYPE_MPG) {
+>>>>>>> b7ba80a49124 (Commit)
 			/* Stop internal use associated VBI and IDX streams */
 			if (test_bit(CX18_F_S_STREAMING, &s_vbi->s_flags) &&
 			    !test_bit(CX18_F_S_APPL_IO, &s_vbi->s_flags)) {
@@ -662,7 +748,11 @@ void cx18_stop_capture(struct cx18_stream *s, int gop_end)
 				cx18_stop_v4l2_encode_stream(s_idx, 0);
 			}
 		}
+<<<<<<< HEAD
 		if (s->type == CX18_ENC_STREAM_TYPE_VBI &&
+=======
+		if (id->type == CX18_ENC_STREAM_TYPE_VBI &&
+>>>>>>> b7ba80a49124 (Commit)
 		    test_bit(CX18_F_S_INTERNAL_USE, &s->s_flags))
 			/* Also used internally, don't stop capturing */
 			s->id = -1;
@@ -682,14 +772,21 @@ int cx18_v4l2_close(struct file *filp)
 	struct cx18_open_id *id = fh2id(fh);
 	struct cx18 *cx = id->cx;
 	struct cx18_stream *s = &cx->streams[id->type];
+<<<<<<< HEAD
 	struct video_device *vdev = &s->video_dev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	CX18_DEBUG_IOCTL("close() of %s\n", s->name);
 
 	mutex_lock(&cx->serialize_lock);
 	/* Stop radio */
 	if (id->type == CX18_ENC_STREAM_TYPE_RAD &&
+<<<<<<< HEAD
 	    v4l2_fh_is_singular_file(filp)) {
+=======
+			v4l2_fh_is_singular_file(filp)) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Closing radio device, return to TV mode */
 		cx18_mute(cx);
 		/* Mark that the radio is no longer in use */
@@ -708,17 +805,25 @@ int cx18_v4l2_close(struct file *filp)
 		cx18_unmute(cx);
 	}
 
+<<<<<<< HEAD
 	if (id->type == CX18_ENC_STREAM_TYPE_YUV &&
 	    filp->private_data == vdev->queue->owner) {
 		vb2_queue_release(vdev->queue);
 		vdev->queue->owner = NULL;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	v4l2_fh_del(fh);
 	v4l2_fh_exit(fh);
 
 	/* 'Unclaim' this stream */
+<<<<<<< HEAD
 	if (id->type != CX18_ENC_STREAM_TYPE_YUV && s->id == id->open_id)
 		cx18_stop_capture(s, 0);
+=======
+	if (s->id == id->open_id)
+		cx18_stop_capture(id, 0);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(id);
 	mutex_unlock(&cx->serialize_lock);
 	return 0;

@@ -425,6 +425,7 @@ static const struct of_device_id ws2401_match[] = {
 };
 MODULE_DEVICE_TABLE(of, ws2401_match);
 
+<<<<<<< HEAD
 static const struct spi_device_id ws2401_ids[] = {
 	{ "lms380kf01" },
 	{ },
@@ -435,6 +436,11 @@ static struct spi_driver ws2401_driver = {
 	.probe		= ws2401_probe,
 	.remove		= ws2401_remove,
 	.id_table	= ws2401_ids,
+=======
+static struct spi_driver ws2401_driver = {
+	.probe		= ws2401_probe,
+	.remove		= ws2401_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver		= {
 		.name	= "ws2401-panel",
 		.of_match_table = ws2401_match,

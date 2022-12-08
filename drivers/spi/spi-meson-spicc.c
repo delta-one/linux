@@ -21,7 +21,10 @@
 #include <linux/types.h>
 #include <linux/interrupt.h>
 #include <linux/reset.h>
+<<<<<<< HEAD
 #include <linux/pinctrl/consumer.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * The Meson SPICC controller could support DMA based transfers, but is not
@@ -161,7 +164,10 @@ struct meson_spicc_device {
 	struct clk			*clk;
 	struct spi_message		*message;
 	struct spi_transfer		*xfer;
+<<<<<<< HEAD
 	struct completion		done;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const struct meson_spicc_data	*data;
 	u8				*tx_buf;
 	u8				*rx_buf;
@@ -169,9 +175,12 @@ struct meson_spicc_device {
 	unsigned long			tx_remain;
 	unsigned long			rx_remain;
 	unsigned long			xfer_remain;
+<<<<<<< HEAD
 	struct pinctrl			*pinctrl;
 	struct pinctrl_state		*pins_idle_high;
 	struct pinctrl_state		*pins_idle_low;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define pow2_clk_to_spicc(_div) container_of(_div, struct meson_spicc_device, pow2_div)
@@ -180,6 +189,7 @@ static void meson_spicc_oen_enable(struct meson_spicc_device *spicc)
 {
 	u32 conf;
 
+<<<<<<< HEAD
 	if (!spicc->data->has_oen) {
 		/* Try to get pinctrl states for idle high/low */
 		spicc->pins_idle_high = pinctrl_lookup_state(spicc->pinctrl,
@@ -196,6 +206,10 @@ static void meson_spicc_oen_enable(struct meson_spicc_device *spicc)
 		}
 		return;
 	}
+=======
+	if (!spicc->data->has_oen)
+		return;
+>>>>>>> b7ba80a49124 (Commit)
 
 	conf = readl_relaxed(spicc->base + SPICC_ENH_CTL0) |
 		SPICC_ENH_MOSI_OEN | SPICC_ENH_CLK_OEN | SPICC_ENH_CS_OEN;
@@ -301,7 +315,11 @@ static irqreturn_t meson_spicc_irq(int irq, void *data)
 		/* Disable all IRQs */
 		writel(0, spicc->base + SPICC_INTREG);
 
+<<<<<<< HEAD
 		complete(&spicc->done);
+=======
+		spi_finalize_current_transfer(spicc->master);
+>>>>>>> b7ba80a49124 (Commit)
 
 		return IRQ_HANDLED;
 	}
@@ -405,7 +423,10 @@ static int meson_spicc_transfer_one(struct spi_master *master,
 				    struct spi_transfer *xfer)
 {
 	struct meson_spicc_device *spicc = spi_master_get_devdata(master);
+<<<<<<< HEAD
 	uint64_t timeout;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Store current transfer */
 	spicc->xfer = xfer;
@@ -430,6 +451,7 @@ static int meson_spicc_transfer_one(struct spi_master *master,
 	/* Setup burst */
 	meson_spicc_setup_burst(spicc);
 
+<<<<<<< HEAD
 	/* Setup wait for completion */
 	reinit_completion(&spicc->done);
 
@@ -443,16 +465,22 @@ static int meson_spicc_transfer_one(struct spi_master *master,
 	/* Increase it twice and add 200 ms tolerance */
 	timeout += timeout + 200;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Start burst */
 	writel_bits_relaxed(SPICC_XCH, SPICC_XCH, spicc->base + SPICC_CONREG);
 
 	/* Enable interrupts */
 	writel_relaxed(SPICC_TC_EN, spicc->base + SPICC_INTREG);
 
+<<<<<<< HEAD
 	if (!wait_for_completion_timeout(&spicc->done, msecs_to_jiffies(timeout)))
 		return -ETIMEDOUT;
 
 	return 0;
+=======
+	return 1;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int meson_spicc_prepare_message(struct spi_master *master,
@@ -477,6 +505,7 @@ static int meson_spicc_prepare_message(struct spi_master *master,
 	else
 		conf &= ~SPICC_POL;
 
+<<<<<<< HEAD
 	if (!spicc->data->has_oen) {
 		if (spi->mode & SPI_CPOL) {
 			if (spicc->pins_idle_high)
@@ -487,6 +516,8 @@ static int meson_spicc_prepare_message(struct spi_master *master,
 		}
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (spi->mode & SPI_CPHA)
 		conf |= SPICC_PHA;
 	else
@@ -505,7 +536,11 @@ static int meson_spicc_prepare_message(struct spi_master *master,
 		conf |= FIELD_PREP(SPICC_DRCTL_MASK, SPICC_DRCTL_IGNORE);
 
 	/* Select CS */
+<<<<<<< HEAD
 	conf |= FIELD_PREP(SPICC_CS_MASK, spi_get_chipselect(spi, 0));
+=======
+	conf |= FIELD_PREP(SPICC_CS_MASK, spi->chip_select);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Default 8bit word */
 	conf |= FIELD_PREP(SPICC_BITLENGTH_MASK, 8 - 1);
@@ -533,9 +568,12 @@ static int meson_spicc_unprepare_transfer(struct spi_master *master)
 	/* Set default configuration, keeping datarate field */
 	writel_relaxed(conf, spicc->base + SPICC_CONREG);
 
+<<<<<<< HEAD
 	if (!spicc->data->has_oen)
 		pinctrl_select_default_state(&spicc->pdev->dev);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -792,8 +830,11 @@ static int meson_spicc_probe(struct platform_device *pdev)
 	spicc->pdev = pdev;
 	platform_set_drvdata(pdev, spicc);
 
+<<<<<<< HEAD
 	init_completion(&spicc->done);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	spicc->base = devm_platform_ioremap_resource(pdev, 0);
 	if (IS_ERR(spicc->base)) {
 		dev_err(&pdev->dev, "io resource mapping failed\n");
@@ -849,12 +890,15 @@ static int meson_spicc_probe(struct platform_device *pdev)
 		goto out_core_clk;
 	}
 
+<<<<<<< HEAD
 	spicc->pinctrl = devm_pinctrl_get(&pdev->dev);
 	if (IS_ERR(spicc->pinctrl)) {
 		ret = PTR_ERR(spicc->pinctrl);
 		goto out_clk;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	device_reset_optional(&pdev->dev);
 
 	master->num_chipselect = 4;
@@ -910,7 +954,11 @@ out_master:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void meson_spicc_remove(struct platform_device *pdev)
+=======
+static int meson_spicc_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct meson_spicc_device *spicc = platform_get_drvdata(pdev);
 
@@ -921,6 +969,11 @@ static void meson_spicc_remove(struct platform_device *pdev)
 	clk_disable_unprepare(spicc->pclk);
 
 	spi_master_put(spicc->master);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct meson_spicc_data meson_spicc_gx_data = {
@@ -965,7 +1018,11 @@ MODULE_DEVICE_TABLE(of, meson_spicc_of_match);
 
 static struct platform_driver meson_spicc_driver = {
 	.probe   = meson_spicc_probe,
+<<<<<<< HEAD
 	.remove_new = meson_spicc_remove,
+=======
+	.remove  = meson_spicc_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver  = {
 		.name = "meson-spicc",
 		.of_match_table = of_match_ptr(meson_spicc_of_match),

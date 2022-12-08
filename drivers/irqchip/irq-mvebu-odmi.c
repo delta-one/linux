@@ -161,7 +161,11 @@ static struct msi_domain_info odmi_msi_domain_info = {
 static int __init mvebu_odmi_init(struct device_node *node,
 				  struct device_node *parent)
 {
+<<<<<<< HEAD
 	struct irq_domain *parent_domain, *inner_domain, *plat_domain;
+=======
+	struct irq_domain *inner_domain, *plat_domain;
+>>>>>>> b7ba80a49124 (Commit)
 	int ret, i;
 
 	if (of_property_read_u32(node, "marvell,odmi-frames", &odmis_count))
@@ -197,17 +201,28 @@ static int __init mvebu_odmi_init(struct device_node *node,
 		}
 	}
 
+<<<<<<< HEAD
 	parent_domain = irq_find_host(parent);
 
 	inner_domain = irq_domain_create_hierarchy(parent_domain, 0,
 						   odmis_count * NODMIS_PER_FRAME,
 						   of_node_to_fwnode(node),
 						   &odmi_domain_ops, NULL);
+=======
+	inner_domain = irq_domain_create_linear(of_node_to_fwnode(node),
+						odmis_count * NODMIS_PER_FRAME,
+						&odmi_domain_ops, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!inner_domain) {
 		ret = -ENOMEM;
 		goto err_unmap;
 	}
 
+<<<<<<< HEAD
+=======
+	inner_domain->parent = irq_find_host(parent);
+
+>>>>>>> b7ba80a49124 (Commit)
 	plat_domain = platform_msi_create_irq_domain(of_node_to_fwnode(node),
 						     &odmi_msi_domain_info,
 						     inner_domain);

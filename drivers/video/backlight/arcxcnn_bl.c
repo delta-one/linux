@@ -130,9 +130,18 @@ static int arcxcnn_set_brightness(struct arcxcnn *lp, u32 brightness)
 static int arcxcnn_bl_update_status(struct backlight_device *bl)
 {
 	struct arcxcnn *lp = bl_get_data(bl);
+<<<<<<< HEAD
 	u32 brightness = backlight_get_brightness(bl);
 	int ret;
 
+=======
+	u32 brightness = bl->props.brightness;
+	int ret;
+
+	if (bl->props.state & (BL_CORE_SUSPENDED | BL_CORE_FBBLANK))
+		brightness = 0;
+
+>>>>>>> b7ba80a49124 (Commit)
 	ret = arcxcnn_set_brightness(lp, brightness);
 	if (ret)
 		return ret;
@@ -238,7 +247,11 @@ static void arcxcnn_parse_dt(struct arcxcnn *lp)
 	}
 }
 
+<<<<<<< HEAD
 static int arcxcnn_probe(struct i2c_client *cl)
+=======
+static int arcxcnn_probe(struct i2c_client *cl, const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct arcxcnn *lp;
 	int ret;
@@ -390,9 +403,15 @@ MODULE_DEVICE_TABLE(i2c, arcxcnn_ids);
 static struct i2c_driver arcxcnn_driver = {
 	.driver = {
 		.name = "arcxcnn_bl",
+<<<<<<< HEAD
 		.of_match_table = arcxcnn_dt_ids,
 	},
 	.probe_new = arcxcnn_probe,
+=======
+		.of_match_table = of_match_ptr(arcxcnn_dt_ids),
+	},
+	.probe = arcxcnn_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove = arcxcnn_remove,
 	.id_table = arcxcnn_ids,
 };

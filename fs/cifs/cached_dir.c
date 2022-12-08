@@ -14,7 +14,10 @@
 
 static struct cached_fid *init_cached_dir(const char *path);
 static void free_cached_dir(struct cached_fid *cfid);
+<<<<<<< HEAD
 static void smb2_close_cached_fid(struct kref *ref);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static struct cached_fid *find_or_create_cached_dir(struct cached_fids *cfids,
 						    const char *path,
@@ -62,12 +65,26 @@ static struct cached_fid *find_or_create_cached_dir(struct cached_fids *cfids,
 }
 
 static struct dentry *
+<<<<<<< HEAD
 path_to_dentry(struct cifs_sb_info *cifs_sb, const char *path)
 {
 	struct dentry *dentry;
 	const char *s, *p;
 	char sep;
 
+=======
+path_to_dentry(struct cifs_sb_info *cifs_sb, const char *full_path)
+{
+	struct dentry *dentry;
+	char *path = NULL;
+	char *s, *p;
+	char sep;
+
+	path = kstrdup(full_path, GFP_ATOMIC);
+	if (path == NULL)
+		return ERR_PTR(-ENOMEM);
+
+>>>>>>> b7ba80a49124 (Commit)
 	sep = CIFS_DIR_SEP(cifs_sb);
 	dentry = dget(cifs_sb->root);
 	s = path;
@@ -96,6 +113,10 @@ path_to_dentry(struct cifs_sb_info *cifs_sb, const char *path)
 		dput(dentry);
 		dentry = child;
 	} while (!IS_ERR(dentry));
+<<<<<<< HEAD
+=======
+	kfree(path);
+>>>>>>> b7ba80a49124 (Commit)
 	return dentry;
 }
 
@@ -182,6 +203,7 @@ int open_cached_dir(unsigned int xid, struct cifs_tcon *tcon,
 	rqst[0].rq_iov = open_iov;
 	rqst[0].rq_nvec = SMB2_CREATE_IOV_SIZE;
 
+<<<<<<< HEAD
 	oparms = (struct cifs_open_parms) {
 		.tcon = tcon,
 		.path = path,
@@ -190,6 +212,14 @@ int open_cached_dir(unsigned int xid, struct cifs_tcon *tcon,
 		.disposition = FILE_OPEN,
 		.fid = pfid,
 	};
+=======
+	oparms.tcon = tcon;
+	oparms.create_options = cifs_create_options(cifs_sb, CREATE_NOT_FILE);
+	oparms.desired_access = FILE_READ_ATTRIBUTES;
+	oparms.disposition = FILE_OPEN;
+	oparms.fid = pfid;
+	oparms.reconnect = false;
+>>>>>>> b7ba80a49124 (Commit)
 
 	rc = SMB2_open_init(tcon, server,
 			    &rqst[0], &oplock, &oparms, utf16_path);
@@ -223,8 +253,13 @@ int open_cached_dir(unsigned int xid, struct cifs_tcon *tcon,
 		}
 		goto oshr_free;
 	}
+<<<<<<< HEAD
 	cfid->tcon = tcon;
 	cfid->is_open = true;
+=======
+
+	atomic_inc(&tcon->num_remote_opens);
+>>>>>>> b7ba80a49124 (Commit)
 
 	o_rsp = (struct smb2_create_rsp *)rsp_iov[0].iov_base;
 	oparms.fid->persistent_fid = o_rsp->PersistentFileId;
@@ -233,15 +268,25 @@ int open_cached_dir(unsigned int xid, struct cifs_tcon *tcon,
 	oparms.fid->mid = le64_to_cpu(o_rsp->hdr.MessageId);
 #endif /* CIFS_DEBUG2 */
 
+<<<<<<< HEAD
 	if (o_rsp->OplockLevel != SMB2_OPLOCK_LEVEL_LEASE)
 		goto oshr_free;
+=======
+	if (o_rsp->OplockLevel != SMB2_OPLOCK_LEVEL_LEASE) {
+		goto oshr_free;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	smb2_parse_contexts(server, o_rsp,
 			    &oparms.fid->epoch,
 			    oparms.fid->lease_key, &oplock,
 			    NULL, NULL);
+<<<<<<< HEAD
 	if (!(oplock & SMB2_LEASE_READ_CACHING_HE))
 		goto oshr_free;
+=======
+
+>>>>>>> b7ba80a49124 (Commit)
 	qi_rsp = (struct smb2_query_info_rsp *)rsp_iov[1].iov_base;
 	if (le32_to_cpu(qi_rsp->OutputBufferLength) < sizeof(struct smb2_file_all_info))
 		goto oshr_free;
@@ -252,6 +297,7 @@ int open_cached_dir(unsigned int xid, struct cifs_tcon *tcon,
 				(char *)&cfid->file_all_info))
 		cfid->file_all_info_is_valid = true;
 
+<<<<<<< HEAD
 	if (!path[0])
 		dentry = dget(cifs_sb->root);
 	else {
@@ -263,6 +309,20 @@ int open_cached_dir(unsigned int xid, struct cifs_tcon *tcon,
 	}
 	cfid->dentry = dentry;
 	cfid->time = jiffies;
+=======
+	if (!strlen(path)) {
+		dentry = dget(cifs_sb->root);
+		cfid->dentry = dentry;
+	} else {
+		dentry = path_to_dentry(cifs_sb, path);
+		if (IS_ERR(dentry))
+			goto oshr_free;
+		cfid->dentry = dentry;
+	}
+	cfid->tcon = tcon;
+	cfid->time = jiffies;
+	cfid->is_open = true;
+>>>>>>> b7ba80a49124 (Commit)
 	cfid->has_lease = true;
 
 oshr_free:
@@ -272,7 +332,11 @@ oshr_free:
 	free_rsp_buf(resp_buftype[0], rsp_iov[0].iov_base);
 	free_rsp_buf(resp_buftype[1], rsp_iov[1].iov_base);
 	spin_lock(&cfids->cfid_list_lock);
+<<<<<<< HEAD
 	if (rc && !cfid->has_lease) {
+=======
+	if (!cfid->has_lease) {
+>>>>>>> b7ba80a49124 (Commit)
 		if (cfid->on_list) {
 			list_del(&cfid->entry);
 			cfid->on_list = false;
@@ -281,6 +345,7 @@ oshr_free:
 		rc = -ENOENT;
 	}
 	spin_unlock(&cfids->cfid_list_lock);
+<<<<<<< HEAD
 	if (!rc && !cfid->has_lease) {
 		/*
 		 * We are guaranteed to have two references at this point.
@@ -303,6 +368,15 @@ oshr_free:
 		atomic_inc(&tcon->num_remote_opens);
 	}
 
+=======
+	if (rc) {
+		free_cached_dir(cfid);
+		cfid = NULL;
+	}
+	if (rc == 0) {
+		*ret_cfid = cfid;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return rc;
 }
 
@@ -350,12 +424,16 @@ smb2_close_cached_fid(struct kref *ref)
 	if (cfid->is_open) {
 		SMB2_close(0, cfid->tcon, cfid->fid.persistent_fid,
 			   cfid->fid.volatile_fid);
+<<<<<<< HEAD
 		atomic_dec(&cfid->tcon->num_remote_opens);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	free_cached_dir(cfid);
 }
 
+<<<<<<< HEAD
 void drop_cached_dir_by_name(const unsigned int xid, struct cifs_tcon *tcon,
 			     const char *name, struct cifs_sb_info *cifs_sb)
 {
@@ -377,6 +455,8 @@ void drop_cached_dir_by_name(const unsigned int xid, struct cifs_tcon *tcon,
 }
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void close_cached_dir(struct cached_fid *cfid)
 {
 	kref_put(&cfid->refcount, smb2_close_cached_fid);
@@ -417,6 +497,7 @@ void invalidate_all_cached_dirs(struct cifs_tcon *tcon)
 {
 	struct cached_fids *cfids = tcon->cfids;
 	struct cached_fid *cfid, *q;
+<<<<<<< HEAD
 	LIST_HEAD(entry);
 
 	spin_lock(&cfids->cfid_list_lock);
@@ -425,12 +506,27 @@ void invalidate_all_cached_dirs(struct cifs_tcon *tcon)
 		cfids->num_entries--;
 		cfid->is_open = false;
 		cfid->on_list = false;
+=======
+	struct list_head entry;
+
+	INIT_LIST_HEAD(&entry);
+	spin_lock(&cfids->cfid_list_lock);
+	list_for_each_entry_safe(cfid, q, &cfids->entries, entry) {
+		list_del(&cfid->entry);
+		list_add(&cfid->entry, &entry);
+		cfids->num_entries--;
+		cfid->is_open = false;
+>>>>>>> b7ba80a49124 (Commit)
 		/* To prevent race with smb2_cached_lease_break() */
 		kref_get(&cfid->refcount);
 	}
 	spin_unlock(&cfids->cfid_list_lock);
 
 	list_for_each_entry_safe(cfid, q, &entry, entry) {
+<<<<<<< HEAD
+=======
+		cfid->on_list = false;
+>>>>>>> b7ba80a49124 (Commit)
 		list_del(&cfid->entry);
 		cancel_work_sync(&cfid->lease_break);
 		if (cfid->has_lease) {
@@ -555,13 +651,24 @@ struct cached_fids *init_cached_dirs(void)
 void free_cached_dirs(struct cached_fids *cfids)
 {
 	struct cached_fid *cfid, *q;
+<<<<<<< HEAD
 	LIST_HEAD(entry);
 
+=======
+	struct list_head entry;
+
+	INIT_LIST_HEAD(&entry);
+>>>>>>> b7ba80a49124 (Commit)
 	spin_lock(&cfids->cfid_list_lock);
 	list_for_each_entry_safe(cfid, q, &cfids->entries, entry) {
 		cfid->on_list = false;
 		cfid->is_open = false;
+<<<<<<< HEAD
 		list_move(&cfid->entry, &entry);
+=======
+		list_del(&cfid->entry);
+		list_add(&cfid->entry, &entry);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	spin_unlock(&cfids->cfid_list_lock);
 

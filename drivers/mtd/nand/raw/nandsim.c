@@ -1393,7 +1393,11 @@ static int ns_do_read_error(struct nandsim *ns, int num)
 	unsigned int page_no = ns->regs.row;
 
 	if (ns_read_error(page_no)) {
+<<<<<<< HEAD
 		get_random_bytes(ns->buf.byte, num);
+=======
+		prandom_bytes(ns->buf.byte, num);
+>>>>>>> b7ba80a49124 (Commit)
 		NS_WARN("simulating read error in page %u\n", page_no);
 		return 1;
 	}
@@ -1402,12 +1406,21 @@ static int ns_do_read_error(struct nandsim *ns, int num)
 
 static void ns_do_bit_flips(struct nandsim *ns, int num)
 {
+<<<<<<< HEAD
 	if (bitflips && get_random_u16() < (1 << 6)) {
 		int flips = 1;
 		if (bitflips > 1)
 			flips = get_random_u32_inclusive(1, bitflips);
 		while (flips--) {
 			int pos = get_random_u32_below(num * 8);
+=======
+	if (bitflips && prandom_u32() < (1 << 22)) {
+		int flips = 1;
+		if (bitflips > 1)
+			flips = (prandom_u32() % (int) bitflips) + 1;
+		while (flips--) {
+			int pos = prandom_u32() % (num * 8);
+>>>>>>> b7ba80a49124 (Commit)
 			ns->buf.byte[pos / 8] ^= (1 << (pos % 8));
 			NS_WARN("read_page: flipping bit %d in page %d "
 				"reading from %d ecc: corrected=%u failed=%u\n",
@@ -2160,6 +2173,7 @@ static int ns_exec_op(struct nand_chip *chip, const struct nand_operation *op,
 	const struct nand_op_instr *instr = NULL;
 	struct nandsim *ns = nand_get_controller_data(chip);
 
+<<<<<<< HEAD
 	if (check_only) {
 		/* The current implementation of nandsim needs to know the
 		 * ongoing operation when performing the address cycles. This
@@ -2177,6 +2191,10 @@ static int ns_exec_op(struct nand_chip *chip, const struct nand_operation *op,
 
 		return 0;
 	}
+=======
+	if (check_only)
+		return 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ns->lines.ce = 1;
 

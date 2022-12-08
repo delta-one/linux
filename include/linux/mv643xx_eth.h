@@ -8,7 +8,10 @@
 
 #include <linux/mbus.h>
 #include <linux/if_ether.h>
+<<<<<<< HEAD
 #include <linux/phy.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define MV643XX_ETH_SHARED_NAME		"mv643xx_eth"
 #define MV643XX_ETH_NAME		"mv643xx_eth_port"
@@ -60,7 +63,10 @@ struct mv643xx_eth_platform_data {
 	 */
 	int			speed;
 	int			duplex;
+<<<<<<< HEAD
 	phy_interface_t		interface;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * How many RX/TX queues to use.

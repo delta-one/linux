@@ -31,6 +31,7 @@ static enum drm_connector_status dp_bridge_detect(struct drm_bridge *bridge)
 					connector_status_disconnected;
 }
 
+<<<<<<< HEAD
 static int dp_bridge_atomic_check(struct drm_bridge *bridge,
 			    struct drm_bridge_state *bridge_state,
 			    struct drm_crtc_state *crtc_state,
@@ -61,6 +62,8 @@ static int dp_bridge_atomic_check(struct drm_bridge *bridge,
 }
 
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * dp_bridge_get_modes - callback to add drm modes via drm_mode_probed_add()
  * @bridge: Poiner to drm bridge
@@ -91,16 +94,23 @@ static int dp_bridge_get_modes(struct drm_bridge *bridge, struct drm_connector *
 }
 
 static const struct drm_bridge_funcs dp_bridge_ops = {
+<<<<<<< HEAD
 	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
 	.atomic_destroy_state   = drm_atomic_helper_bridge_destroy_state,
 	.atomic_reset           = drm_atomic_helper_bridge_reset,
 	.atomic_enable          = dp_bridge_atomic_enable,
 	.atomic_disable         = dp_bridge_atomic_disable,
 	.atomic_post_disable    = dp_bridge_atomic_post_disable,
+=======
+	.enable       = dp_bridge_enable,
+	.disable      = dp_bridge_disable,
+	.post_disable = dp_bridge_post_disable,
+>>>>>>> b7ba80a49124 (Commit)
 	.mode_set     = dp_bridge_mode_set,
 	.mode_valid   = dp_bridge_mode_valid,
 	.get_modes    = dp_bridge_get_modes,
 	.detect       = dp_bridge_detect,
+<<<<<<< HEAD
 	.atomic_check = dp_bridge_atomic_check,
 	.hpd_enable   = dp_bridge_hpd_enable,
 	.hpd_disable  = dp_bridge_hpd_disable,
@@ -270,6 +280,8 @@ static const struct drm_bridge_funcs edp_bridge_ops = {
 	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
 	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
 	.atomic_check = edp_bridge_atomic_check,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct drm_bridge *dp_bridge_init(struct msm_dp *dp_display, struct drm_device *dev,
@@ -286,7 +298,11 @@ struct drm_bridge *dp_bridge_init(struct msm_dp *dp_display, struct drm_device *
 	dp_bridge->dp_display = dp_display;
 
 	bridge = &dp_bridge->bridge;
+<<<<<<< HEAD
 	bridge->funcs = dp_display->is_edp ? &edp_bridge_ops : &dp_bridge_ops;
+=======
+	bridge->funcs = &dp_bridge_ops;
+>>>>>>> b7ba80a49124 (Commit)
 	bridge->type = dp_display->connector_type;
 
 	/*

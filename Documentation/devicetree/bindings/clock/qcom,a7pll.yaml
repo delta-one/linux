@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/clock/qcom,a7pll.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Qualcomm A7 PLL clock
+=======
+title: Qualcomm A7 PLL Binding
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>

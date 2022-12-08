@@ -139,14 +139,20 @@ static void esw_acl_ingress_lgcy_groups_destroy(struct mlx5_vport *vport)
 int esw_acl_ingress_lgcy_setup(struct mlx5_eswitch *esw,
 			       struct mlx5_vport *vport)
 {
+<<<<<<< HEAD
 	bool vst_mode_steering = esw_vst_mode_is_steering(esw);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct mlx5_flow_destination drop_ctr_dst = {};
 	struct mlx5_flow_destination *dst = NULL;
 	struct mlx5_flow_act flow_act = {};
 	struct mlx5_flow_spec *spec = NULL;
 	struct mlx5_fc *counter = NULL;
+<<<<<<< HEAD
 	bool vst_check_cvlan = false;
 	bool vst_push_cvlan = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* The ingress acl table contains 4 groups
 	 * (2 active rules at the same time -
 	 *      1 allow rule from one of the first 3 groups.
@@ -206,6 +212,7 @@ int esw_acl_ingress_lgcy_setup(struct mlx5_eswitch *esw,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	if ((vport->info.vlan || vport->info.qos)) {
 		if (vst_mode_steering)
 			vst_push_cvlan = true;
@@ -226,6 +233,9 @@ int esw_acl_ingress_lgcy_setup(struct mlx5_eswitch *esw,
 	}
 
 	if (vst_check_cvlan)
+=======
+	if (vport->info.vlan || vport->info.qos)
+>>>>>>> b7ba80a49124 (Commit)
 		MLX5_SET_TO_ONES(fte_match_param, spec->match_criteria,
 				 outer_headers.cvlan_tag);
 
@@ -240,6 +250,12 @@ int esw_acl_ingress_lgcy_setup(struct mlx5_eswitch *esw,
 		ether_addr_copy(smac_v, vport->info.mac);
 	}
 
+<<<<<<< HEAD
+=======
+	/* Create ingress allow rule */
+	spec->match_criteria_enable = MLX5_MATCH_OUTER_HEADERS;
+	flow_act.action = MLX5_FLOW_CONTEXT_ACTION_ALLOW;
+>>>>>>> b7ba80a49124 (Commit)
 	vport->ingress.allow_rule = mlx5_add_flow_rules(vport->ingress.acl, spec,
 							&flow_act, NULL, 0);
 	if (IS_ERR(vport->ingress.allow_rule)) {
@@ -251,9 +267,12 @@ int esw_acl_ingress_lgcy_setup(struct mlx5_eswitch *esw,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	if (!vst_check_cvlan && !vport->info.spoofchk)
 		goto out;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	memset(&flow_act, 0, sizeof(flow_act));
 	flow_act.action = MLX5_FLOW_CONTEXT_ACTION_DROP;
 	/* Attach drop flow counter */
@@ -279,8 +298,12 @@ int esw_acl_ingress_lgcy_setup(struct mlx5_eswitch *esw,
 	return 0;
 
 out:
+<<<<<<< HEAD
 	if (err)
 		esw_acl_ingress_lgcy_cleanup(esw, vport);
+=======
+	esw_acl_ingress_lgcy_cleanup(esw, vport);
+>>>>>>> b7ba80a49124 (Commit)
 	kvfree(spec);
 	return err;
 }

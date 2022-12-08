@@ -207,7 +207,11 @@ static int __init konepure_init(void)
 {
 	int retval;
 
+<<<<<<< HEAD
 	konepure_class = class_create("konepure");
+=======
+	konepure_class = class_create(THIS_MODULE, "konepure");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(konepure_class))
 		return PTR_ERR(konepure_class);
 	konepure_class->dev_groups = konepure_groups;

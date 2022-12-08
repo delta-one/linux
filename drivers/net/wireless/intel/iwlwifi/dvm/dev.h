@@ -696,7 +696,10 @@ struct iwl_priv {
 	/* Scan related variables */
 	unsigned long scan_start;
 	unsigned long scan_start_tsf;
+<<<<<<< HEAD
 	size_t scan_cmd_size;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void *scan_cmd;
 	enum nl80211_band scan_band;
 	struct cfg80211_scan_request *scan_request;

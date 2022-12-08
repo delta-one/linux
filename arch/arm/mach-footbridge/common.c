@@ -206,6 +206,12 @@ void __init footbridge_init_irq(void)
 		 */
 		isa_init_irq(IRQ_PCI);
 
+<<<<<<< HEAD
+=======
+	if (machine_is_cats())
+		isa_init_irq(IRQ_IN2);
+
+>>>>>>> b7ba80a49124 (Commit)
 	if (machine_is_netwinder())
 		isa_init_irq(IRQ_IN3);
 }

@@ -100,7 +100,11 @@ int macio_init(void)
 	unsigned int irq;
 
 	adbs = of_find_compatible_node(NULL, "adb", "chrp,adb0");
+<<<<<<< HEAD
 	if (!adbs)
+=======
+	if (adbs == 0)
+>>>>>>> b7ba80a49124 (Commit)
 		return -ENXIO;
 
 	if (of_address_to_resource(adbs, 0, &r)) {
@@ -108,10 +112,13 @@ int macio_init(void)
 		return -ENXIO;
 	}
 	adb = ioremap(r.start, sizeof(struct adb_regs));
+<<<<<<< HEAD
 	if (!adb) {
 		of_node_put(adbs);
 		return -ENOMEM;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	out_8(&adb->ctrl.r, 0);
 	out_8(&adb->intr.r, 0);
@@ -187,7 +194,11 @@ static int macio_send_request(struct adb_request *req, int sync)
 	req->reply_len = 0;
 
 	spin_lock_irqsave(&macio_lock, flags);
+<<<<<<< HEAD
 	if (current_req) {
+=======
+	if (current_req != 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		last_req->next = req;
 		last_req = req;
 	} else {
@@ -217,8 +228,12 @@ static irqreturn_t macio_adb_interrupt(int irq, void *arg)
 	spin_lock(&macio_lock);
 	if (in_8(&adb->intr.r) & TAG) {
 		handled = 1;
+<<<<<<< HEAD
 		req = current_req;
 		if (req) {
+=======
+		if ((req = current_req) != 0) {
+>>>>>>> b7ba80a49124 (Commit)
 			/* put the current request in */
 			for (i = 0; i < req->nbytes; ++i)
 				out_8(&adb->data[i].r, req->data[i]);

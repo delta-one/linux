@@ -78,7 +78,11 @@ void __init pcpu_populate_pte(unsigned long addr)
 		new = memblock_alloc(PAGE_SIZE, PAGE_SIZE);
 		pgd_populate(&init_mm, pgd, new);
 #ifndef __PAGETABLE_PUD_FOLDED
+<<<<<<< HEAD
 		pud_init(new);
+=======
+		pud_init((unsigned long)new, (unsigned long)invalid_pmd_table);
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	}
 
@@ -89,7 +93,11 @@ void __init pcpu_populate_pte(unsigned long addr)
 		new = memblock_alloc(PAGE_SIZE, PAGE_SIZE);
 		pud_populate(&init_mm, pud, new);
 #ifndef __PAGETABLE_PMD_FOLDED
+<<<<<<< HEAD
 		pmd_init(new);
+=======
+		pmd_init((unsigned long)new, (unsigned long)invalid_pte_table);
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 	}
 
@@ -388,6 +396,7 @@ static void __init numa_default_distance(void)
 	}
 }
 
+<<<<<<< HEAD
 /*
  * fake_numa_init() - For Non-ACPI systems
  * Return: 0 on success, -errno on failure.
@@ -403,6 +412,8 @@ static int __init fake_numa_init(void)
 	return numa_add_memblk(0, start, end + 1);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 int __init init_numa_memory(void)
 {
 	int i;
@@ -419,7 +430,11 @@ int __init init_numa_memory(void)
 	memset(&numa_meminfo, 0, sizeof(numa_meminfo));
 
 	/* Parse SRAT and SLIT if provided by firmware. */
+<<<<<<< HEAD
 	ret = acpi_disabled ? fake_numa_init() : acpi_numa_init();
+=======
+	ret = acpi_numa_init();
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return ret;
 

@@ -606,20 +606,34 @@ static ssize_t switchtec_dev_read(struct file *filp, char __user *data,
 	rc = copy_to_user(data, &stuser->return_code,
 			  sizeof(stuser->return_code));
 	if (rc) {
+<<<<<<< HEAD
 		mutex_unlock(&stdev->mrpc_mutex);
 		return -EFAULT;
+=======
+		rc = -EFAULT;
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	data += sizeof(stuser->return_code);
 	rc = copy_to_user(data, &stuser->data,
 			  size - sizeof(stuser->return_code));
 	if (rc) {
+<<<<<<< HEAD
 		mutex_unlock(&stdev->mrpc_mutex);
 		return -EFAULT;
+=======
+		rc = -EFAULT;
+		goto out;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	stuser_set_state(stuser, MRPC_IDLE);
 
+<<<<<<< HEAD
+=======
+out:
+>>>>>>> b7ba80a49124 (Commit)
 	mutex_unlock(&stdev->mrpc_mutex);
 
 	if (stuser->status == SWITCHTEC_MRPC_STATUS_DONE ||
@@ -1479,13 +1493,22 @@ static irqreturn_t switchtec_event_isr(int irq, void *dev)
 static irqreturn_t switchtec_dma_mrpc_isr(int irq, void *dev)
 {
 	struct switchtec_dev *stdev = dev;
+<<<<<<< HEAD
+=======
+	irqreturn_t ret = IRQ_NONE;
+>>>>>>> b7ba80a49124 (Commit)
 
 	iowrite32(SWITCHTEC_EVENT_CLEAR |
 		  SWITCHTEC_EVENT_EN_IRQ,
 		  &stdev->mmio_part_cfg->mrpc_comp_hdr);
 	schedule_work(&stdev->mrpc_work);
 
+<<<<<<< HEAD
 	return IRQ_HANDLED;
+=======
+	ret = IRQ_HANDLED;
+	return ret;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int switchtec_init_isr(struct switchtec_dev *stdev)
@@ -1804,7 +1827,11 @@ static int __init switchtec_init(void)
 	if (rc)
 		return rc;
 
+<<<<<<< HEAD
 	switchtec_class = class_create("switchtec");
+=======
+	switchtec_class = class_create(THIS_MODULE, "switchtec");
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(switchtec_class)) {
 		rc = PTR_ERR(switchtec_class);
 		goto err_create_class;

@@ -30,6 +30,7 @@ properties:
   $nodename:
     pattern: "^dsi(@.*)?$"
 
+<<<<<<< HEAD
   clock-master:
     type: boolean
     description:
@@ -39,6 +40,8 @@ properties:
       to be driven by the same clock. Only the DSI host instance
       controlling this clock should contain this property.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
   "#address-cells":
     const: 1
 
@@ -61,6 +64,18 @@ patternProperties:
           case the reg property can take multiple entries, one for each virtual
           channel that the peripheral responds to.
 
+<<<<<<< HEAD
+=======
+      clock-master:
+        type: boolean
+        description:
+          Should be enabled if the host is being used in conjunction with
+          another DSI host to drive the same peripheral. Hardware supporting
+          such a configuration generally requires the data on both the busses
+          to be driven by the same clock. Only the DSI host instance
+          controlling this clock should contain this property.
+
+>>>>>>> b7ba80a49124 (Commit)
       enforce-video-mode:
         type: boolean
         description:

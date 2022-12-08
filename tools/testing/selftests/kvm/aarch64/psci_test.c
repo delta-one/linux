@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * psci_test - Tests relating to KVM's PSCI implementation.
  *
  * Copyright (c) 2021 Google LLC.
@@ -9,6 +10,15 @@
  *    and userspace reading the targeted vCPU's registers.
  *  - A test for KVM's handling of PSCI SYSTEM_SUSPEND and the associated
  *    KVM_SYSTEM_EVENT_SUSPEND UAPI.
+=======
+ * psci_cpu_on_test - Test that the observable state of a vCPU targeted by the
+ * CPU_ON PSCI call matches what the caller requested.
+ *
+ * Copyright (c) 2021 Google LLC.
+ *
+ * This is a regression test for a race between KVM servicing the PSCI call and
+ * userspace reading the vCPUs registers.
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #define _GNU_SOURCE
@@ -79,6 +89,10 @@ static struct kvm_vm *setup_vm(void *guest_code, struct kvm_vcpu **source,
 	struct kvm_vm *vm;
 
 	vm = vm_create(2);
+<<<<<<< HEAD
+=======
+	ucall_init(vm, NULL);
+>>>>>>> b7ba80a49124 (Commit)
 
 	vm_ioctl(vm, KVM_ARM_PREFERRED_TARGET, &init);
 	init.features[0] |= (1 << KVM_ARM_VCPU_PSCI_0_2);
@@ -180,7 +194,13 @@ static void host_test_system_suspend(void)
 
 	enter_guest(source);
 
+<<<<<<< HEAD
 	TEST_ASSERT_KVM_EXIT_REASON(source, KVM_EXIT_SYSTEM_EVENT);
+=======
+	TEST_ASSERT(run->exit_reason == KVM_EXIT_SYSTEM_EVENT,
+		    "Unhandled exit reason: %u (%s)",
+		    run->exit_reason, exit_reason_str(run->exit_reason));
+>>>>>>> b7ba80a49124 (Commit)
 	TEST_ASSERT(run->system_event.type == KVM_SYSTEM_EVENT_SUSPEND,
 		    "Unhandled system event: %u (expected: %u)",
 		    run->system_event.type, KVM_SYSTEM_EVENT_SUSPEND);

@@ -191,7 +191,11 @@ static void atusb_work_urbs(struct work_struct *work)
 
 /* ----- Asynchronous USB -------------------------------------------------- */
 
+<<<<<<< HEAD
 static void atusb_tx_done(struct atusb *atusb, u8 seq, int reason)
+=======
+static void atusb_tx_done(struct atusb *atusb, u8 seq)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct usb_device *usb_dev = atusb->usb_dev;
 	u8 expect = atusb->tx_ack_seq;
@@ -199,10 +203,14 @@ static void atusb_tx_done(struct atusb *atusb, u8 seq, int reason)
 	dev_dbg(&usb_dev->dev, "%s (0x%02x/0x%02x)\n", __func__, seq, expect);
 	if (seq == expect) {
 		/* TODO check for ifs handling in firmware */
+<<<<<<< HEAD
 		if (reason == IEEE802154_SUCCESS)
 			ieee802154_xmit_complete(atusb->hw, atusb->tx_skb, false);
 		else
 			ieee802154_xmit_error(atusb->hw, atusb->tx_skb, reason);
+=======
+		ieee802154_xmit_complete(atusb->hw, atusb->tx_skb, false);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		/* TODO I experience this case when atusb has a tx complete
 		 * irq before probing, we should fix the firmware it's an
@@ -218,8 +226,12 @@ static void atusb_in_good(struct urb *urb)
 	struct usb_device *usb_dev = urb->dev;
 	struct sk_buff *skb = urb->context;
 	struct atusb *atusb = SKB_ATUSB(skb);
+<<<<<<< HEAD
 	int result = IEEE802154_SUCCESS;
 	u8 len, lqi, trac;
+=======
+	u8 len, lqi;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (!urb->actual_length) {
 		dev_dbg(&usb_dev->dev, "atusb_in: zero-sized URB ?\n");
@@ -228,6 +240,7 @@ static void atusb_in_good(struct urb *urb)
 
 	len = *skb->data;
 
+<<<<<<< HEAD
 	switch (urb->actual_length) {
 	case 2:
 		trac = TRAC_MASK(*(skb->data + 1));
@@ -249,6 +262,10 @@ static void atusb_in_good(struct urb *urb)
 		fallthrough;
 	case 1:
 		atusb_tx_done(atusb, len, result);
+=======
+	if (urb->actual_length == 1) {
+		atusb_tx_done(atusb, len);
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 	}
 

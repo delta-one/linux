@@ -23,7 +23,10 @@
 #include <linux/pci.h>
 #include <linux/delay.h>
 #include <asm/io.h>
+<<<<<<< HEAD
 #include <asm/time.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * The I/O port the PMTMR resides at.
@@ -211,9 +214,14 @@ static int __init init_acpi_pm_clocksource(void)
 		return -ENODEV;
 	}
 
+<<<<<<< HEAD
 	if (tsc_clocksource_watchdog_disabled())
 		clocksource_acpi_pm.flags |= CLOCK_SOURCE_MUST_VERIFY;
 	return clocksource_register_hz(&clocksource_acpi_pm, PMTMR_TICKS_PER_SEC);
+=======
+	return clocksource_register_hz(&clocksource_acpi_pm,
+						PMTMR_TICKS_PER_SEC);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* We use fs_initcall because we want the PCI fixups to have run

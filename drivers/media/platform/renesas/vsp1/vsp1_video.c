@@ -267,10 +267,17 @@ static int vsp1_video_pipeline_setup_partitions(struct vsp1_pipeline *pipe)
 	div_size = format->width;
 
 	/*
+<<<<<<< HEAD
 	 * Only Gen3+ hardware requires image partitioning, Gen2 will operate
 	 * with a single partition that covers the whole output.
 	 */
 	if (vsp1->info->gen >= 3) {
+=======
+	 * Only Gen3 hardware requires image partitioning, Gen2 will operate
+	 * with a single partition that covers the whole output.
+	 */
+	if (vsp1->info->gen == 3) {
+>>>>>>> b7ba80a49124 (Commit)
 		list_for_each_entry(entity, &pipe->entities, list_pipe) {
 			unsigned int entity_max;
 
@@ -927,7 +934,11 @@ static void vsp1_video_stop_streaming(struct vb2_queue *vq)
 	}
 	mutex_unlock(&pipe->lock);
 
+<<<<<<< HEAD
 	video_device_pipeline_stop(&video->video);
+=======
+	media_pipeline_stop(&video->video.entity);
+>>>>>>> b7ba80a49124 (Commit)
 	vsp1_video_release_buffers(video);
 	vsp1_video_pipeline_put(pipe);
 }
@@ -1046,7 +1057,11 @@ vsp1_video_streamon(struct file *file, void *fh, enum v4l2_buf_type type)
 		return PTR_ERR(pipe);
 	}
 
+<<<<<<< HEAD
 	ret = __video_device_pipeline_start(&video->video, &pipe->pipe);
+=======
+	ret = __media_pipeline_start(&video->video.entity, &pipe->pipe);
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0) {
 		mutex_unlock(&mdev->graph_mutex);
 		goto err_pipe;
@@ -1070,7 +1085,11 @@ vsp1_video_streamon(struct file *file, void *fh, enum v4l2_buf_type type)
 	return 0;
 
 err_stop:
+<<<<<<< HEAD
 	video_device_pipeline_stop(&video->video);
+=======
+	media_pipeline_stop(&video->video.entity);
+>>>>>>> b7ba80a49124 (Commit)
 err_pipe:
 	vsp1_video_pipeline_put(pipe);
 	return ret;

@@ -116,7 +116,11 @@ __copy_to_user_memcpy(void __user *to, const void *from, unsigned long n)
 			tocopy = n;
 
 		ua_flags = uaccess_save_and_enable();
+<<<<<<< HEAD
 		__memcpy((void *)to, from, tocopy);
+=======
+		memcpy((void *)to, from, tocopy);
+>>>>>>> b7ba80a49124 (Commit)
 		uaccess_restore(ua_flags);
 		to += tocopy;
 		from += tocopy;
@@ -178,7 +182,11 @@ __clear_user_memset(void __user *addr, unsigned long n)
 			tocopy = n;
 
 		ua_flags = uaccess_save_and_enable();
+<<<<<<< HEAD
 		__memset((void *)addr, 0, tocopy);
+=======
+		memset((void *)addr, 0, tocopy);
+>>>>>>> b7ba80a49124 (Commit)
 		uaccess_restore(ua_flags);
 		addr += tocopy;
 		n -= tocopy;

@@ -91,6 +91,10 @@ asm_offsets.h
 autoconf.h*
 av_permissions.h
 bbootsect
+<<<<<<< HEAD
+=======
+bin2c
+>>>>>>> b7ba80a49124 (Commit)
 binkernel.spec
 bootsect
 bounds.h

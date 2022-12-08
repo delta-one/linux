@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
+<<<<<<< HEAD
 /*
  * Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
+>>>>>>> b7ba80a49124 (Commit)
  */
 
 #include "msm8994.dtsi"
@@ -37,6 +41,13 @@
 	compatible = "qcom,rpmcc-msm8992", "qcom,rpmcc";
 };
 
+<<<<<<< HEAD
+=======
+&tcsr_mutex {
+	compatible = "qcom,sfpb-mutex";
+};
+
+>>>>>>> b7ba80a49124 (Commit)
 &timer {
 	interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
 			     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,

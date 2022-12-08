@@ -26,6 +26,10 @@
 #include <linux/random.h>
 #include <linux/rcupdate.h>
 #include <linux/sched/clock.h>
+<<<<<<< HEAD
+=======
+#include <linux/sched/sysctl.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/seq_file.h>
 #include <linux/slab.h>
 #include <linux/spinlock.h>
@@ -359,9 +363,15 @@ static void *kfence_guarded_alloc(struct kmem_cache *cache, size_t size, gfp_t g
 	unsigned long flags;
 	struct slab *slab;
 	void *addr;
+<<<<<<< HEAD
 	const bool random_right_allocate = get_random_u32_below(2);
 	const bool random_fault = CONFIG_KFENCE_STRESS_TEST_FAULTS &&
 				  !get_random_u32_below(CONFIG_KFENCE_STRESS_TEST_FAULTS);
+=======
+	const bool random_right_allocate = prandom_u32_max(2);
+	const bool random_fault = CONFIG_KFENCE_STRESS_TEST_FAULTS &&
+				  !prandom_u32_max(CONFIG_KFENCE_STRESS_TEST_FAULTS);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Try to obtain a free object. */
 	raw_spin_lock_irqsave(&kfence_freelist_lock, flags);
@@ -556,11 +566,22 @@ static unsigned long kfence_init_pool(void)
 	 * enters __slab_free() slow-path.
 	 */
 	for (i = 0; i < KFENCE_POOL_SIZE / PAGE_SIZE; i++) {
+<<<<<<< HEAD
 		struct slab *slab = page_slab(nth_page(pages, i));
+=======
+		struct slab *slab = page_slab(&pages[i]);
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (!i || (i % 2))
 			continue;
 
+<<<<<<< HEAD
+=======
+		/* Verify we do not have a compound head page. */
+		if (WARN_ON(compound_head(&pages[i]) != &pages[i]))
+			return addr;
+
+>>>>>>> b7ba80a49124 (Commit)
 		__folio_set_slab(slab_folio(slab));
 #ifdef CONFIG_MEMCG
 		slab->memcg_data = (unsigned long)&kfence_metadata[i / 2 - 1].objcg |
@@ -593,12 +614,17 @@ static unsigned long kfence_init_pool(void)
 
 		/* Protect the right redzone. */
 		if (unlikely(!kfence_protect(addr + PAGE_SIZE)))
+<<<<<<< HEAD
 			goto reset_slab;
+=======
+			return addr;
+>>>>>>> b7ba80a49124 (Commit)
 
 		addr += 2 * PAGE_SIZE;
 	}
 
 	return 0;
+<<<<<<< HEAD
 
 reset_slab:
 	for (i = 0; i < KFENCE_POOL_SIZE / PAGE_SIZE; i++) {
@@ -613,6 +639,8 @@ reset_slab:
 	}
 
 	return addr;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool __init kfence_init_pool_early(void)
@@ -642,6 +670,19 @@ static bool __init kfence_init_pool_early(void)
 	 * fails for the first page, and therefore expect addr==__kfence_pool in
 	 * most failure cases.
 	 */
+<<<<<<< HEAD
+=======
+	for (char *p = (char *)addr; p < __kfence_pool + KFENCE_POOL_SIZE; p += PAGE_SIZE) {
+		struct slab *slab = virt_to_slab(p);
+
+		if (!slab)
+			continue;
+#ifdef CONFIG_MEMCG
+		slab->memcg_data = 0;
+#endif
+		__folio_clear_slab(slab_folio(slab));
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	memblock_free_late(__pa(addr), KFENCE_POOL_SIZE - (addr - (unsigned long)__kfence_pool));
 	__kfence_pool = NULL;
 	return false;
@@ -726,6 +767,7 @@ static const struct seq_operations objects_sops = {
 };
 DEFINE_SEQ_ATTRIBUTE(objects);
 
+<<<<<<< HEAD
 static int kfence_debugfs_init(void)
 {
 	struct dentry *kfence_dir;
@@ -734,6 +776,12 @@ static int kfence_debugfs_init(void)
 		return 0;
 
 	kfence_dir = debugfs_create_dir("kfence", NULL);
+=======
+static int __init kfence_debugfs_init(void)
+{
+	struct dentry *kfence_dir = debugfs_create_dir("kfence", NULL);
+
+>>>>>>> b7ba80a49124 (Commit)
 	debugfs_create_file("stats", 0444, kfence_dir, NULL, &stats_fops);
 	debugfs_create_file("objects", 0400, kfence_dir, NULL, &objects_fops);
 	return 0;
@@ -802,7 +850,20 @@ static void toggle_allocation_gate(struct work_struct *work)
 	/* Enable static key, and await allocation to happen. */
 	static_branch_enable(&kfence_allocation_key);
 
+<<<<<<< HEAD
 	wait_event_idle(allocation_wait, atomic_read(&kfence_allocation_gate));
+=======
+	if (sysctl_hung_task_timeout_secs) {
+		/*
+		 * During low activity with no allocations we might wait a
+		 * while; let's avoid the hung task warning.
+		 */
+		wait_event_idle_timeout(allocation_wait, atomic_read(&kfence_allocation_gate),
+					sysctl_hung_task_timeout_secs * HZ / 2);
+	} else {
+		wait_event_idle(allocation_wait, atomic_read(&kfence_allocation_gate));
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Disable static key and reset timer. */
 	static_branch_disable(&kfence_allocation_key);
@@ -818,10 +879,13 @@ void __init kfence_alloc_pool(void)
 	if (!kfence_sample_interval)
 		return;
 
+<<<<<<< HEAD
 	/* if the pool has already been initialized by arch, skip the below. */
 	if (__kfence_pool)
 		return;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	__kfence_pool = memblock_alloc(KFENCE_POOL_SIZE, PAGE_SIZE);
 
 	if (!__kfence_pool)
@@ -851,7 +915,11 @@ static void kfence_init_enable(void)
 
 void __init kfence_init(void)
 {
+<<<<<<< HEAD
 	stack_hash_seed = get_random_u32();
+=======
+	stack_hash_seed = (u32)random_get_entropy();
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Setting kfence_sample_interval to 0 on boot disables KFENCE. */
 	if (!kfence_sample_interval)
@@ -891,8 +959,11 @@ static int kfence_init_late(void)
 	}
 
 	kfence_init_enable();
+<<<<<<< HEAD
 	kfence_debugfs_init();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

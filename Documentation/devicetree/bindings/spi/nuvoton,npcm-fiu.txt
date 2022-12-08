@@ -51,7 +51,11 @@ fiu3: spi@c00000000 {
 	clocks = <&clk NPCM7XX_CLK_AHB>;
 	pinctrl-names = "default";
 	pinctrl-0 = <&spi3_pins>;
+<<<<<<< HEAD
 	flash@0 {
+=======
+	spi-nor@0 {
+>>>>>>> b7ba80a49124 (Commit)
 			...
 	};
 };

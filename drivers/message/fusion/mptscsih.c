@@ -1231,6 +1231,10 @@ mptscsih_suspend(struct pci_dev *pdev, pm_message_t state)
 	MPT_ADAPTER 		*ioc = pci_get_drvdata(pdev);
 
 	scsi_block_requests(ioc->sh);
+<<<<<<< HEAD
+=======
+	flush_scheduled_work();
+>>>>>>> b7ba80a49124 (Commit)
 	mptscsih_shutdown(pdev);
 	return mpt_suspend(pdev,state);
 }

@@ -535,7 +535,11 @@ static void copy_play_buf(struct loopback_pcm *play,
 
 	/* check if playback is draining, trim the capture copy size
 	 * when our pointer is at the end of playback ring buffer */
+<<<<<<< HEAD
 	if (runtime->state == SNDRV_PCM_STATE_DRAINING &&
+=======
+	if (runtime->status->state == SNDRV_PCM_STATE_DRAINING &&
+>>>>>>> b7ba80a49124 (Commit)
 	    snd_pcm_playback_hw_avail(runtime) < runtime->buffer_size) { 
 	    	snd_pcm_uframes_t appl_ptr, appl_ptr1, diff;
 		appl_ptr = appl_ptr1 = runtime->control->appl_ptr;
@@ -730,7 +734,11 @@ static void loopback_snd_timer_period_elapsed(struct loopback_cable *cable,
 
 	if (event == SNDRV_TIMER_EVENT_MSTOP) {
 		if (!dpcm_play ||
+<<<<<<< HEAD
 		    dpcm_play->substream->runtime->state !=
+=======
+		    dpcm_play->substream->runtime->status->state !=
+>>>>>>> b7ba80a49124 (Commit)
 				SNDRV_PCM_STATE_DRAINING) {
 			spin_unlock_irqrestore(&cable->lock, flags);
 			return;

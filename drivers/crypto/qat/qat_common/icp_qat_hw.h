@@ -307,6 +307,7 @@ struct icp_qat_hw_cipher_algo_blk {
 		struct icp_qat_hw_ucs_cipher_aes256_f8 ucs_aes;
 	};
 } __aligned(64);
+<<<<<<< HEAD
 
 enum icp_qat_hw_compression_direction {
 	ICP_QAT_HW_COMPRESSION_DIR_COMPRESS = 0,
@@ -373,4 +374,6 @@ struct icp_qat_hw_compression_config {
 	(((filetype) & QAT_COMPRESSION_FILE_TYPE_MASK) << \
 	QAT_COMPRESSION_FILE_TYPE_BITPOS))
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif

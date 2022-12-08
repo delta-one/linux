@@ -290,9 +290,15 @@ static void mcfqspi_set_cs(struct spi_device *spi, bool enable)
 	bool cs_high = spi->mode & SPI_CS_HIGH;
 
 	if (enable)
+<<<<<<< HEAD
 		mcfqspi_cs_select(mcfqspi, spi_get_chipselect(spi, 0), cs_high);
 	else
 		mcfqspi_cs_deselect(mcfqspi, spi_get_chipselect(spi, 0), cs_high);
+=======
+		mcfqspi_cs_select(mcfqspi, spi->chip_select, cs_high);
+	else
+		mcfqspi_cs_deselect(mcfqspi, spi->chip_select, cs_high);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int mcfqspi_transfer_one(struct spi_master *master,
@@ -324,11 +330,19 @@ static int mcfqspi_transfer_one(struct spi_master *master,
 static int mcfqspi_setup(struct spi_device *spi)
 {
 	mcfqspi_cs_deselect(spi_master_get_devdata(spi->master),
+<<<<<<< HEAD
 			    spi_get_chipselect(spi, 0), spi->mode & SPI_CS_HIGH);
 
 	dev_dbg(&spi->dev,
 			"bits per word %d, chip select %d, speed %d KHz\n",
 			spi->bits_per_word, spi_get_chipselect(spi, 0),
+=======
+			    spi->chip_select, spi->mode & SPI_CS_HIGH);
+
+	dev_dbg(&spi->dev,
+			"bits per word %d, chip select %d, speed %d KHz\n",
+			spi->bits_per_word, spi->chip_select,
+>>>>>>> b7ba80a49124 (Commit)
 			(MCFQSPI_BUSCLK / mcfqspi_qmr_baud(spi->max_speed_hz))
 			/ 1000);
 
@@ -434,7 +448,11 @@ fail0:
 	return status;
 }
 
+<<<<<<< HEAD
 static void mcfqspi_remove(struct platform_device *pdev)
+=======
+static int mcfqspi_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct spi_master *master = platform_get_drvdata(pdev);
 	struct mcfqspi *mcfqspi = spi_master_get_devdata(master);
@@ -445,6 +463,11 @@ static void mcfqspi_remove(struct platform_device *pdev)
 
 	mcfqspi_cs_teardown(mcfqspi);
 	clk_disable_unprepare(mcfqspi->clk);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -507,7 +530,11 @@ static struct platform_driver mcfqspi_driver = {
 	.driver.owner	= THIS_MODULE,
 	.driver.pm	= &mcfqspi_pm,
 	.probe		= mcfqspi_probe,
+<<<<<<< HEAD
 	.remove_new	= mcfqspi_remove,
+=======
+	.remove		= mcfqspi_remove,
+>>>>>>> b7ba80a49124 (Commit)
 };
 module_platform_driver(mcfqspi_driver);
 

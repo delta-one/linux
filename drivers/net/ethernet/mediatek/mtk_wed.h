@@ -10,7 +10,10 @@
 #include <linux/netdevice.h>
 
 struct mtk_eth;
+<<<<<<< HEAD
 struct mtk_wed_wo;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct mtk_wed_hw {
 	struct device_node *node;
@@ -23,7 +26,10 @@ struct mtk_wed_hw {
 	struct regmap *mirror;
 	struct dentry *debugfs_dir;
 	struct mtk_wed_device *wed_dev;
+<<<<<<< HEAD
 	struct mtk_wed_wo *wed_wo;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 debugfs_reg;
 	u32 num_flows;
 	u8 version;
@@ -87,6 +93,7 @@ wpdma_tx_w32(struct mtk_wed_device *dev, int ring, u32 reg, u32 val)
 }
 
 static inline u32
+<<<<<<< HEAD
 wpdma_rx_r32(struct mtk_wed_device *dev, int ring, u32 reg)
 {
 	if (!dev->rx_ring[ring].wpdma)
@@ -105,6 +112,8 @@ wpdma_rx_w32(struct mtk_wed_device *dev, int ring, u32 reg, u32 val)
 }
 
 static inline u32
+=======
+>>>>>>> b7ba80a49124 (Commit)
 wpdma_txfree_r32(struct mtk_wed_device *dev, u32 reg)
 {
 	if (!dev->txfree_ring.wpdma)
@@ -128,8 +137,11 @@ void mtk_wed_add_hw(struct device_node *np, struct mtk_eth *eth,
 void mtk_wed_exit(void);
 int mtk_wed_flow_add(int index);
 void mtk_wed_flow_remove(int index);
+<<<<<<< HEAD
 void mtk_wed_fe_reset(void);
 void mtk_wed_fe_reset_complete(void);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else
 static inline void
 mtk_wed_add_hw(struct device_node *np, struct mtk_eth *eth,
@@ -148,6 +160,7 @@ static inline int mtk_wed_flow_add(int index)
 static inline void mtk_wed_flow_remove(int index)
 {
 }
+<<<<<<< HEAD
 
 static inline void mtk_wed_fe_reset(void)
 {
@@ -156,6 +169,8 @@ static inline void mtk_wed_fe_reset(void)
 static inline void mtk_wed_fe_reset_complete(void)
 {
 }
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #ifdef CONFIG_DEBUG_FS

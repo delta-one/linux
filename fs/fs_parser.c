@@ -138,16 +138,26 @@ EXPORT_SYMBOL(__fs_parse);
  * @fc: The filesystem context to log errors through.
  * @param: The parameter.
  * @want_bdev: T if want a blockdev
+<<<<<<< HEAD
  * @flags: Pathwalk flags passed to filename_lookup()
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * @_path: The result of the lookup
  */
 int fs_lookup_param(struct fs_context *fc,
 		    struct fs_parameter *param,
 		    bool want_bdev,
+<<<<<<< HEAD
 		    unsigned int flags,
 		    struct path *_path)
 {
 	struct filename *f;
+=======
+		    struct path *_path)
+{
+	struct filename *f;
+	unsigned int flags = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	bool put_f;
 	int ret;
 

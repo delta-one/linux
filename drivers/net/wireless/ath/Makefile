@@ -8,7 +8,10 @@ obj-$(CONFIG_WIL6210)		+= wil6210/
 obj-$(CONFIG_ATH10K)		+= ath10k/
 obj-$(CONFIG_WCN36XX)		+= wcn36xx/
 obj-$(CONFIG_ATH11K)		+= ath11k/
+<<<<<<< HEAD
 obj-$(CONFIG_ATH12K)		+= ath12k/
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 obj-$(CONFIG_ATH_COMMON)	+= ath.o
 

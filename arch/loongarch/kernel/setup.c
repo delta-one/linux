@@ -19,8 +19,11 @@
 #include <linux/memblock.h>
 #include <linux/initrd.h>
 #include <linux/ioport.h>
+<<<<<<< HEAD
 #include <linux/kexec.h>
 #include <linux/crash_dump.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/root_dev.h>
 #include <linux/console.h>
 #include <linux/pfn.h>
@@ -28,6 +31,7 @@
 #include <linux/sizes.h>
 #include <linux/device.h>
 #include <linux/dma-map-ops.h>
+<<<<<<< HEAD
 #include <linux/libfdt.h>
 #include <linux/of_fdt.h>
 #include <linux/of_address.h>
@@ -38,6 +42,12 @@
 #include <asm/alternative.h>
 #include <asm/bootinfo.h>
 #include <asm/bugs.h>
+=======
+#include <linux/swiotlb.h>
+
+#include <asm/addrspace.h>
+#include <asm/bootinfo.h>
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/cache.h>
 #include <asm/cpu.h>
 #include <asm/dma.h>
@@ -73,7 +83,10 @@ static const char dmi_empty_string[] = "        ";
  *
  * These are initialized so they are in the .data section
  */
+<<<<<<< HEAD
 char init_command_line[COMMAND_LINE_SIZE] __initdata;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int num_standard_resources;
 static struct resource *standard_resources;
@@ -87,11 +100,14 @@ const char *get_system_type(void)
 	return "generic-loongson-machine";
 }
 
+<<<<<<< HEAD
 void __init check_bugs(void)
 {
 	alternative_instructions();
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static const char *dmi_string_parse(const struct dmi_header *dm, u8 s)
 {
 	const u8 *bp = ((u8 *) dm) + dm->length;
@@ -199,6 +215,7 @@ static int __init early_parse_mem(char *p)
 }
 early_param("mem", early_parse_mem);
 
+<<<<<<< HEAD
 static void __init arch_reserve_vmcore(void)
 {
 #ifdef CONFIG_PROC_VMCORE
@@ -323,14 +340,23 @@ void __init platform_init(void)
 	arch_reserve_vmcore();
 	arch_parse_crashkernel();
 
+=======
+void __init platform_init(void)
+{
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_ACPI_TABLE_UPGRADE
 	acpi_table_upgrade();
 #endif
 #ifdef CONFIG_ACPI
 	acpi_gbl_use_default_register_widths = false;
 	acpi_boot_table_init();
+<<<<<<< HEAD
 #endif
 	unflatten_and_copy_device_tree();
+=======
+	acpi_boot_init();
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_NUMA
 	init_numa_memory();
@@ -363,8 +389,11 @@ static void __init arch_mem_init(char **cmdline_p)
 
 	check_kernel_sections_mem();
 
+<<<<<<< HEAD
 	early_init_fdt_scan_reserved_mem();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * In order to reduce the possibility of kernel panic when failed to
 	 * get IO TLB memory under CONFIG_SWIOTLB, it is better to allocate
@@ -375,6 +404,7 @@ static void __init arch_mem_init(char **cmdline_p)
 	sparse_init();
 	memblock_set_bottom_up(true);
 
+<<<<<<< HEAD
 	swiotlb_init(true, SWIOTLB_VERBOSE);
 
 	dma_contiguous_reserve(PFN_PHYS(max_low_pfn));
@@ -383,6 +413,12 @@ static void __init arch_mem_init(char **cmdline_p)
 	register_nosave_region(PFN_DOWN(__pa_symbol(&__nosave_begin)),
 				   PFN_UP(__pa_symbol(&__nosave_end)));
 
+=======
+	plat_swiotlb_setup();
+
+	dma_contiguous_reserve(PFN_PHYS(max_low_pfn));
+
+>>>>>>> b7ba80a49124 (Commit)
 	memblock_dump_all();
 
 	early_memtest(PFN_PHYS(ARCH_PFN_OFFSET), PFN_PHYS(max_low_pfn));
@@ -431,6 +467,7 @@ static void __init resource_init(void)
 		request_resource(res, &data_resource);
 		request_resource(res, &bss_resource);
 	}
+<<<<<<< HEAD
 
 #ifdef CONFIG_KEXEC
 	if (crashk_res.start < crashk_res.end) {
@@ -517,6 +554,10 @@ static __init int arch_reserve_pio_range(void)
 }
 arch_initcall(arch_reserve_pio_range);
 
+=======
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static int __init reserve_memblock_reserved_regions(void)
 {
 	u64 i, j;
@@ -569,6 +610,7 @@ static void __init prefill_possible_map(void)
 void __init setup_arch(char **cmdline_p)
 {
 	cpu_probe();
+<<<<<<< HEAD
 
 	init_environ();
 	efi_init();
@@ -580,6 +622,17 @@ void __init setup_arch(char **cmdline_p)
 	reserve_initrd_mem();
 
 	platform_init();
+=======
+	*cmdline_p = boot_command_line;
+
+	init_environ();
+	efi_init();
+	memblock_init();
+	parse_early_param();
+
+	platform_init();
+	pagetable_init();
+>>>>>>> b7ba80a49124 (Commit)
 	arch_mem_init(cmdline_p);
 
 	resource_init();

@@ -1425,7 +1425,11 @@ static void ivtv_remove(struct pci_dev *pdev)
 
 	/* Interrupts */
 	ivtv_set_irq_mask(itv, 0xffffffff);
+<<<<<<< HEAD
 	timer_shutdown_sync(&itv->dma_timer);
+=======
+	del_timer_sync(&itv->dma_timer);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Kill irq worker */
 	kthread_flush_worker(&itv->irq_worker);

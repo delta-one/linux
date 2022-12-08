@@ -22,6 +22,10 @@
 #include "prm-regbits-24xx.h"
 #include "i2c.h"
 #include "mmc.h"
+<<<<<<< HEAD
+=======
+#include "serial.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "wd_timer.h"
 
 /*

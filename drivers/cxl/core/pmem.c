@@ -99,6 +99,10 @@ static struct cxl_nvdimm_bridge *cxl_nvdimm_bridge_alloc(struct cxl_port *port)
 
 	dev = &cxl_nvb->dev;
 	cxl_nvb->port = port;
+<<<<<<< HEAD
+=======
+	cxl_nvb->state = CXL_NVB_NEW;
+>>>>>>> b7ba80a49124 (Commit)
 	device_initialize(dev);
 	lockdep_set_class(&dev->mutex, &cxl_nvdimm_bridge_key);
 	device_set_pm_not_required(dev);
@@ -116,7 +120,32 @@ err:
 static void unregister_nvb(void *_cxl_nvb)
 {
 	struct cxl_nvdimm_bridge *cxl_nvb = _cxl_nvb;
+<<<<<<< HEAD
 
+=======
+	bool flush;
+
+	/*
+	 * If the bridge was ever activated then there might be in-flight state
+	 * work to flush. Once the state has been changed to 'dead' then no new
+	 * work can be queued by user-triggered bind.
+	 */
+	device_lock(&cxl_nvb->dev);
+	flush = cxl_nvb->state != CXL_NVB_NEW;
+	cxl_nvb->state = CXL_NVB_DEAD;
+	device_unlock(&cxl_nvb->dev);
+
+	/*
+	 * Even though the device core will trigger device_release_driver()
+	 * before the unregister, it does not know about the fact that
+	 * cxl_nvdimm_bridge_driver defers ->remove() work. So, do the driver
+	 * release not and flush it before tearing down the nvdimm device
+	 * hierarchy.
+	 */
+	device_release_driver(&cxl_nvb->dev);
+	if (flush)
+		flush_work(&cxl_nvb->state_work);
+>>>>>>> b7ba80a49124 (Commit)
 	device_unregister(&cxl_nvb->dev);
 }
 
@@ -197,8 +226,12 @@ EXPORT_SYMBOL_NS_GPL(to_cxl_nvdimm, CXL);
 
 static struct lock_class_key cxl_nvdimm_key;
 
+<<<<<<< HEAD
 static struct cxl_nvdimm *cxl_nvdimm_alloc(struct cxl_nvdimm_bridge *cxl_nvb,
 					   struct cxl_memdev *cxlmd)
+=======
+static struct cxl_nvdimm *cxl_nvdimm_alloc(struct cxl_memdev *cxlmd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct cxl_nvdimm *cxl_nvd;
 	struct device *dev;
@@ -209,13 +242,17 @@ static struct cxl_nvdimm *cxl_nvdimm_alloc(struct cxl_nvdimm_bridge *cxl_nvb,
 
 	dev = &cxl_nvd->dev;
 	cxl_nvd->cxlmd = cxlmd;
+<<<<<<< HEAD
 	cxlmd->cxl_nvd = cxl_nvd;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	device_initialize(dev);
 	lockdep_set_class(&dev->mutex, &cxl_nvdimm_key);
 	device_set_pm_not_required(dev);
 	dev->parent = &cxlmd->dev;
 	dev->bus = &cxl_bus_type;
 	dev->type = &cxl_nvdimm_type;
+<<<<<<< HEAD
 	/*
 	 * A "%llx" string is 17-bytes vs dimm_id that is max
 	 * NVDIMM_KEY_DESC_LEN
@@ -223,10 +260,13 @@ static struct cxl_nvdimm *cxl_nvdimm_alloc(struct cxl_nvdimm_bridge *cxl_nvb,
 	BUILD_BUG_ON(sizeof(cxl_nvd->dev_id) < 17 ||
 		     sizeof(cxl_nvd->dev_id) > NVDIMM_KEY_DESC_LEN);
 	sprintf(cxl_nvd->dev_id, "%llx", cxlmd->cxlds->serial);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return cxl_nvd;
 }
 
+<<<<<<< HEAD
 static void cxlmd_release_nvdimm(void *_cxlmd)
 {
 	struct cxl_memdev *cxlmd = _cxlmd;
@@ -238,21 +278,36 @@ static void cxlmd_release_nvdimm(void *_cxlmd)
 	cxlmd->cxl_nvb = NULL;
 	device_unregister(&cxl_nvd->dev);
 	put_device(&cxl_nvb->dev);
+=======
+static void cxl_nvd_unregister(void *dev)
+{
+	device_unregister(dev);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**
  * devm_cxl_add_nvdimm() - add a bridge between a cxl_memdev and an nvdimm
+<<<<<<< HEAD
+=======
+ * @host: same host as @cxlmd
+>>>>>>> b7ba80a49124 (Commit)
  * @cxlmd: cxl_memdev instance that will perform LIBNVDIMM operations
  *
  * Return: 0 on success negative error code on failure.
  */
+<<<<<<< HEAD
 int devm_cxl_add_nvdimm(struct cxl_memdev *cxlmd)
 {
 	struct cxl_nvdimm_bridge *cxl_nvb;
+=======
+int devm_cxl_add_nvdimm(struct device *host, struct cxl_memdev *cxlmd)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	struct cxl_nvdimm *cxl_nvd;
 	struct device *dev;
 	int rc;
 
+<<<<<<< HEAD
 	cxl_nvb = cxl_find_nvdimm_bridge(&cxlmd->dev);
 	if (!cxl_nvb)
 		return -ENODEV;
@@ -263,6 +318,11 @@ int devm_cxl_add_nvdimm(struct cxl_memdev *cxlmd)
 		goto err_alloc;
 	}
 	cxlmd->cxl_nvb = cxl_nvb;
+=======
+	cxl_nvd = cxl_nvdimm_alloc(cxlmd);
+	if (IS_ERR(cxl_nvd))
+		return PTR_ERR(cxl_nvd);
+>>>>>>> b7ba80a49124 (Commit)
 
 	dev = &cxl_nvd->dev;
 	rc = dev_set_name(dev, "pmem%d", cxlmd->id);
@@ -273,6 +333,7 @@ int devm_cxl_add_nvdimm(struct cxl_memdev *cxlmd)
 	if (rc)
 		goto err;
 
+<<<<<<< HEAD
 	dev_dbg(&cxlmd->dev, "register %s\n", dev_name(dev));
 
 	/* @cxlmd carries a reference on @cxl_nvb until cxlmd_release_nvdimm */
@@ -285,6 +346,15 @@ err_alloc:
 	cxlmd->cxl_nvd = NULL;
 	put_device(&cxl_nvb->dev);
 
+=======
+	dev_dbg(host, "%s: register %s\n", dev_name(dev->parent),
+		dev_name(dev));
+
+	return devm_add_action_or_reset(host, cxl_nvd_unregister, dev);
+
+err:
+	put_device(dev);
+>>>>>>> b7ba80a49124 (Commit)
 	return rc;
 }
 EXPORT_SYMBOL_NS_GPL(devm_cxl_add_nvdimm, CXL);

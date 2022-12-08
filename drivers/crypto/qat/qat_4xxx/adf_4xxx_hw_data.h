@@ -56,6 +56,7 @@
 #define ADF_4XXX_DC_OBJ		"qat_4xxx_dc.bin"
 #define ADF_4XXX_ASYM_OBJ	"qat_4xxx_asym.bin"
 #define ADF_4XXX_ADMIN_OBJ	"qat_4xxx_admin.bin"
+<<<<<<< HEAD
 /* Firmware for 402XXX */
 #define ADF_402XX_FW		"qat_402xx.bin"
 #define ADF_402XX_MMP		"qat_402xx_mmp.bin"
@@ -63,6 +64,8 @@
 #define ADF_402XX_DC_OBJ	"qat_402xx_dc.bin"
 #define ADF_402XX_ASYM_OBJ	"qat_402xx_asym.bin"
 #define ADF_402XX_ADMIN_OBJ	"qat_402xx_admin.bin"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* qat_4xxx fuse bits are different from old GENs, redefine them */
 enum icp_qat_4xxx_slice_mask {
@@ -75,8 +78,14 @@ enum icp_qat_4xxx_slice_mask {
 	ICP_ACCEL_4XXX_MASK_SMX_SLICE = BIT(6),
 };
 
+<<<<<<< HEAD
 void adf_init_hw_data_4xxx(struct adf_hw_device_data *hw_data, u32 dev_id);
 void adf_clean_hw_data_4xxx(struct adf_hw_device_data *hw_data);
 int adf_gen4_dev_config(struct adf_accel_dev *accel_dev);
+=======
+void adf_init_hw_data_4xxx(struct adf_hw_device_data *hw_data);
+void adf_clean_hw_data_4xxx(struct adf_hw_device_data *hw_data);
+int adf_crypto_dev_config(struct adf_accel_dev *accel_dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 #endif

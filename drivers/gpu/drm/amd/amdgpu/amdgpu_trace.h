@@ -127,7 +127,11 @@ TRACE_EVENT(amdgpu_bo_create,
 
 	    TP_fast_assign(
 			   __entry->bo = bo;
+<<<<<<< HEAD
 			   __entry->pages = PFN_UP(bo->tbo.resource->size);
+=======
+			   __entry->pages = bo->tbo.resource->num_pages;
+>>>>>>> b7ba80a49124 (Commit)
 			   __entry->type = bo->tbo.resource->mem_type;
 			   __entry->prefer = bo->preferred_domains;
 			   __entry->allow = bo->allowed_domains;
@@ -153,10 +157,17 @@ TRACE_EVENT(amdgpu_cs,
 
 	    TP_fast_assign(
 			   __entry->bo_list = p->bo_list;
+<<<<<<< HEAD
 			   __entry->ring = to_amdgpu_ring(job->base.entity->rq->sched)->idx;
 			   __entry->dw = ib->length_dw;
 			   __entry->fences = amdgpu_fence_count_emitted(
 				to_amdgpu_ring(job->base.entity->rq->sched));
+=======
+			   __entry->ring = to_amdgpu_ring(job->base.sched)->idx;
+			   __entry->dw = ib->length_dw;
+			   __entry->fences = amdgpu_fence_count_emitted(
+				to_amdgpu_ring(job->base.sched));
+>>>>>>> b7ba80a49124 (Commit)
 			   ),
 	    TP_printk("bo_list=%p, ring=%u, dw=%u, fences=%u",
 		      __entry->bo_list, __entry->ring, __entry->dw,

@@ -150,7 +150,11 @@ out:
 }
 
 /**
+<<<<<<< HEAD
  * hih6130_temperature_show() - show temperature measurement value in sysfs
+=======
+ * hih6130_show_temperature() - show temperature measurement value in sysfs
+>>>>>>> b7ba80a49124 (Commit)
  * @dev: device
  * @attr: device attribute
  * @buf: sysfs buffer (PAGE_SIZE) where measurement values are written to
@@ -172,7 +176,11 @@ static ssize_t hih6130_temperature_show(struct device *dev,
 }
 
 /**
+<<<<<<< HEAD
  * hih6130_humidity_show() - show humidity measurement value in sysfs
+=======
+ * hih6130_show_humidity() - show humidity measurement value in sysfs
+>>>>>>> b7ba80a49124 (Commit)
  * @dev: device
  * @attr: device attribute
  * @buf: sysfs buffer (PAGE_SIZE) where measurement values are written to

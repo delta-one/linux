@@ -97,7 +97,11 @@ static struct option long_options[] = {
 static void parse_options(int argc, char **argv)
 {
 	int option_index = 0;
+<<<<<<< HEAD
 	char *pathname, *endptr;
+=======
+	char *pathname;
+>>>>>>> b7ba80a49124 (Commit)
 	int opt;
 
 	pathname = strdup(argv[0]);
@@ -125,6 +129,7 @@ static void parse_options(int argc, char **argv)
 			log_getinfo = 1;
 			break;
 		case 'T':
+<<<<<<< HEAD
 			log_type = strtol(optarg, &endptr, 0);
 			if (*endptr || (log_type != 0 && log_type != 1)) {
 				printf("Number expected: type(0:execution, 1:history) - Quit.\n");
@@ -142,6 +147,13 @@ static void parse_options(int argc, char **argv)
 				exit(1);
 			}
 
+=======
+			log_type = atoi(optarg);
+			set_log_type = 1;
+			break;
+		case 'L':
+			log_level = atoi(optarg);
+>>>>>>> b7ba80a49124 (Commit)
 			set_log_level = 1;
 			break;
 		case 'R':

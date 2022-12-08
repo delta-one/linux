@@ -477,7 +477,11 @@ static dma_addr_t *g2d_userptr_get_dma_addr(struct g2d_data *g2d,
 	}
 
 	ret = pin_user_pages_fast(start, npages,
+<<<<<<< HEAD
 				  FOLL_WRITE | FOLL_LONGTERM,
+=======
+				  FOLL_FORCE | FOLL_WRITE | FOLL_LONGTERM,
+>>>>>>> b7ba80a49124 (Commit)
 				  g2d_userptr->pages);
 	if (ret != npages) {
 		DRM_DEV_ERROR(g2d->dev,
@@ -1549,6 +1553,10 @@ static int g2d_remove(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM_SLEEP
+>>>>>>> b7ba80a49124 (Commit)
 static int g2d_suspend(struct device *dev)
 {
 	struct g2d_data *g2d = dev_get_drvdata(dev);
@@ -1573,7 +1581,13 @@ static int g2d_resume(struct device *dev)
 
 	return 0;
 }
+<<<<<<< HEAD
 
+=======
+#endif
+
+#ifdef CONFIG_PM
+>>>>>>> b7ba80a49124 (Commit)
 static int g2d_runtime_suspend(struct device *dev)
 {
 	struct g2d_data *g2d = dev_get_drvdata(dev);
@@ -1594,10 +1608,18 @@ static int g2d_runtime_resume(struct device *dev)
 
 	return ret;
 }
+<<<<<<< HEAD
 
 static const struct dev_pm_ops g2d_pm_ops = {
 	SYSTEM_SLEEP_PM_OPS(g2d_suspend, g2d_resume)
 	RUNTIME_PM_OPS(g2d_runtime_suspend, g2d_runtime_resume, NULL)
+=======
+#endif
+
+static const struct dev_pm_ops g2d_pm_ops = {
+	SET_SYSTEM_SLEEP_PM_OPS(g2d_suspend, g2d_resume)
+	SET_RUNTIME_PM_OPS(g2d_runtime_suspend, g2d_runtime_resume, NULL)
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct of_device_id exynos_g2d_match[] = {
@@ -1613,7 +1635,11 @@ struct platform_driver g2d_driver = {
 	.driver		= {
 		.name	= "exynos-drm-g2d",
 		.owner	= THIS_MODULE,
+<<<<<<< HEAD
 		.pm	= pm_ptr(&g2d_pm_ops),
+=======
+		.pm	= &g2d_pm_ops,
+>>>>>>> b7ba80a49124 (Commit)
 		.of_match_table = exynos_g2d_match,
 	},
 };

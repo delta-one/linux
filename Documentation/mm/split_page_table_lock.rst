@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+.. _split_page_table_lock:
+
+>>>>>>> b7ba80a49124 (Commit)
 =====================
 Split page table lock
 =====================

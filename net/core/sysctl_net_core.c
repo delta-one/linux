@@ -16,7 +16,10 @@
 #include <linux/vmalloc.h>
 #include <linux/init.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
 #include <linux/sched/isolation.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <net/ip.h>
 #include <net/sock.h>
@@ -46,6 +49,7 @@ EXPORT_SYMBOL(sysctl_fb_tunnels_only_for_init_net);
 int sysctl_devconf_inherit_init_net __read_mostly;
 EXPORT_SYMBOL(sysctl_devconf_inherit_init_net);
 
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_NET_FLOW_LIMIT) || IS_ENABLED(CONFIG_RPS)
 static void dump_cpumask(void *buffer, size_t *lenp, loff_t *ppos,
 			 struct cpumask *mask)
@@ -122,6 +126,9 @@ done:
 	return err;
 }
 
+=======
+#ifdef CONFIG_RPS
+>>>>>>> b7ba80a49124 (Commit)
 static int rps_sock_flow_sysctl(struct ctl_table *table, int write,
 				void *buffer, size_t *lenp, loff_t *ppos)
 {
@@ -177,7 +184,11 @@ static int rps_sock_flow_sysctl(struct ctl_table *table, int write,
 			if (orig_sock_table) {
 				static_branch_dec(&rps_needed);
 				static_branch_dec(&rfs_needed);
+<<<<<<< HEAD
 				kvfree_rcu_mightsleep(orig_sock_table);
+=======
+				kvfree_rcu(orig_sock_table);
+>>>>>>> b7ba80a49124 (Commit)
 			}
 		}
 	}
@@ -215,7 +226,11 @@ static int flow_limit_cpu_sysctl(struct ctl_table *table, int write,
 				     lockdep_is_held(&flow_limit_update_mutex));
 			if (cur && !cpumask_test_cpu(i, mask)) {
 				RCU_INIT_POINTER(sd->flow_limit, NULL);
+<<<<<<< HEAD
 				kfree_rcu_mightsleep(cur);
+=======
+				kfree_rcu(cur);
+>>>>>>> b7ba80a49124 (Commit)
 			} else if (!cur && cpumask_test_cpu(i, mask)) {
 				cur = kzalloc_node(len, GFP_KERNEL,
 						   cpu_to_node(i));
@@ -231,6 +246,16 @@ static int flow_limit_cpu_sysctl(struct ctl_table *table, int write,
 write_unlock:
 		mutex_unlock(&flow_limit_update_mutex);
 	} else {
+<<<<<<< HEAD
+=======
+		char kbuf[128];
+
+		if (*ppos || !*lenp) {
+			*lenp = 0;
+			goto done;
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 		cpumask_clear(mask);
 		rcu_read_lock();
 		for_each_possible_cpu(i) {
@@ -240,7 +265,21 @@ write_unlock:
 		}
 		rcu_read_unlock();
 
+<<<<<<< HEAD
 		dump_cpumask(buffer, lenp, ppos, mask);
+=======
+		len = min(sizeof(kbuf) - 1, *lenp);
+		len = scnprintf(kbuf, len, "%*pb", cpumask_pr_args(mask));
+		if (!len) {
+			*lenp = 0;
+			goto done;
+		}
+		if (len < *lenp)
+			kbuf[len++] = '\n';
+		memcpy(buffer, kbuf, len);
+		*lenp = len;
+		*ppos += len;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 done:
@@ -657,6 +696,7 @@ static struct ctl_table net_core_table[] = {
 };
 
 static struct ctl_table netns_core_table[] = {
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_RPS)
 	{
 		.procname	= "rps_default_mask",
@@ -665,6 +705,8 @@ static struct ctl_table netns_core_table[] = {
 		.proc_handler	= rps_default_mask_sysctl
 	},
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{
 		.procname	= "somaxconn",
 		.data		= &init_net.core.sysctl_somaxconn,
@@ -710,6 +752,14 @@ static __net_init int sysctl_core_net_init(struct net *net)
 
 		for (tmp = tbl; tmp->procname; tmp++)
 			tmp->data += (char *)net - (char *)&init_net;
+<<<<<<< HEAD
+=======
+
+		/* Don't export any sysctls to unprivileged users */
+		if (net->user_ns != &init_user_ns) {
+			tbl[0].procname = NULL;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	net->core.sysctl_hdr = register_net_sysctl(net, "net/core", tbl);
@@ -732,9 +782,12 @@ static __net_exit void sysctl_core_net_exit(struct net *net)
 	tbl = net->core.sysctl_hdr->ctl_table_arg;
 	unregister_net_sysctl_table(net->core.sysctl_hdr);
 	BUG_ON(tbl == netns_core_table);
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_RPS)
 	kfree(net->core.rps_default_mask);
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(tbl);
 }
 

@@ -6808,6 +6808,10 @@ struct bnx2 {
 #define BNX2_FLAG_JUMBO_BROKEN		0x00000800
 #define BNX2_FLAG_CAN_KEEP_VLAN		0x00001000
 #define BNX2_FLAG_BROKEN_STATS		0x00002000
+<<<<<<< HEAD
+=======
+#define BNX2_FLAG_AER_ENABLED		0x00004000
+>>>>>>> b7ba80a49124 (Commit)
 
 	struct bnx2_napi	bnx2_napi[BNX2_MAX_MSIX_VEC];
 

@@ -27,6 +27,10 @@ config PINCTRL_RENESAS
 	select PINCTRL_PFC_R8A7792 if ARCH_R8A7792
 	select PINCTRL_PFC_R8A7793 if ARCH_R8A7793
 	select PINCTRL_PFC_R8A7794 if ARCH_R8A7794
+<<<<<<< HEAD
+=======
+	select PINCTRL_PFC_R8A77950 if ARCH_R8A77950
+>>>>>>> b7ba80a49124 (Commit)
 	select PINCTRL_PFC_R8A77951 if ARCH_R8A77951
 	select PINCTRL_PFC_R8A77960 if ARCH_R8A77960
 	select PINCTRL_PFC_R8A77961 if ARCH_R8A77961
@@ -102,6 +106,13 @@ config PINCTRL_PFC_R8A7790
 	bool "pin control support for R-Car H2" if COMPILE_TEST
 	select PINCTRL_SH_PFC
 
+<<<<<<< HEAD
+=======
+config PINCTRL_PFC_R8A77950
+	bool "pin control support for R-Car H3 ES1.x" if COMPILE_TEST
+	select PINCTRL_SH_PFC
+
+>>>>>>> b7ba80a49124 (Commit)
 config PINCTRL_PFC_R8A77951
 	bool "pin control support for R-Car H3 ES2.0+" if COMPILE_TEST
 	select PINCTRL_SH_PFC

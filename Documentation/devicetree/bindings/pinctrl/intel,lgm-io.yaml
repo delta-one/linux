@@ -4,7 +4,11 @@
 $id: http://devicetree.org/schemas/pinctrl/intel,lgm-io.yaml#
 $schema: http://devicetree.org/meta-schemas/core.yaml#
 
+<<<<<<< HEAD
 title: Intel Lightning Mountain SoC pinmux & GPIO controller
+=======
+title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
+>>>>>>> b7ba80a49124 (Commit)
 
 maintainers:
   - Rahul Tanwar <rahul.tanwar@linux.intel.com>

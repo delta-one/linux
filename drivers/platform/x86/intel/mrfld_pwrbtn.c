@@ -78,12 +78,20 @@ static int mrfld_pwrbtn_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void mrfld_pwrbtn_remove(struct platform_device *pdev)
+=======
+static int mrfld_pwrbtn_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device *dev = &pdev->dev;
 
 	dev_pm_clear_wake_irq(dev);
 	device_init_wakeup(dev, false);
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static const struct platform_device_id mrfld_pwrbtn_id_table[] = {
@@ -97,7 +105,11 @@ static struct platform_driver mrfld_pwrbtn_driver = {
 		.name	= "mrfld_bcove_pwrbtn",
 	},
 	.probe		= mrfld_pwrbtn_probe,
+<<<<<<< HEAD
 	.remove_new	= mrfld_pwrbtn_remove,
+=======
+	.remove		= mrfld_pwrbtn_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= mrfld_pwrbtn_id_table,
 };
 module_platform_driver(mrfld_pwrbtn_driver);

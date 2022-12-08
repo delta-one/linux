@@ -64,7 +64,12 @@ static const struct v4l2_subdev_ops cs3308_ops = {
 
 /* ----------------------------------------------------------------------- */
 
+<<<<<<< HEAD
 static int cs3308_probe(struct i2c_client *client)
+=======
+static int cs3308_probe(struct i2c_client *client,
+			const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct v4l2_subdev *sd;
 	unsigned i;
@@ -118,7 +123,11 @@ static struct i2c_driver cs3308_driver = {
 	.driver = {
 		.name   = "cs3308",
 	},
+<<<<<<< HEAD
 	.probe_new      = cs3308_probe,
+=======
+	.probe          = cs3308_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove         = cs3308_remove,
 	.id_table       = cs3308_id,
 };

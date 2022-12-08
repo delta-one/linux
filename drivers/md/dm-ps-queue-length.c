@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Copyright (C) 2004-2005 IBM Corp.  All Rights Reserved.
  * Copyright (C) 2006-2009 NEC Corporation.
@@ -36,7 +39,11 @@ struct selector {
 struct path_info {
 	struct list_head	list;
 	struct dm_path		*path;
+<<<<<<< HEAD
 	unsigned int		repeat_count;
+=======
+	unsigned		repeat_count;
+>>>>>>> b7ba80a49124 (Commit)
 	atomic_t		qlen;	/* the number of in-flight I/Os */
 };
 
@@ -53,7 +60,11 @@ static struct selector *alloc_selector(void)
 	return s;
 }
 
+<<<<<<< HEAD
 static int ql_create(struct path_selector *ps, unsigned int argc, char **argv)
+=======
+static int ql_create(struct path_selector *ps, unsigned argc, char **argv)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct selector *s = alloc_selector();
 
@@ -85,9 +96,15 @@ static void ql_destroy(struct path_selector *ps)
 }
 
 static int ql_status(struct path_selector *ps, struct dm_path *path,
+<<<<<<< HEAD
 		     status_type_t type, char *result, unsigned int maxlen)
 {
 	unsigned int sz = 0;
+=======
+		     status_type_t type, char *result, unsigned maxlen)
+{
+	unsigned sz = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	struct path_info *pi;
 
 	/* When called with NULL path, return selector status/args. */
@@ -117,14 +134,23 @@ static int ql_add_path(struct path_selector *ps, struct dm_path *path,
 {
 	struct selector *s = ps->context;
 	struct path_info *pi;
+<<<<<<< HEAD
 	unsigned int repeat_count = QL_MIN_IO;
+=======
+	unsigned repeat_count = QL_MIN_IO;
+>>>>>>> b7ba80a49124 (Commit)
 	char dummy;
 	unsigned long flags;
 
 	/*
 	 * Arguments: [<repeat_count>]
+<<<<<<< HEAD
 	 *	<repeat_count>: The number of I/Os before switching path.
 	 *			If not given, default (QL_MIN_IO) is used.
+=======
+	 * 	<repeat_count>: The number of I/Os before switching path.
+	 * 			If not given, default (QL_MIN_IO) is used.
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	if (argc > 1) {
 		*error = "queue-length ps: incorrect number of arguments";

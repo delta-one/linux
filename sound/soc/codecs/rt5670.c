@@ -3311,6 +3311,11 @@ static int rt5670_i2c_probe(struct i2c_client *i2c)
 	if (ret < 0)
 		goto err;
 
+<<<<<<< HEAD
+=======
+	pm_runtime_put(&i2c->dev);
+
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 err:
 	pm_runtime_disable(&i2c->dev);

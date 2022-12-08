@@ -66,6 +66,10 @@
 		led4 {
 			label = "green:user3";
 			gpios = <&gpiog 1 GPIO_ACTIVE_HIGH>;
+<<<<<<< HEAD
+=======
+			linux,default-trigger = "none";
+>>>>>>> b7ba80a49124 (Commit)
 			default-state = "off";
 			panic-indicator;
 		};
@@ -99,7 +103,11 @@
 		regulator-min-microvolt = <3300000>;
 		regulator-max-microvolt = <3300000>;
 
+<<<<<<< HEAD
 		gpio = <&gpioz 3 GPIO_ACTIVE_HIGH>;
+=======
+		gpios = <&gpioz 3 GPIO_ACTIVE_HIGH>;
+>>>>>>> b7ba80a49124 (Commit)
 		enable-active-high;
 	};
 };
@@ -150,7 +158,11 @@
 	max-speed = <1000>;
 	phy-handle = <&phy0>;
 
+<<<<<<< HEAD
 	mdio {
+=======
+	mdio0 {
+>>>>>>> b7ba80a49124 (Commit)
 		#address-cells = <1>;
 		#size-cells = <0>;
 		compatible = "snps,dwmac-mdio";
@@ -358,7 +370,11 @@
 		sai2a_port: port {
 			sai2a_endpoint: endpoint {
 				remote-endpoint = <&adv7513_i2s0>;
+<<<<<<< HEAD
 				dai-format = "i2s";
+=======
+				format = "i2s";
+>>>>>>> b7ba80a49124 (Commit)
 				mclk-fs = <256>;
 			};
 		};

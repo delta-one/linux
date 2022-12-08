@@ -44,9 +44,22 @@ struct ethtool_devlink_compat {
 
 static struct devlink *netdev_to_devlink_get(struct net_device *dev)
 {
+<<<<<<< HEAD
 	if (!dev->devlink_port)
 		return NULL;
 	return devlink_try_get(dev->devlink_port->devlink);
+=======
+	struct devlink_port *devlink_port;
+
+	if (!dev->netdev_ops->ndo_get_devlink_port)
+		return NULL;
+
+	devlink_port = dev->netdev_ops->ndo_get_devlink_port(dev);
+	if (!devlink_port)
+		return NULL;
+
+	return devlink_try_get(devlink_port->devlink);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -564,7 +577,10 @@ static int ethtool_get_link_ksettings(struct net_device *dev,
 		= __ETHTOOL_LINK_MODE_MASK_NU32;
 	link_ksettings.base.master_slave_cfg = MASTER_SLAVE_CFG_UNSUPPORTED;
 	link_ksettings.base.master_slave_state = MASTER_SLAVE_STATE_UNSUPPORTED;
+<<<<<<< HEAD
 	link_ksettings.base.rate_matching = RATE_MATCH_NONE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	return store_link_ksettings_for_user(useraddr, &link_ksettings);
 }
@@ -706,12 +722,16 @@ static int
 ethtool_get_drvinfo(struct net_device *dev, struct ethtool_devlink_compat *rsp)
 {
 	const struct ethtool_ops *ops = dev->ethtool_ops;
+<<<<<<< HEAD
 	struct device *parent = dev->dev.parent;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	rsp->info.cmd = ETHTOOL_GDRVINFO;
 	strscpy(rsp->info.version, UTS_RELEASE, sizeof(rsp->info.version));
 	if (ops->get_drvinfo) {
 		ops->get_drvinfo(dev, &rsp->info);
+<<<<<<< HEAD
 		if (!rsp->info.bus_info[0] && parent)
 			strscpy(rsp->info.bus_info, dev_name(parent),
 				sizeof(rsp->info.bus_info));
@@ -722,6 +742,12 @@ ethtool_get_drvinfo(struct net_device *dev, struct ethtool_devlink_compat *rsp)
 		strscpy(rsp->info.bus_info, dev_name(parent),
 			sizeof(rsp->info.bus_info));
 		strscpy(rsp->info.driver, parent->driver->name,
+=======
+	} else if (dev->dev.parent && dev->dev.parent->driver) {
+		strscpy(rsp->info.bus_info, dev_name(dev->dev.parent),
+			sizeof(rsp->info.bus_info));
+		strscpy(rsp->info.driver, dev->dev.parent->driver->name,
+>>>>>>> b7ba80a49124 (Commit)
 			sizeof(rsp->info.driver));
 	} else if (dev->rtnl_link_ops) {
 		strscpy(rsp->info.driver, dev->rtnl_link_ops->kind,
@@ -1796,8 +1822,12 @@ static noinline_for_stack int ethtool_set_channels(struct net_device *dev,
 {
 	struct ethtool_channels channels, curr = { .cmd = ETHTOOL_GCHANNELS };
 	u16 from_channel, to_channel;
+<<<<<<< HEAD
 	u64 max_rxnfc_in_use;
 	u32 max_rxfh_in_use;
+=======
+	u32 max_rx_in_use = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int i;
 	int ret;
 
@@ -1828,6 +1858,7 @@ static noinline_for_stack int ethtool_set_channels(struct net_device *dev,
 		return -EINVAL;
 
 	/* ensure the new Rx count fits within the configured Rx flow
+<<<<<<< HEAD
 	 * indirection table/rxnfc settings */
 	if (ethtool_get_max_rxnfc_channel(dev, &max_rxnfc_in_use))
 		max_rxnfc_in_use = 0;
@@ -1837,6 +1868,13 @@ static noinline_for_stack int ethtool_set_channels(struct net_device *dev,
 	if (channels.combined_count + channels.rx_count <=
 	    max_t(u64, max_rxnfc_in_use, max_rxfh_in_use))
 		return -EINVAL;
+=======
+	 * indirection table settings */
+	if (netif_is_rxfh_configured(dev) &&
+	    !ethtool_get_max_rxfh_channel(dev, &max_rx_in_use) &&
+	    (channels.combined_count + channels.rx_count) <= max_rx_in_use)
+	    return -EINVAL;
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Disabling channels, query zero-copy AF_XDP sockets */
 	from_channel = channels.combined_count +
@@ -2013,8 +2051,12 @@ static int ethtool_phys_id(struct net_device *dev, void __user *useraddr)
 	} else {
 		/* Driver expects to be called at twice the frequency in rc */
 		int n = rc * 2, interval = HZ / n;
+<<<<<<< HEAD
 		u64 count = mul_u32_u32(n, id.data);
 		u64 i = 0;
+=======
+		u64 count = n * id.data, i = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
 		do {
 			rtnl_lock();
@@ -2078,12 +2120,33 @@ static int ethtool_get_stats(struct net_device *dev, void __user *useraddr)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int ethtool_vzalloc_stats_array(int n_stats, u64 **data)
 {
+=======
+static int ethtool_get_phy_stats(struct net_device *dev, void __user *useraddr)
+{
+	const struct ethtool_phy_ops *phy_ops = ethtool_phy_ops;
+	const struct ethtool_ops *ops = dev->ethtool_ops;
+	struct phy_device *phydev = dev->phydev;
+	struct ethtool_stats stats;
+	u64 *data;
+	int ret, n_stats;
+
+	if (!phydev && (!ops->get_ethtool_phy_stats || !ops->get_sset_count))
+		return -EOPNOTSUPP;
+
+	if (phydev && !ops->get_ethtool_phy_stats &&
+	    phy_ops && phy_ops->get_sset_count)
+		n_stats = phy_ops->get_sset_count(phydev);
+	else
+		n_stats = ops->get_sset_count(dev, ETH_SS_PHY_STATS);
+>>>>>>> b7ba80a49124 (Commit)
 	if (n_stats < 0)
 		return n_stats;
 	if (n_stats > S32_MAX / sizeof(u64))
 		return -ENOMEM;
+<<<<<<< HEAD
 	if (WARN_ON_ONCE(!n_stats))
 		return -EOPNOTSUPP;
 
@@ -2142,10 +2205,14 @@ static int ethtool_get_phy_stats(struct net_device *dev, void __user *useraddr)
 	struct ethtool_stats stats;
 	u64 *data = NULL;
 	int ret = -EOPNOTSUPP;
+=======
+	WARN_ON_ONCE(!n_stats);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (copy_from_user(&stats, useraddr, sizeof(stats)))
 		return -EFAULT;
 
+<<<<<<< HEAD
 	if (phydev)
 		ret = ethtool_get_phy_stats_phydev(phydev, &stats, &data);
 
@@ -2163,6 +2230,34 @@ static int ethtool_get_phy_stats(struct net_device *dev, void __user *useraddr)
 	useraddr += sizeof(stats);
 	if (copy_to_user(useraddr, data, array_size(stats.n_stats, sizeof(u64))))
 		ret = -EFAULT;
+=======
+	stats.n_stats = n_stats;
+
+	if (n_stats) {
+		data = vzalloc(array_size(n_stats, sizeof(u64)));
+		if (!data)
+			return -ENOMEM;
+
+		if (phydev && !ops->get_ethtool_phy_stats &&
+		    phy_ops && phy_ops->get_stats) {
+			ret = phy_ops->get_stats(phydev, &stats, data);
+			if (ret < 0)
+				goto out;
+		} else {
+			ops->get_ethtool_phy_stats(dev, &stats, data);
+		}
+	} else {
+		data = NULL;
+	}
+
+	ret = -EFAULT;
+	if (copy_to_user(useraddr, &stats, sizeof(stats)))
+		goto out;
+	useraddr += sizeof(stats);
+	if (n_stats && copy_to_user(useraddr, data, array_size(n_stats, sizeof(u64))))
+		goto out;
+	ret = 0;
+>>>>>>> b7ba80a49124 (Commit)
 
  out:
 	vfree(data);

@@ -172,17 +172,24 @@ static void sunxi_rsb_device_remove(struct device *dev)
 	drv->remove(to_sunxi_rsb_device(dev));
 }
 
+<<<<<<< HEAD
 static int sunxi_rsb_device_modalias(const struct device *dev, struct kobj_uevent_env *env)
 {
 	return of_device_uevent_modalias(dev, env);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct bus_type sunxi_rsb_bus = {
 	.name		= RSB_CTRL_NAME,
 	.match		= sunxi_rsb_device_match,
 	.probe		= sunxi_rsb_device_probe,
 	.remove		= sunxi_rsb_device_remove,
+<<<<<<< HEAD
 	.uevent		= sunxi_rsb_device_modalias,
+=======
+	.uevent		= of_device_uevent_modalias,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static void sunxi_rsb_dev_release(struct device *dev)
@@ -272,9 +279,12 @@ EXPORT_SYMBOL_GPL(sunxi_rsb_driver_register);
 /* common code that starts a transfer */
 static int _sunxi_rsb_run_xfer(struct sunxi_rsb *rsb)
 {
+<<<<<<< HEAD
 	u32 int_mask, status;
 	bool timeout;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (readl(rsb->regs + RSB_CTRL) & RSB_CTRL_START_TRANS) {
 		dev_dbg(rsb->dev, "RSB transfer still in progress\n");
 		return -EBUSY;
@@ -282,6 +292,7 @@ static int _sunxi_rsb_run_xfer(struct sunxi_rsb *rsb)
 
 	reinit_completion(&rsb->complete);
 
+<<<<<<< HEAD
 	int_mask = RSB_INTS_LOAD_BSY | RSB_INTS_TRANS_ERR | RSB_INTS_TRANS_OVER;
 	writel(int_mask, rsb->regs + RSB_INTE);
 	writel(RSB_CTRL_START_TRANS | RSB_CTRL_GLOBAL_INT_ENB,
@@ -299,6 +310,15 @@ static int _sunxi_rsb_run_xfer(struct sunxi_rsb *rsb)
 	}
 
 	if (timeout) {
+=======
+	writel(RSB_INTS_LOAD_BSY | RSB_INTS_TRANS_ERR | RSB_INTS_TRANS_OVER,
+	       rsb->regs + RSB_INTE);
+	writel(RSB_CTRL_START_TRANS | RSB_CTRL_GLOBAL_INT_ENB,
+	       rsb->regs + RSB_CTRL);
+
+	if (!wait_for_completion_io_timeout(&rsb->complete,
+					    msecs_to_jiffies(100))) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_dbg(rsb->dev, "RSB timeout\n");
 
 		/* abort the transfer */
@@ -310,18 +330,31 @@ static int _sunxi_rsb_run_xfer(struct sunxi_rsb *rsb)
 		return -ETIMEDOUT;
 	}
 
+<<<<<<< HEAD
 	if (status & RSB_INTS_LOAD_BSY) {
+=======
+	if (rsb->status & RSB_INTS_LOAD_BSY) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_dbg(rsb->dev, "RSB busy\n");
 		return -EBUSY;
 	}
 
+<<<<<<< HEAD
 	if (status & RSB_INTS_TRANS_ERR) {
 		if (status & RSB_INTS_TRANS_ERR_ACK) {
+=======
+	if (rsb->status & RSB_INTS_TRANS_ERR) {
+		if (rsb->status & RSB_INTS_TRANS_ERR_ACK) {
+>>>>>>> b7ba80a49124 (Commit)
 			dev_dbg(rsb->dev, "RSB slave nack\n");
 			return -EINVAL;
 		}
 
+<<<<<<< HEAD
 		if (status & RSB_INTS_TRANS_ERR_DATA) {
+=======
+		if (rsb->status & RSB_INTS_TRANS_ERR_DATA) {
+>>>>>>> b7ba80a49124 (Commit)
 			dev_dbg(rsb->dev, "RSB transfer data error\n");
 			return -EIO;
 		}
@@ -830,6 +863,17 @@ static int sunxi_rsb_remove(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static void sunxi_rsb_shutdown(struct platform_device *pdev)
+{
+	struct sunxi_rsb *rsb = platform_get_drvdata(pdev);
+
+	pm_runtime_disable(&pdev->dev);
+	sunxi_rsb_hw_exit(rsb);
+}
+
+>>>>>>> b7ba80a49124 (Commit)
 static const struct dev_pm_ops sunxi_rsb_dev_pm_ops = {
 	SET_RUNTIME_PM_OPS(sunxi_rsb_runtime_suspend,
 			   sunxi_rsb_runtime_resume, NULL)
@@ -845,6 +889,10 @@ MODULE_DEVICE_TABLE(of, sunxi_rsb_of_match_table);
 static struct platform_driver sunxi_rsb_driver = {
 	.probe = sunxi_rsb_probe,
 	.remove	= sunxi_rsb_remove,
+<<<<<<< HEAD
+=======
+	.shutdown = sunxi_rsb_shutdown,
+>>>>>>> b7ba80a49124 (Commit)
 	.driver	= {
 		.name = RSB_CTRL_NAME,
 		.of_match_table = sunxi_rsb_of_match_table,
@@ -862,6 +910,7 @@ static int __init sunxi_rsb_init(void)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	ret = platform_driver_register(&sunxi_rsb_driver);
 	if (ret) {
 		bus_unregister(&sunxi_rsb_bus);
@@ -869,6 +918,9 @@ static int __init sunxi_rsb_init(void)
 	}
 
 	return 0;
+=======
+	return platform_driver_register(&sunxi_rsb_driver);
+>>>>>>> b7ba80a49124 (Commit)
 }
 module_init(sunxi_rsb_init);
 

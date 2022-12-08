@@ -212,9 +212,14 @@ struct sbsocramregs {
 #define	ARMCR4_TCBANB_MASK	0xf
 #define	ARMCR4_TCBANB_SHIFT	0
 
+<<<<<<< HEAD
 #define	ARMCR4_BSZ_MASK		0x7f
 #define	ARMCR4_BSZ_MULT		8192
 #define	ARMCR4_BLK_1K_MASK	0x200
+=======
+#define	ARMCR4_BSZ_MASK		0x3f
+#define	ARMCR4_BSZ_MULT		8192
+>>>>>>> b7ba80a49124 (Commit)
 
 struct brcmf_core_priv {
 	struct brcmf_core pub;
@@ -685,7 +690,10 @@ static u32 brcmf_chip_tcm_ramsize(struct brcmf_core_priv *cr4)
 	u32 nbb;
 	u32 totb;
 	u32 bxinfo;
+<<<<<<< HEAD
 	u32 blksize;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	u32 idx;
 
 	corecap = brcmf_chip_core_read32(cr4, ARMCR4_CAP);
@@ -697,11 +705,15 @@ static u32 brcmf_chip_tcm_ramsize(struct brcmf_core_priv *cr4)
 	for (idx = 0; idx < totb; idx++) {
 		brcmf_chip_core_write32(cr4, ARMCR4_BANKIDX, idx);
 		bxinfo = brcmf_chip_core_read32(cr4, ARMCR4_BANKINFO);
+<<<<<<< HEAD
 		blksize = ARMCR4_BSZ_MULT;
 		if (bxinfo & ARMCR4_BLK_1K_MASK)
 			blksize >>= 3;
 
 		memsize += ((bxinfo & ARMCR4_BSZ_MASK) + 1) * blksize;
+=======
+		memsize += ((bxinfo & ARMCR4_BSZ_MASK) + 1) * ARMCR4_BSZ_MULT;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return memsize;
@@ -732,19 +744,28 @@ static u32 brcmf_chip_tcm_rambase(struct brcmf_chip_priv *ci)
 	case BRCM_CC_43664_CHIP_ID:
 	case BRCM_CC_43666_CHIP_ID:
 		return 0x200000;
+<<<<<<< HEAD
 	case BRCM_CC_4355_CHIP_ID:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case BRCM_CC_4359_CHIP_ID:
 		return (ci->pub.chiprev < 9) ? 0x180000 : 0x160000;
 	case BRCM_CC_4364_CHIP_ID:
 	case CY_CC_4373_CHIP_ID:
 		return 0x160000;
 	case CY_CC_43752_CHIP_ID:
+<<<<<<< HEAD
 	case BRCM_CC_4377_CHIP_ID:
 		return 0x170000;
 	case BRCM_CC_4378_CHIP_ID:
 		return 0x352000;
 	case BRCM_CC_4387_CHIP_ID:
 		return 0x740000;
+=======
+		return 0x170000;
+	case BRCM_CC_4378_CHIP_ID:
+		return 0x352000;
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		brcmf_err("unknown chip: %s\n", ci->pub.name);
 		break;
@@ -1300,11 +1321,15 @@ static bool brcmf_chip_cm3_set_active(struct brcmf_chip_priv *chip)
 static inline void
 brcmf_chip_cr4_set_passive(struct brcmf_chip_priv *chip)
 {
+<<<<<<< HEAD
 	int i;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct brcmf_core *core;
 
 	brcmf_chip_disable_arm(chip, BCMA_CORE_ARM_CR4);
 
+<<<<<<< HEAD
 	/* Disable the cores only and let the firmware enable them.
 	 * Releasing reset ourselves breaks BCM4387 in weird ways.
 	 */
@@ -1312,6 +1337,13 @@ brcmf_chip_cr4_set_passive(struct brcmf_chip_priv *chip)
 		brcmf_chip_coredisable(core, D11_BCMA_IOCTL_PHYRESET |
 				       D11_BCMA_IOCTL_PHYCLOCKEN,
 				       D11_BCMA_IOCTL_PHYCLOCKEN);
+=======
+	core = brcmf_chip_get_core(&chip->pub, BCMA_CORE_80211);
+	brcmf_chip_resetcore(core, D11_BCMA_IOCTL_PHYRESET |
+				   D11_BCMA_IOCTL_PHYCLOCKEN,
+			     D11_BCMA_IOCTL_PHYCLOCKEN,
+			     D11_BCMA_IOCTL_PHYCLOCKEN);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static bool brcmf_chip_cr4_set_active(struct brcmf_chip_priv *chip, u32 rstvec)
@@ -1437,7 +1469,10 @@ bool brcmf_chip_sr_capable(struct brcmf_chip *pub)
 		addr = CORE_CC_REG(base, sr_control1);
 		reg = chip->ops->read32(chip->ctx, addr);
 		return reg != 0;
+<<<<<<< HEAD
 	case BRCM_CC_4355_CHIP_ID:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	case CY_CC_4373_CHIP_ID:
 		/* explicitly check SR engine enable bit */
 		addr = CORE_CC_REG(base, sr_control0);

@@ -79,6 +79,7 @@ static inline void mmdrop_sched(struct mm_struct *mm)
 }
 #endif
 
+<<<<<<< HEAD
 /* Helpers for lazy TLB mm refcounting */
 static inline void mmgrab_lazy_tlb(struct mm_struct *mm)
 {
@@ -107,6 +108,8 @@ static inline void mmdrop_lazy_tlb_sched(struct mm_struct *mm)
 		smp_mb(); /* see mmdrop_lazy_tlb() above */
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /**
  * mmget() - Pin the address space associated with a &struct mm_struct.
  * @mm: The address space to pin.

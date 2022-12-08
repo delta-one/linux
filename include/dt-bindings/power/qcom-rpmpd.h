@@ -4,6 +4,7 @@
 #ifndef _DT_BINDINGS_POWER_QCOM_RPMPD_H
 #define _DT_BINDINGS_POWER_QCOM_RPMPD_H
 
+<<<<<<< HEAD
 /* SA8775P Power Domain Indexes */
 #define SA8775P_CX	0
 #define SA8775P_CX_AO	1
@@ -33,6 +34,8 @@
 #define SDM670_GFX	6
 #define SDM670_MSS	7
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* SDM845 Power Domain Indexes */
 #define SDM845_EBI	0
 #define SDM845_MX	1
@@ -132,6 +135,7 @@
 #define SM8450_MXC_AO	11
 #define SM8450_MSS	12
 
+<<<<<<< HEAD
 /* SM8550 Power Domain Indexes */
 #define SM8550_CX	0
 #define SM8550_CX_AO	1
@@ -154,6 +158,8 @@
 #define QDU1000_CX	2
 #define QDU1000_MX	3
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* SC7180 Power Domain Indexes */
 #define SC7180_CX	0
 #define SC7180_CX_AO	1
@@ -209,9 +215,13 @@
 /* SDM845 Power Domain performance levels */
 #define RPMH_REGULATOR_LEVEL_RETENTION	16
 #define RPMH_REGULATOR_LEVEL_MIN_SVS	48
+<<<<<<< HEAD
 #define RPMH_REGULATOR_LEVEL_LOW_SVS_D1	56
 #define RPMH_REGULATOR_LEVEL_LOW_SVS	64
 #define RPMH_REGULATOR_LEVEL_LOW_SVS_L1	80
+=======
+#define RPMH_REGULATOR_LEVEL_LOW_SVS	64
+>>>>>>> b7ba80a49124 (Commit)
 #define RPMH_REGULATOR_LEVEL_SVS	128
 #define RPMH_REGULATOR_LEVEL_SVS_L0	144
 #define RPMH_REGULATOR_LEVEL_SVS_L1	192

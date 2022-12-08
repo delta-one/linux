@@ -39,6 +39,9 @@ static inline u8 intel_dp_training_pattern_symbol(u8 pattern)
 	return pattern & ~DP_LINK_SCRAMBLING_DISABLE;
 }
 
+<<<<<<< HEAD
 void intel_dp_128b132b_sdp_crc16(struct intel_dp *intel_dp,
 				 const struct intel_crtc_state *crtc_state);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __INTEL_DP_LINK_TRAINING_H__ */

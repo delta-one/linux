@@ -2709,7 +2709,12 @@ static int velocity_get_platform_info(struct velocity_info *vptr)
 	struct resource res;
 	int ret;
 
+<<<<<<< HEAD
 	vptr->no_eeprom = of_property_read_bool(vptr->dev->of_node, "no-eeprom");
+=======
+	if (of_get_property(vptr->dev->of_node, "no-eeprom", NULL))
+		vptr->no_eeprom = 1;
+>>>>>>> b7ba80a49124 (Commit)
 
 	ret = of_address_to_resource(vptr->dev->of_node, 0, &res);
 	if (ret) {
@@ -2845,7 +2850,11 @@ static int velocity_probe(struct device *dev, int irq,
 
 	netdev->netdev_ops = &velocity_netdev_ops;
 	netdev->ethtool_ops = &velocity_ethtool_ops;
+<<<<<<< HEAD
 	netif_napi_add(netdev, &vptr->napi, velocity_poll);
+=======
+	netif_napi_add(netdev, &vptr->napi, velocity_poll, NAPI_POLL_WEIGHT);
+>>>>>>> b7ba80a49124 (Commit)
 
 	netdev->hw_features = NETIF_F_IP_CSUM | NETIF_F_SG |
 			   NETIF_F_HW_VLAN_CTAG_TX;

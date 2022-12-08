@@ -79,6 +79,7 @@ struct drm_info_node {
 	struct dentry *dent;
 };
 
+<<<<<<< HEAD
 /**
  * struct drm_debugfs_info - debugfs info list entry
  *
@@ -122,18 +123,23 @@ struct drm_debugfs_entry {
 	struct list_head list;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #if defined(CONFIG_DEBUG_FS)
 void drm_debugfs_create_files(const struct drm_info_list *files,
 			      int count, struct dentry *root,
 			      struct drm_minor *minor);
 int drm_debugfs_remove_files(const struct drm_info_list *files,
 			     int count, struct drm_minor *minor);
+<<<<<<< HEAD
 
 void drm_debugfs_add_file(struct drm_device *dev, const char *name,
 			  int (*show)(struct seq_file*, void*), void *data);
 
 void drm_debugfs_add_files(struct drm_device *dev,
 			   const struct drm_debugfs_info *files, int count);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #else
 static inline void drm_debugfs_create_files(const struct drm_info_list *files,
 					    int count, struct dentry *root,
@@ -145,6 +151,7 @@ static inline int drm_debugfs_remove_files(const struct drm_info_list *files,
 {
 	return 0;
 }
+<<<<<<< HEAD
 
 static inline void drm_debugfs_add_file(struct drm_device *dev, const char *name,
 					int (*show)(struct seq_file*, void*),
@@ -155,6 +162,8 @@ static inline void drm_debugfs_add_files(struct drm_device *dev,
 					 const struct drm_debugfs_info *files,
 					 int count)
 {}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif
 
 #endif /* _DRM_DEBUGFS_H_ */

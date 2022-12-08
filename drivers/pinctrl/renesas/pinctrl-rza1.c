@@ -1407,3 +1407,7 @@ core_initcall(rza1_pinctrl_init);
 
 MODULE_AUTHOR("Jacopo Mondi <jacopo+renesas@jmondi.org");
 MODULE_DESCRIPTION("Pin and gpio controller driver for Reneas RZ/A1 SoC");
+<<<<<<< HEAD
+=======
+MODULE_LICENSE("GPL v2");
+>>>>>>> b7ba80a49124 (Commit)

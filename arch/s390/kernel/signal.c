@@ -184,7 +184,11 @@ static int save_sigregs_ext(struct pt_regs *regs,
 	/* Save vector registers to signal stack */
 	if (MACHINE_HAS_VX) {
 		for (i = 0; i < __NUM_VXRS_LOW; i++)
+<<<<<<< HEAD
 			vxrs[i] = current->thread.fpu.vxrs[i].low;
+=======
+			vxrs[i] = *((__u64 *)(current->thread.fpu.vxrs + i) + 1);
+>>>>>>> b7ba80a49124 (Commit)
 		if (__copy_to_user(&sregs_ext->vxrs_low, vxrs,
 				   sizeof(sregs_ext->vxrs_low)) ||
 		    __copy_to_user(&sregs_ext->vxrs_high,
@@ -210,7 +214,11 @@ static int restore_sigregs_ext(struct pt_regs *regs,
 				     sizeof(sregs_ext->vxrs_high)))
 			return -EFAULT;
 		for (i = 0; i < __NUM_VXRS_LOW; i++)
+<<<<<<< HEAD
 			current->thread.fpu.vxrs[i].low = vxrs[i];
+=======
+			*((__u64 *)(current->thread.fpu.vxrs + i) + 1) = vxrs[i];
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return 0;
 }

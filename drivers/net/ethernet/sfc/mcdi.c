@@ -2175,6 +2175,7 @@ int efx_mcdi_get_privilege_mask(struct efx_nic *efx, u32 *mask)
 	return 0;
 }
 
+<<<<<<< HEAD
 int efx_mcdi_nvram_metadata(struct efx_nic *efx, unsigned int type,
 			    u32 *subtype, u16 version[4], char *desc,
 			    size_t descsize)
@@ -2247,6 +2248,8 @@ out_free:
 	return rc;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #ifdef CONFIG_SFC_MTD
 
 #define EFX_MCDI_NVRAM_LEN_MAX 128

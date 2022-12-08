@@ -4,6 +4,7 @@
 
 #include <uapi/linux/audit.h>
 
+<<<<<<< HEAD
 #include <asm/unistd.h>
 
 extern const unsigned long sys_call_table[];
@@ -61,6 +62,8 @@ static inline void syscall_set_arguments(struct task_struct *task,
 	memcpy(&regs->d1, args, 5 * sizeof(args[0]));
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int syscall_get_arch(struct task_struct *task)
 {
 	return AUDIT_ARCH_M68K;

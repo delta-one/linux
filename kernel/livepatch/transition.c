@@ -9,14 +9,20 @@
 
 #include <linux/cpu.h>
 #include <linux/stacktrace.h>
+<<<<<<< HEAD
 #include <linux/static_call.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "core.h"
 #include "patch.h"
 #include "transition.h"
 
 #define MAX_STACK_ENTRIES  100
+<<<<<<< HEAD
 DEFINE_PER_CPU(unsigned long[MAX_STACK_ENTRIES], klp_stack_entries);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define STACK_ERR_BUF_SIZE 128
 
 #define SIGNALS_TIMEOUT 15
@@ -28,6 +34,7 @@ static int klp_target_state = KLP_UNDEFINED;
 static unsigned int klp_signals_cnt;
 
 /*
+<<<<<<< HEAD
  * When a livepatch is in progress, enable klp stack checking in
  * cond_resched().  This helps CPU-bound kthreads get patched.
  */
@@ -47,6 +54,8 @@ EXPORT_SYMBOL(klp_sched_try_switch_key);
 #endif /* CONFIG_PREEMPT_DYNAMIC && CONFIG_HAVE_PREEMPT_DYNAMIC_CALL */
 
 /*
+=======
+>>>>>>> b7ba80a49124 (Commit)
  * This work can be performed periodically to finish patching or unpatching any
  * "straggler" tasks which failed to transition in the first attempt.
  */
@@ -194,8 +203,13 @@ void klp_update_patch_state(struct task_struct *task)
 	 * barrier (smp_rmb) for two cases:
 	 *
 	 * 1) Enforce the order of the TIF_PATCH_PENDING read and the
+<<<<<<< HEAD
 	 *    klp_target_state read.  The corresponding write barriers are in
 	 *    klp_init_transition() and klp_reverse_transition().
+=======
+	 *    klp_target_state read.  The corresponding write barrier is in
+	 *    klp_init_transition().
+>>>>>>> b7ba80a49124 (Commit)
 	 *
 	 * 2) Enforce the order of the TIF_PATCH_PENDING read and a future read
 	 *    of func->transition, if klp_ftrace_handler() is called later on
@@ -218,6 +232,7 @@ static int klp_check_stack_func(struct klp_func *func, unsigned long *entries,
 	struct klp_ops *ops;
 	int i;
 
+<<<<<<< HEAD
 	if (klp_target_state == KLP_UNPATCHED) {
 		 /*
 		  * Check for the to-be-unpatched function
@@ -249,6 +264,39 @@ static int klp_check_stack_func(struct klp_func *func, unsigned long *entries,
 	for (i = 0; i < nr_entries; i++) {
 		address = entries[i];
 
+=======
+	for (i = 0; i < nr_entries; i++) {
+		address = entries[i];
+
+		if (klp_target_state == KLP_UNPATCHED) {
+			 /*
+			  * Check for the to-be-unpatched function
+			  * (the func itself).
+			  */
+			func_addr = (unsigned long)func->new_func;
+			func_size = func->new_size;
+		} else {
+			/*
+			 * Check for the to-be-patched function
+			 * (the previous func).
+			 */
+			ops = klp_find_ops(func->old_func);
+
+			if (list_is_singular(&ops->func_stack)) {
+				/* original function */
+				func_addr = (unsigned long)func->old_func;
+				func_size = func->old_size;
+			} else {
+				/* previously patched function */
+				struct klp_func *prev;
+
+				prev = list_next_entry(func, stack_node);
+				func_addr = (unsigned long)prev->new_func;
+				func_size = prev->new_size;
+			}
+		}
+
+>>>>>>> b7ba80a49124 (Commit)
 		if (address >= func_addr && address < func_addr + func_size)
 			return -EAGAIN;
 	}
@@ -262,15 +310,23 @@ static int klp_check_stack_func(struct klp_func *func, unsigned long *entries,
  */
 static int klp_check_stack(struct task_struct *task, const char **oldname)
 {
+<<<<<<< HEAD
 	unsigned long *entries = this_cpu_ptr(klp_stack_entries);
+=======
+	static unsigned long entries[MAX_STACK_ENTRIES];
+>>>>>>> b7ba80a49124 (Commit)
 	struct klp_object *obj;
 	struct klp_func *func;
 	int ret, nr_entries;
 
+<<<<<<< HEAD
 	/* Protect 'klp_stack_entries' */
 	lockdep_assert_preemption_disabled();
 
 	ret = stack_trace_save_tsk_reliable(task, entries, MAX_STACK_ENTRIES);
+=======
+	ret = stack_trace_save_tsk_reliable(task, entries, ARRAY_SIZE(entries));
+>>>>>>> b7ba80a49124 (Commit)
 	if (ret < 0)
 		return -EINVAL;
 	nr_entries = ret;
@@ -332,11 +388,15 @@ static bool klp_try_switch_task(struct task_struct *task)
 	 * functions.  If all goes well, switch the task to the target patch
 	 * state.
 	 */
+<<<<<<< HEAD
 	if (task == current)
 		ret = klp_check_and_switch_task(current, &old_name);
 	else
 		ret = task_call_func(task, klp_check_and_switch_task, &old_name);
 
+=======
+	ret = task_call_func(task, klp_check_and_switch_task, &old_name);
+>>>>>>> b7ba80a49124 (Commit)
 	switch (ret) {
 	case 0:		/* success */
 		break;
@@ -363,6 +423,7 @@ static bool klp_try_switch_task(struct task_struct *task)
 	return !ret;
 }
 
+<<<<<<< HEAD
 void __klp_sched_try_switch(void)
 {
 	if (likely(!klp_patch_pending(current)))
@@ -401,6 +462,8 @@ out:
 }
 EXPORT_SYMBOL(__klp_sched_try_switch);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Sends a fake signal to all non-kthread tasks with TIF_PATCH_PENDING set.
  * Kthreads with TIF_PATCH_PENDING set are woken up.
@@ -507,8 +570,12 @@ void klp_try_complete_transition(void)
 		return;
 	}
 
+<<<<<<< HEAD
 	/* Done!  Now cleanup the data structures. */
 	klp_cond_resched_disable();
+=======
+	/* we're done, now cleanup the data structures */
+>>>>>>> b7ba80a49124 (Commit)
 	patch = klp_transition_patch;
 	klp_complete_transition();
 
@@ -560,8 +627,11 @@ void klp_start_transition(void)
 			set_tsk_thread_flag(task, TIF_PATCH_PENDING);
 	}
 
+<<<<<<< HEAD
 	klp_cond_resched_enable();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	klp_signals_cnt = 0;
 }
 
@@ -617,9 +687,14 @@ void klp_init_transition(struct klp_patch *patch, int state)
 	 * see a func in transition with a task->patch_state of KLP_UNDEFINED.
 	 *
 	 * Also enforce the order of the klp_target_state write and future
+<<<<<<< HEAD
 	 * TIF_PATCH_PENDING writes to ensure klp_update_patch_state() and
 	 * __klp_sched_try_switch() don't set a task->patch_state to
 	 * KLP_UNDEFINED.
+=======
+	 * TIF_PATCH_PENDING writes to ensure klp_update_patch_state() doesn't
+	 * set a task->patch_state to KLP_UNDEFINED.
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	smp_wmb();
 
@@ -655,10 +730,21 @@ void klp_reverse_transition(void)
 		 klp_target_state == KLP_PATCHED ? "patching to unpatching" :
 						   "unpatching to patching");
 
+<<<<<<< HEAD
 	/*
 	 * Clear all TIF_PATCH_PENDING flags to prevent races caused by
 	 * klp_update_patch_state() or __klp_sched_try_switch() running in
 	 * parallel with the reverse transition.
+=======
+	klp_transition_patch->enabled = !klp_transition_patch->enabled;
+
+	klp_target_state = !klp_target_state;
+
+	/*
+	 * Clear all TIF_PATCH_PENDING flags to prevent races caused by
+	 * klp_update_patch_state() running in parallel with
+	 * klp_start_transition().
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	read_lock(&tasklist_lock);
 	for_each_process_thread(g, task)
@@ -668,6 +754,7 @@ void klp_reverse_transition(void)
 	for_each_possible_cpu(cpu)
 		clear_tsk_thread_flag(idle_task(cpu), TIF_PATCH_PENDING);
 
+<<<<<<< HEAD
 	/*
 	 * Make sure all existing invocations of klp_update_patch_state() and
 	 * __klp_sched_try_switch() see the cleared TIF_PATCH_PENDING before
@@ -690,6 +777,11 @@ void klp_reverse_transition(void)
 	 */
 	smp_wmb();
 
+=======
+	/* Let any remaining calls to klp_update_patch_state() complete */
+	klp_synchronize_transition();
+
+>>>>>>> b7ba80a49124 (Commit)
 	klp_start_transition();
 }
 
@@ -703,9 +795,15 @@ void klp_copy_process(struct task_struct *child)
 	 * the task flag up to date with the parent here.
 	 *
 	 * The operation is serialized against all klp_*_transition()
+<<<<<<< HEAD
 	 * operations by the tasklist_lock. The only exceptions are
 	 * klp_update_patch_state(current) and __klp_sched_try_switch(), but we
 	 * cannot race with them because we are current.
+=======
+	 * operations by the tasklist_lock. The only exception is
+	 * klp_update_patch_state(current), but we cannot race with
+	 * that because we are current.
+>>>>>>> b7ba80a49124 (Commit)
 	 */
 	if (test_tsk_thread_flag(current, TIF_PATCH_PENDING))
 		set_tsk_thread_flag(child, TIF_PATCH_PENDING);

@@ -5,8 +5,12 @@
  * This software may be used and distributed according to the terms
  * of the GNU General Public License, incorporated herein by reference.
  *
+<<<<<<< HEAD
  * Usage: kallsyms [--all-symbols] [--absolute-percpu]
  *                         [--base-relative] in.map > out.S
+=======
+ * Usage: nm -n vmlinux | scripts/kallsyms [--all-symbols] > symbols.S
+>>>>>>> b7ba80a49124 (Commit)
  *
  *      Table compression uses all the unused char codes on the symbols and
  *  maps these to the most used substrings (tokens). For instance, it might
@@ -19,7 +23,10 @@
  *
  */
 
+<<<<<<< HEAD
 #include <getopt.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,6 +41,7 @@
 
 #define KSYM_NAME_LEN		512
 
+<<<<<<< HEAD
 /*
  * A substantially bigger size than the current maximum.
  *
@@ -41,6 +49,9 @@
  * for the fscanf() format string. Therefore, a _Static_assert() is
  * used instead to maintain the relationship with KSYM_NAME_LEN.
  */
+=======
+/* A substantially bigger size than the current maximum. */
+>>>>>>> b7ba80a49124 (Commit)
 #define KSYM_NAME_LEN_BUFFER	2048
 _Static_assert(
 	KSYM_NAME_LEN_BUFFER == KSYM_NAME_LEN * 4,
@@ -50,7 +61,10 @@ _Static_assert(
 struct sym_entry {
 	unsigned long long addr;
 	unsigned int len;
+<<<<<<< HEAD
 	unsigned int seq;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	unsigned int start_pos;
 	unsigned int percpu_absolute;
 	unsigned char sym[];
@@ -79,7 +93,10 @@ static unsigned int table_size, table_cnt;
 static int all_symbols;
 static int absolute_percpu;
 static int base_relative;
+<<<<<<< HEAD
 static int lto_clang;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 static int token_profit[0x10000];
 
@@ -91,7 +108,11 @@ static unsigned char best_table_len[256];
 static void usage(void)
 {
 	fprintf(stderr, "Usage: kallsyms [--all-symbols] [--absolute-percpu] "
+<<<<<<< HEAD
 			"[--base-relative] [--lto-clang] in.map > out.S\n");
+=======
+			"[--base-relative] < in.map > out.S\n");
+>>>>>>> b7ba80a49124 (Commit)
 	exit(1);
 }
 
@@ -119,7 +140,10 @@ static bool is_ignored_symbol(const char *name, char type)
 		"kallsyms_markers",
 		"kallsyms_token_table",
 		"kallsyms_token_index",
+<<<<<<< HEAD
 		"kallsyms_seqs_of_names",
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		/* Exclude linker generated symbols which vary between passes */
 		"_SDA_BASE_",		/* ppc */
 		"_SDA2_BASE_",		/* ppc */
@@ -128,6 +152,12 @@ static bool is_ignored_symbol(const char *name, char type)
 
 	/* Symbol names that begin with the following are ignored.*/
 	static const char * const ignored_prefixes[] = {
+<<<<<<< HEAD
+=======
+		"$",			/* local symbols for ARM, MIPS, etc. */
+		".L",			/* local labels, .LBB,.Ltmpxxx,.L__unnamed_xx,.LASANPC, etc. */
+		"__crc_",		/* modversions */
+>>>>>>> b7ba80a49124 (Commit)
 		"__efistub_",		/* arm64 EFI stub namespace */
 		"__kvm_nvhe_$",		/* arm64 local symbols in non-VHE KVM namespace */
 		"__kvm_nvhe_.L",	/* arm64 local symbols in non-VHE KVM namespace */
@@ -137,7 +167,10 @@ static bool is_ignored_symbol(const char *name, char type)
 		"__ThumbV7PILongThunk_",
 		"__LA25Thunk_",		/* mips lld */
 		"__microLA25Thunk_",
+<<<<<<< HEAD
 		"__kcfi_typeid_",	/* CFI type identifiers */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		NULL
 	};
 
@@ -225,7 +258,11 @@ static struct sym_entry *read_symbol(FILE *in)
 
 	rc = fscanf(in, "%llx %c %" _stringify(KSYM_NAME_LEN_BUFFER) "s\n", &addr, &type, name);
 	if (rc != 3) {
+<<<<<<< HEAD
 		if (rc != EOF && fgets(name, ARRAY_SIZE(name), in) == NULL)
+=======
+		if (rc != EOF && fgets(name, sizeof(name), in) == NULL)
+>>>>>>> b7ba80a49124 (Commit)
 			fprintf(stderr, "Read error or end of file.\n");
 		return NULL;
 	}
@@ -332,6 +369,7 @@ static void shrink_table(void)
 	}
 }
 
+<<<<<<< HEAD
 static void read_map(const char *in)
 {
 	FILE *fp;
@@ -345,6 +383,14 @@ static void read_map(const char *in)
 
 	while (!feof(fp)) {
 		sym = read_symbol(fp);
+=======
+static void read_map(FILE *in)
+{
+	struct sym_entry *sym;
+
+	while (!feof(in)) {
+		sym = read_symbol(in);
+>>>>>>> b7ba80a49124 (Commit)
 		if (!sym)
 			continue;
 
@@ -355,15 +401,21 @@ static void read_map(const char *in)
 			table = realloc(table, sizeof(*table) * table_size);
 			if (!table) {
 				fprintf(stderr, "out of memory\n");
+<<<<<<< HEAD
 				fclose(fp);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				exit (1);
 			}
 		}
 
 		table[table_cnt++] = sym;
 	}
+<<<<<<< HEAD
 
 	fclose(fp);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void output_label(const char *label)
@@ -414,6 +466,7 @@ static int symbol_absolute(const struct sym_entry *s)
 	return s->percpu_absolute;
 }
 
+<<<<<<< HEAD
 static char * s_name(char *buf)
 {
 	/* Skip the symbol type */
@@ -473,6 +526,8 @@ static void sort_symbols_by_name(void)
 	qsort(table, table_cnt, sizeof(table[0]), compare_names);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static void write_src(void)
 {
 	unsigned int i, k, off;
@@ -525,8 +580,12 @@ static void write_src(void)
 					table[i]->addr);
 				exit(EXIT_FAILURE);
 			}
+<<<<<<< HEAD
 			expand_symbol(table[i]->sym, table[i]->len, buf);
 			printf("\t.long\t%#x	/* %s */\n", (int)offset, buf);
+=======
+			printf("\t.long\t%#x\n", (int)offset);
+>>>>>>> b7ba80a49124 (Commit)
 		} else if (!symbol_absolute(table[i])) {
 			output_address(table[i]->addr);
 		} else {
@@ -559,7 +618,10 @@ static void write_src(void)
 	for (i = 0; i < table_cnt; i++) {
 		if ((i & 0xFF) == 0)
 			markers[i >> 8] = off;
+<<<<<<< HEAD
 		table[i]->seq = i;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		/* There cannot be any symbol of length zero. */
 		if (table[i]->len == 0) {
@@ -600,6 +662,7 @@ static void write_src(void)
 
 	free(markers);
 
+<<<<<<< HEAD
 	sort_symbols_by_name();
 	output_label("kallsyms_seqs_of_names");
 	for (i = 0; i < table_cnt; i++)
@@ -609,6 +672,8 @@ static void write_src(void)
 			(unsigned char)(table[i]->seq >> 0));
 	printf("\n");
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	output_label("kallsyms_token_table");
 	off = 0;
 	for (i = 0; i < 256; i++) {
@@ -647,7 +712,11 @@ static void forget_symbol(const unsigned char *symbol, int len)
 }
 
 /* do the initial token count */
+<<<<<<< HEAD
 static void build_initial_token_table(void)
+=======
+static void build_initial_tok_table(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	unsigned int i;
 
@@ -772,7 +841,11 @@ static void insert_real_symbols_in_table(void)
 
 static void optimize_token_table(void)
 {
+<<<<<<< HEAD
 	build_initial_token_table();
+=======
+	build_initial_tok_table();
+>>>>>>> b7ba80a49124 (Commit)
 
 	insert_real_symbols_in_table();
 
@@ -887,6 +960,7 @@ static void record_relative_base(void)
 
 int main(int argc, char **argv)
 {
+<<<<<<< HEAD
 	while (1) {
 		static struct option long_options[] = {
 			{"all-symbols",     no_argument, &all_symbols,     1},
@@ -908,6 +982,24 @@ int main(int argc, char **argv)
 		usage();
 
 	read_map(argv[optind]);
+=======
+	if (argc >= 2) {
+		int i;
+		for (i = 1; i < argc; i++) {
+			if(strcmp(argv[i], "--all-symbols") == 0)
+				all_symbols = 1;
+			else if (strcmp(argv[i], "--absolute-percpu") == 0)
+				absolute_percpu = 1;
+			else if (strcmp(argv[i], "--base-relative") == 0)
+				base_relative = 1;
+			else
+				usage();
+		}
+	} else if (argc != 1)
+		usage();
+
+	read_map(stdin);
+>>>>>>> b7ba80a49124 (Commit)
 	shrink_table();
 	if (absolute_percpu)
 		make_percpus_absolute();

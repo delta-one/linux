@@ -1264,10 +1264,17 @@ static int tc_dsi_rx_enable(struct tc_data *tc)
 	u32 value;
 	int ret;
 
+<<<<<<< HEAD
 	regmap_write(tc->regmap, PPI_D0S_CLRSIPOCOUNT, 25);
 	regmap_write(tc->regmap, PPI_D1S_CLRSIPOCOUNT, 25);
 	regmap_write(tc->regmap, PPI_D2S_CLRSIPOCOUNT, 25);
 	regmap_write(tc->regmap, PPI_D3S_CLRSIPOCOUNT, 25);
+=======
+	regmap_write(tc->regmap, PPI_D0S_CLRSIPOCOUNT, 5);
+	regmap_write(tc->regmap, PPI_D1S_CLRSIPOCOUNT, 5);
+	regmap_write(tc->regmap, PPI_D2S_CLRSIPOCOUNT, 5);
+	regmap_write(tc->regmap, PPI_D3S_CLRSIPOCOUNT, 5);
+>>>>>>> b7ba80a49124 (Commit)
 	regmap_write(tc->regmap, PPI_D0S_ATMR, 0);
 	regmap_write(tc->regmap, PPI_D1S_ATMR, 0);
 	regmap_write(tc->regmap, PPI_TX_RX_TA, TTA_GET | TTA_SURE);
@@ -2029,7 +2036,11 @@ static void tc_clk_disable(void *data)
 	clk_disable_unprepare(refclk);
 }
 
+<<<<<<< HEAD
 static int tc_probe(struct i2c_client *client)
+=======
+static int tc_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct device *dev = &client->dev;
 	struct tc_data *tc;
@@ -2209,7 +2220,11 @@ static struct i2c_driver tc358767_driver = {
 		.of_match_table = tc358767_of_ids,
 	},
 	.id_table = tc358767_i2c_ids,
+<<<<<<< HEAD
 	.probe_new = tc_probe,
+=======
+	.probe = tc_probe,
+>>>>>>> b7ba80a49124 (Commit)
 	.remove	= tc_remove,
 };
 module_i2c_driver(tc358767_driver);

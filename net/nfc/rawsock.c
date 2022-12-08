@@ -12,7 +12,10 @@
 #include <net/tcp_states.h>
 #include <linux/nfc.h>
 #include <linux/export.h>
+<<<<<<< HEAD
 #include <linux/kcov.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "nfc.h"
 
@@ -190,7 +193,10 @@ static void rawsock_tx_work(struct work_struct *work)
 	}
 
 	skb = skb_dequeue(&sk->sk_write_queue);
+<<<<<<< HEAD
 	kcov_remote_start_common(skb_get_kcov_handle(skb));
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	sock_hold(sk);
 	rc = nfc_data_exchange(dev, target_idx, skb,
@@ -199,7 +205,10 @@ static void rawsock_tx_work(struct work_struct *work)
 		rawsock_report_error(sk, rc);
 		sock_put(sk);
 	}
+<<<<<<< HEAD
 	kcov_remote_stop();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int rawsock_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)

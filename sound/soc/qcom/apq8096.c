@@ -113,7 +113,10 @@ static int apq8096_platform_probe(struct platform_device *pdev)
 	if (!card)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	card->driver_name = "apq8096";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	card->dev = dev;
 	card->owner = THIS_MODULE;
 	dev_set_drvdata(dev, card);

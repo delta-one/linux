@@ -46,7 +46,11 @@
 #define QUIRK_AUTO_CLEAR_INT	BIT(0)
 #define QUIRK_E2E		BIT(1)
 
+<<<<<<< HEAD
 static int ring_interrupt_index(const struct tb_ring *ring)
+=======
+static int ring_interrupt_index(struct tb_ring *ring)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int bit = ring->hop;
 	if (!ring->is_tx)
@@ -63,14 +67,22 @@ static void ring_interrupt_active(struct tb_ring *ring, bool active)
 {
 	int reg = REG_RING_INTERRUPT_BASE +
 		  ring_interrupt_index(ring) / 32 * 4;
+<<<<<<< HEAD
 	int interrupt_bit = ring_interrupt_index(ring) & 31;
 	int mask = 1 << interrupt_bit;
+=======
+	int bit = ring_interrupt_index(ring) & 31;
+	int mask = 1 << bit;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 old, new;
 
 	if (ring->irq > 0) {
 		u32 step, shift, ivr, misc;
 		void __iomem *ivr_base;
+<<<<<<< HEAD
 		int auto_clear_bit;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		int index;
 
 		if (ring->is_tx)
@@ -78,6 +90,7 @@ static void ring_interrupt_active(struct tb_ring *ring, bool active)
 		else
 			index = ring->hop + ring->nhi->hop_count;
 
+<<<<<<< HEAD
 		/*
 		 * Intel routers support a bit that isn't part of
 		 * the USB4 spec to ask the hardware to clear
@@ -97,6 +110,20 @@ static void ring_interrupt_active(struct tb_ring *ring, bool active)
 		if (!(misc & auto_clear_bit))
 			iowrite32(misc | auto_clear_bit,
 				  ring->nhi->iobase + REG_DMA_MISC);
+=======
+		if (ring->nhi->quirks & QUIRK_AUTO_CLEAR_INT) {
+			/*
+			 * Ask the hardware to clear interrupt status
+			 * bits automatically since we already know
+			 * which interrupt was triggered.
+			 */
+			misc = ioread32(ring->nhi->iobase + REG_DMA_MISC);
+			if (!(misc & REG_DMA_MISC_INT_AUTO_CLEAR)) {
+				misc |= REG_DMA_MISC_INT_AUTO_CLEAR;
+				iowrite32(misc, ring->nhi->iobase + REG_DMA_MISC);
+			}
+		}
+>>>>>>> b7ba80a49124 (Commit)
 
 		ivr_base = ring->nhi->iobase + REG_INT_VEC_ALLOC_BASE;
 		step = index / REG_INT_VEC_ALLOC_REGS * REG_INT_VEC_ALLOC_BITS;
@@ -116,7 +143,11 @@ static void ring_interrupt_active(struct tb_ring *ring, bool active)
 
 	dev_dbg(&ring->nhi->pdev->dev,
 		"%s interrupt at register %#x bit %d (%#x -> %#x)\n",
+<<<<<<< HEAD
 		active ? "enabling" : "disabling", reg, interrupt_bit, old, new);
+=======
+		active ? "enabling" : "disabling", reg, bit, old, new);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (new == old)
 		dev_WARN(&ring->nhi->pdev->dev,
@@ -401,6 +432,7 @@ EXPORT_SYMBOL_GPL(tb_ring_poll_complete);
 
 static void ring_clear_msix(const struct tb_ring *ring)
 {
+<<<<<<< HEAD
 	int bit;
 
 	if (ring->nhi->quirks & QUIRK_AUTO_CLEAR_INT)
@@ -412,6 +444,16 @@ static void ring_clear_msix(const struct tb_ring *ring)
 	else
 		iowrite32(BIT(bit), ring->nhi->iobase + REG_RING_INT_CLEAR +
 			  4 * (ring->nhi->hop_count / 32));
+=======
+	if (ring->nhi->quirks & QUIRK_AUTO_CLEAR_INT)
+		return;
+
+	if (ring->is_tx)
+		ioread32(ring->nhi->iobase + REG_RING_NOTIFY_BASE);
+	else
+		ioread32(ring->nhi->iobase + REG_RING_NOTIFY_BASE +
+			 4 * (ring->nhi->hop_count / 32));
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static irqreturn_t ring_msix(int irq, void *data)
@@ -1195,7 +1237,10 @@ static void nhi_check_iommu(struct tb_nhi *nhi)
 static int nhi_init_msi(struct tb_nhi *nhi)
 {
 	struct pci_dev *pdev = nhi->pdev;
+<<<<<<< HEAD
 	struct device *dev = &pdev->dev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int res, irq, nvec;
 
 	/* In case someone left them on. */
@@ -1226,8 +1271,15 @@ static int nhi_init_msi(struct tb_nhi *nhi)
 
 		res = devm_request_irq(&pdev->dev, irq, nhi_msi,
 				       IRQF_NO_SUSPEND, "thunderbolt", nhi);
+<<<<<<< HEAD
 		if (res)
 			return dev_err_probe(dev, res, "request_irq failed, aborting\n");
+=======
+		if (res) {
+			dev_err(&pdev->dev, "request_irq failed, aborting\n");
+			return res;
+		}
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -1268,11 +1320,15 @@ static struct tb *nhi_select_cm(struct tb_nhi *nhi)
 
 static int nhi_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 {
+<<<<<<< HEAD
 	struct device *dev = &pdev->dev;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct tb_nhi *nhi;
 	struct tb *tb;
 	int res;
 
+<<<<<<< HEAD
 	if (!nhi_imr_valid(pdev))
 		return dev_err_probe(dev, -ENODEV, "firmware image not valid, aborting\n");
 
@@ -1283,6 +1339,24 @@ static int nhi_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	res = pcim_iomap_regions(pdev, 1 << 0, "thunderbolt");
 	if (res)
 		return dev_err_probe(dev, res, "cannot obtain PCI resources, aborting\n");
+=======
+	if (!nhi_imr_valid(pdev)) {
+		dev_warn(&pdev->dev, "firmware image not valid, aborting\n");
+		return -ENODEV;
+	}
+
+	res = pcim_enable_device(pdev);
+	if (res) {
+		dev_err(&pdev->dev, "cannot enable PCI device, aborting\n");
+		return res;
+	}
+
+	res = pcim_iomap_regions(pdev, 1 << 0, "thunderbolt");
+	if (res) {
+		dev_err(&pdev->dev, "cannot obtain PCI resources, aborting\n");
+		return res;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	nhi = devm_kzalloc(&pdev->dev, sizeof(*nhi), GFP_KERNEL);
 	if (!nhi)
@@ -1293,7 +1367,11 @@ static int nhi_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	/* cannot fail - table is allocated in pcim_iomap_regions */
 	nhi->iobase = pcim_iomap_table(pdev)[0];
 	nhi->hop_count = ioread32(nhi->iobase + REG_HOP_COUNT) & 0x3ff;
+<<<<<<< HEAD
 	dev_dbg(dev, "total paths: %d\n", nhi->hop_count);
+=======
+	dev_dbg(&pdev->dev, "total paths: %d\n", nhi->hop_count);
+>>>>>>> b7ba80a49124 (Commit)
 
 	nhi->tx_rings = devm_kcalloc(&pdev->dev, nhi->hop_count,
 				     sizeof(*nhi->tx_rings), GFP_KERNEL);
@@ -1306,14 +1384,28 @@ static int nhi_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	nhi_check_iommu(nhi);
 
 	res = nhi_init_msi(nhi);
+<<<<<<< HEAD
 	if (res)
 		return dev_err_probe(dev, res, "cannot enable MSI, aborting\n");
+=======
+	if (res) {
+		dev_err(&pdev->dev, "cannot enable MSI, aborting\n");
+		return res;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	spin_lock_init(&nhi->lock);
 
 	res = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
+<<<<<<< HEAD
 	if (res)
 		return dev_err_probe(dev, res, "failed to set DMA mask\n");
+=======
+	if (res) {
+		dev_err(&pdev->dev, "failed to set DMA mask\n");
+		return res;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 
 	pci_set_master(pdev);
 
@@ -1324,11 +1416,21 @@ static int nhi_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	}
 
 	tb = nhi_select_cm(nhi);
+<<<<<<< HEAD
 	if (!tb)
 		return dev_err_probe(dev, -ENODEV,
 			"failed to determine connection manager, aborting\n");
 
 	dev_dbg(dev, "NHI initialized, starting thunderbolt\n");
+=======
+	if (!tb) {
+		dev_err(&nhi->pdev->dev,
+			"failed to determine connection manager, aborting\n");
+		return -ENODEV;
+	}
+
+	dev_dbg(&nhi->pdev->dev, "NHI initialized, starting thunderbolt\n");
+>>>>>>> b7ba80a49124 (Commit)
 
 	res = tb_domain_add(tb);
 	if (res) {

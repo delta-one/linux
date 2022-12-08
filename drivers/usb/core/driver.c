@@ -899,14 +899,24 @@ static int usb_device_match(struct device *dev, struct device_driver *drv)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int usb_uevent(const struct device *dev, struct kobj_uevent_env *env)
 {
 	const struct usb_device *usb_dev;
+=======
+static int usb_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+	struct usb_device *usb_dev;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (is_usb_device(dev)) {
 		usb_dev = to_usb_device(dev);
 	} else if (is_usb_interface(dev)) {
+<<<<<<< HEAD
 		const struct usb_interface *intf = to_usb_interface(dev);
+=======
+		struct usb_interface *intf = to_usb_interface(dev);
+>>>>>>> b7ba80a49124 (Commit)
 
 		usb_dev = interface_to_usbdev(intf);
 	} else {

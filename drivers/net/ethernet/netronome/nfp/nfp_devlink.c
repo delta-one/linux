@@ -239,6 +239,13 @@ nfp_devlink_info_get(struct devlink *devlink, struct devlink_info_req *req,
 	char *buf = NULL;
 	int err;
 
+<<<<<<< HEAD
+=======
+	err = devlink_info_driver_name_put(req, "nfp");
+	if (err)
+		return err;
+
+>>>>>>> b7ba80a49124 (Commit)
 	vendor = nfp_hwinfo_lookup(pf->hwinfo, "assembly.vendor");
 	part = nfp_hwinfo_lookup(pf->hwinfo, "assembly.partno");
 	sn = nfp_hwinfo_lookup(pf->hwinfo, "assembly.serial");
@@ -330,8 +337,11 @@ int nfp_devlink_port_register(struct nfp_app *app, struct nfp_port *port)
 	int serial_len;
 	int ret;
 
+<<<<<<< HEAD
 	SET_NETDEV_DEVLINK_PORT(port->netdev, &port->dl_port);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	rtnl_lock();
 	ret = nfp_devlink_fill_eth_port(port, &eth_port);
 	rtnl_unlock();
@@ -339,7 +349,11 @@ int nfp_devlink_port_register(struct nfp_app *app, struct nfp_port *port)
 		return ret;
 
 	attrs.split = eth_port.is_split;
+<<<<<<< HEAD
 	attrs.splittable = eth_port.port_lanes > 1 && !attrs.split;
+=======
+	attrs.splittable = !attrs.split;
+>>>>>>> b7ba80a49124 (Commit)
 	attrs.lanes = eth_port.port_lanes;
 	attrs.flavour = DEVLINK_PORT_FLAVOUR_PHYSICAL;
 	attrs.phys.port_number = eth_port.label_port;
@@ -358,3 +372,27 @@ void nfp_devlink_port_unregister(struct nfp_port *port)
 {
 	devl_port_unregister(&port->dl_port);
 }
+<<<<<<< HEAD
+=======
+
+void nfp_devlink_port_type_eth_set(struct nfp_port *port)
+{
+	devlink_port_type_eth_set(&port->dl_port, port->netdev);
+}
+
+void nfp_devlink_port_type_clear(struct nfp_port *port)
+{
+	devlink_port_type_clear(&port->dl_port);
+}
+
+struct devlink_port *nfp_devlink_get_devlink_port(struct net_device *netdev)
+{
+	struct nfp_port *port;
+
+	port = nfp_port_from_netdev(netdev);
+	if (!port)
+		return NULL;
+
+	return &port->dl_port;
+}
+>>>>>>> b7ba80a49124 (Commit)

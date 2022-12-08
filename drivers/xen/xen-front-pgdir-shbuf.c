@@ -30,7 +30,11 @@
 struct xen_page_directory {
 	grant_ref_t gref_dir_next_page;
 #define XEN_GREF_LIST_END	0
+<<<<<<< HEAD
 	grant_ref_t gref[]; /* Variable length */
+=======
+	grant_ref_t gref[1]; /* Variable length */
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /**

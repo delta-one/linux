@@ -15,12 +15,18 @@
 #include <net/dsa.h>
 #include <linux/irq.h>
 
+<<<<<<< HEAD
 #include "ksz_ptp.h"
 
 #define KSZ_MAX_NUM_PORTS 8
 
 struct ksz_device;
 struct ksz_port;
+=======
+#define KSZ_MAX_NUM_PORTS 8
+
+struct ksz_device;
+>>>>>>> b7ba80a49124 (Commit)
 
 struct vlan_table {
 	u32 table[3];
@@ -48,10 +54,13 @@ struct ksz_chip_data {
 	int num_statics;
 	int cpu_ports;
 	int port_cnt;
+<<<<<<< HEAD
 	u8 port_nirqs;
 	u8 num_tx_queues;
 	bool tc_cbs_supported;
 	bool tc_ets_supported;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	const struct ksz_dev_ops *ops;
 	bool phy_errata_9477;
 	bool ksz87xx_eee_link_erratum;
@@ -78,6 +87,7 @@ struct ksz_chip_data {
 
 struct ksz_irq {
 	u16 masked;
+<<<<<<< HEAD
 	u16 reg_mask;
 	u16 reg_status;
 	struct irq_domain *domain;
@@ -93,6 +103,12 @@ struct ksz_ptp_irq {
 	bool ts_en;
 	char name[16];
 	int num;
+=======
+	struct irq_chip chip;
+	struct irq_domain *domain;
+	int nirqs;
+	char name[16];
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct ksz_port {
@@ -109,11 +125,16 @@ struct ksz_port {
 
 	struct ksz_port_mib mib;
 	phy_interface_t interface;
+<<<<<<< HEAD
+=======
+	u16 max_frame;
+>>>>>>> b7ba80a49124 (Commit)
 	u32 rgmii_tx_val;
 	u32 rgmii_rx_val;
 	struct ksz_device *ksz_dev;
 	struct ksz_irq pirq;
 	u8 num;
+<<<<<<< HEAD
 #if IS_ENABLED(CONFIG_NET_DSA_MICROCHIP_KSZ_PTP)
 	struct hwtstamp_config tstamp_config;
 	bool hwts_tx_en;
@@ -123,6 +144,8 @@ struct ksz_port {
 	ktime_t tstamp_msg;
 	struct completion tstamp_msg_comp;
 #endif
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct ksz_device {
@@ -163,7 +186,10 @@ struct ksz_device {
 	u16 port_mask;
 	struct mutex lock_irq;		/* IRQ Access */
 	struct ksz_irq girq;
+<<<<<<< HEAD
 	struct ksz_ptp_data ptp_data;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 /* List of supported models */
@@ -177,7 +203,10 @@ enum ksz_model {
 	KSZ9896,
 	KSZ9897,
 	KSZ9893,
+<<<<<<< HEAD
 	KSZ9563,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	KSZ9567,
 	LAN9370,
 	LAN9371,
@@ -196,7 +225,10 @@ enum ksz_chip_id {
 	KSZ9896_CHIP_ID = 0x00989600,
 	KSZ9897_CHIP_ID = 0x00989700,
 	KSZ9893_CHIP_ID = 0x00989300,
+<<<<<<< HEAD
 	KSZ9563_CHIP_ID = 0x00956300,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	KSZ9567_CHIP_ID = 0x00956700,
 	LAN9370_CHIP_ID = 0x00937000,
 	LAN9371_CHIP_ID = 0x00937100,
@@ -345,6 +377,10 @@ struct ksz_dev_ops {
 	void (*get_caps)(struct ksz_device *dev, int port,
 			 struct phylink_config *config);
 	int (*change_mtu)(struct ksz_device *dev, int port, int mtu);
+<<<<<<< HEAD
+=======
+	int (*max_mtu)(struct ksz_device *dev, int port);
+>>>>>>> b7ba80a49124 (Commit)
 	void (*freeze_mib)(struct ksz_device *dev, int port, bool freeze);
 	void (*port_init_cnt)(struct ksz_device *dev, int port);
 	void (*phylink_mac_config)(struct ksz_device *dev, int port,
@@ -356,7 +392,10 @@ struct ksz_dev_ops {
 				    struct phy_device *phydev, int speed,
 				    int duplex, bool tx_pause, bool rx_pause);
 	void (*setup_rgmii_delay)(struct ksz_device *dev, int port);
+<<<<<<< HEAD
 	int (*tc_cbs_set_cinc)(struct ksz_device *dev, int port, u32 val);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	void (*config_cpu_port)(struct dsa_switch *ds);
 	int (*enable_stp_addr)(struct ksz_device *dev);
 	int (*reset)(struct ksz_device *dev);
@@ -370,7 +409,10 @@ void ksz_switch_remove(struct ksz_device *dev);
 
 void ksz_init_mib_timer(struct ksz_device *dev);
 void ksz_r_mib_stats64(struct ksz_device *dev, int port);
+<<<<<<< HEAD
 void ksz88xx_r_mib_stats64(struct ksz_device *dev, int port);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 void ksz_port_stp_state_set(struct dsa_switch *ds, int port, u8 state);
 bool ksz_get_gbit(struct ksz_device *dev, int port);
 phy_interface_t ksz_get_xmii(struct ksz_device *dev, int port, bool gbit);
@@ -468,6 +510,7 @@ static inline int ksz_write32(struct ksz_device *dev, u32 reg, u32 value)
 	return ret;
 }
 
+<<<<<<< HEAD
 static inline int ksz_rmw16(struct ksz_device *dev, u32 reg, u16 mask,
 			    u16 value)
 {
@@ -494,6 +537,8 @@ static inline int ksz_rmw32(struct ksz_device *dev, u32 reg, u32 mask,
 	return ret;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int ksz_write64(struct ksz_device *dev, u32 reg, u64 value)
 {
 	u32 val[2];
@@ -506,11 +551,14 @@ static inline int ksz_write64(struct ksz_device *dev, u32 reg, u64 value)
 	return regmap_bulk_write(dev->regmap[2], reg, val, 2);
 }
 
+<<<<<<< HEAD
 static inline int ksz_rmw8(struct ksz_device *dev, int offset, u8 mask, u8 val)
 {
 	return regmap_update_bits(dev->regmap[0], offset, mask, val);
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static inline int ksz_pread8(struct ksz_device *dev, int port, int offset,
 			     u8 *data)
 {
@@ -608,7 +656,10 @@ static inline int is_lan937x(struct ksz_device *dev)
 /* KSZ9893, KSZ9563, KSZ8563 specific register  */
 #define REG_CHIP_ID4			0x0f
 #define SKU_ID_KSZ8563			0x3c
+<<<<<<< HEAD
 #define SKU_ID_KSZ9563			0x1c
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /* Driver set switch broadcast storm protection at 10% rate. */
 #define BROADCAST_STORM_PROT_RATE	10
@@ -634,6 +685,7 @@ static inline int is_lan937x(struct ksz_device *dev)
 #define P_MII_MAC_MODE			BIT(2)
 #define P_MII_SEL_M			0x3
 
+<<<<<<< HEAD
 /* Interrupt */
 #define REG_SW_PORT_INT_STATUS__1	0x001B
 #define REG_SW_PORT_INT_MASK__1		0x001F
@@ -677,6 +729,8 @@ static inline int is_lan937x(struct ksz_device *dev)
 #define REG_PORT_MTI_HI_WATER_MARK	0x0916
 #define REG_PORT_MTI_LO_WATER_MARK	0x0918
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* Regmap tables generation */
 #define KSZ_SPI_OP_RD		3
 #define KSZ_SPI_OP_WR		2

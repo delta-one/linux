@@ -624,8 +624,11 @@ __udp_tunnel_nic_dump_write(struct net_device *dev, unsigned int table,
 			continue;
 
 		nest = nla_nest_start(skb, ETHTOOL_A_TUNNEL_UDP_TABLE_ENTRY);
+<<<<<<< HEAD
 		if (!nest)
 			return -EMSGSIZE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 		if (nla_put_be16(skb, ETHTOOL_A_TUNNEL_UDP_ENTRY_PORT,
 				 utn->entries[table][j].port) ||

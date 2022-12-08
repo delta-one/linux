@@ -16,7 +16,10 @@ properties:
   compatible:
     enum:
       - qcom,dsi-phy-28nm-hpm
+<<<<<<< HEAD
       - qcom,dsi-phy-28nm-hpm-fam-b
+=======
+>>>>>>> b7ba80a49124 (Commit)
       - qcom,dsi-phy-28nm-lp
       - qcom,dsi-phy-28nm-8960
 
@@ -35,10 +38,13 @@ properties:
   vddio-supply:
     description: Phandle to vdd-io regulator device node.
 
+<<<<<<< HEAD
   qcom,dsi-phy-regulator-ldo-mode:
     type: boolean
     description: Indicates if the LDO mode PHY regulator is wanted.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - reg

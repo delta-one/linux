@@ -39,6 +39,10 @@ static inline bool ctxt_has_mte(struct kvm_cpu_context *ctxt)
 
 static inline void __sysreg_save_el1_state(struct kvm_cpu_context *ctxt)
 {
+<<<<<<< HEAD
+=======
+	ctxt_sys_reg(ctxt, CSSELR_EL1)	= read_sysreg(csselr_el1);
+>>>>>>> b7ba80a49124 (Commit)
 	ctxt_sys_reg(ctxt, SCTLR_EL1)	= read_sysreg_el1(SYS_SCTLR);
 	ctxt_sys_reg(ctxt, CPACR_EL1)	= read_sysreg_el1(SYS_CPACR);
 	ctxt_sys_reg(ctxt, TTBR0_EL1)	= read_sysreg_el1(SYS_TTBR0);
@@ -94,6 +98,10 @@ static inline void __sysreg_restore_user_state(struct kvm_cpu_context *ctxt)
 static inline void __sysreg_restore_el1_state(struct kvm_cpu_context *ctxt)
 {
 	write_sysreg(ctxt_sys_reg(ctxt, MPIDR_EL1),	vmpidr_el2);
+<<<<<<< HEAD
+=======
+	write_sysreg(ctxt_sys_reg(ctxt, CSSELR_EL1),	csselr_el1);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (has_vhe() ||
 	    !cpus_have_final_cap(ARM64_WORKAROUND_SPECULATIVE_AT)) {
@@ -154,6 +162,7 @@ static inline void __sysreg_restore_el1_state(struct kvm_cpu_context *ctxt)
 	write_sysreg_el1(ctxt_sys_reg(ctxt, SPSR_EL1),	SYS_SPSR);
 }
 
+<<<<<<< HEAD
 /* Read the VCPU state's PSTATE, but translate (v)EL2 to EL1. */
 static inline u64 to_hw_pstate(const struct kvm_cpu_context *ctxt)
 {
@@ -174,6 +183,11 @@ static inline u64 to_hw_pstate(const struct kvm_cpu_context *ctxt)
 static inline void __sysreg_restore_el2_return_state(struct kvm_cpu_context *ctxt)
 {
 	u64 pstate = to_hw_pstate(ctxt);
+=======
+static inline void __sysreg_restore_el2_return_state(struct kvm_cpu_context *ctxt)
+{
+	u64 pstate = ctxt->regs.pstate;
+>>>>>>> b7ba80a49124 (Commit)
 	u64 mode = pstate & PSR_AA32_MODE_MASK;
 
 	/*

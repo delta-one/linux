@@ -737,9 +737,14 @@ mlxsw_afa_cookie_create(struct mlxsw_afa *mlxsw_afa,
 	if (!cookie)
 		return ERR_PTR(-ENOMEM);
 	refcount_set(&cookie->ref_count, 1);
+<<<<<<< HEAD
 	cookie->fa_cookie = *fa_cookie;
 	memcpy(cookie->fa_cookie.cookie, fa_cookie->cookie,
 	       fa_cookie->cookie_len);
+=======
+	memcpy(&cookie->fa_cookie, fa_cookie,
+	       sizeof(*fa_cookie) + fa_cookie->cookie_len);
+>>>>>>> b7ba80a49124 (Commit)
 
 	err = rhashtable_insert_fast(&mlxsw_afa->cookie_ht, &cookie->ht_node,
 				     mlxsw_afa_cookie_ht_params);

@@ -96,8 +96,11 @@ int prestera_mall_replace(struct prestera_flow_block *block,
 
 	list_for_each_entry(binding, &block->binding_list, list) {
 		err = prestera_span_rule_add(binding, port, block->ingress);
+<<<<<<< HEAD
 		if (err == -EEXIST)
 			return err;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (err)
 			goto rollback;
 	}

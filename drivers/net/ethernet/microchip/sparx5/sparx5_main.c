@@ -27,7 +27,10 @@
 #include "sparx5_main_regs.h"
 #include "sparx5_main.h"
 #include "sparx5_port.h"
+<<<<<<< HEAD
 #include "sparx5_qos.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define QLIM_WM(fraction) \
 	((SPX5_BUFFER_MEMORY / SPX5_BUFFER_CELL_SZ - 100) * (fraction) / 100)
@@ -198,15 +201,21 @@ static const struct sparx5_main_io_resource sparx5_main_iomap[] =  {
 	{ TARGET_QSYS,               0x110a0000, 2 }, /* 0x6110a0000 */
 	{ TARGET_QFWD,               0x110b0000, 2 }, /* 0x6110b0000 */
 	{ TARGET_XQS,                0x110c0000, 2 }, /* 0x6110c0000 */
+<<<<<<< HEAD
 	{ TARGET_VCAP_ES2,           0x110d0000, 2 }, /* 0x6110d0000 */
 	{ TARGET_VCAP_ES0,           0x110e0000, 2 }, /* 0x6110e0000 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ TARGET_CLKGEN,             0x11100000, 2 }, /* 0x611100000 */
 	{ TARGET_ANA_AC_POL,         0x11200000, 2 }, /* 0x611200000 */
 	{ TARGET_QRES,               0x11280000, 2 }, /* 0x611280000 */
 	{ TARGET_EACL,               0x112c0000, 2 }, /* 0x6112c0000 */
 	{ TARGET_ANA_CL,             0x11400000, 2 }, /* 0x611400000 */
 	{ TARGET_ANA_L3,             0x11480000, 2 }, /* 0x611480000 */
+<<<<<<< HEAD
 	{ TARGET_ANA_AC_SDLB,        0x11500000, 2 }, /* 0x611500000 */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{ TARGET_HSCH,               0x11580000, 2 }, /* 0x611580000 */
 	{ TARGET_REW,                0x11600000, 2 }, /* 0x611600000 */
 	{ TARGET_ANA_L2,             0x11800000, 2 }, /* 0x611800000 */
@@ -282,7 +291,10 @@ static int sparx5_create_port(struct sparx5 *sparx5,
 	spx5_port->phylink_pcs.poll = true;
 	spx5_port->phylink_pcs.ops = &sparx5_phylink_pcs_ops;
 	spx5_port->is_mrouter = false;
+<<<<<<< HEAD
 	INIT_LIST_HEAD(&spx5_port->tc_templates);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sparx5->ports[config->portno] = spx5_port;
 
 	err = sparx5_port_init(sparx5, spx5_port, &config->conf);
@@ -504,8 +516,13 @@ static int sparx5_init_coreclock(struct sparx5 *sparx5)
 
 	clk_period = sparx5_clk_period(freq);
 
+<<<<<<< HEAD
 	spx5_rmw(HSCH_SYS_CLK_PER_100PS_SET(clk_period / 100),
 		 HSCH_SYS_CLK_PER_100PS,
+=======
+	spx5_rmw(HSCH_SYS_CLK_PER_SYS_CLK_PER_100PS_SET(clk_period / 100),
+		 HSCH_SYS_CLK_PER_SYS_CLK_PER_100PS,
+>>>>>>> b7ba80a49124 (Commit)
 		 sparx5,
 		 HSCH_SYS_CLK_PER);
 
@@ -663,9 +680,12 @@ static int sparx5_start(struct sparx5 *sparx5)
 	snprintf(queue_name, sizeof(queue_name), "%s-mact",
 		 dev_name(sparx5->dev));
 	sparx5->mact_queue = create_singlethread_workqueue(queue_name);
+<<<<<<< HEAD
 	if (!sparx5->mact_queue)
 		return -ENOMEM;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	INIT_DELAYED_WORK(&sparx5->mact_work, sparx5_mact_pull_work);
 	queue_delayed_work(sparx5->mact_queue, &sparx5->mact_work,
 			   SPX5_MACT_PULL_DELAY);
@@ -679,6 +699,7 @@ static int sparx5_start(struct sparx5 *sparx5)
 
 	sparx5_board_init(sparx5);
 	err = sparx5_register_notifier_blocks(sparx5);
+<<<<<<< HEAD
 	if (err)
 		return err;
 
@@ -687,6 +708,8 @@ static int sparx5_start(struct sparx5 *sparx5)
 		sparx5_unregister_notifier_blocks(sparx5);
 		return err;
 	}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* Start Frame DMA with fallback to register based INJ/XTR */
 	err = -ENXIO;
@@ -767,8 +790,11 @@ static int mchp_sparx5_probe(struct platform_device *pdev)
 	/* Default values, some from DT */
 	sparx5->coreclock = SPX5_CORE_CLOCK_DEFAULT;
 
+<<<<<<< HEAD
 	sparx5->debugfs_root = debugfs_create_dir("sparx5", NULL);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ports = of_get_child_by_name(np, "ethernet-ports");
 	if (!ports) {
 		dev_err(sparx5->dev, "no ethernet-ports child node found\n");
@@ -838,7 +864,11 @@ static int mchp_sparx5_probe(struct platform_device *pdev)
 	if (err)
 		goto cleanup_config;
 
+<<<<<<< HEAD
 	if (of_get_mac_address(np, sparx5->base_mac)) {
+=======
+	if (!of_get_mac_address(np, sparx5->base_mac)) {
+>>>>>>> b7ba80a49124 (Commit)
 		dev_info(sparx5->dev, "MAC addr was not set, use random MAC\n");
 		eth_random_addr(sparx5->base_mac);
 		sparx5->base_mac[5] = 0;
@@ -886,12 +916,15 @@ static int mchp_sparx5_probe(struct platform_device *pdev)
 		goto cleanup_ports;
 	}
 
+<<<<<<< HEAD
 	err = sparx5_qos_init(sparx5);
 	if (err) {
 		dev_err(sparx5->dev, "Failed to initialize QoS\n");
 		goto cleanup_ports;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	err = sparx5_ptp_init(sparx5);
 	if (err) {
 		dev_err(sparx5->dev, "PTP failed\n");
@@ -901,8 +934,11 @@ static int mchp_sparx5_probe(struct platform_device *pdev)
 
 cleanup_ports:
 	sparx5_cleanup_ports(sparx5);
+<<<<<<< HEAD
 	if (sparx5->mact_queue)
 		destroy_workqueue(sparx5->mact_queue);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 cleanup_config:
 	kfree(configs);
 cleanup_pnode:
@@ -914,7 +950,10 @@ static int mchp_sparx5_remove(struct platform_device *pdev)
 {
 	struct sparx5 *sparx5 = platform_get_drvdata(pdev);
 
+<<<<<<< HEAD
 	debugfs_remove_recursive(sparx5->debugfs_root);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (sparx5->xtr_irq) {
 		disable_irq(sparx5->xtr_irq);
 		sparx5->xtr_irq = -ENXIO;
@@ -926,10 +965,15 @@ static int mchp_sparx5_remove(struct platform_device *pdev)
 	sparx5_ptp_deinit(sparx5);
 	sparx5_fdma_stop(sparx5);
 	sparx5_cleanup_ports(sparx5);
+<<<<<<< HEAD
 	sparx5_vcap_destroy(sparx5);
 	/* Unregister netdevs */
 	sparx5_unregister_notifier_blocks(sparx5);
 	destroy_workqueue(sparx5->mact_queue);
+=======
+	/* Unregister netdevs */
+	sparx5_unregister_notifier_blocks(sparx5);
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }

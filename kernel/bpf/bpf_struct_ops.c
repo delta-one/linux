@@ -11,13 +11,19 @@
 #include <linux/refcount.h>
 #include <linux/mutex.h>
 #include <linux/btf_ids.h>
+<<<<<<< HEAD
 #include <linux/rcupdate_wait.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 enum bpf_struct_ops_state {
 	BPF_STRUCT_OPS_STATE_INIT,
 	BPF_STRUCT_OPS_STATE_INUSE,
 	BPF_STRUCT_OPS_STATE_TOBEFREE,
+<<<<<<< HEAD
 	BPF_STRUCT_OPS_STATE_READY,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define BPF_STRUCT_OPS_COMMON_VALUE			\
@@ -60,6 +66,7 @@ struct bpf_struct_ops_map {
 	struct bpf_struct_ops_value kvalue;
 };
 
+<<<<<<< HEAD
 struct bpf_struct_ops_link {
 	struct bpf_link link;
 	struct bpf_map __rcu *map;
@@ -67,6 +74,8 @@ struct bpf_struct_ops_link {
 
 static DEFINE_MUTEX(update_mutex);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #define VALUE_PREFIX "bpf_struct_ops_"
 #define VALUE_PREFIX_LEN (sizeof(VALUE_PREFIX) - 1)
 
@@ -258,7 +267,10 @@ int bpf_struct_ops_map_sys_lookup_elem(struct bpf_map *map, void *key,
 	struct bpf_struct_ops_map *st_map = (struct bpf_struct_ops_map *)map;
 	struct bpf_struct_ops_value *uvalue, *kvalue;
 	enum bpf_struct_ops_state state;
+<<<<<<< HEAD
 	s64 refcnt;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (unlikely(*(u32 *)key != 0))
 		return -ENOENT;
@@ -277,6 +289,7 @@ int bpf_struct_ops_map_sys_lookup_elem(struct bpf_map *map, void *key,
 	uvalue = value;
 	memcpy(uvalue, st_map->uvalue, map->value_size);
 	uvalue->state = state;
+<<<<<<< HEAD
 
 	/* This value offers the user space a general estimate of how
 	 * many sockets are still utilizing this struct_ops for TCP
@@ -285,6 +298,9 @@ int bpf_struct_ops_map_sys_lookup_elem(struct bpf_map *map, void *key,
 	 */
 	refcnt = atomic64_read(&map->refcnt) - atomic64_read(&map->usercnt);
 	refcount_set(&uvalue->refcnt, max_t(s64, refcnt, 0));
+=======
+	refcount_set(&uvalue->refcnt, refcount_read(&kvalue->refcnt));
+>>>>>>> b7ba80a49124 (Commit)
 
 	return 0;
 }
@@ -366,8 +382,13 @@ int bpf_struct_ops_prepare_trampoline(struct bpf_tramp_links *tlinks,
 					   model, flags, tlinks, NULL);
 }
 
+<<<<<<< HEAD
 static long bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
 					   void *value, u64 flags)
+=======
+static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
+					  void *value, u64 flags)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bpf_struct_ops_map *st_map = (struct bpf_struct_ops_map *)map;
 	const struct bpf_struct_ops *st_ops = st_map->st_ops;
@@ -508,6 +529,7 @@ static long bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
 		*(unsigned long *)(udata + moff) = prog->aux->id;
 	}
 
+<<<<<<< HEAD
 	if (st_map->map.map_flags & BPF_F_LINK) {
 		err = st_ops->validate(kdata);
 		if (err)
@@ -531,6 +553,15 @@ static long bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
 		 * or transition it to TOBEFREE concurrently.
 		 */
 		bpf_map_inc(map);
+=======
+	refcount_set(&kvalue->refcnt, 1);
+	bpf_map_inc(map);
+
+	set_memory_ro((long)st_map->image, 1);
+	set_memory_x((long)st_map->image, 1);
+	err = st_ops->reg(kdata);
+	if (likely(!err)) {
+>>>>>>> b7ba80a49124 (Commit)
 		/* Pair with smp_load_acquire() during lookup_elem().
 		 * It ensures the above udata updates (e.g. prog->aux->id)
 		 * can be seen once BPF_STRUCT_OPS_STATE_INUSE is set.
@@ -546,6 +577,10 @@ static long bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
 	 */
 	set_memory_nx((long)st_map->image, 1);
 	set_memory_rw((long)st_map->image, 1);
+<<<<<<< HEAD
+=======
+	bpf_map_put(map);
+>>>>>>> b7ba80a49124 (Commit)
 
 reset_unlock:
 	bpf_struct_ops_map_put_progs(st_map);
@@ -557,22 +592,34 @@ unlock:
 	return err;
 }
 
+<<<<<<< HEAD
 static long bpf_struct_ops_map_delete_elem(struct bpf_map *map, void *key)
+=======
+static int bpf_struct_ops_map_delete_elem(struct bpf_map *map, void *key)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	enum bpf_struct_ops_state prev_state;
 	struct bpf_struct_ops_map *st_map;
 
 	st_map = (struct bpf_struct_ops_map *)map;
+<<<<<<< HEAD
 	if (st_map->map.map_flags & BPF_F_LINK)
 		return -EOPNOTSUPP;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	prev_state = cmpxchg(&st_map->kvalue.state,
 			     BPF_STRUCT_OPS_STATE_INUSE,
 			     BPF_STRUCT_OPS_STATE_TOBEFREE);
 	switch (prev_state) {
 	case BPF_STRUCT_OPS_STATE_INUSE:
 		st_map->st_ops->unreg(&st_map->kvalue.data);
+<<<<<<< HEAD
 		bpf_map_put(map);
+=======
+		if (refcount_dec_and_test(&st_map->kvalue.refcnt))
+			bpf_map_put(map);
+>>>>>>> b7ba80a49124 (Commit)
 		return 0;
 	case BPF_STRUCT_OPS_STATE_TOBEFREE:
 		return -EINPROGRESS;
@@ -605,7 +652,11 @@ static void bpf_struct_ops_map_seq_show_elem(struct bpf_map *map, void *key,
 	kfree(value);
 }
 
+<<<<<<< HEAD
 static void __bpf_struct_ops_map_free(struct bpf_map *map)
+=======
+static void bpf_struct_ops_map_free(struct bpf_map *map)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct bpf_struct_ops_map *st_map = (struct bpf_struct_ops_map *)map;
 
@@ -617,6 +668,7 @@ static void __bpf_struct_ops_map_free(struct bpf_map *map)
 	bpf_map_area_free(st_map);
 }
 
+<<<<<<< HEAD
 static void bpf_struct_ops_map_free(struct bpf_map *map)
 {
 	/* The struct_ops's function may switch to another struct_ops.
@@ -643,6 +695,12 @@ static int bpf_struct_ops_map_alloc_check(union bpf_attr *attr)
 {
 	if (attr->key_size != sizeof(unsigned int) || attr->max_entries != 1 ||
 	    (attr->map_flags & ~BPF_F_LINK) || !attr->btf_vmlinux_value_type_id)
+=======
+static int bpf_struct_ops_map_alloc_check(union bpf_attr *attr)
+{
+	if (attr->key_size != sizeof(unsigned int) || attr->max_entries != 1 ||
+	    attr->map_flags || !attr->btf_vmlinux_value_type_id)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EINVAL;
 	return 0;
 }
@@ -666,9 +724,12 @@ static struct bpf_map *bpf_struct_ops_map_alloc(union bpf_attr *attr)
 	if (attr->value_size != vt->size)
 		return ERR_PTR(-EINVAL);
 
+<<<<<<< HEAD
 	if (attr->map_flags & BPF_F_LINK && (!st_ops->validate || !st_ops->update))
 		return ERR_PTR(-EOPNOTSUPP);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	t = st_ops->type;
 
 	st_map_size = sizeof(*st_map) +
@@ -690,7 +751,11 @@ static struct bpf_map *bpf_struct_ops_map_alloc(union bpf_attr *attr)
 				   NUMA_NO_NODE);
 	st_map->image = bpf_jit_alloc_exec(PAGE_SIZE);
 	if (!st_map->uvalue || !st_map->links || !st_map->image) {
+<<<<<<< HEAD
 		__bpf_struct_ops_map_free(map);
+=======
+		bpf_struct_ops_map_free(map);
+>>>>>>> b7ba80a49124 (Commit)
 		return ERR_PTR(-ENOMEM);
 	}
 
@@ -701,6 +766,7 @@ static struct bpf_map *bpf_struct_ops_map_alloc(union bpf_attr *attr)
 	return map;
 }
 
+<<<<<<< HEAD
 static u64 bpf_struct_ops_map_mem_usage(const struct bpf_map *map)
 {
 	struct bpf_struct_ops_map *st_map = (struct bpf_struct_ops_map *)map;
@@ -716,6 +782,8 @@ static u64 bpf_struct_ops_map_mem_usage(const struct bpf_map *map)
 	return usage;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 BTF_ID_LIST_SINGLE(bpf_struct_ops_map_btf_ids, struct, bpf_struct_ops_map)
 const struct bpf_map_ops bpf_struct_ops_map_ops = {
 	.map_alloc_check = bpf_struct_ops_map_alloc_check,
@@ -726,7 +794,10 @@ const struct bpf_map_ops bpf_struct_ops_map_ops = {
 	.map_delete_elem = bpf_struct_ops_map_delete_elem,
 	.map_update_elem = bpf_struct_ops_map_update_elem,
 	.map_seq_show_elem = bpf_struct_ops_map_seq_show_elem,
+<<<<<<< HEAD
 	.map_mem_usage = bpf_struct_ops_map_mem_usage,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.map_btf_id = &bpf_struct_ops_map_btf_ids[0],
 };
 
@@ -736,6 +807,7 @@ const struct bpf_map_ops bpf_struct_ops_map_ops = {
 bool bpf_struct_ops_get(const void *kdata)
 {
 	struct bpf_struct_ops_value *kvalue;
+<<<<<<< HEAD
 	struct bpf_struct_ops_map *st_map;
 	struct bpf_map *map;
 
@@ -744,11 +816,26 @@ bool bpf_struct_ops_get(const void *kdata)
 
 	map = __bpf_map_inc_not_zero(&st_map->map, false);
 	return !IS_ERR(map);
+=======
+
+	kvalue = container_of(kdata, struct bpf_struct_ops_value, data);
+
+	return refcount_inc_not_zero(&kvalue->refcnt);
+}
+
+static void bpf_struct_ops_put_rcu(struct rcu_head *head)
+{
+	struct bpf_struct_ops_map *st_map;
+
+	st_map = container_of(head, struct bpf_struct_ops_map, rcu);
+	bpf_map_put(&st_map->map);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void bpf_struct_ops_put(const void *kdata)
 {
 	struct bpf_struct_ops_value *kvalue;
+<<<<<<< HEAD
 	struct bpf_struct_ops_map *st_map;
 
 	kvalue = container_of(kdata, struct bpf_struct_ops_value, data);
@@ -908,3 +995,26 @@ err_out:
 	return err;
 }
 
+=======
+
+	kvalue = container_of(kdata, struct bpf_struct_ops_value, data);
+	if (refcount_dec_and_test(&kvalue->refcnt)) {
+		struct bpf_struct_ops_map *st_map;
+
+		st_map = container_of(kvalue, struct bpf_struct_ops_map,
+				      kvalue);
+		/* The struct_ops's function may switch to another struct_ops.
+		 *
+		 * For example, bpf_tcp_cc_x->init() may switch to
+		 * another tcp_cc_y by calling
+		 * setsockopt(TCP_CONGESTION, "tcp_cc_y").
+		 * During the switch,  bpf_struct_ops_put(tcp_cc_x) is called
+		 * and its map->refcnt may reach 0 which then free its
+		 * trampoline image while tcp_cc_x is still running.
+		 *
+		 * Thus, a rcu grace period is needed here.
+		 */
+		call_rcu(&st_map->rcu, bpf_struct_ops_put_rcu);
+	}
+}
+>>>>>>> b7ba80a49124 (Commit)

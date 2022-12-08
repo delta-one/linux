@@ -115,9 +115,15 @@ static int poly_copy_tag(struct aead_request *req)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void chacha_decrypt_done(void *data, int err)
 {
 	async_done_continue(data, err, poly_verify_tag);
+=======
+static void chacha_decrypt_done(struct crypto_async_request *areq, int err)
+{
+	async_done_continue(areq->data, err, poly_verify_tag);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int chacha_decrypt(struct aead_request *req)
@@ -161,9 +167,15 @@ static int poly_tail_continue(struct aead_request *req)
 	return chacha_decrypt(req);
 }
 
+<<<<<<< HEAD
 static void poly_tail_done(void *data, int err)
 {
 	async_done_continue(data, err, poly_tail_continue);
+=======
+static void poly_tail_done(struct crypto_async_request *areq, int err)
+{
+	async_done_continue(areq->data, err, poly_tail_continue);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int poly_tail(struct aead_request *req)
@@ -191,9 +203,15 @@ static int poly_tail(struct aead_request *req)
 	return poly_tail_continue(req);
 }
 
+<<<<<<< HEAD
 static void poly_cipherpad_done(void *data, int err)
 {
 	async_done_continue(data, err, poly_tail);
+=======
+static void poly_cipherpad_done(struct crypto_async_request *areq, int err)
+{
+	async_done_continue(areq->data, err, poly_tail);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int poly_cipherpad(struct aead_request *req)
@@ -220,9 +238,15 @@ static int poly_cipherpad(struct aead_request *req)
 	return poly_tail(req);
 }
 
+<<<<<<< HEAD
 static void poly_cipher_done(void *data, int err)
 {
 	async_done_continue(data, err, poly_cipherpad);
+=======
+static void poly_cipher_done(struct crypto_async_request *areq, int err)
+{
+	async_done_continue(areq->data, err, poly_cipherpad);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int poly_cipher(struct aead_request *req)
@@ -250,9 +274,15 @@ static int poly_cipher(struct aead_request *req)
 	return poly_cipherpad(req);
 }
 
+<<<<<<< HEAD
 static void poly_adpad_done(void *data, int err)
 {
 	async_done_continue(data, err, poly_cipher);
+=======
+static void poly_adpad_done(struct crypto_async_request *areq, int err)
+{
+	async_done_continue(areq->data, err, poly_cipher);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int poly_adpad(struct aead_request *req)
@@ -279,9 +309,15 @@ static int poly_adpad(struct aead_request *req)
 	return poly_cipher(req);
 }
 
+<<<<<<< HEAD
 static void poly_ad_done(void *data, int err)
 {
 	async_done_continue(data, err, poly_adpad);
+=======
+static void poly_ad_done(struct crypto_async_request *areq, int err)
+{
+	async_done_continue(areq->data, err, poly_adpad);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int poly_ad(struct aead_request *req)
@@ -303,9 +339,15 @@ static int poly_ad(struct aead_request *req)
 	return poly_adpad(req);
 }
 
+<<<<<<< HEAD
 static void poly_setkey_done(void *data, int err)
 {
 	async_done_continue(data, err, poly_ad);
+=======
+static void poly_setkey_done(struct crypto_async_request *areq, int err)
+{
+	async_done_continue(areq->data, err, poly_ad);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int poly_setkey(struct aead_request *req)
@@ -329,9 +371,15 @@ static int poly_setkey(struct aead_request *req)
 	return poly_ad(req);
 }
 
+<<<<<<< HEAD
 static void poly_init_done(void *data, int err)
 {
 	async_done_continue(data, err, poly_setkey);
+=======
+static void poly_init_done(struct crypto_async_request *areq, int err)
+{
+	async_done_continue(areq->data, err, poly_setkey);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int poly_init(struct aead_request *req)
@@ -352,9 +400,15 @@ static int poly_init(struct aead_request *req)
 	return poly_setkey(req);
 }
 
+<<<<<<< HEAD
 static void poly_genkey_done(void *data, int err)
 {
 	async_done_continue(data, err, poly_init);
+=======
+static void poly_genkey_done(struct crypto_async_request *areq, int err)
+{
+	async_done_continue(areq->data, err, poly_init);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int poly_genkey(struct aead_request *req)
@@ -391,9 +445,15 @@ static int poly_genkey(struct aead_request *req)
 	return poly_init(req);
 }
 
+<<<<<<< HEAD
 static void chacha_encrypt_done(void *data, int err)
 {
 	async_done_continue(data, err, poly_genkey);
+=======
+static void chacha_encrypt_done(struct crypto_async_request *areq, int err)
+{
+	async_done_continue(areq->data, err, poly_genkey);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static int chacha_encrypt(struct aead_request *req)

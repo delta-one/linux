@@ -203,7 +203,11 @@
 	flash@0 {
 		#address-cells = <1>;
 		#size-cells = <1>;
+<<<<<<< HEAD
 		compatible = "winbond,w25x80", "jedec,spi-nor";
+=======
+		compatible = "w25x80";
+>>>>>>> b7ba80a49124 (Commit)
 		reg = <0>;
 		spi-max-frequency = <1000000>;
 

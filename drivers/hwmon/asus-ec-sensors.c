@@ -299,7 +299,10 @@ static const struct ec_board_info board_info_pro_art_x570_creator_wifi = {
 	.sensors = SENSOR_SET_TEMP_CHIPSET_CPU_MB | SENSOR_TEMP_VRM |
 		SENSOR_TEMP_T_SENSOR | SENSOR_FAN_CPU_OPT |
 		SENSOR_CURR_CPU | SENSOR_IN_CPU_CORE,
+<<<<<<< HEAD
 	.mutex_path = ASUS_HW_ACCESS_MUTEX_ASMX,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.family = family_amd_500_series,
 };
 
@@ -467,8 +470,11 @@ static const struct dmi_system_id dmi_table[] = {
 					&board_info_strix_z690_a_gaming_wifi_d4),
 	DMI_EXACT_MATCH_ASUS_BOARD_NAME("ROG ZENITH II EXTREME",
 					&board_info_zenith_ii_extreme),
+<<<<<<< HEAD
 	DMI_EXACT_MATCH_ASUS_BOARD_NAME("ROG ZENITH II EXTREME ALPHA",
 					&board_info_zenith_ii_extreme),
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	{},
 };
 
@@ -941,8 +947,11 @@ static int asus_ec_probe(struct platform_device *pdev)
 	ec_data->nr_sensors = hweight_long(ec_data->board_info->sensors);
 	ec_data->sensors = devm_kcalloc(dev, ec_data->nr_sensors,
 					sizeof(struct ec_sensor), GFP_KERNEL);
+<<<<<<< HEAD
 	if (!ec_data->sensors)
 		return -ENOMEM;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	status = setup_lock_data(dev);
 	if (status) {

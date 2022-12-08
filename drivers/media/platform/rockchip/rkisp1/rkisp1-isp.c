@@ -231,11 +231,18 @@ static int rkisp1_config_isp(struct rkisp1_isp *isp,
 		struct v4l2_mbus_framefmt *src_frm;
 
 		src_frm = rkisp1_isp_get_pad_fmt(isp, NULL,
+<<<<<<< HEAD
 						 RKISP1_ISP_PAD_SOURCE_VIDEO,
 						 V4L2_SUBDEV_FORMAT_ACTIVE);
 		rkisp1_params_pre_configure(&rkisp1->params, sink_fmt->bayer_pat,
 					    src_frm->quantization,
 					    src_frm->ycbcr_enc);
+=======
+						 RKISP1_ISP_PAD_SINK_VIDEO,
+						 V4L2_SUBDEV_FORMAT_ACTIVE);
+		rkisp1_params_configure(&rkisp1->params, sink_fmt->bayer_pat,
+					src_frm->quantization);
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	return 0;
@@ -341,9 +348,12 @@ static void rkisp1_isp_start(struct rkisp1_isp *isp)
 	       RKISP1_CIF_ISP_CTRL_ISP_ENABLE |
 	       RKISP1_CIF_ISP_CTRL_ISP_INFORM_ENABLE;
 	rkisp1_write(rkisp1, RKISP1_CIF_ISP_CTRL, val);
+<<<<<<< HEAD
 
 	if (isp->src_fmt->pixel_enc != V4L2_PIXEL_ENC_BAYER)
 		rkisp1_params_post_configure(&rkisp1->params);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* ----------------------------------------------------------------------------
@@ -435,17 +445,23 @@ static int rkisp1_isp_init_config(struct v4l2_subdev *sd,
 	struct v4l2_mbus_framefmt *sink_fmt, *src_fmt;
 	struct v4l2_rect *sink_crop, *src_crop;
 
+<<<<<<< HEAD
 	/* Video. */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sink_fmt = v4l2_subdev_get_try_format(sd, sd_state,
 					      RKISP1_ISP_PAD_SINK_VIDEO);
 	sink_fmt->width = RKISP1_DEFAULT_WIDTH;
 	sink_fmt->height = RKISP1_DEFAULT_HEIGHT;
 	sink_fmt->field = V4L2_FIELD_NONE;
 	sink_fmt->code = RKISP1_DEF_SINK_PAD_FMT;
+<<<<<<< HEAD
 	sink_fmt->colorspace = V4L2_COLORSPACE_RAW;
 	sink_fmt->xfer_func = V4L2_XFER_FUNC_NONE;
 	sink_fmt->ycbcr_enc = V4L2_YCBCR_ENC_601;
 	sink_fmt->quantization = V4L2_QUANTIZATION_FULL_RANGE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	sink_crop = v4l2_subdev_get_try_crop(sd, sd_state,
 					     RKISP1_ISP_PAD_SINK_VIDEO);
@@ -458,16 +474,22 @@ static int rkisp1_isp_init_config(struct v4l2_subdev *sd,
 					     RKISP1_ISP_PAD_SOURCE_VIDEO);
 	*src_fmt = *sink_fmt;
 	src_fmt->code = RKISP1_DEF_SRC_PAD_FMT;
+<<<<<<< HEAD
 	src_fmt->colorspace = V4L2_COLORSPACE_SRGB;
 	src_fmt->xfer_func = V4L2_XFER_FUNC_SRGB;
 	src_fmt->ycbcr_enc = V4L2_YCBCR_ENC_601;
 	src_fmt->quantization = V4L2_QUANTIZATION_LIM_RANGE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	src_crop = v4l2_subdev_get_try_crop(sd, sd_state,
 					    RKISP1_ISP_PAD_SOURCE_VIDEO);
 	*src_crop = *sink_crop;
 
+<<<<<<< HEAD
 	/* Parameters and statistics. */
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	sink_fmt = v4l2_subdev_get_try_format(sd, sd_state,
 					      RKISP1_ISP_PAD_SINK_PARAMS);
 	src_fmt = v4l2_subdev_get_try_format(sd, sd_state,
@@ -486,6 +508,7 @@ static void rkisp1_isp_set_src_fmt(struct rkisp1_isp *isp,
 				   struct v4l2_mbus_framefmt *format,
 				   unsigned int which)
 {
+<<<<<<< HEAD
 	const struct rkisp1_mbus_info *sink_info;
 	const struct rkisp1_mbus_info *src_info;
 	struct v4l2_mbus_framefmt *sink_fmt;
@@ -495,11 +518,18 @@ static void rkisp1_isp_set_src_fmt(struct rkisp1_isp *isp,
 
 	sink_fmt = rkisp1_isp_get_pad_fmt(isp, sd_state,
 					  RKISP1_ISP_PAD_SINK_VIDEO, which);
+=======
+	const struct rkisp1_mbus_info *mbus_info;
+	struct v4l2_mbus_framefmt *src_fmt;
+	const struct v4l2_rect *src_crop;
+
+>>>>>>> b7ba80a49124 (Commit)
 	src_fmt = rkisp1_isp_get_pad_fmt(isp, sd_state,
 					 RKISP1_ISP_PAD_SOURCE_VIDEO, which);
 	src_crop = rkisp1_isp_get_pad_crop(isp, sd_state,
 					   RKISP1_ISP_PAD_SOURCE_VIDEO, which);
 
+<<<<<<< HEAD
 	/*
 	 * Media bus code. The ISP can operate in pass-through mode (Bayer in,
 	 * Bayer out or YUV in, YUV out) or process Bayer data to YUV, but
@@ -524,10 +554,21 @@ static void rkisp1_isp_set_src_fmt(struct rkisp1_isp *isp,
 	 * The source width and height must be identical to the source crop
 	 * size.
 	 */
+=======
+	src_fmt->code = format->code;
+	mbus_info = rkisp1_mbus_info_get_by_code(src_fmt->code);
+	if (!mbus_info || !(mbus_info->direction & RKISP1_ISP_SD_SRC)) {
+		src_fmt->code = RKISP1_DEF_SRC_PAD_FMT;
+		mbus_info = rkisp1_mbus_info_get_by_code(src_fmt->code);
+	}
+	if (which == V4L2_SUBDEV_FORMAT_ACTIVE)
+		isp->src_fmt = mbus_info;
+>>>>>>> b7ba80a49124 (Commit)
 	src_fmt->width  = src_crop->width;
 	src_fmt->height = src_crop->height;
 
 	/*
+<<<<<<< HEAD
 	 * Copy the color space for the sink pad. When converting from Bayer to
 	 * YUV, default to a limited quantization range.
 	 */
@@ -585,6 +626,21 @@ static void rkisp1_isp_set_src_fmt(struct rkisp1_isp *isp,
 	/* Store the source format info when setting the active format. */
 	if (which == V4L2_SUBDEV_FORMAT_ACTIVE)
 		isp->src_fmt = src_info;
+=======
+	 * The CSC API is used to allow userspace to force full
+	 * quantization on YUV formats.
+	 */
+	if (format->flags & V4L2_MBUS_FRAMEFMT_SET_CSC &&
+	    format->quantization == V4L2_QUANTIZATION_FULL_RANGE &&
+	    mbus_info->pixel_enc == V4L2_PIXEL_ENC_YUV)
+		src_fmt->quantization = V4L2_QUANTIZATION_FULL_RANGE;
+	else if (mbus_info->pixel_enc == V4L2_PIXEL_ENC_YUV)
+		src_fmt->quantization = V4L2_QUANTIZATION_LIM_RANGE;
+	else
+		src_fmt->quantization = V4L2_QUANTIZATION_FULL_RANGE;
+
+	*format = *src_fmt;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static void rkisp1_isp_set_src_crop(struct rkisp1_isp *isp,
@@ -652,7 +708,10 @@ static void rkisp1_isp_set_sink_fmt(struct rkisp1_isp *isp,
 	const struct rkisp1_mbus_info *mbus_info;
 	struct v4l2_mbus_framefmt *sink_fmt;
 	struct v4l2_rect *sink_crop;
+<<<<<<< HEAD
 	bool is_yuv;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	sink_fmt = rkisp1_isp_get_pad_fmt(isp, sd_state,
 					  RKISP1_ISP_PAD_SINK_VIDEO,
@@ -673,6 +732,7 @@ static void rkisp1_isp_set_sink_fmt(struct rkisp1_isp *isp,
 				   RKISP1_ISP_MIN_HEIGHT,
 				   RKISP1_ISP_MAX_HEIGHT);
 
+<<<<<<< HEAD
 	/*
 	 * Adjust the color space fields. Accept any color primaries and
 	 * transfer function for both YUV and Bayer. For YUV any YCbCr encoding
@@ -703,6 +763,8 @@ static void rkisp1_isp_set_sink_fmt(struct rkisp1_isp *isp,
 		sink_fmt->quantization = V4L2_QUANTIZATION_FULL_RANGE;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	*format = *sink_fmt;
 
 	/* Propagate to in crop */

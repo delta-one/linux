@@ -1507,7 +1507,11 @@ err_bus_clk:
  * Shutdown and then release all the resources that the driver allocated
  * on initialisation.
  */
+<<<<<<< HEAD
 static void s3c_fb_remove(struct platform_device *pdev)
+=======
+static int s3c_fb_remove(struct platform_device *pdev)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct s3c_fb *sfb = platform_get_drvdata(pdev);
 	int win;
@@ -1525,6 +1529,11 @@ static void s3c_fb_remove(struct platform_device *pdev)
 
 	pm_runtime_put_sync(sfb->dev);
 	pm_runtime_disable(sfb->dev);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_PM_SLEEP
@@ -1792,7 +1801,11 @@ static const struct dev_pm_ops s3cfb_pm_ops = {
 
 static struct platform_driver s3c_fb_driver = {
 	.probe		= s3c_fb_probe,
+<<<<<<< HEAD
 	.remove_new	= s3c_fb_remove,
+=======
+	.remove		= s3c_fb_remove,
+>>>>>>> b7ba80a49124 (Commit)
 	.id_table	= s3c_fb_driver_ids,
 	.driver		= {
 		.name	= "s3c-fb",

@@ -51,6 +51,7 @@ fman@500000 {
 		reg = <0xea000 0x1000>;
 		fsl,fman-ports = <&fman1_rx_0x0d &fman1_tx_0x2d>;
 		ptp-timer = <&ptp_timer1>;
+<<<<<<< HEAD
 		pcsphy-handle = <&pcsphy13>, <&qsgmiid_pcs1>;
 		pcs-handle-names = "sgmii", "qsgmii";
 	};
@@ -60,6 +61,9 @@ fman@500000 {
 			compatible = "fsl,lynx-pcs";
 			reg = <1>;
 		};
+=======
+		pcsphy-handle = <&pcsphy13>;
+>>>>>>> b7ba80a49124 (Commit)
 	};
 
 	mdio@eb000 {

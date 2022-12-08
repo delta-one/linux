@@ -24,10 +24,16 @@ static inline void plat_smp_setup(void)
 	mp_ops->smp_setup();
 }
 
+<<<<<<< HEAD
 static inline void __noreturn play_dead(void)
 {
 	mp_ops->play_dead();
 	BUG();
+=======
+static inline void play_dead(void)
+{
+	mp_ops->play_dead();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 extern void register_smp_ops(struct plat_smp_ops *ops);
@@ -43,7 +49,11 @@ static inline void register_smp_ops(struct plat_smp_ops *ops)
 {
 }
 
+<<<<<<< HEAD
 static inline void __noreturn play_dead(void)
+=======
+static inline void play_dead(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	BUG();
 }

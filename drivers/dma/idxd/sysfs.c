@@ -387,7 +387,11 @@ static ssize_t group_traffic_class_a_store(struct device *dev,
 	if (idxd->state == IDXD_DEV_ENABLED)
 		return -EPERM;
 
+<<<<<<< HEAD
 	if (idxd->hw.version <= DEVICE_VERSION_2 && !tc_override)
+=======
+	if (idxd->hw.version < DEVICE_VERSION_2 && !tc_override)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EPERM;
 
 	if (val < 0 || val > 7)
@@ -429,7 +433,11 @@ static ssize_t group_traffic_class_b_store(struct device *dev,
 	if (idxd->state == IDXD_DEV_ENABLED)
 		return -EPERM;
 
+<<<<<<< HEAD
 	if (idxd->hw.version <= DEVICE_VERSION_2 && !tc_override)
+=======
+	if (idxd->hw.version < DEVICE_VERSION_2 && !tc_override)
+>>>>>>> b7ba80a49124 (Commit)
 		return -EPERM;
 
 	if (val < 0 || val > 7)
@@ -443,6 +451,7 @@ static struct device_attribute dev_attr_group_traffic_class_b =
 		__ATTR(traffic_class_b, 0644, group_traffic_class_b_show,
 		       group_traffic_class_b_store);
 
+<<<<<<< HEAD
 static ssize_t group_desc_progress_limit_show(struct device *dev,
 					      struct device_attribute *attr,
 					      char *buf)
@@ -504,6 +513,8 @@ static ssize_t group_batch_progress_limit_store(struct device *dev,
 static struct device_attribute dev_attr_group_batch_progress_limit =
 		__ATTR(batch_progress_limit, 0644, group_batch_progress_limit_show,
 		       group_batch_progress_limit_store);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct attribute *idxd_group_attributes[] = {
 	&dev_attr_group_work_queues.attr,
 	&dev_attr_group_engines.attr,
@@ -515,6 +526,7 @@ static struct attribute *idxd_group_attributes[] = {
 	&dev_attr_group_read_buffers_reserved.attr,
 	&dev_attr_group_traffic_class_a.attr,
 	&dev_attr_group_traffic_class_b.attr,
+<<<<<<< HEAD
 	&dev_attr_group_desc_progress_limit.attr,
 	&dev_attr_group_batch_progress_limit.attr,
 	NULL,
@@ -563,6 +575,13 @@ static umode_t idxd_group_attr_visible(struct kobject *kobj,
 static const struct attribute_group idxd_group_attribute_group = {
 	.attrs = idxd_group_attributes,
 	.is_visible = idxd_group_attr_visible,
+=======
+	NULL,
+};
+
+static const struct attribute_group idxd_group_attribute_group = {
+	.attrs = idxd_group_attributes,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct attribute_group *idxd_group_attribute_groups[] = {
@@ -1065,7 +1084,11 @@ static ssize_t wq_max_batch_size_store(struct device *dev, struct device_attribu
 	if (batch_size > idxd->max_batch_size)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	idxd_wq_set_max_batch_size(idxd->data->type, wq, (u32)batch_size);
+=======
+	wq->max_batch_size = (u32)batch_size;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return count;
 }
@@ -1077,7 +1100,11 @@ static ssize_t wq_ats_disable_show(struct device *dev, struct device_attribute *
 {
 	struct idxd_wq *wq = confdev_to_wq(dev);
 
+<<<<<<< HEAD
 	return sysfs_emit(buf, "%u\n", test_bit(WQ_FLAG_ATS_DISABLE, &wq->flags));
+=======
+	return sysfs_emit(buf, "%u\n", wq->ats_dis);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 static ssize_t wq_ats_disable_store(struct device *dev, struct device_attribute *attr,
@@ -1098,10 +1125,14 @@ static ssize_t wq_ats_disable_store(struct device *dev, struct device_attribute 
 	if (rc < 0)
 		return rc;
 
+<<<<<<< HEAD
 	if (ats_dis)
 		set_bit(WQ_FLAG_ATS_DISABLE, &wq->flags);
 	else
 		clear_bit(WQ_FLAG_ATS_DISABLE, &wq->flags);
+=======
+	wq->ats_dis = ats_dis;
+>>>>>>> b7ba80a49124 (Commit)
 
 	return count;
 }
@@ -1162,6 +1193,7 @@ static ssize_t wq_enqcmds_retries_store(struct device *dev, struct device_attrib
 static struct device_attribute dev_attr_wq_enqcmds_retries =
 		__ATTR(enqcmds_retries, 0644, wq_enqcmds_retries_show, wq_enqcmds_retries_store);
 
+<<<<<<< HEAD
 static ssize_t wq_op_config_show(struct device *dev,
 				 struct device_attribute *attr, char *buf)
 {
@@ -1224,6 +1256,8 @@ err:
 static struct device_attribute dev_attr_wq_op_config =
 		__ATTR(op_config, 0644, wq_op_config_show, wq_op_config_store);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct attribute *idxd_wq_attributes[] = {
 	&dev_attr_wq_clients.attr,
 	&dev_attr_wq_state.attr,
@@ -1241,6 +1275,7 @@ static struct attribute *idxd_wq_attributes[] = {
 	&dev_attr_wq_ats_disable.attr,
 	&dev_attr_wq_occupancy.attr,
 	&dev_attr_wq_enqcmds_retries.attr,
+<<<<<<< HEAD
 	&dev_attr_wq_op_config.attr,
 	NULL,
 };
@@ -1279,6 +1314,13 @@ static umode_t idxd_wq_attr_visible(struct kobject *kobj,
 static const struct attribute_group idxd_wq_attribute_group = {
 	.attrs = idxd_wq_attributes,
 	.is_visible = idxd_wq_attr_visible,
+=======
+	NULL,
+};
+
+static const struct attribute_group idxd_wq_attribute_group = {
+	.attrs = idxd_wq_attributes,
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct attribute_group *idxd_wq_attribute_groups[] = {
@@ -1290,7 +1332,10 @@ static void idxd_conf_wq_release(struct device *dev)
 {
 	struct idxd_wq *wq = confdev_to_wq(dev);
 
+<<<<<<< HEAD
 	bitmap_free(wq->opcap_bmap);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(wq->wqcfg);
 	kfree(wq);
 }
@@ -1380,8 +1425,19 @@ static ssize_t op_cap_show(struct device *dev,
 			   struct device_attribute *attr, char *buf)
 {
 	struct idxd_device *idxd = confdev_to_idxd(dev);
+<<<<<<< HEAD
 
 	return sysfs_emit(buf, "%*pb\n", IDXD_MAX_OPCAP_BITS, idxd->opcap_bmap);
+=======
+	int i, rc = 0;
+
+	for (i = 0; i < 4; i++)
+		rc += sysfs_emit_at(buf, rc, "%#llx ", idxd->hw.opcap.bits[i]);
+
+	rc--;
+	rc += sysfs_emit_at(buf, rc, "\n");
+	return rc;
+>>>>>>> b7ba80a49124 (Commit)
 }
 static DEVICE_ATTR_RO(op_cap);
 
@@ -1563,6 +1619,7 @@ static ssize_t cmd_status_store(struct device *dev, struct device_attribute *att
 }
 static DEVICE_ATTR_RW(cmd_status);
 
+<<<<<<< HEAD
 static bool idxd_device_attr_max_batch_size_invisible(struct attribute *attr,
 						      struct idxd_device *idxd)
 {
@@ -1600,6 +1657,8 @@ static umode_t idxd_device_attr_visible(struct kobject *kobj,
 	return attr->mode;
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct attribute *idxd_device_attributes[] = {
 	&dev_attr_version.attr,
 	&dev_attr_max_groups.attr,
@@ -1627,7 +1686,10 @@ static struct attribute *idxd_device_attributes[] = {
 
 static const struct attribute_group idxd_device_attribute_group = {
 	.attrs = idxd_device_attributes,
+<<<<<<< HEAD
 	.is_visible = idxd_device_attr_visible,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static const struct attribute_group *idxd_attribute_groups[] = {
@@ -1640,11 +1702,17 @@ static void idxd_conf_device_release(struct device *dev)
 	struct idxd_device *idxd = confdev_to_idxd(dev);
 
 	kfree(idxd->groups);
+<<<<<<< HEAD
 	bitmap_free(idxd->wq_enable_map);
 	kfree(idxd->wqs);
 	kfree(idxd->engines);
 	ida_free(&idxd_ida, idxd->id);
 	bitmap_free(idxd->opcap_bmap);
+=======
+	kfree(idxd->wqs);
+	kfree(idxd->engines);
+	ida_free(&idxd_ida, idxd->id);
+>>>>>>> b7ba80a49124 (Commit)
 	kfree(idxd);
 }
 

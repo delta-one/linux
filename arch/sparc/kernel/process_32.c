@@ -71,6 +71,10 @@ void arch_cpu_idle(void)
 {
 	if (sparc_idle)
 		(*sparc_idle)();
+<<<<<<< HEAD
+=======
+	raw_local_irq_enable();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* XXX cli/sti -> local_irq_xxx here, check this works once SMP is fixed. */

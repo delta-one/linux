@@ -7,16 +7,24 @@ char _license[] SEC("license") = "GPL";
 
 int count = 0;
 int tgid = 0;
+<<<<<<< HEAD
 int last_tgid = 0;
 int unique_tgid_count = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 SEC("iter/task_file")
 int dump_task_file(struct bpf_iter__task_file *ctx)
 {
 	struct seq_file *seq = ctx->meta->seq;
 	struct task_struct *task = ctx->task;
+<<<<<<< HEAD
 	struct file *file = ctx->file;
 	__u32 fd = ctx->fd;
+=======
+	__u32 fd = ctx->fd;
+	struct file *file = ctx->file;
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (task == (void *)0 || file == (void *)0)
 		return 0;
@@ -29,11 +37,14 @@ int dump_task_file(struct bpf_iter__task_file *ctx)
 	if (tgid == task->tgid && task->tgid != task->pid)
 		count++;
 
+<<<<<<< HEAD
 	if (last_tgid != task->tgid) {
 		last_tgid = task->tgid;
 		unique_tgid_count++;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	BPF_SEQ_PRINTF(seq, "%8d %8d %8d %lx\n", task->tgid, task->pid, fd,
 		       (long)file->f_op);
 	return 0;

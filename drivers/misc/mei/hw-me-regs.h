@@ -111,8 +111,11 @@
 
 #define MEI_DEV_ID_RPL_S      0x7A68  /* Raptor Lake Point S */
 
+<<<<<<< HEAD
 #define MEI_DEV_ID_MTL_M      0x7E70  /* Meteor Lake Point M */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * MEI HW Section
  */

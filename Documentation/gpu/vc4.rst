@@ -54,6 +54,7 @@ VEC (Composite TV out) encoder
 .. kernel-doc:: drivers/gpu/drm/vc4/vc4_vec.c
    :doc: VC4 SDTV module
 
+<<<<<<< HEAD
 KUnit Tests
 ===========
 
@@ -73,6 +74,8 @@ Parts of the driver that are currently covered by tests are:
  * The HVS to PixelValve dynamic FIFO assignment, for the BCM2835-7
    and BCM2711.
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 Memory Management and 3D Command Submission
 ===========================================
 

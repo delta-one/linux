@@ -12,6 +12,10 @@
 #include "intel_gt_mcr.h"
 #include "intel_gt_pm_debugfs.h"
 #include "intel_sseu_debugfs.h"
+<<<<<<< HEAD
+=======
+#include "pxp/intel_pxp_debugfs.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "uc/intel_uc_debugfs.h"
 
 int intel_gt_debugfs_reset_show(struct intel_gt *gt, u64 *val)
@@ -98,6 +102,10 @@ void intel_gt_debugfs_register(struct intel_gt *gt)
 	intel_sseu_debugfs_register(gt, root);
 
 	intel_uc_debugfs_register(&gt->uc, root);
+<<<<<<< HEAD
+=======
+	intel_pxp_debugfs_register(&gt->pxp, root);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void intel_gt_debugfs_register_files(struct dentry *root,

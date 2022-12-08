@@ -18,10 +18,18 @@
 #else
 #include <linux/module.h>
 #include <linux/gfp.h>
+<<<<<<< HEAD
+=======
+#if !RAID6_USE_EMPTY_ZERO_PAGE
+>>>>>>> b7ba80a49124 (Commit)
 /* In .bss so it's zeroed */
 const char raid6_empty_zero_page[PAGE_SIZE] __attribute__((aligned(256)));
 EXPORT_SYMBOL(raid6_empty_zero_page);
 #endif
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> b7ba80a49124 (Commit)
 
 struct raid6_calls raid6_call;
 EXPORT_SYMBOL_GPL(raid6_call);

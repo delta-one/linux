@@ -124,7 +124,11 @@ static int sun8i_ss_setup_ivs(struct skcipher_request *areq)
 	unsigned int ivsize = crypto_skcipher_ivsize(tfm);
 	struct sun8i_ss_flow *sf = &ss->flows[rctx->flow];
 	int i = 0;
+<<<<<<< HEAD
 	dma_addr_t a;
+=======
+	u32 a;
+>>>>>>> b7ba80a49124 (Commit)
 	int err;
 
 	rctx->ivlen = ivsize;
@@ -452,7 +456,11 @@ int sun8i_ss_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
 	}
 	kfree_sensitive(op->key);
 	op->keylen = keylen;
+<<<<<<< HEAD
 	op->key = kmemdup(key, keylen, GFP_KERNEL);
+=======
+	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!op->key)
 		return -ENOMEM;
 
@@ -475,7 +483,11 @@ int sun8i_ss_des3_setkey(struct crypto_skcipher *tfm, const u8 *key,
 
 	kfree_sensitive(op->key);
 	op->keylen = keylen;
+<<<<<<< HEAD
 	op->key = kmemdup(key, keylen, GFP_KERNEL);
+=======
+	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
+>>>>>>> b7ba80a49124 (Commit)
 	if (!op->key)
 		return -ENOMEM;
 

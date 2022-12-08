@@ -131,10 +131,17 @@ extern pte_t *va_to_pte(unsigned long address);
  * of the 16 available.  Bit 24-26 of the TLB are cleared in the TLB
  * miss handler.  Bit 27 is PAGE_USER, thus selecting the correct
  * zone.
+<<<<<<< HEAD
  * - PRESENT *must* be in the bottom two bits because swap PTEs use the top
  * 30 bits.  Because 4xx doesn't support SMP anyway, M is irrelevant so we
  * borrow it for PAGE_PRESENT.  Bit 30 is cleared in the TLB miss handler
  * before the TLB entry is loaded.
+=======
+ * - PRESENT *must* be in the bottom two bits because swap cache
+ * entries use the top 30 bits.  Because 4xx doesn't support SMP
+ * anyway, M is irrelevant so we borrow it for PAGE_PRESENT.  Bit 30
+ * is cleared in the TLB miss handler before the TLB entry is loaded.
+>>>>>>> b7ba80a49124 (Commit)
  * - All other bits of the PTE are loaded into TLBLO without
  *  * modification, leaving us only the bits 20, 21, 24, 25, 26, 30 for
  * software PTE bits.  We actually use bits 21, 24, 25, and
@@ -155,9 +162,12 @@ extern pte_t *va_to_pte(unsigned long address);
 #define _PAGE_ACCESSED	0x400	/* software: R: page referenced */
 #define _PMD_PRESENT	PAGE_MASK
 
+<<<<<<< HEAD
 /* We borrow bit 24 to store the exclusive marker in swap PTEs. */
 #define _PAGE_SWP_EXCLUSIVE	_PAGE_DIRTY
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /*
  * Some bits are unused...
  */
@@ -266,7 +276,11 @@ static inline pte_t pte_mkread(pte_t pte) \
 	{ pte_val(pte) |= _PAGE_USER; return pte; }
 static inline pte_t pte_mkexec(pte_t pte) \
 	{ pte_val(pte) |= _PAGE_USER | _PAGE_EXEC; return pte; }
+<<<<<<< HEAD
 static inline pte_t pte_mkwrite(pte_t pte, struct vm_area_struct *vma) \
+=======
+static inline pte_t pte_mkwrite(pte_t pte) \
+>>>>>>> b7ba80a49124 (Commit)
 	{ pte_val(pte) |= _PAGE_RW; return pte; }
 static inline pte_t pte_mkdirty(pte_t pte) \
 	{ pte_val(pte) |= _PAGE_DIRTY; return pte; }
@@ -396,6 +410,7 @@ static inline unsigned long pmd_page_vaddr(pmd_t pmd)
 extern pgd_t swapper_pg_dir[PTRS_PER_PGD];
 
 /*
+<<<<<<< HEAD
  * Encode/decode swap entries and swap PTEs. Swap PTEs are all PTEs that
  * are !pte_none() && !pte_present().
  *
@@ -429,6 +444,20 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
 	return pte;
 }
 
+=======
+ * Encode and decode a swap entry.
+ * Note that the bits we use in a PTE for representing a swap entry
+ * must not include the _PAGE_PRESENT bit, or the _PAGE_HASHPTE bit
+ * (if used).  -- paulus
+ */
+#define __swp_type(entry)		((entry).val & 0x3f)
+#define __swp_offset(entry)	((entry).val >> 6)
+#define __swp_entry(type, offset) \
+		((swp_entry_t) { (type) | ((offset) << 6) })
+#define __pte_to_swp_entry(pte)	((swp_entry_t) { pte_val(pte) >> 2 })
+#define __swp_entry_to_pte(x)	((pte_t) { (x).val << 2 })
+
+>>>>>>> b7ba80a49124 (Commit)
 extern unsigned long iopa(unsigned long addr);
 
 /* Values for nocacheflag and cmode */
@@ -440,6 +469,12 @@ extern unsigned long iopa(unsigned long addr);
 #define	IOMAP_NOCACHE_NONSER	2
 #define	IOMAP_NO_COPYBACK	3
 
+<<<<<<< HEAD
+=======
+/* Needs to be defined here and not in linux/mm.h, as it is arch dependent */
+#define kern_addr_valid(addr)	(1)
+
+>>>>>>> b7ba80a49124 (Commit)
 void do_page_fault(struct pt_regs *regs, unsigned long address,
 		   unsigned long error_code);
 

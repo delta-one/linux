@@ -27,7 +27,10 @@
 #include <linux/dmi.h>
 #endif
 #include <linux/acpi_agdi.h>
+<<<<<<< HEAD
 #include <linux/acpi_apmt.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/acpi_iort.h>
 #include <linux/acpi_viot.h>
 #include <linux/pci.h>
@@ -324,8 +327,11 @@ static void acpi_bus_osc_negotiate_platform_control(void)
 	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_PCLPI_SUPPORT;
 	if (IS_ENABLED(CONFIG_ACPI_PRMT))
 		capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_PRM_SUPPORT;
+<<<<<<< HEAD
 	if (IS_ENABLED(CONFIG_ACPI_FFH))
 		capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_FFH_OPR_SUPPORT;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #ifdef CONFIG_ARM64
 	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_GENERIC_INITIATOR_SUPPORT;
@@ -817,10 +823,16 @@ static bool acpi_of_modalias(struct acpi_device *adev,
  * @modalias:   Pointer to buffer that modalias value will be copied into
  * @len:	Length of modalias buffer
  *
+<<<<<<< HEAD
  * This is a counterpart of of_alias_from_compatible() for struct acpi_device
  * objects. If there is a compatible string for @adev, it will be copied to
  * @modalias with the vendor prefix stripped; otherwise, @default_id will be
  * used.
+=======
+ * This is a counterpart of of_modalias_node() for struct acpi_device objects.
+ * If there is a compatible string for @adev, it will be copied to @modalias
+ * with the vendor prefix stripped; otherwise, @default_id will be used.
+>>>>>>> b7ba80a49124 (Commit)
  */
 void acpi_set_modalias(struct acpi_device *adev, const char *default_id,
 		       char *modalias, size_t len)
@@ -1015,7 +1027,11 @@ static int acpi_bus_match(struct device *dev, struct device_driver *drv)
 		&& !acpi_match_device_ids(acpi_dev, acpi_drv->ids);
 }
 
+<<<<<<< HEAD
 static int acpi_device_uevent(const struct device *dev, struct kobj_uevent_env *env)
+=======
+static int acpi_device_uevent(struct device *dev, struct kobj_uevent_env *env)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return __acpi_device_uevent_modalias(to_acpi_device(dev), env);
 }
@@ -1412,7 +1428,10 @@ static int __init acpi_init(void)
 		disable_acpi();
 		return result;
 	}
+<<<<<<< HEAD
 	acpi_init_ffh();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	pci_mmcfg_late_init();
 	acpi_iort_init();
@@ -1428,7 +1447,10 @@ static int __init acpi_init(void)
 	acpi_setup_sb_notify_handler();
 	acpi_viot_init();
 	acpi_agdi_init();
+<<<<<<< HEAD
 	acpi_apmt_init();
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 

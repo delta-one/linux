@@ -72,8 +72,11 @@ static int cfg_wait;
 static uint32_t cfg_mark;
 static char *cfg_input;
 static int cfg_repeat = 1;
+<<<<<<< HEAD
 static int cfg_truncate;
 static int cfg_rcv_trunc;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 struct cfg_cmsg_types {
 	unsigned int cmsg_enabled:1;
@@ -83,7 +86,10 @@ struct cfg_cmsg_types {
 
 struct cfg_sockopt_types {
 	unsigned int transparent:1;
+<<<<<<< HEAD
 	unsigned int mptfo:1;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 struct tcp_inq_state {
@@ -91,6 +97,7 @@ struct tcp_inq_state {
 	bool expect_eof;
 };
 
+<<<<<<< HEAD
 struct wstate {
 	char buf[8192];
 	unsigned int len;
@@ -98,6 +105,8 @@ struct wstate {
 	unsigned int total_len;
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static struct tcp_inq_state tcp_inq;
 
 static struct cfg_cmsg_types cfg_cmsg_types;
@@ -105,15 +114,22 @@ static struct cfg_sockopt_types cfg_sockopt_types;
 
 static void die_usage(void)
 {
+<<<<<<< HEAD
 	fprintf(stderr, "Usage: mptcp_connect [-6] [-c cmsg] [-f offset] [-i file] [-I num] [-j] [-l] "
+=======
+	fprintf(stderr, "Usage: mptcp_connect [-6] [-c cmsg] [-i file] [-I num] [-j] [-l] "
+>>>>>>> b7ba80a49124 (Commit)
 		"[-m mode] [-M mark] [-o option] [-p port] [-P mode] [-j] [-l] [-r num] "
 		"[-s MPTCP|TCP] [-S num] [-r num] [-t num] [-T num] [-u] [-w sec] connect_address\n");
 	fprintf(stderr, "\t-6 use ipv6\n");
 	fprintf(stderr, "\t-c cmsg -- test cmsg type <cmsg>\n");
+<<<<<<< HEAD
 	fprintf(stderr, "\t-f offset -- stop the I/O after receiving and sending the specified amount "
 		"of bytes. If there are unread bytes in the receive queue, that will cause a MPTCP "
 		"fastclose at close/shutdown. If offset is negative, expect the peer to close before "
 		"all the local data as been sent, thus toleration errors on write and EPIPE signals\n");
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	fprintf(stderr, "\t-i file -- read the data to send from the given file instead of stdin");
 	fprintf(stderr, "\t-I num -- repeat the transfer 'num' times. In listen mode accepts num "
 		"incoming connections, in client mode, disconnect and reconnect to the server\n");
@@ -240,6 +256,7 @@ static void set_transparent(int fd, int pf)
 	}
 }
 
+<<<<<<< HEAD
 static void set_mptfo(int fd, int pf)
 {
 	int qlen = 25;
@@ -248,6 +265,8 @@ static void set_mptfo(int fd, int pf)
 		perror("TCP_FASTOPEN");
 }
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 static int do_ulp_so(int sock, const char *name)
 {
 	return setsockopt(sock, IPPROTO_TCP, TCP_ULP, name, strlen(name));
@@ -316,9 +335,12 @@ static int sock_listen_mptcp(const char * const listenaddr,
 		if (cfg_sockopt_types.transparent)
 			set_transparent(sock, pf);
 
+<<<<<<< HEAD
 		if (cfg_sockopt_types.mptfo)
 			set_mptfo(sock, pf);
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (bind(sock, a->ai_addr, a->ai_addrlen) == 0)
 			break; /* success */
 
@@ -349,15 +371,22 @@ static int sock_listen_mptcp(const char * const listenaddr,
 
 static int sock_connect_mptcp(const char * const remoteaddr,
 			      const char * const port, int proto,
+<<<<<<< HEAD
 			      struct addrinfo **peer,
 			      int infd, struct wstate *winfo)
+=======
+			      struct addrinfo **peer)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct addrinfo hints = {
 		.ai_protocol = IPPROTO_TCP,
 		.ai_socktype = SOCK_STREAM,
 	};
 	struct addrinfo *a, *addr;
+<<<<<<< HEAD
 	int syn_copied = 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	int sock = -1;
 
 	hints.ai_family = pf;
@@ -375,6 +404,7 @@ static int sock_connect_mptcp(const char * const remoteaddr,
 		if (cfg_mark)
 			set_mark(sock, cfg_mark);
 
+<<<<<<< HEAD
 		if (cfg_sockopt_types.mptfo) {
 			if (!winfo->total_len)
 				winfo->total_len = winfo->len = read(infd, winfo->buf,
@@ -403,6 +433,16 @@ static int sock_connect_mptcp(const char * const remoteaddr,
 			close(sock);
 			sock = -1;
 		}
+=======
+		if (connect(sock, a->ai_addr, a->ai_addrlen) == 0) {
+			*peer = a;
+			break; /* success */
+		}
+
+		perror("connect()");
+		close(sock);
+		sock = -1;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 
 	freeaddrinfo(addr);
@@ -429,7 +469,11 @@ static size_t do_rnd_write(const int fd, char *buf, const size_t len)
 
 	bw = write(fd, buf, do_w);
 	if (bw < 0)
+<<<<<<< HEAD
 		return bw;
+=======
+		perror("write");
+>>>>>>> b7ba80a49124 (Commit)
 
 	/* let the join handshake complete, before going on */
 	if (cfg_join && first) {
@@ -612,14 +656,23 @@ static void shut_wr(int fd)
 	shutdown(fd, SHUT_WR);
 }
 
+<<<<<<< HEAD
 static int copyfd_io_poll(int infd, int peerfd, int outfd,
 			  bool *in_closed_after_out, struct wstate *winfo)
+=======
+static int copyfd_io_poll(int infd, int peerfd, int outfd, bool *in_closed_after_out)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct pollfd fds = {
 		.fd = peerfd,
 		.events = POLLIN | POLLOUT,
 	};
+<<<<<<< HEAD
 	unsigned int total_wlen = 0, total_rlen = 0;
+=======
+	unsigned int woff = 0, wlen = 0;
+	char wbuf[8192];
+>>>>>>> b7ba80a49124 (Commit)
 
 	set_nonblock(peerfd, true);
 
@@ -627,7 +680,11 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
 		char rbuf[8192];
 		ssize_t len;
 
+<<<<<<< HEAD
 		if (fds.events == 0 || quit)
+=======
+		if (fds.events == 0)
+>>>>>>> b7ba80a49124 (Commit)
 			break;
 
 		switch (poll(&fds, 1, poll_timeout)) {
@@ -644,6 +701,7 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
 		}
 
 		if (fds.revents & POLLIN) {
+<<<<<<< HEAD
 			ssize_t rb = sizeof(rbuf);
 
 			/* limit the total amount of read data to the trunc value*/
@@ -654,6 +712,9 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
 			} else {
 				len = do_rnd_read(peerfd, rbuf, sizeof(rbuf));
 			}
+=======
+			len = do_rnd_read(peerfd, rbuf, sizeof(rbuf));
+>>>>>>> b7ba80a49124 (Commit)
 			if (len == 0) {
 				/* no more data to receive:
 				 * peer has closed its write side
@@ -668,17 +729,24 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
 
 			/* Else, still have data to transmit */
 			} else if (len < 0) {
+<<<<<<< HEAD
 				if (cfg_rcv_trunc)
 					return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 				perror("read");
 				return 3;
 			}
 
+<<<<<<< HEAD
 			total_rlen += len;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			do_write(outfd, rbuf, len);
 		}
 
 		if (fds.revents & POLLOUT) {
+<<<<<<< HEAD
 			if (winfo->len == 0) {
 				winfo->off = 0;
 				winfo->len = read(infd, winfo->buf, sizeof(winfo->buf));
@@ -703,6 +771,23 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
 				winfo->len -= bw;
 				total_wlen += bw;
 			} else if (winfo->len == 0) {
+=======
+			if (wlen == 0) {
+				woff = 0;
+				wlen = read(infd, wbuf, sizeof(wbuf));
+			}
+
+			if (wlen > 0) {
+				ssize_t bw;
+
+				bw = do_rnd_write(peerfd, wbuf + woff, wlen);
+				if (bw < 0)
+					return 111;
+
+				woff += bw;
+				wlen -= bw;
+			} else if (wlen == 0) {
+>>>>>>> b7ba80a49124 (Commit)
 				/* We have no more data to send. */
 				fds.events &= ~POLLOUT;
 
@@ -720,12 +805,16 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
 		}
 
 		if (fds.revents & (POLLERR | POLLNVAL)) {
+<<<<<<< HEAD
 			if (cfg_rcv_trunc)
 				return 0;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 			fprintf(stderr, "Unexpected revents: "
 				"POLLERR/POLLNVAL(%x)\n", fds.revents);
 			return 5;
 		}
+<<<<<<< HEAD
 
 		if (cfg_truncate > 0 && total_wlen >= cfg_truncate &&
 		    total_rlen >= cfg_truncate)
@@ -734,6 +823,12 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
 
 	/* leave some time for late join/announce */
 	if (cfg_remove && !quit)
+=======
+	}
+
+	/* leave some time for late join/announce */
+	if (cfg_remove)
+>>>>>>> b7ba80a49124 (Commit)
 		usleep(cfg_wait);
 
 	return 0;
@@ -758,6 +853,7 @@ static int do_recvfile(int infd, int outfd)
 	return (int)r;
 }
 
+<<<<<<< HEAD
 static int spool_buf(int fd, struct wstate *winfo)
 {
 	while (winfo->len) {
@@ -778,6 +874,12 @@ static int do_mmap(int infd, int outfd, unsigned int size,
 {
 	char *inbuf = mmap(NULL, size, PROT_READ, MAP_SHARED, infd, 0);
 	ssize_t ret = 0, off = winfo->total_len;
+=======
+static int do_mmap(int infd, int outfd, unsigned int size)
+{
+	char *inbuf = mmap(NULL, size, PROT_READ, MAP_SHARED, infd, 0);
+	ssize_t ret = 0, off = 0;
+>>>>>>> b7ba80a49124 (Commit)
 	size_t rem;
 
 	if (inbuf == MAP_FAILED) {
@@ -785,11 +887,15 @@ static int do_mmap(int infd, int outfd, unsigned int size,
 		return 1;
 	}
 
+<<<<<<< HEAD
 	ret = spool_buf(outfd, winfo);
 	if (ret < 0)
 		return ret;
 
 	rem = size - winfo->total_len;
+=======
+	rem = size;
+>>>>>>> b7ba80a49124 (Commit)
 
 	while (rem > 0) {
 		ret = write(outfd, inbuf + off, rem);
@@ -833,6 +939,7 @@ static int get_infd_size(int fd)
 	return (int)count;
 }
 
+<<<<<<< HEAD
 static int do_sendfile(int infd, int outfd, unsigned int count,
 		       struct wstate *winfo)
 {
@@ -843,6 +950,10 @@ static int do_sendfile(int infd, int outfd, unsigned int count,
 
 	count -= winfo->total_len;
 
+=======
+static int do_sendfile(int infd, int outfd, unsigned int count)
+{
+>>>>>>> b7ba80a49124 (Commit)
 	while (count > 0) {
 		ssize_t r;
 
@@ -859,8 +970,12 @@ static int do_sendfile(int infd, int outfd, unsigned int count,
 }
 
 static int copyfd_io_mmap(int infd, int peerfd, int outfd,
+<<<<<<< HEAD
 			  unsigned int size, bool *in_closed_after_out,
 			  struct wstate *winfo)
+=======
+			  unsigned int size, bool *in_closed_after_out)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int err;
 
@@ -869,9 +984,15 @@ static int copyfd_io_mmap(int infd, int peerfd, int outfd,
 		if (err)
 			return err;
 
+<<<<<<< HEAD
 		err = do_mmap(infd, peerfd, size, winfo);
 	} else {
 		err = do_mmap(infd, peerfd, size, winfo);
+=======
+		err = do_mmap(infd, peerfd, size);
+	} else {
+		err = do_mmap(infd, peerfd, size);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err)
 			return err;
 
@@ -885,7 +1006,11 @@ static int copyfd_io_mmap(int infd, int peerfd, int outfd,
 }
 
 static int copyfd_io_sendfile(int infd, int peerfd, int outfd,
+<<<<<<< HEAD
 			      unsigned int size, bool *in_closed_after_out, struct wstate *winfo)
+=======
+			      unsigned int size, bool *in_closed_after_out)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	int err;
 
@@ -894,9 +1019,15 @@ static int copyfd_io_sendfile(int infd, int peerfd, int outfd,
 		if (err)
 			return err;
 
+<<<<<<< HEAD
 		err = do_sendfile(infd, peerfd, size, winfo);
 	} else {
 		err = do_sendfile(infd, peerfd, size, winfo);
+=======
+		err = do_sendfile(infd, peerfd, size);
+	} else {
+		err = do_sendfile(infd, peerfd, size);
+>>>>>>> b7ba80a49124 (Commit)
 		if (err)
 			return err;
 
@@ -909,7 +1040,11 @@ static int copyfd_io_sendfile(int infd, int peerfd, int outfd,
 	return err;
 }
 
+<<<<<<< HEAD
 static int copyfd_io(int infd, int peerfd, int outfd, bool close_peerfd, struct wstate *winfo)
+=======
+static int copyfd_io(int infd, int peerfd, int outfd, bool close_peerfd)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	bool in_closed_after_out = false;
 	struct timespec start, end;
@@ -921,24 +1056,36 @@ static int copyfd_io(int infd, int peerfd, int outfd, bool close_peerfd, struct 
 
 	switch (cfg_mode) {
 	case CFG_MODE_POLL:
+<<<<<<< HEAD
 		ret = copyfd_io_poll(infd, peerfd, outfd, &in_closed_after_out,
 				     winfo);
+=======
+		ret = copyfd_io_poll(infd, peerfd, outfd, &in_closed_after_out);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	case CFG_MODE_MMAP:
 		file_size = get_infd_size(infd);
 		if (file_size < 0)
 			return file_size;
+<<<<<<< HEAD
 		ret = copyfd_io_mmap(infd, peerfd, outfd, file_size,
 				     &in_closed_after_out, winfo);
+=======
+		ret = copyfd_io_mmap(infd, peerfd, outfd, file_size, &in_closed_after_out);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	case CFG_MODE_SENDFILE:
 		file_size = get_infd_size(infd);
 		if (file_size < 0)
 			return file_size;
+<<<<<<< HEAD
 		ret = copyfd_io_sendfile(infd, peerfd, outfd, file_size,
 					 &in_closed_after_out, winfo);
+=======
+		ret = copyfd_io_sendfile(infd, peerfd, outfd, file_size, &in_closed_after_out);
+>>>>>>> b7ba80a49124 (Commit)
 		break;
 
 	default:
@@ -1072,7 +1219,10 @@ static void maybe_close(int fd)
 int main_loop_s(int listensock)
 {
 	struct sockaddr_storage ss;
+<<<<<<< HEAD
 	struct wstate winfo;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct pollfd polls;
 	socklen_t salen;
 	int remotesock;
@@ -1107,8 +1257,12 @@ again:
 
 		SOCK_TEST_TCPULP(remotesock, 0);
 
+<<<<<<< HEAD
 		memset(&winfo, 0, sizeof(winfo));
 		copyfd_io(fd, remotesock, 1, true, &winfo);
+=======
+		copyfd_io(fd, remotesock, 1, true);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		perror("accept");
 		return 1;
@@ -1205,11 +1359,14 @@ static void parse_setsock_options(const char *name)
 		return;
 	}
 
+<<<<<<< HEAD
 	if (strncmp(name, "MPTFO", len) == 0) {
 		cfg_sockopt_types.mptfo = 1;
 		return;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	fprintf(stderr, "Unrecognized setsockopt option %s\n", name);
 	exit(1);
 }
@@ -1246,6 +1403,7 @@ void xdisconnect(int fd, int addrlen)
 
 int main_loop(void)
 {
+<<<<<<< HEAD
 	int fd = 0, ret, fd_in = 0;
 	struct addrinfo *peer;
 	struct wstate winfo;
@@ -1258,6 +1416,13 @@ int main_loop(void)
 
 	memset(&winfo, 0, sizeof(winfo));
 	fd = sock_connect_mptcp(cfg_host, cfg_port, cfg_sock_proto, &peer, fd_in, &winfo);
+=======
+	int fd, ret, fd_in = 0;
+	struct addrinfo *peer;
+
+	/* listener is ready. */
+	fd = sock_connect_mptcp(cfg_host, cfg_port, cfg_sock_proto, &peer);
+>>>>>>> b7ba80a49124 (Commit)
 	if (fd < 0)
 		return 2;
 
@@ -1273,12 +1438,17 @@ again:
 	if (cfg_cmsg_types.cmsg_enabled)
 		apply_cmsg_types(fd, &cfg_cmsg_types);
 
+<<<<<<< HEAD
 	if (cfg_input && !cfg_sockopt_types.mptfo) {
+=======
+	if (cfg_input) {
+>>>>>>> b7ba80a49124 (Commit)
 		fd_in = open(cfg_input, O_RDONLY);
 		if (fd < 0)
 			xerror("can't open %s:%d", cfg_input, errno);
 	}
 
+<<<<<<< HEAD
 	ret = copyfd_io(fd_in, fd, 1, 0, &winfo);
 	if (ret)
 		return ret;
@@ -1286,6 +1456,14 @@ again:
 	if (cfg_truncate > 0) {
 		xdisconnect(fd, peer->ai_addrlen);
 	} else if (--cfg_repeat > 0) {
+=======
+	/* close the client socket open only if we are not going to reconnect */
+	ret = copyfd_io(fd_in, fd, 1, cfg_repeat == 1);
+	if (ret)
+		return ret;
+
+	if (--cfg_repeat > 0) {
+>>>>>>> b7ba80a49124 (Commit)
 		xdisconnect(fd, peer->ai_addrlen);
 
 		/* the socket could be unblocking at this point, we need the
@@ -1296,12 +1474,17 @@ again:
 			xerror("can't reconnect: %d", errno);
 		if (cfg_input)
 			close(fd_in);
+<<<<<<< HEAD
 		memset(&winfo, 0, sizeof(winfo));
 		goto again;
 	} else {
 		close(fd);
 	}
 
+=======
+		goto again;
+	}
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -1387,6 +1570,7 @@ static void parse_opts(int argc, char **argv)
 {
 	int c;
 
+<<<<<<< HEAD
 	while ((c = getopt(argc, argv, "6c:f:hi:I:jlm:M:o:p:P:r:R:s:S:t:T:w:")) != -1) {
 		switch (c) {
 		case 'f':
@@ -1400,6 +1584,10 @@ static void parse_opts(int argc, char **argv)
 				signal(SIGPIPE, handle_signal);
 			}
 			break;
+=======
+	while ((c = getopt(argc, argv, "6c:hi:I:jlm:M:o:p:P:r:R:s:S:t:T:w:")) != -1) {
+		switch (c) {
+>>>>>>> b7ba80a49124 (Commit)
 		case 'j':
 			cfg_join = true;
 			cfg_mode = CFG_MODE_POLL;

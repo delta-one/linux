@@ -26,12 +26,20 @@
 
 	leds {
 		compatible = "gpio-leds";
+<<<<<<< HEAD
 		led-red {
+=======
+		red {
+>>>>>>> b7ba80a49124 (Commit)
 			label = "Front Panel LED";
 			gpios = <&pio4 1 GPIO_ACTIVE_HIGH>;
 			linux,default-trigger = "heartbeat";
 		};
+<<<<<<< HEAD
 		led-green {
+=======
+		green {
+>>>>>>> b7ba80a49124 (Commit)
 			gpios = <&pio1 3 GPIO_ACTIVE_HIGH>;
 			default-state = "off";
 		};

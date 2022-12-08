@@ -11,11 +11,16 @@ maintainers:
 
 description: |
   fsl_rpmsg is a virtual audio device. Mapping to real hardware devices
+<<<<<<< HEAD
   are SAI, MICFIL, DMA controlled by Cortex M core. What we see from
   Linux side is a device which provides audio service by rpmsg channel.
   We can create different sound cards which access different hardwares
   such as SAI, MICFIL, .etc through building rpmsg channels between
   Cortex-A and Cortex-M.
+=======
+  are SAI, DMA controlled by Cortex M core. What we see from Linux
+  side is a device which provides audio service by rpmsg channel.
+>>>>>>> b7ba80a49124 (Commit)
 
 properties:
   compatible:
@@ -88,6 +93,7 @@ properties:
       This is a boolean property. If present, the receiving function
       will be enabled.
 
+<<<<<<< HEAD
   fsl,rpmsg-channel-name:
     $ref: /schemas/types.yaml#/definitions/string
     description: |
@@ -98,6 +104,8 @@ properties:
       - rpmsg-audio-channel
       - rpmsg-micfil-channel
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 required:
   - compatible
   - model
@@ -120,6 +128,7 @@ examples:
                  <&clk IMX8MN_AUDIO_PLL2_OUT>;
         clock-names = "ipg", "mclk", "dma", "pll8k", "pll11k";
     };
+<<<<<<< HEAD
 
   - |
     #include <dt-bindings/clock/imx8mm-clock.h>
@@ -139,3 +148,5 @@ examples:
     };
 
 ...
+=======
+>>>>>>> b7ba80a49124 (Commit)

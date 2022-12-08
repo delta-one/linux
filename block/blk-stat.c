@@ -58,8 +58,12 @@ void blk_stat_add(struct request *rq, u64 now)
 
 	value = (now >= rq->io_start_time_ns) ? now - rq->io_start_time_ns : 0;
 
+<<<<<<< HEAD
 	if (req_op(rq) == REQ_OP_READ || req_op(rq) == REQ_OP_WRITE)
 		blk_throtl_stat_add(rq, value);
+=======
+	blk_throtl_stat_add(rq, value);
+>>>>>>> b7ba80a49124 (Commit)
 
 	rcu_read_lock();
 	cpu = get_cpu();
@@ -231,3 +235,24 @@ void blk_free_queue_stats(struct blk_queue_stats *stats)
 
 	kfree(stats);
 }
+<<<<<<< HEAD
+=======
+
+bool blk_stats_alloc_enable(struct request_queue *q)
+{
+	struct blk_rq_stat *poll_stat;
+
+	poll_stat = kcalloc(BLK_MQ_POLL_STATS_BKTS, sizeof(*poll_stat),
+				GFP_ATOMIC);
+	if (!poll_stat)
+		return false;
+
+	if (cmpxchg(&q->poll_stat, NULL, poll_stat) != NULL) {
+		kfree(poll_stat);
+		return true;
+	}
+
+	blk_stat_add_callback(q, q->poll_cb);
+	return false;
+}
+>>>>>>> b7ba80a49124 (Commit)

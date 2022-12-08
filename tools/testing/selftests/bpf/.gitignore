@@ -36,16 +36,25 @@ test_cpp
 *.lskel.h
 /no_alu32
 /bpf_gcc
+<<<<<<< HEAD
 /host-tools
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /tools
 /runqslower
 /bench
 /veristat
+<<<<<<< HEAD
 /sign-file
+=======
+>>>>>>> b7ba80a49124 (Commit)
 *.ko
 *.tmp
 xskxceiver
 xdp_redirect_multi
 xdp_synproxy
+<<<<<<< HEAD
 xdp_hw_metadata
 xdp_features
+=======
+>>>>>>> b7ba80a49124 (Commit)

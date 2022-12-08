@@ -188,6 +188,7 @@
 #define PTRLOG		3
 #endif
 
+<<<<<<< HEAD
 /* Annotate a function as being unsuitable for kprobes. */
 #ifdef CONFIG_KPROBES
 #define _ASM_NOKPROBE(name)				\
@@ -198,4 +199,6 @@
 #define _ASM_NOKPROBE(name)
 #endif
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* __ASM_ASM_H */

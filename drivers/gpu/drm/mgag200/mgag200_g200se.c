@@ -284,8 +284,12 @@ static void mgag200_g200se_04_pixpllc_atomic_update(struct drm_crtc *crtc,
 	pixpllcp = pixpllc->p - 1;
 	pixpllcs = pixpllc->s;
 
+<<<<<<< HEAD
 	// For G200SE A, BIT(7) should be set unconditionally.
 	xpixpllcm = BIT(7) | pixpllcm;
+=======
+	xpixpllcm = pixpllcm | ((pixpllcn & BIT(8)) >> 1);
+>>>>>>> b7ba80a49124 (Commit)
 	xpixpllcn = pixpllcn;
 	xpixpllcp = (pixpllcs << 3) | pixpllcp;
 

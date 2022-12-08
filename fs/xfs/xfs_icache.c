@@ -255,7 +255,11 @@ xfs_perag_set_inode_tag(
 		break;
 	}
 
+<<<<<<< HEAD
 	trace_xfs_perag_set_inode_tag(pag, _RET_IP_);
+=======
+	trace_xfs_perag_set_inode_tag(mp, pag->pag_agno, tag, _RET_IP_);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /* Clear a tag on both the AG incore inode tree and the AG radix tree. */
@@ -289,7 +293,11 @@ xfs_perag_clear_inode_tag(
 	radix_tree_tag_clear(&mp->m_perag_tree, pag->pag_agno, tag);
 	spin_unlock(&mp->m_perag_lock);
 
+<<<<<<< HEAD
 	trace_xfs_perag_clear_inode_tag(pag, _RET_IP_);
+=======
+	trace_xfs_perag_clear_inode_tag(mp, pag->pag_agno, tag, _RET_IP_);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*
@@ -342,9 +350,12 @@ xfs_iget_recycle(
 
 	trace_xfs_iget_recycle(ip);
 
+<<<<<<< HEAD
 	if (!xfs_ilock_nowait(ip, XFS_ILOCK_EXCL))
 		return -EAGAIN;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/*
 	 * We need to make it look like the inode is being reclaimed to prevent
 	 * the actual reclaim workers from stomping over us while we recycle
@@ -358,7 +369,10 @@ xfs_iget_recycle(
 
 	ASSERT(!rwsem_is_locked(&inode->i_rwsem));
 	error = xfs_reinit_inode(mp, inode);
+<<<<<<< HEAD
 	xfs_iunlock(ip, XFS_ILOCK_EXCL);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (error) {
 		/*
 		 * Re-initializing the inode failed, and we are in deep
@@ -522,8 +536,11 @@ xfs_iget_cache_hit(
 	if (ip->i_flags & XFS_IRECLAIMABLE) {
 		/* Drops i_flags_lock and RCU read lock. */
 		error = xfs_iget_recycle(pag, ip);
+<<<<<<< HEAD
 		if (error == -EAGAIN)
 			goto out_skip;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		if (error)
 			return error;
 	} else {
@@ -586,7 +603,11 @@ xfs_iget_cache_miss(
 	if (!ip)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	error = xfs_imap(pag, tp, ip->i_ino, &ip->i_imap, flags);
+=======
+	error = xfs_imap(mp, tp, ip->i_ino, &ip->i_imap, flags);
+>>>>>>> b7ba80a49124 (Commit)
 	if (error)
 		goto out_destroy;
 
@@ -602,7 +623,11 @@ xfs_iget_cache_miss(
 	 */
 	if (xfs_has_v3inodes(mp) &&
 	    (flags & XFS_IGET_CREATE) && !xfs_has_ikeep(mp)) {
+<<<<<<< HEAD
 		VFS_I(ip)->i_generation = get_random_u32();
+=======
+		VFS_I(ip)->i_generation = prandom_u32();
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		struct xfs_buf		*bp;
 
@@ -1767,7 +1792,11 @@ xfs_icwalk(
 		if (error) {
 			last_error = error;
 			if (error == -EFSCORRUPTED) {
+<<<<<<< HEAD
 				xfs_perag_rele(pag);
+=======
+				xfs_perag_put(pag);
+>>>>>>> b7ba80a49124 (Commit)
 				break;
 			}
 		}
@@ -1853,13 +1882,17 @@ xfs_inodegc_worker(
 						struct xfs_inodegc, work);
 	struct llist_node	*node = llist_del_all(&gc->list);
 	struct xfs_inode	*ip, *n;
+<<<<<<< HEAD
 	unsigned int		nofs_flag;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	WRITE_ONCE(gc->items, 0);
 
 	if (!node)
 		return;
 
+<<<<<<< HEAD
 	/*
 	 * We can allocate memory here while doing writeback on behalf of
 	 * memory reclaim.  To avoid memory allocation deadlocks set the
@@ -1867,6 +1900,8 @@ xfs_inodegc_worker(
 	 */
 	nofs_flag = memalloc_nofs_save();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ip = llist_entry(node, struct xfs_inode, i_gclist);
 	trace_xfs_inodegc_worker(ip->i_mount, READ_ONCE(gc->shrinker_hits));
 
@@ -1875,8 +1910,11 @@ xfs_inodegc_worker(
 		xfs_iflags_set(ip, XFS_INACTIVATING);
 		xfs_inodegc_inactivate(ip);
 	}
+<<<<<<< HEAD
 
 	memalloc_nofs_restore(nofs_flag);
+=======
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /*

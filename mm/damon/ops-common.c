@@ -16,6 +16,7 @@
  * Get an online page for a pfn if it's in the LRU list.  Otherwise, returns
  * NULL.
  *
+<<<<<<< HEAD
  * The body of this function is stolen from the 'page_idle_get_folio()'.  We
  * steal rather than reuse it because the code is quite simple.
  */
@@ -35,14 +36,37 @@ struct folio *damon_get_folio(unsigned long pfn)
 		folio = NULL;
 	}
 	return folio;
+=======
+ * The body of this function is stolen from the 'page_idle_get_page()'.  We
+ * steal rather than reuse it because the code is quite simple.
+ */
+struct page *damon_get_page(unsigned long pfn)
+{
+	struct page *page = pfn_to_online_page(pfn);
+
+	if (!page || !PageLRU(page) || !get_page_unless_zero(page))
+		return NULL;
+
+	if (unlikely(!PageLRU(page))) {
+		put_page(page);
+		page = NULL;
+	}
+	return page;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void damon_ptep_mkold(pte_t *pte, struct mm_struct *mm, unsigned long addr)
 {
 	bool referenced = false;
+<<<<<<< HEAD
 	struct folio *folio = damon_get_folio(pte_pfn(*pte));
 
 	if (!folio)
+=======
+	struct page *page = damon_get_page(pte_pfn(*pte));
+
+	if (!page)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	if (pte_young(*pte)) {
@@ -56,19 +80,32 @@ void damon_ptep_mkold(pte_t *pte, struct mm_struct *mm, unsigned long addr)
 #endif /* CONFIG_MMU_NOTIFIER */
 
 	if (referenced)
+<<<<<<< HEAD
 		folio_set_young(folio);
 
 	folio_set_idle(folio);
 	folio_put(folio);
+=======
+		set_page_young(page);
+
+	set_page_idle(page);
+	put_page(page);
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 void damon_pmdp_mkold(pmd_t *pmd, struct mm_struct *mm, unsigned long addr)
 {
 #ifdef CONFIG_TRANSPARENT_HUGEPAGE
 	bool referenced = false;
+<<<<<<< HEAD
 	struct folio *folio = damon_get_folio(pmd_pfn(*pmd));
 
 	if (!folio)
+=======
+	struct page *page = damon_get_page(pmd_pfn(*pmd));
+
+	if (!page)
+>>>>>>> b7ba80a49124 (Commit)
 		return;
 
 	if (pmd_young(*pmd)) {
@@ -82,10 +119,17 @@ void damon_pmdp_mkold(pmd_t *pmd, struct mm_struct *mm, unsigned long addr)
 #endif /* CONFIG_MMU_NOTIFIER */
 
 	if (referenced)
+<<<<<<< HEAD
 		folio_set_young(folio);
 
 	folio_set_idle(folio);
 	folio_put(folio);
+=======
+		set_page_young(page);
+
+	set_page_idle(page);
+	put_page(page);
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
 }
 

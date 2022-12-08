@@ -90,6 +90,21 @@
 		};
 	};
 
+<<<<<<< HEAD
+=======
+	panel: panel {
+		compatible = "lg,lp120up1";
+		power-supply = <&panel_fixed_3v3>;
+		backlight = <&backlight>;
+
+		port {
+			panel_in: endpoint {
+				remote-endpoint = <&ps8640_out>;
+			};
+		};
+	};
+
+>>>>>>> b7ba80a49124 (Commit)
 	panel_fixed_3v3: regulator1 {
 		compatible = "regulator-fixed";
 		regulator-name = "PANEL_3V3";
@@ -149,6 +164,7 @@
 			};
 		};
 	};
+<<<<<<< HEAD
 
 	watchdog {
 		compatible = "arm,smc-wdt";
@@ -161,6 +177,8 @@
  */
 &watchdog {
 	status = "disabled";
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 &mfg_async {
@@ -282,6 +300,7 @@
 				};
 			};
 		};
+<<<<<<< HEAD
 
 		aux-bus {
 			panel: panel {
@@ -296,6 +315,8 @@
 				};
 			};
 		};
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	};
 };
 
@@ -927,7 +948,11 @@
 };
 
 &pwrap {
+<<<<<<< HEAD
 	pmic: pmic {
+=======
+	pmic: mt6397 {
+>>>>>>> b7ba80a49124 (Commit)
 		compatible = "mediatek,mt6397";
 		#address-cells = <1>;
 		#size-cells = <1>;
@@ -943,6 +968,10 @@
 
 		pio6397: pinctrl {
 			compatible = "mediatek,mt6397-pinctrl";
+<<<<<<< HEAD
+=======
+			pins-are-numbered;
+>>>>>>> b7ba80a49124 (Commit)
 			gpio-controller;
 			#gpio-cells = <2>;
 		};

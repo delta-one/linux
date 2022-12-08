@@ -50,6 +50,10 @@ MODULE_DEVICE_TABLE(of, of_hi6421_pmic_match);
 static int hi6421_pmic_probe(struct platform_device *pdev)
 {
 	struct hi6421_pmic *pmic;
+<<<<<<< HEAD
+=======
+	struct resource *res;
+>>>>>>> b7ba80a49124 (Commit)
 	const struct of_device_id *id;
 	const struct mfd_cell *subdevs;
 	enum hi6421_type type;
@@ -65,7 +69,12 @@ static int hi6421_pmic_probe(struct platform_device *pdev)
 	if (!pmic)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	base = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
+=======
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	base = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>> b7ba80a49124 (Commit)
 	if (IS_ERR(base))
 		return PTR_ERR(base);
 

@@ -7,7 +7,10 @@
 struct stats_req_info {
 	struct ethnl_req_info		base;
 	DECLARE_BITMAP(stat_mask, __ETHTOOL_STATS_CNT);
+<<<<<<< HEAD
 	enum ethtool_mac_stats_src	src;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 #define STATS_REQINFO(__req_base) \
@@ -76,19 +79,29 @@ const char stats_rmon_names[__ETHTOOL_A_STATS_RMON_CNT][ETH_GSTRING_LEN] = {
 	[ETHTOOL_A_STATS_RMON_JABBER]		= "etherStatsJabbers",
 };
 
+<<<<<<< HEAD
 const struct nla_policy ethnl_stats_get_policy[ETHTOOL_A_STATS_SRC + 1] = {
 	[ETHTOOL_A_STATS_HEADER]	=
 		NLA_POLICY_NESTED(ethnl_header_policy),
 	[ETHTOOL_A_STATS_GROUPS]	= { .type = NLA_NESTED },
 	[ETHTOOL_A_STATS_SRC]		=
 		NLA_POLICY_MAX(NLA_U32, ETHTOOL_MAC_STATS_SRC_PMAC),
+=======
+const struct nla_policy ethnl_stats_get_policy[ETHTOOL_A_STATS_GROUPS + 1] = {
+	[ETHTOOL_A_STATS_HEADER]	=
+		NLA_POLICY_NESTED(ethnl_header_policy),
+	[ETHTOOL_A_STATS_GROUPS]	= { .type = NLA_NESTED },
+>>>>>>> b7ba80a49124 (Commit)
 };
 
 static int stats_parse_request(struct ethnl_req_info *req_base,
 			       struct nlattr **tb,
 			       struct netlink_ext_ack *extack)
 {
+<<<<<<< HEAD
 	enum ethtool_mac_stats_src src = ETHTOOL_MAC_STATS_SRC_AGGREGATE;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	struct stats_req_info *req_info = STATS_REQINFO(req_base);
 	bool mod = false;
 	int err;
@@ -104,11 +117,14 @@ static int stats_parse_request(struct ethnl_req_info *req_base,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	if (tb[ETHTOOL_A_STATS_SRC])
 		src = nla_get_u32(tb[ETHTOOL_A_STATS_SRC]);
 
 	req_info->src = src;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 }
 
@@ -117,9 +133,13 @@ static int stats_prepare_data(const struct ethnl_req_info *req_base,
 			      struct genl_info *info)
 {
 	const struct stats_req_info *req_info = STATS_REQINFO(req_base);
+<<<<<<< HEAD
 	struct netlink_ext_ack *extack = info ? info->extack : NULL;
 	struct stats_reply_data *data = STATS_REPDATA(reply_base);
 	enum ethtool_mac_stats_src src = req_info->src;
+=======
+	struct stats_reply_data *data = STATS_REPDATA(reply_base);
+>>>>>>> b7ba80a49124 (Commit)
 	struct net_device *dev = reply_base->dev;
 	int ret;
 
@@ -127,6 +147,7 @@ static int stats_prepare_data(const struct ethnl_req_info *req_base,
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
 	if ((src == ETHTOOL_MAC_STATS_SRC_EMAC ||
 	     src == ETHTOOL_MAC_STATS_SRC_PMAC) &&
 	    !__ethtool_dev_mm_supported(dev)) {
@@ -136,16 +157,21 @@ static int stats_prepare_data(const struct ethnl_req_info *req_base,
 		return -EOPNOTSUPP;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Mark all stats as unset (see ETHTOOL_STAT_NOT_SET) to prevent them
 	 * from being reported to user space in case driver did not set them.
 	 */
 	memset(&data->stats, 0xff, sizeof(data->stats));
 
+<<<<<<< HEAD
 	data->phy_stats.src = src;
 	data->mac_stats.src = src;
 	data->ctrl_stats.src = src;
 	data->rmon_stats.src = src;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (test_bit(ETHTOOL_STATS_ETH_PHY, req_info->stat_mask) &&
 	    dev->ethtool_ops->get_eth_phy_stats)
 		dev->ethtool_ops->get_eth_phy_stats(dev, &data->phy_stats);
@@ -171,8 +197,11 @@ static int stats_reply_size(const struct ethnl_req_info *req_base,
 	unsigned int n_grps = 0, n_stats = 0;
 	int len = 0;
 
+<<<<<<< HEAD
 	len += nla_total_size(sizeof(u32)); /* _STATS_SRC */
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (test_bit(ETHTOOL_STATS_ETH_PHY, req_info->stat_mask)) {
 		n_stats += sizeof(struct ethtool_eth_phy_stats) / sizeof(u64);
 		n_grps++;
@@ -406,9 +435,12 @@ static int stats_fill_reply(struct sk_buff *skb,
 	const struct stats_reply_data *data = STATS_REPDATA(reply_base);
 	int ret = 0;
 
+<<<<<<< HEAD
 	if (nla_put_u32(skb, ETHTOOL_A_STATS_SRC, req_info->src))
 		return -EMSGSIZE;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (!ret && test_bit(ETHTOOL_STATS_ETH_PHY, req_info->stat_mask))
 		ret = stats_put_stats(skb, data, ETHTOOL_STATS_ETH_PHY,
 				      ETH_SS_STATS_ETH_PHY,
@@ -440,6 +472,7 @@ const struct ethnl_request_ops ethnl_stats_request_ops = {
 	.reply_size		= stats_reply_size,
 	.fill_reply		= stats_fill_reply,
 };
+<<<<<<< HEAD
 
 static u64 ethtool_stats_sum(u64 a, u64 b)
 {
@@ -567,3 +600,5 @@ void ethtool_aggregate_rmon_stats(struct net_device *dev,
 				offsetof(struct ethtool_rmon_stats, stats));
 }
 EXPORT_SYMBOL(ethtool_aggregate_rmon_stats);
+=======
+>>>>>>> b7ba80a49124 (Commit)

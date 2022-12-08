@@ -108,7 +108,11 @@ properties:
 
   msi-controller:
     description:
+<<<<<<< HEAD
       Only present if the Message Based Interrupt functionality is
+=======
+      Only present if the Message Based Interrupt functionnality is
+>>>>>>> b7ba80a49124 (Commit)
       being exposed by the HW, and the mbi-ranges property present.
 
   mbi-ranges:

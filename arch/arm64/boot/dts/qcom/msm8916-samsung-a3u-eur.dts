@@ -81,10 +81,13 @@
 	};
 };
 
+<<<<<<< HEAD
 &clk_pwm {
 	status = "okay";
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 &dsi0 {
 	panel@0 {
 		reg = <0>;
@@ -108,12 +111,17 @@
 	remote-endpoint = <&panel_in>;
 };
 
+<<<<<<< HEAD
 &vibrator {
 	status = "okay";
 };
 
 &msmgpio {
 	panel_vdd3_default: panel-vdd3-default-state {
+=======
+&msmgpio {
+	panel_vdd3_default: panel-vdd3-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio9";
 		function = "gpio";
 
@@ -121,7 +129,11 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	tkey_en_default: tkey-en-default-state {
+=======
+	tkey_en_default: tkey-en-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio86";
 		function = "gpio";
 
@@ -129,7 +141,11 @@
 		bias-disable;
 	};
 
+<<<<<<< HEAD
 	tkey_led_en_default: tkey-led-en-default-state {
+=======
+	tkey_led_en_default: tkey-led-en-default {
+>>>>>>> b7ba80a49124 (Commit)
 		pins = "gpio60";
 		function = "gpio";
 

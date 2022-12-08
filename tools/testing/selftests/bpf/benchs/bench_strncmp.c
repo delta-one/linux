@@ -140,7 +140,10 @@ static void strncmp_measure(struct bench_res *res)
 
 const struct bench bench_strncmp_no_helper = {
 	.name = "strncmp-no-helper",
+<<<<<<< HEAD
 	.argp = &bench_strncmp_argp,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.validate = strncmp_validate,
 	.setup = strncmp_no_helper_setup,
 	.producer_thread = strncmp_producer,
@@ -152,7 +155,10 @@ const struct bench bench_strncmp_no_helper = {
 
 const struct bench bench_strncmp_helper = {
 	.name = "strncmp-helper",
+<<<<<<< HEAD
 	.argp = &bench_strncmp_argp,
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	.validate = strncmp_validate,
 	.setup = strncmp_helper_setup,
 	.producer_thread = strncmp_producer,

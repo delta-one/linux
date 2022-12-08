@@ -141,7 +141,11 @@
  * @fab_port_id: used to indicate current working mode of fabric counters.
  * @fab_lock: lock to protect fabric counters working mode.
  * @cpu: active CPU to which the PMU is bound for accesses.
+<<<<<<< HEAD
  * @node: node for CPU hotplug notifier link.
+=======
+ * @cpuhp_node: node for CPU hotplug notifier link.
+>>>>>>> b7ba80a49124 (Commit)
  * @cpuhp_state: state for CPU hotplug notification;
  */
 struct fme_perf_priv {

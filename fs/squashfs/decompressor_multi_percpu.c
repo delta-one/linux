@@ -25,7 +25,11 @@ struct squashfs_stream {
 	local_lock_t	lock;
 };
 
+<<<<<<< HEAD
 static void *squashfs_decompressor_create(struct squashfs_sb_info *msblk,
+=======
+void *squashfs_decompressor_create(struct squashfs_sb_info *msblk,
+>>>>>>> b7ba80a49124 (Commit)
 						void *comp_opts)
 {
 	struct squashfs_stream *stream;
@@ -59,7 +63,11 @@ out:
 	return ERR_PTR(err);
 }
 
+<<<<<<< HEAD
 static void squashfs_decompressor_destroy(struct squashfs_sb_info *msblk)
+=======
+void squashfs_decompressor_destroy(struct squashfs_sb_info *msblk)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	struct squashfs_stream __percpu *percpu =
 			(struct squashfs_stream __percpu *) msblk->stream;
@@ -75,6 +83,7 @@ static void squashfs_decompressor_destroy(struct squashfs_sb_info *msblk)
 	}
 }
 
+<<<<<<< HEAD
 static int squashfs_decompress(struct squashfs_sb_info *msblk, struct bio *bio,
 	int offset, int length, struct squashfs_page_actor *output)
 {
@@ -85,11 +94,25 @@ static int squashfs_decompress(struct squashfs_sb_info *msblk, struct bio *bio,
 
 	local_lock(&percpu->lock);
 	stream = this_cpu_ptr(percpu);
+=======
+int squashfs_decompress(struct squashfs_sb_info *msblk, struct bio *bio,
+	int offset, int length, struct squashfs_page_actor *output)
+{
+	struct squashfs_stream *stream;
+	int res;
+
+	local_lock(&msblk->stream->lock);
+	stream = this_cpu_ptr(msblk->stream);
+>>>>>>> b7ba80a49124 (Commit)
 
 	res = msblk->decompressor->decompress(msblk, stream->stream, bio,
 					      offset, length, output);
 
+<<<<<<< HEAD
 	local_unlock(&percpu->lock);
+=======
+	local_unlock(&msblk->stream->lock);
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (res < 0)
 		ERROR("%s decompression failed, data probably corrupt\n",
@@ -98,6 +121,7 @@ static int squashfs_decompress(struct squashfs_sb_info *msblk, struct bio *bio,
 	return res;
 }
 
+<<<<<<< HEAD
 static int squashfs_max_decompressors(void)
 {
 	return num_possible_cpus();
@@ -109,3 +133,9 @@ const struct squashfs_decompressor_thread_ops squashfs_decompressor_percpu = {
 	.decompress = squashfs_decompress,
 	.max_decompressors = squashfs_max_decompressors,
 };
+=======
+int squashfs_max_decompressors(void)
+{
+	return num_possible_cpus();
+}
+>>>>>>> b7ba80a49124 (Commit)

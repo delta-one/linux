@@ -136,9 +136,61 @@ static inline void __uaccess_enable_hw_pan(void)
 			CONFIG_ARM64_PAN));
 }
 
+<<<<<<< HEAD
 static inline void uaccess_disable_privileged(void)
 {
 	__mte_disable_tco();
+=======
+/*
+ * The Tag Check Flag (TCF) mode for MTE is per EL, hence TCF0
+ * affects EL0 and TCF affects EL1 irrespective of which TTBR is
+ * used.
+ * The kernel accesses TTBR0 usually with LDTR/STTR instructions
+ * when UAO is available, so these would act as EL0 accesses using
+ * TCF0.
+ * However futex.h code uses exclusives which would be executed as
+ * EL1, this can potentially cause a tag check fault even if the
+ * user disables TCF0.
+ *
+ * To address the problem we set the PSTATE.TCO bit in uaccess_enable()
+ * and reset it in uaccess_disable().
+ *
+ * The Tag check override (TCO) bit disables temporarily the tag checking
+ * preventing the issue.
+ */
+static inline void __uaccess_disable_tco(void)
+{
+	asm volatile(ALTERNATIVE("nop", SET_PSTATE_TCO(0),
+				 ARM64_MTE, CONFIG_KASAN_HW_TAGS));
+}
+
+static inline void __uaccess_enable_tco(void)
+{
+	asm volatile(ALTERNATIVE("nop", SET_PSTATE_TCO(1),
+				 ARM64_MTE, CONFIG_KASAN_HW_TAGS));
+}
+
+/*
+ * These functions disable tag checking only if in MTE async mode
+ * since the sync mode generates exceptions synchronously and the
+ * nofault or load_unaligned_zeropad can handle them.
+ */
+static inline void __uaccess_disable_tco_async(void)
+{
+	if (system_uses_mte_async_or_asymm_mode())
+		 __uaccess_disable_tco();
+}
+
+static inline void __uaccess_enable_tco_async(void)
+{
+	if (system_uses_mte_async_or_asymm_mode())
+		__uaccess_enable_tco();
+}
+
+static inline void uaccess_disable_privileged(void)
+{
+	__uaccess_disable_tco();
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (uaccess_ttbr0_disable())
 		return;
@@ -148,7 +200,11 @@ static inline void uaccess_disable_privileged(void)
 
 static inline void uaccess_enable_privileged(void)
 {
+<<<<<<< HEAD
 	__mte_enable_tco();
+=======
+	__uaccess_enable_tco();
+>>>>>>> b7ba80a49124 (Commit)
 
 	if (uaccess_ttbr0_enable())
 		return;
@@ -157,11 +213,17 @@ static inline void uaccess_enable_privileged(void)
 }
 
 /*
+<<<<<<< HEAD
  * Sanitize a uaccess pointer such that it cannot reach any kernel address.
  *
  * Clearing bit 55 ensures the pointer cannot address any portion of the TTBR1
  * address range (i.e. any kernel address), and either the pointer falls within
  * the TTBR0 address range or must cause a fault.
+=======
+ * Sanitise a uaccess pointer such that it becomes NULL if above the maximum
+ * user address. In case the pointer is tagged (has the top byte set), untag
+ * the pointer before checking.
+>>>>>>> b7ba80a49124 (Commit)
  */
 #define uaccess_mask_ptr(ptr) (__typeof__(ptr))__uaccess_mask_ptr(ptr)
 static inline void __user *__uaccess_mask_ptr(const void __user *ptr)
@@ -169,12 +231,23 @@ static inline void __user *__uaccess_mask_ptr(const void __user *ptr)
 	void __user *safe_ptr;
 
 	asm volatile(
+<<<<<<< HEAD
 	"	bic	%0, %1, %2\n"
 	: "=r" (safe_ptr)
 	: "r" (ptr),
 	  "i" (BIT(55))
 	);
 
+=======
+	"	bics	xzr, %3, %2\n"
+	"	csel	%0, %1, xzr, eq\n"
+	: "=&r" (safe_ptr)
+	: "r" (ptr), "r" (TASK_SIZE_MAX - 1),
+	  "r" (untagged_addr(ptr))
+	: "cc");
+
+	csdb();
+>>>>>>> b7ba80a49124 (Commit)
 	return safe_ptr;
 }
 
@@ -256,8 +329,13 @@ do {									\
 #define get_user	__get_user
 
 /*
+<<<<<<< HEAD
  * We must not call into the scheduler between __mte_enable_tco_async() and
  * __mte_disable_tco_async(). As `dst` and `src` may contain blocking
+=======
+ * We must not call into the scheduler between __uaccess_enable_tco_async() and
+ * __uaccess_disable_tco_async(). As `dst` and `src` may contain blocking
+>>>>>>> b7ba80a49124 (Commit)
  * functions, we must evaluate these outside of the critical section.
  */
 #define __get_kernel_nofault(dst, src, type, err_label)			\
@@ -266,10 +344,17 @@ do {									\
 	__typeof__(src) __gkn_src = (src);				\
 	int __gkn_err = 0;						\
 									\
+<<<<<<< HEAD
 	__mte_enable_tco_async();					\
 	__raw_get_mem("ldr", *((type *)(__gkn_dst)),			\
 		      (__force type *)(__gkn_src), __gkn_err, K);	\
 	__mte_disable_tco_async();					\
+=======
+	__uaccess_enable_tco_async();					\
+	__raw_get_mem("ldr", *((type *)(__gkn_dst)),			\
+		      (__force type *)(__gkn_src), __gkn_err, K);	\
+	__uaccess_disable_tco_async();					\
+>>>>>>> b7ba80a49124 (Commit)
 									\
 	if (unlikely(__gkn_err))					\
 		goto err_label;						\
@@ -342,8 +427,13 @@ do {									\
 #define put_user	__put_user
 
 /*
+<<<<<<< HEAD
  * We must not call into the scheduler between __mte_enable_tco_async() and
  * __mte_disable_tco_async(). As `dst` and `src` may contain blocking
+=======
+ * We must not call into the scheduler between __uaccess_enable_tco_async() and
+ * __uaccess_disable_tco_async(). As `dst` and `src` may contain blocking
+>>>>>>> b7ba80a49124 (Commit)
  * functions, we must evaluate these outside of the critical section.
  */
 #define __put_kernel_nofault(dst, src, type, err_label)			\
@@ -352,10 +442,17 @@ do {									\
 	__typeof__(src) __pkn_src = (src);				\
 	int __pkn_err = 0;						\
 									\
+<<<<<<< HEAD
 	__mte_enable_tco_async();					\
 	__raw_put_mem("str", *((type *)(__pkn_src)),			\
 		      (__force type *)(__pkn_dst), __pkn_err, K);	\
 	__mte_disable_tco_async();					\
+=======
+	__uaccess_enable_tco_async();					\
+	__raw_put_mem("str", *((type *)(__pkn_src)),			\
+		      (__force type *)(__pkn_dst), __pkn_err, K);	\
+	__uaccess_disable_tco_async();					\
+>>>>>>> b7ba80a49124 (Commit)
 									\
 	if (unlikely(__pkn_err))					\
 		goto err_label;						\

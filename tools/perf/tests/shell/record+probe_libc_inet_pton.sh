@@ -11,7 +11,10 @@
 # Arnaldo Carvalho de Melo <acme@kernel.org>, 2017
 
 . $(dirname $0)/lib/probe.sh
+<<<<<<< HEAD
 . $(dirname $0)/lib/probe_vfs_getname.sh
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 libc=$(grep -w libc /proc/self/maps | head -1 | sed -r 's/.*[[:space:]](\/.*)/\1/g')
 nm -Dg $libc 2>/dev/null | fgrep -q inet_pton || exit 254
@@ -38,7 +41,10 @@ trace_libc_inet_pton_backtrace() {
 	case "$(uname -m)" in
 	s390x)
 		eventattr='call-graph=dwarf,max-stack=4'
+<<<<<<< HEAD
 		echo "text_to_binary_address.*\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
+=======
+>>>>>>> b7ba80a49124 (Commit)
 		echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
 		echo "(__GI_)?getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
 		echo "main\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$" >> $expected
@@ -58,6 +64,7 @@ trace_libc_inet_pton_backtrace() {
 
 	perf_data=`mktemp -u /tmp/perf.data.XXX`
 	perf_script=`mktemp -u /tmp/perf.script.XXX`
+<<<<<<< HEAD
 
 	# Check presence of libtraceevent support to run perf record
 	skip_no_probe_record_support "$event_name/$eventattr/"
@@ -70,13 +77,21 @@ trace_libc_inet_pton_backtrace() {
 		return 1
 	fi
 	perf script -i $perf_data | tac | grep -m1 ^ping -B9 | tac > $perf_script
+=======
+	perf record -e $event_name/$eventattr/ -o $perf_data ping -6 -c 1 ::1 > /dev/null 2>&1
+	perf script -i $perf_data > $perf_script
+>>>>>>> b7ba80a49124 (Commit)
 
 	exec 3<$perf_script
 	exec 4<$expected
 	while read line <&3 && read -r pattern <&4; do
 		[ -z "$pattern" ] && break
 		echo $line
+<<<<<<< HEAD
 		echo "$line" | grep -E -q "$pattern"
+=======
+		echo "$line" | egrep -q "$pattern"
+>>>>>>> b7ba80a49124 (Commit)
 		if [ $? -ne 0 ] ; then
 			printf "FAIL: expected backtrace entry \"%s\" got \"%s\"\n" "$pattern" "$line"
 			return 1

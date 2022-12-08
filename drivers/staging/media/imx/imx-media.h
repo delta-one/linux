@@ -219,6 +219,10 @@ imx_media_pipeline_subdev(struct media_entity *start_entity, u32 grp_id,
 struct video_device *
 imx_media_pipeline_video_device(struct media_entity *start_entity,
 				enum v4l2_buf_type buftype, bool upstream);
+<<<<<<< HEAD
+=======
+struct fwnode_handle *imx_media_get_pad_fwnode(struct media_pad *pad);
+>>>>>>> b7ba80a49124 (Commit)
 
 struct imx_media_dma_buf {
 	void          *virt;
@@ -246,9 +250,15 @@ int imx_media_dev_notifier_register(struct imx_media_dev *imxmd,
 /* imx-media-fim.c */
 struct imx_media_fim;
 void imx_media_fim_eof_monitor(struct imx_media_fim *fim, ktime_t timestamp);
+<<<<<<< HEAD
 void imx_media_fim_set_stream(struct imx_media_fim *fim,
 			      const struct v4l2_fract *frame_interval,
 			      bool on);
+=======
+int imx_media_fim_set_stream(struct imx_media_fim *fim,
+			     const struct v4l2_fract *frame_interval,
+			     bool on);
+>>>>>>> b7ba80a49124 (Commit)
 int imx_media_fim_add_controls(struct imx_media_fim *fim);
 struct imx_media_fim *imx_media_fim_init(struct v4l2_subdev *sd);
 void imx_media_fim_free(struct imx_media_fim *fim);

@@ -26,7 +26,10 @@
 #include <linux/delay.h>
 #include <linux/slab.h>
 #include <linux/of.h>
+<<<<<<< HEAD
 #include <linux/cpuidle.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <trace/events/power.h>
 
@@ -175,7 +178,11 @@ static int omap34xx_do_sram_idle(unsigned long save_state)
 	return 0;
 }
 
+<<<<<<< HEAD
 __cpuidle void omap_sram_idle(bool rcuidle)
+=======
+void omap_sram_idle(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	/* Variable to tell what needs to be saved and restored
 	 * in omap_sram_idle*/
@@ -255,18 +262,24 @@ __cpuidle void omap_sram_idle(bool rcuidle)
 	 */
 	if (save_state)
 		omap34xx_save_context(omap3_arm_context);
+<<<<<<< HEAD
 
 	if (rcuidle)
 		ct_cpuidle_enter();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (save_state == 1 || save_state == 3)
 		cpu_suspend(save_state, omap34xx_do_sram_idle);
 	else
 		omap34xx_do_sram_idle(save_state);
 
+<<<<<<< HEAD
 	if (rcuidle)
 		ct_cpuidle_exit();
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	/* Restore normal SDRC POWER settings */
 	if (cpu_is_omap3430() && omap_rev() >= OMAP3430_REV_ES3_0 &&
 	    (omap_type() == OMAP2_DEVICE_TYPE_EMU ||
@@ -302,7 +315,11 @@ static void omap3_pm_idle(void)
 	if (omap_irq_pending())
 		return;
 
+<<<<<<< HEAD
 	omap3_do_wfi();
+=======
+	omap_sram_idle();
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 #ifdef CONFIG_SUSPEND
@@ -324,7 +341,11 @@ static int omap3_pm_suspend(void)
 
 	omap3_intc_suspend();
 
+<<<<<<< HEAD
 	omap_sram_idle(false);
+=======
+	omap_sram_idle();
+>>>>>>> b7ba80a49124 (Commit)
 
 restore:
 	/* Restore next_pwrsts */

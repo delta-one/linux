@@ -264,6 +264,7 @@ DEFINE_EVENT(clk_duty_cycle, clk_set_duty_cycle_complete,
 	TP_ARGS(core, duty)
 );
 
+<<<<<<< HEAD
 DECLARE_EVENT_CLASS(clk_rate_request,
 
 	TP_PROTO(struct clk_rate_request *req),
@@ -307,6 +308,8 @@ DEFINE_EVENT(clk_rate_request, clk_rate_request_done,
 	TP_ARGS(req)
 );
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #endif /* _TRACE_CLK_H */
 
 /* This part must be outside protection */

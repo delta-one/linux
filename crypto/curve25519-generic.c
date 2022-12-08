@@ -72,12 +72,20 @@ static struct kpp_alg curve25519_alg = {
 	.max_size		= curve25519_max_size,
 };
 
+<<<<<<< HEAD
 static int __init curve25519_init(void)
+=======
+static int curve25519_init(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return crypto_register_kpp(&curve25519_alg);
 }
 
+<<<<<<< HEAD
 static void __exit curve25519_exit(void)
+=======
+static void curve25519_exit(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	crypto_unregister_kpp(&curve25519_alg);
 }

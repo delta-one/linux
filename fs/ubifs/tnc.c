@@ -267,6 +267,7 @@ static struct ubifs_znode *dirty_cow_znode(struct ubifs_info *c,
 	if (zbr->len) {
 		err = insert_old_idx(c, zbr->lnum, zbr->offs);
 		if (unlikely(err))
+<<<<<<< HEAD
 			/*
 			 * Obsolete znodes will be freed by tnc_destroy_cnext()
 			 * or free_obsolete_znodes(), copied up znodes should
@@ -274,11 +275,17 @@ static struct ubifs_znode *dirty_cow_znode(struct ubifs_info *c,
 			 * ubifs_destroy_tnc_subtree().
 			 */
 			goto out;
+=======
+			return ERR_PTR(err);
+>>>>>>> b7ba80a49124 (Commit)
 		err = add_idx_dirt(c, zbr->lnum, zbr->len);
 	} else
 		err = 0;
 
+<<<<<<< HEAD
 out:
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	zbr->znode = zn;
 	zbr->lnum = 0;
 	zbr->offs = 0;
@@ -3060,6 +3067,7 @@ static void tnc_destroy_cnext(struct ubifs_info *c)
 		cnext = cnext->cnext;
 		if (ubifs_zn_obsolete(znode))
 			kfree(znode);
+<<<<<<< HEAD
 		else if (!ubifs_zn_cow(znode)) {
 			/*
 			 * Don't forget to update clean znode count after
@@ -3075,6 +3083,8 @@ static void tnc_destroy_cnext(struct ubifs_info *c)
 			atomic_long_inc(&c->clean_zn_cnt);
 			atomic_long_inc(&ubifs_clean_zn_cnt);
 		}
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	} while (cnext && cnext != c->cnext);
 }
 

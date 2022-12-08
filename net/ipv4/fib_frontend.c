@@ -389,7 +389,11 @@ static int __fib_validate_source(struct sk_buff *skb, __be32 src, __be32 dst,
 	dev_match = dev_match || (res.type == RTN_LOCAL &&
 				  dev == net->loopback_dev);
 	if (dev_match) {
+<<<<<<< HEAD
 		ret = FIB_RES_NHC(res)->nhc_scope >= RT_SCOPE_HOST;
+=======
+		ret = FIB_RES_NHC(res)->nhc_scope >= RT_SCOPE_LINK;
+>>>>>>> b7ba80a49124 (Commit)
 		return ret;
 	}
 	if (no_addr)
@@ -401,7 +405,11 @@ static int __fib_validate_source(struct sk_buff *skb, __be32 src, __be32 dst,
 	ret = 0;
 	if (fib_lookup(net, &fl4, &res, FIB_LOOKUP_IGNORE_LINKSTATE) == 0) {
 		if (res.type == RTN_UNICAST)
+<<<<<<< HEAD
 			ret = FIB_RES_NHC(res)->nhc_scope >= RT_SCOPE_HOST;
+=======
+			ret = FIB_RES_NHC(res)->nhc_scope >= RT_SCOPE_LINK;
+>>>>>>> b7ba80a49124 (Commit)
 	}
 	return ret;
 
@@ -576,9 +584,12 @@ static int rtentry_to_fib_config(struct net *net, int cmd, struct rtentry *rt,
 			cfg->fc_scope = RT_SCOPE_UNIVERSE;
 	}
 
+<<<<<<< HEAD
 	if (!cfg->fc_table)
 		cfg->fc_table = RT_TABLE_MAIN;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	if (cmd == SIOCDELRT)
 		return 0;
 
@@ -844,9 +855,12 @@ static int rtm_to_fib_config(struct net *net, struct sk_buff *skb,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	if (!cfg->fc_table)
 		cfg->fc_table = RT_TABLE_MAIN;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	return 0;
 errout:
 	return err;

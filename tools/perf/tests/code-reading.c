@@ -16,6 +16,10 @@
 #include "dso.h"
 #include "env.h"
 #include "parse-events.h"
+<<<<<<< HEAD
+=======
+#include "trace-event.h"
+>>>>>>> b7ba80a49124 (Commit)
 #include "evlist.h"
 #include "evsel.h"
 #include "thread_map.h"
@@ -27,7 +31,10 @@
 #include "util/mmap.h"
 #include "util/string2.h"
 #include "util/synthetic-events.h"
+<<<<<<< HEAD
 #include "util/util.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include "thread.h"
 
 #include "tests.h"
@@ -79,7 +86,11 @@ static size_t read_objdump_chunk(const char **line, unsigned char **buf,
 	 * see disassemble_bytes() at binutils/objdump.c for details
 	 * how objdump chooses display endian)
 	 */
+<<<<<<< HEAD
 	if (bytes_read > 1 && !host_is_bigendian()) {
+=======
+	if (bytes_read > 1 && !bigendian()) {
+>>>>>>> b7ba80a49124 (Commit)
 		unsigned char *chunk_end = chunk_start + bytes_read - 1;
 		unsigned char tmp;
 

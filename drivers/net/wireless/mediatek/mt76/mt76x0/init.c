@@ -217,7 +217,11 @@ mt76x0_init_txpower(struct mt76x02_dev *dev,
 		    struct ieee80211_supported_band *sband)
 {
 	struct ieee80211_channel *chan;
+<<<<<<< HEAD
 	struct mt76x02_rate_power t;
+=======
+	struct mt76_rate_power t;
+>>>>>>> b7ba80a49124 (Commit)
 	s8 tp;
 	int i;
 

@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0
 /*  Copyright(c) 2021 Intel Corporation. */
+<<<<<<< HEAD
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #include <asm/sgx.h>
 
@@ -130,7 +133,11 @@ static int sgx_inject_fault(struct kvm_vcpu *vcpu, gva_t gva, int trapnr)
 		ex.address = gva;
 		ex.error_code_valid = true;
 		ex.nested_page_fault = false;
+<<<<<<< HEAD
 		kvm_inject_emulated_page_fault(vcpu, &ex);
+=======
+		kvm_inject_page_fault(vcpu, &ex);
+>>>>>>> b7ba80a49124 (Commit)
 	} else {
 		kvm_inject_gp(vcpu, 0);
 	}
@@ -165,7 +172,11 @@ static int __handle_encls_ecreate(struct kvm_vcpu *vcpu,
 	if (!vcpu->kvm->arch.sgx_provisioning_allowed &&
 	    (attributes & SGX_ATTR_PROVISIONKEY)) {
 		if (sgx_12_1->eax & SGX_ATTR_PROVISIONKEY)
+<<<<<<< HEAD
 			pr_warn_once("SGX PROVISIONKEY advertised but not allowed\n");
+=======
+			pr_warn_once("KVM: SGX PROVISIONKEY advertised but not allowed\n");
+>>>>>>> b7ba80a49124 (Commit)
 		kvm_inject_gp(vcpu, 0);
 		return 1;
 	}
@@ -183,10 +194,15 @@ static int __handle_encls_ecreate(struct kvm_vcpu *vcpu,
 	/* Enforce CPUID restriction on max enclave size. */
 	max_size_log2 = (attributes & SGX_ATTR_MODE64BIT) ? sgx_12_0->edx >> 8 :
 							    sgx_12_0->edx;
+<<<<<<< HEAD
 	if (size >= BIT_ULL(max_size_log2)) {
 		kvm_inject_gp(vcpu, 0);
 		return 1;
 	}
+=======
+	if (size >= BIT_ULL(max_size_log2))
+		kvm_inject_gp(vcpu, 0);
+>>>>>>> b7ba80a49124 (Commit)
 
 	/*
 	 * sgx_virt_ecreate() returns:
@@ -382,7 +398,11 @@ int handle_encls(struct kvm_vcpu *vcpu)
 			return handle_encls_ecreate(vcpu);
 		if (leaf == EINIT)
 			return handle_encls_einit(vcpu);
+<<<<<<< HEAD
 		WARN_ONCE(1, "unexpected exit on ENCLS[%u]", leaf);
+=======
+		WARN(1, "KVM: unexpected exit on ENCLS[%u]", leaf);
+>>>>>>> b7ba80a49124 (Commit)
 		vcpu->run->exit_reason = KVM_EXIT_UNKNOWN;
 		vcpu->run->hw.hardware_exit_reason = EXIT_REASON_ENCLS;
 		return 0;

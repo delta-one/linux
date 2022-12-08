@@ -20,7 +20,10 @@
 #include "tsc.h"
 #include "mmap.h"
 #include "tests.h"
+<<<<<<< HEAD
 #include "util/sample.h"
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 /*
  * Except x86_64/i386 and Arm64, other archs don't support TSC in perf.  Just

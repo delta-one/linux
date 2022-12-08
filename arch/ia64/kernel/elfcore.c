@@ -7,7 +7,11 @@
 #include <asm/elf.h>
 
 
+<<<<<<< HEAD
 Elf64_Half elf_core_extra_phdrs(struct coredump_params *cprm)
+=======
+Elf64_Half elf_core_extra_phdrs(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	return GATE_EHDR->e_phnum;
 }
@@ -60,7 +64,11 @@ int elf_core_write_extra_data(struct coredump_params *cprm)
 	return 1;
 }
 
+<<<<<<< HEAD
 size_t elf_core_extra_data_size(struct coredump_params *cprm)
+=======
+size_t elf_core_extra_data_size(void)
+>>>>>>> b7ba80a49124 (Commit)
 {
 	const struct elf_phdr *const gate_phdrs =
 		(const struct elf_phdr *) (GATE_ADDR + GATE_EHDR->e_phoff);

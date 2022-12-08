@@ -1,7 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 #include <linux/threads.h>
+<<<<<<< HEAD
 #include <linux/linkage.h>
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <asm/processor.h>
 #include <asm/page.h>
 #include <asm/cputable.h>
@@ -402,7 +405,11 @@ _ASM_NOKPROBE_SYMBOL(swsusp_arch_resume)
 /* FIXME:This construct is actually not useful since we don't shut
  * down the instruction MMU, we could just flip back MSR-DR on.
  */
+<<<<<<< HEAD
 SYM_FUNC_START_LOCAL(turn_on_mmu)
+=======
+turn_on_mmu:
+>>>>>>> b7ba80a49124 (Commit)
 	mflr	r4
 	mtsrr0	r4
 	mtsrr1	r3
@@ -410,5 +417,8 @@ SYM_FUNC_START_LOCAL(turn_on_mmu)
 	isync
 	rfi
 _ASM_NOKPROBE_SYMBOL(turn_on_mmu)
+<<<<<<< HEAD
 SYM_FUNC_END(turn_on_mmu)
+=======
+>>>>>>> b7ba80a49124 (Commit)
 

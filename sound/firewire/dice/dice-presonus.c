@@ -2,6 +2,11 @@
 // dice-presonus.c - a part of driver for DICE based devices
 //
 // Copyright (c) 2019 Takashi Sakamoto
+<<<<<<< HEAD
+=======
+//
+// Licensed under the terms of the GNU General Public License, version 2.
+>>>>>>> b7ba80a49124 (Commit)
 
 #include "dice.h"
 

@@ -14,7 +14,11 @@ Some hardware or software features are only available on some CPU
 implementations, and/or with certain kernel configurations, but have no
 architected discovery mechanism available to userspace code at EL0. The
 kernel exposes the presence of these features to userspace through a set
+<<<<<<< HEAD
 of flags called hwcaps, exposed in the auxiliary vector.
+=======
+of flags called hwcaps, exposed in the auxilliary vector.
+>>>>>>> b7ba80a49124 (Commit)
 
 Userspace software can test for features by acquiring the AT_HWCAP or
 AT_HWCAP2 entry of the auxiliary vector, and testing whether the relevant
@@ -275,6 +279,7 @@ HWCAP2_EBF16
 HWCAP2_SVE_EBF16
     Functionality implied by ID_AA64ZFR0_EL1.BF16 == 0b0010.
 
+<<<<<<< HEAD
 HWCAP2_CSSC
     Functionality implied by ID_AA64ISAR2_EL1.CSSC == 0b0001.
 
@@ -302,6 +307,8 @@ HWCAP2_SMEB16B16
 HWCAP2_SMEF16F16
     Functionality implied by ID_AA64SMFR0_EL1.F16F16 == 0b1
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 4. Unused AT_HWCAP bits
 -----------------------
 

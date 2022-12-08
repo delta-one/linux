@@ -30,7 +30,10 @@
 #define ATH11K_SPECTRAL_20MHZ			20
 #define ATH11K_SPECTRAL_40MHZ			40
 #define ATH11K_SPECTRAL_80MHZ			80
+<<<<<<< HEAD
 #define ATH11K_SPECTRAL_160MHZ			160
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 #define ATH11K_SPECTRAL_SIGNATURE		0xFA
 
@@ -184,8 +187,11 @@ static int ath11k_spectral_scan_trigger(struct ath11k *ar)
 	if (ar->spectral.mode == ATH11K_SPECTRAL_DISABLED)
 		return 0;
 
+<<<<<<< HEAD
 	ar->spectral.is_primary = true;
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ret = ath11k_wmi_vdev_spectral_enable(ar, arvif->vdev_id,
 					      ATH11K_WMI_SPECTRAL_TRIGGER_CMD_CLEAR,
 					      ATH11K_WMI_SPECTRAL_ENABLE_CMD_ENABLE);
@@ -588,7 +594,10 @@ int ath11k_spectral_process_fft(struct ath11k *ar,
 	u8 chan_width_mhz, bin_sz;
 	int ret;
 	u32 check_length;
+<<<<<<< HEAD
 	bool fragment_sample = false;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 
 	lockdep_assert_held(&ar->spectral.lock);
 
@@ -643,6 +652,7 @@ int ath11k_spectral_process_fft(struct ath11k *ar,
 	case ATH11K_SPECTRAL_80MHZ:
 		fft_sample->chan_width_mhz = chan_width_mhz;
 		break;
+<<<<<<< HEAD
 	case ATH11K_SPECTRAL_160MHZ:
 		if (ab->hw_params.spectral.fragment_160mhz) {
 			chan_width_mhz /= 2;
@@ -650,6 +660,8 @@ int ath11k_spectral_process_fft(struct ath11k *ar,
 		}
 		fft_sample->chan_width_mhz = chan_width_mhz;
 		break;
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	default:
 		ath11k_warn(ab, "invalid channel width %d\n", chan_width_mhz);
 		return -EINVAL;
@@ -674,6 +686,7 @@ int ath11k_spectral_process_fft(struct ath11k *ar,
 	freq = summary->meta.freq2;
 	fft_sample->freq2 = __cpu_to_be16(freq);
 
+<<<<<<< HEAD
 	/* If freq2 is available then the spectral scan results are fragmented
 	 * as primary and secondary
 	 */
@@ -685,6 +698,8 @@ int ath11k_spectral_process_fft(struct ath11k *ar,
 		ar->spectral.is_primary = !ar->spectral.is_primary;
 	}
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 	ath11k_spectral_parse_fft(fft_sample->data, fft_report->bins, num_bins,
 				  ab->hw_params.spectral.fft_sz);
 

@@ -2,7 +2,10 @@
 #include <linux/highmem.h>
 #include <linux/kdebug.h>
 #include <linux/types.h>
+<<<<<<< HEAD
 #include <linux/non-atomic/xchg.h>
+=======
+>>>>>>> b7ba80a49124 (Commit)
 #include <linux/notifier.h>
 #include <linux/sched.h>
 #include <linux/uprobes.h>
@@ -198,7 +201,18 @@ void arch_uprobe_abort_xol(struct arch_uprobe *aup,
 unsigned long arch_uretprobe_hijack_return_addr(
 	unsigned long trampoline_vaddr, struct pt_regs *regs)
 {
+<<<<<<< HEAD
 	return __xchg(&regs->regs[31], trampoline_vaddr);
+=======
+	unsigned long ra;
+
+	ra = regs->regs[31];
+
+	/* Replace the return address with the trampoline address */
+	regs->regs[31] = trampoline_vaddr;
+
+	return ra;
+>>>>>>> b7ba80a49124 (Commit)
 }
 
 /**

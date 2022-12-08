@@ -179,6 +179,7 @@
 #define UVC_CONTROL_CAP_AUTOUPDATE			(1 << 3)
 #define UVC_CONTROL_CAP_ASYNCHRONOUS			(1 << 4)
 
+<<<<<<< HEAD
 /* 3.9.2.6 Color Matching Descriptor Values */
 enum uvc_color_primaries_values {
 	UVC_COLOR_PRIMARIES_UNSPECIFIED,
@@ -209,6 +210,8 @@ enum uvc_matrix_coefficients {
 	UVC_MATRIX_COEFFICIENTS_SMPTE_240M,
 };
 
+=======
+>>>>>>> b7ba80a49124 (Commit)
 /* ------------------------------------------------------------------------
  * UVC structures
  */
@@ -496,7 +499,11 @@ struct uvc_format_uncompressed {
 	__u8  bDefaultFrameIndex;
 	__u8  bAspectRatioX;
 	__u8  bAspectRatioY;
+<<<<<<< HEAD
 	__u8  bmInterlaceFlags;
+=======
+	__u8  bmInterfaceFlags;
+>>>>>>> b7ba80a49124 (Commit)
 	__u8  bCopyProtect;
 } __attribute__((__packed__));
 
@@ -552,7 +559,11 @@ struct uvc_format_mjpeg {
 	__u8  bDefaultFrameIndex;
 	__u8  bAspectRatioX;
 	__u8  bAspectRatioY;
+<<<<<<< HEAD
 	__u8  bmInterlaceFlags;
+=======
+	__u8  bmInterfaceFlags;
+>>>>>>> b7ba80a49124 (Commit)
 	__u8  bCopyProtect;
 } __attribute__((__packed__));
 
