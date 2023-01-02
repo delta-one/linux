@@ -1745,6 +1745,8 @@ void ConfigMainWindow::listFocusChanged(void)
 {
 	if (menuList->mode == menuMode)
 		configList->clearSelection();
+
+	//ConfigList::updateSelection(void);
 }
 
 void ConfigMainWindow::goBack(void)
@@ -2115,8 +2117,7 @@ void ConflictsView::addSymbolFromMenu(struct menu *m)
 			//if symbol is not added yet:
 			QAbstractItemModel* tableModel = conflictsTable->model();
 			QModelIndexList matches = tableModel->match(tableModel->index(0,0), Qt::DisplayRole, sym->name );
-			if (matches.isEmpty()){
-
+			if (matches.isEmpty() || true){
 				conflictsTable->insertRow(conflictsTable->rowCount());
 				conflictsTable->setItem(conflictsTable->rowCount()-1,0,new QTableWidgetItem(sym->name));
 				conflictsTable->setItem(conflictsTable->rowCount()-1,1,new QTableWidgetItem(tristate_value_to_string(currentval)));
@@ -2130,8 +2131,9 @@ void ConflictsView::addSymbolFromMenu(struct menu *m)
 void ConflictsView::addSymbolFromContextMenu() {
 	struct menu *menu;
 
-	if (currentSelection.count() == 0)
+	if (currentSelection.count() == 0){
 		return;
+	}
 
 	for (auto el: currentSelection){
 		ConfigItem* item = (ConfigItem*)el;
@@ -2143,6 +2145,7 @@ void ConflictsView::addSymbolFromContextMenu() {
 		menu = item->menu;
 		addSymbolFromMenu(menu);
 	}
+	
 }
 void ConflictsView::removeSymbol()
 {
