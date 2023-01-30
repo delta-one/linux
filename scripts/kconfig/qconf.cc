@@ -2279,14 +2279,12 @@ void ConflictsView::runSatConfAsync()
 	
 	if (!movie->isValid())
 	{
-		lbl->setText("Calcualting...");
+		lbl->setText("Calculating...");
 	}
 	else 
 	{
 		lbl->setMovie(movie);
 	}
-	//labelAction = conflictsToolBar->addWidget(lbl);
-	//lbl->setText("Calculating...");
 	
 	struct sfl_list *ret = run_satconf(wanted_symbols);
 	solution_output = ret;
