@@ -1967,16 +1967,16 @@ ConflictsView::ConflictsView(QWidget* parent, const char *name)
 	
 	
 
-	lbl = new QLabel;
-	movie = new QMovie("scripts/kconfig/loader.gif");
-	movie->setScaledSize(QSize(30,20));
-	movie->start();
+	loadingLabel = new QLabel;
+	loadingGif = new QMovie("scripts/kconfig/loader.gif");
+	loadingGif->setScaledSize(QSize(30,20));
+	loadingGif->start();
 
 	emptyGIF = new QMovie("scripts/kconfig/empty.gif");
 
 	emptyGIF->setScaledSize(QSize(30,20));
 	emptyGIF->start();
-	lbl->setMovie(emptyGIF);
+	loadingLabel->setMovie(emptyGIF);
 	
 	
 	//if you change the order of buttons here, change the code where
@@ -1989,7 +1989,7 @@ ConflictsView::ConflictsView(QWidget* parent, const char *name)
 	conflictsToolBar->addAction(setConfigSymbolAsYes);
 	conflictsToolBar->addAction(fixConflictsAction_);
 	conflictsToolBar->addAction(removeSymbol);
-	conflictsToolBar->addWidget(lbl);
+	conflictsToolBar->addWidget(loadingLabel);
 
 	
 
@@ -2277,13 +2277,13 @@ void ConflictsView::runSatConfAsync()
 	}
 	fixConflictsAction_->setText("Cancel");
 	
-	if (!movie->isValid())
+	if (!loadingGif->isValid())
 	{
-		lbl->setText("Calculating...");
+		loadingLabel->setText("Calculating...");
 	}
 	else 
 	{
-		lbl->setMovie(movie);
+		loadingLabel->setMovie(loadingGif);
 	}
 	
 	struct sfl_list *ret = run_satconf(wanted_symbols);
@@ -2307,7 +2307,7 @@ void ConflictsView::runSatConfAsync()
 void ConflictsView::updateResults(void)
 {
 	fixConflictsAction_->setText("Calculate Fixes");
-	lbl->setMovie(emptyGIF);
+	loadingLabel->setMovie(emptyGIF);
 	if (!(solution_output == nullptr || solution_output->size == 0))
 	{
 		solutionSelector->clear();
