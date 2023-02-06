@@ -425,7 +425,7 @@ void ConfigList::updateSelection(void)
 
 	if (selectedItems().count() == 0)
 		return;
-
+		
 	ConfigItem* item = (ConfigItem*)selectedItems().first();
 	if (!item)
 		return;
@@ -2290,7 +2290,7 @@ void ConflictsView::runSatConfAsync()
 	solution_output = ret;
 	struct sfl_node *node1;
 	sfl_list_for_each(node1, ret) {
-		struct sfix_node *node2;
+		//struct sfix_node *node2;
 		/*sfix_list_for_each(node2, node1->elem) {
 			printf("%s - %d\n", node2->elem->sym->name, node2->elem->tri);
 		}*/
