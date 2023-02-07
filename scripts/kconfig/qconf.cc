@@ -2121,7 +2121,7 @@ void ConflictsView::addSymbolFromMenu(struct menu *m)
 			//if symbol is not added yet:
 			QAbstractItemModel* tableModel = conflictsTable->model();
 			QModelIndexList matches = tableModel->match(tableModel->index(0,0), Qt::DisplayRole, sym->name );
-			if (matches.isEmpty() || true){
+			if (matches.isEmpty()){
 				conflictsTable->insertRow(conflictsTable->rowCount());
 				conflictsTable->setItem(conflictsTable->rowCount()-1,0,new QTableWidgetItem(sym->name));
 				conflictsTable->setItem(conflictsTable->rowCount()-1,1,new QTableWidgetItem(tristate_value_to_string(currentval)));
