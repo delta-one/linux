@@ -441,7 +441,6 @@ void ConfigList::updateSelection(void)
 	type = menu->prompt ? menu->prompt->type : P_UNKNOWN;
 	if (mode == menuMode && type == P_MENU)
 		emit menuSelected(menu);
-	updateConflictsViewColorization();
 }
 
 void ConfigList::updateList()
@@ -2071,6 +2070,7 @@ void ConflictsView::applyFixButtonClick(){
 	{
 		conflictsTable->item(i,2)->setText(conflictsTable->item(i,1)->text());
 	}
+	updateConflictsViewColorization();
 	QMessageBox msgBox;
 	msgBox.setText("The solution has been applied.");
 	msgBox.exec();
