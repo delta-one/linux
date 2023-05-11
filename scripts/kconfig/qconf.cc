@@ -17,10 +17,6 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QToolBar>
-<<<<<<< HEAD
-
-#include <stdlib.h>
-=======
 #include <QListWidget>
 #include <QComboBox>
 #include <QTableWidget>
@@ -35,7 +31,6 @@
 #include <QColor>
 #include <future>
 #include <memory>
->>>>>>> 254d115c6ead (Changes to the UI:)
 
 #include "lkc.h"
 #include "qconf.h"
@@ -48,13 +43,10 @@ static ConfigSettings *configSettings;
 
 QAction *ConfigMainWindow::saveAction;
 
-<<<<<<< HEAD
-=======
 QLabel *lbl;
 QMovie *movie;
 QMovie *emptyGIF;
 
->>>>>>> 254d115c6ead (Changes to the UI:)
 ConfigSettings::ConfigSettings()
 	: QSettings("kernel.org", "qconf")
 {
@@ -429,11 +421,7 @@ void ConfigList::updateSelection(void)
 	ConfigItem* item = (ConfigItem*)selectedItems().first();
 	if (!item)
 		return;
-<<<<<<< HEAD
-
-=======
 	emit selectionChanged(selectedItems());
->>>>>>> 254d115c6ead (Changes to the UI:)
 	menu = item->menu;
 	emit menuChanged(menu);
 	if (!menu)
@@ -499,10 +487,7 @@ void ConfigList::updateListForAll()
 
 		list->updateList();
 	}
-<<<<<<< HEAD
-=======
 	
->>>>>>> 254d115c6ead (Changes to the UI:)
 }
 
 void ConfigList::updateListAllForAll()
@@ -571,10 +556,7 @@ void ConfigList::changeValue(ConfigItem* item)
 		}
 		if (oldexpr != newexpr)
 			ConfigList::updateListForAll();
-<<<<<<< HEAD
-=======
 			emit updateConflictsViewColorization();
->>>>>>> 254d115c6ead (Changes to the UI:)
 		break;
 	default:
 		break;
@@ -956,10 +938,7 @@ QList<ConfigList *> ConfigList::allLists;
 QAction *ConfigList::showNormalAction;
 QAction *ConfigList::showAllAction;
 QAction *ConfigList::showPromptAction;
-<<<<<<< HEAD
-=======
 QAction *ConfigList::addSymbolFromContextMenu;
->>>>>>> 254d115c6ead (Changes to the UI:)
 
 void ConfigList::setAllOpen(bool open)
 {
@@ -1299,14 +1278,10 @@ ConfigSearchWindow::ConfigSearchWindow(ConfigMainWindow *parent)
 		info, &ConfigInfoView::setInfo);
 	connect(list, &ConfigList::menuChanged,
 		parent, &ConfigMainWindow::setMenuLink);
-<<<<<<< HEAD
-
-=======
 	connect(list, &ConfigList::menuChanged,
 		parent, &ConfigMainWindow::conflictSelected);
 
 	connect(list,&ConfigList::updateConflictsViewColorization,this,&ConfigSearchWindow::updateConflictsViewColorizationFowarder);
->>>>>>> 254d115c6ead (Changes to the UI:)
 	layout1->addWidget(split);
 
 	QVariant x, y;
@@ -1328,13 +1303,10 @@ ConfigSearchWindow::ConfigSearchWindow(ConfigMainWindow *parent)
 	connect(configApp, &QApplication::aboutToQuit,
 		this, &ConfigSearchWindow::saveSettings);
 }
-<<<<<<< HEAD
-=======
 void ConfigSearchWindow::updateConflictsViewColorizationFowarder(void){
 	emit updateConflictsViewColorization();
 }
 
->>>>>>> 254d115c6ead (Changes to the UI:)
 
 void ConfigSearchWindow::saveSettings(void)
 {
@@ -1428,8 +1400,6 @@ ConfigMainWindow::ConfigMainWindow(void)
 	split1->addWidget(configList);
 	split1->addWidget(menuList);
 	split2->addWidget(helpText);
-<<<<<<< HEAD
-=======
 	split3 = new QSplitter(split2);
 	split3->setOrientation(Qt::Vertical);
 	conflictsView = new ConflictsView(split3, "help");
@@ -1441,7 +1411,6 @@ ConfigMainWindow::ConfigMainWindow(void)
 	connect(conflictsView,SIGNAL(refreshMenu()),SLOT(refreshMenu()));
 	connect(menuList,SIGNAL(updateConflictsViewColorization()),conflictsView,SLOT(updateConflictsViewColorization()));
 	connect(configList,SIGNAL(updateConflictsViewColorization()),conflictsView,SLOT(updateConflictsViewColorization()));
->>>>>>> 254d115c6ead (Changes to the UI:)
 
 	setTabOrder(configList, helpText);
 	configList->setFocus();
@@ -1510,11 +1479,8 @@ ConfigMainWindow::ConfigMainWindow(void)
 	ConfigList::showAllAction->setCheckable(true);
 	ConfigList::showPromptAction = new QAction("Show Prompt Options", optGroup);
 	ConfigList::showPromptAction->setCheckable(true);
-<<<<<<< HEAD
-=======
 	ConfigList::addSymbolFromContextMenu = new QAction("Add symbol from context menu");
 	connect(ConfigList::addSymbolFromContextMenu, &QAction::triggered, conflictsView, &ConflictsView::addSymbolFromContextMenu);
->>>>>>> 254d115c6ead (Changes to the UI:)
 
 	QAction *showDebugAction = new QAction("Show Debug Info", this);
 	  showDebugAction->setCheckable(true);
@@ -1570,11 +1536,8 @@ ConfigMainWindow::ConfigMainWindow(void)
 
 	connect(configList, &ConfigList::menuChanged,
 		helpText, &ConfigInfoView::setInfo);
-<<<<<<< HEAD
-=======
 	connect(configList, &ConfigList::menuChanged,
 		conflictsView, &ConflictsView::menuChanged);
->>>>>>> 254d115c6ead (Changes to the UI:)
 	connect(configList, &ConfigList::menuSelected,
 		this, &ConfigMainWindow::changeMenu);
 	connect(configList, &ConfigList::itemSelected,
@@ -1805,15 +1768,12 @@ void ConfigMainWindow::showSplitView(void)
 	menuList->show();
 	menuList->setFocus();
 }
-<<<<<<< HEAD
-=======
 void ConfigMainWindow::conflictSelected(struct menu * men)
 {
 	configList->clearSelection();
 	menuList->clearSelection();
 	emit(setMenuLink(men));
 }
->>>>>>> 254d115c6ead (Changes to the UI:)
 
 void ConfigMainWindow::showFullView(void)
 {
@@ -1939,8 +1899,6 @@ void ConfigMainWindow::conf_changed(void)
 	if (saveAction)
 		saveAction->setEnabled(conf_get_changed());
 }
-<<<<<<< HEAD
-=======
 void ConfigMainWindow::refreshMenu(void)
 {
 	configList->updateListAll();
@@ -2370,7 +2328,6 @@ ConflictsView::~ConflictsView(void)
 
 }
 
->>>>>>> 254d115c6ead (Changes to the UI:)
 
 void fixup_rootmenu(struct menu *menu)
 {
@@ -2441,8 +2398,6 @@ int main(int ac, char** av)
 
 	return 0;
 }
-<<<<<<< HEAD
-=======
 
 dropAbleView::dropAbleView(QWidget *parent) :
     QTableWidget(parent) {}
@@ -2452,4 +2407,3 @@ void dropAbleView::dropEvent(QDropEvent *event)
 {
    event->acceptProposedAction();
 }
->>>>>>> 254d115c6ead (Changes to the UI:)
