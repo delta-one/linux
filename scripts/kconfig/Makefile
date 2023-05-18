@@ -184,18 +184,20 @@ $(addprefix $(obj)/, mconf.o $(lxdialog)): | $(obj)/mconf-cflags
 # configfix: Used for the xconfig target as well as for its debugging tools
 hostprogs        += cfoutconfig
 cfconf-objs      := configfix.o cf_constraints.o cf_expr.o cf_rangefix.o cf_utils.o picosat.o
-cfoutconfig-objs := cfoutconfig.o $(cfconf-objs) $(common-objs)
+cfoutconfig-objs := cfoutconfig.o $(common-objs) $(cfconf-objs)
 
 HOSTCFLAGS_picosat.o = -DTRACE -Wno-missing-prototypes -Wno-pointer-compare
 
 # qconf: Used for the xconfig target based on Qt
 hostprogs	+= qconf
-qconf-cxxobjs	:= qconf.o qconf-moc.o
-qconf-objs	:= images.o $(common-objs)
+qconf-cxxobjs	:= qconf.o qconf-moc.o conflict_resolver.o
+qconf-objs	:= images.o $(common-objs) $(cfconf-objs)
 
 HOSTLDLIBS_qconf         = $(call read-file, $(obj)/qconf-libs)
+HOSTLDLIBS_conflict_resolver = $(call read-file, $(obj)/qconf-libs)
 HOSTCXXFLAGS_qconf.o     = -std=c++11 -fPIC $(call read-file, $(obj)/qconf-cflags)
 HOSTCXXFLAGS_qconf-moc.o = -std=c++11 -fPIC $(call read-file, $(obj)/qconf-cflags)
+HOSTCXXFLAGS_conflict_resolver.o = -std=c++11 -fPIC $(call read-file, $(obj)/qconf-cflags)
 $(obj)/qconf: | $(obj)/qconf-libs
 $(obj)/qconf.o $(obj)/qconf-moc.o: | $(obj)/qconf-cflags
 
