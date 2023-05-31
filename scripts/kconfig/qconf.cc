@@ -23,6 +23,8 @@
 #include <QComboBox>
 #include <QTableWidget>
 #include <QHBoxLayout>
+#include <QMovie>
+#include <QMessageBox>
 
 #include <stdlib.h>
 #include <QAbstractItemView>
@@ -42,6 +44,12 @@ static QApplication *configApp;
 static ConfigSettings *configSettings;
 
 QAction *ConfigMainWindow::saveAction;
+
+QLabel *lbl;
+QMovie *movie;
+QMovie *emptyGIF;
+QLabel *loadingLabel;
+QMovie *loadingGif;
 
 ConfigSettings::ConfigSettings()
 	: QSettings("kernel.org", "qconf")
@@ -188,6 +196,7 @@ void ConfigItem::updateMenu(void)
 		prompt += " (NEW)";
 set_prompt:
 	setText(promptColIdx, prompt);
+
 }
 
 void ConfigItem::testUpdateMenu(bool v)
@@ -235,6 +244,7 @@ void ConfigItem::init(void)
 		}
 	}
 	updateMenu();
+
 }
 
 /*
@@ -411,7 +421,7 @@ void ConfigList::updateSelection(void)
 
 	if (selectedItems().count() == 0)
 		return;
-
+		
 	ConfigItem* item = (ConfigItem*)selectedItems().first();
 	if (!item)
 		return;
@@ -481,6 +491,7 @@ void ConfigList::updateListForAll()
 
 		list->updateList();
 	}
+	
 }
 
 void ConfigList::updateListAllForAll()
@@ -909,6 +920,8 @@ void ConfigList::contextMenuEvent(QContextMenuEvent *e)
 			action, &QAction::setChecked);
 		action->setChecked(showName);
 		headerPopup->addAction(action);
+		//QAction *ConfigList::addSymbolFromContextMenu;
+		headerPopup->addAction(addSymbolFromContextMenu);
 	}
 
 	headerPopup->exec(e->globalPos());
@@ -1537,6 +1550,8 @@ ConfigMainWindow::ConfigMainWindow(void)
 		this, &ConfigMainWindow::goBack);
 	connect(menuList, &ConfigList::menuChanged,
 		helpText, &ConfigInfoView::setInfo);
+	connect(menuList, &ConfigList::menuChanged,
+		conflictsView, &ConflictsView::menuChanged);
 	connect(menuList, &ConfigList::menuSelected,
 		this, &ConfigMainWindow::changeMenu);
 
@@ -1700,6 +1715,8 @@ void ConfigMainWindow::listFocusChanged(void)
 {
 	if (menuList->mode == menuMode)
 		configList->clearSelection();
+
+	//ConfigList::updateSelection(void);
 }
 
 void ConfigMainWindow::goBack(void)
@@ -1920,7 +1937,21 @@ ConflictsView::ConflictsView(QWidget* parent, const char *name)
 	QAction *setConfigSymbolAsYes = new QAction("Y");
 	fixConflictsAction_ = new QAction("Calculate Fixes");
 	QAction *removeSymbol = new QAction("Remove Symbol");
+	
+	
 
+	loadingLabel = new QLabel;
+	loadingGif = new QMovie("scripts/kconfig/loader.gif");
+	loadingGif->setScaledSize(QSize(30,20));
+	loadingGif->start();
+
+	emptyGIF = new QMovie("scripts/kconfig/empty.gif");
+
+	emptyGIF->setScaledSize(QSize(30,20));
+	emptyGIF->start();
+	loadingLabel->setMovie(emptyGIF);
+	
+	
 	//if you change the order of buttons here, change the code where
 	//module button was disabled if symbol is boolean, selecting module button
 	//depends on a specific index in list of action
@@ -1931,6 +1962,9 @@ ConflictsView::ConflictsView(QWidget* parent, const char *name)
 	conflictsToolBar->addAction(setConfigSymbolAsYes);
 	conflictsToolBar->addAction(fixConflictsAction_);
 	conflictsToolBar->addAction(removeSymbol);
+	conflictsToolBar->addWidget(loadingLabel);
+
+	
 
 	verticalLayout->addWidget(conflictsToolBar);
 
@@ -1979,8 +2013,8 @@ ConflictsView::ConflictsView(QWidget* parent, const char *name)
 	solutionLayout->addWidget(applyFixButton);
 
 	horizontalLayout->addLayout(solutionLayout);
-
 }
+
 
 void ConflictsView::changeToNo(){
 	QItemSelectionModel *select = conflictsTable->selectionModel();
@@ -2002,6 +2036,16 @@ void ConflictsView::applyFixButtonClick(){
 	struct sfix_list * selected_solution = select_solution(solution_output, solution_number);
 	apply_fix(selected_solution);
 
+
+	ConfigList::updateListForAll();
+	for (int i = 0;i < conflictsTable->rowCount(); i++)
+	{
+		conflictsTable->item(i,2)->setText(conflictsTable->item(i,1)->text());
+	}
+	updateConflictsViewColorization();
+	QMessageBox msgBox;
+	msgBox.setText("The solution has been applied.");
+	msgBox.exec();
 	// ConfigView::updateListAll();
 }
 void ConflictsView::changeToYes(){
@@ -2063,8 +2107,9 @@ void ConflictsView::addSymbolFromMenu(struct menu *m)
 void ConflictsView::addSymbolFromContextMenu() {
 	struct menu *menu;
 
-	if (currentSelection.count() == 0)
+	if (currentSelection.count() == 0){
 		return;
+	}
 
 	for (auto el: currentSelection){
 		ConfigItem* item = (ConfigItem*)el;
@@ -2076,6 +2121,7 @@ void ConflictsView::addSymbolFromContextMenu() {
 		menu = item->menu;
 		addSymbolFromMenu(menu);
 	}
+	
 }
 void ConflictsView::removeSymbol()
 {
@@ -2204,14 +2250,24 @@ void ConflictsView::runSatConfAsync()
 		sdv_list_add(wanted_symbols,tmp);
 	}
 	fixConflictsAction_->setText("Cancel");
+	
+	if (!loadingGif->isValid())
+	{
+		loadingLabel->setText("Calculating...");
+	}
+	else 
+	{
+		loadingLabel->setMovie(loadingGif);
+	}
+	
 	struct sfl_list *ret = run_satconf(wanted_symbols);
 	solution_output = ret;
 	struct sfl_node *node1;
 	sfl_list_for_each(node1, ret) {
-		struct sfix_node *node2;
-		sfix_list_for_each(node2, node1->elem) {
+		//struct sfix_node *node2;
+		/*sfix_list_for_each(node2, node1->elem) {
 			printf("%s - %d\n", node2->elem->sym->name, node2->elem->tri);
-		}
+		}*/
 	}
 	free(p);
 	emit resultsReady();
@@ -2225,7 +2281,7 @@ void ConflictsView::runSatConfAsync()
 void ConflictsView::updateResults(void)
 {
 	fixConflictsAction_->setText("Calculate Fixes");
-	// conflictsToolBar->repaint();
+	loadingLabel->setMovie(emptyGIF);
 	if (!(solution_output == nullptr || solution_output->size == 0))
 	{
 		solutionSelector->clear();
@@ -2237,6 +2293,11 @@ void ConflictsView::updateResults(void)
 		numSolutionLabel->setText(QString("Solutions: (%1) found").arg(solution_output->size));
 		changeSolutionTable(0);
 	}
+	else {
+		QMessageBox msgBox;
+		msgBox.setText("All symbols are already within range.");
+		msgBox.exec();
+	}
 	if (runSatConfAsyncThread->joinable()){
 		runSatConfAsyncThread->join();
 		delete runSatConfAsyncThread;
@@ -2244,7 +2305,7 @@ void ConflictsView::updateResults(void)
 	}
 
 }
-void ConflictsView::calculateFixes(void)
+void ConflictsView::calculateFixes()
 {
 	if(conflictsTable->rowCount() == 0)
 	{
