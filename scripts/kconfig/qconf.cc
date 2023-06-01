@@ -1482,7 +1482,7 @@ ConfigMainWindow::ConfigMainWindow(void)
 	ConfigList::showPromptAction = new QAction("Show Prompt Options", optGroup);
 	ConfigList::showPromptAction->setCheckable(true);
 	ConfigList::addSymbolFromContextMenu = new QAction("Add symbol from context menu");
-	connect(ConfigList::addSymbolFromContextMenu, &QAction::triggered, conflictsView, &ConflictsView::addSymbolFromContextMenu);
+	connect(ConfigList::addSymbolFromContextMenu, &QAction::triggered, conflictsView, &ConflictsView::addSymbol);
 
 	QAction *showDebugAction = new QAction("Show Debug Info", this);
 	  showDebugAction->setCheckable(true);
@@ -2095,21 +2095,19 @@ void ConflictsView::addSymbolFromMenu(struct menu *m)
 void ConflictsView::addSymbolFromContextMenu() {
 	struct menu *menu;
 
-	if (currentSelection.count() == 0){
+	if (currentSelection.count() < 0){
 		return;
 	}
-
 	for (auto el: currentSelection){
 		ConfigItem* item = (ConfigItem*)el;
 		if (!item)
 		{
 			continue;
 		}
-
 		menu = item->menu;
 		addSymbolFromMenu(menu);
 	}
-	
+
 }
 void ConflictsView::removeSymbol()
 {
