@@ -419,7 +419,7 @@ void ConfigList::updateSelection(void)
 
 	if (selectedItems().count() == 0)
 		return;
-		
+
 	ConfigItem* item = (ConfigItem*)selectedItems().first();
 	if (!item)
 		return;
@@ -489,7 +489,7 @@ void ConfigList::updateListForAll()
 
 		list->updateList();
 	}
-	
+
 }
 
 void ConfigList::updateListAllForAll()
@@ -918,7 +918,6 @@ void ConfigList::contextMenuEvent(QContextMenuEvent *e)
 			action, &QAction::setChecked);
 		action->setChecked(showName);
 		headerPopup->addAction(action);
-		//QAction *ConfigList::addSymbolFromContextMenu;
 		headerPopup->addAction(addSymbolFromContextMenu);
 	}
 
@@ -1713,8 +1712,6 @@ void ConfigMainWindow::listFocusChanged(void)
 {
 	if (menuList->mode == menuMode)
 		configList->clearSelection();
-
-	//ConfigList::updateSelection(void);
 }
 
 void ConfigMainWindow::goBack(void)
@@ -1925,8 +1922,8 @@ ConflictsView::ConflictsView(QWidget* parent, const char *name)
 	QAction *setConfigSymbolAsYes = new QAction("Y");
 	fixConflictsAction_ = new QAction("Calculate Fixes");
 	QAction *removeSymbol = new QAction("Remove Symbol");
-	
-	
+
+
 
 	loadingLabel = new QLabel;
 	loadingGif = new QMovie("scripts/kconfig/loader.gif");
@@ -1938,8 +1935,8 @@ ConflictsView::ConflictsView(QWidget* parent, const char *name)
 	emptyGIF->setScaledSize(QSize(30,20));
 	emptyGIF->start();
 	loadingLabel->setMovie(emptyGIF);
-	
-	
+
+
 	//if you change the order of buttons here, change the code where
 	//module button was disabled if symbol is boolean, selecting module button
 	//depends on a specific index in list of action
@@ -1951,8 +1948,6 @@ ConflictsView::ConflictsView(QWidget* parent, const char *name)
 	conflictsToolBar->addAction(fixConflictsAction_);
 	conflictsToolBar->addAction(removeSymbol);
 	conflictsToolBar->addWidget(loadingLabel);
-
-	
 
 	verticalLayout->addWidget(conflictsToolBar);
 
@@ -2034,7 +2029,6 @@ void ConflictsView::applyFixButtonClick(){
 	QMessageBox msgBox;
 	msgBox.setText("The solution has been applied.");
 	msgBox.exec();
-	// ConfigView::updateListAll();
 }
 void ConflictsView::changeToYes(){
 	QItemSelectionModel *select = conflictsTable->selectionModel();
@@ -2236,25 +2230,19 @@ void ConflictsView::runSatConfAsync()
 		sdv_list_add(wanted_symbols,tmp);
 	}
 	fixConflictsAction_->setText("Cancel");
-	
+
 	if (!loadingGif->isValid())
 	{
 		loadingLabel->setText("Calculating...");
 	}
-	else 
+	else
 	{
 		loadingLabel->setMovie(loadingGif);
 	}
-	
+
 	struct sfl_list *ret = run_satconf(wanted_symbols);
 	solution_output = ret;
-	struct sfl_node *node1;
-	sfl_list_for_each(node1, ret) {
-		//struct sfix_node *node2;
-		/*sfix_list_for_each(node2, node1->elem) {
-			printf("%s - %d\n", node2->elem->sym->name, node2->elem->tri);
-		}*/
-	}
+
 	free(p);
 	emit resultsReady();
 	{
