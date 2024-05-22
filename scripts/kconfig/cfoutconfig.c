@@ -15,6 +15,7 @@
 #include <unistd.h>
 
 #include "configfix.h"
+#include "internal.h"
 
 #define OUTFILE_CONSTRAINTS "./scripts/kconfig/cfout_constraints.txt"
 #define OUTFILE_DIMACS "./scripts/kconfig/cfout_constraints.dimacs"
@@ -103,10 +104,9 @@ int main(int argc, char *argv[])
 static void write_constraints_to_file(struct cfdata *data)
 {
 	FILE *fd = fopen(OUTFILE_CONSTRAINTS, "w");
-	unsigned int i;
 	struct symbol *sym;
 
-	for_all_symbols(i, sym) {
+	for_all_symbols(sym) {
 		struct pexpr_node *node;
 
 		if (sym->type == S_UNKNOWN)

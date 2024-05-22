@@ -15,6 +15,7 @@
 #include <unistd.h>
 
 #include "configfix.h"
+#include "internal.h"
 
 bool CFDEBUG;
 bool stop_rangefix;
@@ -33,7 +34,6 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 	clock_t start, end;
 	double time;
 	struct symbol *sym;
-	unsigned int i;
 	struct sdv_node *node;
 	int res;
 	struct sfl_list *ret;
@@ -105,7 +105,7 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 	sym_add_assumption_sdv(pico, data.sdv_symbols);
 
 	/* add assumptions for all other symbols */
-	for_all_symbols(i, sym) {
+	for_all_symbols(sym) {
 		if (sym->type == S_UNKNOWN)
 			continue;
 

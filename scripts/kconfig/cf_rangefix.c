@@ -15,6 +15,7 @@
 #include <unistd.h>
 
 #include "configfix.h"
+#include "internal.h"
 
 #define MAX_DIAGNOSES 3
 #define MAX_SECONDS 120
@@ -261,10 +262,10 @@ DIAGNOSES_FOUND:
  */
 static void add_fexpr_to_constraint_set(struct fexpr_list *C, struct cfdata *data)
 {
-	unsigned int i, nr_sym = 0, nr_fexpr = 0;
+	unsigned int nr_sym = 0, nr_fexpr = 0;
 	struct symbol *sym;
 
-	for_all_symbols(i, sym) {
+	for_all_symbols(sym) {
 		/* must be a proper symbol */
 		if (sym->type == S_UNKNOWN)
 			continue;

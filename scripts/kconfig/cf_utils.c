@@ -16,6 +16,7 @@
 #include <ctype.h>
 
 #include "configfix.h"
+#include "internal.h"
 
 #define SATMAP_INIT_SIZE 2
 
@@ -58,12 +59,11 @@ void init_data(struct cfdata *data)
  */
 void create_sat_variables(struct cfdata *data)
 {
-	unsigned int i;
 	struct symbol *sym;
 
 	printd("Creating SAT-variables...");
 
-	for_all_symbols(i, sym) {
+	for_all_symbols(sym) {
 		sym->constraints = pexpr_list_init();
 		sym_create_fexpr(sym, data);
 	}
@@ -551,7 +551,6 @@ PicoSAT *initialize_picosat(void)
  */
 void construct_cnf_clauses(PicoSAT *p, struct cfdata *data)
 {
-	unsigned int i;
 	struct symbol *sym;
 
 	pico = p;
@@ -560,7 +559,7 @@ void construct_cnf_clauses(PicoSAT *p, struct cfdata *data)
 	sat_add_clause(2, pico, -(data->constants->const_false->satval));
 	sat_add_clause(2, pico, data->constants->const_true->satval);
 
-	for_all_symbols(i, sym) {
+	for_all_symbols(sym) {
 		struct pexpr_node *node;
 
 		if (sym->type == S_UNKNOWN)

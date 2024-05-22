@@ -16,6 +16,7 @@
 #include <ctype.h>
 
 #include "configfix.h"
+#include "internal.h"
 
 #define KCR_CMP false
 #define NPC_OPTIMISATION true
@@ -72,11 +73,10 @@ void get_constraints(struct cfdata *data)
  */
 static void init_constraints(struct cfdata *data)
 {
-	unsigned int i;
 	struct symbol *sym;
 	struct property *p;
 
-	for_all_symbols(i, sym) {
+	for_all_symbols(sym) {
 		struct property *prompt;
 
 		if (sym->type == S_UNKNOWN)
@@ -131,10 +131,9 @@ static void init_constraints(struct cfdata *data)
  */
 static void get_constraints_bool(struct cfdata *data)
 {
-	unsigned int i;
 	struct symbol *sym;
 
-	for_all_symbols(i, sym) {
+	for_all_symbols(sym) {
 
 		if (!sym_is_boolean(sym))
 			continue;
@@ -184,10 +183,9 @@ static void get_constraints_bool(struct cfdata *data)
  */
 static void get_constraints_select(struct cfdata *data)
 {
-	unsigned int i;
 	struct symbol *sym;
 
-	for_all_symbols(i, sym) {
+	for_all_symbols(sym) {
 		struct pexpr *sel_y, *sel_m;
 		struct pexpr *c1, *c2;
 
@@ -241,10 +239,9 @@ static void get_constraints_select(struct cfdata *data)
  */
 static void get_constraints_nonbool(struct cfdata *data)
 {
-	unsigned int i;
 	struct symbol *sym;
 
-	for_all_symbols(i, sym) {
+	for_all_symbols(sym) {
 
 		if (!sym_is_nonboolean(sym))
 			continue;
@@ -476,6 +473,7 @@ static void add_choice_prompt_cond(struct symbol *sym, struct cfdata *data)
 	struct pexpr *promptCondition;
 	struct pexpr *fe_both;
 	struct pexpr *pr_cond;
+	struct pexpr *req_cond;
 
 	if (!sym_is_boolean(sym))
 		return;
@@ -485,15 +483,9 @@ static void add_choice_prompt_cond(struct symbol *sym, struct cfdata *data)
 		return;
 
 	promptCondition = prompt->visible.expr ? expr_calculate_pexpr_both(prompt->visible.expr, data) : pexf(data->constants->const_true);
-
 	fe_both = sym_get_fexpr_both(sym, data);
-
-	if (!sym_is_optional(sym)) {
-		struct pexpr *req_cond = pexpr_implies(promptCondition, fe_both, data);
-
-		sym_add_constraint(sym, req_cond, data);
-	}
-
+	req_cond = pexpr_implies(promptCondition, fe_both, data);
+	sym_add_constraint(sym, req_cond, data);
 	pr_cond = pexpr_implies(fe_both, promptCondition, data);
 	sym_add_constraint(sym, pr_cond, data);
 }
@@ -1259,10 +1251,10 @@ static long sym_get_range_val(struct symbol *sym, int base)
  */
 unsigned int count_counstraints(void)
 {
-	unsigned int i, c = 0;
+	unsigned int c = 0;
 	struct symbol *sym;
 
-	for_all_symbols(i, sym) {
+	for_all_symbols(sym) {
 		if (sym->type == S_UNKNOWN)
 			continue;
 
