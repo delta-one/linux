@@ -416,9 +416,10 @@ bool sym_nonbool_has_value_set(struct symbol *sym)
 }
 
 /*
- * return the name of the symbol or the prompt-text, if it is a choice symbol
+ * return pointer to the name of the symbol or the current prompt-text, if it
+ * is a choice symbol
  */
-char *sym_get_name(struct symbol *sym)
+const char *sym_get_name(struct symbol *sym)
 {
 	if (sym_is_choice(sym)) {
 		struct property *prompt = sym_get_prompt(sym);
@@ -426,7 +427,7 @@ char *sym_get_name(struct symbol *sym)
 		if (prompt == NULL)
 			return "";
 
-		return strdup(prompt->text);
+		return prompt->text;
 	} else {
 		return sym->name;
 	}
@@ -697,6 +698,8 @@ static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t, struct cfdat
 	struct fexpr *t1 = NULL, *t2 = NULL;
 	int a, b, c;
 
+	assert(t != NULL);
+
 	/* set left side */
 	if (pexpr_is_symbol(e->left.pexpr)) {
 		a = pexpr_satval(e->left.pexpr);
@@ -744,6 +747,8 @@ static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t, struct cfdata
 {
 	struct fexpr *t1 = NULL, *t2 = NULL;
 	int a, b, c;
+
+	assert(t != NULL);
 
 	/* set left side */
 	if (pexpr_is_symbol(e->left.pexpr)) {
@@ -858,7 +863,7 @@ void picosat_solve(PicoSAT *pico, struct cfdata *data)
 
 	} else if (res == PICOSAT_UNSATISFIABLE) {
 		struct fexpr *e;
-		int *lit;
+		int lit;
 		const int *i;
 
 		printd("===> PROBLEM IS UNSATISFIABLE <===\n");
@@ -867,14 +872,13 @@ void picosat_solve(PicoSAT *pico, struct cfdata *data)
 		printd("\nPrinting unsatisfiable core:\n");
 
 		i = picosat_failed_assumptions(pico);
-		lit = malloc(sizeof(int));
-		*lit = abs(*i++);
+		lit = abs(*i++);
 
-		while (*lit != 0) {
-			e = &data->satmap[*lit];
+		while (lit != 0) {
+			e = &data->satmap[lit];
 
-			printd("(%d) %s <%d>\n", *lit, str_get(&e->name), e->assumption);
-			*lit = abs(*i++);
+			printd("(%d) %s <%d>\n", lit, str_get(&e->name), e->assumption);
+			lit = abs(*i++);
 		}
 	} else {
 		printd("Unknown if satisfiable.\n");

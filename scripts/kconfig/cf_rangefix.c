@@ -481,17 +481,17 @@ static struct fexpr_list *get_unsat_core_soft(PicoSAT *pico, struct cfdata *data
 	struct fexpr_list *ret = fexpr_list_init();
 	struct fexpr *e;
 
-	int *lit = malloc(sizeof(int));
+	int lit;
 	const int *i = picosat_failed_assumptions(pico);
-	*lit = abs(*i++);
+	lit = abs(*i++);
 
-	while (*lit != 0) {
-		e = &data->satmap[*lit];
+	while (lit != 0) {
+		e = &data->satmap[lit];
 
 		if (!sym_is_sdv(data->sdv_symbols, e->sym))
 			fexpr_list_add(ret, e);
 
-		*lit = abs(*i++);
+		lit = abs(*i++);
 	}
 
 	return ret;

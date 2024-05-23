@@ -67,7 +67,7 @@ struct property *sym_get_default_prop(struct symbol *sym);
 bool sym_nonbool_has_value_set(struct symbol *sym);
 
 /* return the name of the symbol */
-char *sym_get_name(struct symbol *sym);
+const char *sym_get_name(struct symbol *sym);
 
 /* check whether symbol is to be changed */
 bool sym_is_sdv(struct sdv_list *list, struct symbol *sym);

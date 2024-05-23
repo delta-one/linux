@@ -382,7 +382,7 @@ static void add_selects(struct symbol *sym, struct cfdata *data)
  */
 static void add_dependencies_bool(struct symbol *sym, struct cfdata *data)
 {
-	struct pexpr *dep_both = expr_calculate_pexpr_both(sym->dir_dep.expr, data);
+	struct pexpr *dep_both;
 
 	if (!sym_is_boolean(sym) || !sym->dir_dep.expr)
 		return;
@@ -537,7 +537,7 @@ static void add_choice_dependencies(struct symbol *sym, struct cfdata *data)
  */
 static void add_choice_constraints(struct symbol *sym, struct cfdata *data)
 {
-	struct property *prompt = sym_get_prompt(sym);
+	struct property *prompt;
 	struct symbol *choice, *choice2;
 	struct sym_node *node, *node2;
 	struct sym_list *items, *promptItems;
