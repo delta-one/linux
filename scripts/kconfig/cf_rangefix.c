@@ -16,6 +16,7 @@
 
 #include "configfix.h"
 #include "internal.h"
+#include "cf_utils.h"
 
 #define MAX_DIAGNOSES 3
 #define MAX_SECONDS 120
@@ -460,7 +461,8 @@ static void fexpr_add_assumption(PicoSAT *pico, struct fexpr *e, int satval)
 				e->assumption = false;
 			}
 		} else {
-			if (!strcmp(str_get(&e->nb_val), string_val)) {
+			if (!strcmp(str_get(&e->nb_val), string_val) &&
+					sym_nonbool_has_value_set(sym)) {
 				picosat_assume(pico, satval);
 				e->assumption = true;
 				nr_of_assumptions_true++;

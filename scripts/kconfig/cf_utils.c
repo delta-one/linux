@@ -379,20 +379,17 @@ struct property *sym_get_default_prop(struct symbol *sym)
  */
 bool sym_nonbool_has_value_set(struct symbol *sym)
 {
-	const char *string_val;
+	/*
+	 * The built constraints make the following constraints:
+	 *
+	 * visible -> not 'n'
+	 * sym->dir_dep not fulfilled -> 'n'
+	 * invisible -> (no default's condition is fulfilled <-> 'n')
+	 */
 	struct property *prompt;
 	struct property *p;
 
 	if (!sym_is_nonboolean(sym))
-		return false;
-
-	string_val = sym_get_string_value(sym);
-
-	if (strcmp(string_val, "") != 0)
-		return true;
-
-	/* a HEX/INT symbol cannot have value "" */
-	if (sym->type == S_HEX || sym->type == S_INT)
 		return false;
 
 	/* cannot have a value with unmet dependencies */
@@ -406,13 +403,7 @@ bool sym_nonbool_has_value_set(struct symbol *sym)
 
 	/* invisible prompt => must get value from default value */
 	p = sym_get_default_prop(sym);
-	if (p == NULL)
-		return false;
-
-	if (!strcmp(sym_get_string_default(sym), ""))
-		return true;
-
-	return false;
+	return p != NULL;
 }
 
 /*

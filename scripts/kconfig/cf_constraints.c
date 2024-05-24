@@ -437,12 +437,13 @@ static void add_dependencies_bool_kcr(struct symbol *sym, struct cfdata *data)
 
 /*
  * build the dependency constraints for non-booleans
- * X_i implies Dep(X)
+ *
+ * sym is not 'n' implies `sym->dir_dep`
  */
 static void add_dependencies_nonbool(struct symbol *sym, struct cfdata *data)
 {
 	struct pexpr *dep_both;
-	struct pexpr *nb_vals;
+	struct pexpr *nb_vals; // "sym is set to some value" / "sym is not 'n'"
 	struct fexpr_node *node;
 	struct pexpr *c;
 
@@ -760,10 +761,13 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 
 		sym_add_constraint_eq(sym, e2, data);
 	} else {
+		/* if non-boolean is invisible and no default's condition is
+		 * fulfilled, then the symbol is not set */
 		struct pexpr *default_any = get_default_any(sym, data);
 		struct pexpr *e1 = pexf(data->constants->const_true);
 		struct pexpr *e2, *e3;
 
+		/* e1 = "sym is not set" */
 		for (struct fexpr_node *node = sym->nb_vals->head->next; node != NULL; node = node->next)
 			e1 = pexpr_and(e1, pexpr_not(pexf(node->elem), data), data);
 
@@ -800,6 +804,8 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 		c2 = pexpr_implies(npc, c, data);
 		sym_add_constraint(sym, c2, data);
 	} else {
+		/* if non-boolean invisible, then it assumes the correct
+		 * default (if any). */
 		struct defm_node *node;
 		struct pexpr *cond, *c;
 		struct fexpr *f;
@@ -839,7 +845,9 @@ static void sym_add_nonbool_values_from_default_range(struct symbol *sym, struct
 }
 
 /*
- * build the range constraints for int/hex
+ * build the range constraints for int/hex:
+ * For each range and each value in `sym->nb_vals` that's not in the range:
+ *	If the range's condition is fulfilled, then sym can't have this value.
  */
 static void sym_add_range_constraints(struct symbol *sym, struct cfdata *data)
 {
@@ -887,6 +895,7 @@ static void sym_add_range_constraints(struct symbol *sym, struct cfdata *data)
 		/* can skip the first non-boolean value, since this is 'n' */
 		fexpr_list_for_each(node, sym->nb_vals) {
 			struct pexpr *not_nb_val;
+			struct pexpr *c;
 
 			if (node->prev == NULL)
 				continue;
@@ -898,17 +907,8 @@ static void sym_add_range_constraints(struct symbol *sym, struct cfdata *data)
 				continue;
 
 			not_nb_val = pexpr_not(pexf(node->elem), data);
-			if (tmp < range_min) {
-				struct pexpr *c = pexpr_implies(prevs, not_nb_val, data);
-
-				sym_add_constraint(sym, c, data);
-			}
-
-			if (tmp > range_max) {
-				struct pexpr *c = pexpr_implies(prevs, not_nb_val, data);
-
-				sym_add_constraint(sym, c, data);
-			}
+			c = pexpr_implies(prevs, not_nb_val, data);
+			sym_add_constraint(sym, c, data);
 		}
 	}
 }
@@ -992,6 +992,18 @@ static struct default_map *create_default_map_entry(struct fexpr *val, struct pe
 	return map;
 }
 
+/**
+ * findDefaultEntry()
+ * @val: Value that the entry must have
+ * @defaults: List of defaults to search in
+ * @constants: To get ``constants->const_false`` from
+ *
+ * Finds an entry in @defaults whose &default_map.val attribute is the same
+ * pointer as the @val argument.
+ *
+ * Return: The condition &default_map.e of the found entry, or
+ * ``pexf(constants->const_false)`` if none was found
+ */
 static struct pexpr *findDefaultEntry(struct fexpr *val, struct defm_list *defaults, struct constants *constants)
 {
 	struct defm_node *node;
@@ -1003,12 +1015,10 @@ static struct pexpr *findDefaultEntry(struct fexpr *val, struct defm_list *defau
 	return pexf(constants->const_false);
 }
 
-/* add a default value to the list */
+static struct pexpr *covered; /* accumulated during execution of add_defaults(), a
+				 disjunction of the conditions for all default
+				 props */
 
-/*
- * return all defaults for a symbol
- */
-static struct pexpr *covered;
 static bool is_tri_as_num(struct symbol *sym)
 {
 	if (!sym->name)
@@ -1018,6 +1028,10 @@ static bool is_tri_as_num(struct symbol *sym)
 		!strcmp(sym->name, "1") ||
 		!strcmp(sym->name, "2");
 }
+
+/**
+ * add_to_default_map() - Add to or update an entry in a default list
+ */
 static void add_to_default_map(struct defm_list *defaults, struct default_map *entry, struct symbol *sym)
 {
 	/* as this is a map, the entry must be replaced if it already exists */
@@ -1047,15 +1061,48 @@ static void add_to_default_map(struct defm_list *defaults, struct default_map *e
 		defm_list_add(defaults, entry);
 	}
 }
+
+/**
+ * updateDefaultList() - Update a default list with a new value-condition pair
+ * @val: The value whose condition will be updated
+ * @newCond: The condition of the default prop. Does not include the condition that the
+ * earlier default's conditions are not fulfilled.
+ * @result: the default list
+ * @sym: the symbol that the defaults belong to
+ *
+ * Update the condition that @val will be used for @sym by considering the next
+ * default property with condition @newCond.
+ */
 static void updateDefaultList(struct fexpr *val, struct pexpr *newCond, struct defm_list *result, struct symbol *sym, struct cfdata *data)
 {
+	// The current condition of @val deduced from the previous default props
 	struct pexpr *prevCond = findDefaultEntry(val, result, data->constants);
-	struct pexpr *cond = pexpr_or(prevCond, pexpr_and(newCond, pexpr_not(covered, data), data), data);
-	struct default_map *entry = create_default_map_entry(val, cond);
+	// New combined condition for @val
+	struct pexpr *condUseVal = pexpr_or(prevCond, pexpr_and(newCond,
+				pexpr_not(covered, data), data), data);
+	struct default_map *entry = create_default_map_entry(val, condUseVal);
 
 	add_to_default_map(result, entry, sym);
 	covered = pexpr_or(covered, newCond, data);
 }
+
+/**
+ * add_defaults() - Generate list of default values and their conditions
+ * @defaults: List of the default properties
+ * @ctx: Additional condition that needs to be fulfilled for any default. May be
+ * NULL.
+ * @result: List that will be filled
+ * @sym: Symbol that the defaults belong to
+ *
+ * Creates a map from values that @sym can assume to the conditions under which
+ * they will be assumed. Without @ctx, this will only consider the conditions
+ * directly associated with the defaults, e.g. sym->dir_dep would not be
+ * considered.
+ *
+ * As a side effect, the &symbol->nb_vals of @sym will be added for
+ * all default values (as well as the @symbol->nb_vals of other symbols @sym has
+ * as default (recursively)).
+ */
 static void add_defaults(struct prop_list *defaults, struct expr *ctx, struct defm_list *result, struct symbol *sym, struct cfdata *data)
 {
 	struct prop_node *node;
@@ -1064,6 +1111,8 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx, struct de
 
 	prop_list_for_each(node, defaults) {
 		p = node->elem;
+		/* calculate expr as whether the default's condition (and the
+		 * one inherited from ctx) is fulfilled */
 		if (p->visible.expr) {
 			if (ctx == NULL)
 				expr = p->visible.expr;
@@ -1134,6 +1183,8 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx, struct de
 			struct prop_list *nb_sym_defaults = prop_list_init();
 			struct property *p_tmp;
 
+			/* Add defaults of other symbol as possible defaults for
+			 * this symbol */
 			for_all_defaults(p->expr->left.sym, p_tmp)
 				prop_list_add(nb_sym_defaults, p_tmp);
 
@@ -1148,10 +1199,24 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx, struct de
 		}
 	}
 }
+
+/**
+ * get_defaults() - Generate list of default values and their conditions
+ * @sym: Symbol whose defaults we want to look at
+ *
+ * Creates a map from values that @sym can assume to the conditions under which
+ * they will be assumed. This will only consider the conditions
+ * directly associated with the defaults, e.g. sym->dir_dep would not be
+ * considered.
+ *
+ * As a side effect, the &symbol->nb_vals of @sym will be added for
+ * all default values (as well as the @symbol->nb_vals of other symbols @sym has
+ * as default (recursively)).
+ */
 static struct defm_list *get_defaults(struct symbol *sym, struct cfdata *data)
 {
 	struct defm_list *result = defm_list_init();
-	struct prop_list *defaults;
+	struct prop_list *defaults; /* list of default props of sym */
 	struct property *p;
 
 	covered = pexf(data->constants->const_false);
@@ -1166,7 +1231,7 @@ static struct defm_list *get_defaults(struct symbol *sym, struct cfdata *data)
 }
 
 /*
- * return the default_map for "y", False if it doesn't exist
+ * return the condition for "y", False if it doesn't exist
  */
 static struct pexpr *get_default_y(struct defm_list *list, struct cfdata *data)
 {
@@ -1183,7 +1248,7 @@ static struct pexpr *get_default_y(struct defm_list *list, struct cfdata *data)
 }
 
 /*
- * return the default map for "m", False if it doesn't exist
+ * return the condition for "m", False if it doesn't exist
  */
 static struct pexpr *get_default_m(struct defm_list *list, struct cfdata *data)
 {

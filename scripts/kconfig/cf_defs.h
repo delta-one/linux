@@ -115,12 +115,20 @@ struct pexpr_node {
 	struct pexpr_node *next, *prev;
 };
 
+/**
+ * struct default_map - Map entry from default values to their condition
+ * @val: value of the default property
+ * @e: condition that implies that the symbol assumes the @val
+ */
 struct default_map {
 	struct fexpr *val;
-
 	struct pexpr *e;
 };
 
+/**
+ * struct defm_list - Map from values of default properties of a symbol to their
+ * (accumulated) conditions
+ */
 struct defm_list {
 	struct defm_node *head, *tail;
 	unsigned int size;
