@@ -6,9 +6,7 @@
  * Copyright (C) 2019 Ibrahim Fayaz <phayax@gmail.com>
 **/
 
-#include "lkc.h"
-#include "cftestgenconfig.h"
-
+#include "for_each_symbol_pp.h"
 #include <time.h>
 #include <dirent.h>
 #include <stdint.h>
@@ -24,7 +22,10 @@
 #include <filesystem>
 #include <map>
 #include <iomanip>
+
 #include "spdlog/spdlog.h"
+#include "lkc.h"
+#include "cftestgenconfig.h"
 
 using namespace std;
 namespace fs = std::filesystem;
@@ -233,7 +234,6 @@ void ConflictGenerator::print_config_stats() {
 
     // alternative counts by iterating symbols
     invisible = 0, unknown = 0, nonchangeable = 0, promptless = 0;
-    int i;
     int sym_candidates = 0;
     int promptless_unchangeable = 0;
     int dep_mod = 0;
@@ -242,29 +242,29 @@ void ConflictGenerator::print_config_stats() {
     int blocked_3 = 0;
     int count = 0;
 
-    for_all_symbols(i, sym) {
-            count++;
-            if (!sym_has_prompt(sym))
-                promptless++;
-            if (sym->visible == no)
-                invisible++;
-            if (!sym_is_changeable(sym))
-                nonchangeable++;
-            if (sym_get_type(sym) == S_UNKNOWN)
-                unknown++;
-            if (sym_has_conflict(sym, base_config))
-                sym_candidates++;
-            if (!sym_is_changeable(sym) && !sym_has_prompt(sym))
-                promptless_unchangeable++;
-            if (expr_contains_symbol(sym->dir_dep.expr, &symbol_mod))
-                dep_mod++;
-            if (sym_has_blocked_values(sym, base_config) == 1)
-                blocked_1++;
-            if (sym_has_blocked_values(sym, base_config) == 2)
-                blocked_2++;
-            if (sym_has_blocked_values(sym, base_config) == 3)
-                blocked_3++;
-        }
+    for_all_symbols_pp([&](struct symbol *sym) {
+	    count++;
+	    if (!sym_has_prompt(sym))
+		    promptless++;
+	    if (sym->visible == no)
+		    invisible++;
+	    if (!sym_is_changeable(sym))
+		    nonchangeable++;
+	    if (sym_get_type(sym) == S_UNKNOWN)
+		    unknown++;
+	    if (sym_has_conflict(sym, base_config))
+		    sym_candidates++;
+	    if (!sym_is_changeable(sym) && !sym_has_prompt(sym))
+		    promptless_unchangeable++;
+	    if (expr_contains_symbol(sym->dir_dep.expr, &symbol_mod))
+		    dep_mod++;
+	    if (sym_has_blocked_values(sym, base_config) == 1)
+		    blocked_1++;
+	    if (sym_has_blocked_values(sym, base_config) == 2)
+		    blocked_2++;
+	    if (sym_has_blocked_values(sym, base_config) == 3)
+		    blocked_3++;
+    });
 
     spdlog::info(
             "{} symbols: {}  prompt-less, {}  invisible, {} unknown type, {} non-changeable, {} prompt-less & unchangeable",
@@ -286,7 +286,6 @@ void ConflictGenerator::print_config_stats() {
  */
 void ConflictGenerator::print_sample_stats() {
 
-    int i;
     int count = 0;
     int invalid = 0;
     int other = 0;
@@ -296,33 +295,32 @@ void ConflictGenerator::print_sample_stats() {
     int tri_m = 0;
     int tri_n = 0;
 
-    struct symbol *sym;
-    for_all_symbols(i, sym) {
-            count++;
-            const char *val = sym_get_string_value(sym);
-            switch (sym_get_type(sym)) {
-                case S_BOOLEAN:
-                    if (strcmp(val, "y") == 0)
-                        bool_y++;
-                    else if (strcmp(val, "n") == 0)
-                        bool_n++;
-                    else
-                        invalid++;
-                    break;
-                case S_TRISTATE:
-                    if (strcmp(val, "y") == 0)
-                        tri_y++;
-                    else if (strcmp(val, "m") == 0)
-                        tri_m++;
-                    else if (strcmp(val, "n") == 0)
-                        tri_n++;
-                    else
-                        invalid++;
-                    break;
-                default:
-                    other++;
-            }
-        }
+    for_all_symbols_pp([&](struct symbol *sym) {
+	    count++;
+	    const char *val = sym_get_string_value(sym);
+	    switch (sym_get_type(sym)) {
+	    case S_BOOLEAN:
+		    if (strcmp(val, "y") == 0)
+			    bool_y++;
+		    else if (strcmp(val, "n") == 0)
+			    bool_n++;
+		    else
+			    invalid++;
+		    break;
+	    case S_TRISTATE:
+		    if (strcmp(val, "y") == 0)
+			    tri_y++;
+		    else if (strcmp(val, "m") == 0)
+			    tri_m++;
+		    else if (strcmp(val, "n") == 0)
+			    tri_n++;
+		    else
+			    invalid++;
+		    break;
+	    default:
+		    other++;
+	    }
+    });
     spdlog::info("Sym count    Boolean        Tristates");
     spdlog::info("--------- ------ ------   ------  ------  ------");
     spdlog::info("           Y      N        Y      M       N");
@@ -800,40 +798,40 @@ static SymbolMap config_backup() {
     SymbolMap backup_table;
 
     spdlog::info("Backing up configuration...");
-    int i;
     int count = 0;
     int unknowns = 0;
 
-    struct symbol *sym;
     std::string key;
     std::string val;
     std::string val_old;
 
-    for_all_symbols(i, sym) {
-            count++;
-            if (sym_get_type(sym) == S_UNKNOWN) {
-                unknowns++;
-                continue;
-            }
-            if (sym_get_string_value(sym) == NULL) {
-                continue;
-            }
+    for_all_symbols_pp([&](struct symbol *sym) {
+		count++;
+		if (sym_get_type(sym) == S_UNKNOWN) {
+			unknowns++;
+			return;
+		}
+		if (sym_get_string_value(sym) == NULL) {
+			return;
+		}
 
-            key = std::string(sym_get_name(sym));
-            val = std::string(sym_get_string_value(sym));
+		key = std::string(sym_get_name(sym));
+		val = std::string(sym_get_string_value(sym));
 
-            if (backup_table.count(key) > 0) {
-                val_old = backup_table[key];
-                if(sym_get_name(sym)!= NULL) {
-                    spdlog::info("Duplicate key: {}", sym_get_type_name(sym), sym_get_name(sym), sym->name);
-                    if (val != val_old) {
-                        spdlog::info("Value has changed: {} {}", val_old, val);
-                    }
-                }
-
-            }
-            backup_table[key] = val;
-        }
+		if (backup_table.count(key) > 0) {
+			val_old = backup_table[key];
+			if (sym_get_name(sym) != NULL) {
+				spdlog::info("Duplicate key: {}",
+					     sym_get_type_name(sym),
+					     sym_get_name(sym), sym->name);
+				if (val != val_old) {
+					spdlog::info("Value has changed: {} {}",
+						     val_old, val);
+				}
+			}
+		}
+		backup_table[key] = val;
+	});
     spdlog::info("Done: iterated {} symbols, {} symbols in backup table, {} UNKNOWNs ignored",
                  count, backup_table.size(), unknowns);
     return backup_table;
@@ -856,9 +854,6 @@ SymbolMap config_reset() {
  * otherwise return number of mismatching symbols.
  */
 static int config_compare(const SymbolMap &backup_table) {
-    struct symbol *sym;
-
-    int i;
     int count = 0;
     int match = 0;
     int mismatch = 0;
@@ -869,32 +864,35 @@ static int config_compare(const SymbolMap &backup_table) {
     std::string current_val;
 
     if (!backup_table.empty()) {
-        for_all_symbols(i, sym) {
-                count++;
-                if (sym_get_type(sym) == S_UNKNOWN) {
-                    unknowns++;
-                    continue;
-                }
-                if (sym_get_string_value(sym) == NULL) {
-                    continue;
-                }
+	    for_all_symbols_pp([&](struct symbol *sym) {
+		    count++;
+		    if (sym_get_type(sym) == S_UNKNOWN) {
+			    unknowns++;
+			    return;
+		    }
+		    if (sym_get_string_value(sym) == NULL) {
+			    return;
+		    }
 
-                key = std::string(sym_get_name(sym));
-                current_val = std::string(sym_get_string_value(sym));
+		    key = std::string(sym_get_name(sym));
+		    current_val = std::string(sym_get_string_value(sym));
 
-                if (backup_table.count(key) > 0) {
-                    backup_val = backup_table.at(key);
-                    if (backup_val != current_val) {
-                        spdlog::info("Symbols that are mismatching key= {} initial value= {} current value= {}",
-                                     key, backup_val, current_val);
-                        mismatch++;
-                    } else
-                        match++;
-                } else {
-                    spdlog::info("Symbol missing in the original config for the key= {}", key);
-                    mismatch++;
-                }
-            }
+		    if (backup_table.count(key) > 0) {
+			    backup_val = backup_table.at(key);
+			    if (backup_val != current_val) {
+				    spdlog::info(
+					    "Symbols that are mismatching key= {} initial value= {} current value= {}",
+					    key, backup_val, current_val);
+				    mismatch++;
+			    } else
+				    match++;
+		    } else {
+			    spdlog::info(
+				    "Symbol missing in the original config for the key= {}",
+				    key);
+			    mismatch++;
+		    }
+	    });
     }
     return mismatch;
 }
@@ -927,9 +925,9 @@ tristate std_string_value_to_tristate(const std::string& x) {
         return tristate::yes;
     } else if (x == "NO") {
         return tristate::no;
-    } else if (x == "MODULE") {
-        return tristate::mod;
     }
+	assert(x == "MODULE");
+	return tristate::mod;
 }
 
 /**
