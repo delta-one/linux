@@ -6,3 +6,5 @@
 /[gmnq]conf-libs
 /qconf-moc.cc
 /cfoutconfig
+/cftestconfig
+/cftestgenconfig
