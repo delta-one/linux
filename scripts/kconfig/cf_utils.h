@@ -6,6 +6,10 @@
 #ifndef CF_UTILS_H
 #define CF_UTILS_H
 
+#include "expr.h"
+#include "cf_defs.h"
+#include "picosat.h"
+
 /* parse Kconfig-file and read .config */
 void init_config(const char *Kconfig_file);
 

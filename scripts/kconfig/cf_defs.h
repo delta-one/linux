@@ -7,6 +7,13 @@
 #define DEFS_H
 
 /* global variables */
+#include <limits.h>
+#include <stdbool.h>
+#include <stddef.h>
+
+#include "lkc.h"
+#include "expr.h"
+
 extern bool CFDEBUG;
 extern bool stop_rangefix;
 
@@ -103,6 +110,7 @@ union pexpr_data {
 struct pexpr {
 	enum pexpr_type type;
 	union pexpr_data left, right;
+	unsigned int ref_count;
 };
 
 struct pexpr_list {

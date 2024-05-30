@@ -13,10 +13,11 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
-#include <ctype.h>
 
-#include "configfix.h"
+#include "cf_utils.h"
 #include "internal.h"
+#include "cf_expr.h"
+#include "cf_constraints.h"
 
 #define KCR_CMP false
 #define NPC_OPTIMISATION true
@@ -26,7 +27,8 @@ static void get_constraints_bool(struct cfdata *data);
 static void get_constraints_select(struct cfdata *data);
 static void get_constraints_nonbool(struct cfdata *data);
 
-static void build_tristate_constraint_clause(struct symbol *sym, struct cfdata *data);
+static void build_tristate_constraint_clause(struct symbol *sym,
+					     struct cfdata *data);
 
 static void add_selects_kcr(struct symbol *sym, struct cfdata *data);
 static void add_selects(struct symbol *sym, struct cfdata *data);
@@ -41,11 +43,14 @@ static void add_choice_constraints(struct symbol *sym, struct cfdata *data);
 static void add_invisible_constraints(struct symbol *sym, struct cfdata *data);
 static void sym_nonbool_at_least_1(struct symbol *sym, struct cfdata *data);
 static void sym_nonbool_at_most_1(struct symbol *sym, struct cfdata *data);
-static void sym_add_nonbool_values_from_default_range(struct symbol *sym, struct cfdata *data);
+static void sym_add_nonbool_values_from_default_range(struct symbol *sym,
+						      struct cfdata *data);
 static void sym_add_range_constraints(struct symbol *sym, struct cfdata *data);
-static void sym_add_nonbool_prompt_constraint(struct symbol *sym, struct cfdata *data);
+static void sym_add_nonbool_prompt_constraint(struct symbol *sym,
+					      struct cfdata *data);
 
-static struct default_map *create_default_map_entry(struct fexpr *val, struct pexpr *e);
+static struct default_map *create_default_map_entry(struct fexpr *val,
+						    struct pexpr *e);
 static struct defm_list *get_defaults(struct symbol *sym, struct cfdata *data);
 static struct pexpr *get_default_y(struct defm_list *list, struct cfdata *data);
 static struct pexpr *get_default_m(struct defm_list *list, struct cfdata *data);
@@ -69,7 +74,10 @@ void get_constraints(struct cfdata *data)
 
 /*
  * need to go through the constraints once to find all "known values"
- * for the non-Boolean symbols
+ * for the non-Boolean symbols (and add them to sym->nb_vals for the given
+ * symbols).
+ * expr_calculate_pexpr_both and get_defaults have the side effect of creating
+ * known values.
  */
 static void init_constraints(struct cfdata *data)
 {
@@ -84,10 +92,12 @@ static void init_constraints(struct cfdata *data)
 
 		if (sym_is_boolean(sym)) {
 			for_all_properties(sym, p, P_SELECT)
-				expr_calculate_pexpr_both(p->visible.expr, data);
+				expr_calculate_pexpr_both(p->visible.expr,
+							  data);
 
 			for_all_properties(sym, p, P_IMPLY)
-				expr_calculate_pexpr_both(p->visible.expr, data);
+				expr_calculate_pexpr_both(p->visible.expr,
+							  data);
 		}
 
 		if (sym->dir_dep.expr)
@@ -106,25 +116,28 @@ static void init_constraints(struct cfdata *data)
 				if (p == NULL)
 					continue;
 
-				sym_create_nonbool_fexpr(sym, p->expr->left.sym->name, data);
+				sym_create_nonbool_fexpr(
+					sym, p->expr->left.sym->name, data);
 			}
 			for_all_properties(sym, p, P_RANGE) {
 				if (p == NULL)
 					continue;
 
-				sym_create_nonbool_fexpr(sym, p->expr->left.sym->name, data);
-				sym_create_nonbool_fexpr(sym, p->expr->right.sym->name, data);
+				sym_create_nonbool_fexpr(
+					sym, p->expr->left.sym->name, data);
+				sym_create_nonbool_fexpr(
+					sym, p->expr->right.sym->name, data);
 			}
 			curr = sym_get_string_value(sym);
 			if (strcmp(curr, "") != 0)
-				sym_create_nonbool_fexpr(sym, (char *) curr, data);
+				sym_create_nonbool_fexpr(sym, (char *)curr,
+							 data);
 		}
 
 		if (sym->type == S_HEX || sym->type == S_INT)
 			sym_add_nonbool_values_from_default_range(sym, data);
 	}
 }
-
 
 /*
  *  build constraints for boolean symbols
@@ -134,7 +147,6 @@ static void get_constraints_bool(struct cfdata *data)
 	struct symbol *sym;
 
 	for_all_symbols(sym) {
-
 		if (!sym_is_boolean(sym))
 			continue;
 
@@ -148,12 +160,14 @@ static void get_constraints_bool(struct cfdata *data)
 		if (!KCR_CMP) {
 			add_selects(sym, data);
 		} else {
-			if (sym->rev_dep.expr && !sym_is_choice(sym) && !sym_is_choice_value(sym))
+			if (sym->rev_dep.expr && !sym_is_choice(sym) &&
+			    !sym_is_choice_value(sym))
 				add_selects_kcr(sym, data);
 		}
 
 		/* build constraints for dependencies for booleans */
-		if (sym->dir_dep.expr && !sym_is_choice(sym) && !sym_is_choice_value(sym)) {
+		if (sym->dir_dep.expr && !sym_is_choice(sym) &&
+		    !sym_is_choice_value(sym)) {
 			if (!KCR_CMP)
 				add_dependencies_bool(sym, data);
 			else
@@ -204,32 +218,26 @@ static void get_constraints_select(struct cfdata *data)
 		if (sym->list_sel_y == NULL)
 			continue;
 
-		sel_y = pexpr_implies(
-				pexf(sym->fexpr_sel_y),
-				pexf(sym->fexpr_y),
-				data);
+		sel_y = pexpr_implies(pexf(sym->fexpr_sel_y),
+					   pexf(sym->fexpr_y), data,
+					   PEXPR_ARGX);
 		sym_add_constraint(sym, sel_y, data);
 
-		c1 = pexpr_implies(
-			pexf(sym->fexpr_sel_y),
-			sym->list_sel_y,
-			data);
+		c1 = pexpr_implies(pexf(sym->fexpr_sel_y), sym->list_sel_y,
+					data, PEXPR_ARG1);
 		sym_add_constraint(sym, c1, data);
 
 		/* only continue for tristates */
 		if (sym->type == S_BOOLEAN)
 			continue;
 
-		sel_m = pexpr_implies(
-				pexf(sym->fexpr_sel_m),
-				sym_get_fexpr_both(sym, data),
-				data);
+		sel_m = pexpr_implies(pexf(sym->fexpr_sel_m),
+					   sym_get_fexpr_both(sym, data), data,
+					   PEXPR_ARGX);
 		sym_add_constraint(sym, sel_m, data);
 
-		c2 = pexpr_implies(
-			pexf(sym->fexpr_sel_m),
-			sym->list_sel_m,
-			data);
+		c2 = pexpr_implies(pexf(sym->fexpr_sel_m), sym->list_sel_m,
+					data, PEXPR_ARG1);
 		sym_add_constraint(sym, c2, data);
 	}
 }
@@ -242,7 +250,6 @@ static void get_constraints_nonbool(struct cfdata *data)
 	struct symbol *sym;
 
 	for_all_symbols(sym) {
-
 		if (!sym_is_nonboolean(sym))
 			continue;
 
@@ -270,7 +277,8 @@ static void get_constraints_nonbool(struct cfdata *data)
 /*
  * enforce tristate constraints
  */
-static void build_tristate_constraint_clause(struct symbol *sym, struct cfdata *data)
+static void build_tristate_constraint_clause(struct symbol *sym,
+					     struct cfdata *data)
 {
 	struct pexpr *X, *X_m, *modules, *c;
 
@@ -282,15 +290,17 @@ static void build_tristate_constraint_clause(struct symbol *sym, struct cfdata *
 	modules = pexf(modules_sym->fexpr_y);
 
 	/* -X v -X_m */
-	c = pexpr_or(pexpr_not(X, data), pexpr_not(X_m, data), data);
+	c = pexpr_or(pexpr_not_share(X, data), pexpr_not_share(X_m, data),
+			  data, PEXPR_ARGX);
 	sym_add_constraint(sym, c, data);
 
 	/* X_m -> MODULES */
 	if (modules_sym->fexpr_y != NULL) {
-		struct pexpr *c2 = pexpr_implies(X_m, modules, data);
+		struct pexpr *c2 = pexpr_implies_share(X_m, modules, data);
 
 		sym_add_constraint(sym, c2, data);
 	}
+	PEXPR_PUT(X, X_m, modules);
 }
 
 /*
@@ -300,10 +310,13 @@ static void build_tristate_constraint_clause(struct symbol *sym, struct cfdata *
 static void add_selects_kcr(struct symbol *sym, struct cfdata *data)
 {
 	struct pexpr *rdep_y = expr_calculate_pexpr_y(sym->rev_dep.expr, data);
-	struct pexpr *c1 = pexpr_implies(rdep_y, pexf(sym->fexpr_y), data);
+	struct pexpr *c1 = pexpr_implies(rdep_y, pexf(sym->fexpr_y), data,
+					      PEXPR_ARGX);
 
-	struct pexpr *rdep_both = expr_calculate_pexpr_both(sym->rev_dep.expr, data);
-	struct pexpr *c2 = pexpr_implies(rdep_both, sym_get_fexpr_both(sym, data), data);
+	struct pexpr *rdep_both =
+		expr_calculate_pexpr_both(sym->rev_dep.expr, data);
+	struct pexpr *c2 = pexpr_implies(
+		rdep_both, sym_get_fexpr_both(sym, data), data, PEXPR_ARGX);
 
 	sym_add_constraint(sym, c1, data);
 	sym_add_constraint(sym, c2, data);
@@ -330,49 +343,67 @@ static void add_selects(struct symbol *sym, struct cfdata *data)
 		if (!selected->rev_dep.expr)
 			continue;
 
-		cond_y = pexf(data->constants->const_true);
-		cond_both = pexf(data->constants->const_true);
 		if (p->visible.expr) {
 			cond_y = expr_calculate_pexpr_y(p->visible.expr, data);
-			cond_both = expr_calculate_pexpr_both(p->visible.expr, data);
+			cond_both = expr_calculate_pexpr_both(p->visible.expr,
+							      data);
+		} else {
+			cond_y = pexf(data->constants->const_true);
+			cond_both = pexf(data->constants->const_true);
 		}
 
 		if (selected->type == S_BOOLEAN) {
 			/* imply that symbol is selected to y */
-			struct pexpr *e1 = pexpr_and(cond_both, sym_get_fexpr_both(sym, data), data);
-			struct pexpr *c1 = pexpr_implies(e1, pexf(selected->fexpr_sel_y), data);
+			struct pexpr *e1 = pexpr_and(
+				cond_both, sym_get_fexpr_both(sym, data), data,
+				PEXPR_ARG2);
+			struct pexpr *c1 = pexpr_implies(
+				e1, pexf(selected->fexpr_sel_y), data,
+				PEXPR_ARG2);
 
 			sym_add_constraint(selected, c1, data);
 
 			if (selected->list_sel_y == NULL)
 				selected->list_sel_y = e1;
 			else
-				selected->list_sel_y = pexpr_or(selected->list_sel_y, e1, data);
+				selected->list_sel_y =
+					pexpr_or(selected->list_sel_y, e1,
+						      data, PEXPR_ARG2);
 		}
 
 		if (selected->type == S_TRISTATE) {
 			struct pexpr *e2, *e3, *c2, *c3;
 
 			/* imply that symbol is selected to y */
-			e2 = pexpr_and(cond_y, pexf(sym->fexpr_y), data);
-			c2 = pexpr_implies(e2, pexf(selected->fexpr_sel_y), data);
+			e2 = pexpr_and(cond_y, pexf(sym->fexpr_y), data,
+					    PEXPR_ARG2);
+			c2 = pexpr_implies(e2, pexf(selected->fexpr_sel_y),
+						data, PEXPR_ARG2);
 			sym_add_constraint(selected, c2, data);
 
 			if (selected->list_sel_y == NULL)
 				selected->list_sel_y = e2;
 			else
-				selected->list_sel_y = pexpr_or(selected->list_sel_y, e2, data);
+				selected->list_sel_y =
+					pexpr_or(selected->list_sel_y, e2,
+						      data, PEXPR_ARG2);
 
 			/* imply that symbol is selected to m */
-			e3 = pexpr_and(cond_both, sym_get_fexpr_both(sym, data), data);
-			c3 = pexpr_implies(e3, pexf(selected->fexpr_sel_m), data);
+			e3 = pexpr_and(cond_both,
+					    sym_get_fexpr_both(sym, data), data,
+					    PEXPR_ARG2);
+			c3 = pexpr_implies(e3, pexf(selected->fexpr_sel_m),
+						data, PEXPR_ARG2);
 			sym_add_constraint(selected, c3, data);
 
 			if (selected->list_sel_m == NULL)
 				selected->list_sel_m = e3;
 			else
-				selected->list_sel_m = pexpr_or(selected->list_sel_m, e3, data);
+				selected->list_sel_m =
+					pexpr_or(selected->list_sel_m, e3,
+						      data, PEXPR_ARG2);
 		}
+		PEXPR_PUT(cond_y, cond_both);
 	}
 }
 
@@ -390,19 +421,41 @@ static void add_dependencies_bool(struct symbol *sym, struct cfdata *data)
 	dep_both = expr_calculate_pexpr_both(sym->dir_dep.expr, data);
 
 	if (sym->type == S_TRISTATE) {
-		struct pexpr *dep_y = expr_calculate_pexpr_y(sym->dir_dep.expr, data);
-		struct pexpr *sel_y = sym->rev_dep.expr ? pexf(sym->fexpr_sel_y) : pexf(data->constants->const_false);
+		struct pexpr *c1;
+		struct pexpr *c2;
+		{
+			struct pexpr *dep_y =
+				expr_calculate_pexpr_y(sym->dir_dep.expr, data);
+			struct pexpr *sel_y =
+				sym->rev_dep.expr ?
+					pexf(sym->fexpr_sel_y) :
+					pexf(data->constants->const_false);
 
-		struct pexpr *c1 = pexpr_implies(pexf(sym->fexpr_y), pexpr_or(dep_y, sel_y, data), data);
-		struct pexpr *c2 = pexpr_implies(pexf(sym->fexpr_m), pexpr_or(dep_both, sym_get_fexpr_sel_both(sym, data), data), data);
+			c1 = pexpr_implies(pexf(sym->fexpr_y),
+						pexpr_or(dep_y, sel_y,
+							      data, PEXPR_ARGX),
+						data, PEXPR_ARGX);
+		}
+		c2 = pexpr_implies(
+			pexf(sym->fexpr_m),
+			pexpr_or(dep_both,
+				      sym_get_fexpr_sel_both(sym, data), data,
+				      PEXPR_ARG2),
+			data, PEXPR_ARGX);
 
 		sym_add_constraint(sym, c1, data);
 		sym_add_constraint(sym, c2, data);
 	} else if (sym->type == S_BOOLEAN) {
-		struct pexpr *c = pexpr_implies(pexf(sym->fexpr_y), pexpr_or(dep_both, sym_get_fexpr_sel_both(sym, data), data), data);
+		struct pexpr *c = pexpr_implies(
+			pexf(sym->fexpr_y),
+			pexpr_or(dep_both,
+				      sym_get_fexpr_sel_both(sym, data), data,
+				      PEXPR_ARG2),
+			data, PEXPR_ARGX);
 
 		sym_add_constraint(sym, c, data);
 	}
+	pexpr_put(dep_both);
 }
 
 /*
@@ -418,21 +471,43 @@ static void add_dependencies_bool_kcr(struct symbol *sym, struct cfdata *data)
 
 	dep_both = expr_calculate_pexpr_both(sym->dir_dep.expr, data);
 
-	sel_both = sym->rev_dep.expr ? expr_calculate_pexpr_both(sym->rev_dep.expr, data) : pexf(data->constants->const_false);
+	sel_both = sym->rev_dep.expr ?
+			   expr_calculate_pexpr_both(sym->rev_dep.expr, data) :
+			   pexf(data->constants->const_false);
 
 	if (sym->type == S_TRISTATE) {
-		struct pexpr *dep_y = expr_calculate_pexpr_y(sym->dir_dep.expr, data);
-		struct pexpr *sel_y = sym->rev_dep.expr ? expr_calculate_pexpr_y(sym->rev_dep.expr, data) : pexf(data->constants->const_false);
-		struct pexpr *c1 = pexpr_implies(pexf(sym->fexpr_y), pexpr_or(dep_y, sel_y, data), data);
-		struct pexpr *c2 = pexpr_implies(pexf(sym->fexpr_m), pexpr_or(dep_both, sel_both, data), data);
+		struct pexpr *c1;
+		struct pexpr *c2;
+		{
+			struct pexpr *dep_y =
+				expr_calculate_pexpr_y(sym->dir_dep.expr, data);
+			struct pexpr *sel_y =
+				sym->rev_dep.expr ?
+					expr_calculate_pexpr_y(
+						sym->rev_dep.expr, data) :
+					pexf(data->constants->const_false);
+			c1 = pexpr_implies(pexf(sym->fexpr_y),
+						pexpr_or(dep_y, sel_y,
+							      data, PEXPR_ARGX),
+						data, PEXPR_ARGX);
+		}
+		c2 = pexpr_implies(pexf(sym->fexpr_m),
+					pexpr_or_share(dep_both, sel_both,
+						       data),
+					data, PEXPR_ARGX);
 
 		sym_add_constraint(sym, c1, data);
 		sym_add_constraint(sym, c2, data);
 	} else if (sym->type == S_BOOLEAN) {
-		struct pexpr *c = pexpr_implies(pexf(sym->fexpr_y), pexpr_or(dep_both, sel_both, data), data);
+		struct pexpr *c = pexpr_implies(
+			pexf(sym->fexpr_y),
+			pexpr_or_share(dep_both, sel_both, data), data,
+			PEXPR_ARGX);
 
 		sym_add_constraint(sym, c, data);
 	}
+
+	PEXPR_PUT(dep_both, sel_both);
 }
 
 /*
@@ -458,10 +533,11 @@ static void add_dependencies_nonbool(struct symbol *sym, struct cfdata *data)
 		if (node->prev == NULL)
 			continue;
 
-		nb_vals = pexpr_or(nb_vals, pexf(node->elem), data);
+		nb_vals = pexpr_or(nb_vals, pexf(node->elem), data,
+					PEXPR_ARGX);
 	}
 
-	c = pexpr_implies(nb_vals, dep_both, data);
+	c = pexpr_implies(nb_vals, dep_both, data, PEXPR_ARGX);
 	sym_add_constraint(sym, c, data);
 }
 
@@ -483,12 +559,16 @@ static void add_choice_prompt_cond(struct symbol *sym, struct cfdata *data)
 	if (prompt == NULL)
 		return;
 
-	promptCondition = prompt->visible.expr ? expr_calculate_pexpr_both(prompt->visible.expr, data) : pexf(data->constants->const_true);
+	promptCondition =
+		prompt->visible.expr ?
+			expr_calculate_pexpr_both(prompt->visible.expr, data) :
+			pexf(data->constants->const_true);
 	fe_both = sym_get_fexpr_both(sym, data);
-	req_cond = pexpr_implies(promptCondition, fe_both, data);
+	req_cond = pexpr_implies_share(promptCondition, fe_both, data);
 	sym_add_constraint(sym, req_cond, data);
-	pr_cond = pexpr_implies(fe_both, promptCondition, data);
+	pr_cond = pexpr_implies_share(fe_both, promptCondition, data);
 	sym_add_constraint(sym, pr_cond, data);
+	PEXPR_PUT(promptCondition, fe_both);
 }
 
 /*
@@ -521,16 +601,21 @@ static void add_choice_dependencies(struct symbol *sym, struct cfdata *data)
 
 	if (sym->type == S_TRISTATE) {
 		struct pexpr *dep_y = expr_calculate_pexpr_y(to_parse, data);
-		struct pexpr *c1 = pexpr_implies(pexf(sym->fexpr_y), dep_y, data);
-		struct pexpr *c2 = pexpr_implies(pexf(sym->fexpr_m), dep_both, data);
+		struct pexpr *c1 = pexpr_implies(pexf(sym->fexpr_y), dep_y,
+						      data, PEXPR_ARG1);
+		struct pexpr *c2 = pexpr_implies(
+			pexf(sym->fexpr_m), dep_both, data, PEXPR_ARG1);
 
 		sym_add_constraint_eq(sym, c1, data);
 		sym_add_constraint_eq(sym, c2, data);
+		pexpr_put(dep_y);
 	} else if (sym->type == S_BOOLEAN) {
-		struct pexpr *c = pexpr_implies(pexf(sym->fexpr_y), dep_both, data);
+		struct pexpr *c = pexpr_implies(
+			pexf(sym->fexpr_y), dep_both, data, PEXPR_ARG1);
 
 		sym_add_constraint_eq(sym, c, data);
 	}
+	pexpr_put(dep_both);
 }
 
 /*
@@ -571,18 +656,25 @@ static void add_choice_constraints(struct symbol *sym, struct cfdata *data)
 	c1 = NULL;
 	sym_list_for_each(node, promptItems) {
 		choice = node->elem;
-		c1 = node->prev == NULL ? pexf(choice->fexpr_y) : pexpr_or(c1, pexf(choice->fexpr_y), data);
+		c1 = node->prev == NULL ?
+			     pexf(choice->fexpr_y) :
+			     pexpr_or(c1, pexf(choice->fexpr_y), data,
+					   PEXPR_ARGX);
 	}
 	if (c1 != NULL) {
-		struct pexpr *c2 = pexpr_implies(pexf(sym->fexpr_y), c1, data);
+		struct pexpr *c2 = pexpr_implies(pexf(sym->fexpr_y), c1,
+						      data, PEXPR_ARG1);
 
 		sym_add_constraint(sym, c2, data);
+		pexpr_put(c1);
 	}
 
 	/* every choice option (even those without a prompt) implies the choice */
 	sym_list_for_each(node, items) {
 		choice = node->elem;
-		c1 = pexpr_implies(sym_get_fexpr_both(choice, data), sym_get_fexpr_both(sym, data), data);
+		c1 = pexpr_implies(sym_get_fexpr_both(choice, data),
+					sym_get_fexpr_both(sym, data), data,
+					PEXPR_ARGX);
 		sym_add_constraint(sym, c1, data);
 	}
 
@@ -591,7 +683,9 @@ static void add_choice_constraints(struct symbol *sym, struct cfdata *data)
 		sym_list_for_each(node, items) {
 			choice = node->elem;
 			if (choice->type == S_TRISTATE) {
-				c1 = pexpr_implies(pexf(choice->fexpr_m), pexf(sym->fexpr_m), data);
+				c1 = pexpr_implies(pexf(choice->fexpr_m),
+							pexf(sym->fexpr_m),
+							data, PEXPR_ARGX);
 				sym_add_constraint(sym, c1, data);
 			}
 		}
@@ -602,16 +696,24 @@ static void add_choice_constraints(struct symbol *sym, struct cfdata *data)
 		sym_list_for_each(node, items) {
 			choice = node->elem;
 			if (choice->type == S_TRISTATE)
-				sym_add_constraint(sym, pexpr_not(pexf(choice->fexpr_m), data), data);
+				sym_add_constraint(
+					sym,
+					pexpr_not(pexf(choice->fexpr_m),
+						       data),
+					data);
 		}
 	}
 
 	/* all choice options are mutually exclusive for yes */
 	sym_list_for_each(node, promptItems) {
 		choice = node->elem;
-		for (struct sym_node *node2 = node->next; node2 != NULL; node2 = node2->next) {
+		for (struct sym_node *node2 = node->next; node2 != NULL;
+		     node2 = node2->next) {
 			choice2 = node2->elem;
-			c1 = pexpr_or(pexpr_not(pexf(choice->fexpr_y), data), pexpr_not(pexf(choice2->fexpr_y), data), data);
+			c1 = pexpr_or(
+				pexpr_not(pexf(choice->fexpr_y), data),
+				pexpr_not(pexf(choice2->fexpr_y), data),
+				data, PEXPR_ARGX);
 			sym_add_constraint(sym, c1, data);
 		}
 	}
@@ -626,7 +728,8 @@ static void add_choice_constraints(struct symbol *sym, struct cfdata *data)
 			choice = node->elem;
 
 			tmp = sym_list_init();
-			for (struct sym_node *node2 = node->next; node2 != NULL; node2 = node2->next) {
+			for (struct sym_node *node2 = node->next; node2 != NULL;
+			     node2 = node2->next) {
 				choice2 = node2->elem;
 				if (choice2->type == S_TRISTATE)
 					sym_list_add(tmp, choice2);
@@ -637,11 +740,18 @@ static void add_choice_constraints(struct symbol *sym, struct cfdata *data)
 			sym_list_for_each(node2, tmp) {
 				choice2 = node2->elem;
 				if (node2->prev == NULL)
-					c1 = pexpr_not(pexf(choice2->fexpr_m), data);
+					c1 = pexpr_not(
+						pexf(choice2->fexpr_m), data);
 				else
-					c1 = pexpr_and(c1, pexpr_not(pexf(choice2->fexpr_m), data), data);
+					c1 = pexpr_and(
+						c1,
+						pexpr_not(
+							pexf(choice2->fexpr_m),
+							data),
+						data, PEXPR_ARGX);
 			}
-			c1 = pexpr_implies(pexf(choice->fexpr_y), c1, data);
+			c1 = pexpr_implies(pexf(choice->fexpr_y), c1, data,
+						PEXPR_ARGX);
 			sym_add_constraint(sym, c1, data);
 		}
 	}
@@ -674,17 +784,22 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 
 		/* some symbols have multiple prompts */
 		for_all_prompts(sym, p) {
-			promptCondition_both = pexpr_or(promptCondition_both,
-				expr_calculate_pexpr_both(p->visible.expr, data), data);
-			promptCondition_yes = pexpr_or(promptCondition_yes,
-				expr_calculate_pexpr_y(p->visible.expr, data), data);
+			promptCondition_both =
+				pexpr_or(promptCondition_both,
+					      expr_calculate_pexpr_both(
+						      p->visible.expr, data),
+					      data, PEXPR_ARGX);
+			promptCondition_yes = pexpr_or(
+				promptCondition_yes,
+				expr_calculate_pexpr_y(p->visible.expr, data),
+				data, PEXPR_ARGX);
 		}
-		noPromptCond = pexpr_not(promptCondition_both, data);
+		noPromptCond = pexpr_not_share(promptCondition_both, data);
 	}
 
 	if (NPC_OPTIMISATION) {
-		struct fexpr *npc_fe = fexpr_create(data->sat_variable_nr++, FE_NPC, "");
-		struct pexpr *c;
+		struct fexpr *npc_fe =
+			fexpr_create(data->sat_variable_nr++, FE_NPC, "");
 
 		if (sym_is_choice(sym))
 			str_append(&npc_fe->name, "Choice_");
@@ -696,22 +811,29 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 
 		npc = pexf(npc_fe);
 
-		c = pexpr_implies(noPromptCond, npc, data);
-
-		if (!sym_is_choice_value(sym) && !sym_is_choice(sym))
+		if (!sym_is_choice_value(sym) && !sym_is_choice(sym)) {
+			struct pexpr *c =
+				pexpr_implies_share(noPromptCond, npc, data);
 			sym_add_constraint(sym, c, data);
+		}
 	} else {
+		pexpr_get(noPromptCond);
 		npc = noPromptCond;
 	}
 
 	defaults = get_defaults(sym, data);
 	default_y = get_default_y(defaults, data);
 	default_m = get_default_m(defaults, data);
-	default_both = pexpr_or(default_y, default_m, data);
+	default_both = pexpr_or_share(default_y, default_m, data);
 
 	/* tristate elements are only selectable as yes, if they are visible as yes */
 	if (sym->type == S_TRISTATE) {
-		struct pexpr *e1 = pexpr_implies(promptCondition_both, pexpr_implies(pexf(sym->fexpr_y), promptCondition_yes, data), data);
+		struct pexpr *e1 = pexpr_implies(
+			promptCondition_both,
+			pexpr_implies(pexf(sym->fexpr_y),
+					   promptCondition_yes, data,
+					   PEXPR_ARG1),
+			data, PEXPR_ARG2);
 
 		sym_add_constraint(sym, e1, data);
 	}
@@ -724,42 +846,64 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 		struct pexpr *e1, *e2, *e3;
 
 		if (sym->fexpr_sel_y != NULL) {
-			sel_y = pexpr_implies(pexf(sym->fexpr_y), pexf(sym->fexpr_sel_y), data);
-			sel_m = pexpr_implies(pexf(sym->fexpr_m), pexf(sym->fexpr_sel_m), data);
-			sel_both = pexpr_implies(pexf(sym->fexpr_y), pexpr_or(pexf(sym->fexpr_sel_m), pexf(sym->fexpr_sel_y), data), data);
+			sel_y = pexpr_implies(pexf(sym->fexpr_y),
+						   pexf(sym->fexpr_sel_y), data,
+						   PEXPR_ARGX);
+			sel_m = pexpr_implies(pexf(sym->fexpr_m),
+						   pexf(sym->fexpr_sel_m), data,
+						   PEXPR_ARGX);
+			sel_both = pexpr_implies(
+				pexf(sym->fexpr_y),
+				pexpr_or(pexf(sym->fexpr_sel_m),
+					      pexf(sym->fexpr_sel_y), data,
+					      PEXPR_ARGX),
+				data, PEXPR_ARGX);
 		} else {
 			sel_y = pexpr_not(pexf(sym->fexpr_y), data);
 			sel_m = pexpr_not(pexf(sym->fexpr_m), data);
+			pexpr_get(sel_y);
 			sel_both = sel_y;
 		}
 
-		c1 = pexpr_implies(pexpr_not(default_y, data), sel_y, data);
-		c2 = pexpr_implies(pexf(modules_sym->fexpr_y), c1, data);
-		c3 = pexpr_implies(npc, c2, data);
+		c1 = pexpr_implies(pexpr_not_share(default_y, data), sel_y,
+					data, PEXPR_ARG1);
+		c2 = pexpr_implies(pexf(modules_sym->fexpr_y), c1, data,
+					PEXPR_ARG1);
+		c3 = pexpr_implies_share(npc, c2, data);
 		sym_add_constraint(sym, c3, data);
 
-		d1 = pexpr_implies(pexpr_not(default_m, data), sel_m, data);
-		d2 = pexpr_implies(pexf(modules_sym->fexpr_y), d1, data);
-		d3 = pexpr_implies(npc, d2, data);
+		d1 = pexpr_implies(pexpr_not_share(default_m, data), sel_m,
+					data, PEXPR_ARG1);
+		d2 = pexpr_implies(pexf(modules_sym->fexpr_y), d1, data,
+					PEXPR_ARG1);
+		d3 = pexpr_implies_share(npc, d2, data);
 		sym_add_constraint(sym, d3, data);
 
-		e1 = pexpr_implies(pexpr_not(default_both, data), sel_both, data);
-		e2 = pexpr_implies(pexpr_not(pexf(modules_sym->fexpr_y), data), e1, data);
-		e3 = pexpr_implies(npc, e2, data);
+		e1 = pexpr_implies(pexpr_not_share(default_both, data),
+					sel_both, data, PEXPR_ARG1);
+		e2 = pexpr_implies(
+			pexpr_not(pexf(modules_sym->fexpr_y), data), e1,
+			data, PEXPR_ARG1);
+		e3 = pexpr_implies_share(npc, e2, data);
 		sym_add_constraint(sym, e3, data);
+		PEXPR_PUT(sel_y, sel_m, sel_both, c1, c2, d1, d2, e1, e2);
 	} else if (sym->type == S_BOOLEAN) {
 		struct pexpr *sel_y;
 		struct pexpr *e1, *e2;
 
 		if (sym->fexpr_sel_y != NULL)
-			sel_y = pexpr_implies(pexf(sym->fexpr_y), pexf(sym->fexpr_sel_y), data);
+			sel_y = pexpr_implies(pexf(sym->fexpr_y),
+						   pexf(sym->fexpr_sel_y), data,
+						   PEXPR_ARGX);
 		else
 			sel_y = pexpr_not(pexf(sym->fexpr_y), data);
 
-		e1 = pexpr_implies(pexpr_not(default_both, data), sel_y, data);
-		e2 = pexpr_implies(npc, e1, data);
+		e1 = pexpr_implies(pexpr_not_share(default_both, data),
+					sel_y, data, PEXPR_ARG1);
+		e2 = pexpr_implies_share(npc, e1, data);
 
 		sym_add_constraint_eq(sym, e2, data);
+		PEXPR_PUT(sel_y, e1);
 	} else {
 		/* if non-boolean is invisible and no default's condition is
 		 * fulfilled, then the symbol is not set */
@@ -768,13 +912,18 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 		struct pexpr *e2, *e3;
 
 		/* e1 = "sym is not set" */
-		for (struct fexpr_node *node = sym->nb_vals->head->next; node != NULL; node = node->next)
-			e1 = pexpr_and(e1, pexpr_not(pexf(node->elem), data), data);
+		for (struct fexpr_node *node = sym->nb_vals->head->next;
+		     node != NULL; node = node->next)
+			e1 = pexpr_and(
+				e1, pexpr_not(pexf(node->elem), data),
+				data, PEXPR_ARGX);
 
-		e2 = pexpr_implies(pexpr_not(default_any, data), e1, data);
-		e3 = pexpr_implies(npc, e2, data);
+		e2 = pexpr_implies(pexpr_not_share(default_any, data), e1,
+					data, PEXPR_ARG1);
+		e3 = pexpr_implies_share(npc, e2, data);
 
 		sym_add_constraint(sym, e3, data);
+		PEXPR_PUT(default_any, e1, e2);
 	}
 
 	/* if invisible and on by default, then a symbol can only be deactivated by its dependencies */
@@ -785,10 +934,19 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 		if (defaults->size == 0)
 			return;
 
-		e1 = pexpr_implies(npc, pexpr_implies(default_y, pexf(sym->fexpr_y), data), data);
+		e1 = pexpr_implies(npc,
+					pexpr_implies(default_y,
+							   pexf(sym->fexpr_y),
+							   data, PEXPR_ARG2),
+					data, PEXPR_ARG2);
 		sym_add_constraint(sym, e1, data);
 
-		e2 = pexpr_implies(npc, pexpr_implies(default_m, sym_get_fexpr_both(sym, data), data), data);
+		e2 = pexpr_implies(
+			npc,
+			pexpr_implies(default_m,
+					   sym_get_fexpr_both(sym, data), data,
+					   PEXPR_ARG2),
+			data, PEXPR_ARG2);
 		sym_add_constraint(sym, e2, data);
 	} else if (sym->type == S_BOOLEAN) {
 		struct pexpr *c;
@@ -797,12 +955,14 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 		if (defaults->size == 0)
 			return;
 
-		c = pexpr_implies(default_both, pexf(sym->fexpr_y), data);
+		c = pexpr_implies(default_both, pexf(sym->fexpr_y), data,
+				       PEXPR_ARG2);
 
 		// TODO tristate choice hack
 
-		c2 = pexpr_implies(npc, c, data);
+		c2 = pexpr_implies_share(npc, c, data);
 		sym_add_constraint(sym, c2, data);
+		PEXPR_PUT(c);
 	} else {
 		/* if non-boolean invisible, then it assumes the correct
 		 * default (if any). */
@@ -813,16 +973,23 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 		defm_list_for_each(node, defaults) {
 			f = node->elem->val;
 			cond = node->elem->e;
-			c = pexpr_implies(npc, pexpr_implies(cond, pexf(f), data), data);
+			c = pexpr_implies(npc,
+					       pexpr_implies(cond, pexf(f),
+								  data,
+								  PEXPR_ARG2),
+					       data, PEXPR_ARG2);
 			sym_add_constraint(sym, c, data);
 		}
 	}
+	PEXPR_PUT(promptCondition_yes, promptCondition_both, noPromptCond, npc,
+		  default_y, default_m, default_both);
 }
 
 /*
  * add the known values from the default and range properties
  */
-static void sym_add_nonbool_values_from_default_range(struct symbol *sym, struct cfdata *data)
+static void sym_add_nonbool_values_from_default_range(struct symbol *sym,
+						      struct cfdata *data)
 {
 	struct property *p;
 
@@ -852,8 +1019,11 @@ static void sym_add_nonbool_values_from_default_range(struct symbol *sym, struct
 static void sym_add_range_constraints(struct symbol *sym, struct cfdata *data)
 {
 	struct property *prop;
-	struct pexpr *prevs, *propCond;
-	struct pexpr_list *prevCond = pexpr_list_init();
+	struct pexpr *prevs;
+	struct pexpr *propCond;
+	struct pexpr_list *prevCond; // list of all conditions of the ranges
+		// from the previous iterations
+	prevCond = pexpr_list_init();
 
 	for_all_properties(sym, prop, P_RANGE) {
 		int base;
@@ -866,16 +1036,23 @@ static void sym_add_range_constraints(struct symbol *sym, struct cfdata *data)
 		prevs = pexf(data->constants->const_true);
 		propCond = prop_get_condition(prop, data);
 
+		// construct prevs as "none of the previous ranges' conditions
+		// were fulfilled but this range's condition is"
 		if (prevCond->size == 0) {
+			pexpr_get(propCond);
 			prevs = propCond;
 		} else {
 			struct pexpr_node *node;
 
 			pexpr_list_for_each(node, prevCond)
-				prevs = pexpr_and(pexpr_not(node->elem, data), prevs, data);
+				prevs = pexpr_and(pexpr_not_share(node->elem,
+								  data),
+						  prevs, data, PEXPR_ARGX);
 
-			prevs = pexpr_and(propCond, prevs, data);
+			prevs = pexpr_and(propCond, prevs, data,
+					       PEXPR_ARG2);
 		}
+		pexpr_get(propCond);
 		pexpr_list_add(prevCond, propCond);
 
 		switch (sym->type) {
@@ -907,10 +1084,20 @@ static void sym_add_range_constraints(struct symbol *sym, struct cfdata *data)
 				continue;
 
 			not_nb_val = pexpr_not(pexf(node->elem), data);
-			c = pexpr_implies(prevs, not_nb_val, data);
+			c = pexpr_implies_share(prevs, not_nb_val, data);
 			sym_add_constraint(sym, c, data);
+			pexpr_put(not_nb_val);
 		}
+		PEXPR_PUT(prevs, propCond);
 	}
+
+	/* free prevCond */
+	struct pexpr_node *node;
+
+	pexpr_list_for_each(node, prevCond)
+		pexpr_put(node->elem);
+	pexpr_list_free(prevCond);
+
 }
 
 /*
@@ -928,7 +1115,7 @@ static void sym_nonbool_at_least_1(struct symbol *sym, struct cfdata *data)
 		if (node->prev == NULL)
 			e = pexf(node->elem);
 		else
-			e = pexpr_or(e, pexf(node->elem), data);
+			e = pexpr_or(e, pexf(node->elem), data, PEXPR_ARGX);
 	}
 	sym_add_constraint(sym, e, data);
 }
@@ -943,22 +1130,29 @@ static void sym_nonbool_at_most_1(struct symbol *sym, struct cfdata *data)
 	if (!sym_is_nonboolean(sym))
 		return;
 
+	/* iterate over all subsets of sym->nb_vals of size 2 */
 	fexpr_list_for_each(node1, sym->nb_vals) {
 		struct pexpr *e1 = pexf(node1->elem);
 
-		for (struct fexpr_node *node2 = node1->next; node2 != NULL; node2 = node2->next) {
+		for (struct fexpr_node *node2 = node1->next; node2 != NULL;
+		     node2 = node2->next) {
 			struct pexpr *e2 = pexf(node2->elem);
-			struct pexpr *e = pexpr_or(pexpr_not(e1, data), pexpr_not(e2, data), data);
+			struct pexpr *e = pexpr_or(pexpr_not_share(e1, data),
+						   pexpr_not_share(e2, data),
+						   data, PEXPR_ARGX);
 
 			sym_add_constraint(sym, e, data);
+			pexpr_put(e2);
 		}
+		pexpr_put(e1);
 	}
 }
 
 /*
  * a visible prompt for a non-boolean implies a value for the symbol
  */
-static void sym_add_nonbool_prompt_constraint(struct symbol *sym, struct cfdata *data)
+static void sym_add_nonbool_prompt_constraint(struct symbol *sym,
+					      struct cfdata *data)
 {
 	struct property *prompt;
 	struct pexpr *promptCondition;
@@ -972,17 +1166,20 @@ static void sym_add_nonbool_prompt_constraint(struct symbol *sym, struct cfdata 
 	promptCondition = prop_get_condition(prompt, data);
 	n = pexf(sym_get_nonbool_fexpr(sym, "n"));
 
-	if (n->type != PE_SYMBOL)
-		return;
-	if (n->left.fexpr == NULL)
-		return;
+	if (n->type != PE_SYMBOL || n->left.fexpr == NULL)
+		goto cleanup;
 
-	c = pexpr_implies(promptCondition, pexpr_not(n, data), data);
+	c = pexpr_implies(promptCondition, pexpr_not_share(n, data), data,
+			  PEXPR_ARG2);
 
 	sym_add_constraint(sym, c, data);
+
+cleanup:
+	PEXPR_PUT(n, promptCondition);
 }
 
-static struct default_map *create_default_map_entry(struct fexpr *val, struct pexpr *e)
+static struct default_map *create_default_map_entry(struct fexpr *val,
+						    struct pexpr *e)
 {
 	struct default_map *map = malloc(sizeof(struct default_map));
 
@@ -1002,37 +1199,46 @@ static struct default_map *create_default_map_entry(struct fexpr *val, struct pe
  * pointer as the @val argument.
  *
  * Return: The condition &default_map.e of the found entry, or
- * ``pexf(constants->const_false)`` if none was found
+ * ``pexf(constants->const_false)`` if none was found. To be pexpr_put() by the
+ * caller.
  */
-static struct pexpr *findDefaultEntry(struct fexpr *val, struct defm_list *defaults, struct constants *constants)
+static struct pexpr *findDefaultEntry(struct fexpr *val,
+				      struct defm_list *defaults,
+				      struct constants *constants)
 {
 	struct defm_node *node;
 
-	defm_list_for_each(node, defaults)
-		if (val == node->elem->val)
+	defm_list_for_each(node, defaults) {
+		if (val == node->elem->val) {
+			pexpr_get(node->elem->e);
 			return node->elem->e;
+		}
+	}
 
 	return pexf(constants->const_false);
 }
 
-static struct pexpr *covered; /* accumulated during execution of add_defaults(), a
-				 disjunction of the conditions for all default
-				 props */
+/*
+ * accumulated during execution of add_defaults(), a disjunction of the
+ * conditions for all default props of a symbol
+ */
+static struct pexpr *covered;
 
 static bool is_tri_as_num(struct symbol *sym)
 {
 	if (!sym->name)
 		return false;
 
-	return !strcmp(sym->name, "0") ||
-		!strcmp(sym->name, "1") ||
-		!strcmp(sym->name, "2");
+	return !strcmp(sym->name, "0")
+		|| !strcmp(sym->name, "1")
+		|| !strcmp(sym->name, "2");
 }
 
 /**
  * add_to_default_map() - Add to or update an entry in a default list
  */
-static void add_to_default_map(struct defm_list *defaults, struct default_map *entry, struct symbol *sym)
+static void add_to_default_map(struct defm_list *defaults,
+			       struct default_map *entry, struct symbol *sym)
 {
 	/* as this is a map, the entry must be replaced if it already exists */
 	if (sym_is_boolean(sym)) {
@@ -1065,25 +1271,29 @@ static void add_to_default_map(struct defm_list *defaults, struct default_map *e
 /**
  * updateDefaultList() - Update a default list with a new value-condition pair
  * @val: The value whose condition will be updated
- * @newCond: The condition of the default prop. Does not include the condition that the
- * earlier default's conditions are not fulfilled.
+ * @newCond: The condition of the default prop. Does not include the condition
+ * that the earlier default's conditions are not fulfilled.
  * @result: the default list
  * @sym: the symbol that the defaults belong to
  *
  * Update the condition that @val will be used for @sym by considering the next
- * default property with condition @newCond.
+ * default property, whose condition is given by @newCond.
  */
-static void updateDefaultList(struct fexpr *val, struct pexpr *newCond, struct defm_list *result, struct symbol *sym, struct cfdata *data)
+static void updateDefaultList(struct fexpr *val, struct pexpr *newCond,
+			      struct defm_list *result, struct symbol *sym,
+			      struct cfdata *data)
 {
 	// The current condition of @val deduced from the previous default props
 	struct pexpr *prevCond = findDefaultEntry(val, result, data->constants);
 	// New combined condition for @val
-	struct pexpr *condUseVal = pexpr_or(prevCond, pexpr_and(newCond,
-				pexpr_not(covered, data), data), data);
+	struct pexpr *condUseVal = pexpr_or(
+		prevCond, pexpr_and(newCond, pexpr_not_share(covered, data), data, PEXPR_ARG2),
+		data, PEXPR_ARG2);
 	struct default_map *entry = create_default_map_entry(val, condUseVal);
 
 	add_to_default_map(result, entry, sym);
-	covered = pexpr_or(covered, newCond, data);
+	covered = pexpr_or(covered, newCond, data, PEXPR_ARG1);
+	PEXPR_PUT(prevCond);
 }
 
 /**
@@ -1103,7 +1313,9 @@ static void updateDefaultList(struct fexpr *val, struct pexpr *newCond, struct d
  * all default values (as well as the @symbol->nb_vals of other symbols @sym has
  * as default (recursively)).
  */
-static void add_defaults(struct prop_list *defaults, struct expr *ctx, struct defm_list *result, struct symbol *sym, struct cfdata *data)
+static void add_defaults(struct prop_list *defaults, struct expr *ctx,
+			 struct defm_list *result, struct symbol *sym,
+			 struct cfdata *data)
 {
 	struct prop_node *node;
 	struct property *p;
@@ -1122,20 +1334,32 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx, struct de
 			if (ctx == NULL)
 				expr = expr_alloc_symbol(&symbol_yes);
 			else
-				expr = expr_alloc_and(expr_alloc_symbol(&symbol_yes), ctx);
+				expr = expr_alloc_and(
+					expr_alloc_symbol(&symbol_yes), ctx);
 		}
+		// TODOle free expr's
 
 		/* if tristate and def.value = y */
-		if (p->expr->type == E_SYMBOL && sym->type == S_TRISTATE && p->expr->left.sym == &symbol_yes) {
-			struct pexpr *expr_y = expr_calculate_pexpr_y(expr, data);
-			struct pexpr *expr_m = expr_calculate_pexpr_m(expr, data);
+		if (p->expr->type == E_SYMBOL && sym->type == S_TRISTATE &&
+		    p->expr->left.sym == &symbol_yes) {
+			struct pexpr *expr_y =
+				expr_calculate_pexpr_y(expr, data);
+			struct pexpr *expr_m =
+				expr_calculate_pexpr_m(expr, data);
 
-			updateDefaultList(data->constants->symbol_yes_fexpr, expr_y, result, sym, data);
-			updateDefaultList(data->constants->symbol_mod_fexpr, expr_m, result, sym, data);
+			updateDefaultList(data->constants->symbol_yes_fexpr,
+					  expr_y, result, sym, data);
+			updateDefaultList(data->constants->symbol_mod_fexpr,
+					  expr_m, result, sym, data);
+			PEXPR_PUT(expr_y, expr_m);
 		}
 		/* if def.value = n/m/y */
-		else if (p->expr->type == E_SYMBOL && sym_is_tristate_constant(p->expr->left.sym) && sym_is_boolean(sym)) {
+		else if (p->expr->type == E_SYMBOL &&
+			 sym_is_tristate_constant(p->expr->left.sym) &&
+			 sym_is_boolean(sym)) {
 			struct fexpr *s;
+			struct pexpr *expr_both =
+				expr_calculate_pexpr_both(expr, data);
 
 			if (p->expr->left.sym == &symbol_yes)
 				s = data->constants->symbol_yes_fexpr;
@@ -1144,15 +1368,16 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx, struct de
 			else
 				s = data->constants->symbol_no_fexpr;
 
-			updateDefaultList(s, expr_calculate_pexpr_both(expr, data), result, sym, data);
+			updateDefaultList(s, expr_both, result, sym, data);
+			pexpr_put(expr_both);
 		}
 		/* if def.value = n/m/y, but written as 0/1/2 for a boolean */
-		else if (sym_is_boolean(sym) &&
-			p->expr->type == E_SYMBOL &&
-			p->expr->left.sym->type == S_UNKNOWN &&
-			is_tri_as_num(p->expr->left.sym)) {
-
+		else if (sym_is_boolean(sym) && p->expr->type == E_SYMBOL &&
+			 p->expr->left.sym->type == S_UNKNOWN &&
+			 is_tri_as_num(p->expr->left.sym)) {
 			struct fexpr *s;
+			struct pexpr *expr_both =
+				expr_calculate_pexpr_both(expr, data);
 
 			if (!strcmp(p->expr->left.sym->name, "0"))
 				s = data->constants->symbol_no_fexpr;
@@ -1161,25 +1386,36 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx, struct de
 			else
 				s = data->constants->symbol_yes_fexpr;
 
-			updateDefaultList(s, expr_calculate_pexpr_both(expr, data), result, sym, data);
+			updateDefaultList(s, expr_both, result, sym, data);
+			pexpr_put(expr_both);
 		}
 		/* if def.value = non-boolean constant */
 		else if (expr_is_nonbool_constant(p->expr)) {
-			struct fexpr *s = sym_get_or_create_nonbool_fexpr(sym, p->expr->left.sym->name, data);
+			struct fexpr *s = sym_get_or_create_nonbool_fexpr(
+				sym, p->expr->left.sym->name, data);
+			struct pexpr *expr_both =
+				expr_calculate_pexpr_both(expr, data);
 
-			updateDefaultList(s, expr_calculate_pexpr_both(expr, data), result, sym, data);
+			updateDefaultList(s, expr_both, result, sym, data);
+			pexpr_put(expr_both);
 		}
 		/* any expression which evaluates to n/m/y for a tristate */
 		else if (sym->type == S_TRISTATE) {
 			struct expr *e_tmp = expr_alloc_and(p->expr, expr);
-			struct pexpr *expr_y = expr_calculate_pexpr_y(e_tmp, data);
-			struct pexpr *expr_m = expr_calculate_pexpr_m(e_tmp, data);
+			struct pexpr *expr_y =
+				expr_calculate_pexpr_y(e_tmp, data);
+			struct pexpr *expr_m =
+				expr_calculate_pexpr_m(e_tmp, data);
 
-			updateDefaultList(data->constants->symbol_yes_fexpr, expr_y, result, sym, data);
-			updateDefaultList(data->constants->symbol_mod_fexpr, expr_m, result, sym, data);
+			updateDefaultList(data->constants->symbol_yes_fexpr,
+					  expr_y, result, sym, data);
+			updateDefaultList(data->constants->symbol_mod_fexpr,
+					  expr_m, result, sym, data);
+			PEXPR_PUT(expr_y, expr_m);
 		}
 		/* if non-boolean && def.value = non-boolean symbol */
-		else if (p->expr->type == E_SYMBOL && sym_is_nonboolean(sym) && sym_is_nonboolean(p->expr->left.sym)) {
+		else if (p->expr->type == E_SYMBOL && sym_is_nonboolean(sym) &&
+			 sym_is_nonboolean(p->expr->left.sym)) {
 			struct prop_list *nb_sym_defaults = prop_list_init();
 			struct property *p_tmp;
 
@@ -1189,13 +1425,18 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx, struct de
 				prop_list_add(nb_sym_defaults, p_tmp);
 
 			add_defaults(nb_sym_defaults, expr, result, sym, data);
+			prop_list_free(nb_sym_defaults);
 		}
 		/* any expression which evaluates to n/m/y */
 		else {
 			struct expr *e_tmp = expr_alloc_and(p->expr, expr);
-			struct pexpr *expr_both = expr_calculate_pexpr_both(e_tmp, data);
+			struct pexpr *expr_both =
+				expr_calculate_pexpr_both(e_tmp, data);
 
-			updateDefaultList(data->constants->symbol_yes_fexpr, expr_both, result, sym, data);
+			updateDefaultList(data->constants->symbol_yes_fexpr,
+					  expr_both, result, sym, data);
+
+			pexpr_put(expr_both);
 		}
 	}
 }
@@ -1226,6 +1467,8 @@ static struct defm_list *get_defaults(struct symbol *sym, struct cfdata *data)
 		prop_list_add(defaults, p);
 
 	add_defaults(defaults, NULL, result, sym, data);
+	prop_list_free(defaults);
+	pexpr_put(covered);
 
 	return result;
 }
@@ -1240,8 +1483,11 @@ static struct pexpr *get_default_y(struct defm_list *list, struct cfdata *data)
 
 	defm_list_for_each(node, list) {
 		entry = node->elem;
-		if (entry->val->type == FE_SYMBOL && entry->val->sym == &symbol_yes)
+		if (entry->val->type == FE_SYMBOL &&
+		    entry->val->sym == &symbol_yes) {
+			pexpr_get(entry->e);
 			return entry->e;
+		}
 	}
 
 	return pexf(data->constants->const_false);
@@ -1257,8 +1503,11 @@ static struct pexpr *get_default_m(struct defm_list *list, struct cfdata *data)
 
 	defm_list_for_each(node, list) {
 		entry = node->elem;
-		if (entry->val->type == FE_SYMBOL && entry->val->sym == &symbol_mod)
+		if (entry->val->type == FE_SYMBOL &&
+		    entry->val->sym == &symbol_mod) {
+			pexpr_get(entry->e);
 			return entry->e;
+		}
 	}
 
 	return pexf(data->constants->const_false);
@@ -1284,9 +1533,11 @@ static struct pexpr *get_default_any(struct symbol *sym, struct cfdata *data)
 			e = expr_alloc_symbol(&symbol_yes);
 
 		if (expr_can_evaluate_to_mod(e))
-			p = pexpr_or(p, expr_calculate_pexpr_both(e, data), data);
+			p = pexpr_or(p, expr_calculate_pexpr_both(e, data),
+				     data, PEXPR_ARGX);
 
-		p = pexpr_or(p, expr_calculate_pexpr_y(e, data), data);
+		p = pexpr_or(p, expr_calculate_pexpr_y(e, data), data,
+			     PEXPR_ARGX);
 	}
 
 	return p;
@@ -1332,17 +1583,20 @@ unsigned int count_counstraints(void)
 /*
  * add a constraint for a symbol
  */
-void sym_add_constraint(struct symbol *sym, struct pexpr *constraint, struct cfdata *data)
+void sym_add_constraint(struct symbol *sym, struct pexpr *constraint,
+			struct cfdata *data)
 {
 	if (!constraint)
 		return;
 
 	/* no need to add that */
-	if (constraint->type == PE_SYMBOL && constraint->left.fexpr == data->constants->const_true)
+	if (constraint->type == PE_SYMBOL &&
+	    constraint->left.fexpr == data->constants->const_true)
 		return;
 
 	/* this should never happen */
-	if (constraint->type == PE_SYMBOL && constraint->left.fexpr == data->constants->const_false)
+	if (constraint->type == PE_SYMBOL &&
+	    constraint->left.fexpr == data->constants->const_false)
 		perror("Adding const_false.");
 
 	pexpr_list_add(sym->constraints, constraint);
@@ -1354,7 +1608,8 @@ void sym_add_constraint(struct symbol *sym, struct pexpr *constraint, struct cfd
 /*
  * add a constraint for a symbol, but check for duplicate constraints
  */
-void sym_add_constraint_eq(struct symbol *sym, struct pexpr *constraint, struct cfdata *data)
+void sym_add_constraint_eq(struct symbol *sym, struct pexpr *constraint,
+			   struct cfdata *data)
 {
 	struct pexpr_node *node;
 
@@ -1362,11 +1617,13 @@ void sym_add_constraint_eq(struct symbol *sym, struct pexpr *constraint, struct 
 		return;
 
 	/* no need to add that */
-	if (constraint->type == PE_SYMBOL && constraint->left.fexpr == data->constants->const_true)
+	if (constraint->type == PE_SYMBOL &&
+	    constraint->left.fexpr == data->constants->const_true)
 		return;
 
 	/* this should never happen */
-	if (constraint->type == PE_SYMBOL && constraint->left.fexpr == data->constants->const_false)
+	if (constraint->type == PE_SYMBOL &&
+	    constraint->left.fexpr == data->constants->const_false)
 		perror("Adding const_false.");
 
 	/* check the constraints for the same symbol */

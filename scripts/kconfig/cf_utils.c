@@ -345,7 +345,8 @@ struct property *sym_get_prompt(struct symbol *sym)
 }
 
 /*
- * return the condition for the property, True if there is none
+ * return the condition for the property, NULL if there is none. To be pexpr_put
+ * by caller.
  */
 struct pexpr *prop_get_condition(struct property *prop, struct cfdata *data)
 {
