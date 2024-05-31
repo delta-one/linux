@@ -3,6 +3,7 @@
  * Copyright (C) 2023 Patrick Franz <deltaone@debian.org>
  */
 
+#include "cf_expr.h"
 #define _GNU_SOURCE
 #include <assert.h>
 #include <locale.h>
@@ -144,6 +145,7 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 	}
 
 	sdv_list_free(data.sdv_symbols);
+	sym_list_free(conflict_syms);
 
 	return ret;
 }

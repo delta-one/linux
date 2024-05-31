@@ -6,6 +6,9 @@
 #ifndef CF_RANGEFIX_H
 #define CF_RANGEFIX_H
 
+#include "picosat.h"
+#include "cf_defs.h"
+
 /* initialize RangeFix and return the diagnoses */
 struct sfl_list *rangefix_run(PicoSAT *pico, struct cfdata *data);
 

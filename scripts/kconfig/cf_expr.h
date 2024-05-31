@@ -40,6 +40,7 @@
 /* from list.h. The header can't be used directly due to C++ incompatibility. */
 #define PEXPR_SAME_TYPE(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
 
+/* initializes e which is of type ``struct pexpr *`` */
 #define PEXPR(e, type, left_e, right_e, ref_count)                            \
 	({                                                                    \
 		_Static_assert((PEXPR_SAME_TYPE((left_e), (e)->left.pexpr) || \
@@ -55,16 +56,8 @@
 				 (ref_count));                                \
 	})
 
+/* call pexpr_put for a list of pexpr's */
 #define PEXPR_PUT(...) _pexpr_put_list((struct pexpr *[]){ __VA_ARGS__, NULL })
-
-/*
- * For functions that construct nested pexpr expressions.
- */
-enum pexpr_move {
-	PEXPR_ARG1,	/* put reference to first pexpr */
-	PEXPR_ARG2,	/* put reference to second pexpr */
-	PEXPR_ARGX	/* put all references to pexpr's */
-};
 
 /* create a fexpr */
 struct fexpr *fexpr_create(int satval, enum fexpr_type type, char *name);
@@ -262,8 +255,8 @@ void pexpr_list_print(char *title, struct pexpr_list *list);
 /* free an fexpr_list */
 void fexpr_list_free(struct fexpr_list *list);
 
-/* free an pexpr_list */
-void pexpr_list_free(struct pexpr_list *list);
+/* free an pexpr_list (and pexpr_put the elements) */
+void pexpr_list_free_put(struct pexpr_list *list);
 
 /* free an fexl_list */
 void fexl_list_free(struct fexl_list *list);
@@ -274,15 +267,17 @@ void sdv_list_free(struct sdv_list *list);
 /* free a prop_list */
 void prop_list_free(struct prop_list *list);
 
+/* free a defm_list (and pexpr_put the conditions of the maps) */
+void defm_list_free_put(struct defm_list *list);
+
+/* free a sym_list */
+void sym_list_free(struct sym_list *list);
+
 /* check whether 2 pexpr are equal */
 bool pexpr_eq(struct pexpr *e1, struct pexpr *e2, struct cfdata *data);
 
 /* copy a pexpr */
 struct pexpr *pexpr_deep_copy(const struct pexpr *org);
-
-void pexpr_shallow_copy_assign(struct pexpr *dest, struct pexpr *org);
-
-struct pexpr *pexpr_shallow_copy_construct(struct pexpr *org);
 
 void _pexpr_construct(struct pexpr *e, enum pexpr_type type, void *left,
 		      void *right, unsigned int ref_count);
@@ -290,9 +285,12 @@ void _pexpr_construct(struct pexpr *e, enum pexpr_type type, void *left,
 /* free a pexpr */
 void pexpr_free_depr(struct pexpr *e);
 
+/* give up a reference to e. Also see struct pexpr. */
 void pexpr_put(struct pexpr *e);
+/* Used by PEXPR_PUT(). Not to be used directly. */
 void _pexpr_put_list(struct pexpr **es);
 
+/* acquire a reference to e. Also see struct pexpr. */
 void pexpr_get(struct pexpr *e);
 
 /* print a pexpr  */
@@ -300,8 +298,6 @@ void pexpr_print(char *tag, struct pexpr *e, int prevtoken);
 
 /* convert a fexpr to a pexpr */
 struct pexpr *pexf(struct fexpr *fe);
-
-struct pexpr *pexf2(struct fexpr *fe, struct pexpr *pe);
 
 /* eliminate duplicate and redundant operands */
 struct pexpr *pexpr_eliminate_dups(struct pexpr *e, struct cfdata *data);

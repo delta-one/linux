@@ -3,6 +3,8 @@
  * Copyright (C) 2023 Patrick Franz <deltaone@debian.org>
  */
 
+#include "cf_defs.h"
+#include "cf_expr.h"
 #define _GNU_SOURCE
 #include <assert.h>
 #include <locale.h>
@@ -14,7 +16,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#include "configfix.h"
+#include "cf_rangefix.h"
 #include "internal.h"
 #include "cf_utils.h"
 
@@ -26,7 +28,6 @@
 #define MINIMISE_DIAGNOSES false
 #define MINIMISE_UNSAT_CORE true
 
-static struct fexl_list *diagnoses;
 static struct sfl_list *diagnoses_symbol;
 
 static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data);
@@ -35,7 +36,7 @@ static void add_fexpr_to_constraint_set(struct fexpr_list *C, struct cfdata *dat
 static void set_assumptions(PicoSAT *pico, struct fexpr_list *c, struct cfdata *data);
 static void fexpr_add_assumption(PicoSAT *pico, struct fexpr *e, int satval);
 static struct fexpr_list *get_unsat_core_soft(PicoSAT *pico, struct cfdata *data);
-static struct fexpr_list *minimise_unsat_core(PicoSAT *pico, struct fexpr_list *C, struct cfdata *data);
+static void minimise_unsat_core(PicoSAT *pico, struct fexpr_list *C, struct cfdata *data);
 
 
 static struct fexpr_list *get_difference(struct fexpr_list *C, struct fexpr_list *E0);
@@ -67,6 +68,8 @@ struct sfl_list *rangefix_run(PicoSAT *pico, struct cfdata *data)
 {
 	clock_t start, end;
 	double time;
+	struct fexl_list *diagnoses;
+	struct fexl_node *node;
 
 	printd("Starting RangeFix...\n");
 	printd("Generating diagnoses...");
@@ -92,6 +95,10 @@ struct sfl_list *rangefix_run(PicoSAT *pico, struct cfdata *data)
 		diagnoses_symbol = convert_diagnoses(diagnoses, data);
 
 	printd("\n");
+
+	fexpr_list_for_each(node, diagnoses)
+		fexpr_list_free(node->elem);
+	fexl_list_free(diagnoses);
 
 	return diagnoses_symbol;
 }
@@ -137,6 +144,7 @@ static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data)
 		nr_of_assumptions = 0;
 		nr_of_assumptions_true = 0;
 		set_assumptions(pico, c, data);
+		fexpr_list_free(c);
 
 		res = picosat_sat(pico, -1);
 
@@ -149,8 +157,6 @@ static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data)
 				fexl_list_add(R, E0);
 			else
 				fexpr_list_free(E0);
-
-			fexpr_list_free(c);
 
 			if (R->size >= MAX_DIAGNOSES)
 				goto DIAGNOSES_FOUND;
@@ -182,7 +188,7 @@ static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data)
 
 		/* minimise the unsat core */
 		if (MINIMISE_UNSAT_CORE)
-			X = minimise_unsat_core(pico, X, data);
+			minimise_unsat_core(pico, X, data);
 
 		if (PRINT_UNSAT_CORE)
 			print_unsat_core(X);
@@ -233,6 +239,7 @@ static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data)
 				}
 
 				fexl_list_free(E_R_Union);
+				fexpr_list_free(x_set);
 
 				/* ∄ E" ⊆ E' */
 				if (!E2_subset_of_E1)
@@ -248,11 +255,13 @@ static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data)
 			node = tmp;
 		}
 		fexpr_list_free(X);
-		fexpr_list_free(c);
 	}
 
+	struct fexl_node *node;
 DIAGNOSES_FOUND:
 	fexpr_list_free(C);
+	fexl_list_for_each(node, E)
+		fexpr_list_free(node->elem);
 	fexl_list_free(E);
 
 	return R;
@@ -263,7 +272,6 @@ DIAGNOSES_FOUND:
  */
 static void add_fexpr_to_constraint_set(struct fexpr_list *C, struct cfdata *data)
 {
-	unsigned int nr_sym = 0, nr_fexpr = 0;
 	struct symbol *sym;
 
 	for_all_symbols(sym) {
@@ -281,22 +289,16 @@ static void add_fexpr_to_constraint_set(struct fexpr_list *C, struct cfdata *dat
 		if (!sym->name || !sym_has_prompt(sym))
 			continue;
 
-		nr_sym++;
-
-		if (sym->type == S_BOOLEAN) {
+		if (sym->type == S_BOOLEAN)
 			fexpr_list_add(C, sym->fexpr_y);
-			nr_fexpr++;
-		} else if (sym->type == S_TRISTATE) {
+		else if (sym->type == S_TRISTATE) {
 			fexpr_list_add(C, sym->fexpr_y);
 			fexpr_list_add(C, sym->fexpr_m);
-			nr_fexpr += 2;
 		} else if (sym->type == S_INT || sym->type == S_HEX || sym->type == S_STRING) {
 			struct fexpr_node *node;
 
-			fexpr_list_for_each(node, sym->nb_vals) {
+			fexpr_list_for_each(node, sym->nb_vals)
 				fexpr_list_add(C, node->elem);
-				nr_fexpr++;
-			}
 		} else {
 			perror("Error adding variables to constraint set C.");
 		}
@@ -502,21 +504,21 @@ static struct fexpr_list *get_unsat_core_soft(PicoSAT *pico, struct cfdata *data
 /*
  * minimise the unsat core C
  */
-static struct fexpr_list *minimise_unsat_core(PicoSAT *pico, struct fexpr_list *C, struct cfdata *data)
+static void minimise_unsat_core(PicoSAT *pico, struct fexpr_list *C, struct cfdata *data)
 {
 	struct fexpr_list *c_set;
 	struct fexpr_node *node, *tmp;
 
 	/* no need to check further */
 	if (C->size == 1)
-		return C;
+		return;
 
 	for (node = C->head; node != NULL;) {
 		struct fexpr_list *t;
 		int res;
 
 		if (C->size == 1)
-			return C;
+			return;
 
 		/* create C\c */
 		c_set = fexpr_list_init();
@@ -539,7 +541,7 @@ static struct fexpr_list *minimise_unsat_core(PicoSAT *pico, struct fexpr_list *
 		fexpr_list_free(t);
 	}
 
-	return C;
+	return;
 }
 
 
@@ -883,12 +885,17 @@ static struct sfl_list *minimise_diagnoses(PicoSAT *pico, struct fexl_list *diag
 	fexl_list_for_each(flnode, diagnoses) {
 		struct fexpr_node *fnode;
 		struct sfix_node *snode;
+		struct fexpr_list *C_without_d;
 		int res;
 
 		d = flnode->elem;
 
 		/* set assumptions for those symbols that don't need to be changed */
-		set_assumptions(pico, get_difference(C, d), data);
+		C_without_d = get_difference(C, d);
+		set_assumptions(pico, C_without_d, data);
+		fexpr_list_free(C_without_d);
+		fexpr_list_free(C);
+
 
 		/* flip the assumptions from the diagnosis */
 		fexpr_list_for_each(fnode, d) {

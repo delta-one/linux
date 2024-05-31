@@ -22,6 +22,15 @@ extern bool stop_rangefix;
 		printf(fmt); \
 } while (0)
 
+/*
+ * For functions that construct nested pexpr expressions.
+ */
+enum pexpr_move {
+	PEXPR_ARG1,	/* put reference to first pexpr */
+	PEXPR_ARG2,	/* put reference to second pexpr */
+	PEXPR_ARGX	/* put all references to pexpr's */
+};
+
 
 /* different types for f_expr */
 enum fexpr_type {
@@ -56,11 +65,6 @@ struct fexpr {
 		/* symbol */
 		struct {
 			tristate tri;
-		};
-		/* AND, OR, NOT */
-		struct {
-			struct fexpr *left;
-			struct fexpr *right; /* not used for NOT */
 		};
 		/* EQUALS */
 		struct {
@@ -107,6 +111,28 @@ union pexpr_data {
 	struct fexpr *fexpr;
 };
 
+/**
+ * struct pexpr - a node in a tree representing a propositional formula
+ * @type: Type of the node
+ * @left: left-hand-side for AND and OR, the unique operand for NOT, and for
+ * SYMBOL it contains the fpexpr.
+ * @right: right-hand-side for AND and OR
+ * @ref_count: Number of calls to pexpr_put() that need to effectuated with this
+ * pexpr for it to get free'd.
+ *
+ * Functions that return new struct pexpr instances (like pexpr_or(),
+ * pexpr_or_share(), pexf(), ...) set @ref_count in a way that accounts for the
+ * new reference that they return (e.g. pexf() will always set it to 1).
+ * Functions with arguments of type ``struct pexpr *`` will generally keep the
+ * reference intact, so that for example
+ * ``e = pexf(sym); not_e = pexpr_not_share(e)`` would require
+ * ``pexpr_put(not_e)`` before not_e can be free'd and additionally
+ * ``pexpr_put(e)`` for e to get free'd. Some functions take an argument of type
+ * ``enum pexpr_move`` which function as a wrapper of sorts that first executes
+ * a function and then pexpr_put's the argument(s) specified by the
+ * ``enum pexpr_move`` argument (e.g. the normal function for OR is
+ * pexpr_or_share() and the wrapper is pexpr_or()).
+ */
 struct pexpr {
 	enum pexpr_type type;
 	union pexpr_data left, right;
@@ -125,8 +151,10 @@ struct pexpr_node {
 
 /**
  * struct default_map - Map entry from default values to their condition
- * @val: value of the default property
- * @e: condition that implies that the symbol assumes the @val
+ * @val: value of the default property. Not 'owned' by this this struct and
+ * therefore shouldn't be free'd.
+ * @e: condition that implies that the symbol assumes the @val. Needs to be
+ * pexpr_put when free'ing.
  */
 struct default_map {
 	struct fexpr *val;

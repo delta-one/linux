@@ -225,6 +225,7 @@ static void create_fexpr_choice(struct symbol *sym, struct cfdata *data)
 		fexpr_m = data->constants->const_false;
 	}
 	sym->fexpr_m = fexpr_m;
+	free(name);
 }
 
 /*
@@ -1945,6 +1946,23 @@ void fexpr_list_free(struct fexpr_list *list)
 }
 
 /*
+ * free an defm_list (and pexpr_put the conditions of the maps)
+ */
+void defm_list_free_put(struct defm_list *list)
+{
+	struct defm_node *node = list->head, *tmp;
+
+	while (node != NULL) {
+		tmp = node->next;
+		pexpr_put(node->elem->e);
+		free(node);
+		node = tmp;
+	}
+
+	free(list);
+}
+
+/*
  * free an fexl_list
  */
 void fexl_list_free(struct fexl_list *list)
@@ -1977,14 +1995,15 @@ void sdv_list_free(struct sdv_list *list)
 }
 
 /*
- * free a pexpr_list
+ * free a pexpr_list (and pexpr_put the elements)
  */
-void pexpr_list_free(struct pexpr_list *list)
+void pexpr_list_free_put(struct pexpr_list *list)
 {
 	struct pexpr_node *node = list->head, *tmp;
 
 	while (node != NULL) {
 		tmp = node->next;
+		pexpr_put(node->elem);
 		free(node);
 		node = tmp;
 	}
@@ -1998,6 +2017,22 @@ void pexpr_list_free(struct pexpr_list *list)
 void prop_list_free(struct prop_list *list)
 {
 	struct prop_node *node = list->head, *tmp;
+
+	while (node != NULL) {
+		tmp = node->next;
+		free(node);
+		node = tmp;
+	}
+
+	free(list);
+}
+
+/*
+ * free a sym_list
+ */
+void sym_list_free(struct sym_list *list)
+{
+	struct sym_node *node = list->head, *tmp;
 
 	while (node != NULL) {
 		tmp = node->next;
@@ -2212,10 +2247,13 @@ void pexpr_put(struct pexpr *e)
 	free(e);
 }
 
+/*
+ * calls pexpr_put for a NULL-terminated array of struct pexpr *
+ */
 void _pexpr_put_list(struct pexpr **es)
 {
-	while (*es)
-		pexpr_put(*es++);
+	for (; *es != NULL; es++)
+		pexpr_put(*es);
 }
 
 #define e1 (*ep1)
@@ -2378,15 +2416,6 @@ struct pexpr *pexf(struct fexpr *fe)
 {
 	struct pexpr *pe = xcalloc(1, sizeof(*pe));
 
-	return pexf2(fe, pe);
-}
-
-/*
- * like pexf2 but it overwrites @pe and return it instead of allocating new
- * memory
- */
-struct pexpr *pexf2(struct fexpr *fe, struct pexpr *pe)
-{
 	PEXPR(pe, PE_SYMBOL, fe, NULL, 1);
 	return pe;
 }

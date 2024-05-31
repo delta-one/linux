@@ -92,21 +92,21 @@ static void init_constraints(struct cfdata *data)
 
 		if (sym_is_boolean(sym)) {
 			for_all_properties(sym, p, P_SELECT)
-				expr_calculate_pexpr_both(p->visible.expr,
-							  data);
+				pexpr_put(expr_calculate_pexpr_both(p->visible.expr,
+							  data));
 
 			for_all_properties(sym, p, P_IMPLY)
-				expr_calculate_pexpr_both(p->visible.expr,
-							  data);
+				pexpr_put(expr_calculate_pexpr_both(p->visible.expr,
+							  data));
 		}
 
 		if (sym->dir_dep.expr)
-			expr_calculate_pexpr_both(sym->dir_dep.expr, data);
+			pexpr_put(expr_calculate_pexpr_both(sym->dir_dep.expr, data));
 
 		prompt = sym_get_prompt(sym);
 		if (prompt != NULL && prompt->visible.expr) {
-			expr_calculate_pexpr_both(prompt->visible.expr, data);
-			get_defaults(sym, data);
+			pexpr_put(expr_calculate_pexpr_both(prompt->visible.expr, data));
+			defm_list_free_put(get_defaults(sym, data));
 		}
 
 		if (sym_is_nonboolean(sym)) {
@@ -1091,12 +1091,7 @@ static void sym_add_range_constraints(struct symbol *sym, struct cfdata *data)
 		PEXPR_PUT(prevs, propCond);
 	}
 
-	/* free prevCond */
-	struct pexpr_node *node;
-
-	pexpr_list_for_each(node, prevCond)
-		pexpr_put(node->elem);
-	pexpr_list_free(prevCond);
+	pexpr_list_free_put(prevCond);
 
 }
 
