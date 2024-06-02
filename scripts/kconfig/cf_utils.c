@@ -117,11 +117,13 @@ void create_constants(struct cfdata *data)
  */
 struct fexpr *create_tmpsatvar(struct cfdata *data)
 {
-	struct fexpr *t = fexpr_create(data->sat_variable_nr++, FE_TMPSATVAR, "");
+	char *name = get_tmp_var_as_char(data->tmp_variable_nr);
+	struct fexpr *t = fexpr_create(data->sat_variable_nr++, FE_TMPSATVAR, name);
 
-	str_append(&t->name, get_tmp_var_as_char(data->tmp_variable_nr++));
+	++data->tmp_variable_nr;
 	fexpr_add_to_satmap(t, data);
 
+	free(name);
 	return t;
 }
 

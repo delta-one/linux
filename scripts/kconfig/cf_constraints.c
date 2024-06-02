@@ -927,12 +927,11 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 	}
 
 	/* if invisible and on by default, then a symbol can only be deactivated by its dependencies */
-	if (sym->type == S_TRISTATE) {
+	if (defaults->size == 0) {
+		// nothing to do
+	} else if (sym->type == S_TRISTATE) {
 		struct pexpr *e1;
 		struct pexpr *e2;
-
-		if (defaults->size == 0)
-			return;
 
 		e1 = pexpr_implies(npc,
 					pexpr_implies(default_y,
@@ -944,16 +943,13 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 		e2 = pexpr_implies(
 			npc,
 			pexpr_implies(default_m,
-					   sym_get_fexpr_both(sym, data), data,
-					   PEXPR_ARG2),
+					   sym_get_fexpr_both(sym, data),
+					   data, PEXPR_ARG2),
 			data, PEXPR_ARG2);
 		sym_add_constraint(sym, e2, data);
 	} else if (sym->type == S_BOOLEAN) {
 		struct pexpr *c;
 		struct pexpr *c2;
-
-		if (defaults->size == 0)
-			return;
 
 		c = pexpr_implies(default_both, pexf(sym->fexpr_y), data,
 				       PEXPR_ARG2);
@@ -974,15 +970,15 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 			f = node->elem->val;
 			cond = node->elem->e;
 			c = pexpr_implies(npc,
-					       pexpr_implies(cond, pexf(f),
-								  data,
-								  PEXPR_ARG2),
+					       pexpr_implies(cond, pexf(f), data, PEXPR_ARG2),
 					       data, PEXPR_ARG2);
 			sym_add_constraint(sym, c, data);
 		}
 	}
+
 	PEXPR_PUT(promptCondition_yes, promptCondition_both, noPromptCond, npc,
 		  default_y, default_m, default_both);
+	defm_list_free_put(defaults);
 }
 
 /*

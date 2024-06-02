@@ -499,9 +499,6 @@ struct pexpr *expr_calculate_pexpr_both_and(struct expr *a, struct expr *b,
 				       expr_calculate_pexpr_m(b, data), data,
 				       PEXPR_ARGX);
 
-	left = pexpr_or(expr_calculate_pexpr_y(a, data),
-			expr_calculate_pexpr_m(a, data), data, PEXPR_ARGX);
-
 	return pexpr_and(left, right, data, PEXPR_ARGX);
 }
 
