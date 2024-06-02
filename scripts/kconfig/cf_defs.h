@@ -278,7 +278,7 @@ struct constants {
 struct cfdata {
 	unsigned int sat_variable_nr;
 	unsigned int tmp_variable_nr;
-	struct fexpr *satmap; // map SAT variables to fexpr
+	struct fexpr **satmap; // map SAT variables to fexpr
 	size_t satmap_size;
 	struct constants *constants;
 	struct sdv_list *sdv_symbols; // array with conflict-symbols

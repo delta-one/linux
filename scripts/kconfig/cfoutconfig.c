@@ -135,7 +135,7 @@ static void write_dimacs_to_file(PicoSAT *pico, struct cfdata *data)
 	unsigned int i;
 
 	for (i = 1; i < data->sat_variable_nr; i++)
-		add_comment(fd, &data->satmap[i]);
+		add_comment(fd, data->satmap[i]);
 
 	picosat_print(pico, fd);
 	fclose(fd);

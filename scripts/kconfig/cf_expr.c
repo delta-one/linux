@@ -1249,11 +1249,11 @@ bool fexpr_is_constant(struct fexpr *e, struct cfdata *data)
 void fexpr_add_to_satmap(struct fexpr *e, struct cfdata *data)
 {
 	if (e->satval >= data->satmap_size) {
-		data->satmap = xrealloc(data->satmap, data->satmap_size * 2 * sizeof(*data->satmap));
+		data->satmap = xrealloc(data->satmap, data->satmap_size * 2 * sizeof(**data->satmap));
 		data->satmap_size *= 2;
 	}
 
-	data->satmap[e->satval] = *e;
+	data->satmap[e->satval] = e;
 }
 
 /*
