@@ -789,7 +789,7 @@ static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t, struct cfdata
 void sat_add_clause(int num, ...)
 {
 	va_list valist;
-	int *lit;
+	int lit;
 	PicoSAT *pico;
 
 	if (num <= 1)
@@ -801,9 +801,8 @@ void sat_add_clause(int num, ...)
 
 	/* access all the arguments assigned to valist */
 	for (int i = 1; i < num; i++) {
-		lit = xmalloc(sizeof(int));
-		*lit = va_arg(valist, int);
-		picosat_add(pico, *lit);
+		lit = va_arg(valist, int);
+		picosat_add(pico, lit);
 	}
 	picosat_add(pico, 0);
 

@@ -37,25 +37,6 @@
 #define prop_list_for_each(node, list) \
 	fexpr_list_for_each(node, list)
 
-/* from list.h. The header can't be used directly due to C++ incompatibility. */
-#define PEXPR_SAME_TYPE(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
-
-/* initializes e which is of type ``struct pexpr *`` */
-#define PEXPR(e, type, left_e, right_e, ref_count)                            \
-	({                                                                    \
-		_Static_assert((PEXPR_SAME_TYPE((left_e), (e)->left.pexpr) || \
-				PEXPR_SAME_TYPE((left_e), (e)->left.fexpr) || \
-				left_e == NULL) &&                            \
-				       (PEXPR_SAME_TYPE((right_e),            \
-							(e)->right.pexpr) ||  \
-					PEXPR_SAME_TYPE((right_e),            \
-							(e)->right.fexpr) ||  \
-					right_e == NULL),                     \
-			       "Invalid type of left_e or right_e");          \
-		_pexpr_construct((e), (type), (left_e), (right_e),            \
-				 (ref_count));                                \
-	})
-
 /* call pexpr_put for a list of pexpr's */
 #define PEXPR_PUT(...) _pexpr_put_list((struct pexpr *[]){ __VA_ARGS__, NULL })
 
@@ -279,8 +260,14 @@ bool pexpr_eq(struct pexpr *e1, struct pexpr *e2, struct cfdata *data);
 /* copy a pexpr */
 struct pexpr *pexpr_deep_copy(const struct pexpr *org);
 
-void _pexpr_construct(struct pexpr *e, enum pexpr_type type, void *left,
-		      void *right, unsigned int ref_count);
+void pexpr_construct_sym(struct pexpr *e, struct fexpr *left,
+			 unsigned int ref_count);
+void pexpr_construct_not(struct pexpr *e, struct pexpr *left,
+			 unsigned int ref_count);
+void pexpr_construct_and(struct pexpr *e, struct pexpr *left,
+			 struct pexpr *right, unsigned int ref_count);
+void pexpr_construct_or(struct pexpr *e, struct pexpr *left,
+			struct pexpr *right, unsigned int ref_count);
 
 /* free a pexpr */
 void pexpr_free_depr(struct pexpr *e);

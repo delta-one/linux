@@ -945,7 +945,7 @@ struct pexpr *pexpr_and_share(struct pexpr *a, struct pexpr *b, struct cfdata *d
 	e = xcalloc(1, sizeof(*e));
 	pexpr_get(a);
 	pexpr_get(b);
-	PEXPR(e, PE_AND, a, b, 1);
+	pexpr_construct_and(e, a, b, 1);
 	return e;
 }
 
@@ -1063,7 +1063,7 @@ struct pexpr *pexpr_or_share(struct pexpr *a, struct pexpr *b, struct cfdata *da
 	e = xcalloc(1, sizeof(*e));
 	pexpr_get(a);
 	pexpr_get(b);
-	PEXPR(e, PE_OR, a, b, 1);
+	pexpr_construct_or(e, a, b, 1);
 
 	return e;
 }
@@ -1081,7 +1081,6 @@ struct pexpr *pexpr_not(struct pexpr *a, struct cfdata *data)
 struct pexpr *pexpr_not_share(struct pexpr *a, struct cfdata *data)
 {
 	struct pexpr *ret_val;
-	int new_type;
 
 	if (a->type == PE_SYMBOL &&
 	    a->left.fexpr == data->constants->const_false)
@@ -1095,16 +1094,20 @@ struct pexpr *pexpr_not_share(struct pexpr *a, struct cfdata *data)
 		pexpr_get(ret_val);
 	}
 	/* De Morgan */
-	else if (a->type == PE_AND || a->type == PE_OR) {
-		new_type = a->type == PE_AND ? PE_OR : PE_AND;
+	else if (a->type == PE_AND) {
 		ret_val = xmalloc(sizeof(*ret_val));
-		PEXPR(ret_val, new_type,
-				pexpr_not_share(a->left.pexpr, data),
-				pexpr_not_share(a->right.pexpr, data), 1);
+		pexpr_construct_or(ret_val,
+				   pexpr_not_share(a->left.pexpr, data),
+				   pexpr_not_share(a->right.pexpr, data), 1);
+	} else if (a->type == PE_OR) {
+		ret_val = xmalloc(sizeof(*ret_val));
+		pexpr_construct_and(ret_val,
+				    pexpr_not_share(a->left.pexpr, data),
+				    pexpr_not_share(a->right.pexpr, data), 1);
 	} else {
 		ret_val = xmalloc(sizeof(*ret_val));
 		pexpr_get(a);
-		PEXPR(ret_val, PE_NOT, a, NULL, 1);
+		pexpr_construct_not(ret_val, a, 1);
 	}
 
 	return ret_val;
@@ -2067,7 +2070,9 @@ static void pexpr_eliminate_yn(struct pexpr *e, struct cfdata *data)
 				pexpr_put(e->left.pexpr);
 				pexpr_put(e->right.pexpr);
 				ref_count = e->ref_count;
-				PEXPR(e, PE_SYMBOL, data->constants->const_false, NULL, ref_count);
+				pexpr_construct_sym(
+					e, data->constants->const_false,
+					ref_count);
 				return;
 			} else if (e->left.pexpr->left.fexpr == data->constants->const_true) {
 				pexpr_put(e->left.pexpr);
@@ -2083,7 +2088,9 @@ static void pexpr_eliminate_yn(struct pexpr *e, struct cfdata *data)
 				pexpr_put(e->left.pexpr);
 				pexpr_put(e->right.pexpr);
 				ref_count = e->ref_count;
-				PEXPR(e, PE_SYMBOL, data->constants->const_false, NULL, ref_count);
+				pexpr_construct_sym(
+					e, data->constants->const_false,
+					ref_count);
 				return;
 			} else if (e->right.pexpr->left.fexpr == data->constants->const_true) {
 				pexpr_put(e->right.pexpr);
@@ -2110,7 +2117,9 @@ static void pexpr_eliminate_yn(struct pexpr *e, struct cfdata *data)
 				pexpr_put(e->left.pexpr);
 				pexpr_put(e->right.pexpr);
 				ref_count = e->ref_count;
-				PEXPR(e, PE_SYMBOL, data->constants->const_true, NULL, ref_count);
+				pexpr_construct_sym(
+					e, data->constants->const_true,
+					ref_count);
 				return;
 			}
 		}
@@ -2126,7 +2135,9 @@ static void pexpr_eliminate_yn(struct pexpr *e, struct cfdata *data)
 				pexpr_put(e->left.pexpr);
 				pexpr_put(e->right.pexpr);
 				ref_count = e->ref_count;
-				PEXPR(e, PE_SYMBOL, data->constants->const_true, NULL, ref_count);
+				pexpr_construct_sym(e,
+						    data->constants->const_true,
+						    ref_count);
 				return;
 			}
 		}
@@ -2416,16 +2427,43 @@ struct pexpr *pexf(struct fexpr *fe)
 {
 	struct pexpr *pe = xcalloc(1, sizeof(*pe));
 
-	PEXPR(pe, PE_SYMBOL, fe, NULL, 1);
+	pexpr_construct_sym(pe, fe, 1);
 	return pe;
 }
 
-void _pexpr_construct(struct pexpr *e, enum pexpr_type type, void *left, void *right,
-			      unsigned int ref_count)
+void pexpr_construct_or(struct pexpr *e, struct pexpr *left,
+			     struct pexpr *right, unsigned int ref_count)
 {
-	e->type = type;
+	e->type = PE_OR;
 	e->left.pexpr = left;
 	e->right.pexpr = right;
+	e->ref_count = ref_count;
+}
+
+void pexpr_construct_and(struct pexpr *e, struct pexpr *left,
+			     struct pexpr *right, unsigned int ref_count)
+{
+	e->type = PE_AND;
+	e->left.pexpr = left;
+	e->right.pexpr = right;
+	e->ref_count = ref_count;
+}
+
+void pexpr_construct_not(struct pexpr *e, struct pexpr *left,
+			  unsigned int ref_count)
+{
+	e->type = PE_NOT;
+	e->left.pexpr = left;
+	e->right.pexpr = NULL;
+	e->ref_count = ref_count;
+}
+
+void pexpr_construct_sym(struct pexpr *e, struct fexpr *left,
+			  unsigned int ref_count)
+{
+	e->type = PE_SYMBOL;
+	e->left.fexpr = left;
+	e->right.pexpr = NULL;
 	e->ref_count = ref_count;
 }
 
