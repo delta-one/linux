@@ -249,7 +249,7 @@ void sdv_list_free(struct sdv_list *list);
 void prop_list_free(struct prop_list *list);
 
 /* free a defm_list (and pexpr_put the conditions of the maps) */
-void defm_list_free_put(struct defm_list *list);
+void defm_list_destruct(struct defm_list *list);
 
 /* free a sym_list */
 void sym_list_free(struct sym_list *list);
@@ -278,7 +278,7 @@ void pexpr_put(struct pexpr *e);
 void _pexpr_put_list(struct pexpr **es);
 
 /* acquire a reference to e. Also see struct pexpr. */
-void pexpr_get(struct pexpr *e);
+struct pexpr *pexpr_get(struct pexpr *e);
 
 /* print a pexpr  */
 void pexpr_print(char *tag, struct pexpr *e, int prevtoken);

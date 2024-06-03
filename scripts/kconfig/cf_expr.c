@@ -302,7 +302,6 @@ static struct pexpr *expr_eval_unequal_bool(struct symbol *left, struct symbol *
 		return pexf(data->constants->const_false);
 	}
 
-	c = pexf(data->constants->const_false);
 	switch (type) {
 	case E_LTH:
 		c = pexpr_and(pexpr_not(sym_get_fexpr_both(left, data), data),
@@ -353,6 +352,7 @@ static struct pexpr *expr_eval_unequal_bool(struct symbol *left, struct symbol *
 		break;
 	default:
 		fprintf(stderr, "Wrong type - %s", __func__);
+		c = pexf(data->constants->const_false);
 	}
 
 	return c;
@@ -1946,15 +1946,17 @@ void fexpr_list_free(struct fexpr_list *list)
 }
 
 /*
- * free an defm_list (and pexpr_put the conditions of the maps)
+ * free an defm_list (and pexpr_put the conditions of the maps and free the
+ * node->element's)
  */
-void defm_list_free_put(struct defm_list *list)
+void defm_list_destruct(struct defm_list *list)
 {
 	struct defm_node *node = list->head, *tmp;
 
 	while (node != NULL) {
 		tmp = node->next;
 		pexpr_put(node->elem->e);
+		free(node->elem);
 		free(node);
 		node = tmp;
 	}
@@ -2214,11 +2216,12 @@ void pexpr_free_depr(struct pexpr *e)
 }
 
 /*
- * Increments ref_count
+ * Increments ref_count and returns @e
  */
-void pexpr_get(struct pexpr *e)
+struct pexpr *pexpr_get(struct pexpr *e)
 {
 	++e->ref_count;
+	return e;
 }
 
 /*

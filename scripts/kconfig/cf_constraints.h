@@ -6,6 +6,9 @@
 #ifndef CF_CONSTRAINTS_H
 #define CF_CONSTRAINTS_H
 
+#include "cf_defs.h"
+#include "expr.h"
+
 /* build the constraints for each symbol */
 void get_constraints(struct cfdata *data);
 

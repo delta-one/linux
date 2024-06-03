@@ -212,6 +212,7 @@ static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data)
 				struct fexpr *x = fnode->elem;
 				bool E2_subset_of_E1;
 				struct fexl_node *lnode;
+				struct fexl_list *E_without_e;
 
 				/* create {x} */
 				x_set = fexpr_list_init();
@@ -221,9 +222,9 @@ static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data)
 				E1 = fexpr_list_union(e, x_set);
 
 				/* create (E\e) ∪ R */
-				E_R_Union = fexl_list_copy(E);
-				fexl_list_delete_elem(E_R_Union, e);
-				E_R_Union = fexl_list_union(E_R_Union, R);
+				E_without_e = fexl_list_copy(E);
+				fexl_list_delete_elem(E_without_e, e);
+				E_R_Union = fexl_list_union(E_without_e, R);
 
 				E2_subset_of_E1 = false;
 
@@ -238,6 +239,7 @@ static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data)
 					}
 				}
 
+				fexl_list_free(E_without_e);
 				fexl_list_free(E_R_Union);
 				fexpr_list_free(x_set);
 
