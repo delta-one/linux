@@ -1121,10 +1121,7 @@ struct pexpr *pexpr_implies(struct pexpr *a, struct pexpr *b, struct cfdata *dat
 struct pexpr *pexpr_implies_share(struct pexpr *a, struct pexpr *b, struct cfdata *data)
 {
 	/* A => B -> True if A == B */
-	if (a == b) {
-		pexpr_get(a);
-		return a;
-	} else if (pexpr_eq(a, b, data)) {
+	if (a == b || pexpr_eq(a, b, data)) {
 		return pexf(data->constants->const_true);
 	}
 

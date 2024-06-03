@@ -4,6 +4,7 @@
  */
 
 #include "cf_defs.h"
+#include "expr.h"
 #define _GNU_SOURCE
 #include <assert.h>
 #include <locale.h>
@@ -420,50 +421,95 @@ static void add_selects(struct symbol *sym, struct cfdata *data)
 static void add_dependencies_bool(struct symbol *sym, struct cfdata *data)
 {
 	struct pexpr *dep_both;
+	struct pexpr *visible_m;
+	struct pexpr *visible_y;
+	struct pexpr *visible_both;
+	struct property *prompt;
 
 	if (!sym_is_boolean(sym) || !sym->dir_dep.expr)
 		return;
 
+	prompt = sym_get_prompt(sym);
+	if (!prompt) {
+		visible_m = pexf(data->constants->const_false);
+		visible_y = pexpr_get(visible_m);
+		visible_both = pexpr_get(visible_m);
+	} else if (prompt->expr == NULL) {
+		visible_m = pexf(data->constants->const_true);
+		visible_y = pexpr_get(visible_m);
+		visible_both = pexpr_get(visible_m);
+	} else {
+		visible_m = expr_calculate_pexpr_m(prompt->expr, data);
+		visible_y = expr_calculate_pexpr_y(prompt->expr, data);
+		visible_both = pexpr_or_share(visible_y, visible_m, data);
+	}
+
 	dep_both = expr_calculate_pexpr_both(sym->dir_dep.expr, data);
+
+	struct pexpr *has_prompt;
+	struct pexpr *sel_y =
+		sym->rev_dep.expr ?
+		pexf(sym->fexpr_sel_y) :
+		pexf(data->constants->const_false);
+	has_prompt = pexpr_get(visible_both);
+	has_prompt = pexpr_and(
+			has_prompt,
+			pexpr_not(pexpr_and_share(sel_y, visible_m, data),
+				data),
+			data, PEXPR_ARGX);
 
 	if (sym->type == S_TRISTATE) {
 		struct pexpr *c1;
 		struct pexpr *c2;
-		{
-			struct pexpr *dep_y =
-				expr_calculate_pexpr_y(sym->dir_dep.expr, data);
-			struct pexpr *sel_y =
-				sym->rev_dep.expr ?
-					pexf(sym->fexpr_sel_y) :
-					pexf(data->constants->const_false);
+		struct pexpr *dep_y =
+			expr_calculate_pexpr_y(sym->dir_dep.expr, data);
+		struct pexpr *sel_both = sym_get_fexpr_sel_both(sym, data);
+		struct pexpr *cond_y1;
+		struct pexpr *cond_y2;
+		struct pexpr *cond_y;
+		struct pexpr *cond_m1;
+		struct pexpr *cond_m2;
+		struct pexpr *cond_m;
 
-			c1 = pexpr_implies(pexf(sym->fexpr_y),
-						pexpr_or(dep_y, sel_y,
-							      data, PEXPR_ARGX),
-						data, PEXPR_ARGX);
-		}
-		c2 = pexpr_implies(
-			pexf(sym->fexpr_m),
-			pexpr_or(dep_both,
-				      sym_get_fexpr_sel_both(sym, data), data,
-				      PEXPR_ARG2),
-			data, PEXPR_ARGX);
+		cond_y1 = pexpr_implies(pexpr_not_share(has_prompt, data),
+				       pexpr_or_share(dep_y, sel_y, data), data,
+				       PEXPR_ARGX);
+		cond_y2 = pexpr_implies_share(has_prompt, visible_y, data);
+		cond_y = pexpr_and_share(cond_y1, cond_y2, data);
+		cond_m1 =
+			pexpr_implies(pexpr_not_share(has_prompt, data),
+				      pexpr_or_share(dep_both, sel_both, data),
+				      data, PEXPR_ARGX);
+		cond_m2 = pexpr_implies(has_prompt,
+					pexpr_not_share(sel_y, data), data,
+					PEXPR_ARG2);
+		cond_m = pexpr_and_share(cond_m1, cond_m2, data);
+		c1 = pexpr_implies(pexf(sym->fexpr_y), cond_y, data,
+				   PEXPR_ARG1);
+		c2 = pexpr_implies(pexf(sym->fexpr_m), cond_m, data,
+				   PEXPR_ARG1);
 
 		sym_add_constraint(sym, c1, data);
 		sym_add_constraint(sym, c2, data);
-		PEXPR_PUT(c1, c2);
+		PEXPR_PUT(c1, c2, dep_y, sel_both, cond_y1,
+			  cond_y2, cond_y, cond_m1, cond_m2, cond_m);
 	} else if (sym->type == S_BOOLEAN) {
-		struct pexpr *c = pexpr_implies(
-			pexf(sym->fexpr_y),
-			pexpr_or(dep_both,
-				      sym_get_fexpr_sel_both(sym, data), data,
-				      PEXPR_ARG2),
-			data, PEXPR_ARGX);
+		struct pexpr *cond1;
+		struct pexpr *cond2;
+		struct pexpr *c;
+		cond1 = pexpr_implies(pexpr_not_share(has_prompt, data),
+				      pexpr_or(dep_both, pexf(sym->fexpr_m),
+					       data, PEXPR_ARG2),
+				      data, PEXPR_ARGX);
+		cond2 = pexpr_implies_share(has_prompt, visible_y, data);
+		c = pexpr_implies(pexf(sym->fexpr_y),
+				  pexpr_and_share(cond1, cond2, data), data,
+				  PEXPR_ARGX);
 
 		sym_add_constraint(sym, c, data);
-		pexpr_put(c);
+		PEXPR_PUT(c, cond1, cond2);
 	}
-	pexpr_put(dep_both);
+	PEXPR_PUT(dep_both, has_prompt, sel_y);
 }
 
 /*
