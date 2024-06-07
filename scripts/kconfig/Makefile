@@ -215,7 +215,6 @@ HOSTCFLAGS_picosat.o = -DTRACE -Wno-missing-prototypes -Wno-pointer-compare
 hostprogs	+= cftestgenconfig
 cftestgenconfig-cxxobjs	:= cftestgenconfig.o for_each_symbol_pp.o
 cftestgenconfig-objs	:= images.o for_each_symbol.o $(common-objs) $(cfconf-objs)
-echo Common objs: "$(common-objs)"
 
 HOSTLDLIBS_cftestgenconfig	= $(shell . $(obj)/cftestgenconfig-cfg && echo $$libs)
 HOSTCXXFLAGS_cftestgenconfig.o	= $(shell . $(obj)/cftestgenconfig-cfg && echo $$cflags)
