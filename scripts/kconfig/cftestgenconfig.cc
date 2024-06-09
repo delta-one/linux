@@ -6,13 +6,12 @@
  * Copyright (C) 2019 Ibrahim Fayaz <phayax@gmail.com>
 **/
 
-#include "for_each_symbol_pp.h"
+#include <string>
 #include <time.h>
 #include <dirent.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <iostream>
 #include <string.h>
 #include <fstream>
@@ -23,12 +22,20 @@
 #include <map>
 #include <iomanip>
 
-#include "spdlog/spdlog.h"
-#include "lkc.h"
 #include "cftestgenconfig.h"
+#include "spdlog/spdlog.h"
+
+#include "for_each_symbol_pp.h"
+
+extern "C" {
+#include "cf_utils.h"
+#include "lkc.h"
+}
 
 using namespace std;
 namespace fs = std::filesystem;
+
+static std::string sym_get_unique_name(struct symbol &sym);
 
 // Mersenne Twister random number generator, initialised once
 static std::random_device::result_type seed = std::random_device{}();
@@ -627,6 +634,7 @@ bool ConflictGenerator::verify_diagnosis(int i, const std::stringstream &csv_row
 
     // reload, compare
     conf_read(config_filename.str().c_str());
+    conf_write(("2" + config_filename.str()).c_str());
 
     if (config_compare(after_write) != 0){
         spdlog::warn("Reloaded configuration and backup mismatch");
@@ -687,7 +695,7 @@ bool ConflictGenerator::verify_resolution() {
         // consider only booleans as conflict symbols
         if (value != sym_get_tristate_value(sym)) {
             spdlog::info("Conflict symbol {}: target {} != actual {}",
-                         sym_get_name(sym),
+                         sym_get_unique_name(*sym),
                          conflict_candidate_list[i][1],
                          sym_get_string_value(sym));
             return false;
@@ -790,6 +798,16 @@ static struct menu *get_conflict_candidate(int index, const MenuIterator &menu_i
     return NULL;
 }
 
+static std::string sym_get_unique_name(struct symbol &sym)
+{
+	if (!sym_is_choice(&sym))
+		return sym.name;
+
+	struct property *prompt = sym_get_prompt(&sym);
+	const char *prompt_str = prompt ? prompt->text : "<NULL>";
+	return std::string(prompt->filename) + ":" + std::to_string(prompt->lineno) + ": " + prompt_str;
+}
+
 /**
  * Save the current configuration (symbol values) into a map container,
  * where keys are symbol names, and values are symbol values.
@@ -815,19 +833,18 @@ static SymbolMap config_backup() {
 			return;
 		}
 
-		key = std::string(sym_get_name(sym));
+		key = std::string(sym_get_unique_name(*sym));
 		val = std::string(sym_get_string_value(sym));
 
 		if (backup_table.count(key) > 0) {
 			val_old = backup_table[key];
-			if (sym_get_name(sym) != NULL) {
-				spdlog::info("Duplicate key: {}",
-					     sym_get_type_name(sym),
-					     sym_get_name(sym), sym->name);
-				if (val != val_old) {
-					spdlog::info("Value has changed: {} {}",
-						     val_old, val);
-				}
+			spdlog::warn("Duplicate key: type: {}: {}", key,
+				     sym_get_type_name(sym));
+			if (val != val_old) {
+				spdlog::warn("Value has changed: {} {}",
+						 val_old, val);
+			} else {
+				spdlog::warn("Value hasn't changed ({})", val);
 			}
 		}
 		backup_table[key] = val;
@@ -874,21 +891,21 @@ static int config_compare(const SymbolMap &backup_table) {
 			    return;
 		    }
 
-		    key = std::string(sym_get_name(sym));
+		    key = sym_get_unique_name(*sym);
 		    current_val = std::string(sym_get_string_value(sym));
 
 		    if (backup_table.count(key) > 0) {
 			    backup_val = backup_table.at(key);
 			    if (backup_val != current_val) {
-				    spdlog::info(
-					    "Symbols that are mismatching key= {} initial value= {} current value= {}",
+				    spdlog::warn(
+					    "{} - Symbols that are mismatching key= {} initial value= {} current value= {}", __func__,
 					    key, backup_val, current_val);
 				    mismatch++;
 			    } else
 				    match++;
 		    } else {
-			    spdlog::info(
-				    "Symbol missing in the original config for the key= {}",
+			    spdlog::warn(
+				    "{} - Symbol missing in the original config for the key= {}", __func__,
 				    key);
 			    mismatch++;
 		    }
@@ -950,7 +967,7 @@ static bool sym_has_conflict(struct symbol *sym, const SymbolMap &base_config) {
  * in the base configuration, 'false' otherwise.
  */
 static bool sym_enabled_in_base_config(struct symbol *sym, const SymbolMap &base_config) {
-    std::string key = std::string(sym_get_name(sym));
+    std::string key = std::string(sym_get_unique_name(*sym));
 
     if (base_config.count(key) == 0) {
         spdlog::error("Symbol missing in base config");
@@ -1024,7 +1041,7 @@ static tristate random_blocked_value(struct symbol *sym) {
         case 2:
             return values[rand() % no_values];
         default:
-            spdlog::error("Too many random values for {}", sym_get_name(sym));
+            spdlog::error("Too many random values for {}", sym_get_unique_name(*sym));
     }
     return no;
 }
@@ -1077,7 +1094,7 @@ static bool verify_fix_target_values(struct sfix_list *diag) {
             case S_TRISTATE:
                 if (fix->tri != sym_get_tristate_value(fix->sym)) {
                     spdlog::info("Fix symbol {}: target {} != actual {}",
-                                 sym_get_name(sym),
+                                 sym_get_unique_name(*sym),
                                  sym_fix_get_string_value(fix),
                                  sym_get_string_value(sym));
                     return false;
@@ -1086,7 +1103,7 @@ static bool verify_fix_target_values(struct sfix_list *diag) {
             default:
                 if (strcmp(str_get(&fix->nb_val), sym_get_string_value(fix->sym)) != 0) {
                     spdlog::info("{}: target {} != actual {}",
-                                 sym_get_name(sym),
+                                 sym_get_unique_name(*sym),
                                  sym_fix_get_string_value(fix),
                                  sym_get_string_value(sym));
                     return false;
