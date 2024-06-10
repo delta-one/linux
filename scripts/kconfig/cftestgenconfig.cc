@@ -634,7 +634,6 @@ bool ConflictGenerator::verify_diagnosis(int i, const std::stringstream &csv_row
 
     // reload, compare
     conf_read(config_filename.str().c_str());
-    conf_write(("2" + config_filename.str()).c_str());
 
     if (config_compare(after_write) != 0){
         spdlog::warn("Reloaded configuration and backup mismatch");
