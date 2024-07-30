@@ -1,10 +1,8 @@
-// SPDX-License-Identifier: GPL-2.0
+/* SPDX-License-Identifier: GPL-2.0 */
 /*
- * Copyright (C) 2023 Patrick Franz <deltaone@debian.org>
+ * Copyright (C) 2021 Patrick Franz <deltaone@debian.org>
  */
 
-#include "cf_defs.h"
-#include "cf_expr.h"
 #define _GNU_SOURCE
 #include <assert.h>
 #include <locale.h>
@@ -16,9 +14,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#include "cf_rangefix.h"
-#include "internal.h"
-#include "cf_utils.h"
+#include "configfix.h"
 
 #define MAX_DIAGNOSES 3
 #define MAX_SECONDS 120
@@ -28,21 +24,22 @@
 #define MINIMISE_DIAGNOSES false
 #define MINIMISE_UNSAT_CORE true
 
+static struct fexl_list *diagnoses;
 static struct sfl_list *diagnoses_symbol;
 
-static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data);
+static struct fexl_list * generate_diagnoses(PicoSAT *pico);
 
-static void add_fexpr_to_constraint_set(struct fexpr_list *C, struct cfdata *data);
-static void set_assumptions(PicoSAT *pico, struct fexpr_list *c, struct cfdata *data);
+static void add_fexpr_to_constraint_set(struct fexpr_list *C);
+static void set_assumptions(PicoSAT *pico, struct fexpr_list *c);
 static void fexpr_add_assumption(PicoSAT *pico, struct fexpr *e, int satval);
-static struct fexpr_list *get_unsat_core_soft(PicoSAT *pico, struct cfdata *data);
-static void minimise_unsat_core(PicoSAT *pico, struct fexpr_list *C, struct cfdata *data);
+static struct fexpr_list * get_unsat_core_soft(PicoSAT *pico);
+static struct fexpr_list * minimise_unsat_core(PicoSAT *pico, struct fexpr_list *C);
 
 
-static struct fexpr_list *get_difference(struct fexpr_list *C, struct fexpr_list *E0);
+static struct fexpr_list * get_difference(struct fexpr_list *C, struct fexpr_list *E0);
 static bool has_intersection(struct fexpr_list *e, struct fexpr_list *X);
-static struct fexpr_list *fexpr_list_union(struct fexpr_list *A, struct fexpr_list *B);
-static struct fexl_list *fexl_list_union(struct fexl_list *A, struct fexl_list *B);
+static struct fexpr_list * fexpr_list_union(struct fexpr_list *A, struct fexpr_list *B);
+static struct fexl_list * fexl_list_union(struct fexl_list *A, struct fexl_list *B);
 static bool is_subset_of(struct fexpr_list *A, struct fexpr_list *B);
 static void print_unsat_core(struct fexpr_list *list);
 static bool diagnosis_contains_fexpr(struct fexpr_list *diagnosis, struct fexpr *e);
@@ -51,36 +48,31 @@ static bool diagnosis_contains_symbol(struct sfix_list *diagnosis, struct symbol
 static void print_diagnoses(struct fexl_list *diag);
 static void print_diagnoses_symbol(struct sfl_list *diag_sym);
 
-static struct sfl_list *convert_diagnoses(struct fexl_list *diagnoses, struct cfdata *data);
-static struct sfix_list *convert_diagnosis(struct fexpr_list *diagnosis, struct cfdata *data);
-static struct symbol_fix *symbol_fix_create(struct fexpr *e, enum symbolfix_type type,
-					    struct fexpr_list *diagnosis);
-static struct sfl_list *minimise_diagnoses(PicoSAT *pico, struct fexl_list *diagnoses,
-					   struct cfdata *data);
+static struct sfl_list * convert_diagnoses(struct fexl_list *diagnoses);
+static struct sfix_list * convert_diagnosis(struct fexpr_list *diagnosis);
+static struct symbol_fix * symbol_fix_create(struct fexpr *e, enum symbolfix_type type, struct fexpr_list *diagnosis);
+static struct sfl_list * minimise_diagnoses(PicoSAT *pico, struct fexl_list *diagnoses);
 
 static tristate calculate_new_tri_val(struct fexpr *e, struct fexpr_list *diagnosis);
-static const char *calculate_new_string_value(struct fexpr *e, struct fexpr_list *diagnosis);
+static const char * calculate_new_string_value(struct fexpr *e, struct fexpr_list *diagnosis);
 
 /* count assumptions, only used for debugging */
-static unsigned int nr_of_assumptions = 0, nr_of_assumptions_true;
+static unsigned int nr_of_assumptions = 0, nr_of_assumptions_true = 0;
 
 /* -------------------------------------- */
 
-struct sfl_list *rangefix_run(PicoSAT *pico, struct cfdata *data)
+struct sfl_list * rangefix_run(PicoSAT *pico)
 {
-	clock_t start, end;
-	double time;
-	struct fexl_list *diagnoses;
-	struct fexl_node *node;
-
 	printd("Starting RangeFix...\n");
 	printd("Generating diagnoses...");
+	clock_t start, end;
+	double time;
+	start = clock();
 
 	/* generate the diagnoses */
-	start = clock();
-	diagnoses = generate_diagnoses(pico, data);
-	end = clock();
+	diagnoses = generate_diagnoses(pico);
 
+	end = clock();
 	time = ((double) (end - start)) / CLOCKS_PER_SEC;
 	printd("Generating diagnoses...done. (%.6f secs.)\n", time);
 
@@ -92,15 +84,11 @@ struct sfl_list *rangefix_run(PicoSAT *pico, struct cfdata *data)
 
 	/* convert diagnoses of fexpr to diagnoses of symbols */
 	if (MINIMISE_DIAGNOSES)
-		diagnoses_symbol = minimise_diagnoses(pico, diagnoses, data);
+		diagnoses_symbol = minimise_diagnoses(pico, diagnoses);
 	else
-		diagnoses_symbol = convert_diagnoses(diagnoses, data);
+		diagnoses_symbol = convert_diagnoses(diagnoses);
 
 	printd("\n");
-
-	fexpr_list_for_each(node, diagnoses)
-		fexpr_list_free(node->elem);
-	fexl_list_free(diagnoses);
 
 	return diagnoses_symbol;
 }
@@ -108,28 +96,27 @@ struct sfl_list *rangefix_run(PicoSAT *pico, struct cfdata *data)
 /*
  * generate the diagnoses
  */
-static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data)
+static struct fexl_list * generate_diagnoses(PicoSAT *pico)
 {
 	struct fexpr_list *C = fexpr_list_init();
 	struct fexl_list *E = fexl_list_init();
 	struct fexl_list *R = fexl_list_init();
 	struct fexpr_list *X, *e, *x_set, *E1, *E2;
 	struct fexl_list *E_R_Union;
-	struct fexpr_list *empty_diagnosis;
-	clock_t start_t, end_t;
-	double time_t;
 
 	/* create constraint set C */
-	add_fexpr_to_constraint_set(C, data);
+	add_fexpr_to_constraint_set(C);
 
 	if (PRINT_UNSAT_CORE)
 		printd("\n");
 
 	/* init E with an empty diagnosis */
-	empty_diagnosis = fexpr_list_init();
+	struct fexpr_list *empty_diagnosis = fexpr_list_init();
 	fexl_list_add(E, empty_diagnosis);
 
 	/* start the clock */
+	clock_t start_t, end_t;
+	double time_t;
 	start_t = clock();
 
 	while (E->size > 0) {
@@ -139,16 +126,12 @@ static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data)
 		/* calculate C\E0 */
 		struct fexpr_list *c = get_difference(C, E0);
 
-		struct fexl_node *node, *tmp;
-		int res;
-
 		/* set assumptions */
 		nr_of_assumptions = 0;
 		nr_of_assumptions_true = 0;
-		set_assumptions(pico, c, data);
-		fexpr_list_free(c);
+		set_assumptions(pico, c);
 
-		res = picosat_sat(pico, -1);
+		int res = picosat_sat(pico, -1);
 
 		if (res == PICOSAT_SATISFIABLE) {
 			if (PRINT_DIAGNOSIS_FOUND && CFDEBUG)
@@ -159,6 +142,8 @@ static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data)
 				fexl_list_add(R, E0);
 			else
 				fexpr_list_free(E0);
+
+			fexpr_list_free(c);
 
 			if (R->size >= MAX_DIAGNOSES)
 				goto DIAGNOSES_FOUND;
@@ -179,73 +164,62 @@ static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data)
 		if (time_t > (double) MAX_SECONDS)
 			goto DIAGNOSES_FOUND;
 
-		/* abort and return results if cancelled by user */
-		if (stop_rangefix) {
-			stop_rangefix = false;
-			goto DIAGNOSES_FOUND;
-		}
-
 		/* get unsat core from SAT solver */
-		X = get_unsat_core_soft(pico, data);
+		X = get_unsat_core_soft(pico);
 
 		/* minimise the unsat core */
 		if (MINIMISE_UNSAT_CORE)
-			minimise_unsat_core(pico, X, data);
+			X = minimise_unsat_core(pico, X);
 
 		if (PRINT_UNSAT_CORE)
 			print_unsat_core(X);
 
+		struct fexl_node *node, *tmp;
 		for (node = E->head; node != NULL;) {
-			struct fexpr_node *fnode;
-
 			/* get partial diagnosis */
 			e = node->elem;
 
 			/* check, if there is an intersection between e and X
-			 * if there is, go to the next partial diagnosis
-			 */
+			 * if there is, go to the next partial diagnosis */
 			if (has_intersection(e, X)) {
 				node = node->next;
 				continue;
 			}
 
 			/* for each fexpr in the core */
+			struct fexpr_node *fnode;
 			fexpr_list_for_each(fnode, X) {
 				struct fexpr *x = fnode->elem;
-				bool E2_subset_of_E1;
-				struct fexl_node *lnode;
-				struct fexl_list *E_without_e;
 
 				/* create {x} */
 				x_set = fexpr_list_init();
 				fexpr_list_add(x_set, x);
 
-				/* create E' = e U {x} */
+				/* create E' = e ∪ {x} */
 				E1 = fexpr_list_union(e, x_set);
 
-				/* create (E\e) U R */
-				E_without_e = fexl_list_copy(E);
-				fexl_list_delete_elem(E_without_e, e);
-				E_R_Union = fexl_list_union(E_without_e, R);
+				/* create (E\e) ∪ R */
+				E_R_Union = fexl_list_copy(E);
+				fexl_list_delete_elem(E_R_Union, e);
+				E_R_Union = fexl_list_union(E_R_Union, R);
 
-				E2_subset_of_E1 = false;
+				bool E2_subset_of_E1 = false;
 
-				/* E" in (E\e) U R */
+				/* E" ∈ (E\e) ∪ R */
+				struct fexl_node *lnode;
 				fexl_list_for_each(lnode, E_R_Union) {
 					E2 = lnode->elem;
 
-					/* E" subset of E' ? */
+					/* E" ⊆ E' ? */
 					if (is_subset_of(E2, E1)) {
 						E2_subset_of_E1 = true;
 						break;
 					}
 				}
 
-				fexl_list_free(E_without_e);
 				fexl_list_free(E_R_Union);
-				fexpr_list_free(x_set);
 
-				/* there exists no E" that is a subset of E' */
+				/* ∄ E" ⊆ E' */
 				if (!E2_subset_of_E1)
 					fexl_list_add(E, E1);
 				else
@@ -259,13 +233,11 @@ static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data)
 			node = tmp;
 		}
 		fexpr_list_free(X);
+		fexpr_list_free(c);
 	}
 
-	struct fexl_node *node;
 DIAGNOSES_FOUND:
 	fexpr_list_free(C);
-	fexl_list_for_each(node, E)
-		fexpr_list_free(node->elem);
 	fexl_list_free(E);
 
 	return R;
@@ -274,33 +246,39 @@ DIAGNOSES_FOUND:
 /*
  * add the fexpr to the constraint set C
  */
-static void add_fexpr_to_constraint_set(struct fexpr_list *C, struct cfdata *data)
+static void add_fexpr_to_constraint_set(struct fexpr_list *C)
 {
+	unsigned int i, nr_sym = 0, nr_fexpr = 0;
 	struct symbol *sym;
-
-	for_all_symbols(sym) {
+	for_all_symbols(i, sym) {
 		/* must be a proper symbol */
 		if (sym->type == S_UNKNOWN)
 			continue;
 
-		/* don't need the conflict symbols they are handled separately */
-		if (sym_is_sdv(data->sdv_symbols, sym))
+		/* don't need the conflict symbols
+		 * they are handled seperately */
+		if (sym_is_sdv(sdv_symbols, sym))
 			continue;
 
 		/* must have a prompt and a name */
 		if (!sym->name || !sym_has_prompt(sym))
 			continue;
 
-		if (sym->type == S_BOOLEAN)
+		nr_sym++;
+
+		if (sym->type == S_BOOLEAN) {
 			fexpr_list_add(C, sym->fexpr_y);
-		else if (sym->type == S_TRISTATE) {
+			nr_fexpr++;
+		} else if (sym->type == S_TRISTATE) {
 			fexpr_list_add(C, sym->fexpr_y);
 			fexpr_list_add(C, sym->fexpr_m);
+			nr_fexpr += 2;
 		} else if (sym->type == S_INT || sym->type == S_HEX || sym->type == S_STRING) {
 			struct fexpr_node *node;
-
-			fexpr_list_for_each(node, sym->nb_vals)
+			fexpr_list_for_each(node, sym->nb_vals) {
 				fexpr_list_add(C, node->elem);
+				nr_fexpr++;
+			}
 		} else {
 			perror("Error adding variables to constraint set C.");
 		}
@@ -325,12 +303,10 @@ static void set_assumptions_sdv(PicoSAT *pico, struct sdv_list *arr)
 	struct symbol *sym;
 
 	sdv_list_for_each(node, arr) {
-		int lit_y;
-
 		sdv = node->elem;
 		sym = sdv->sym;
 
-		lit_y = sym->fexpr_y->satval;
+		int lit_y = sym->fexpr_y->satval;
 
 		if (sym->type == S_BOOLEAN) {
 			switch (sdv->tri) {
@@ -349,7 +325,6 @@ static void set_assumptions_sdv(PicoSAT *pico, struct sdv_list *arr)
 			nr_of_assumptions++;
 		} else if (sym->type == S_TRISTATE) {
 			int lit_m = sym->fexpr_m->satval;
-
 			switch (sdv->tri) {
 			case yes:
 				picosat_assume(pico, lit_y);
@@ -379,15 +354,14 @@ static void set_assumptions_sdv(PicoSAT *pico, struct sdv_list *arr)
 /*
  * set the assumptions for the next run of Picosat
  */
-static void set_assumptions(PicoSAT *pico, struct fexpr_list *c, struct cfdata *data)
+static void set_assumptions(PicoSAT *pico, struct fexpr_list *c)
 {
 	struct fexpr_node *node;
-
 	fexpr_list_for_each(node, c)
 		fexpr_add_assumption(pico, node->elem, node->elem->satval);
 
 	/* set assumptions for the conflict-symbols */
-	set_assumptions_sdv(pico, data->sdv_symbols);
+	set_assumptions_sdv(pico, sdv_symbols);
 }
 
 /*
@@ -464,9 +438,9 @@ static void fexpr_add_assumption(PicoSAT *pico, struct fexpr *e, int satval)
 				picosat_assume(pico, -satval);
 				e->assumption = false;
 			}
-		} else {
-			if (!strcmp(str_get(&e->nb_val), string_val) &&
-					sym_nonbool_has_value_set(sym)) {
+		}
+		else {
+			if (!strcmp(str_get(&e->nb_val), string_val)) {
 				picosat_assume(pico, satval);
 				e->assumption = true;
 				nr_of_assumptions_true++;
@@ -482,23 +456,22 @@ static void fexpr_add_assumption(PicoSAT *pico, struct fexpr *e, int satval)
 /*
  * get the unsatisfiable soft constraints from the last run of Picosat
  */
-static struct fexpr_list *get_unsat_core_soft(PicoSAT *pico, struct cfdata *data)
+static struct fexpr_list * get_unsat_core_soft(PicoSAT *pico)
 {
 	struct fexpr_list *ret = fexpr_list_init();
 	struct fexpr *e;
 
-	int lit;
+	int *lit = malloc(sizeof(int));
 	const int *i = picosat_failed_assumptions(pico);
+	*lit = abs(*i++);
 
-	lit = abs(*i++);
+	while (*lit != 0) {
+		e = &satmap[*lit];
 
-	while (lit != 0) {
-		e = data->satmap[lit];
-
-		if (!sym_is_sdv(data->sdv_symbols, e->sym))
+		if (!sym_is_sdv(sdv_symbols, e->sym))
 			fexpr_list_add(ret, e);
 
-		lit = abs(*i++);
+		*lit = abs(*i++);
 	}
 
 	return ret;
@@ -507,31 +480,28 @@ static struct fexpr_list *get_unsat_core_soft(PicoSAT *pico, struct cfdata *data
 /*
  * minimise the unsat core C
  */
-static void minimise_unsat_core(PicoSAT *pico, struct fexpr_list *C, struct cfdata *data)
+static struct fexpr_list * minimise_unsat_core(PicoSAT *pico, struct fexpr_list *C)
 {
+	/* no need to check further */
+	if (C->size == 1)
+		return C;
+
 	struct fexpr_list *c_set;
 	struct fexpr_node *node, *tmp;
 
-	/* no need to check further */
-	if (C->size == 1)
-		return;
-
 	for (node = C->head; node != NULL;) {
-		struct fexpr_list *t;
-		int res;
-
 		if (C->size == 1)
-			return;
+			return C;
 
 		/* create C\c */
 		c_set = fexpr_list_init();
 		fexpr_list_add(c_set, node->elem);
-		t = get_difference(C, c_set);
+		struct fexpr_list *t = get_difference(C, c_set);
 
 		/* invoke PicoSAT */
-		set_assumptions(pico, t, data);
+		set_assumptions(pico, t);
 
-		res = picosat_sat(pico, -1);
+		int res = picosat_sat(pico, -1);
 
 		tmp = node->next;
 
@@ -543,13 +513,15 @@ static void minimise_unsat_core(PicoSAT *pico, struct fexpr_list *C, struct cfda
 		fexpr_list_free(c_set);
 		fexpr_list_free(t);
 	}
+
+	return C;
 }
 
 
 /*
  * Calculate C\E0
  */
-static struct fexpr_list *get_difference(struct fexpr_list *C, struct fexpr_list *E0)
+static struct fexpr_list * get_difference(struct fexpr_list *C, struct fexpr_list *E0)
 {
 	struct fexpr_list *ret = fexpr_list_init();
 	struct fexpr_node *node1, *node2;
@@ -576,7 +548,6 @@ static struct fexpr_list *get_difference(struct fexpr_list *C, struct fexpr_list
 static bool has_intersection(struct fexpr_list *e, struct fexpr_list *X)
 {
 	struct fexpr_node *node1, *node2;
-
 	fexpr_list_for_each(node1, e)
 		fexpr_list_for_each(node2, X)
 			if (node1->elem->satval == node2->elem->satval)
@@ -588,7 +559,7 @@ static bool has_intersection(struct fexpr_list *e, struct fexpr_list *X)
 /*
  * get the union of 2 fexpr_list
  */
-static struct fexpr_list *fexpr_list_union(struct fexpr_list *A, struct fexpr_list *B)
+static struct fexpr_list * fexpr_list_union(struct fexpr_list *A, struct fexpr_list *B)
 {
 	struct fexpr_list *ret = fexpr_list_copy(A);
 	struct fexpr_node *node1, *node2;
@@ -612,7 +583,7 @@ static struct fexpr_list *fexpr_list_union(struct fexpr_list *A, struct fexpr_li
 /*
  * get the union of 2 fexl_list
  */
-static struct fexl_list *fexl_list_union(struct fexl_list *A, struct fexl_list *B)
+static struct fexl_list * fexl_list_union(struct fexl_list *A, struct fexl_list *B)
 {
 	struct fexl_list *ret = fexl_list_copy(A);
 	struct fexl_node *node1, *node2;
@@ -662,7 +633,6 @@ static bool is_subset_of(struct fexpr_list *A, struct fexpr_list *B)
 static void print_unsat_core(struct fexpr_list *list)
 {
 	struct fexpr_node *node;
-
 	printd("Unsat core: [");
 
 	fexpr_list_for_each(node, list) {
@@ -713,12 +683,10 @@ static void print_diagnoses(struct fexl_list *diag)
 	unsigned int i = 1;
 
 	fexl_list_for_each(lnode, diag) {
-		struct fexpr_node *node;
-
 		printd("%d: [", i++);
+		struct fexpr_node *node;
 		fexpr_list_for_each(node, lnode->elem) {
 			char *new_val = node->elem->assumption ? "false" : "true";
-
 			printd("%s => %s", str_get(&node->elem->name), new_val);
 			if (node->next != NULL)
 				printd(", ");
@@ -740,12 +708,13 @@ void print_diagnosis_symbol(struct sfix_list *diag_sym)
 	sfix_list_for_each(node, diag_sym) {
 		fix = node->elem;
 
-		if (fix->type == SF_BOOLEAN)
+		if (fix->type == SF_BOOLEAN) {
 			printd("%s => %s", fix->sym->name, tristate_get_char(fix->tri));
-		else if (fix->type == SF_NONBOOLEAN)
+		} else if (fix->type == SF_NONBOOLEAN) {
 			printd("%s => %s", fix->sym->name, str_get(&fix->nb_val));
-		else
+		} else {
 			perror("NB not yet implemented.");
+		}
 
 		if (node->next != NULL)
 			printd(", ");
@@ -770,17 +739,16 @@ static void print_diagnoses_symbol(struct sfl_list *diag_sym)
 /*
  * convert a single diagnosis of fexpr into a diagnosis of symbols
  */
-static struct sfix_list *convert_diagnosis(struct fexpr_list *diagnosis, struct cfdata *data)
+static struct sfix_list * convert_diagnosis(struct fexpr_list *diagnosis)
 {
 	struct sfix_list *diagnosis_symbol = sfix_list_init();
 	struct fexpr *e;
 	struct symbol_fix *fix;
 	struct symbol_dvalue *sdv;
-	struct sdv_node *snode;
-	struct fexpr_node *fnode;
 
 	/* set the values for the conflict symbols */
-	sdv_list_for_each(snode, data->sdv_symbols) {
+	struct sdv_node *snode;
+	sdv_list_for_each(snode, sdv_symbols) {
 		sdv = snode->elem;
 		fix = xcalloc(1, sizeof(*fix));
 		fix->sym = sdv->sym;
@@ -789,15 +757,15 @@ static struct sfix_list *convert_diagnosis(struct fexpr_list *diagnosis, struct 
 		sfix_list_add(diagnosis_symbol, fix);
 	}
 
+	struct fexpr_node * fnode;
 	fexpr_list_for_each(fnode, diagnosis) {
-		enum symbolfix_type type;
-
 		e = fnode->elem;
 
 		/* diagnosis already contains symbol, so continue */
 		if (diagnosis_contains_symbol(diagnosis_symbol, e->sym))
 			continue;
 
+		enum symbolfix_type type;
 		if (sym_is_boolean(e->sym))
 			type = SF_BOOLEAN;
 		else if (sym_is_nonboolean(e->sym))
@@ -816,15 +784,13 @@ static struct sfix_list *convert_diagnosis(struct fexpr_list *diagnosis, struct 
  * convert the diagnoses of fexpr into diagnoses of symbols
  * it is easier to handle symbols when applying fixes
  */
-static struct sfl_list *convert_diagnoses(struct fexl_list *diag_arr, struct cfdata *data)
+static struct sfl_list * convert_diagnoses(struct fexl_list *diag_arr)
 {
-	struct fexl_node *lnode;
-
 	diagnoses_symbol = sfl_list_init();
 
+	struct fexl_node *lnode;
 	fexl_list_for_each(lnode, diag_arr) {
-		struct sfix_list *fix = convert_diagnosis(lnode->elem, data);
-
+		struct sfix_list *fix = convert_diagnosis(lnode->elem);
 		sfl_list_add(diagnoses_symbol, fix);
 	}
 
@@ -834,15 +800,13 @@ static struct sfl_list *convert_diagnoses(struct fexl_list *diag_arr, struct cfd
 /*
  * create a symbol_fix given a fexpr
  */
-static struct symbol_fix *symbol_fix_create(struct fexpr *e, enum symbolfix_type type,
-					    struct fexpr_list *diagnosis)
+static struct symbol_fix * symbol_fix_create(struct fexpr *e, enum symbolfix_type type, struct fexpr_list *diagnosis)
 {
 	struct symbol_fix *fix = malloc(sizeof(struct symbol_fix));
-
 	fix->sym = e->sym;
 	fix->type = type;
 
-	switch (type) {
+	switch(type) {
 	case SF_BOOLEAN:
 		fix->tri = calculate_new_tri_val(e, diagnosis);
 		break;
@@ -863,57 +827,49 @@ static struct symbol_fix *symbol_fix_create(struct fexpr *e, enum symbolfix_type
  * 2. choice symbol gets enabled/disabled automatically
  * 3. symbol uses a default value
  */
-static struct sfl_list *minimise_diagnoses(PicoSAT *pico, struct fexl_list *diagnoses,
-					   struct cfdata *data)
+static struct sfl_list * minimise_diagnoses(PicoSAT *pico, struct fexl_list *diagnoses)
 {
 	clock_t start, end;
 	double time;
+
+	printd("Minimising diagnoses...");
+
+	start = clock();
+
 	struct fexpr_list *d;
 	struct sfix_list *diagnosis_symbol;
 	struct sfl_list *diagnoses_symbol = sfl_list_init();
 	struct fexpr *e;
 	int satval, deref = 0;
 	struct symbol_fix *fix;
-	struct fexl_node *flnode;
-	struct fexpr_list *C;
-
-	printd("Minimising diagnoses...");
-
-	start = clock();
 
 	/* create soft constraint set C */
-	C = fexpr_list_init();
-	add_fexpr_to_constraint_set(C, data);
+	struct fexpr_list *C = fexpr_list_init();
+	add_fexpr_to_constraint_set(C);
 
+	struct fexl_node *flnode;
 	fexl_list_for_each(flnode, diagnoses) {
-		struct fexpr_node *fnode;
-		struct sfix_node *snode;
-		struct fexpr_list *C_without_d;
-		int res;
-
 		d = flnode->elem;
 
 		/* set assumptions for those symbols that don't need to be changed */
-		C_without_d = get_difference(C, d);
-		set_assumptions(pico, C_without_d, data);
-		fexpr_list_free(C_without_d);
-		fexpr_list_free(C);
-
+		set_assumptions(pico, get_difference(C, d));
 
 		/* flip the assumptions from the diagnosis */
+		struct fexpr_node *fnode;
 		fexpr_list_for_each(fnode, d) {
 			e = fnode->elem;
 			satval = e->assumption ? -(e->satval) : e->satval;
 			picosat_assume(pico, satval);
 		}
 
-		res = picosat_sat(pico, -1);
+		int res = picosat_sat(pico, -1);
 		if (res != PICOSAT_SATISFIABLE)
 			perror("Diagnosis not satisfiable (minimise).");
 
-		diagnosis_symbol = convert_diagnosis(d, data);
+		diagnosis_symbol = convert_diagnosis(d);
 
 		/* check if symbol gets selected */
+		struct sfix_node *snode;
 		for (snode = diagnosis_symbol->head; snode != NULL;) {
 			fix = snode->elem;
 
@@ -924,16 +880,16 @@ static struct sfl_list *minimise_diagnoses(PicoSAT *pico, struct fexl_list *diag
 			}
 
 			/* check, whether the symbol was selected anyway */
-			if (fix->sym->type == S_BOOLEAN && fix->tri == yes)
+			if (fix->sym->type == S_BOOLEAN && fix->tri == yes) {
 				deref = picosat_deref(pico, fix->sym->fexpr_sel_y->satval);
-			else if (fix->sym->type == S_TRISTATE && fix->tri == yes)
+			} else if (fix->sym->type == S_TRISTATE && fix->tri == yes) {
 				deref = picosat_deref(pico, fix->sym->fexpr_sel_y->satval);
-			else if (fix->sym->type == S_TRISTATE && fix->tri == mod)
+			} else if (fix->sym->type == S_TRISTATE && fix->tri == mod) {
 				deref = picosat_deref(pico, fix->sym->fexpr_sel_m->satval);
+			}
 
 			if (deref == 1) {
 				struct sfix_node *tmp = snode->next;
-
 				sfix_list_delete(diagnosis_symbol, snode);
 				snode = tmp;
 			} else {
@@ -955,15 +911,13 @@ static struct sfl_list *minimise_diagnoses(PicoSAT *pico, struct fexl_list *diag
 /*
  * list the diagnoses and let user choose a diagnosis to be applied
  */
-struct sfix_list *choose_fix(struct sfl_list *diag)
+struct sfix_list * choose_fix(struct sfl_list *diag)
 {
-	int choice;
-	struct sfl_node *node;
-
 	printd("=== GENERATED DIAGNOSES ===\n");
 	printd("0: No changes wanted\n");
 	print_diagnoses_symbol(diag);
 
+	int choice;
 	printd("\n> Choose option: ");
 	scanf("%d", &choice);
 
@@ -975,8 +929,9 @@ struct sfix_list *choose_fix(struct sfl_list *diag)
 	if (choice > diag->size)
 		return NULL;
 
-	node = diag->head;
-	for (int counter = 1; counter < choice; counter++)
+	unsigned int counter;
+	struct sfl_node *node = diag->head;
+	for (counter = 1; counter < choice; counter++)
 		node = node->next;
 
 	return node->elem;
@@ -1003,8 +958,7 @@ static tristate calculate_new_tri_val(struct fexpr *e, struct fexpr_list *diagno
 				 * if diagnosis contains fexpr_m, fexpr_m was false
 				 * => new value is mod
 				 */
-				return diagnosis_contains_fexpr(
-						diagnosis, e->sym->fexpr_m) ? mod : no;
+				return diagnosis_contains_fexpr(diagnosis, e->sym->fexpr_m) ? mod : no;
 			else if (e->assumption == false)
 				/*
 				 * if fexpr_y is set to true, the new value must be yes
@@ -1018,10 +972,11 @@ static tristate calculate_new_tri_val(struct fexpr *e, struct fexpr_list *diagno
 				 * if diagnosis contains fexpr_y, fexpr_y was false
 				 * => new value is yes
 				 */
-				return diagnosis_contains_fexpr(
-						diagnosis, e->sym->fexpr_m) ? yes : no;
+				return diagnosis_contains_fexpr(diagnosis, e->sym->fexpr_m) ? yes : no;
 			else if (e->assumption == false)
-				/* if diagnosis contains fexpr_m, the new value must be mod */
+				/*
+				 * if diagnosis contains fexpr_m, the new value must be mod
+				 */
 				return mod;
 		}
 		perror("Should not get here.\n");
@@ -1034,23 +989,19 @@ static tristate calculate_new_tri_val(struct fexpr *e, struct fexpr_list *diagno
 /*
  * calculate the new value for a non-boolean symbol given a diagnosis and an fexpr
  */
-static const char *calculate_new_string_value(struct fexpr *e, struct fexpr_list *diagnosis)
+static const char * calculate_new_string_value(struct fexpr *e, struct fexpr_list *diagnosis)
 {
-	struct fexpr_node *node;
-	struct fexpr *e2;
-
 	assert(sym_is_nonboolean(e->sym));
 
-	/* if assumption was false before, this is the new value because only 1
-	 * variable can be true
-	 */
+	/* if assumption was false before, this is the new value because only 1 variable can be true */
 	if (e->assumption == false)
 		return str_get(&e->nb_val);
 
 	/* a diagnosis always contains 2 variables for the same non-boolean symbol
-	 * one is set to true, the other to false
-	 * otherwise you'd set 2 variables to true, which is not allowed
-	 */
+	* one is set to true, the other to false
+	* otherwise you'd set 2 variables to true, which is not allowed */
+	struct fexpr_node *node;
+	struct fexpr *e2;
 	fexpr_list_for_each(node, diagnosis) {
 		e2 = node->elem;
 

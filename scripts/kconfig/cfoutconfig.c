@@ -1,6 +1,6 @@
-// SPDX-License-Identifier: GPL-2.0
+/* SPDX-License-Identifier: GPL-2.0 */
 /*
- * Copyright (C) 2023 Patrick Franz <deltaone@debian.org>
+ * Copyright (C) 2021 Patrick Franz <deltaone@debian.org>
  */
 
 #define _GNU_SOURCE
@@ -15,13 +15,12 @@
 #include <unistd.h>
 
 #include "configfix.h"
-#include "internal.h"
 
 #define OUTFILE_CONSTRAINTS "./scripts/kconfig/cfout_constraints.txt"
 #define OUTFILE_DIMACS "./scripts/kconfig/cfout_constraints.dimacs"
 
-static void write_constraints_to_file(struct cfdata *data);
-static void write_dimacs_to_file(PicoSAT *pico, struct cfdata *data);
+static void write_constraints_to_file(void);
+static void write_dimacs_to_file(PicoSAT *pico);
 
 /* -------------------------------------- */
 
@@ -29,16 +28,6 @@ int main(int argc, char *argv[])
 {
 	clock_t start, end;
 	double time;
-	PicoSAT *pico;
-
-	static struct constants constants = {NULL, NULL, NULL, NULL, NULL};
-	static struct cfdata data = {
-		1,    // unsigned int sat_variable_nr
-		1,    // unsigned int tmp_variable_nr
-		NULL, // struct fexpr *satmap
-		0,    // size_t satmap_size
-		&constants // struct constants *constants
-	};
 
 	printf("\nCreating constraints and CNF clauses...");
 	/* measure time for constructing constraints and clauses */
@@ -48,16 +37,16 @@ int main(int argc, char *argv[])
 	init_config(argv[1]);
 
 	/* initialize satmap and cnf_clauses */
-	init_data(&data);
+	init_data();
 
 	/* creating constants */
-	create_constants(&data);
+	create_constants();
 
 	/* assign SAT variables & create sat_map */
-	create_sat_variables(&data);
+	create_sat_variables();
 
 	/* get the constraints */
-	get_constraints(&data);
+	get_constraints();
 
 	end = clock();
 	time = ((double) (end - start)) / CLOCKS_PER_SEC;
@@ -65,13 +54,13 @@ int main(int argc, char *argv[])
 	printd("done. (%.6f secs.)\n", time);
 
 	/* start PicoSAT */
-	pico = picosat_init();
+	PicoSAT *pico = picosat_init();
 	picosat_enable_trace_generation(pico);
 	printd("Building CNF-clauses...");
 	start = clock();
 
 	/* construct the CNF clauses */
-	construct_cnf_clauses(pico, &data);
+	construct_cnf_clauses(pico);
 
 	end = clock();
 	time = ((double) (end - start)) / CLOCKS_PER_SEC;
@@ -82,7 +71,7 @@ int main(int argc, char *argv[])
 	/* write constraints into file */
 	start = clock();
 	printf("Writing constraints...");
-	write_constraints_to_file(&data);
+	write_constraints_to_file();
 	end = clock();
 	time = ((double) (end - start)) / CLOCKS_PER_SEC;
 	printf("done. (%.6f secs.)\n", time);
@@ -90,7 +79,7 @@ int main(int argc, char *argv[])
 	/* write SAT problem in DIMACS into file */
 	start = clock();
 	printf("Writing SAT problem in DIMACS...");
-	write_dimacs_to_file(pico, &data);
+	write_dimacs_to_file(pico);
 	end = clock();
 	time = ((double) (end - start)) / CLOCKS_PER_SEC;
 	printf("done. (%.6f secs.)\n", time);
@@ -101,21 +90,19 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-static void write_constraints_to_file(struct cfdata *data)
+static void write_constraints_to_file(void)
 {
 	FILE *fd = fopen(OUTFILE_CONSTRAINTS, "w");
+	unsigned int i;
 	struct symbol *sym;
 
-	for_all_symbols(sym) {
+	for_all_symbols(i, sym) {
+		if (sym->type == S_UNKNOWN) continue;
+
 		struct pexpr_node *node;
-
-		if (sym->type == S_UNKNOWN)
-			continue;
-
 		pexpr_list_for_each(node, sym->constraints) {
 			struct gstr s = str_new();
-
-			pexpr_as_char(node->elem, &s, 0, data);
+			pexpr_as_char(node->elem, &s, 0);
 			fprintf(fd, "%s\n", str_get(&s));
 			str_free(&s);
 		}
@@ -128,14 +115,13 @@ static void add_comment(FILE *fd, struct fexpr *e)
 	fprintf(fd, "c %d %s\n", e->satval, str_get(&e->name));
 }
 
-static void write_dimacs_to_file(PicoSAT *pico, struct cfdata *data)
+static void write_dimacs_to_file(PicoSAT *pico)
 {
 	FILE *fd = fopen(OUTFILE_DIMACS, "w");
 
 	unsigned int i;
-
-	for (i = 1; i < data->sat_variable_nr; i++)
-		add_comment(fd, data->satmap[i]);
+	for (i = 1; i < sat_variable_nr; i++)
+		add_comment(fd, &satmap[i]);
 
 	picosat_print(pico, fd);
 	fclose(fd);

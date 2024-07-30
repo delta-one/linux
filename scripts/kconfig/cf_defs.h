@@ -1,36 +1,27 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /*
- * Copyright (C) 2023 Patrick Franz <deltaone@debian.org>
+ * Copyright (C) 2021 Patrick Franz <deltaone@debian.org>
  */
 
 #ifndef DEFS_H
 #define DEFS_H
 
-/* global variables */
-#include <limits.h>
-#include <stdbool.h>
-#include <stddef.h>
+/* external variables */
+extern unsigned int sat_variable_nr;
+extern unsigned int tmp_variable_nr;
+extern struct fexpr *satmap; // map SAT variables to fexpr
+extern size_t satmap_size;
 
-#include "lkc.h"
-#include "expr.h"
-
+extern struct sdv_list *sdv_symbols; /* array with conflict-symbols */
 extern bool CFDEBUG;
 extern bool stop_rangefix;
+extern struct fexpr *const_false;
+extern struct fexpr *const_true;
+extern struct fexpr *symbol_yes_fexpr;
+extern struct fexpr *symbol_mod_fexpr;
+extern struct fexpr *symbol_no_fexpr;
 
-#define printd(fmt...) do { \
-	if (CFDEBUG) \
-		printf(fmt); \
-} while (0)
-
-/*
- * For functions that construct nested pexpr expressions.
- */
-enum pexpr_move {
-	PEXPR_ARG1,	/* put reference to first pexpr */
-	PEXPR_ARG2,	/* put reference to second pexpr */
-	PEXPR_ARGX	/* put all references to pexpr's */
-};
-
+#define printd(fmt...) if (CFDEBUG) printf(fmt)
 
 /* different types for f_expr */
 enum fexpr_type {
@@ -65,6 +56,11 @@ struct fexpr {
 		/* symbol */
 		struct {
 			tristate tri;
+		};
+		/* AND, OR, NOT */
+		struct {
+			struct fexpr *left;
+			struct fexpr *right; /* not used for NOT */
 		};
 		/* EQUALS */
 		struct {
@@ -111,32 +107,9 @@ union pexpr_data {
 	struct fexpr *fexpr;
 };
 
-/**
- * struct pexpr - a node in a tree representing a propositional formula
- * @type: Type of the node
- * @left: left-hand-side for AND and OR, the unique operand for NOT, and for
- * SYMBOL it contains the fpexpr.
- * @right: right-hand-side for AND and OR
- * @ref_count: Number of calls to pexpr_put() that need to effectuated with this
- * pexpr for it to get free'd.
- *
- * Functions that return new struct pexpr instances (like pexpr_or(),
- * pexpr_or_share(), pexf(), ...) set @ref_count in a way that accounts for the
- * new reference that they return (e.g. pexf() will always set it to 1).
- * Functions with arguments of type ``struct pexpr *`` will generally keep the
- * reference intact, so that for example
- * ``e = pexf(sym); not_e = pexpr_not_share(e)`` would require
- * ``pexpr_put(not_e)`` before not_e can be free'd and additionally
- * ``pexpr_put(e)`` for e to get free'd. Some functions take an argument of type
- * ``enum pexpr_move`` which function as a wrapper of sorts that first executes
- * a function and then pexpr_put's the argument(s) specified by the
- * ``enum pexpr_move`` argument (e.g. the normal function for OR is
- * pexpr_or_share() and the wrapper is pexpr_or()).
- */
 struct pexpr {
 	enum pexpr_type type;
 	union pexpr_data left, right;
-	unsigned int ref_count;
 };
 
 struct pexpr_list {
@@ -149,22 +122,12 @@ struct pexpr_node {
 	struct pexpr_node *next, *prev;
 };
 
-/**
- * struct default_map - Map entry from default values to their condition
- * @val: value of the default property. Not 'owned' by this struct and
- * therefore shouldn't be free'd.
- * @e: condition that implies that the symbol assumes the @val. Needs to be
- * pexpr_put when free'ing.
- */
 struct default_map {
 	struct fexpr *val;
+
 	struct pexpr *e;
 };
 
-/**
- * struct defm_list - Map from values of default properties of a symbol to their
- * (accumulated) conditions
- */
 struct defm_list {
 	struct defm_node *head, *tail;
 	unsigned int size;
@@ -265,23 +228,6 @@ struct prop_list {
 struct prop_node {
 	struct property *elem;
 	struct prop_node *next, *prev;
-};
-
-struct constants {
-	struct fexpr *const_false;
-	struct fexpr *const_true;
-	struct fexpr *symbol_yes_fexpr;
-	struct fexpr *symbol_mod_fexpr;
-	struct fexpr *symbol_no_fexpr;
-};
-
-struct cfdata {
-	unsigned int sat_variable_nr;
-	unsigned int tmp_variable_nr;
-	struct fexpr **satmap; // map SAT variables to fexpr
-	size_t satmap_size;
-	struct constants *constants;
-	struct sdv_list *sdv_symbols; // array with conflict-symbols
 };
 
 #endif

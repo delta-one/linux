@@ -1,6 +1,6 @@
-/* SPDX-License-Identifier: GPL-2.0 */
+// SPDX-License-Identifier: GPL-2.0
 /*
- * Copyright (C) 2023 Patrick Franz <deltaone@debian.org>
+ * Copyright (C) 2021 Patrick Franz <deltaone@debian.org>
  */
 
 #ifndef CONFIGFIX_H
@@ -23,6 +23,7 @@ extern "C" {
 #include "cf_constraints.h"
 #include "cf_expr.h"
 #include "cf_rangefix.h"
+#include "cf_satutils.h"
 #include "cf_utils.h"
 
 /* external functions */
