@@ -946,7 +946,7 @@ struct pexpr *pexpr_and_share(struct pexpr *a, struct pexpr *b, struct cfdata *d
 	}
 
 	/* general case */
-	e = xcalloc(1, sizeof(*e));
+	e = xmalloc(sizeof(*e));
 	pexpr_get(a);
 	pexpr_get(b);
 	pexpr_construct_and(e, a, b, 1);
@@ -1068,7 +1068,7 @@ struct pexpr *pexpr_or_share(struct pexpr *a, struct pexpr *b, struct cfdata *da
 	}
 
 	/* general case */
-	e = xcalloc(1, sizeof(*e));
+	e = xmalloc(sizeof(*e));
 	pexpr_get(a);
 	pexpr_get(b);
 	pexpr_construct_or(e, a, b, 1);
@@ -1420,13 +1420,7 @@ bool pexpr_contains_fexpr(struct pexpr *e, struct fexpr *fe)
  */
 struct fexpr_list *fexpr_list_init(void)
 {
-	struct fexpr_list *list = xcalloc(1, sizeof(*list));
-
-	list->head = NULL;
-	list->tail = NULL;
-	list->size = 0;
-
-	return list;
+	return xcalloc(1, sizeof(struct fexpr_list));
 }
 
 /*
@@ -1434,13 +1428,7 @@ struct fexpr_list *fexpr_list_init(void)
  */
 struct fexl_list *fexl_list_init(void)
 {
-	struct fexl_list *list = xcalloc(1, sizeof(*list));
-
-	list->head = NULL;
-	list->tail = NULL;
-	list->size = 0;
-
-	return list;
+	return xcalloc(1, sizeof(struct fexl_list));
 }
 
 /*
@@ -1448,13 +1436,7 @@ struct fexl_list *fexl_list_init(void)
  */
 struct pexpr_list *pexpr_list_init(void)
 {
-	struct pexpr_list *list = xcalloc(1, sizeof(*list));
-
-	list->head = NULL;
-	list->tail = NULL;
-	list->size = 0;
-
-	return list;
+	return xcalloc(1, sizeof(struct pexpr_list));
 }
 
 /*
@@ -1462,13 +1444,7 @@ struct pexpr_list *pexpr_list_init(void)
  */
 struct sfix_list *sfix_list_init(void)
 {
-	struct sfix_list *list = xcalloc(1, sizeof(*list));
-
-	list->head = NULL;
-	list->tail = NULL;
-	list->size = 0;
-
-	return list;
+	return xcalloc(1, sizeof(struct sfix_list));
 }
 
 /*
@@ -1476,13 +1452,7 @@ struct sfix_list *sfix_list_init(void)
  */
 struct sfl_list *sfl_list_init(void)
 {
-	struct sfl_list *list = xcalloc(1, sizeof(*list));
-
-	list->head = NULL;
-	list->tail = NULL;
-	list->size = 0;
-
-	return list;
+	return xcalloc(1, sizeof(struct sfl_list));
 }
 
 /*
@@ -1490,13 +1460,7 @@ struct sfl_list *sfl_list_init(void)
  */
 struct sdv_list *sdv_list_init(void)
 {
-	struct sdv_list *list = xcalloc(1, sizeof(*list));
-
-	list->head = NULL;
-	list->tail = NULL;
-	list->size = 0;
-
-	return list;
+	return xcalloc(1, sizeof(struct sdv_list));
 }
 
 /*
@@ -1504,13 +1468,7 @@ struct sdv_list *sdv_list_init(void)
  */
 struct sym_list *sym_list_init(void)
 {
-	struct sym_list *list = xcalloc(1, sizeof(*list));
-
-	list->head = NULL;
-	list->tail = NULL;
-	list->size = 0;
-
-	return list;
+	return xcalloc(1, sizeof(struct sym_list));
 }
 
 /*
@@ -1518,13 +1476,7 @@ struct sym_list *sym_list_init(void)
  */
 struct defm_list *defm_list_init(void)
 {
-	struct defm_list *list = xcalloc(1, sizeof(*list));
-
-	list->head = NULL;
-	list->tail = NULL;
-	list->size = 0;
-
-	return list;
+	return xcalloc(1, sizeof(struct defm_list));
 }
 
 /*
@@ -1532,13 +1484,7 @@ struct defm_list *defm_list_init(void)
  */
 struct prop_list *prop_list_init(void)
 {
-	struct prop_list *list = xcalloc(1, sizeof(*list));
-
-	list->head = NULL;
-	list->tail = NULL;
-	list->size = 0;
-
-	return list;
+	return xcalloc(1, sizeof(struct prop_list));
 }
 
 /*
@@ -2441,7 +2387,7 @@ void pexpr_print(char *tag, struct pexpr *e, int prevtoken)
  */
 struct pexpr *pexf(struct fexpr *fe)
 {
-	struct pexpr *pe = xcalloc(1, sizeof(*pe));
+	struct pexpr *pe = xmalloc(sizeof(*pe));
 
 	pexpr_construct_sym(pe, fe, 1);
 	return pe;
