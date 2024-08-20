@@ -153,7 +153,7 @@ help:
 	@echo  '                    default value without prompting'
 	@echo  '  tinyconfig	  - Configure the tiniest possible kernel'
 	@echo  '  testconfig	  - Run Kconfig unit tests (requires python3 and pytest)'
-	@echo  '  cfoutconfig     - Print constraints and DIMACS-output into files'
+	@echo  '  cfoutconfig     - Print constraints and DIMACS-output into files (requires PicoSAT)'
 	@echo  ''
 	@echo  'Configuration topic targets:'
 	@$(foreach f, $(all-config-fragments), \
@@ -198,21 +198,24 @@ $(foreach f, mconf.o $(lxdialog), \
 $(obj)/mconf: | $(obj)/mconf-libs
 $(addprefix $(obj)/, mconf.o $(lxdialog)): | $(obj)/mconf-cflags
 
+ifneq ($(strip $(shell ldconfig -p | grep libpicosat-trace.so.1)),)
 # configfix: Used for the xconfig target as well as for its debugging tools
 hostprogs        += cfoutconfig
-cfconf-objs      := configfix.o cf_constraints.o cf_expr.o cf_rangefix.o cf_utils.o picosat.o
+cfconf-objs      := configfix.o cf_constraints.o cf_expr.o cf_rangefix.o cf_utils.o
 cfoutconfig-objs := cfoutconfig.o $(common-objs) $(cfconf-objs)
-
-HOSTCFLAGS_picosat.o = -DTRACE -Wno-missing-prototypes -Wno-pointer-compare
+picosat-lib	           := -l:libpicosat-trace.so.1
+picosat-available-macro    := -DPICOSAT_AVAILABLE
+HOSTLDLIBS_cfoutconfig     := $(picosat-lib)
+endif
 
 # qconf: Used for the xconfig target based on Qt
 hostprogs	+= qconf
 qconf-cxxobjs	:= qconf.o qconf-moc.o
 qconf-objs	:= images.o $(common-objs) $(cfconf-objs)
 
-HOSTLDLIBS_qconf         = $(call read-file, $(obj)/qconf-libs)
-HOSTCXXFLAGS_qconf.o     = -std=c++11 -fPIC $(call read-file, $(obj)/qconf-cflags)
-HOSTCXXFLAGS_qconf-moc.o = -std=c++11 -fPIC $(call read-file, $(obj)/qconf-cflags)
+HOSTLDLIBS_qconf         := $(call read-file, $(obj)/qconf-libs) $(picosat-lib)
+HOSTCXXFLAGS_qconf.o     := -std=c++11 -fPIC $(call read-file, $(obj)/qconf-cflags) $(picosat-available-macro)
+HOSTCXXFLAGS_qconf-moc.o := -std=c++11 -fPIC $(call read-file, $(obj)/qconf-cflags) $(picosat-available-macro)
 $(obj)/qconf: | $(obj)/qconf-libs
 $(obj)/qconf.o $(obj)/qconf-moc.o: | $(obj)/qconf-cflags
 

@@ -35,8 +35,10 @@
 #include <xalloc.h>
 #include "lkc.h"
 #include "qconf.h"
+#ifdef PICOSAT_AVAILABLE
 #include "configfix.h"
 #include "cf_expr.h"
+#endif
 
 #include "images.h"
 
@@ -1393,6 +1395,7 @@ ConfigMainWindow::ConfigMainWindow(void)
 	split2->addWidget(helpText);
 	split3 = new QSplitter(split2);
 	split3->setOrientation(Qt::Vertical);
+#ifdef PICOSAT_AVAILABLE
 	conflictsView = new ConflictsView(split3, "help");
 	/* conflictsSelected signal in conflictsview triggers when a conflict is selected
 		 in the view. this line connects that event to conflictselected event in mainwindow
@@ -1402,6 +1405,7 @@ ConfigMainWindow::ConfigMainWindow(void)
 	connect(conflictsView,SIGNAL(refreshMenu()),SLOT(refreshMenu()));
 	connect(menuList,SIGNAL(updateConflictsViewColorization()),conflictsView,SLOT(updateConflictsViewColorization()));
 	connect(configList,SIGNAL(updateConflictsViewColorization()),conflictsView,SLOT(updateConflictsViewColorization()));
+#endif
 
 	setTabOrder(configList, helpText);
 	configList->setFocus();
@@ -1469,7 +1473,9 @@ ConfigMainWindow::ConfigMainWindow(void)
 	ConfigList::showPromptAction = new QAction("Show Prompt Options", optGroup);
 	ConfigList::showPromptAction->setCheckable(true);
 	ConfigList::addSymbolFromContextMenu = new QAction("Add symbol from context menu");
+#ifdef PICOSAT_AVAILABLE
 	connect(ConfigList::addSymbolFromContextMenu, &QAction::triggered, conflictsView, &ConflictsView::addSymbol);
+#endif
 
 	QAction *showDebugAction = new QAction("Show Debug Info", this);
 	  showDebugAction->setCheckable(true);
@@ -1525,8 +1531,6 @@ ConfigMainWindow::ConfigMainWindow(void)
 
 	connect(configList, &ConfigList::menuChanged,
 		helpText, &ConfigInfoView::setInfo);
-	connect(configList, &ConfigList::menuChanged,
-		conflictsView, &ConflictsView::menuChanged);
 	connect(configList, &ConfigList::menuSelected,
 		this, &ConfigMainWindow::changeMenu);
 	connect(configList, &ConfigList::itemSelected,
@@ -1535,10 +1539,14 @@ ConfigMainWindow::ConfigMainWindow(void)
 		this, &ConfigMainWindow::goBack);
 	connect(menuList, &ConfigList::menuChanged,
 		helpText, &ConfigInfoView::setInfo);
-	connect(menuList, &ConfigList::menuChanged,
-		conflictsView, &ConflictsView::menuChanged);
 	connect(menuList, &ConfigList::menuSelected,
 		this, &ConfigMainWindow::changeMenu);
+#ifdef PICOSAT_AVAILABLE
+	connect(menuList, &ConfigList::menuChanged,
+		conflictsView, &ConflictsView::menuChanged);
+	connect(configList, &ConfigList::menuChanged,
+		conflictsView, &ConflictsView::menuChanged);
+#endif
 
 	connect(configList, &ConfigList::gotFocus,
 		helpText, &ConfigInfoView::setInfo);
@@ -2015,6 +2023,7 @@ void ConflictsView::changeToNo(){
 }
 
 void ConflictsView::applyFixButtonClick(){
+#ifdef PICOSAT_AVAILABLE
 	signed int solution_number = solutionSelector->currentIndex();
 
 	if (solution_number == -1 || solution_output == NULL) {
@@ -2034,6 +2043,7 @@ void ConflictsView::applyFixButtonClick(){
 	QMessageBox msgBox;
 	msgBox.setText("The solution has been applied.");
 	msgBox.exec();
+#endif
 }
 
 void ConflictsView::changeToYes(){
@@ -2149,6 +2159,7 @@ void ConflictsView::cellClicked(int row, int column)
 }
 
 void ConflictsView::changeSolutionTable(int solution_number){
+#ifdef PICOSAT_AVAILABLE
 	if (solution_output == nullptr || solution_number < 0){
 		return;
 	}
@@ -2176,10 +2187,12 @@ void ConflictsView::changeSolutionTable(int solution_number){
 		}
 	}
 	updateConflictsViewColorization();
+#endif
 }
 
 void ConflictsView::updateConflictsViewColorization(void)
 {
+#ifdef PICOSAT_AVAILABLE
 	auto green = QColor(0,170,0);
 	auto red = QColor(255,0,0);
 	auto grey = QColor(180,180,180);
@@ -2215,11 +2228,12 @@ void ConflictsView::updateConflictsViewColorization(void)
 			symbol->setForeground(green);
 		}
     }
-
+#endif
 }
 
 void ConflictsView::runSatConfAsync()
 {
+#ifdef PICOSAT_AVAILABLE
 	//loop through the rows in conflicts table adding each row into the array:
 	struct symbol_dvalue *p = nullptr;
 	p = static_cast<struct symbol_dvalue *>(calloc(conflictsTable->rowCount(),sizeof(struct symbol_dvalue)));
@@ -2256,11 +2270,12 @@ void ConflictsView::runSatConfAsync()
 		satconf_cancelled = true;
 	}
 	satconf_cancellation_cv.notify_one();
-
+#endif
 }
 
 void ConflictsView::updateResults(void)
 {
+#ifdef PICOSAT_AVAILABLE
 	fixConflictsAction_->setText("Calculate Fixes");
 	loadingAction->setVisible(false);
 	if (!(solution_output == nullptr || solution_output->size == 0))
@@ -2284,11 +2299,12 @@ void ConflictsView::updateResults(void)
 		delete runSatConfAsyncThread;
 		runSatConfAsyncThread  = nullptr;
 	}
-
+#endif
 }
 
 void ConflictsView::calculateFixes()
 {
+#ifdef PICOSAT_AVAILABLE
 	if(conflictsTable->rowCount() == 0)
 	{
 		printd("table is empty\n");
@@ -2311,7 +2327,7 @@ void ConflictsView::calculateFixes()
 		std::unique_lock<std::mutex> lk{satconf_mutex};
 		satconf_cancellation_cv.wait(lk,[this] {return satconf_cancelled == true;});
 	}
-
+#endif
 }
 
 void ConflictsView::changeAll(void)
