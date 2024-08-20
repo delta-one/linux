@@ -6,6 +6,10 @@
 #ifndef CF_EXPR_H
 #define CF_EXPR_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdbool.h>
 
 #include "cf_defs.h"
@@ -147,9 +151,6 @@ void pexpr_as_char(struct pexpr *e, struct gstr *s, int parent, struct cfdata *d
 /* check whether a pexpr contains a specific fexpr */
 bool pexpr_contains_fexpr(struct pexpr *e, struct fexpr *fe);
 
-/* init list of fexpr */
-struct fexpr_list *fexpr_list_init(void);
-
 /* init list of fexpr_list */
 struct fexl_list *fexl_list_init(void);
 
@@ -173,9 +174,6 @@ struct defm_list *defm_list_init(void);
 
 /* init list of properties */
 struct prop_list *prop_list_init(void);
-
-/* add element to tail of a fexpr_list */
-void fexpr_list_add(struct fexpr_list *list, struct fexpr *fe);
 
 /* add element to tail of a fexl_list */
 void fexl_list_add(struct fexl_list *list, struct fexpr_list *elem);
@@ -202,9 +200,6 @@ void defm_list_add(struct defm_list *list, struct default_map *map);
 void prop_list_add(struct prop_list *list, struct property *prop);
 
 /* delete an element from a fexpr_list */
-void fexpr_list_delete(struct fexpr_list *list, struct fexpr_node *node);
-
-/* delete an element from a fexpr_list */
 void fexl_list_delete(struct fexl_list *list, struct fexl_node *node);
 
 /* delete the first occurrence of elem in an fexl_list */
@@ -215,9 +210,6 @@ void pexpr_list_delete(struct pexpr_list *list, struct pexpr_node *node);
 
 /* delete an element from a sfix_list */
 void sfix_list_delete(struct sfix_list *list, struct sfix_node *node);
-
-/* make a shallow copy of a fexpr_list */
-struct fexpr_list *fexpr_list_copy(struct fexpr_list *list);
 
 /* make a shallow copy of a fexpr_list */
 struct fexl_list *fexl_list_copy(struct fexl_list *list);
@@ -236,9 +228,6 @@ void fexl_list_print(char *title, struct fexl_list *list);
 
 /* print a pexpr_list */
 void pexpr_list_print(char *title, struct pexpr_list *list);
-
-/* free an fexpr_list */
-void fexpr_list_free(struct fexpr_list *list);
 
 /* free an pexpr_list (and pexpr_put the elements) */
 void pexpr_list_free_put(struct pexpr_list *list);
@@ -292,5 +281,9 @@ struct pexpr *pexf(struct fexpr *fe);
 
 /* eliminate duplicate and redundant operands */
 struct pexpr *pexpr_eliminate_dups(struct pexpr *e, struct cfdata *data);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

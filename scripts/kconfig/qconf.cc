@@ -36,6 +36,7 @@
 #include "lkc.h"
 #include "qconf.h"
 #include "configfix.h"
+#include "cf_expr.h"
 
 #include "images.h"
 
