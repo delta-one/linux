@@ -16,6 +16,9 @@
 
 #include "configfix.h"
 #include "internal.h"
+#include "picosat.h"
+#include "cf_expr.h"
+#include "cf_utils.h"
 
 #define OUTFILE_CONSTRAINTS "./scripts/kconfig/cfout_constraints.txt"
 #define OUTFILE_DIMACS "./scripts/kconfig/cfout_constraints.dimacs"
