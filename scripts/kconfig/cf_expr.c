@@ -3,6 +3,7 @@
  * Copyright (C) 2023 Patrick Franz <deltaone@debian.org>
  */
 
+#include "lkc.h"
 #define _GNU_SOURCE
 #include <assert.h>
 #include <locale.h>
@@ -14,6 +15,7 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "list.h"
 #include "cf_expr.h"
 #include "cf_defs.h"
 #include "cf_utils.h"
@@ -137,7 +139,8 @@ static void create_fexpr_nonbool(struct symbol *sym, struct cfdata *data)
 
 	sym->fexpr_y = data->constants->const_false;
 	sym->fexpr_m = data->constants->const_false;
-	sym->nb_vals = fexpr_list_init();
+	sym->nb_vals = xmalloc(sizeof(*sym->nb_vals));
+	INIT_LIST_HEAD(&sym->nb_vals->list);
 
 	for (int i = 0; i < 3; i++) {
 		struct fexpr *e = fexpr_create(data->sat_variable_nr++, FE_NONBOOL, sym->name);
@@ -163,7 +166,7 @@ static void create_fexpr_nonbool(struct symbol *sym, struct cfdata *data)
 			break;
 		}
 
-		fexpr_list_add(sym->nb_vals, e);
+		CF_EMPLACE_BACK(sym->nb_vals, fexpr_node, e);
 		fexpr_add_to_satmap(e, data);
 	}
 }
@@ -239,6 +242,7 @@ static struct pexpr *expr_eval_unequal_nonbool_const(struct symbol *sym, struct 
 	long val;
 	struct fexpr_node *node;
 	struct fexpr *fe;
+	bool first;
 
 	if (!sym || !compval)
 		return pexf(data->constants->const_false);
@@ -257,9 +261,14 @@ static struct pexpr *expr_eval_unequal_nonbool_const(struct symbol *sym, struct 
 
 	c = pexf(data->constants->const_false);
 	val = strtol(compval->name, NULL, base);
-	for (node = sym->nb_vals->head->next; node != NULL; node = node->next) {
+	first = true;
+	list_for_each_entry(node, &sym->nb_vals->list, node) {
 		long symval;
 
+		if (first) {
+			first = false;
+			continue;
+		}
 		fe = node->elem;
 		symval = strtol(str_get(&fe->nb_val), NULL, base);
 
@@ -601,12 +610,14 @@ struct fexpr *sym_create_nonbool_fexpr(struct symbol *sym, char *value,
 {
 	struct fexpr *e;
 	char *s;
+	struct fexpr_node *first =
+		list_first_entry(&sym->nb_vals->list, struct fexpr_node, node);
 
 	if (!strcmp(value, "")) {
 		if (sym->type == S_STRING)
-			return sym->nb_vals->head->next->elem;
+			return list_next_entry(first, node)->elem;
 		else
-			return sym->nb_vals->head->elem;
+			return first->elem;
 	}
 
 	e = sym_get_nonbool_fexpr(sym, value);
@@ -635,9 +646,9 @@ struct fexpr *sym_create_nonbool_fexpr(struct symbol *sym, char *value,
 
 	if (!strcmp(s, "")) {
 		if (sym->type == S_STRING)
-			return sym->nb_vals->head->next->elem;
+			return list_next_entry(first, node)->elem;
 		else
-			return sym->nb_vals->head->elem;
+			return first->elem;
 	}
 
 	e = sym_get_nonbool_fexpr(sym, s);
@@ -651,7 +662,7 @@ struct fexpr *sym_create_nonbool_fexpr(struct symbol *sym, char *value,
 	e->nb_val = str_new();
 	str_append(&e->nb_val, s);
 
-	fexpr_list_add(sym->nb_vals, e);
+	CF_EMPLACE_BACK(sym->nb_vals, fexpr_node, e);
 	fexpr_add_to_satmap(e, data);
 
 	return e;
@@ -665,7 +676,7 @@ struct fexpr *sym_get_nonbool_fexpr(struct symbol *sym, char *value)
 {
 	struct fexpr_node *e;
 
-	fexpr_list_for_each(e, sym->nb_vals) {
+	list_for_each_entry(e, &sym->nb_vals->list, node) {
 		if (strcmp(str_get(&e->elem->nb_val), value) == 0)
 			return e->elem;
 	}
@@ -690,7 +701,7 @@ struct fexpr *sym_get_or_create_nonbool_fexpr(struct symbol *sym, char *value,
 
 /*
  * calculate, when expr of type EQUAL will evaluate to yes
- * Side effect: May create certain values in e->{left,right}.sym.nb_vals
+ * Side effect: May create certain values in e->{left,right}.sym->nb_vals
  */
 struct pexpr *expr_calculate_pexpr_y_equals(struct expr *e, struct cfdata *data)
 {
@@ -744,14 +755,25 @@ struct pexpr *expr_calculate_pexpr_y_equals(struct expr *e, struct cfdata *data)
 	if (sym_is_nonboolean(e->left.sym) && sym_is_nonboolean(e->right.sym)) {
 		struct pexpr *c = pexf(data->constants->const_false);
 		struct fexpr *e1, *e2;
+		struct fexpr_node *node1, *node2;
+		struct list_head *nb_vals_l = &e->left.sym->nb_vals->list;
+		struct list_head *nb_vals_r = &e->right.sym->nb_vals->list;
+		bool first1 = true;
 
-		for (struct fexpr_node *node1 =
-			     e->left.sym->nb_vals->head->next;
-		     node1 != NULL; node1 = node1->next) {
+		list_for_each_entry(node1, nb_vals_l, node) {
+			bool first2 = true;
+
+			if (first1) {
+				first1 = false;
+				continue;
+			}
 			e1 = node1->elem;
-			for (struct fexpr_node *node2 =
-				     e->right.sym->nb_vals->head->next;
-			     node2 != NULL; node2 = node2->next) {
+			list_for_each_entry(node2, nb_vals_r, node) {
+				if (first2) {
+					first2 = false;
+					continue;
+				}
+
 				e2 = node2->elem;
 				if (!strcmp(str_get(&e1->nb_val),
 					    str_get(&e2->nb_val))) {
@@ -1417,14 +1439,6 @@ bool pexpr_contains_fexpr(struct pexpr *e, struct fexpr *fe)
 }
 
 /*
- * init list of fexpr
- */
-struct fexpr_list *fexpr_list_init(void)
-{
-	return xcalloc(1, sizeof(struct fexpr_list));
-}
-
-/*
  * init list of fexpr_list
  */
 struct fexl_list *fexl_list_init(void)
@@ -1486,27 +1500,6 @@ struct defm_list *defm_list_init(void)
 struct prop_list *prop_list_init(void)
 {
 	return xcalloc(1, sizeof(struct prop_list));
-}
-
-/*
- * add element to tail of a fexpr_list
- */
-void fexpr_list_add(struct fexpr_list *list, struct fexpr *fe)
-{
-	struct fexpr_node *node = xcalloc(1, sizeof(*node));
-
-	node->elem = fe;
-
-	if (list->size == 0) {
-		list->head = node;
-		list->tail = node;
-	} else {
-		node->prev = list->tail;
-		list->tail = node;
-		node->prev->next = node;
-	}
-
-	list->size++;
 }
 
 /*
@@ -1680,28 +1673,6 @@ void prop_list_add(struct prop_list *list, struct property *prop)
 /*
  * delete an element from a fexpr_list
  */
-void fexpr_list_delete(struct fexpr_list *list, struct fexpr_node *node)
-{
-	if (list->size == 0 || node == NULL)
-		return;
-
-	if (node == list->head)
-		list->head = node->next;
-	else
-		node->prev->next = node->next;
-
-	if (node == list->tail)
-		list->tail = node->prev;
-	else
-		node->next->prev = node->prev;
-
-	list->size--;
-	free(node);
-}
-
-/*
- * delete an element from a fexpr_list
- */
 void sfix_list_delete(struct sfix_list *list, struct sfix_node *node)
 {
 	if (list->size == 0 || node == NULL)
@@ -1784,20 +1755,6 @@ void fexl_list_delete_elem(struct fexl_list *list, struct fexpr_list *elem)
 }
 
 /*
- * make a shallow copy of a fexpr_list
- */
-struct fexpr_list *fexpr_list_copy(struct fexpr_list *list)
-{
-	struct fexpr_list *ret = fexpr_list_init();
-	struct fexpr_node *node;
-
-	fexpr_list_for_each(node, list)
-		fexpr_list_add(ret, node->elem);
-
-	return ret;
-}
-
-/*
  * make a shallow copy of a fexl_list
  */
 struct fexl_list *fexl_list_copy(struct fexl_list *list)
@@ -1846,13 +1803,16 @@ struct sfix_list *sfix_list_copy(struct sfix_list *list)
 void fexpr_list_print(char *title, struct fexpr_list *list)
 {
 	struct fexpr_node *node;
+	bool first = true;
 
 	printf("%s: [", title);
 
-	fexpr_list_for_each(node, list) {
-		printf("%s", str_get(&node->elem->name));
-		if (node->next != NULL)
+	list_for_each_entry(node, &list->list, node) {
+		if (first)
+			first = false;
+		else
 			printf(", ");
+		printf("%s", str_get(&node->elem->name));
 	}
 
 	printf("]\n");
@@ -1887,22 +1847,6 @@ void pexpr_list_print(char *title, struct pexpr_list *list)
 	}
 
 	printf("]\n");
-}
-
-/*
- * free an fexpr_list
- */
-void fexpr_list_free(struct fexpr_list *list)
-{
-	struct fexpr_node *node = list->head, *tmp;
-
-	while (node != NULL) {
-		tmp = node->next;
-		free(node);
-		node = tmp;
-	}
-
-	free(list);
 }
 
 /*

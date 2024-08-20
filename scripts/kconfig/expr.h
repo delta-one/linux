@@ -138,7 +138,7 @@ struct symbol {
 	struct pexpr *list_sel_y;
 	struct pexpr *list_sel_m;
 	struct fexpr *noPromptCond;
-	struct fexpr_list *nb_vals; /* used for non-booleans */
+	struct fexpr_list *nb_vals; /* list of struct fexpr_node's; used for non-booleans */
 	struct pexpr_list *constraints; /* list of constraints for symbol */
 };
 
