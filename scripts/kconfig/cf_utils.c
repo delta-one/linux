@@ -15,8 +15,11 @@
 #include <unistd.h>
 #include <ctype.h>
 
-#include "configfix.h"
 #include "internal.h"
+#include "picosat.h"
+#include "cf_utils.h"
+#include "cf_expr.h"
+#include "list.h"
 
 #define SATMAP_INIT_SIZE 2
 
@@ -892,7 +895,10 @@ void sym_add_assumption(PicoSAT *pico, struct symbol *sym)
 	}
 
 	if (sym_is_nonboolean(sym)) {
-		struct fexpr *e = sym->nb_vals->head->elem;
+		bool first;
+		struct fexpr *not_set = list_first_entry(&sym->nb_vals->list,
+						   struct fexpr_node, node)
+					  ->elem;
 		struct fexpr_node *node;
 
 		const char *string_val = sym_get_string_value(sym);
@@ -902,11 +908,17 @@ void sym_add_assumption(PicoSAT *pico, struct symbol *sym)
 
 		/* symbol does not have a value */
 		if (!sym_nonbool_has_value_set(sym)) {
-			/* set value for sym=n */
-			picosat_assume(pico, e->satval);
-			e->assumption = true;
+			bool first = true;
 
-			for (node = sym->nb_vals->head->next; node != NULL; node = node->next) {
+			/* set value for sym=n */
+			picosat_assume(pico, not_set->satval);
+			not_set->assumption = true;
+
+			list_for_each_entry(node, &sym->nb_vals->list, node) {
+				if (first) {
+					first = false;
+					continue;
+				}
 				picosat_assume(pico, -(node->elem->satval));
 				node->elem->assumption = false;
 			}
@@ -917,13 +929,16 @@ void sym_add_assumption(PicoSAT *pico, struct symbol *sym)
 		/* symbol does have a value set */
 
 		/* set value for sym=n */
-		picosat_assume(pico, -(e->satval));
-		e->assumption = false;
+		picosat_assume(pico, -(not_set->satval));
+		not_set->assumption = false;
 
+		first = true;
 		/* set value for all other fexpr */
-		fexpr_list_for_each(node, sym->nb_vals) {
-			if (node->prev == NULL)
+		list_for_each_entry(node, &sym->nb_vals->list, node) {
+			if (first) {
+				first = false;
 				continue;
+			}
 
 			if (strcmp(str_get(&node->elem->nb_val), string_val) == 0) {
 				picosat_assume(pico, node->elem->satval);

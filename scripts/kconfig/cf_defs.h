@@ -13,6 +13,7 @@
 
 #include "lkc.h"
 #include "expr.h"
+#include "list_types.h"
 
 extern bool CFDEBUG;
 extern bool stop_rangefix;
@@ -76,17 +77,65 @@ struct fexpr {
 			struct gstr nb_val;
 		};
 	};
-
 };
 
-struct fexpr_list {
-	struct fexpr_node *head, *tail;
-	unsigned int size;
-};
+/*
+ * CF_ALLOC_NODE - Utility macro for allocating, initializing and returning an 
+ * object of a type like struct fexpr_node
+ *
+ * @node_type: type of the object to create a pointer to (e.g. struct fexpr_node)
+ * @el: the value to set field .element to
+ */
+#define CF_ALLOC_NODE(node_type, el)                                          \
+	({                                                                    \
+		struct node_type *__node = xmalloc(sizeof(struct node_type)); \
+		__node->elem = el;                                            \
+		INIT_LIST_HEAD(&__node->node);                                \
+		__node;                                                       \
+	})
+/*
+ * constructs an object using CF_ALLOC_NODE(node_type, el) and then adds to the
+ * end of list->list
+ */
+#define CF_EMPLACE_BACK(list_, node_type, el)                                 \
+	do {                                                                  \
+		struct node_type *__cf_emplace_back_node =                    \
+			CF_ALLOC_NODE(node_type, el);                         \
+		list_add_tail(&__cf_emplace_back_node->node, &(list_)->list); \
+	} while (0)
+
+/*
+ * frees all nodes and then list_
+ */
+#define CF_LIST_FREE(list_, node_type)                                   \
+	do {                                                             \
+		struct node_type *__node, *__next;                       \
+		list_for_each_entry_safe(__node, __next, &(list_)->list, \
+					 node) {                         \
+			list_del(&__node->node);                         \
+			free(__node);                                    \
+		}                                                        \
+		free(list_);                                             \
+	} while (0)
+
+/*
+ * declares and initializes a list
+ */
+#define CF_DEF_LIST(name, list_type)                  \
+	struct list_type *name = ({                        \
+		struct list_type *__cf_list =              \
+			xmalloc(sizeof(struct list_type)); \
+		INIT_LIST_HEAD(&__cf_list->list);          \
+		__cf_list;                                 \
+	});
 
 struct fexpr_node {
 	struct fexpr *elem;
-	struct fexpr_node *next, *prev;
+	struct list_head node;
+};
+
+struct fexpr_list {
+	struct list_head list;
 };
 
 struct fexl_list {

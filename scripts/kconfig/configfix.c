@@ -17,6 +17,10 @@
 #include "configfix.h"
 #include "internal.h"
 #include "cf_expr.h"
+#include "picosat.h"
+#include "cf_utils.h"
+#include "cf_constraints.h"
+#include "cf_rangefix.h"
 
 bool CFDEBUG;
 bool stop_rangefix;

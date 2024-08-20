@@ -11,19 +11,8 @@
 extern "C" {
 #endif
 
-/* include internal definitions */
-#define LKC_DIRECT_LINK
-#include "lkc.h"
-
 /* include own definitions */
 #include "cf_defs.h"
-
-/* include other header files needed */
-#include "picosat.h"
-#include "cf_constraints.h"
-#include "cf_expr.h"
-#include "cf_rangefix.h"
-#include "cf_utils.h"
 
 /* external functions */
 struct sfl_list *run_satconf(struct sdv_list *symbols);

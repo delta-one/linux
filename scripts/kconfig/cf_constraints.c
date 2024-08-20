@@ -5,6 +5,7 @@
 
 #include "cf_defs.h"
 #include "expr.h"
+#include "list.h"
 #define _GNU_SOURCE
 #include <assert.h>
 #include <locale.h>
@@ -577,6 +578,7 @@ static void add_dependencies_nonbool(struct symbol *sym, struct cfdata *data)
 	struct pexpr *nb_vals; // "sym is set to some value" / "sym is not 'n'"
 	struct fexpr_node *node;
 	struct pexpr *c;
+	bool first = true;
 
 	if (!sym_is_nonboolean(sym) || !sym->dir_dep.expr || sym->rev_dep.expr)
 		return;
@@ -585,9 +587,11 @@ static void add_dependencies_nonbool(struct symbol *sym, struct cfdata *data)
 
 	nb_vals = pexf(data->constants->const_false);
 	/* can skip the first non-boolean value, since this is 'n' */
-	fexpr_list_for_each(node, sym->nb_vals) {
-		if (node->prev == NULL)
+	list_for_each_entry(node, &sym->nb_vals->list, node) {
+		if (first) {
+			first = false;
 			continue;
+		}
 
 		nb_vals = pexpr_or(nb_vals, pexf(node->elem), data,
 					PEXPR_ARGX);
@@ -976,13 +980,19 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 		struct pexpr *default_any = get_default_any(sym, data);
 		struct pexpr *e1 = pexf(data->constants->const_true);
 		struct pexpr *e2, *e3;
+		struct fexpr_node *node;
+		bool first = true;
 
 		/* e1 = "sym is not set" */
-		for (struct fexpr_node *node = sym->nb_vals->head->next;
-		     node != NULL; node = node->next)
+		list_for_each_entry(node, &sym->nb_vals->list, node) {
+			if (first) {
+				first = false;
+				continue;
+			}
 			e1 = pexpr_and(
 				e1, pexpr_not(pexf(node->elem), data),
 				data, PEXPR_ARGX);
+		}
 
 		e2 = pexpr_implies(pexpr_not_share(default_any, data), e1,
 					data, PEXPR_ARG1);
@@ -1090,12 +1100,14 @@ static void sym_add_range_constraints(struct symbol *sym, struct cfdata *data)
 	struct pexpr *propCond;
 	struct pexpr_list *prevCond; // list of all conditions of the ranges
 		// from the previous iterations
+
 	prevCond = pexpr_list_init();
 
 	for_all_properties(sym, prop, P_RANGE) {
 		int base;
 		long long range_min, range_max, tmp;
 		struct fexpr_node *node;
+		bool first;
 
 		if (prop == NULL)
 			continue;
@@ -1136,13 +1148,16 @@ static void sym_add_range_constraints(struct symbol *sym, struct cfdata *data)
 		range_min = sym_get_range_val(prop->expr->left.sym, base);
 		range_max = sym_get_range_val(prop->expr->right.sym, base);
 
+		first = true;
 		/* can skip the first non-boolean value, since this is 'n' */
-		fexpr_list_for_each(node, sym->nb_vals) {
+		list_for_each_entry(node, &sym->nb_vals->list, node) {
 			struct pexpr *not_nb_val;
 			struct pexpr *c;
 
-			if (node->prev == NULL)
+			if (first) {
+				first = false;
 				continue;
+			}
 
 			tmp = strtoll(str_get(&node->elem->nb_val), NULL, base);
 
@@ -1167,18 +1182,16 @@ static void sym_add_range_constraints(struct symbol *sym, struct cfdata *data)
  */
 static void sym_nonbool_at_least_1(struct symbol *sym, struct cfdata *data)
 {
-	struct pexpr *e = NULL;
+	struct pexpr *e;
 	struct fexpr_node *node;
 
 	if (!sym_is_nonboolean(sym))
 		return;
 
-	fexpr_list_for_each(node, sym->nb_vals) {
-		if (node->prev == NULL)
-			e = pexf(node->elem);
-		else
-			e = pexpr_or(e, pexf(node->elem), data, PEXPR_ARGX);
-	}
+	e = pexf(data->constants->const_false);
+	list_for_each_entry(node, &sym->nb_vals->list, node)
+		e = pexpr_or(e, pexf(node->elem), data, PEXPR_ARGX);
+	
 	sym_add_constraint(sym, e, data);
 	pexpr_put(e);
 }
@@ -1194,13 +1207,17 @@ static void sym_nonbool_at_most_1(struct symbol *sym, struct cfdata *data)
 		return;
 
 	/* iterate over all subsets of sym->nb_vals of size 2 */
-	fexpr_list_for_each(node1, sym->nb_vals) {
+	list_for_each_entry(node1, &sym->nb_vals->list, node) {
 		struct pexpr *e1 = pexf(node1->elem);
+		struct fexpr_node *node2;
 
-		for (struct fexpr_node *node2 = node1->next; node2 != NULL;
-		     node2 = node2->next) {
-			struct pexpr *e2 = pexf(node2->elem);
-			struct pexpr *e = pexpr_or(pexpr_not_share(e1, data),
+		list_for_each_entry_reverse(node2, &sym->nb_vals->list, node) {
+			struct pexpr *e2, *e;
+
+			if (node2 == node1)
+				break;
+			e2 = pexf(node2->elem);
+			e = pexpr_or(pexpr_not_share(e1, data),
 						   pexpr_not_share(e2, data),
 						   data, PEXPR_ARGX);
 
