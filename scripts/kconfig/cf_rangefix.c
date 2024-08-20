@@ -782,7 +782,7 @@ static struct sfix_list *convert_diagnosis(struct fexpr_list *diagnosis, struct 
 	/* set the values for the conflict symbols */
 	sdv_list_for_each(snode, data->sdv_symbols) {
 		sdv = snode->elem;
-		fix = xcalloc(1, sizeof(*fix));
+		fix = xmalloc(sizeof(*fix));
 		fix->sym = sdv->sym;
 		fix->type = SF_BOOLEAN;
 		fix->tri = sdv->tri;
