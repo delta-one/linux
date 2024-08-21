@@ -151,9 +151,6 @@ void pexpr_as_char(struct pexpr *e, struct gstr *s, int parent, struct cfdata *d
 /* check whether a pexpr contains a specific fexpr */
 bool pexpr_contains_fexpr(struct pexpr *e, struct fexpr *fe);
 
-/* init list of fexpr_list */
-struct fexl_list *fexl_list_init(void);
-
 /* init list of pexpr */
 struct pexpr_list *pexpr_list_init(void);
 
@@ -174,9 +171,6 @@ struct defm_list *defm_list_init(void);
 
 /* init list of properties */
 struct prop_list *prop_list_init(void);
-
-/* add element to tail of a fexl_list */
-void fexl_list_add(struct fexl_list *list, struct fexpr_list *elem);
 
 /* add element to tail of a pexpr_list */
 void pexpr_list_add(struct pexpr_list *list, struct pexpr *e);
@@ -199,20 +193,11 @@ void defm_list_add(struct defm_list *list, struct default_map *map);
 /* add element to tail of a prop_list */
 void prop_list_add(struct prop_list *list, struct property *prop);
 
-/* delete an element from a fexpr_list */
-void fexl_list_delete(struct fexl_list *list, struct fexl_node *node);
-
 /* delete the first occurrence of elem in an fexl_list */
 void fexl_list_delete_elem(struct fexl_list *list, struct fexpr_list *elem);
 
-/* delete an element from a pexpr_list */
-void pexpr_list_delete(struct pexpr_list *list, struct pexpr_node *node);
-
 /* delete an element from a sfix_list */
 void sfix_list_delete(struct sfix_list *list, struct sfix_node *node);
-
-/* make a shallow copy of a fexpr_list */
-struct fexl_list *fexl_list_copy(struct fexl_list *list);
 
 /* make a shallow copy of a sdv_list */
 struct sdv_list *sdv_list_copy(struct sdv_list *list);
@@ -231,9 +216,6 @@ void pexpr_list_print(char *title, struct pexpr_list *list);
 
 /* free an pexpr_list (and pexpr_put the elements) */
 void pexpr_list_free_put(struct pexpr_list *list);
-
-/* free an fexl_list */
-void fexl_list_free(struct fexl_list *list);
 
 /* free a sdv_list */
 void sdv_list_free(struct sdv_list *list);
