@@ -13,7 +13,7 @@
 void get_constraints(struct cfdata *data);
 
 /* count the number of all constraints */
-unsigned int count_counstraints(void);
+unsigned int count_constraints(void);
 
 /* add a constraint for a symbol */
 void sym_add_constraint(struct symbol *sym, struct pexpr *constraint, struct cfdata *data);
