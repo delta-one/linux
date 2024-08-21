@@ -127,7 +127,7 @@ struct fexpr {
 			xmalloc(sizeof(struct list_type)); \
 		INIT_LIST_HEAD(&__cf_list->list);          \
 		__cf_list;                                 \
-	});
+	})
 
 struct fexpr_node {
 	struct fexpr *elem;
@@ -139,13 +139,12 @@ struct fexpr_list {
 };
 
 struct fexl_list {
-	struct fexl_node *head, *tail;
-	unsigned int size;
+	struct list_head list;
 };
 
 struct fexl_node {
 	struct fexpr_list *elem;
-	struct fexl_node *next, *prev;
+	struct list_head node;
 };
 
 enum pexpr_type {
