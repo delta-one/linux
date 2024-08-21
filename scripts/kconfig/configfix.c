@@ -16,7 +16,6 @@
 
 #include "configfix.h"
 #include "internal.h"
-#include "cf_expr.h"
 #include "picosat.h"
 #include "cf_utils.h"
 #include "cf_constraints.h"
@@ -40,7 +39,7 @@ static bool sdv_within_range(struct sdv_list *symbols);
 struct sfix_list **run_satconf(struct symbol_dvalue **symbols, size_t n,
 			       size_t *num_solutions)
 {
-	CF_DEF_LIST(symbols_list, sdv_list);
+	CF_DEF_LIST(symbols_list, sdv);
 	struct sfl_list *solutions;
 	struct sfix_list **solutions_arr;
 	struct sfl_node *node;
@@ -48,15 +47,15 @@ struct sfix_list **run_satconf(struct symbol_dvalue **symbols, size_t n,
 
 	i = 0;
 	for (i = 0; i < n; ++i)
-		CF_EMPLACE_BACK(symbols_list, sdv_node, symbols[i]);
+		CF_EMPLACE_BACK(symbols_list, symbols[i], sdv);
 
 	solutions = run_satconf_list(symbols_list);
 	*num_solutions = list_size(&solutions->list);
 	solutions_arr = xcalloc(*num_solutions, sizeof(struct sfix_list *));
 	i = 0;
-	CF_LIST_FOR_EACH(node, solutions)
+	CF_LIST_FOR_EACH(node, solutions, sfl)
 		solutions_arr[i++] = node->elem;
-	CF_LIST_FREE(solutions, sfix_node);
+	CF_LIST_FREE(solutions, sfl);
 	return solutions_arr;
 }
 
@@ -83,7 +82,7 @@ struct sfl_list *run_satconf_list(struct sdv_list *symbols)
 	/* check whether all values can be applied -> no need to run */
 	if (sdv_within_range(symbols)) {
 		printd("\nAll symbols are already within range.\n\n");
-		return CF_LIST_INIT(sfl_list);
+		return CF_LIST_INIT(sfl);
 	}
 
 	if (!init_done) {
@@ -130,7 +129,7 @@ struct sfl_list *run_satconf_list(struct sdv_list *symbols)
 	}
 
 	/* copy array with symbols to change */
-	data.sdv_symbols = CF_LIST_COPY(symbols, sdv_node);
+	data.sdv_symbols = CF_LIST_COPY(symbols, sdv);
 
 	/* add assumptions for conflict-symbols */
 	sym_add_assumption_sdv(pico, data.sdv_symbols);
@@ -145,9 +144,9 @@ struct sfl_list *run_satconf_list(struct sdv_list *symbols)
 	}
 
 	/* store the conflict symbols */
-	conflict_syms = CF_LIST_INIT(sym_list);
-	CF_LIST_FOR_EACH(node, data.sdv_symbols)
-		CF_EMPLACE_BACK(conflict_syms, sym_node, node->elem->sym);
+	conflict_syms = CF_LIST_INIT(sym);
+	CF_LIST_FOR_EACH(node, data.sdv_symbols, sdv)
+		CF_EMPLACE_BACK(conflict_syms, node->elem->sym, sym);
 
 	printd("Solving SAT-problem...");
 	start = clock();
@@ -161,7 +160,7 @@ struct sfl_list *run_satconf_list(struct sdv_list *symbols)
 	if (res == PICOSAT_SATISFIABLE) {
 		printd("===> PROBLEM IS SATISFIABLE <===\n");
 
-		ret = CF_LIST_INIT(sfl_list);
+		ret = CF_LIST_INIT(sfl);
 
 	} else if (res == PICOSAT_UNSATISFIABLE) {
 		printd("===> PROBLEM IS UNSATISFIABLE <===\n");
@@ -171,10 +170,10 @@ struct sfl_list *run_satconf_list(struct sdv_list *symbols)
 	} else {
 		printd("Unknown if satisfiable.\n");
 
-		ret = CF_LIST_INIT(sfl_list);
+		ret = CF_LIST_INIT(sfl);
 	}
 
-	CF_LIST_FREE(data.sdv_symbols, sdv_node);
+	CF_LIST_FREE(data.sdv_symbols, sdv);
 	return ret;
 }
 
@@ -185,7 +184,7 @@ static bool sym_is_conflict_sym(struct symbol *sym)
 {
 	struct sym_node *node;
 
-	list_for_each_entry(node, &conflict_syms->list, node)
+	CF_LIST_FOR_EACH(node, conflict_syms, sym)
 		if (sym == node->elem)
 			return true;
 
@@ -200,7 +199,7 @@ static bool syms_have_target_value(struct sfix_list *list)
 	struct symbol_fix *fix;
 	struct sfix_node *node;
 
-	list_for_each_entry(node, &list->list, node) {
+	CF_LIST_FOR_EACH(node, list, sfix) {
 		fix = node->elem;
 
 		if (!sym_is_conflict_sym(fix->sym))
@@ -231,7 +230,7 @@ int apply_fix(struct sfix_list *fix)
 	struct sfix_node *node, *next;
 	unsigned int no_symbols_set = 0, iterations = 0, manually_changed = 0;
 	size_t fix_size = list_size(&fix->list);
-	struct sfix_list *tmp = CF_LIST_COPY(fix, sfix_node);
+	struct sfix_list *tmp = CF_LIST_COPY(fix, sfix);
 
 	printd("Trying to apply fixes now...\n");
 
@@ -319,7 +318,7 @@ static bool sdv_within_range(struct sdv_list *symbols)
 	struct symbol_dvalue *sdv;
 	struct sdv_node *node;
 
-	list_for_each_entry(node, &symbols->list, node) {
+	CF_LIST_FOR_EACH(node, symbols, sdv) {
 		sdv = node->elem;
 
 		assert(sym_is_boolean(sdv->sym));

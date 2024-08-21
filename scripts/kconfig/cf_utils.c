@@ -67,7 +67,7 @@ void create_sat_variables(struct cfdata *data)
 	printd("Creating SAT-variables...");
 
 	for_all_symbols(sym) {
-		sym->constraints = CF_LIST_INIT(pexpr_list);
+		sym->constraints = CF_LIST_INIT(pexpr);
 		sym_create_fexpr(sym, data);
 	}
 
@@ -438,7 +438,7 @@ bool sym_is_sdv(struct sdv_list *list, struct symbol *sym)
 {
 	struct sdv_node *node;
 
-	list_for_each_entry(node, &list->list, node)
+	CF_LIST_FOR_EACH(node, list, sdv)
 		if (sym == node->elem->sym)
 			return true;
 
@@ -468,7 +468,7 @@ void print_sym_constraint(struct symbol *sym)
 {
 	struct pexpr_node *node;
 
-	list_for_each_entry(node, &sym->constraints->list, node)
+	CF_LIST_FOR_EACH(node, sym->constraints, pexpr)
 		pexpr_print("::", node->elem, -1);
 }
 
@@ -480,7 +480,7 @@ void print_default_map(struct defm_list *map)
 	struct default_map *entry;
 	struct defm_node *node;
 
-	list_for_each_entry(node, &map->list, node) {
+	CF_LIST_FOR_EACH(node, map, defm) {
 		struct gstr s = str_new();
 
 		entry = node->elem;
@@ -564,7 +564,7 @@ void construct_cnf_clauses(PicoSAT *p, struct cfdata *data)
 		if (sym->type == S_UNKNOWN)
 			continue;
 
-		list_for_each_entry(node, &sym->constraints->list, node) {
+		CF_LIST_FOR_EACH(node, sym->constraints, pexpr) {
 			if (pexpr_is_cnf(node->elem)) {
 				unfold_cnf_clause(node->elem);
 				picosat_add(pico, 0);
@@ -914,7 +914,7 @@ void sym_add_assumption(PicoSAT *pico, struct symbol *sym)
 			picosat_assume(pico, not_set->satval);
 			not_set->assumption = true;
 
-			list_for_each_entry(node, &sym->nb_vals->list, node) {
+			CF_LIST_FOR_EACH(node, sym->nb_vals, fexpr) {
 				if (first) {
 					first = false;
 					continue;
@@ -934,7 +934,7 @@ void sym_add_assumption(PicoSAT *pico, struct symbol *sym)
 
 		first = true;
 		/* set value for all other fexpr */
-		list_for_each_entry(node, &sym->nb_vals->list, node) {
+		CF_LIST_FOR_EACH(node, sym->nb_vals, fexpr) {
 			if (first) {
 				first = false;
 				continue;
@@ -1010,7 +1010,7 @@ void sym_add_assumption_sdv(PicoSAT *pico, struct sdv_list *list)
 	struct sdv_node *node;
 	int lit_y, lit_m;
 
-	list_for_each_entry(node, &list->list, node) {
+	CF_LIST_FOR_EACH(node, list, sdv) {
 		sdv = node->elem;
 		lit_y = sdv->sym->fexpr_y->satval;
 

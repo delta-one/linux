@@ -79,8 +79,21 @@ struct fexpr {
 	};
 };
 
-#define __NODE_T(prefix) struct prefix ## _node
-#define __LIST_T(prefix) struct prefix ## _list
+#define __NODE_T(prefix) struct prefix##_node
+#define __LIST_T(prefix) struct prefix##_list
+#define __CF_DEFS_TO_STR2(x) #x
+#define __CF_DEFS_TO_STR(x) __CF_DEFS_TO_STR2(x)
+#define __ASSERT_LIST_PREF(list, prefix)                                       \
+	_Static_assert(__builtin_types_compatible_p(typeof(*list),             \
+						    __LIST_T(prefix)),         \
+		       "Incorrect type of list, should be `" __CF_DEFS_TO_STR( \
+			       __LIST_T(prefix)) " *`")
+
+#define __ASSERT_NODE_PREF(node, prefix)                                       \
+	_Static_assert(__builtin_types_compatible_p(typeof(*node),             \
+						    __NODE_T(prefix)),         \
+		       "Incorrect type of node, should be `" __CF_DEFS_TO_STR( \
+			       __LIST_T(prefix)) " *`")
 /*
  * CF_ALLOC_NODE - Utility macro for allocating, initializing and returning an 
  * object of a type like struct fexpr_node
@@ -88,31 +101,34 @@ struct fexpr {
  * @node_type: type of the object to create a pointer to (e.g. struct fexpr_node)
  * @el: the value to set field .element to
  */
-#define CF_ALLOC_NODE(el, prefix)                       \
+#define CF_ALLOC_NODE(el, prefix)                          \
 	({                                                 \
-		struct __NODE *__node_cf_alloc =        \
-			xmalloc(sizeof(struct node_type)); \
+		__NODE_T(prefix) *__node_cf_alloc =        \
+			xmalloc(sizeof(*__node_cf_alloc)); \
 		__node_cf_alloc->elem = el;                \
 		INIT_LIST_HEAD(&__node_cf_alloc->node);    \
 		__node_cf_alloc;                           \
 	})
+
 /*
  * constructs an object using CF_ALLOC_NODE(node_type, el) and then adds to the
  * end of list->list
  */
-#define CF_EMPLACE_BACK(list_, node_type, el)                                 \
+#define CF_EMPLACE_BACK(list_, el, prefix)                                    \
 	do {                                                                  \
-		struct node_type *__cf_emplace_back_node =                    \
-			CF_ALLOC_NODE(node_type, el);                         \
+		__ASSERT_LIST_PREF(list_, prefix);                            \
+		__NODE_T(prefix) *__cf_emplace_back_node =                    \
+			CF_ALLOC_NODE(el, prefix);                            \
 		list_add_tail(&__cf_emplace_back_node->node, &(list_)->list); \
 	} while (0)
 
 /*
  * frees all nodes and then list_
  */
-#define CF_LIST_FREE(list_, node_type)                                   \
+#define CF_LIST_FREE(list_, prefix)                                      \
 	do {                                                             \
-		struct node_type *__node, *__next;                       \
+		__NODE_T(prefix) * __node, *__next;                      \
+		__ASSERT_LIST_PREF(list_, prefix);                       \
 		list_for_each_entry_safe(__node, __next, &(list_)->list, \
 					 node) {                         \
 			list_del(&__node->node);                         \
@@ -121,11 +137,11 @@ struct fexpr {
 		free(list_);                                             \
 	} while (0)
 
-#define __CF_LIST_INIT(full_list_type)                                       \
-	({                                                                   \
-		full_list_type *__cf_list = xmalloc(sizeof(full_list_type)); \
-		INIT_LIST_HEAD(&__cf_list->list);                            \
-		__cf_list;                                                   \
+#define __CF_LIST_INIT(full_list_type)                                        \
+	({                                                                    \
+		full_list_type *__cf_list = xmalloc(sizeof(*__cf_list)); \
+		INIT_LIST_HEAD(&__cf_list->list);                             \
+		__cf_list;                                                    \
 	})
 
 #define __CF_DEF_LIST(name, full_list_type) \
@@ -134,66 +150,56 @@ struct fexpr {
 /*
  * declares and initializes a list
  */
-#define CF_DEF_LIST(name, list_type) __CF_DEF_LIST(name, struct list_type)
+#define CF_DEF_LIST(name, prefix) __CF_DEF_LIST(name, __LIST_T(prefix))
 
 /*
  * returns initialized a list
  */
-#define CF_LIST_INIT(list_type) __CF_LIST_INIT(struct list_type)
+#define CF_LIST_INIT(prefix) __CF_LIST_INIT(__LIST_T(prefix))
 
+#define CF_LIST_FOR_EACH(node_, list_, prefix)                         \
+	list_for_each_entry(node_, ({                                  \
+				    __ASSERT_LIST_PREF(list_, prefix); \
+				    __ASSERT_NODE_PREF(node_, prefix); \
+				    &(list_)->list;                    \
+			    }),                                        \
+			    node)
 
-#define CF_LIST_FOR_EACH(node_, list_)                                                          \
-	list_for_each_entry(                                                                    \
-		node_, ({                                                                       \
-			_Static_assert(                                                         \
-				__builtin_types_compatible_p(                                   \
-					typeof((node_)->_), typeof(list_)),                     \
-				"In CF_LIST_FOR_EACH: type mistmatch between list_ and node_"); \
-			&(list_)->list;                                                         \
-		}),                                                                             \
-		node)
-
-#define CF_LIST_COPY(orig, node_type)                                    \
-	({                                                               \
-		__CF_DEF_LIST(__ret, typeof(*orig));                     \
-		struct node_type *__node;                                \
-                                                                         \
-		CF_LIST_FOR_EACH(__node, orig)                           \
-			CF_EMPLACE_BACK(__ret, node_type, __node->elem); \
-		__ret;                                                   \
+#define CF_LIST_COPY(orig, prefix)                                    \
+	({                                                            \
+		__CF_DEF_LIST(__ret, typeof(*orig));                  \
+		__NODE_T(prefix) * __node;                            \
+                                                                      \
+		CF_LIST_FOR_EACH(__node, orig, prefix)                \
+			CF_EMPLACE_BACK(__ret, __node->elem, prefix); \
+		__ret;                                                \
 	})
 
 struct fexpr_node {
 	struct fexpr *elem;
 	struct list_head node;
-	struct fexpr_list *_;
 };
 
 struct fexpr_list {
 	struct list_head list;
-	struct fexpr_node *_;
 };
 
 struct fexl_list {
 	struct list_head list;
-	struct fexl_node *_;
 };
 
 struct fexl_node {
 	struct fexpr_list *elem;
 	struct list_head node;
-	struct fexl_list *_;
 };
 
 struct pexpr_list {
 	struct list_head list;
-	struct pexpr_node *_;
 };
 
 struct pexpr_node {
 	struct pexpr *elem;
 	struct list_head node;
-	struct pexpr_list *_;
 };
 
 /**
@@ -202,68 +208,56 @@ struct pexpr_node {
  */
 struct defm_list {
 	struct list_head list;
-	struct defm_node *_;
 };
 
 struct defm_node {
 	struct default_map *elem;
 	struct list_head node;
-	struct defm_list *_;
 };
 
 struct sfix_list {
 	struct list_head list;
-	struct sfix_node *_;
 };
 
 struct sfix_node {
 	struct symbol_fix *elem;
 	struct list_head node;
-	struct sfix_list *_;
 };
 
 struct sfl_list {
 	struct list_head list;
-	struct sfl_node *_;
 };
 
 struct sfl_node {
 	struct sfix_list *elem;
 	struct list_head node;
-	struct sfl_list *_;
 };
 
 struct sym_list {
 	struct list_head list;
-	struct sym_node *_;
 };
 
 struct sym_node {
 	struct symbol *elem;
 	struct list_head node;
-	struct sym_list *_;
 };
 
 struct prop_list {
 	struct list_head list;
-	struct prop_node *_;
 };
 
 struct prop_node {
 	struct property *elem;
 	struct list_head node;
-	struct prop_list *_;
 };
 
 struct sdv_list {
 	struct list_head list;
-	struct sdv_node *_;
 };
 
 struct sdv_node {
 	struct symbol_dvalue *elem;
 	struct list_head node;
-	struct sdv_list *_;
 };
 
 
