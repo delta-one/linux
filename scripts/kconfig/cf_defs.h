@@ -79,6 +79,8 @@ struct fexpr {
 	};
 };
 
+#define __NODE_T(prefix) struct prefix ## _node
+#define __LIST_T(prefix) struct prefix ## _list
 /*
  * CF_ALLOC_NODE - Utility macro for allocating, initializing and returning an 
  * object of a type like struct fexpr_node
@@ -86,12 +88,13 @@ struct fexpr {
  * @node_type: type of the object to create a pointer to (e.g. struct fexpr_node)
  * @el: the value to set field .element to
  */
-#define CF_ALLOC_NODE(node_type, el)                                          \
-	({                                                                    \
-		struct node_type *__node = xmalloc(sizeof(struct node_type)); \
-		__node->elem = el;                                            \
-		INIT_LIST_HEAD(&__node->node);                                \
-		__node;                                                       \
+#define CF_ALLOC_NODE(el, prefix)                       \
+	({                                                 \
+		struct __NODE *__node_cf_alloc =        \
+			xmalloc(sizeof(struct node_type)); \
+		__node_cf_alloc->elem = el;                \
+		INIT_LIST_HEAD(&__node_cf_alloc->node);    \
+		__node_cf_alloc;                           \
 	})
 /*
  * constructs an object using CF_ALLOC_NODE(node_type, el) and then adds to the
@@ -118,34 +121,151 @@ struct fexpr {
 		free(list_);                                             \
 	} while (0)
 
+#define __CF_LIST_INIT(full_list_type)                                       \
+	({                                                                   \
+		full_list_type *__cf_list = xmalloc(sizeof(full_list_type)); \
+		INIT_LIST_HEAD(&__cf_list->list);                            \
+		__cf_list;                                                   \
+	})
+
+#define __CF_DEF_LIST(name, full_list_type) \
+	full_list_type *name = __CF_LIST_INIT(full_list_type)
+
 /*
  * declares and initializes a list
  */
-#define CF_DEF_LIST(name, list_type)                  \
-	struct list_type *name = ({                        \
-		struct list_type *__cf_list =              \
-			xmalloc(sizeof(struct list_type)); \
-		INIT_LIST_HEAD(&__cf_list->list);          \
-		__cf_list;                                 \
+#define CF_DEF_LIST(name, list_type) __CF_DEF_LIST(name, struct list_type)
+
+/*
+ * returns initialized a list
+ */
+#define CF_LIST_INIT(list_type) __CF_LIST_INIT(struct list_type)
+
+
+#define CF_LIST_FOR_EACH(node_, list_)                                                          \
+	list_for_each_entry(                                                                    \
+		node_, ({                                                                       \
+			_Static_assert(                                                         \
+				__builtin_types_compatible_p(                                   \
+					typeof((node_)->_), typeof(list_)),                     \
+				"In CF_LIST_FOR_EACH: type mistmatch between list_ and node_"); \
+			&(list_)->list;                                                         \
+		}),                                                                             \
+		node)
+
+#define CF_LIST_COPY(orig, node_type)                                    \
+	({                                                               \
+		__CF_DEF_LIST(__ret, typeof(*orig));                     \
+		struct node_type *__node;                                \
+                                                                         \
+		CF_LIST_FOR_EACH(__node, orig)                           \
+			CF_EMPLACE_BACK(__ret, node_type, __node->elem); \
+		__ret;                                                   \
 	})
 
 struct fexpr_node {
 	struct fexpr *elem;
 	struct list_head node;
+	struct fexpr_list *_;
 };
 
 struct fexpr_list {
 	struct list_head list;
+	struct fexpr_node *_;
 };
 
 struct fexl_list {
 	struct list_head list;
+	struct fexl_node *_;
 };
 
 struct fexl_node {
 	struct fexpr_list *elem;
 	struct list_head node;
+	struct fexl_list *_;
 };
+
+struct pexpr_list {
+	struct list_head list;
+	struct pexpr_node *_;
+};
+
+struct pexpr_node {
+	struct pexpr *elem;
+	struct list_head node;
+	struct pexpr_list *_;
+};
+
+/**
+ * struct defm_list - Map from values of default properties of a symbol to their
+ * (accumulated) conditions
+ */
+struct defm_list {
+	struct list_head list;
+	struct defm_node *_;
+};
+
+struct defm_node {
+	struct default_map *elem;
+	struct list_head node;
+	struct defm_list *_;
+};
+
+struct sfix_list {
+	struct list_head list;
+	struct sfix_node *_;
+};
+
+struct sfix_node {
+	struct symbol_fix *elem;
+	struct list_head node;
+	struct sfix_list *_;
+};
+
+struct sfl_list {
+	struct list_head list;
+	struct sfl_node *_;
+};
+
+struct sfl_node {
+	struct sfix_list *elem;
+	struct list_head node;
+	struct sfl_list *_;
+};
+
+struct sym_list {
+	struct list_head list;
+	struct sym_node *_;
+};
+
+struct sym_node {
+	struct symbol *elem;
+	struct list_head node;
+	struct sym_list *_;
+};
+
+struct prop_list {
+	struct list_head list;
+	struct prop_node *_;
+};
+
+struct prop_node {
+	struct property *elem;
+	struct list_head node;
+	struct prop_list *_;
+};
+
+struct sdv_list {
+	struct list_head list;
+	struct sdv_node *_;
+};
+
+struct sdv_node {
+	struct symbol_dvalue *elem;
+	struct list_head node;
+	struct sdv_list *_;
+};
+
 
 enum pexpr_type {
 	PE_SYMBOL,
@@ -187,14 +307,9 @@ struct pexpr {
 	unsigned int ref_count;
 };
 
-struct pexpr_list {
-	struct pexpr_node *head, *tail;
-	unsigned int size;
-};
-
-struct pexpr_node {
-	struct pexpr *elem;
-	struct pexpr_node *next, *prev;
+enum symboldv_type {
+	SDV_BOOLEAN,	/* boolean/tristate */
+	SDV_NONBOOLEAN	/* string/int/hex */
 };
 
 /**
@@ -209,25 +324,6 @@ struct default_map {
 	struct pexpr *e;
 };
 
-/**
- * struct defm_list - Map from values of default properties of a symbol to their
- * (accumulated) conditions
- */
-struct defm_list {
-	struct defm_node *head, *tail;
-	unsigned int size;
-};
-
-struct defm_node {
-	struct default_map *elem;
-	struct defm_node *next, *prev;
-};
-
-enum symboldv_type {
-	SDV_BOOLEAN,	/* boolean/tristate */
-	SDV_NONBOOLEAN	/* string/int/hex */
-};
-
 struct symbol_dvalue {
 	struct symbol *sym;
 
@@ -240,16 +336,6 @@ struct symbol_dvalue {
 		/* string/int/hex */
 		struct gstr nb_val;
 	};
-};
-
-struct sdv_list {
-	struct sdv_node *head, *tail;
-	unsigned int size;
-};
-
-struct sdv_node {
-	struct symbol_dvalue *elem;
-	struct sdv_node *next, *prev;
 };
 
 enum symbolfix_type {
@@ -273,46 +359,6 @@ struct symbol_fix {
 		/* disallowed non-boolean values */
 		struct gstr disallowed;
 	};
-};
-
-struct sfix_list {
-	struct sfix_node *head, *tail;
-	unsigned int size;
-};
-
-struct sfix_node {
-	struct symbol_fix *elem;
-	struct sfix_node *next, *prev;
-};
-
-struct sfl_list {
-	struct sfl_node *head, *tail;
-	unsigned int size;
-};
-
-struct sfl_node {
-	struct sfix_list *elem;
-	struct sfl_node *next, *prev;
-};
-
-struct sym_list {
-	struct sym_node *head, *tail;
-	unsigned int size;
-};
-
-struct sym_node {
-	struct symbol *elem;
-	struct sym_node *next, *prev;
-};
-
-struct prop_list {
-	struct prop_node *head, *tail;
-	unsigned int size;
-};
-
-struct prop_node {
-	struct property *elem;
-	struct prop_node *next, *prev;
 };
 
 struct constants {

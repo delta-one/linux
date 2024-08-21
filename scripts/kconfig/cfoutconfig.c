@@ -19,6 +19,7 @@
 #include "picosat.h"
 #include "cf_expr.h"
 #include "cf_utils.h"
+#include "cf_constraints.h"
 
 #define OUTFILE_CONSTRAINTS "./scripts/kconfig/cfout_constraints.txt"
 #define OUTFILE_DIMACS "./scripts/kconfig/cfout_constraints.dimacs"
@@ -115,7 +116,7 @@ static void write_constraints_to_file(struct cfdata *data)
 		if (sym->type == S_UNKNOWN)
 			continue;
 
-		pexpr_list_for_each(node, sym->constraints) {
+		list_for_each_entry(node, &sym->constraints->list, node) {
 			struct gstr s = str_new();
 
 			pexpr_as_char(node->elem, &s, 0, data);

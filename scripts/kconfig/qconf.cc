@@ -3,6 +3,8 @@
  * Copyright (C) 2002 Roman Zippel <zippel@linux-m68k.org>
  * Copyright (C) 2015 Boris Barbulovski <bbarbulovski@gmail.com>
  */
+#include "cf_defs.h"
+#include "list_types.h"
 #include "qnamespace.h"
 #include <QAction>
 #include <QActionGroup>
@@ -34,7 +36,9 @@
 
 #include <xalloc.h>
 #include "lkc.h"
+#include <vector>
 #include "qconf.h"
+#define PICOSAT_AVAILABLE
 #ifdef PICOSAT_AVAILABLE
 #include "configfix.h"
 #include "cf_expr.h"
@@ -2030,8 +2034,7 @@ void ConflictsView::applyFixButtonClick(){
 		return;
 	}
 
-	struct sfix_list * selected_solution = select_solution(solution_output, solution_number);
-	apply_fix(selected_solution);
+	apply_fix(solution_output[solution_number]);
 
 
 	ConfigList::updateListForAll();
@@ -2160,30 +2163,41 @@ void ConflictsView::cellClicked(int row, int column)
 
 void ConflictsView::changeSolutionTable(int solution_number){
 #ifdef PICOSAT_AVAILABLE
-	if (solution_output == nullptr || solution_number < 0){
+	size_t i;
+
+	if (solution_output == nullptr || solution_number < 0) {
 		return;
 	}
-	struct sfix_list *selected_solution = select_solution(solution_output, solution_number);
+	struct sfix_list *selected_solution = solution_output[solution_number];
 	current_solution_number = solution_number;
 	solutionTable->setRowCount(0);
-	for (unsigned int i = 0; i <selected_solution->size; i++)
-	{
+	i = 0;
+	for (struct list_head *curr = selected_solution->list.next;
+	     curr != &selected_solution->list; curr = curr->next, ++i) {
 		solutionTable->insertRow(solutionTable->rowCount());
-		struct symbol_fix *cur_symbol = select_symbol(selected_solution,i);
+		struct symbol_fix *cur_symbol =
+			select_symbol(selected_solution, i);
 
-		QTableWidgetItem *symbol_name = new QTableWidgetItem(cur_symbol->sym->name);
+		QTableWidgetItem *symbol_name =
+			new QTableWidgetItem(cur_symbol->sym->name);
 
 		solutionTable->setItem(solutionTable->rowCount()-1,0,symbol_name);
 
-		if (cur_symbol->type == symbolfix_type::SF_BOOLEAN){
-			QTableWidgetItem *symbol_value = new QTableWidgetItem(tristate_value_to_string(cur_symbol->tri));
-			solutionTable->setItem(solutionTable->rowCount()-1,1,symbol_value);
-		} else if(cur_symbol->type == symbolfix_type::SF_NONBOOLEAN){
-			QTableWidgetItem *symbol_value = new QTableWidgetItem(cur_symbol->nb_val.s);
-			solutionTable->setItem(solutionTable->rowCount()-1,1,symbol_value);
+		if (cur_symbol->type == symbolfix_type::SF_BOOLEAN) {
+			QTableWidgetItem *symbol_value = new QTableWidgetItem(
+				tristate_value_to_string(cur_symbol->tri));
+			solutionTable->setItem(solutionTable->rowCount() - 1, 1,
+					       symbol_value);
+		} else if (cur_symbol->type == symbolfix_type::SF_NONBOOLEAN) {
+			QTableWidgetItem *symbol_value =
+				new QTableWidgetItem(cur_symbol->nb_val.s);
+			solutionTable->setItem(solutionTable->rowCount() - 1, 1,
+					       symbol_value);
 		} else {
-			QTableWidgetItem *symbol_value = new QTableWidgetItem(cur_symbol->disallowed.s);
-			solutionTable->setItem(solutionTable->rowCount()-1,1,symbol_value);
+			QTableWidgetItem *symbol_value =
+				new QTableWidgetItem(cur_symbol->disallowed.s);
+			solutionTable->setItem(solutionTable->rowCount() - 1, 1,
+					       symbol_value);
 		}
 	}
 	updateConflictsViewColorization();
@@ -2203,8 +2217,8 @@ void ConflictsView::updateConflictsViewColorization(void)
 	for (int i=0; i< solutionTable->rowCount(); i++) {
 		QTableWidgetItem *symbol =  solutionTable->item(i,0);
 		//symbol from solution list
-		struct sfix_list *selected_solution = select_solution(solution_output, current_solution_number);
-		struct symbol_fix *cur_symbol = select_symbol(selected_solution,i);
+		struct symbol_fix *cur_symbol = select_symbol(
+			solution_output[current_solution_number], i);
 
 		// if symbol is editable but the value is not the target value from solution we got, the color is red
 		// if symbol is editable but the value is the target value from solution we got, the color is green
@@ -2236,14 +2250,14 @@ void ConflictsView::runSatConfAsync()
 #ifdef PICOSAT_AVAILABLE
 	//loop through the rows in conflicts table adding each row into the array:
 	struct symbol_dvalue *p = nullptr;
+	std::vector<struct symbol_dvalue *> wanted_symbols;
+
 	p = static_cast<struct symbol_dvalue *>(calloc(conflictsTable->rowCount(),sizeof(struct symbol_dvalue)));
 	if (!p)
 	{
 		printf("memory allocation error\n");
 		return;
 	}
-
-	struct sdv_list *wanted_symbols = sdv_list_init();
 
 	for (int i = 0; i < conflictsTable->rowCount(); i++)
 	{
@@ -2255,13 +2269,13 @@ void ConflictsView::runSatConfAsync()
 		tmp->sym = sym;
 		tmp->type = static_cast<symboldv_type>(sym->type == symbol_type::S_BOOLEAN?0:1);
 		tmp->tri = string_value_to_tristate(conflictsTable->item(i,1)->text());
-		sdv_list_add(wanted_symbols,tmp);
+		wanted_symbols.push_back(tmp);
 	}
 	fixConflictsAction_->setText("Cancel");
 	loadingAction->setVisible(true);
 
-	struct sfl_list *ret = run_satconf(wanted_symbols);
-	solution_output = ret;
+	solution_output = run_satconf(
+		wanted_symbols.data(), wanted_symbols.size(), &num_solutions);
 
 	free(p);
 	emit resultsReady();
@@ -2278,15 +2292,14 @@ void ConflictsView::updateResults(void)
 #ifdef PICOSAT_AVAILABLE
 	fixConflictsAction_->setText("Calculate Fixes");
 	loadingAction->setVisible(false);
-	if (!(solution_output == nullptr || solution_output->size == 0))
+	if (!(solution_output == nullptr || num_solutions == 0))
 	{
 		solutionSelector->clear();
-		for (unsigned int i = 0; i < solution_output->size; i++)
-		{
+		for (unsigned int i = 0; i < num_solutions; i++)
 			solutionSelector->addItem(QString::number(i+1));
-		}
 		// populate the solution table from the first solution gotten
-		numSolutionLabel->setText(QString("Solutions: (%1) found").arg(solution_output->size));
+		numSolutionLabel->setText(
+			QString("Solutions: (%1) found").arg(num_solutions));
 		changeSolutionTable(0);
 	}
 	else {

@@ -1439,260 +1439,6 @@ bool pexpr_contains_fexpr(struct pexpr *e, struct fexpr *fe)
 }
 
 /*
- * init list of pexpr
- */
-struct pexpr_list *pexpr_list_init(void)
-{
-	return xcalloc(1, sizeof(struct pexpr_list));
-}
-
-/*
- * init list of symbol_fix
- */
-struct sfix_list *sfix_list_init(void)
-{
-	return xcalloc(1, sizeof(struct sfix_list));
-}
-
-/*
- * init list of symbol_fix
- */
-struct sfl_list *sfl_list_init(void)
-{
-	return xcalloc(1, sizeof(struct sfl_list));
-}
-
-/*
- * init list of symbol_dvalue
- */
-struct sdv_list *sdv_list_init(void)
-{
-	return xcalloc(1, sizeof(struct sdv_list));
-}
-
-/*
- * init list of symbols
- */
-struct sym_list *sym_list_init(void)
-{
-	return xcalloc(1, sizeof(struct sym_list));
-}
-
-/*
- * init list of default_maps
- */
-struct defm_list *defm_list_init(void)
-{
-	return xcalloc(1, sizeof(struct defm_list));
-}
-
-/*
- * init list of properties
- */
-struct prop_list *prop_list_init(void)
-{
-	return xcalloc(1, sizeof(struct prop_list));
-}
-
-/*
- * add element to tail of a pexpr_list
- */
-void pexpr_list_add(struct pexpr_list *list, struct pexpr *e)
-{
-	struct pexpr_node *node = xcalloc(1, sizeof(*node));
-
-	node->elem = e;
-
-	if (list->size == 0) {
-		list->head = node;
-		list->tail = node;
-	} else {
-		node->prev = list->tail;
-		list->tail = node;
-		node->prev->next = node;
-	}
-
-	list->size++;
-}
-
-/*
- * add element to tail of a sfix_list
- */
-void sfix_list_add(struct sfix_list *list, struct symbol_fix *fix)
-{
-	struct sfix_node *node = xcalloc(1, sizeof(*node));
-
-	node->elem = fix;
-
-	if (list->size == 0) {
-		list->head = node;
-		list->tail = node;
-	} else {
-		node->prev = list->tail;
-		list->tail = node;
-		node->prev->next = node;
-	}
-
-	list->size++;
-}
-
-/*
- * add element to tail of a sfl_list
- */
-void sfl_list_add(struct sfl_list *list, struct sfix_list *elem)
-{
-	struct sfl_node *node = xcalloc(1, sizeof(*node));
-
-	node->elem = elem;
-
-	if (list->size == 0) {
-		list->head = node;
-		list->tail = node;
-	} else {
-		node->prev = list->tail;
-		list->tail = node;
-		node->prev->next = node;
-	}
-
-	list->size++;
-}
-
-/*
- * add element to tail of a sdv_list
- */
-void sdv_list_add(struct sdv_list *list, struct symbol_dvalue *sdv)
-{
-	struct sdv_node *node = xcalloc(1, sizeof(*node));
-
-	node->elem = sdv;
-
-	if (list->size == 0) {
-		list->head = node;
-		list->tail = node;
-	} else {
-		node->prev = list->tail;
-		list->tail = node;
-		node->prev->next = node;
-	}
-
-	list->size++;
-}
-
-/*
- * add element to tail of a sym_list
- */
-void sym_list_add(struct sym_list *list, struct symbol *sym)
-{
-	struct sym_node *node = xcalloc(1, sizeof(*node));
-
-	node->elem = sym;
-
-	if (list->size == 0) {
-		list->head = node;
-		list->tail = node;
-	} else {
-		node->prev = list->tail;
-		list->tail = node;
-		node->prev->next = node;
-	}
-
-	list->size++;
-}
-
-/*
- * add element to tail of a defm_list
- */
-void defm_list_add(struct defm_list *list, struct default_map *map)
-{
-	struct defm_node *node = xcalloc(1, sizeof(*node));
-
-	node->elem = map;
-
-	if (list->size == 0) {
-		list->head = node;
-		list->tail = node;
-	} else {
-		node->prev = list->tail;
-		list->tail = node;
-		node->prev->next = node;
-	}
-
-	list->size++;
-}
-
-/*
- * add element to tail of a prop_list
- */
-void prop_list_add(struct prop_list *list, struct property *prop)
-{
-	struct prop_node *node = xcalloc(1, sizeof(*node));
-
-	node->elem = prop;
-
-	if (list->size == 0) {
-		list->head = node;
-		list->tail = node;
-	} else {
-		node->prev = list->tail;
-		list->tail = node;
-		node->prev->next = node;
-	}
-
-	list->size++;
-}
-
-/*
- * delete an element from a fexpr_list
- */
-void sfix_list_delete(struct sfix_list *list, struct sfix_node *node)
-{
-	if (list->size == 0 || node == NULL)
-		return;
-
-	if (node == list->head)
-		list->head = node->next;
-	else
-		node->prev->next = node->next;
-
-	if (node == list->tail)
-		list->tail = node->prev;
-	else
-		node->next->prev = node->prev;
-
-	list->size--;
-	free(node);
-}
-
-/*
- * make a shallow copy of a sdv_list
- */
-struct sdv_list *sdv_list_copy(struct sdv_list *list)
-{
-	struct sdv_list *ret = sdv_list_init();
-	struct sdv_node *node;
-
-	sdv_list_for_each(node, list)
-		sdv_list_add(ret, node->elem);
-
-
-	return ret;
-}
-
-/*
- * make a shallow copy of a sfix_list
- */
-struct sfix_list *sfix_list_copy(struct sfix_list *list)
-{
-	struct sfix_list *ret = sfix_list_init();
-	struct sfix_node *node;
-
-	sfix_list_for_each(node, list)
-		sfix_list_add(ret, node->elem);
-
-	return ret;
-}
-
-/*
  * print a fexpr_list
  */
 void fexpr_list_print(char *title, struct fexpr_list *list)
@@ -1735,9 +1481,9 @@ void pexpr_list_print(char *title, struct pexpr_list *list)
 
 	printf("%s: [", title);
 
-	pexpr_list_for_each(node, list) {
+	list_for_each_entry(node, &list->list, node) {
 		pexpr_print_util(node->elem, -1);
-		if (node->next != NULL)
+		if (node->node.next != &list->list)
 			printf(", ");
 	}
 
@@ -1750,33 +1496,10 @@ void pexpr_list_print(char *title, struct pexpr_list *list)
  */
 void defm_list_destruct(struct defm_list *list)
 {
-	struct defm_node *node = list->head, *tmp;
-
-	while (node != NULL) {
-		tmp = node->next;
+	struct defm_node *node;
+	list_for_each_entry(node, &list->list, node)
 		pexpr_put(node->elem->e);
-		free(node->elem);
-		free(node);
-		node = tmp;
-	}
-
-	free(list);
-}
-
-/*
- * free a sdv_list
- */
-void sdv_list_free(struct sdv_list *list)
-{
-	struct sdv_node *node = list->head, *tmp;
-
-	while (node != NULL) {
-		tmp = node->next;
-		free(node);
-		node = tmp;
-	}
-
-	free(list);
+	CF_LIST_FREE(list, defm_node);
 }
 
 /*
@@ -1784,48 +1507,10 @@ void sdv_list_free(struct sdv_list *list)
  */
 void pexpr_list_free_put(struct pexpr_list *list)
 {
-	struct pexpr_node *node = list->head, *tmp;
-
-	while (node != NULL) {
-		tmp = node->next;
+	struct pexpr_node *node;
+	list_for_each_entry(node, &list->list, node)
 		pexpr_put(node->elem);
-		free(node);
-		node = tmp;
-	}
-
-	free(list);
-}
-
-/*
- * free a prop_list
- */
-void prop_list_free(struct prop_list *list)
-{
-	struct prop_node *node = list->head, *tmp;
-
-	while (node != NULL) {
-		tmp = node->next;
-		free(node);
-		node = tmp;
-	}
-
-	free(list);
-}
-
-/*
- * free a sym_list
- */
-void sym_list_free(struct sym_list *list)
-{
-	struct sym_node *node = list->head, *tmp;
-
-	while (node != NULL) {
-		tmp = node->next;
-		free(node);
-		node = tmp;
-	}
-
-	free(list);
+	CF_LIST_FREE(list, pexpr_node);
 }
 
 /*

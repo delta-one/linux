@@ -6,6 +6,7 @@
 #include "cf_defs.h"
 #include "cf_expr.h"
 #include "list.h"
+#include "list_types.h"
 #include "lkc.h"
 #define _GNU_SOURCE
 #include <assert.h>
@@ -335,7 +336,7 @@ static void set_assumptions_sdv(PicoSAT *pico, struct sdv_list *arr)
 	struct sdv_node *node;
 	struct symbol *sym;
 
-	sdv_list_for_each(node, arr) {
+	list_for_each_entry(node, &arr->list, node) {
 		int lit_y;
 
 		sdv = node->elem;
@@ -597,13 +598,9 @@ static bool has_intersection(struct fexpr_list *e, struct fexpr_list *X)
  */
 static struct fexpr_list *fexpr_list_union(struct fexpr_list *A, struct fexpr_list *B)
 {
-	CF_DEF_LIST(ret, fexpr_list);
+	struct fexpr_list *ret = CF_LIST_COPY(A, fexpr_node);
 	struct fexpr_node *node1, *node2;
 	bool found;
-
-	// copy A to ret
-	list_for_each_entry(node1, &A->list, node)
-		CF_EMPLACE_BACK(ret, fexpr_node, node1->elem);
 
 	list_for_each_entry(node2, &B->list, node) {
 		found = false;
@@ -625,12 +622,9 @@ static struct fexpr_list *fexpr_list_union(struct fexpr_list *A, struct fexpr_li
  */
 static struct fexl_list *fexl_list_union(struct fexl_list *A, struct fexl_list *B)
 {
-	CF_DEF_LIST(ret, fexl_list);
+	struct fexl_list *ret = CF_LIST_COPY(A, fexl_node);
 	struct fexl_node *node1, *node2;
 	bool found;
-
-	list_for_each_entry(node1, &A->list, node)
-		CF_EMPLACE_BACK(ret, fexl_node, node1->elem);
 
 	list_for_each_entry(node2, &B->list, node) {
 		found = false;
@@ -714,7 +708,7 @@ static bool diagnosis_contains_symbol(struct sfix_list *diagnosis, struct symbol
 {
 	struct sfix_node *node;
 
-	sfix_list_for_each(node, diagnosis)
+	list_for_each_entry(node, &diagnosis->list, node)
 		if (sym == node->elem->sym)
 			return true;
 
@@ -757,7 +751,7 @@ void print_diagnosis_symbol(struct sfix_list *diag_sym)
 
 	printd("[");
 
-	sfix_list_for_each(node, diag_sym) {
+	list_for_each_entry(node, &diag_sym->list, node) {
 		fix = node->elem;
 
 		if (fix->type == SF_BOOLEAN)
@@ -767,7 +761,7 @@ void print_diagnosis_symbol(struct sfix_list *diag_sym)
 		else
 			perror("NB not yet implemented.");
 
-		if (node->next != NULL)
+		if (node->node.next != &diag_sym->list)
 			printd(", ");
 	}
 	printd("]\n");
@@ -781,7 +775,7 @@ static void print_diagnoses_symbol(struct sfl_list *diag_sym)
 	struct sfl_node *arr;
 	unsigned int i = 1;
 
-	sfl_list_for_each(arr, diag_sym) {
+	list_for_each_entry(arr, &diag_sym->list, node) {
 		printd("%d: ", i++);
 		print_diagnosis_symbol(arr->elem);
 	}
@@ -792,7 +786,7 @@ static void print_diagnoses_symbol(struct sfl_list *diag_sym)
  */
 static struct sfix_list *convert_diagnosis(struct fexpr_list *diagnosis, struct cfdata *data)
 {
-	struct sfix_list *diagnosis_symbol = sfix_list_init();
+	CF_DEF_LIST(diagnosis_symbol, sfix_list);
 	struct fexpr *e;
 	struct symbol_fix *fix;
 	struct symbol_dvalue *sdv;
@@ -800,13 +794,13 @@ static struct sfix_list *convert_diagnosis(struct fexpr_list *diagnosis, struct 
 	struct fexpr_node *fnode;
 
 	/* set the values for the conflict symbols */
-	sdv_list_for_each(snode, data->sdv_symbols) {
+	list_for_each_entry(snode, &data->sdv_symbols->list, node) {
 		sdv = snode->elem;
 		fix = xmalloc(sizeof(*fix));
 		fix->sym = sdv->sym;
 		fix->type = SF_BOOLEAN;
 		fix->tri = sdv->tri;
-		sfix_list_add(diagnosis_symbol, fix);
+		CF_EMPLACE_BACK(diagnosis_symbol, sfix_node, fix);
 	}
 
 	list_for_each_entry(fnode, &diagnosis->list, node) {
@@ -826,7 +820,7 @@ static struct sfix_list *convert_diagnosis(struct fexpr_list *diagnosis, struct 
 			type = SF_DISALLOWED;
 		fix = symbol_fix_create(e, type, diagnosis);
 
-		sfix_list_add(diagnosis_symbol, fix);
+		CF_EMPLACE_BACK(diagnosis_symbol, sfix_node, fix);
 	}
 
 	return diagnosis_symbol;
@@ -840,12 +834,12 @@ static struct sfl_list *convert_diagnoses(struct fexl_list *diag_arr, struct cfd
 {
 	struct fexl_node *lnode;
 
-	diagnoses_symbol = sfl_list_init();
+	diagnoses_symbol = CF_LIST_INIT(sfl_list);
 
 	list_for_each_entry(lnode, &diag_arr->list, node) {
 		struct sfix_list *fix = convert_diagnosis(lnode->elem, data);
 
-		sfl_list_add(diagnoses_symbol, fix);
+		CF_EMPLACE_BACK(diagnoses_symbol, sfl_node, fix);
 	}
 
 	return diagnoses_symbol;
@@ -890,7 +884,7 @@ static struct sfl_list *minimise_diagnoses(PicoSAT *pico, struct fexl_list *diag
 	double time;
 	struct fexpr_list *d;
 	struct sfix_list *diagnosis_symbol;
-	struct sfl_list *diagnoses_symbol = sfl_list_init();
+	CF_DEF_LIST(diagnoses_symbol, sfl_list);
 	struct fexpr *e;
 	int satval, deref = 0;
 	struct symbol_fix *fix;
@@ -906,7 +900,7 @@ static struct sfl_list *minimise_diagnoses(PicoSAT *pico, struct fexl_list *diag
 
 	list_for_each_entry(flnode, &diagnoses->list, node) {
 		struct fexpr_node *fnode;
-		struct sfix_node *snode;
+		struct sfix_node *snode, *snext;
 		struct fexpr_list *C_without_d;
 		int res;
 
@@ -933,14 +927,12 @@ static struct sfl_list *minimise_diagnoses(PicoSAT *pico, struct fexl_list *diag
 		diagnosis_symbol = convert_diagnosis(d, data);
 
 		/* check if symbol gets selected */
-		for (snode = diagnosis_symbol->head; snode != NULL;) {
+		list_for_each_entry_safe(snode, snext, &diagnosis_symbol->list, node) {
 			fix = snode->elem;
 
 			/* symbol is never selected, continue */
-			if (!fix->sym->fexpr_sel_y) {
-				snode = snode->next;
+			if (!fix->sym->fexpr_sel_y)
 				continue;
-			}
 
 			/* check, whether the symbol was selected anyway */
 			if (fix->sym->type == S_BOOLEAN && fix->tri == yes)
@@ -950,17 +942,12 @@ static struct sfl_list *minimise_diagnoses(PicoSAT *pico, struct fexl_list *diag
 			else if (fix->sym->type == S_TRISTATE && fix->tri == mod)
 				deref = picosat_deref(pico, fix->sym->fexpr_sel_m->satval);
 
-			if (deref == 1) {
-				struct sfix_node *tmp = snode->next;
-
-				sfix_list_delete(diagnosis_symbol, snode);
-				snode = tmp;
-			} else {
+			if (deref == 1)
+				list_del(&snode->node);
+			else
 				deref = 0;
-				snode = snode->next;
-			}
 		}
-		sfl_list_add(diagnoses_symbol, diagnosis_symbol);
+		CF_EMPLACE_BACK(diagnoses_symbol, sfl_node, diagnosis_symbol);
 	}
 
 	end = clock();
@@ -977,7 +964,7 @@ static struct sfl_list *minimise_diagnoses(PicoSAT *pico, struct fexl_list *diag
 struct sfix_list *choose_fix(struct sfl_list *diag)
 {
 	int choice;
-	struct sfl_node *node;
+	struct sfl_node *ret;
 
 	printd("=== GENERATED DIAGNOSES ===\n");
 	printd("0: No changes wanted\n");
@@ -990,15 +977,8 @@ struct sfix_list *choose_fix(struct sfl_list *diag)
 	if (choice == 0)
 		return NULL;
 
-	/* invalid choice */
-	if (choice > diag->size)
-		return NULL;
-
-	node = diag->head;
-	for (int counter = 1; counter < choice; counter++)
-		node = node->next;
-
-	return node->elem;
+	ret = list_at_index(choice - 1, &diag->list, struct sfl_node, node);
+	return ret ? ret->elem : NULL;
 }
 
 

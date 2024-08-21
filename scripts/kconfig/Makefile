@@ -214,7 +214,7 @@ qconf-cxxobjs	:= qconf.o qconf-moc.o
 qconf-objs	:= images.o $(common-objs) $(cfconf-objs)
 
 HOSTLDLIBS_qconf         := $(call read-file, $(obj)/qconf-libs) $(picosat-lib)
-HOSTCXXFLAGS_qconf.o     := -std=c++11 -fPIC $(call read-file, $(obj)/qconf-cflags) $(picosat-available-macro)
+HOSTCXXFLAGS_qconf.o     := -std=c++11 -fPIC $(call read-file, $(obj)/qconf-cflags) $(picosat-available-macro) -g -O0
 HOSTCXXFLAGS_qconf-moc.o := -std=c++11 -fPIC $(call read-file, $(obj)/qconf-cflags) $(picosat-available-macro)
 $(obj)/qconf: | $(obj)/qconf-libs
 $(obj)/qconf.o $(obj)/qconf-moc.o: | $(obj)/qconf-cflags

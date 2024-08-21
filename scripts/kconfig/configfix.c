@@ -21,6 +21,10 @@
 #include "cf_utils.h"
 #include "cf_constraints.h"
 #include "cf_rangefix.h"
+#include "cf_defs.h"
+#include "expr.h"
+#include "list.h"
+#include "lkc.h"
 
 bool CFDEBUG;
 bool stop_rangefix;
@@ -33,8 +37,30 @@ static bool sdv_within_range(struct sdv_list *symbols);
 
 /* -------------------------------------- */
 
+struct sfix_list **run_satconf(struct symbol_dvalue **symbols, size_t n,
+			       size_t *num_solutions)
+{
+	CF_DEF_LIST(symbols_list, sdv_list);
+	struct sfl_list *solutions;
+	struct sfix_list **solutions_arr;
+	struct sfl_node *node;
+	size_t i;
 
-struct sfl_list *run_satconf(struct sdv_list *symbols)
+	i = 0;
+	for (i = 0; i < n; ++i)
+		CF_EMPLACE_BACK(symbols_list, sdv_node, symbols[i]);
+
+	solutions = run_satconf_list(symbols_list);
+	*num_solutions = list_size(&solutions->list);
+	solutions_arr = xcalloc(*num_solutions, sizeof(struct sfix_list *));
+	i = 0;
+	CF_LIST_FOR_EACH(node, solutions)
+		solutions_arr[i++] = node->elem;
+	CF_LIST_FREE(solutions, sfix_node);
+	return solutions_arr;
+}
+
+struct sfl_list *run_satconf_list(struct sdv_list *symbols)
 {
 	clock_t start, end;
 	double time;
@@ -57,7 +83,7 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 	/* check whether all values can be applied -> no need to run */
 	if (sdv_within_range(symbols)) {
 		printd("\nAll symbols are already within range.\n\n");
-		return sfl_list_init();
+		return CF_LIST_INIT(sfl_list);
 	}
 
 	if (!init_done) {
@@ -104,7 +130,7 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 	}
 
 	/* copy array with symbols to change */
-	data.sdv_symbols = sdv_list_copy(symbols);
+	data.sdv_symbols = CF_LIST_COPY(symbols, sdv_node);
 
 	/* add assumptions for conflict-symbols */
 	sym_add_assumption_sdv(pico, data.sdv_symbols);
@@ -119,9 +145,9 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 	}
 
 	/* store the conflict symbols */
-	conflict_syms = sym_list_init();
-	sdv_list_for_each(node, data.sdv_symbols)
-		sym_list_add(conflict_syms, node->elem->sym);
+	conflict_syms = CF_LIST_INIT(sym_list);
+	CF_LIST_FOR_EACH(node, data.sdv_symbols)
+		CF_EMPLACE_BACK(conflict_syms, sym_node, node->elem->sym);
 
 	printd("Solving SAT-problem...");
 	start = clock();
@@ -135,7 +161,7 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 	if (res == PICOSAT_SATISFIABLE) {
 		printd("===> PROBLEM IS SATISFIABLE <===\n");
 
-		ret = sfl_list_init();
+		ret = CF_LIST_INIT(sfl_list);
 
 	} else if (res == PICOSAT_UNSATISFIABLE) {
 		printd("===> PROBLEM IS UNSATISFIABLE <===\n");
@@ -145,10 +171,10 @@ struct sfl_list *run_satconf(struct sdv_list *symbols)
 	} else {
 		printd("Unknown if satisfiable.\n");
 
-		ret = sfl_list_init();
+		ret = CF_LIST_INIT(sfl_list);
 	}
 
-	sdv_list_free(data.sdv_symbols);
+	CF_LIST_FREE(data.sdv_symbols, sdv_node);
 	return ret;
 }
 
@@ -159,7 +185,7 @@ static bool sym_is_conflict_sym(struct symbol *sym)
 {
 	struct sym_node *node;
 
-	sym_list_for_each(node, conflict_syms)
+	list_for_each_entry(node, &conflict_syms->list, node)
 		if (sym == node->elem)
 			return true;
 
@@ -174,7 +200,7 @@ static bool syms_have_target_value(struct sfix_list *list)
 	struct symbol_fix *fix;
 	struct sfix_node *node;
 
-	sfix_list_for_each(node, list) {
+	list_for_each_entry(node, &list->list, node) {
 		fix = node->elem;
 
 		if (!sym_is_conflict_sym(fix->sym))
@@ -204,18 +230,18 @@ int apply_fix(struct sfix_list *fix)
 	struct symbol_fix *sfix;
 	struct sfix_node *node, *next;
 	unsigned int no_symbols_set = 0, iterations = 0, manually_changed = 0;
-
-	struct sfix_list *tmp = sfix_list_copy(fix);
+	size_t fix_size = list_size(&fix->list);
+	struct sfix_list *tmp = CF_LIST_COPY(fix, sfix_node);
 
 	printd("Trying to apply fixes now...\n");
 
-	while (no_symbols_set < fix->size && !syms_have_target_value(fix)) {
-		if (iterations > fix->size * 2) {
+	while (no_symbols_set < fix_size && !syms_have_target_value(fix)) {
+		if (iterations > fix_size * 2) {
 			printd("\nCould not apply all values :-(.\n");
 			return manually_changed;
 		}
 
-		for (node = tmp->head; node != NULL;) {
+		list_for_each_entry_safe(node, next, &tmp->list, node) {
 			sfix = node->elem;
 
 			/* update symbol's current value */
@@ -224,18 +250,14 @@ int apply_fix(struct sfix_list *fix)
 			/* value already set? */
 			if (sfix->type == SF_BOOLEAN) {
 				if (sfix->tri == sym_get_tristate_value(sfix->sym)) {
-					next = node->next;
-					sfix_list_delete(tmp, node);
-					node = next;
+					list_del(&node->node);
 					no_symbols_set++;
 					continue;
 				}
 			} else if (sfix->type == SF_NONBOOLEAN) {
 				if (strcmp(str_get(&sfix->nb_val),
 					   sym_get_string_value(sfix->sym)) == 0) {
-					next = node->next;
-					sfix_list_delete(tmp, node);
-					node = next;
+					list_del(&node->node);
 					no_symbols_set++;
 					continue;
 				}
@@ -246,17 +268,13 @@ int apply_fix(struct sfix_list *fix)
 			/* could not set value, try next */
 			if (sfix->type == SF_BOOLEAN) {
 				if (!sym_set_tristate_value(sfix->sym,
-							    sfix->tri)) {
-					node = node->next;
+							    sfix->tri))
 					continue;
-				}
 			} else if (sfix->type == SF_NONBOOLEAN) {
 				if (!sym_set_string_value(
 					    sfix->sym,
-					    str_get(&sfix->nb_val))) {
-					node = node->next;
+					    str_get(&sfix->nb_val)))
 					continue;
-				}
 			} else {
 				perror("Error applying fix. Value set for disallowed.");
 			}
@@ -273,9 +291,7 @@ int apply_fix(struct sfix_list *fix)
 				       str_get(&sfix->nb_val));
 			}
 
-			next = node->next;
-			sfix_list_delete(tmp, node);
-			node = next;
+			list_del(&node->node);
 			no_symbols_set++;
 		}
 
@@ -303,7 +319,7 @@ static bool sdv_within_range(struct sdv_list *symbols)
 	struct symbol_dvalue *sdv;
 	struct sdv_node *node;
 
-	sdv_list_for_each(node, symbols) {
+	list_for_each_entry(node, &symbols->list, node) {
 		sdv = node->elem;
 
 		assert(sym_is_boolean(sdv->sym));
@@ -318,24 +334,17 @@ static bool sdv_within_range(struct sdv_list *symbols)
 	return true;
 }
 
+/*
+ * for use in .cc files
+ */
 struct sfix_list *select_solution(struct sfl_list *solutions, int index)
 {
-	struct sfl_node *node = solutions->head;
-	unsigned int counter;
-
-	for (counter = 0; counter < index; counter++)
-		node = node->next;
-
-	return node->elem;
+	return list_at_index(index, &solutions->list, struct sfl_node, node)
+		->elem;
 }
 
 struct symbol_fix *select_symbol(struct sfix_list *solution, int index)
 {
-	struct sfix_node *node = solution->head;
-	unsigned int counter;
-
-	for (counter = 0; counter < index; counter++)
-		node = node->next;
-
-	return node->elem;
+	return list_at_index(index, &solution->list, struct sfix_node, node)
+		->elem;
 }
