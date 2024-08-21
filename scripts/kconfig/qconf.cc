@@ -3,8 +3,6 @@
  * Copyright (C) 2002 Roman Zippel <zippel@linux-m68k.org>
  * Copyright (C) 2015 Boris Barbulovski <bbarbulovski@gmail.com>
  */
-#include "cf_defs.h"
-#include "list_types.h"
 #include "qnamespace.h"
 #include <QAction>
 #include <QActionGroup>
@@ -38,10 +36,8 @@
 #include "lkc.h"
 #include <vector>
 #include "qconf.h"
-#define PICOSAT_AVAILABLE
 #ifdef PICOSAT_AVAILABLE
 #include "configfix.h"
-#include "cf_expr.h"
 #endif
 
 #include "images.h"
