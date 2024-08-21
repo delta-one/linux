@@ -15,7 +15,9 @@ extern "C" {
 #include "cf_defs.h"
 
 /* external functions */
-struct sfl_list *run_satconf(struct sdv_list *symbols);
+struct sfix_list **run_satconf(struct symbol_dvalue **symbols, size_t n,
+			       size_t *num_solutions);
+struct sfl_list *run_satconf_list(struct sdv_list *symbols);
 int apply_fix(struct sfix_list *fix);
 int run_satconf_cli(const char *Kconfig_file);
 void interrupt_rangefix(void);

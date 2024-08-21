@@ -14,33 +14,6 @@ extern "C" {
 
 #include "cf_defs.h"
 
-#define fexpr_list_for_each(node, list) \
-	for (node = list->head; node != NULL; node = node->next)
-
-#define fexl_list_for_each(node, list) \
-	fexpr_list_for_each(node, list)
-
-#define pexpr_list_for_each(node, list) \
-	fexpr_list_for_each(node, list)
-
-#define sdv_list_for_each(node, list) \
-	fexpr_list_for_each(node, list)
-
-#define sfix_list_for_each(node, list) \
-	fexpr_list_for_each(node, list)
-
-#define sfl_list_for_each(node, list) \
-	fexpr_list_for_each(node, list)
-
-#define sym_list_for_each(node, list) \
-	fexpr_list_for_each(node, list)
-
-#define defm_list_for_each(node, list) \
-	fexpr_list_for_each(node, list)
-
-#define prop_list_for_each(node, list) \
-	fexpr_list_for_each(node, list)
-
 /* call pexpr_put for a list of pexpr's */
 #define PEXPR_PUT(...) _pexpr_put_list((struct pexpr *[]){ __VA_ARGS__, NULL })
 
@@ -151,60 +124,6 @@ void pexpr_as_char(struct pexpr *e, struct gstr *s, int parent, struct cfdata *d
 /* check whether a pexpr contains a specific fexpr */
 bool pexpr_contains_fexpr(struct pexpr *e, struct fexpr *fe);
 
-/* init list of pexpr */
-struct pexpr_list *pexpr_list_init(void);
-
-/* init list of symbol_fix */
-struct sfix_list *sfix_list_init(void);
-
-/* init list of sfix_list */
-struct sfl_list *sfl_list_init(void);
-
-/* init list of symbol_dvalue */
-struct sdv_list *sdv_list_init(void);
-
-/* init list of symbols */
-struct sym_list *sym_list_init(void);
-
-/* init list of default_maps */
-struct defm_list *defm_list_init(void);
-
-/* init list of properties */
-struct prop_list *prop_list_init(void);
-
-/* add element to tail of a pexpr_list */
-void pexpr_list_add(struct pexpr_list *list, struct pexpr *e);
-
-/* add element to tail of a sfix_list */
-void sfix_list_add(struct sfix_list *list, struct symbol_fix *fix);
-
-/* add element to tail of a sfl_list */
-void sfl_list_add(struct sfl_list *list, struct sfix_list *elem);
-
-/* add element to tail of a sdv_list */
-void sdv_list_add(struct sdv_list *list, struct symbol_dvalue *sdv);
-
-/* add element to tail of a sym_list */
-void sym_list_add(struct sym_list *list, struct symbol *sym);
-
-/* add element to tail of a defm_list */
-void defm_list_add(struct defm_list *list, struct default_map *map);
-
-/* add element to tail of a prop_list */
-void prop_list_add(struct prop_list *list, struct property *prop);
-
-/* delete the first occurrence of elem in an fexl_list */
-void fexl_list_delete_elem(struct fexl_list *list, struct fexpr_list *elem);
-
-/* delete an element from a sfix_list */
-void sfix_list_delete(struct sfix_list *list, struct sfix_node *node);
-
-/* make a shallow copy of a sdv_list */
-struct sdv_list *sdv_list_copy(struct sdv_list *list);
-
-/* make a shallow copy of a sfix_list */
-struct sfix_list *sfix_list_copy(struct sfix_list *list);
-
 /* print a fexpr_list */
 void fexpr_list_print(char *title, struct fexpr_list *list);
 
@@ -217,17 +136,8 @@ void pexpr_list_print(char *title, struct pexpr_list *list);
 /* free an pexpr_list (and pexpr_put the elements) */
 void pexpr_list_free_put(struct pexpr_list *list);
 
-/* free a sdv_list */
-void sdv_list_free(struct sdv_list *list);
-
-/* free a prop_list */
-void prop_list_free(struct prop_list *list);
-
 /* free a defm_list (and pexpr_put the conditions of the maps) */
 void defm_list_destruct(struct defm_list *list);
-
-/* free a sym_list */
-void sym_list_free(struct sym_list *list);
 
 /* check whether 2 pexpr are equal */
 bool pexpr_eq(struct pexpr *e1, struct pexpr *e2, struct cfdata *data);

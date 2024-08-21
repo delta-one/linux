@@ -22,6 +22,7 @@
 #include <condition_variable>
 
 #include "expr.h"
+#include "cf_defs.h"
 
 
 class ConfigList;
@@ -181,7 +182,8 @@ public:
 	// Apply fixes button on the solution view
 	QPushButton *applyFixButton{nullptr};
 
-	struct sfl_list *solution_output{nullptr};
+	struct sfix_list **solution_output{nullptr};
+	size_t num_solutions;
 
 	QToolBar *conflictsToolBar;
 	struct menu *currentSelectedMenu;
