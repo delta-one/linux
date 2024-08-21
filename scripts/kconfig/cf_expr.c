@@ -1439,14 +1439,6 @@ bool pexpr_contains_fexpr(struct pexpr *e, struct fexpr *fe)
 }
 
 /*
- * init list of fexpr_list
- */
-struct fexl_list *fexl_list_init(void)
-{
-	return xcalloc(1, sizeof(struct fexl_list));
-}
-
-/*
  * init list of pexpr
  */
 struct pexpr_list *pexpr_list_init(void)
@@ -1500,27 +1492,6 @@ struct defm_list *defm_list_init(void)
 struct prop_list *prop_list_init(void)
 {
 	return xcalloc(1, sizeof(struct prop_list));
-}
-
-/*
- * add element to tail of a fexl_list
- */
-void fexl_list_add(struct fexl_list *list, struct fexpr_list *elem)
-{
-	struct fexl_node *node = xcalloc(1, sizeof(*node));
-
-	node->elem = elem;
-
-	if (list->size == 0) {
-		list->head = node;
-		list->tail = node;
-	} else {
-		node->prev = list->tail;
-		list->tail = node;
-		node->prev->next = node;
-	}
-
-	list->size++;
 }
 
 /*
@@ -1693,82 +1664,6 @@ void sfix_list_delete(struct sfix_list *list, struct sfix_node *node)
 }
 
 /*
- * delete an element from a fexpr_list
- */
-void pexpr_list_delete(struct pexpr_list *list, struct pexpr_node *node)
-{
-	if (list->size == 0 || node == NULL)
-		return;
-
-	if (node == list->head)
-		list->head = node->next;
-	else
-		node->prev->next = node->next;
-
-	if (node == list->tail)
-		list->tail = node->prev;
-	else
-		node->next->prev = node->prev;
-
-	list->size--;
-	free(node);
-}
-
-/*
- * delete an element from a fexl_list
- */
-void fexl_list_delete(struct fexl_list *list, struct fexl_node *node)
-{
-	if (list->size == 0 || node == NULL)
-		return;
-
-	if (node == list->head)
-		list->head = node->next;
-	else
-		node->prev->next = node->next;
-
-	if (node == list->tail)
-		list->tail = node->prev;
-	else
-		node->next->prev = node->prev;
-
-	list->size--;
-	free(node);
-}
-
-/*
- * delete the first occurrence of elem in an fexl_list
- */
-void fexl_list_delete_elem(struct fexl_list *list, struct fexpr_list *elem)
-{
-	struct fexl_node *node, *to_delete = NULL;
-
-	fexl_list_for_each(node, list) {
-		if (node->elem == elem) {
-			to_delete = node;
-			break;
-		}
-	}
-
-	if (to_delete != NULL)
-		fexl_list_delete(list, to_delete);
-}
-
-/*
- * make a shallow copy of a fexl_list
- */
-struct fexl_list *fexl_list_copy(struct fexl_list *list)
-{
-	struct fexl_list *ret = fexl_list_init();
-	struct fexl_node *node;
-
-	fexl_list_for_each(node, list)
-		fexl_list_add(ret, node->elem);
-
-	return ret;
-}
-
-/*
  * make a shallow copy of a sdv_list
  */
 struct sdv_list *sdv_list_copy(struct sdv_list *list)
@@ -1827,7 +1722,7 @@ void fexl_list_print(char *title, struct fexl_list *list)
 
 	printf("%s:\n", title);
 
-	fexl_list_for_each(node, list)
+	list_for_each_entry(node, &list->list, node)
 		fexpr_list_print(":", node->elem);
 }
 
@@ -1861,22 +1756,6 @@ void defm_list_destruct(struct defm_list *list)
 		tmp = node->next;
 		pexpr_put(node->elem->e);
 		free(node->elem);
-		free(node);
-		node = tmp;
-	}
-
-	free(list);
-}
-
-/*
- * free an fexl_list
- */
-void fexl_list_free(struct fexl_list *list)
-{
-	struct fexl_node *node = list->head, *tmp;
-
-	while (node != NULL) {
-		tmp = node->next;
 		free(node);
 		node = tmp;
 	}
