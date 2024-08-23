@@ -37,7 +37,7 @@
 #include "lkc.h"
 #include <vector>
 #include "qconf.h"
-#ifdef PICOSAT_AVAILABLE
+#if PICOSAT_AVAILABLE
 #include "configfix.h"
 #endif
 
@@ -55,14 +55,6 @@ ConfigSettings::ConfigSettings()
 	: QSettings("kernel.org", "qconf")
 {
 }
-
-class PicoSATInstallationInfo : public QWidget {
-	typedef class QWidget Parent;
-
-    public:
-	PicoSATInstallationInfo(QWidget *parent, const char *name = 0);
-	~PicoSATInstallationInfo() {}
-};
 
 /**
  * Reads a list of integer values from the application settings.
@@ -1402,12 +1394,8 @@ ConfigMainWindow::ConfigMainWindow(void)
 	split1->addWidget(configList);
 	split1->addWidget(menuList);
 	split2->addWidget(helpText);
-
-	auto split3 = new QSplitter(split2);
+	split3 = new QSplitter(split2);
 	split3->setOrientation(Qt::Vertical);
-#ifndef PICOSAT_AVAILABLE
-	split3->addWidget(new PicoSATInstallationInfo(split3));
-#endif
 	conflictsView = new ConflictsView(split3, "help");
 	/* conflictsSelected signal in conflictsview triggers when a conflict is selected
 		 in the view. this line connects that event to conflictselected event in mainwindow
@@ -1417,9 +1405,6 @@ ConfigMainWindow::ConfigMainWindow(void)
 	connect(conflictsView,SIGNAL(refreshMenu()),SLOT(refreshMenu()));
 	connect(menuList,SIGNAL(updateConflictsViewColorization()),conflictsView,SLOT(updateConflictsViewColorization()));
 	connect(configList,SIGNAL(updateConflictsViewColorization()),conflictsView,SLOT(updateConflictsViewColorization()));
-#ifndef PICOSAT_AVAILABLE
-	conflictsView->setDisabled(true);
-#endif
 
 	setTabOrder(configList, helpText);
 	configList->setFocus();
@@ -1487,9 +1472,7 @@ ConfigMainWindow::ConfigMainWindow(void)
 	ConfigList::showPromptAction = new QAction("Show Prompt Options", optGroup);
 	ConfigList::showPromptAction->setCheckable(true);
 	ConfigList::addSymbolFromContextMenu = new QAction("Add symbol from context menu");
-#ifdef PICOSAT_AVAILABLE
 	connect(ConfigList::addSymbolFromContextMenu, &QAction::triggered, conflictsView, &ConflictsView::addSymbol);
-#endif
 
 	QAction *showDebugAction = new QAction("Show Debug Info", this);
 	  showDebugAction->setCheckable(true);
@@ -1545,6 +1528,8 @@ ConfigMainWindow::ConfigMainWindow(void)
 
 	connect(configList, &ConfigList::menuChanged,
 		helpText, &ConfigInfoView::setInfo);
+	connect(configList, &ConfigList::menuChanged,
+		conflictsView, &ConflictsView::menuChanged);
 	connect(configList, &ConfigList::menuSelected,
 		this, &ConfigMainWindow::changeMenu);
 	connect(configList, &ConfigList::itemSelected,
@@ -1553,14 +1538,10 @@ ConfigMainWindow::ConfigMainWindow(void)
 		this, &ConfigMainWindow::goBack);
 	connect(menuList, &ConfigList::menuChanged,
 		helpText, &ConfigInfoView::setInfo);
-	connect(menuList, &ConfigList::menuSelected,
-		this, &ConfigMainWindow::changeMenu);
-#ifdef PICOSAT_AVAILABLE
 	connect(menuList, &ConfigList::menuChanged,
 		conflictsView, &ConflictsView::menuChanged);
-	connect(configList, &ConfigList::menuChanged,
-		conflictsView, &ConflictsView::menuChanged);
-#endif
+	connect(menuList, &ConfigList::menuSelected,
+		this, &ConfigMainWindow::changeMenu);
 
 	connect(configList, &ConfigList::gotFocus,
 		helpText, &ConfigInfoView::setInfo);
@@ -1931,13 +1912,51 @@ void QTableWidget::dropEvent(QDropEvent *event)
 {
 }
 
+void ConflictsView::addPicoSatNote(QHBoxLayout &layout)
+{
+	QLabel &label = *new QLabel;
+	label.setText("To use the conflict resolver you need to <a href=\"https://google.com\">install PicoSAT<\a>");
+	label.setTextFormat(Qt::RichText);
+	label.setTextInteractionFlags(Qt::TextBrowserInteraction);
+	label.setOpenExternalLinks(true);
+	auto &iconLabel = *new QLabel();
+	iconLabel.setPixmap(
+		style()->standardIcon(
+			       QStyle::StandardPixmap::SP_MessageBoxInformation)
+			.pixmap(20, 20));
+	layout.addWidget(&iconLabel);
+	layout.addWidget(&label);
+	layout.addStretch();
+}
+
 ConflictsView::ConflictsView(QWidget *parent, const char *name)
 	: Parent(parent)
 {
+	/*
+	 * 	- topLevelLayout
+	 * 		- picoSatContainer
+	 *  		- picoSatLayout
+	 *  			- ... (addPicoSatNote)
+	 *		- conflictsViewContainer
+	 *			- horizontalLayout
+	 *				- verticalLayout
+	 *				- solutionLayout
+	 */
 	currentSelectedMenu = nullptr;
 	setObjectName(name);
-	QHBoxLayout *horizontalLayout = new QHBoxLayout(this);
-	QVBoxLayout *verticalLayout = new QVBoxLayout();
+	QVBoxLayout *topLevelLayout = new QVBoxLayout(this);
+	QWidget *conflictsViewContainer = new QWidget;
+	if (!PICOSAT_AVAILABLE) {
+		conflictsViewContainer->setDisabled(true);
+		QWidget *picoSatContainer = new QWidget;
+		QHBoxLayout *picoSatLayout = new QHBoxLayout(picoSatContainer);
+		addPicoSatNote(*picoSatLayout);
+		topLevelLayout->addWidget(picoSatContainer);
+	}
+	topLevelLayout->addWidget(conflictsViewContainer);
+
+	QHBoxLayout *horizontalLayout = new QHBoxLayout(conflictsViewContainer);
+	QVBoxLayout *verticalLayout = new QVBoxLayout;
 	verticalLayout->setContentsMargins(0, 0, 0, 0);
 	conflictsToolBar = new QToolBar("ConflictTools", this);
 	// toolbar buttons [n] [m] [y] [calculate fixes] [remove]
@@ -2037,7 +2056,7 @@ void ConflictsView::changeToNo(){
 }
 
 void ConflictsView::applyFixButtonClick(){
-#ifdef PICOSAT_AVAILABLE
+#if PICOSAT_AVAILABLE
 	signed int solution_number = solutionSelector->currentIndex();
 
 	if (solution_number == -1 || solution_output == NULL) {
@@ -2172,7 +2191,7 @@ void ConflictsView::cellClicked(int row, int column)
 }
 
 void ConflictsView::changeSolutionTable(int solution_number){
-#ifdef PICOSAT_AVAILABLE
+#if PICOSAT_AVAILABLE
 	size_t i;
 
 	if (solution_output == nullptr || solution_number < 0) {
@@ -2216,7 +2235,7 @@ void ConflictsView::changeSolutionTable(int solution_number){
 
 void ConflictsView::updateConflictsViewColorization(void)
 {
-#ifdef PICOSAT_AVAILABLE
+#if PICOSAT_AVAILABLE
 	auto green = QColor(0,170,0);
 	auto red = QColor(255,0,0);
 	auto grey = QColor(180,180,180);
@@ -2257,7 +2276,7 @@ void ConflictsView::updateConflictsViewColorization(void)
 
 void ConflictsView::runSatConfAsync()
 {
-#ifdef PICOSAT_AVAILABLE
+#if PICOSAT_AVAILABLE
 	//loop through the rows in conflicts table adding each row into the array:
 	struct symbol_dvalue *p = nullptr;
 	std::vector<struct symbol_dvalue *> wanted_symbols;
@@ -2299,7 +2318,7 @@ void ConflictsView::runSatConfAsync()
 
 void ConflictsView::updateResults(void)
 {
-#ifdef PICOSAT_AVAILABLE
+#if PICOSAT_AVAILABLE
 	fixConflictsAction_->setText("Calculate Fixes");
 	loadingAction->setVisible(false);
 	if (!(solution_output == nullptr || num_solutions == 0))
@@ -2327,7 +2346,7 @@ void ConflictsView::updateResults(void)
 
 void ConflictsView::calculateFixes()
 {
-#ifdef PICOSAT_AVAILABLE
+#if PICOSAT_AVAILABLE
 	if(conflictsTable->rowCount() == 0)
 	{
 		printd("table is empty\n");
@@ -2468,25 +2487,4 @@ static tristate string_value_to_tristate(QString s){
 		return tristate::no;
 	else
 		return tristate::no;
-}
-
-PicoSATInstallationInfo::PicoSATInstallationInfo(QWidget *parent,
-						 const char *name)
-	: Parent(parent)
-{
-	setObjectName(name);
-	QHBoxLayout *horizontalLayout = new QHBoxLayout(this);
-	auto label = new QLabel();
-	label->setText("To use the conflict resolver you need to <a href=\"https://google.com\">install PicoSAT<\a>");
-	label->setTextFormat(Qt::RichText);
-	label->setTextInteractionFlags(Qt::TextBrowserInteraction);
-	label->setOpenExternalLinks(true);
-	auto iconLabel = new QLabel();
-	iconLabel->setPixmap(
-		style()->standardIcon(
-			       QStyle::StandardPixmap::SP_MessageBoxInformation)
-			.pixmap(20, 20));
-	horizontalLayout->addWidget(iconLabel);
-	horizontalLayout->addWidget(label);
-	horizontalLayout->addStretch();
 }
