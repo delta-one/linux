@@ -26,6 +26,7 @@
 #include <QMovie>
 #include <QMessageBox>
 
+#include <QPlainTextEdit>
 #include <stdlib.h>
 #include <QAbstractItemView>
 #include <QMimeData>
@@ -54,6 +55,14 @@ ConfigSettings::ConfigSettings()
 	: QSettings("kernel.org", "qconf")
 {
 }
+
+class PicoSATInstallationInfo : public QWidget {
+	typedef class QWidget Parent;
+
+    public:
+	PicoSATInstallationInfo(QWidget *parent, const char *name = 0);
+	~PicoSATInstallationInfo() {}
+};
 
 /**
  * Reads a list of integer values from the application settings.
@@ -1393,9 +1402,12 @@ ConfigMainWindow::ConfigMainWindow(void)
 	split1->addWidget(configList);
 	split1->addWidget(menuList);
 	split2->addWidget(helpText);
-	split3 = new QSplitter(split2);
+
+	auto split3 = new QSplitter(split2);
 	split3->setOrientation(Qt::Vertical);
-#ifdef PICOSAT_AVAILABLE
+#ifndef PICOSAT_AVAILABLE
+	split3->addWidget(new PicoSATInstallationInfo(split3));
+#endif
 	conflictsView = new ConflictsView(split3, "help");
 	/* conflictsSelected signal in conflictsview triggers when a conflict is selected
 		 in the view. this line connects that event to conflictselected event in mainwindow
@@ -1405,6 +1417,8 @@ ConfigMainWindow::ConfigMainWindow(void)
 	connect(conflictsView,SIGNAL(refreshMenu()),SLOT(refreshMenu()));
 	connect(menuList,SIGNAL(updateConflictsViewColorization()),conflictsView,SLOT(updateConflictsViewColorization()));
 	connect(configList,SIGNAL(updateConflictsViewColorization()),conflictsView,SLOT(updateConflictsViewColorization()));
+#ifndef PICOSAT_AVAILABLE
+	conflictsView->setDisabled(true);
 #endif
 
 	setTabOrder(configList, helpText);
@@ -2454,4 +2468,25 @@ static tristate string_value_to_tristate(QString s){
 		return tristate::no;
 	else
 		return tristate::no;
+}
+
+PicoSATInstallationInfo::PicoSATInstallationInfo(QWidget *parent,
+						 const char *name)
+	: Parent(parent)
+{
+	setObjectName(name);
+	QHBoxLayout *horizontalLayout = new QHBoxLayout(this);
+	auto label = new QLabel();
+	label->setText("To use the conflict resolver you need to <a href=\"https://google.com\">install PicoSAT<\a>");
+	label->setTextFormat(Qt::RichText);
+	label->setTextInteractionFlags(Qt::TextBrowserInteraction);
+	label->setOpenExternalLinks(true);
+	auto iconLabel = new QLabel();
+	iconLabel->setPixmap(
+		style()->standardIcon(
+			       QStyle::StandardPixmap::SP_MessageBoxInformation)
+			.pixmap(20, 20));
+	horizontalLayout->addWidget(iconLabel);
+	horizontalLayout->addWidget(label);
+	horizontalLayout->addStretch();
 }
