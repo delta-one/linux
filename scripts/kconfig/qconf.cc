@@ -2008,6 +2008,7 @@ ConflictsView::ConflictsView(QWidget *parent, const char *name)
 	conflictsTable->setRowCount(0);
 	conflictsTable->setColumnCount(3);
 	conflictsTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+	conflictsTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
 	conflictsTable->setHorizontalHeaderLabels(QStringList()  << "Option" << "Wanted value" << "Current value" );
 	verticalLayout->addWidget(conflictsTable);
@@ -2028,6 +2029,7 @@ ConflictsView::ConflictsView(QWidget *parent, const char *name)
 	solutionTable->setRowCount(0);
 	solutionTable->setColumnCount(2);
 	solutionTable->setHorizontalHeaderLabels(QStringList()  << "Symbol" << "New Value" );
+	solutionTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
 	applyFixButton = new QPushButton("Apply Selected solution");
 	connect(applyFixButton, SIGNAL(clicked(bool)), SLOT(applyFixButtonClick()));
