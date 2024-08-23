@@ -204,8 +204,10 @@ hostprogs        += cfoutconfig
 cfconf-objs      := configfix.o cf_constraints.o cf_expr.o cf_rangefix.o cf_utils.o
 cfoutconfig-objs := cfoutconfig.o $(common-objs) $(cfconf-objs)
 picosat-lib	           := -l:libpicosat-trace.so.1
-picosat-available-macro    := -DPICOSAT_AVAILABLE
+picosat-available-macro    := -DPICOSAT_AVAILABLE=1
 HOSTLDLIBS_cfoutconfig     := $(picosat-lib)
+else
+picosat-available-macro    := -DPICOSAT_AVAILABLE=0
 endif
 
 # qconf: Used for the xconfig target based on Qt
