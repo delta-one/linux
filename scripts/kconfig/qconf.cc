@@ -3,7 +3,7 @@
  * Copyright (C) 2002 Roman Zippel <zippel@linux-m68k.org>
  * Copyright (C) 2015 Boris Barbulovski <bbarbulovski@gmail.com>
  */
-#include "qnamespace.h"
+
 #include <QAction>
 #include <QActionGroup>
 #include <QApplication>
@@ -195,7 +195,6 @@ void ConfigItem::updateMenu(void)
 		prompt += " (NEW)";
 set_prompt:
 	setText(promptColIdx, prompt);
-
 }
 
 void ConfigItem::testUpdateMenu(bool v)
@@ -243,7 +242,6 @@ void ConfigItem::init(void)
 		}
 	}
 	updateMenu();
-
 }
 
 /*
@@ -490,7 +488,6 @@ void ConfigList::updateListForAll()
 
 		list->updateList();
 	}
-
 }
 
 void ConfigList::updateListAllForAll()
