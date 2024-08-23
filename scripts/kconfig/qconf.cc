@@ -38,9 +38,8 @@
 
 #include "lkc.h"
 #include "qconf.h"
-#if PICOSAT_AVAILABLE
 #include "configfix.h"
-#endif
+#include "picosat_functions.h"
 
 #include "images.h"
 
@@ -51,6 +50,8 @@ static QApplication *configApp;
 static ConfigSettings *configSettings;
 
 QAction *ConfigMainWindow::saveAction;
+
+static bool picosat_available;
 
 ConfigSettings::ConfigSettings()
 	: QSettings("kernel.org", "qconf")
@@ -1944,7 +1945,7 @@ ConflictsView::ConflictsView(QWidget *parent, const char *name)
 	setObjectName(name);
 	QVBoxLayout *topLevelLayout = new QVBoxLayout(this);
 	QWidget *conflictsViewContainer = new QWidget;
-	if (!PICOSAT_AVAILABLE) {
+	if (!picosat_available) {
 		conflictsViewContainer->setDisabled(true);
 		QWidget *picoSatContainer = new QWidget;
 		QHBoxLayout *picoSatLayout = new QHBoxLayout(picoSatContainer);
@@ -2044,7 +2045,6 @@ ConflictsView::ConflictsView(QWidget *parent, const char *name)
 }
 
 void ConflictsView::applyFixButtonClick(){
-#if PICOSAT_AVAILABLE
 	signed int solution_number = solutionSelector->currentIndex();
 
 	if (solution_number == -1 || solution_output == NULL) {
@@ -2063,7 +2063,6 @@ void ConflictsView::applyFixButtonClick(){
 	QMessageBox msgBox;
 	msgBox.setText("The solution has been applied.");
 	msgBox.exec();
-#endif
 }
 
 void ConflictsView::changeToYes(){
@@ -2214,7 +2213,6 @@ void ConflictsView::cellClicked(int row, int column)
 }
 
 void ConflictsView::changeSolutionTable(int solution_number){
-#if PICOSAT_AVAILABLE
 	size_t i;
 
 	if (solution_output == nullptr || solution_number < 0) {
@@ -2253,12 +2251,10 @@ void ConflictsView::changeSolutionTable(int solution_number){
 		}
 	}
 	updateConflictsViewColorization();
-#endif
 }
 
 void ConflictsView::updateConflictsViewColorization(void)
 {
-#if PICOSAT_AVAILABLE
 	auto green = QColor(0,170,0);
 	auto red = QColor(255,0,0);
 	auto grey = QColor(180,180,180);
@@ -2294,12 +2290,10 @@ void ConflictsView::updateConflictsViewColorization(void)
 			symbol->setForeground(green);
 		}
     }
-#endif
 }
 
 void ConflictsView::runSatConfAsync()
 {
-#if PICOSAT_AVAILABLE
 	//loop through the rows in conflicts table adding each row into the array:
 	struct symbol_dvalue *p = nullptr;
 	std::vector<struct symbol_dvalue *> wanted_symbols;
@@ -2336,12 +2330,10 @@ void ConflictsView::runSatConfAsync()
 		satconf_cancelled = true;
 	}
 	satconf_cancellation_cv.notify_one();
-#endif
 }
 
 void ConflictsView::updateResults(void)
 {
-#if PICOSAT_AVAILABLE
 	fixConflictsAction_->setText("Calculate Fixes");
 	loadingAction->setVisible(false);
 	if (!(solution_output == nullptr || num_solutions == 0))
@@ -2364,12 +2356,10 @@ void ConflictsView::updateResults(void)
 		delete runSatConfAsyncThread;
 		runSatConfAsyncThread  = nullptr;
 	}
-#endif
 }
 
 void ConflictsView::calculateFixes()
 {
-#if PICOSAT_AVAILABLE
 	if(conflictsTable->rowCount() == 0)
 	{
 		printd("table is empty\n");
@@ -2392,7 +2382,6 @@ void ConflictsView::calculateFixes()
 		std::unique_lock<std::mutex> lk{satconf_mutex};
 		satconf_cancellation_cv.wait(lk,[this] {return satconf_cancelled == true;});
 	}
-#endif
 }
 
 void ConflictsView::changeAll(void)
@@ -2455,6 +2444,8 @@ int main(int ac, char** av)
 	conf_parse(name);
 	fixup_rootmenu(&rootmenu);
 	//zconfdump(stdout);
+
+	picosat_available = load_picosat();
 
 	configApp = new QApplication(ac, av);
 
