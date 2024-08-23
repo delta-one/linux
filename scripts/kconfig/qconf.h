@@ -17,6 +17,7 @@
 #include <QTableWidget>
 #include <QList>
 #include <QComboBox>
+#include <QVBoxLayout>
 #include <QLabel>
 #include <thread>
 #include <condition_variable>
@@ -150,12 +151,9 @@ public slots:
 	void changeToModule();
 	void selectionChanged(QList<QTreeWidgetItem *> selection);
 
-
 	void applyFixButtonClick();
 	void updateConflictsViewColorization();
 	void updateResults();
-
-
 
 	// switches the solution table with selected solution index from  solution_output
 	void changeSolutionTable(int solution_number);
@@ -198,6 +196,8 @@ public:
 	std::condition_variable satconf_cancellation_cv;
 	bool satconf_cancelled{false};
 
+private:
+	void addPicoSatNote(QHBoxLayout &layout);
 };
 
 class ConfigItem : public QTreeWidgetItem {
