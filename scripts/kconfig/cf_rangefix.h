@@ -6,7 +6,7 @@
 #ifndef CF_RANGEFIX_H
 #define CF_RANGEFIX_H
 
-#include "picosat.h"
+#include "picosat_functions.h"
 #include "cf_defs.h"
 
 /* initialize RangeFix and return the diagnoses */
