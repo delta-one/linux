@@ -2045,18 +2045,6 @@ ConflictsView::ConflictsView(QWidget *parent, const char *name)
 	horizontalLayout->addLayout(solutionLayout);
 }
 
-
-void ConflictsView::changeToNo(){
-	QItemSelectionModel *select = conflictsTable->selectionModel();
-	if (select->hasSelection()){
-		QModelIndexList rows = select->selectedRows();
-		for (int i = 0;i < rows.count(); i++)
-		{
-			conflictsTable->item(rows[i].row(),1)->setText("NO");
-		}
-	}
-}
-
 void ConflictsView::applyFixButtonClick(){
 #if PICOSAT_AVAILABLE
 	signed int solution_number = solutionSelector->currentIndex();
@@ -2086,7 +2074,8 @@ void ConflictsView::changeToYes(){
 		QModelIndexList rows = select->selectedRows();
 		for (int i = 0;i < rows.count(); i++)
 		{
-			conflictsTable->item(rows[i].row(),1)->setText("YES");
+			conflictsTable->item(rows[i].row(), 1)
+				->setText(tristate_value_to_string(yes));
 		}
 	}
 
@@ -2098,10 +2087,23 @@ void ConflictsView::changeToModule() {
 		QModelIndexList rows = select->selectedRows();
 		for (int i = 0;i < rows.count(); i++)
 		{
-			conflictsTable->item(rows[i].row(),1)->setText("MODULE");
+			conflictsTable->item(rows[i].row(), 1)
+				->setText(tristate_value_to_string(mod));
 		}
 	}
 
+}
+
+void ConflictsView::changeToNo(){
+	QItemSelectionModel *select = conflictsTable->selectionModel();
+	if (select->hasSelection()){
+		QModelIndexList rows = select->selectedRows();
+		for (int i = 0;i < rows.count(); i++)
+		{
+			conflictsTable->item(rows[i].row(), 1)
+				->setText(tristate_value_to_string(no));
+		}
+	}
 }
 
 void ConflictsView::menuChanged(struct menu *m)
@@ -2188,6 +2190,27 @@ void ConflictsView::cellClicked(int row, int column)
 	} else {
 		//enable module button
 		conflictsToolBar->actions()[2]->setDisabled(false);
+	}
+	if (column == 1) {
+		// cycle to new value
+		tristate old_val = string_value_to_tristate(
+			conflictsTable->item(row, 1)->text());
+		tristate new_val = old_val;
+		switch (old_val) {
+		case no:
+			new_val = mod;
+			break;
+		case mod:
+			new_val = yes;
+			break;
+		case yes:
+			new_val = no;
+			break;
+		}
+		if (sym->type == S_BOOLEAN && new_val == mod)
+			new_val = yes;
+		conflictsTable->item(row, 1)->setText(
+			tristate_value_to_string(new_val));
 	}
 	emit(conflictSelected(men));
 }
