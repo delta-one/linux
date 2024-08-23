@@ -8,7 +8,7 @@
 
 #include "expr.h"
 #include "cf_defs.h"
-#include "picosat.h"
+#include "picosat_functions.h"
 
 /* parse Kconfig-file and read .config */
 void init_config(const char *Kconfig_file);

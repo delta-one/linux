@@ -16,7 +16,7 @@
 
 #include "configfix.h"
 #include "internal.h"
-#include "picosat.h"
+#include "picosat_functions.h"
 #include "cf_utils.h"
 #include "cf_constraints.h"
 #include "cf_rangefix.h"

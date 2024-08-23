@@ -16,7 +16,7 @@
 #include <ctype.h>
 
 #include "internal.h"
-#include "picosat.h"
+#include "picosat_functions.h"
 #include "cf_utils.h"
 #include "cf_expr.h"
 #include "list.h"
