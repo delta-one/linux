@@ -25,9 +25,7 @@
 #include <QHBoxLayout>
 #include <QMovie>
 #include <QMessageBox>
-
 #include <QPlainTextEdit>
-#include <stdlib.h>
 #include <QAbstractItemView>
 #include <QMimeData>
 #include <QBrush>
@@ -36,6 +34,9 @@
 #include <xalloc.h>
 #include "lkc.h"
 #include <vector>
+#include <stdlib.h>
+
+#include "lkc.h"
 #include "qconf.h"
 #if PICOSAT_AVAILABLE
 #include "configfix.h"
