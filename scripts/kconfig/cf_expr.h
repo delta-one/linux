@@ -88,15 +88,17 @@ struct fexpr *sym_get_nonbool_fexpr(struct symbol *sym, char *value);
  * return the fexpr of a non-boolean symbol for a specific value, if it exists
  * otherwise create it
  */
-struct fexpr *sym_get_or_create_nonbool_fexpr(struct symbol *sym, char *value, struct cfdata *data);
+struct fexpr *sym_get_or_create_nonbool_fexpr(struct symbol *sym, char *value,
+					      struct cfdata *data);
 
 /* macro to construct a pexpr for "A implies B" */
-struct pexpr *pexpr_implies_share(struct pexpr *a, struct pexpr *b, struct cfdata *data);
-struct pexpr *pexpr_implies(struct pexpr *a, struct pexpr *b, struct cfdata *data,
-			    enum pexpr_move move);
+struct pexpr *pexpr_implies_share(struct pexpr *a, struct pexpr *b,
+				  struct cfdata *data);
+struct pexpr *pexpr_implies(struct pexpr *a, struct pexpr *b,
+			    struct cfdata *data, enum pexpr_move move);
 
-/* check, if the fexpr is a symbol, a True/False-constant, a literal symbolising a non-boolean or
- * a choice symbol
+/* check, if the fexpr is a symbol, a True/False-constant, a literal symbolising
+ * a non-boolean or a choice symbol
  */
 bool fexpr_is_symbol(struct fexpr *e);
 
@@ -119,7 +121,8 @@ void fexpr_as_char(struct fexpr *e, struct gstr *s);
 void pexpr_as_char_short(struct pexpr *e, struct gstr *s, int parent);
 
 /* write an fexpr into a string (format needed for testing) */
-void pexpr_as_char(struct pexpr *e, struct gstr *s, int parent, struct cfdata *data);
+void pexpr_as_char(struct pexpr *e, struct gstr *s, int parent,
+		   struct cfdata *data);
 
 /* check whether a pexpr contains a specific fexpr */
 bool pexpr_contains_fexpr(struct pexpr *e, struct fexpr *fe);
@@ -169,7 +172,7 @@ struct pexpr *pexpr_get(struct pexpr *e);
 void pexpr_print(char *tag, struct pexpr *e, int prevtoken);
 
 /* convert a fexpr to a pexpr */
-struct pexpr *pexf(struct fexpr *fe);
+struct pexpr *pexpr_alloc_symbol(struct fexpr *fe);
 
 /* eliminate duplicate and redundant operands */
 struct pexpr *pexpr_eliminate_dups(struct pexpr *e, struct cfdata *data);

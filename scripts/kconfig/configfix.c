@@ -248,14 +248,16 @@ int apply_fix(struct sfix_list *fix)
 
 			/* value already set? */
 			if (sfix->type == SF_BOOLEAN) {
-				if (sfix->tri == sym_get_tristate_value(sfix->sym)) {
+				if (sfix->tri ==
+				    sym_get_tristate_value(sfix->sym)) {
 					list_del(&node->node);
 					no_symbols_set++;
 					continue;
 				}
 			} else if (sfix->type == SF_NONBOOLEAN) {
 				if (strcmp(str_get(&sfix->nb_val),
-					   sym_get_string_value(sfix->sym)) == 0) {
+					   sym_get_string_value(sfix->sym)) ==
+				    0) {
 					list_del(&node->node);
 					no_symbols_set++;
 					continue;

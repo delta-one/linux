@@ -31,9 +31,12 @@ static void build_cnf_tseytin(struct pexpr *e, struct cfdata *data);
 static void build_cnf_tseytin_top_and(struct pexpr *e, struct cfdata *data);
 static void build_cnf_tseytin_top_or(struct pexpr *e, struct cfdata *data);
 
-static void build_cnf_tseytin_tmp(struct pexpr *e, struct fexpr *t, struct cfdata *data);
-static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t, struct cfdata *data);
-static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t, struct cfdata *data);
+static void build_cnf_tseytin_tmp(struct pexpr *e, struct fexpr *t,
+				  struct cfdata *data);
+static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t,
+				  struct cfdata *data);
+static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t,
+				 struct cfdata *data);
 static int pexpr_satval(struct pexpr *e);
 
 /*
@@ -82,11 +85,13 @@ void create_constants(struct cfdata *data)
 	printd("Creating constants...");
 
 	/* create TRUE and FALSE constants */
-	data->constants->const_false = fexpr_create(data->sat_variable_nr++, FE_FALSE, "False");
+	data->constants->const_false =
+		fexpr_create(data->sat_variable_nr++, FE_FALSE, "False");
 	// const_false = fexpr_create(sat_variable_nr++, FE_FALSE, "False");
 	fexpr_add_to_satmap(data->constants->const_false, data);
 
-	data->constants->const_true = fexpr_create(data->sat_variable_nr++, FE_TRUE, "True");
+	data->constants->const_true =
+		fexpr_create(data->sat_variable_nr++, FE_TRUE, "True");
 	fexpr_add_to_satmap(data->constants->const_true, data);
 
 	/* add fexpr of constants to tristate constants */
@@ -121,7 +126,8 @@ void create_constants(struct cfdata *data)
 struct fexpr *create_tmpsatvar(struct cfdata *data)
 {
 	char *name = get_tmp_var_as_char(data->tmp_variable_nr);
-	struct fexpr *t = fexpr_create(data->sat_variable_nr++, FE_TMPSATVAR, name);
+	struct fexpr *t =
+		fexpr_create(data->sat_variable_nr++, FE_TMPSATVAR, name);
 
 	++data->tmp_variable_nr;
 	fexpr_add_to_satmap(t, data);
@@ -168,7 +174,8 @@ bool expr_can_evaluate_to_mod(struct expr *e)
 
 	switch (e->type) {
 	case E_SYMBOL:
-		return e->left.sym == &symbol_mod || e->left.sym->type == S_TRISTATE ? true : false;
+		return e->left.sym == &symbol_mod ||
+		       e->left.sym->type == S_TRISTATE;
 	case E_AND:
 	case E_OR:
 		return expr_can_evaluate_to_mod(e->left.expr) ||
@@ -193,7 +200,8 @@ bool expr_is_nonbool_constant(struct expr *e)
 	if (e->left.sym->flags & SYMBOL_CONST)
 		return true;
 
-	return string_is_number(e->left.sym->name) || string_is_hex(e->left.sym->name);
+	return string_is_number(e->left.sym->name) ||
+	       string_is_hex(e->left.sym->name);
 }
 
 /*
@@ -321,7 +329,8 @@ bool sym_is_bool_or_triconst(struct symbol *sym)
  */
 bool sym_is_nonboolean(struct symbol *sym)
 {
-	return sym->type == S_INT || sym->type == S_HEX || sym->type == S_STRING;
+	return sym->type == S_INT || sym->type == S_HEX ||
+	       sym->type == S_STRING;
 }
 
 /*
@@ -361,7 +370,7 @@ struct pexpr *prop_get_condition(struct property *prop, struct cfdata *data)
 
 	/* if there is no condition, return True */
 	if (!prop->visible.expr)
-		return pexf(data->constants->const_true);
+		return pexpr_alloc_symbol(data->constants->const_true);
 
 	return expr_calculate_pexpr_both(prop->visible.expr, data);
 }
@@ -674,7 +683,8 @@ static void build_cnf_tseytin_top_or(struct pexpr *e, struct cfdata *data)
 /*
  * build the sub-expressions
  */
-static void build_cnf_tseytin_tmp(struct pexpr *e, struct fexpr *t, struct cfdata *data)
+static void build_cnf_tseytin_tmp(struct pexpr *e, struct fexpr *t,
+				  struct cfdata *data)
 {
 	switch (e->type) {
 	case PE_AND:
@@ -691,7 +701,8 @@ static void build_cnf_tseytin_tmp(struct pexpr *e, struct fexpr *t, struct cfdat
 /*
  * build the Tseytin sub-expressions for a pexpr of type AND
  */
-static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t, struct cfdata *data)
+static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t,
+				  struct cfdata *data)
 {
 	struct fexpr *t1 = NULL, *t2 = NULL;
 	int a, b, c;
@@ -741,7 +752,8 @@ static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t, struct cfdat
 /*
  * build the Tseytin sub-expressions for a pexpr of type
  */
-static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t, struct cfdata *data)
+static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t,
+				 struct cfdata *data)
 {
 	struct fexpr *t1 = NULL, *t2 = NULL;
 	int a, b, c;
@@ -874,7 +886,8 @@ void picosat_solve(PicoSAT *pico, struct cfdata *data)
 		while (lit != 0) {
 			e = data->satmap[lit];
 
-			printd("(%d) %s <%d>\n", lit, str_get(&e->name), e->assumption);
+			printd("(%d) %s <%d>\n", lit, str_get(&e->name),
+			       e->assumption);
 			lit = abs(*i++);
 		}
 	} else {
@@ -940,7 +953,8 @@ void sym_add_assumption(PicoSAT *pico, struct symbol *sym)
 				continue;
 			}
 
-			if (strcmp(str_get(&node->elem->nb_val), string_val) == 0) {
+			if (strcmp(str_get(&node->elem->nb_val), string_val) ==
+			    0) {
 				picosat_assume(pico, node->elem->satval);
 				node->elem->assumption = true;
 			} else {
