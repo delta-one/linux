@@ -2011,7 +2011,7 @@ ConflictsView::ConflictsView(QWidget *parent, const char *name)
 	conflictsTable->setSelectionBehavior(QAbstractItemView::SelectRows);
 	conflictsTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-	conflictsTable->setHorizontalHeaderLabels(QStringList()  << "Option" << "Wanted value" << "Current value" );
+	conflictsTable->setHorizontalHeaderLabels(QStringList()  << "Name" << "Wanted value" << "Current value" );
 	verticalLayout->addWidget(conflictsTable);
 
 	conflictsTable->setDragDropMode(QAbstractItemView::DropOnly);
@@ -2029,7 +2029,7 @@ ConflictsView::ConflictsView(QWidget *parent, const char *name)
 	solutionTable = new QTableWidget();
 	solutionTable->setRowCount(0);
 	solutionTable->setColumnCount(2);
-	solutionTable->setHorizontalHeaderLabels(QStringList()  << "Symbol" << "New Value" );
+	solutionTable->setHorizontalHeaderLabels(QStringList()  << "Name" << "New Value" );
 	solutionTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
 	applyFixButton = new QPushButton("Apply Selected solution");
