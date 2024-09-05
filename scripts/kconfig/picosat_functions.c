@@ -1,11 +1,13 @@
+#include "array_size.h"
 #include <dlfcn.h>
 #include <unistd.h>
 
 #include "cf_defs.h"
 #include "picosat_functions.h"
 
-
-const char *picosat_lib_name = "libpicosat-trace.so";
+const char *picosat_lib_names[] = { "libpicosat-trace.so",
+				    "libpicosat-trace.so.0",
+				    "libpicosat-trace.so.1" };
 
 PicoSAT *(*picosat_init)(void);
 int (*picosat_add)(PicoSAT *, int lit);
@@ -30,7 +32,11 @@ void (* picosat_print)(PicoSAT *, FILE *);
 
 bool load_picosat(void)
 {
-	void *handle = dlopen(picosat_lib_name, RTLD_LAZY);
+	void *handle = NULL;
+
+	for (int i = 0; i < ARRAY_SIZE(picosat_lib_names) && !handle; ++i) {
+		handle = dlopen(picosat_lib_names[i], RTLD_LAZY);
+	}
 	if (!handle) {
 		printd("%s\n", dlerror());
 		return false;
