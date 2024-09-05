@@ -1914,7 +1914,7 @@ void QTableWidget::dropEvent(QDropEvent *event)
 void ConflictsView::addPicoSatNote(QHBoxLayout &layout)
 {
 	QLabel &label = *new QLabel;
-	label.setText("To use the conflict resolver you need to <a href=\"https://google.com\">install PicoSAT<\a>");
+	label.setText("To use the conflict resolver you need to <a href=\"https://github.com/ole0811sch/picosat-installer\">install PicoSAT<\a>");
 	label.setTextFormat(Qt::RichText);
 	label.setTextInteractionFlags(Qt::TextBrowserInteraction);
 	label.setOpenExternalLinks(true);
