@@ -5,7 +5,7 @@
 #include "picosat_functions.h"
 
 
-const char *picosat_so_name = "libpicosat-trace.so.1";
+const char *picosat_lib_name = "libpicosat-trace.so";
 
 PicoSAT *(*picosat_init)(void);
 int (*picosat_add)(PicoSAT *, int lit);
@@ -28,7 +28,7 @@ int (* picosat_enable_trace_generation) (PicoSAT *);
 
 bool load_picosat(void)
 {
-	void *handle = dlopen(picosat_so_name, RTLD_LAZY);
+	void *handle = dlopen(picosat_lib_name, RTLD_LAZY);
 	if (!handle) {
 		printd("%s\n", dlerror());
 		return false;
