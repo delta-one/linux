@@ -14,9 +14,8 @@
 #include <time.h>
 #include <unistd.h>
 
-#include "configfix.h"
 #include "internal.h"
-#include "picosat.h"
+#include "picosat_functions.h"
 #include "cf_expr.h"
 #include "cf_utils.h"
 #include "cf_constraints.h"
@@ -43,6 +42,10 @@ int main(int argc, char *argv[])
 		0,    // size_t satmap_size
 		&constants // struct constants *constants
 	};
+	if (!load_picosat()) {
+		printf("You need to install PicoSAT first\n");
+		return EXIT_FAILURE;
+	}
 
 	printf("\nCreating constraints and CNF clauses...");
 	/* measure time for constructing constraints and clauses */
