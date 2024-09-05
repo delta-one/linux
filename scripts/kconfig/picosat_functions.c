@@ -15,6 +15,7 @@ int (*picosat_sat)(PicoSAT *, int decision_limit);
 const int *(*picosat_failed_assumptions)(PicoSAT *);
 int (* picosat_added_original_clauses) (PicoSAT *);
 int (* picosat_enable_trace_generation) (PicoSAT *);
+void (* picosat_print)(PicoSAT *, FILE *);
 
 #define PICOSAT_FUNCTION_LIST             \
 	X(picosat_init)                   \
@@ -24,7 +25,8 @@ int (* picosat_enable_trace_generation) (PicoSAT *);
 	X(picosat_sat)                    \
 	X(picosat_failed_assumptions)     \
 	X(picosat_added_original_clauses) \
-	X(picosat_enable_trace_generation)
+	X(picosat_enable_trace_generation)\
+	X(picosat_print)
 
 bool load_picosat(void)
 {
