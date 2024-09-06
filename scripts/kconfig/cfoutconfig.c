@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 	create_sat_variables(&data);
 
 	/* get the constraints */
-	get_constraints(&data);
+	build_constraints(&data);
 
 	end = clock();
 	time = ((double) (end - start)) / CLOCKS_PER_SEC;
