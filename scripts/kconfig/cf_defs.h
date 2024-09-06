@@ -72,7 +72,7 @@ extern bool stop_rangefix;
  * constructs an object using CF_ALLOC_NODE(node_type, el) and then adds to the
  * end of list->list
  */
-#define CF_EMPLACE_BACK(list_, el, prefix)                                    \
+#define CF_PUSH_BACK(list_, el, prefix)                                    \
 	do {                                                                  \
 		__ASSERT_LIST_PREF(list_, prefix);                            \
 		__NODE_T(prefix) *__cf_emplace_back_node =                    \
@@ -129,7 +129,7 @@ extern bool stop_rangefix;
 		__NODE_T(prefix) * __node;                            \
                                                                       \
 		CF_LIST_FOR_EACH(__node, orig, prefix)                \
-			CF_EMPLACE_BACK(__ret, __node->elem, prefix); \
+			CF_PUSH_BACK(__ret, __node->elem, prefix); \
 		__ret;                                                \
 	})
 

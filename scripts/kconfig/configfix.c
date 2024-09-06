@@ -47,7 +47,7 @@ struct sfix_list **run_satconf(struct symbol_dvalue **symbols, size_t n,
 
 	i = 0;
 	for (i = 0; i < n; ++i)
-		CF_EMPLACE_BACK(symbols_list, symbols[i], sdv);
+		CF_PUSH_BACK(symbols_list, symbols[i], sdv);
 
 	solutions = run_satconf_list(symbols_list);
 	*num_solutions = list_size(&solutions->list);
@@ -102,7 +102,7 @@ struct sfl_list *run_satconf_list(struct sdv_list *symbols)
 		create_sat_variables(&data);
 
 		/* get the constraints */
-		get_constraints(&data);
+		build_constraints(&data);
 
 		end = clock();
 		time = ((double)(end - start)) / CLOCKS_PER_SEC;
@@ -146,7 +146,7 @@ struct sfl_list *run_satconf_list(struct sdv_list *symbols)
 	/* store the conflict symbols */
 	conflict_syms = CF_LIST_INIT(sym);
 	CF_LIST_FOR_EACH(node, data.sdv_symbols, sdv)
-		CF_EMPLACE_BACK(conflict_syms, node->elem->sym, sym);
+		CF_PUSH_BACK(conflict_syms, node->elem->sym, sym);
 
 	printd("Solving SAT-problem...");
 	start = clock();

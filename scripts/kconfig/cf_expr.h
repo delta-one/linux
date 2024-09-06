@@ -143,7 +143,7 @@ void pexpr_list_free_put(struct pexpr_list *list);
 void defm_list_destruct(struct defm_list *list);
 
 /* check whether 2 pexpr are equal */
-bool pexpr_eq(struct pexpr *e1, struct pexpr *e2, struct cfdata *data);
+bool pexpr_test_eq(struct pexpr *e1, struct pexpr *e2, struct cfdata *data);
 
 /* copy a pexpr */
 struct pexpr *pexpr_deep_copy(const struct pexpr *org);

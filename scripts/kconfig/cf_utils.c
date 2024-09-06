@@ -37,7 +37,7 @@ static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t,
 				  struct cfdata *data);
 static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t,
 				 struct cfdata *data);
-static int pexpr_satval(struct pexpr *e);
+static int pexpr_get_satval(struct pexpr *e);
 
 /*
  * parse Kconfig-file and read .config
@@ -647,7 +647,7 @@ static void build_cnf_tseytin_top_or(struct pexpr *e, struct cfdata *data)
 
 	/* set left side */
 	if (pexpr_is_symbol(e->left.pexpr)) {
-		a = pexpr_satval(e->left.pexpr);
+		a = pexpr_get_satval(e->left.pexpr);
 	} else {
 		t1 = create_tmpsatvar(data);
 		a = t1->satval;
@@ -655,7 +655,7 @@ static void build_cnf_tseytin_top_or(struct pexpr *e, struct cfdata *data)
 
 	/* set right side */
 	if (pexpr_is_symbol(e->right.pexpr)) {
-		b = pexpr_satval(e->right.pexpr);
+		b = pexpr_get_satval(e->right.pexpr);
 	} else {
 		t2 = create_tmpsatvar(data);
 		b = t2->satval;
@@ -711,7 +711,7 @@ static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t,
 
 	/* set left side */
 	if (pexpr_is_symbol(e->left.pexpr)) {
-		a = pexpr_satval(e->left.pexpr);
+		a = pexpr_get_satval(e->left.pexpr);
 	} else {
 		t1 = create_tmpsatvar(data);
 		a = t1->satval;
@@ -719,7 +719,7 @@ static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t,
 
 	/* set right side */
 	if (pexpr_is_symbol(e->right.pexpr)) {
-		b = pexpr_satval(e->right.pexpr);
+		b = pexpr_get_satval(e->right.pexpr);
 	} else {
 		t2 = create_tmpsatvar(data);
 		b = t2->satval;
@@ -762,7 +762,7 @@ static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t,
 
 	/* set left side */
 	if (pexpr_is_symbol(e->left.pexpr)) {
-		a = pexpr_satval(e->left.pexpr);
+		a = pexpr_get_satval(e->left.pexpr);
 	} else {
 		t1 = create_tmpsatvar(data);
 		a = t1->satval;
@@ -770,7 +770,7 @@ static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t,
 
 	/* set right side */
 	if (pexpr_is_symbol(e->right.pexpr)) {
-		b = pexpr_satval(e->right.pexpr);
+		b = pexpr_get_satval(e->right.pexpr);
 	} else {
 		t2 = create_tmpsatvar(data);
 		b = t2->satval;
@@ -830,7 +830,7 @@ void sat_add_clause(int num, ...)
 /*
  * return the SAT-variable for a pexpr that is a symbol
  */
-static int pexpr_satval(struct pexpr *e)
+static int pexpr_get_satval(struct pexpr *e)
 {
 	if (!pexpr_is_symbol(e)) {
 		perror("pexpr is not a symbol.");
