@@ -171,7 +171,7 @@ static void create_fexpr_nonbool(struct symbol *sym, struct cfdata *data)
 			break;
 		}
 
-		CF_EMPLACE_BACK(sym->nb_vals, e, fexpr);
+		CF_PUSH_BACK(sym->nb_vals, e, fexpr);
 		fexpr_add_to_satmap(e, data);
 	}
 }
@@ -691,7 +691,7 @@ struct fexpr *sym_create_nonbool_fexpr(struct symbol *sym, char *value,
 	e->nb_val = str_new();
 	str_append(&e->nb_val, s);
 
-	CF_EMPLACE_BACK(sym->nb_vals, e, fexpr);
+	CF_PUSH_BACK(sym->nb_vals, e, fexpr);
 	fexpr_add_to_satmap(e, data);
 
 	return e;
@@ -934,7 +934,7 @@ struct pexpr *pexpr_and_share(struct pexpr *a, struct pexpr *b,
 	struct pexpr *e;
 
 	/* A && A -> A */
-	if (a == b || pexpr_eq(a, b, data)) {
+	if (a == b || pexpr_test_eq(a, b, data)) {
 		pexpr_get(a);
 		return a;
 	}
@@ -960,13 +960,13 @@ struct pexpr *pexpr_and_share(struct pexpr *a, struct pexpr *b,
 	}
 
 	/* (A && B) && C -> A && B if B == C */
-	if (a->type == PE_AND && pexpr_eq(a->right.pexpr, b, data)) {
+	if (a->type == PE_AND && pexpr_test_eq(a->right.pexpr, b, data)) {
 		pexpr_get(a);
 		return a;
 	}
 
 	/* A && (B && C) -> B && C if A == B */
-	if (b->type == PE_AND && pexpr_eq(a, b->left.pexpr, data)) {
+	if (b->type == PE_AND && pexpr_test_eq(a, b->left.pexpr, data)) {
 		pexpr_get(b);
 		return b;
 	}
@@ -974,28 +974,28 @@ struct pexpr *pexpr_and_share(struct pexpr *a, struct pexpr *b,
 	if (a->type == PE_OR && b->type == PE_OR) {
 		e = NULL;
 		/* (A || B) && (C || D) -> A || (B && D) if A == C */
-		if (pexpr_eq(a->left.pexpr, b->left.pexpr, data)) {
+		if (pexpr_test_eq(a->left.pexpr, b->left.pexpr, data)) {
 			e = pexpr_or(a->left.pexpr,
 					  pexpr_and_share(a->right.pexpr,
 							  b->right.pexpr, data),
 					  data, PEXPR_ARG2);
 		}
 		/* (A || B) && (C || D) -> B || (A && C) if B == D */
-		else if (pexpr_eq(a->right.pexpr, b->right.pexpr, data)) {
+		else if (pexpr_test_eq(a->right.pexpr, b->right.pexpr, data)) {
 			e = pexpr_or(a->right.pexpr,
 					  pexpr_and_share(a->left.pexpr,
 							  b->left.pexpr, data),
 					  data, PEXPR_ARG2);
 		}
 		/* (A || B) && (C || D) -> A || (B && C) if A == D */
-		else if (pexpr_eq(a->left.pexpr, b->right.pexpr, data)) {
+		else if (pexpr_test_eq(a->left.pexpr, b->right.pexpr, data)) {
 			e = pexpr_or(a->left.pexpr,
 					  pexpr_and_share(a->right.pexpr,
 							  b->left.pexpr, data),
 					  data, PEXPR_ARG2);
 		}
 		/* (A || B) && (C || D) -> B || (A && D) if B == C */
-		else if (pexpr_eq(a->right.pexpr, b->left.pexpr, data)) {
+		else if (pexpr_test_eq(a->right.pexpr, b->left.pexpr, data)) {
 			e = pexpr_or(a->right.pexpr,
 					  pexpr_and_share(a->left.pexpr,
 							  b->right.pexpr, data),
@@ -1029,7 +1029,7 @@ struct pexpr *pexpr_or_share(struct pexpr *a, struct pexpr *b,
 	bool cond1, cond2;
 
 	/* A || A  -> A */
-	if (a == b || pexpr_eq(a, b, data)) {
+	if (a == b || pexpr_test_eq(a, b, data)) {
 		pexpr_get(a);
 		return a;
 	}
@@ -1056,14 +1056,14 @@ struct pexpr *pexpr_or_share(struct pexpr *a, struct pexpr *b,
 	}
 
 	/* A || (B && C) -> A if (A == B || A == C) */
-	if (b->type == PE_AND && (pexpr_eq(a, b->left.pexpr, data) ||
-				  pexpr_eq(a, b->right.pexpr, data))) {
+	if (b->type == PE_AND && (pexpr_test_eq(a, b->left.pexpr, data) ||
+				  pexpr_test_eq(a, b->right.pexpr, data))) {
 		pexpr_get(a);
 		return a;
 	}
 	/* (A && B) || C -> C if (A == C || B == C) */
-	if (a->type == PE_AND && (pexpr_eq(a->left.pexpr, b, data) ||
-				  pexpr_eq(a->right.pexpr, b, data))) {
+	if (a->type == PE_AND && (pexpr_test_eq(a->left.pexpr, b, data) ||
+				  pexpr_test_eq(a->right.pexpr, b, data))) {
 		pexpr_get(b);
 		return b;
 	}
@@ -1071,36 +1071,36 @@ struct pexpr *pexpr_or_share(struct pexpr *a, struct pexpr *b,
 	/* -A || B -> True if A == B
 	 * A || -B -> True if A == B
 	 */
-	cond1 = a->type == PE_NOT && pexpr_eq(a->left.pexpr, b, data);
-	cond2 = b->type == PE_NOT && pexpr_eq(a, b->left.pexpr, data);
+	cond1 = a->type == PE_NOT && pexpr_test_eq(a->left.pexpr, b, data);
+	cond2 = b->type == PE_NOT && pexpr_test_eq(a, b->left.pexpr, data);
 	if (cond1 || cond2)
 		return pexpr_alloc_symbol(data->constants->const_true);
 
 	if (a->type == PE_AND && b->type == PE_AND) {
 		e = NULL;
 		/* (A && B) || (C && D) -> A && (B || D) if (A == C) */
-		if (pexpr_eq(a->left.pexpr, b->left.pexpr, data)) {
+		if (pexpr_test_eq(a->left.pexpr, b->left.pexpr, data)) {
 			e = pexpr_and(a->left.pexpr,
 				      pexpr_or_share(a->right.pexpr,
 						     b->right.pexpr, data),
 				      data, PEXPR_ARG2);
 		}
 		/* (A && B) || (C && D) -> B && (A || C) if (B == D) */
-		if (pexpr_eq(a->right.pexpr, b->right.pexpr, data)) {
+		if (pexpr_test_eq(a->right.pexpr, b->right.pexpr, data)) {
 			e = pexpr_and(a->right.pexpr,
 				      pexpr_or_share(a->left.pexpr,
 						     b->left.pexpr, data),
 				      data, PEXPR_ARG2);
 		}
 		/* (A && B) || (C && D) -> A && (B || C) if (A == D) */
-		if (pexpr_eq(a->left.pexpr, b->right.pexpr, data)) {
+		if (pexpr_test_eq(a->left.pexpr, b->right.pexpr, data)) {
 			e = pexpr_and(a->left.pexpr,
 				      pexpr_or_share(a->right.pexpr,
 						     b->left.pexpr, data),
 				      data, PEXPR_ARG2);
 		}
 		/* (A && B) || (C && D) -> B && (A || D) if (B == C) */
-		if (pexpr_eq(a->right.pexpr, b->left.pexpr, data)) {
+		if (pexpr_test_eq(a->right.pexpr, b->left.pexpr, data)) {
 			e = pexpr_and(a->right.pexpr,
 				      pexpr_or_share(a->left.pexpr,
 						     b->right.pexpr, data),
@@ -1113,24 +1113,22 @@ struct pexpr *pexpr_or_share(struct pexpr *a, struct pexpr *b,
 	/* (A && B) || (C || D) -> C || D if
 	 * A == C || A == D || B == C || B == D
 	 */
-	if (a->type == PE_AND && b->type == PE_OR && (
-		pexpr_eq(a->left.pexpr, b->left.pexpr, data) ||
-		pexpr_eq(a->left.pexpr, b->right.pexpr, data) ||
-		pexpr_eq(a->right.pexpr, b->left.pexpr, data) ||
-		pexpr_eq(a->right.pexpr, b->right.pexpr, data)
-	)) {
+	if (a->type == PE_AND && b->type == PE_OR &&
+	    (pexpr_test_eq(a->left.pexpr, b->left.pexpr, data) ||
+	     pexpr_test_eq(a->left.pexpr, b->right.pexpr, data) ||
+	     pexpr_test_eq(a->right.pexpr, b->left.pexpr, data) ||
+	     pexpr_test_eq(a->right.pexpr, b->right.pexpr, data))) {
 		pexpr_get(b);
 		return b;
 	}
 	/* (C || D) || (A && B) -> C || D if
 	 * A == C || A == D || B == C || B == D
 	 */
-	if (a->type == PE_OR && b->type == PE_AND && (
-		pexpr_eq(a->left.pexpr, b->left.pexpr, data) ||
-		pexpr_eq(a->left.pexpr, b->right.pexpr, data) ||
-		pexpr_eq(a->right.pexpr, b->left.pexpr, data) ||
-		pexpr_eq(a->right.pexpr, b->right.pexpr, data)
-	)) {
+	if (a->type == PE_OR && b->type == PE_AND &&
+	    (pexpr_test_eq(a->left.pexpr, b->left.pexpr, data) ||
+	     pexpr_test_eq(a->left.pexpr, b->right.pexpr, data) ||
+	     pexpr_test_eq(a->right.pexpr, b->left.pexpr, data) ||
+	     pexpr_test_eq(a->right.pexpr, b->right.pexpr, data))) {
 		pexpr_get(a);
 		return a;
 	}
@@ -1203,24 +1201,24 @@ struct pexpr *pexpr_implies_share(struct pexpr *a, struct pexpr *b,
 				  struct cfdata *data)
 {
 	/* A => B -> True if A == B */
-	if (a == b || pexpr_eq(a, b, data))
+	if (a == b || pexpr_test_eq(a, b, data))
 		return pexpr_alloc_symbol(data->constants->const_true);
 
 	/* (A => B && C) -> (A => C) if A == B */
-	if (b->type == PE_AND && pexpr_eq(a, b->left.pexpr, data))
+	if (b->type == PE_AND && pexpr_test_eq(a, b->left.pexpr, data))
 		return pexpr_implies_share(a, b->right.pexpr, data);
 	/* (A => B && C) -> (A => B) if A == C */
-	if (b->type == PE_AND && pexpr_eq(a, b->right.pexpr, data))
+	if (b->type == PE_AND && pexpr_test_eq(a, b->right.pexpr, data))
 		return pexpr_implies_share(a, b->left.pexpr, data);
 
 	/* (A => B || C) -> True if (A == B || A == C) */
-	if (b->type == PE_OR && (pexpr_eq(a, b->left.pexpr, data) ||
-				 pexpr_eq(a, b->right.pexpr, data)))
+	if (b->type == PE_OR && (pexpr_test_eq(a, b->left.pexpr, data) ||
+				 pexpr_test_eq(a, b->right.pexpr, data)))
 		return pexpr_alloc_symbol(data->constants->const_true);
 
 	/* (A && B => C) -> True if (A == C || B == C) */
-	if (a->type == PE_AND && (pexpr_eq(a->left.pexpr, b, data) ||
-				  pexpr_eq(a->right.pexpr, b, data)))
+	if (a->type == PE_AND && (pexpr_test_eq(a->left.pexpr, b, data) ||
+				  pexpr_test_eq(a->right.pexpr, b, data)))
 		return pexpr_alloc_symbol(data->constants->const_true);
 
 	return pexpr_or(pexpr_not_share(a, data), b, data, PEXPR_ARG1);
@@ -1823,7 +1821,7 @@ static void __pexpr_eliminate_eq(enum pexpr_type type, struct pexpr **ep1,
 	    (e1->left.fexpr == data->constants->const_true ||
 	     e2->left.fexpr == data->constants->const_false))
 		return;
-	if (!pexpr_eq(e1, e2, data))
+	if (!pexpr_test_eq(e1, e2, data))
 		return;
 
 	/* e1 and e2 are equal leaves. Prepare them for elimination. */
@@ -1877,7 +1875,7 @@ static void pexpr_eliminate_eq(struct pexpr **ep1, struct pexpr **ep2,
 /*
  * check whether 2 pexpr are equal
  */
-bool pexpr_eq(struct pexpr *e1, struct pexpr *e2, struct cfdata *data)
+bool pexpr_test_eq(struct pexpr *e1, struct pexpr *e2, struct cfdata *data)
 {
 	bool res;
 	int old_count;
@@ -1904,7 +1902,7 @@ bool pexpr_eq(struct pexpr *e1, struct pexpr *e2, struct cfdata *data)
 		trans_count = old_count;
 		return res;
 	case PE_NOT:
-		return pexpr_eq(e1->left.pexpr, e2->left.pexpr, data);
+		return pexpr_test_eq(e1->left.pexpr, e2->left.pexpr, data);
 	}
 
 	return false;

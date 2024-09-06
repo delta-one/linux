@@ -25,10 +25,10 @@
 #define KCR_CMP false
 #define NPC_OPTIMISATION true
 
-static void init_constraints(struct cfdata *data);
-static void get_constraints_bool(struct cfdata *data);
-static void get_constraints_select(struct cfdata *data);
-static void get_constraints_nonbool(struct cfdata *data);
+static void find_nonboolean_known_vals(struct cfdata *data);
+static void build_constraints_bool(struct cfdata *data);
+static void build_constraints_select(struct cfdata *data);
+static void build_constraints_nonbool(struct cfdata *data);
 
 static void build_tristate_constraint_clause(struct symbol *sym,
 					     struct cfdata *data);
@@ -54,7 +54,7 @@ static void sym_add_nonbool_prompt_constraint(struct symbol *sym,
 
 static struct default_map *create_default_map_entry(struct fexpr *val,
 						    struct pexpr *e);
-static struct defm_list *get_defaults(struct symbol *sym, struct cfdata *data);
+static struct defm_list *calc_default_conditions(struct symbol *sym, struct cfdata *data);
 static struct pexpr *get_default_y(struct defm_list *list, struct cfdata *data);
 static struct pexpr *get_default_m(struct defm_list *list, struct cfdata *data);
 static struct pexpr *get_default_any(struct symbol *sym, struct cfdata *data);
@@ -65,14 +65,14 @@ static long sym_get_range_val(struct symbol *sym, int base);
 /*
  * build the constraints for each symbol
  */
-void get_constraints(struct cfdata *data)
+void build_constraints(struct cfdata *data)
 {
 	printd("Building constraints...");
 
-	init_constraints(data);
-	get_constraints_bool(data);
-	get_constraints_select(data);
-	get_constraints_nonbool(data);
+	find_nonboolean_known_vals(data);
+	build_constraints_bool(data);
+	build_constraints_select(data);
+	build_constraints_nonbool(data);
 }
 
 /*
@@ -82,7 +82,7 @@ void get_constraints(struct cfdata *data)
  * expr_calculate_pexpr_both and get_defaults have the side effect of creating
  * known values.
  */
-static void init_constraints(struct cfdata *data)
+static void find_nonboolean_known_vals(struct cfdata *data)
 {
 	struct symbol *sym;
 	struct property *p;
@@ -111,7 +111,7 @@ static void init_constraints(struct cfdata *data)
 		if (prompt != NULL && prompt->visible.expr) {
 			pexpr_put(expr_calculate_pexpr_both(
 				prompt->visible.expr, data));
-			defm_list_destruct(get_defaults(sym, data));
+			defm_list_destruct(calc_default_conditions(sym, data));
 		}
 
 		if (sym_is_nonboolean(sym)) {
@@ -147,7 +147,7 @@ static void init_constraints(struct cfdata *data)
 /*
  *  build constraints for boolean symbols
  */
-static void get_constraints_bool(struct cfdata *data)
+static void build_constraints_bool(struct cfdata *data)
 {
 	struct symbol *sym;
 
@@ -203,7 +203,7 @@ static void get_constraints_bool(struct cfdata *data)
  * build the constraints for select-variables
  * skip non-Booleans, choice symbols/options och symbols without rev_dir
  */
-static void get_constraints_select(struct cfdata *data)
+static void build_constraints_select(struct cfdata *data)
 {
 	struct symbol *sym;
 
@@ -254,7 +254,7 @@ static void get_constraints_select(struct cfdata *data)
 /*
  * build constraints for non-booleans
  */
-static void get_constraints_nonbool(struct cfdata *data)
+static void build_constraints_nonbool(struct cfdata *data)
 {
 	struct symbol *sym;
 
@@ -681,15 +681,15 @@ static void add_choice_dependencies(struct symbol *sym, struct cfdata *data)
 			pexpr_implies(pexpr_alloc_symbol(sym->fexpr_m),
 				      dep_both, data, PEXPR_ARG1);
 
-		sym_add_constraint_eq(sym, c1, data);
-		sym_add_constraint_eq(sym, c2, data);
+		sym_add_constraint_unique(sym, c1, data);
+		sym_add_constraint_unique(sym, c2, data);
 		PEXPR_PUT(dep_y, c1, c2);
 	} else if (sym->type == S_BOOLEAN) {
 		struct pexpr *c =
 			pexpr_implies(pexpr_alloc_symbol(sym->fexpr_y),
 				      dep_both, data, PEXPR_ARG1);
 
-		sym_add_constraint_eq(sym, c, data);
+		sym_add_constraint_unique(sym, c, data);
 		pexpr_put(c);
 	}
 	pexpr_put(dep_both);
@@ -722,9 +722,9 @@ static void add_choice_constraints(struct symbol *sym, struct cfdata *data)
 	for_all_choices(sym, choiceval_menu, menu_ptr) {
 		choice = choiceval_menu->sym;
 
-		CF_EMPLACE_BACK(items, choice, sym);
+		CF_PUSH_BACK(items, choice, sym);
 		if (sym_get_prompt(choice) != NULL)
-			CF_EMPLACE_BACK(promptItems, choice, sym);
+			CF_PUSH_BACK(promptItems, choice, sym);
 	}
 
 	/* if the choice is set to yes, at least one child must be set to yes */
@@ -821,7 +821,7 @@ static void add_choice_constraints(struct symbol *sym, struct cfdata *data)
 				&promptItems->list, node) {
 				choice2 = node2->elem;
 				if (choice2->type == S_TRISTATE)
-					CF_EMPLACE_BACK(tmp, choice2, sym);
+					CF_PUSH_BACK(tmp, choice2, sym);
 			}
 			if (list_empty(&tmp->list))
 				continue;
@@ -920,7 +920,7 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 		npc = pexpr_get(noPromptCond);
 	}
 
-	defaults = get_defaults(sym, data);
+	defaults = calc_default_conditions(sym, data);
 	default_y = get_default_y(defaults, data);
 	default_m = get_default_m(defaults, data);
 	default_both = pexpr_or_share(default_y, default_m, data);
@@ -1014,7 +1014,7 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 					sel_y, data, PEXPR_ARG1);
 		e2 = pexpr_implies_share(npc, e1, data);
 
-		sym_add_constraint_eq(sym, e2, data);
+		sym_add_constraint_unique(sym, e2, data);
 		PEXPR_PUT(sel_y, e1, e2);
 	} else {
 		/* if non-boolean is invisible and no default's condition is
@@ -1181,7 +1181,7 @@ static void sym_add_range_constraints(struct symbol *sym, struct cfdata *data)
 			prevs = pexpr_and(propCond, prevs, data,
 					       PEXPR_ARG2);
 		}
-		CF_EMPLACE_BACK(prevCond, pexpr_get(propCond), pexpr);
+		CF_PUSH_BACK(prevCond, pexpr_get(propCond), pexpr);
 
 		switch (sym->type) {
 		case S_INT:
@@ -1388,7 +1388,7 @@ static void add_to_default_map(struct defm_list *defaults,
 				return;
 			}
 		}
-		CF_EMPLACE_BACK(defaults, entry, defm);
+		CF_PUSH_BACK(defaults, entry, defm);
 	} else {
 		struct default_map *map;
 		struct defm_node *node;
@@ -1402,7 +1402,7 @@ static void add_to_default_map(struct defm_list *defaults,
 				return;
 			}
 		}
-		CF_EMPLACE_BACK(defaults, entry, defm);
+		CF_PUSH_BACK(defaults, entry, defm);
 	}
 }
 
@@ -1567,7 +1567,7 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx,
 			 * this symbol
 			 */
 			for_all_defaults(p->expr->left.sym, p_tmp)
-				CF_EMPLACE_BACK(nb_sym_defaults, p_tmp, prop);
+				CF_PUSH_BACK(nb_sym_defaults, p_tmp, prop);
 
 			add_defaults(nb_sym_defaults, expr, result, sym, data);
 			CF_LIST_FREE(nb_sym_defaults, prop);
@@ -1602,7 +1602,8 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx,
  * all default values (as well as the @symbol->nb_vals of other symbols @sym has
  * as default (recursively)).
  */
-static struct defm_list *get_defaults(struct symbol *sym, struct cfdata *data)
+static struct defm_list *calc_default_conditions(struct symbol *sym,
+						 struct cfdata *data)
 {
 	CF_DEF_LIST(result, defm);
 	struct prop_list *defaults; /* list of default props of sym */
@@ -1612,7 +1613,7 @@ static struct defm_list *get_defaults(struct symbol *sym, struct cfdata *data)
 
 	defaults = CF_LIST_INIT(prop);
 	for_all_defaults(sym, p)
-		CF_EMPLACE_BACK(defaults, p, prop);
+		CF_PUSH_BACK(defaults, p, prop);
 
 	add_defaults(defaults, NULL, result, sym, data);
 	CF_LIST_FREE(defaults, prop);
@@ -1749,7 +1750,7 @@ void sym_add_constraint(struct symbol *sym, struct pexpr *constraint,
 	    constraint->left.fexpr == data->constants->const_false)
 		perror("Adding const_false.");
 
-	CF_EMPLACE_BACK(sym->constraints, pexpr_get(constraint), pexpr);
+	CF_PUSH_BACK(sym->constraints, pexpr_get(constraint), pexpr);
 
 	if (!pexpr_is_nnf(constraint))
 		pexpr_print("Not NNF:", constraint, -1);
@@ -1758,7 +1759,7 @@ void sym_add_constraint(struct symbol *sym, struct pexpr *constraint,
 /*
  * add a constraint for a symbol, but check for duplicate constraints
  */
-void sym_add_constraint_eq(struct symbol *sym, struct pexpr *constraint,
+void sym_add_constraint_unique(struct symbol *sym, struct pexpr *constraint,
 			   struct cfdata *data)
 {
 	struct pexpr_node *node;
@@ -1778,10 +1779,10 @@ void sym_add_constraint_eq(struct symbol *sym, struct pexpr *constraint,
 
 	/* check the constraints for the same symbol */
 	CF_LIST_FOR_EACH(node, sym->constraints, pexpr)
-		if (pexpr_eq(constraint, node->elem, data))
+		if (pexpr_test_eq(constraint, node->elem, data))
 			return;
 
-	CF_EMPLACE_BACK(sym->constraints, pexpr_get(constraint), pexpr);
+	CF_PUSH_BACK(sym->constraints, pexpr_get(constraint), pexpr);
 
 	if (!pexpr_is_nnf(constraint))
 		pexpr_print("Not NNF:", constraint, -1);
