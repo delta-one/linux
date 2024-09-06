@@ -24,61 +24,19 @@ extern bool stop_rangefix;
 } while (0)
 
 /*
- * For functions that construct nested pexpr expressions.
+ * Helper macros for use of list.h with type safety.
+ * Lists of type X can then be defined as
+ * `struct X_list {
+ *	struct list_head list;
+ * }`,
+ * which contains the head of the list, and the nodes with the actual elements
+ * are contained in `struct X_node {
+ *	struct X *elem;
+ *	struct list_head node;
+ * }`
  */
-enum pexpr_move {
-	PEXPR_ARG1,	/* put reference to first pexpr */
-	PEXPR_ARG2,	/* put reference to second pexpr */
-	PEXPR_ARGX	/* put all references to pexpr's */
-};
 
-
-/* different types for f_expr */
-enum fexpr_type {
-	FE_SYMBOL,
-	FE_NPC, /* no prompt condition */
-	FE_TRUE,  /* constant of value True */
-	FE_FALSE,  /* constant of value False */
-	FE_NONBOOL,  /* for all non-(boolean/tristate) known values */
-	FE_CHOICE, /* symbols of type choice */
-	FE_SELECT, /* auxiliary variable for selected symbols */
-	FE_TMPSATVAR /* temporary sat-variable (Tseytin) */
-};
-
-/* struct for a propositional logic formula */
-struct fexpr {
-	/* name of the feature expr */
-	struct gstr name;
-
-	/* associated symbol */
-	struct symbol *sym;
-
-	/* integer value for the SAT solver */
-	int satval;
-
-	/* assumption in the last call to PicoSAT */
-	bool assumption;
-
-	/* type of the fexpr */
-	enum fexpr_type type;
-
-	union {
-		/* symbol */
-		struct {
-			tristate tri;
-		};
-		/* EQUALS */
-		struct {
-			struct symbol *eqsym;
-			struct symbol *eqvalue;
-		};
-		/* HEX, INTEGER, STRING */
-		struct {
-			struct gstr nb_val;
-		};
-	};
-};
-
+/* macros for internal usage */
 #define __NODE_T(prefix) struct prefix##_node
 #define __LIST_T(prefix) struct prefix##_list
 #define __CF_DEFS_TO_STR2(x) #x
@@ -88,14 +46,14 @@ struct fexpr {
 						    __LIST_T(prefix)),         \
 		       "Incorrect type of list, should be `" __CF_DEFS_TO_STR( \
 			       __LIST_T(prefix)) " *`")
-
 #define __ASSERT_NODE_PREF(node, prefix)                                       \
 	_Static_assert(__builtin_types_compatible_p(typeof(*node),             \
 						    __NODE_T(prefix)),         \
 		       "Incorrect type of node, should be `" __CF_DEFS_TO_STR( \
 			       __LIST_T(prefix)) " *`")
+
 /*
- * CF_ALLOC_NODE - Utility macro for allocating, initializing and returning an 
+ * CF_ALLOC_NODE - Utility macro for allocating, initializing and returning an
  * object of a type like struct fexpr_node
  *
  * @node_type: type of the object to create a pointer to (e.g. struct fexpr_node)
@@ -175,6 +133,64 @@ struct fexpr {
 		__ret;                                                \
 	})
 
+
+/*
+ * For functions that construct nested pexpr expressions.
+ */
+enum pexpr_move {
+	PEXPR_ARG1,	/* put reference to first pexpr */
+	PEXPR_ARG2,	/* put reference to second pexpr */
+	PEXPR_ARGX	/* put all references to pexpr's */
+};
+
+
+/* different types for f_expr */
+enum fexpr_type {
+	FE_SYMBOL,
+	FE_NPC, /* no prompt condition */
+	FE_TRUE,  /* constant of value True */
+	FE_FALSE,  /* constant of value False */
+	FE_NONBOOL,  /* for all non-(boolean/tristate) known values */
+	FE_CHOICE, /* symbols of type choice */
+	FE_SELECT, /* auxiliary variable for selected symbols */
+	FE_TMPSATVAR /* temporary sat-variable (Tseytin) */
+};
+
+/* struct for a propositional logic formula */
+struct fexpr {
+	/* name of the feature expr */
+	struct gstr name;
+
+	/* associated symbol */
+	struct symbol *sym;
+
+	/* integer value for the SAT solver */
+	int satval;
+
+	/* assumption in the last call to PicoSAT */
+	bool assumption;
+
+	/* type of the fexpr */
+	enum fexpr_type type;
+
+	union {
+		/* symbol */
+		struct {
+			tristate tri;
+		};
+		/* EQUALS */
+		struct {
+			struct symbol *eqsym;
+			struct symbol *eqvalue;
+		};
+		/* HEX, INTEGER, STRING */
+		struct {
+			struct gstr nb_val;
+		};
+	};
+};
+
+/* struct definitions for lists */
 struct fexpr_node {
 	struct fexpr *elem;
 	struct list_head node;
