@@ -285,6 +285,53 @@ Searching in xconfig:
     You can also enter a different search string without having
     to return to the main menu.
 
+Conflict resolution
+-------------------
+
+    xconfig has support for conflict resolution. A conflict is in this case any
+    situation where the user wants to change the value of a symbol, but
+    unfulfilled dependencies prevent this. The user can compose a list of
+    symbols and their desired values, and the conflict resolver will calculate a
+    series of changes that need to be made, in order to be able to set the
+    symbols to their desired values.
+
+Requirements:
+
+    In order to be able to use the conflict resolver, PicoSAT needs to be
+    installed as a library. See `this
+    repository <https://github.com/ole0811sch/picosat-installer>`_ for
+    installation instructions. For many distributions, there is a PicoSAT
+    package available that only needs to be installed.
+
+Usage:
+
+    To add a symbol to the conflict, i.e., indicate that it should be changed,
+    it needs to be selected in the main view of xconfig, where all normal
+    configuration activity takes place. The button "Add symbol" below the main
+    view adds the symbol to the conflict, which makes it appear in a table below
+    the main view. Often it is necessary to switch to "Show Prompt Options"
+    under the tab "Option" because the symbol is hidden. The desired value of a
+    symbol can be set either by clicking on the corresponding cell in the column
+    "Wanted Value", or by selecting the symbols row and using one of the buttons
+    above the table.
+
+    Once the conflict is programmed, the solutions can be calculated using the
+    button "Calculate Fixes". Once they are computed, they appear in the menu on
+    the bottom right. A solution can be selected from up to three candidates.
+    The solution is presented in a table that shows for a series of symbols
+    which value they need to be set to in order to resolve the conflict. Using
+    the button "Apply selected solution", the indicated changes can
+    automatically be applied. If the user wants to change the values manually,
+    the symbols are color-coded to indicate the order in which they need to be
+    set: Green means that a symbol is already set to the calculated value; gray
+    means that a symbol cannot yet be set to the calculated value and that other
+    symbols' values need to be changed first; red means that a symbol is not yet
+    set to the calculated value, but the user can set it to the calculated value.
+
+    It should be noted that the conflict resolver is not always able to resolve
+    conflicts, even if a resolution exists. There are also cases where a
+    calculated solution includes changes that are not necessary, and very
+    rarely, cases where a calculated solution does not resolve the conflict.
 
 gconfig
 =======
