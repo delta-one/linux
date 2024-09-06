@@ -146,7 +146,7 @@ static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data)
 		printd("\n");
 
 	/* init E with an empty diagnosis */
-	CF_EMPLACE_BACK(E, empty_diagnosis, fexl);
+	CF_PUSH_BACK(E, empty_diagnosis, fexl);
 
 	/* start the clock */
 	start_t = clock();
@@ -177,7 +177,7 @@ static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data)
 
 			list_del(&E0_node->node);
 			if (!list_empty(&E0->list)) {
-				CF_EMPLACE_BACK(R, E0, fexl);
+				CF_PUSH_BACK(R, E0, fexl);
 				++num_diagnoses;
 			} else
 				CF_LIST_FREE(E0, fexpr);
@@ -239,7 +239,7 @@ static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data)
 				struct fexpr_list *E1;
 
 				/* create {x} */
-				CF_EMPLACE_BACK(x_set, x, fexpr);
+				CF_PUSH_BACK(x_set, x, fexpr);
 
 				/* create E' = e U {x} */
 				E1 = fexpr_list_union(e, x_set);
@@ -248,7 +248,7 @@ static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data)
 				CF_LIST_FOR_EACH(lnode, E, fexl) {
 					if (lnode->elem == e)
 						continue;
-					CF_EMPLACE_BACK(E_without_e,
+					CF_PUSH_BACK(E_without_e,
 							lnode->elem, fexl);
 				}
 				E_R_Union = fexl_list_union(E_without_e, R);
@@ -272,7 +272,7 @@ static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data)
 
 				/* there exists no E" that is a subset of E' */
 				if (!E2_subset_of_E1)
-					CF_EMPLACE_BACK(E, E1, fexl);
+					CF_PUSH_BACK(E, E1, fexl);
 				else {
 					CF_LIST_FREE(E1, fexpr);
 				}
@@ -319,16 +319,16 @@ static void add_fexpr_to_constraint_set(struct fexpr_list *C,
 			continue;
 
 		if (sym->type == S_BOOLEAN)
-			CF_EMPLACE_BACK(C, sym->fexpr_y, fexpr);
+			CF_PUSH_BACK(C, sym->fexpr_y, fexpr);
 		else if (sym->type == S_TRISTATE) {
-			CF_EMPLACE_BACK(C, sym->fexpr_y, fexpr);
-			CF_EMPLACE_BACK(C, sym->fexpr_m, fexpr);
+			CF_PUSH_BACK(C, sym->fexpr_y, fexpr);
+			CF_PUSH_BACK(C, sym->fexpr_m, fexpr);
 		} else if (sym->type == S_INT || sym->type == S_HEX ||
 			   sym->type == S_STRING) {
 			struct fexpr_node *node;
 
 			CF_LIST_FOR_EACH(node, sym->nb_vals, fexpr)
-				CF_EMPLACE_BACK(C, node->elem, fexpr);
+				CF_PUSH_BACK(C, node->elem, fexpr);
 		} else {
 			perror("Error adding variables to constraint set C.");
 		}
@@ -529,7 +529,7 @@ static struct fexpr_list *get_unsat_core_soft(PicoSAT *pico,
 		e = data->satmap[lit];
 
 		if (!sym_is_sdv(data->sdv_symbols, e->sym))
-			CF_EMPLACE_BACK(ret, e, fexpr);
+			CF_PUSH_BACK(ret, e, fexpr);
 
 		lit = abs(*i++);
 	}
@@ -558,7 +558,7 @@ static void minimise_unsat_core(PicoSAT *pico, struct fexpr_list *C,
 			return;
 
 		/* create C\c */
-		CF_EMPLACE_BACK(c_set, node->elem, fexpr);
+		CF_PUSH_BACK(c_set, node->elem, fexpr);
 		t = get_difference(C, c_set);
 
 		/* invoke PicoSAT */
@@ -595,7 +595,7 @@ static struct fexpr_list *get_difference(struct fexpr_list *C,
 			}
 		}
 		if (!found)
-			CF_EMPLACE_BACK(ret, node1->elem, fexpr);
+			CF_PUSH_BACK(ret, node1->elem, fexpr);
 	}
 
 	return ret;
@@ -635,7 +635,7 @@ static struct fexpr_list *fexpr_list_union(struct fexpr_list *A,
 			}
 		}
 		if (!found)
-			CF_EMPLACE_BACK(ret, node2->elem, fexpr);
+			CF_PUSH_BACK(ret, node2->elem, fexpr);
 	}
 
 	return ret;
@@ -660,7 +660,7 @@ static struct fexl_list *fexl_list_union(struct fexl_list *A,
 			}
 		}
 		if (!found)
-			CF_EMPLACE_BACK(ret, node2->elem, fexl);
+			CF_PUSH_BACK(ret, node2->elem, fexl);
 	}
 
 	return ret;
@@ -831,7 +831,7 @@ static struct sfix_list *convert_diagnosis(struct fexpr_list *diagnosis,
 		fix->sym = sdv->sym;
 		fix->type = SF_BOOLEAN;
 		fix->tri = sdv->tri;
-		CF_EMPLACE_BACK(diagnosis_symbol, fix, sfix);
+		CF_PUSH_BACK(diagnosis_symbol, fix, sfix);
 	}
 
 	CF_LIST_FOR_EACH(fnode, diagnosis, fexpr) {
@@ -851,7 +851,7 @@ static struct sfix_list *convert_diagnosis(struct fexpr_list *diagnosis,
 			type = SF_DISALLOWED;
 		fix = symbol_fix_create(e, type, diagnosis);
 
-		CF_EMPLACE_BACK(diagnosis_symbol, fix, sfix);
+		CF_PUSH_BACK(diagnosis_symbol, fix, sfix);
 	}
 
 	return diagnosis_symbol;
@@ -871,7 +871,7 @@ static struct sfl_list *convert_diagnoses(struct fexl_list *diag_arr,
 	CF_LIST_FOR_EACH(lnode, diag_arr, fexl) {
 		struct sfix_list *fix = convert_diagnosis(lnode->elem, data);
 
-		CF_EMPLACE_BACK(diagnoses_symbol, fix, sfl);
+		CF_PUSH_BACK(diagnoses_symbol, fix, sfl);
 	}
 
 	return diagnoses_symbol;
@@ -991,7 +991,7 @@ static struct sfl_list *minimise_diagnoses(PicoSAT *pico,
 			else
 				deref = 0;
 		}
-		CF_EMPLACE_BACK(diagnoses_symbol, diagnosis_symbol, sfl);
+		CF_PUSH_BACK(diagnoses_symbol, diagnosis_symbol, sfl);
 	}
 
 	end = clock();
@@ -1005,7 +1005,7 @@ static struct sfl_list *minimise_diagnoses(PicoSAT *pico,
 /*
  * list the diagnoses and let user choose a diagnosis to be applied
  */
-struct sfix_list *choose_fix(struct sfl_list *diag)
+struct sfix_list *ask_user_choose_fix(struct sfl_list *diag)
 {
 	int choice;
 	struct sfl_node *ret;
