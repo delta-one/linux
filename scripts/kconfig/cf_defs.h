@@ -11,6 +11,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#include <xalloc.h>
+
 #include "lkc.h"
 #include "expr.h"
 #include "list_types.h"

@@ -15,6 +15,8 @@
 #include <unistd.h>
 #include <ctype.h>
 
+#include <xalloc.h>
+
 #include "internal.h"
 #include "picosat_functions.h"
 #include "cf_utils.h"

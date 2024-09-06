@@ -3,11 +3,6 @@
  * Copyright (C) 2023 Patrick Franz <deltaone@debian.org>
  */
 
-#include "cf_defs.h"
-#include "cf_expr.h"
-#include "list.h"
-#include "list_types.h"
-#include "lkc.h"
 #define _GNU_SOURCE
 #include <assert.h>
 #include <locale.h>
@@ -19,6 +14,13 @@
 #include <time.h>
 #include <unistd.h>
 
+#include <xalloc.h>
+
+#include "lkc.h"
+#include "cf_defs.h"
+#include "cf_expr.h"
+#include "list.h"
+#include "list_types.h"
 #include "cf_rangefix.h"
 #include "internal.h"
 #include "cf_utils.h"
