@@ -37,6 +37,10 @@ bool load_picosat(void)
 {
 	void *handle = NULL;
 
+	/*
+	 * Try different names for the .so library. This is necessary since
+	 * all packages don't use the same versioning.
+	 */
 	for (int i = 0; i < ARRAY_SIZE(picosat_lib_names) && !handle; ++i) {
 		handle = dlopen(picosat_lib_names[i], RTLD_LAZY);
 	}
