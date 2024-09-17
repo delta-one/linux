@@ -1549,6 +1549,7 @@ void pexpr_list_print(char *title, struct pexpr_list *list)
 void defm_list_destruct(struct defm_list *list)
 {
 	struct defm_node *node;
+
 	CF_LIST_FOR_EACH(node, list, defm)
 		pexpr_put(node->elem->e);
 	CF_LIST_FREE(list, defm);
@@ -1560,6 +1561,7 @@ void defm_list_destruct(struct defm_list *list)
 void pexpr_list_free_put(struct pexpr_list *list)
 {
 	struct pexpr_node *node;
+
 	CF_LIST_FOR_EACH(node, list, pexpr)
 		pexpr_put(node->elem);
 	CF_LIST_FREE(list, pexpr);
