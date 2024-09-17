@@ -363,7 +363,7 @@ static inline size_t list_size(const struct list_head *head)
  * list_at_index - retrieve the entry at index i in O(n)
  * @i:		index of entry to retrieve.
  * @head:	the head for your list.
- * @type:	the type of the struct the entires are embedded in.
+ * @type:	the type of the struct the entries are embedded in.
  * @member:	the name of the list_head within the struct.
  */
 #define list_at_index(i, head, type, member)               \
