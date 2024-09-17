@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-2.0
+/* SPDX-License-Identifier: GPL-2.0 */
 
 #ifndef PICOSAT_FUNCTIONS_H
 #define PICOSAT_FUNCTIONS_H
@@ -17,14 +17,14 @@ extern "C" {
 typedef struct PicoSAT PicoSAT;
 
 extern PicoSAT *(*picosat_init)(void);
-extern int (*picosat_add)(PicoSAT *, int lit);
-extern int (*picosat_deref)(PicoSAT *, int lit);
-extern void (*picosat_assume)(PicoSAT *, int lit);
-extern int (*picosat_sat)(PicoSAT *, int decision_limit);
-extern const int *(*picosat_failed_assumptions)(PicoSAT *);
-extern int (* picosat_added_original_clauses) (PicoSAT *);
-extern int (* picosat_enable_trace_generation) (PicoSAT *);
-extern void (* picosat_print)(PicoSAT *, FILE *);
+extern int (*picosat_add)(PicoSAT *pico, int lit);
+extern int (*picosat_deref)(PicoSAT *pico, int lit);
+extern void (*picosat_assume)(PicoSAT *pico, int lit);
+extern int (*picosat_sat)(PicoSAT *pico, int decision_limit);
+extern const int *(*picosat_failed_assumptions)(PicoSAT *pico);
+extern int (*picosat_added_original_clauses)(PicoSAT *pico);
+extern int (*picosat_enable_trace_generation)(PicoSAT *pico);
+extern void (*picosat_print)(PicoSAT *pico, FILE *file);
 
 bool load_picosat(void);
 
