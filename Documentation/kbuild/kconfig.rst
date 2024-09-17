@@ -298,10 +298,19 @@ Conflict resolution
 Requirements:
 
     In order to be able to use the conflict resolver, PicoSAT needs to be
-    installed as a library. See `this
-    repository <https://github.com/ole0811sch/picosat-installer>`_ for
-    installation instructions. For many distributions, there is a PicoSAT
-    package available that only needs to be installed.
+    installed as a library.
+
+    Debian-based distributions::
+
+        sudo apt install picosat
+
+    Fedora::
+
+        sudo dnf install picosat
+
+    Other::
+
+        sudo scripts/kconfig/install-picosat.sh
 
 Usage:
 
