@@ -275,9 +275,8 @@ static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data)
 				/* there exists no E" that is a subset of E' */
 				if (!E2_subset_of_E1)
 					CF_PUSH_BACK(E, E1, fexl);
-				else {
+				else
 					CF_LIST_FREE(E1, fexpr);
-				}
 			}
 
 			CF_LIST_FREE(e, fexpr);
@@ -590,6 +589,7 @@ static struct fexpr_list *get_difference(struct fexpr_list *C,
 
 	CF_LIST_FOR_EACH(node1, C, fexpr) {
 		bool found = false;
+
 		CF_LIST_FOR_EACH(node2, E0, fexpr) {
 			if (node1->elem->satval == node2->elem->satval) {
 				found = true;
