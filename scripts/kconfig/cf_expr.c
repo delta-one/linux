@@ -825,7 +825,7 @@ struct pexpr *expr_calculate_pexpr_y_equals(struct expr *e, struct cfdata *data)
 	}
 
 	/*
-	 * comparing boolean item with nonboolean constant, will never be true 
+	 * comparing boolean item with nonboolean constant, will never be true
 	 */
 	if (sym_is_tristate_constant(e->left.sym) &&
 	    sym_is_nonbool_constant(e->right.sym))

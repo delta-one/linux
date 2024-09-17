@@ -338,7 +338,7 @@ static void add_fexpr_to_constraint_set(struct fexpr_list *C,
 }
 
 /*
- * check whether the fexpr symbolises the no-value-set fexpr for a non-boolean 
+ * check whether the fexpr symbolises the no-value-set fexpr for a non-boolean
  * symbol
  */
 static bool fexpr_is_novalue(struct fexpr *e)
@@ -944,7 +944,7 @@ static struct sfl_list *minimise_diagnoses(PicoSAT *pico,
 		d = flnode->elem;
 
 		/*
-		 * set assumptions for those symbols that don't need to be 
+		 * set assumptions for those symbols that don't need to be
 		 * changed
 		 */
 		C_without_d = get_difference(C, d);
@@ -1046,7 +1046,7 @@ static tristate calculate_new_tri_val(struct fexpr *e,
 		if (e->tri == yes) {
 			if (e->assumption == true)
 				/*
-				 * if diagnosis contains fexpr_m, fexpr_m was 
+				 * if diagnosis contains fexpr_m, fexpr_m was
 				 * false => new value is mod
 				 */
 				return diagnosis_contains_fexpr(
@@ -1055,7 +1055,7 @@ static tristate calculate_new_tri_val(struct fexpr *e,
 					       no;
 			else if (e->assumption == false)
 				/*
-				 * if fexpr_y is set to true, the new value 
+				 * if fexpr_y is set to true, the new value
 				 * must be yes
 				 */
 				return yes;
@@ -1064,7 +1064,7 @@ static tristate calculate_new_tri_val(struct fexpr *e,
 		if (e->tri == mod) {
 			if (e->assumption == true)
 				/*
-				 * if diagnosis contains fexpr_y, fexpr_y was 
+				 * if diagnosis contains fexpr_y, fexpr_y was
 				 * false => new value is yes
 				 */
 				return diagnosis_contains_fexpr(
@@ -1074,7 +1074,7 @@ static tristate calculate_new_tri_val(struct fexpr *e,
 			else if (e->assumption == false)
 				/*
 				 * if diagnosis contains fexpr_m, the new value
-				 * must be mod 
+				 * must be mod
 				 */
 				return mod;
 		}
@@ -1086,7 +1086,7 @@ static tristate calculate_new_tri_val(struct fexpr *e,
 }
 
 /*
- * calculate the new value for a non-boolean symbol given a diagnosis and an 
+ * calculate the new value for a non-boolean symbol given a diagnosis and an
  * fexpr
  */
 static const char *calculate_new_string_value(struct fexpr *e,
@@ -1103,7 +1103,7 @@ static const char *calculate_new_string_value(struct fexpr *e,
 	if (e->assumption == false)
 		return str_get(&e->nb_val);
 
-	/* a diagnosis always contains 2 variables for the same non-boolean 
+	/* a diagnosis always contains 2 variables for the same non-boolean
 	 * symbol one is set to true, the other to false
 	 * otherwise you'd set 2 variables to true, which is not allowed
 	 */
@@ -1125,7 +1125,7 @@ static bool fexpr_list_has_length_1(struct fexpr_list *list)
 {
 	struct fexpr_node *node;
 	bool first = true;
-	
+
 	CF_LIST_FOR_EACH(node, list, fexpr) {
 		if (first)
 			first = false;
