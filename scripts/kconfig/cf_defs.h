@@ -125,16 +125,14 @@ extern bool stop_rangefix;
 			    }),                                        \
 			    node)
 
-#define CF_LIST_COPY(orig, prefix)                                    \
-	({                                                            \
-		__CF_DEF_LIST(__ret, typeof(*orig));                  \
-		__NODE_T(prefix) * __node;                            \
-                                                                      \
-		CF_LIST_FOR_EACH(__node, orig, prefix)                \
-			CF_PUSH_BACK(__ret, __node->elem, prefix); \
-		__ret;                                                \
+#define CF_LIST_COPY(orig, prefix)                         \
+	({                                                 \
+		__CF_DEF_LIST(__ret, typeof(*orig));       \
+		__NODE_T(prefix) * __node;                 \
+		CF_LIST_FOR_EACH(__node, orig, prefix)     \
+		CF_PUSH_BACK(__ret, __node->elem, prefix); \
+		__ret;                                     \
 	})
-
 
 /*
  * For functions that construct nested pexpr expressions.
