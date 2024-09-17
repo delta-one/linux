@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-2.0
+
 #ifndef PICOSAT_FUNCTIONS_H_
 #define PICOSAT_FUNCTIONS_H_
 

@@ -1,6 +1,9 @@
-#include "array_size.h"
+// SPDX-License-Identifier: GPL-2.0
+
 #include <dlfcn.h>
 #include <unistd.h>
+
+#include "array_size.h"
 
 #include "cf_defs.h"
 #include "picosat_functions.h"
