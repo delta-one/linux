@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0
 
-#ifndef PICOSAT_FUNCTIONS_H_
-#define PICOSAT_FUNCTIONS_H_
+#ifndef PICOSAT_FUNCTIONS_H
+#define PICOSAT_FUNCTIONS_H
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -32,4 +32,4 @@ bool load_picosat(void);
 }
 #endif
 
-#endif // PICOSAT_FUNCTIONS_H_
+#endif // PICOSAT_FUNCTIONS_H
