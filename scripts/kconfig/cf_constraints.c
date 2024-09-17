@@ -184,8 +184,8 @@ static void build_constraints_bool(struct cfdata *data)
 			add_choice_prompt_cond(sym, data);
 
 		/*
-		 * build constraints for dependencies (choice symbols and 
-		 * options) 
+		 * build constraints for dependencies (choice symbols and
+		 * options)
 		 */
 		if (sym_is_choice(sym) || sym_is_choice_value(sym))
 			add_choice_dependencies(sym, data);
@@ -745,7 +745,7 @@ static void add_choice_constraints(struct symbol *sym, struct cfdata *data)
 	}
 
 	/*
-	 * every choice option (even those without a prompt) implies the choice 
+	 * every choice option (even those without a prompt) implies the choice
 	 */
 	CF_LIST_FOR_EACH(node, items, sym) {
 		choice = node->elem;
@@ -925,9 +925,9 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 	default_m = get_default_m(defaults, data);
 	default_both = pexpr_or_share(default_y, default_m, data);
 
-	/* 
-	 * tristate elements are only selectable as yes, if they are visible as 
-	 * yes 
+	/*
+	 * tristate elements are only selectable as yes, if they are visible as
+	 * yes
 	 */
 	if (sym->type == S_TRISTATE) {
 		struct pexpr *e1 = pexpr_implies(
@@ -941,7 +941,7 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 		pexpr_put(e1);
 	}
 
-	/* if invisible and off by default, then a symbol can only be 
+	/* if invisible and off by default, then a symbol can only be
 	 * deactivated by its reverse dependencies
 	 */
 	if (sym->type == S_TRISTATE) {
