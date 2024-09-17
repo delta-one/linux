@@ -197,7 +197,7 @@ public:
 	bool satconf_cancelled{false};
 
 private:
-	void addPicoSatNote(QHBoxLayout &layout);
+	void addPicoSatNote(QToolBar &layout);
 };
 
 class ConfigItem : public QTreeWidgetItem {
@@ -299,6 +299,12 @@ protected:
 	struct symbol *sym;
 	struct menu *_menu;
 	bool _showDebug;
+};
+
+class PicoSATInstallInfoWindow : public QDialog {
+	Q_OBJECT
+public:
+	PicoSATInstallInfoWindow(QWidget *parent);
 };
 
 class ConfigSearchWindow : public QDialog {

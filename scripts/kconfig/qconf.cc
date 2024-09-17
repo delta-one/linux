@@ -1911,21 +1911,22 @@ void QTableWidget::dropEvent(QDropEvent *event)
 {
 }
 
-void ConflictsView::addPicoSatNote(QHBoxLayout &layout)
+void ConflictsView::addPicoSatNote(QToolBar &toolbar)
 {
 	QLabel &label = *new QLabel;
-	label.setText("To use the conflict resolver you need to <a href=\"https://github.com/ole0811sch/picosat-installer\">install PicoSAT<\a>");
-	label.setTextFormat(Qt::RichText);
-	label.setTextInteractionFlags(Qt::TextBrowserInteraction);
-	label.setOpenExternalLinks(true);
 	auto &iconLabel = *new QLabel();
 	iconLabel.setPixmap(
 		style()->standardIcon(
 			       QStyle::StandardPixmap::SP_MessageBoxInformation)
 			.pixmap(20, 20));
-	layout.addWidget(&iconLabel);
-	layout.addWidget(&label);
-	layout.addStretch();
+	label.setText("The conflict resolver requires that PicoSAT is available as a library.");
+	QAction &showDialog = *new QAction();
+	showDialog.setIconText("Install PicoSAT...");
+	toolbar.addWidget(&iconLabel);
+	toolbar.addWidget(&label);
+	toolbar.addAction(&showDialog);
+	connect(&showDialog, &QAction::triggered,
+		[this]() { (new PicoSATInstallInfoWindow(this))->show(); });
 }
 
 ConflictsView::ConflictsView(QWidget *parent, const char *name)
@@ -1935,7 +1936,7 @@ ConflictsView::ConflictsView(QWidget *parent, const char *name)
 	 * 	- topLevelLayout
 	 * 		- picoSatContainer
 	 *  		- picoSatLayout
-	 *  			- ... (addPicoSatNote)
+	 *  			- ...
 	 *		- conflictsViewContainer
 	 *			- horizontalLayout
 	 *				- verticalLayout
@@ -1948,16 +1949,19 @@ ConflictsView::ConflictsView(QWidget *parent, const char *name)
 	if (!picosat_available) {
 		conflictsViewContainer->setDisabled(true);
 		QWidget *picoSatContainer = new QWidget;
-		QHBoxLayout *picoSatLayout = new QHBoxLayout(picoSatContainer);
-		addPicoSatNote(*picoSatLayout);
 		topLevelLayout->addWidget(picoSatContainer);
+		QHBoxLayout *picoSatLayout = new QHBoxLayout(picoSatContainer);
+		QToolBar *picoToolbar = new QToolBar(picoSatContainer);
+		picoSatLayout->addWidget(picoToolbar);
+		picoSatLayout->addStretch();
+		addPicoSatNote(*picoToolbar);
 	}
 	topLevelLayout->addWidget(conflictsViewContainer);
 
 	QHBoxLayout *horizontalLayout = new QHBoxLayout(conflictsViewContainer);
 	QVBoxLayout *verticalLayout = new QVBoxLayout;
 	verticalLayout->setContentsMargins(0, 0, 0, 0);
-	conflictsToolBar = new QToolBar("ConflictTools", this);
+	conflictsToolBar = new QToolBar("ConflictTools", conflictsViewContainer);
 	// toolbar buttons [n] [m] [y] [calculate fixes] [remove]
 	QAction *addSymbol = new QAction("Add Symbol");
 	QAction *setConfigSymbolAsNo = new QAction("N");
@@ -2501,4 +2505,35 @@ static tristate string_value_to_tristate(QString s){
 		return tristate::no;
 	else
 		return tristate::no;
+}
+
+PicoSATInstallInfoWindow::PicoSATInstallInfoWindow(QWidget *parent)
+	: QDialog(parent)
+{
+	QVBoxLayout &layout = *new QVBoxLayout(this);
+	QLabel &text = *new QLabel();
+	layout.addWidget(&text);
+	text.setTextFormat(Qt::MarkdownText);
+	text.setTextInteractionFlags(Qt::TextSelectableByMouse);
+	text.setText(R""""(
+To use the conflict resolver you need to install PicoSAT as a library.
+
+## Debian-based distributions
+
+```sh
+sudo apt install picosat
+```
+
+## Fedora
+
+```sh
+sudo dnf install picosat
+```
+
+## Other
+
+```sh
+sudo scripts/kconfig/install-picosat.sh
+```
+			)"""");
 }
