@@ -242,8 +242,8 @@ static inline int list_is_last(const struct list_head *list,
 }
 
 /**
- * list_size - tests whether a list is empty
- * @head: the list to test.
+ * list_size - counts the number of entries in a list
+ * @head: the list whose entries are counted
  */
 static inline size_t list_size(const struct list_head *head)
 {
