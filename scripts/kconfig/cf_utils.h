@@ -40,9 +40,6 @@ bool expr_is_nonbool_constant(struct expr *e);
 /* check whether a symbol is a non-Boolean constant */
 bool sym_is_nonbool_constant(struct symbol *sym);
 
-/* print an expr */
-void print_expr(char *tag, struct expr *e, int prevtoken);
-
 /* check, if the symbol is a tristate-constant */
 bool sym_is_tristate_constant(struct symbol *sym);
 
