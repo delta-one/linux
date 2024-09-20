@@ -843,8 +843,8 @@ struct pexpr *expr_calculate_pexpr_y_equals(struct expr *e, struct cfdata *data)
 		return pexpr_alloc_symbol(data->constants->const_false);
 
 	/* any other comparison is not supported and should not be executed */
-	fprintf(stderr, "Unsupported equality.");
-	print_expr(":", e, 0);
+	fprintf(stderr, "Unsupported equality in:");
+	expr_fprint(e, stderr);
 
 	return pexpr_alloc_symbol(data->constants->const_false);
 }
