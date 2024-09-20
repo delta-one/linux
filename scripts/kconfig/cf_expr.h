@@ -174,9 +174,6 @@ void pexpr_print(char *tag, struct pexpr *e, int prevtoken);
 /* convert a fexpr to a pexpr */
 struct pexpr *pexpr_alloc_symbol(struct fexpr *fe);
 
-/* eliminate duplicate and redundant operands */
-struct pexpr *pexpr_eliminate_dups(struct pexpr *e, struct cfdata *data);
-
 #ifdef __cplusplus
 }
 #endif
