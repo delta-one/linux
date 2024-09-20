@@ -56,7 +56,7 @@ void init_config(const char *Kconfig_file)
 void init_data(struct cfdata *data)
 {
 	/* create hashtable with all fexpr */
-	data->satmap = xcalloc(SATMAP_INIT_SIZE, sizeof(**data->satmap));
+	data->satmap = xcalloc(SATMAP_INIT_SIZE, sizeof(typeof(*data->satmap)));
 	data->satmap_size = SATMAP_INIT_SIZE;
 
 	printd("done.\n");
