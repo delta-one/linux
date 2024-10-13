@@ -1467,18 +1467,15 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx,
 		 */
 		if (p->visible.expr) {
 			if (ctx == NULL)
-				expr = expr_copy(p->visible.expr);
+				expr = p->visible.expr;
 			else
-				expr = expr_alloc_and(
-					expr_copy(p->visible.expr),
-					expr_copy(ctx));
+				expr = expr_alloc_and(p->visible.expr, ctx);
 		} else {
 			if (ctx == NULL)
 				expr = expr_alloc_symbol(&symbol_yes);
 			else
 				expr = expr_alloc_and(
-					expr_alloc_symbol(&symbol_yes),
-					expr_copy(ctx));
+					expr_alloc_symbol(&symbol_yes), ctx);
 		}
 
 		/* if tristate and def.value = y */
@@ -1543,8 +1540,7 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx,
 		}
 		/* any expression which evaluates to n/m/y for a tristate */
 		else if (sym->type == S_TRISTATE) {
-			struct expr *e_tmp = expr_alloc_and(expr_copy(p->expr),
-							    expr_copy(expr));
+			struct expr *e_tmp = expr_alloc_and(p->expr, expr);
 			struct pexpr *expr_y =
 				expr_calculate_pexpr_y(e_tmp, data);
 			struct pexpr *expr_m =
@@ -1555,7 +1551,6 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx,
 			updateDefaultList(data->constants->symbol_mod_fexpr,
 					  expr_m, result, sym, data);
 			PEXPR_PUT(expr_y, expr_m);
-			expr_free(e_tmp);
 		}
 		/* if non-boolean && def.value = non-boolean symbol */
 		else if (p->expr->type == E_SYMBOL && sym_is_nonboolean(sym) &&
@@ -1574,8 +1569,7 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx,
 		}
 		/* any expression which evaluates to n/m/y */
 		else {
-			struct expr *e_tmp = expr_alloc_and(expr_copy(p->expr),
-							    expr_copy(expr));
+			struct expr *e_tmp = expr_alloc_and(p->expr, expr);
 			struct pexpr *expr_both =
 				expr_calculate_pexpr_both(e_tmp, data);
 
@@ -1583,9 +1577,7 @@ static void add_defaults(struct prop_list *defaults, struct expr *ctx,
 					  expr_both, result, sym, data);
 
 			pexpr_put(expr_both);
-			expr_free(e_tmp);
 		}
-		expr_free(expr);
 	}
 }
 
@@ -1677,7 +1669,7 @@ static struct pexpr *get_default_any(struct symbol *sym, struct cfdata *data)
 	p = pexpr_alloc_symbol(data->constants->const_false);
 	for_all_defaults(sym, prop) {
 		if (prop->visible.expr)
-			e = expr_copy(prop->visible.expr);
+			e = prop->visible.expr;
 		else
 			e = expr_alloc_symbol(&symbol_yes);
 
@@ -1687,8 +1679,6 @@ static struct pexpr *get_default_any(struct symbol *sym, struct cfdata *data)
 
 		p = pexpr_or(p, expr_calculate_pexpr_y(e, data), data,
 			     PEXPR_ARGX);
-
-		expr_free(e);
 	}
 
 	return p;
