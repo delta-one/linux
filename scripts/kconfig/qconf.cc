@@ -2515,8 +2515,10 @@ PicoSATInstallInfoWindow::PicoSATInstallInfoWindow(QWidget *parent)
 	layout.addWidget(&text);
 	text.setTextFormat(Qt::MarkdownText);
 	text.setTextInteractionFlags(Qt::TextSelectableByMouse);
+	text.setTextInteractionFlags(Qt::TextBrowserInteraction);
+	text.setOpenExternalLinks(true);
 	text.setText(R""""(
-To use the conflict resolver you need to install PicoSAT as a library.
+Install the picosat package or build the library yourself:
 
 ## Debian-based distributions
 
@@ -2532,8 +2534,9 @@ sudo dnf install picosat
 
 ## Other
 
-```sh
-sudo scripts/kconfig/install-picosat.sh
-```
-			)"""");
+You can also build PicoSAT yourself from the
+[sources](https://fmv.jku.at/picosat/picosat-965.tar.gz). You need to compile
+PicoSAT with tracing enabled as a shared library under the name of
+"libpicosat-trace.so", "libpicosat-trace.so.0" or "libpicosat-trace.so.1".
+			  )"""");
 }
