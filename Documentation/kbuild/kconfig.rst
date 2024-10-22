@@ -309,7 +309,8 @@ Requirements:
 
     You can also build PicoSAT yourself from the `sources
     <https://fmv.jku.at/picosat/picosat-965.tar.gz>`_. The conflict resolver
-    requires that PicoSAT is built with tracing enabled. It expects the shared
+    requires that PicoSAT is built with tracing enabled (e.g., using the
+    configure.sh script with the "--trace" option). It expects the shared
     library to be named "libpicosat-trace.so", "libpicosat-trace.so.0" or
     "libpicosat-trace.so.1".
 
