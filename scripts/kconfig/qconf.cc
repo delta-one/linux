@@ -2512,6 +2512,7 @@ PicoSATInstallInfoWindow::PicoSATInstallInfoWindow(QWidget *parent)
 {
 	QVBoxLayout &layout = *new QVBoxLayout(this);
 	QLabel &text = *new QLabel();
+	text.setWordWrap(true);
 	layout.addWidget(&text);
 	text.setTextFormat(Qt::MarkdownText);
 	text.setTextInteractionFlags(Qt::TextSelectableByMouse);
@@ -2538,5 +2539,7 @@ You can also build PicoSAT yourself from the
 [sources](https://fmv.jku.at/picosat/picosat-965.tar.gz). You need to compile
 PicoSAT with tracing enabled as a shared library under the name of
 "libpicosat-trace.so", "libpicosat-trace.so.0" or "libpicosat-trace.so.1".
+Tracing can be enabled using the `configure.sh` script with the `--trace`
+option.
 			  )"""");
 }
