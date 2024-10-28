@@ -1381,14 +1381,20 @@ ConfigMainWindow::ConfigMainWindow(void)
 	split3 = new QSplitter(split2);
 	split3->setOrientation(Qt::Vertical);
 	conflictsView = new ConflictsView(split3, "help");
-	/* conflictsSelected signal in conflictsview triggers when a conflict is selected
-		 in the view. this line connects that event to conflictselected event in mainwindow
-		 which updates the selection to match (in the configlist) the symbol that was selected.
-	*/
-	connect(conflictsView,SIGNAL(conflictSelected(struct menu *)),SLOT(conflictSelected(struct menu *)));
-	connect(conflictsView,SIGNAL(refreshMenu()),SLOT(refreshMenu()));
-	connect(menuList,SIGNAL(updateConflictsViewColorization()),conflictsView,SLOT(updateConflictsViewColorization()));
-	connect(configList,SIGNAL(updateConflictsViewColorization()),conflictsView,SLOT(updateConflictsViewColorization()));
+	/*
+	 * conflictsSelected signal in conflictsview triggers when a conflict is
+	 * selected in the view. this line connects that event to conflictselected
+	 * event in mainwindow which updates the selection to match (in the
+	 * configlist) the symbol that was selected.
+	 */
+	connect(conflictsView, &ConflictsView::conflictSelected, this,
+		&ConfigMainWindow::conflictSelected);
+	connect(conflictsView, &ConflictsView::refreshMenu, this,
+		&ConfigMainWindow::refreshMenu);
+	connect(menuList, &ConfigList::updateConflictsViewColorization,
+		conflictsView, &ConflictsView::updateConflictsViewColorization);
+	connect(configList, &ConfigList::updateConflictsViewColorization,
+		conflictsView, &ConflictsView::updateConflictsViewColorization);
 
 	configList->setFocus();
 
@@ -1978,7 +1984,8 @@ ConflictsView::ConflictsView(QWidget *parent, const char *name)
 	connect(setConfigSymbolAsModule, &QAction::triggered,this, &ConflictsView::changeToModule);
 	connect(setConfigSymbolAsYes, &QAction::triggered,this, &ConflictsView::changeToYes);
 	connect(removeSymbol, &QAction::triggered,this, &ConflictsView::removeSymbol);
-	connect(this, SIGNAL(resultsReady()), SLOT(updateResults()));
+	connect(this, &ConflictsView::resultsReady, this,
+		&ConflictsView::updateResults);
 	//connect clicking 'calculate fixes' to 'change all symbol values to fix all conflicts'
 	// no longer used anymore for now.
 	connect(fixConflictsAction_, &QAction::triggered,this, &ConflictsView::calculateFixes);
@@ -1995,7 +2002,8 @@ ConflictsView::ConflictsView(QWidget *parent, const char *name)
 	conflictsTable->setDragDropMode(QAbstractItemView::DropOnly);
 	setAcceptDrops(true);
 
-	connect(conflictsTable, SIGNAL(cellClicked(int, int)), SLOT(cellClicked(int,int)));
+	connect(conflictsTable, &QTableWidget::cellClicked, this,
+		&ConflictsView::cellClicked);
 	horizontalLayout->addLayout(verticalLayout);
 
 	// populate the solution view on the right hand side:
@@ -2011,7 +2019,8 @@ ConflictsView::ConflictsView(QWidget *parent, const char *name)
 	solutionTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
 	applyFixButton = new QPushButton("Apply Selected solution");
-	connect(applyFixButton, SIGNAL(clicked(bool)), SLOT(applyFixButtonClick()));
+	connect(applyFixButton, &QPushButton::clicked, this,
+		&ConflictsView::applyFixButtonClick);
 
 	numSolutionLabel = new QLabel("Solutions:");
 	solutionLayout->addWidget(numSolutionLabel);
