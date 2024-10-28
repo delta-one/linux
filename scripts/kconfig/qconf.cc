@@ -1264,7 +1264,8 @@ ConfigSearchWindow::ConfigSearchWindow(ConfigMainWindow *parent)
 	connect(list, &ConfigList::menuChanged,
 		parent, &ConfigMainWindow::conflictSelected);
 
-	connect(list,&ConfigList::updateConflictsViewColorization,this,&ConfigSearchWindow::updateConflictsViewColorizationFowarder);
+	connect(list, &ConfigList::updateConflictsViewColorization, this,
+		&ConfigSearchWindow::updateConflictsViewColorizationFowarder);
 	layout1->addWidget(split);
 
 	QVariant x, y;
@@ -1287,7 +1288,8 @@ ConfigSearchWindow::ConfigSearchWindow(ConfigMainWindow *parent)
 		this, &ConfigSearchWindow::saveSettings);
 }
 
-void ConfigSearchWindow::updateConflictsViewColorizationFowarder(void){
+void ConfigSearchWindow::updateConflictsViewColorizationFowarder(void)
+{
 	emit updateConflictsViewColorization();
 }
 
@@ -1462,8 +1464,10 @@ ConfigMainWindow::ConfigMainWindow(void)
 	ConfigList::showAllAction->setCheckable(true);
 	ConfigList::showPromptAction = new QAction("Show Prompt Options", optGroup);
 	ConfigList::showPromptAction->setCheckable(true);
-	ConfigList::addSymbolFromContextMenu = new QAction("Add symbol from context menu");
-	connect(ConfigList::addSymbolFromContextMenu, &QAction::triggered, conflictsView, &ConflictsView::addSymbol);
+	ConfigList::addSymbolFromContextMenu =
+		new QAction("Add symbol from context menu");
+	connect(ConfigList::addSymbolFromContextMenu, &QAction::triggered,
+		conflictsView, &ConflictsView::addSymbol);
 
 	QAction *showDebugAction = new QAction("Show Debug Info", this);
 	  showDebugAction->setCheckable(true);
@@ -1740,7 +1744,7 @@ void ConfigMainWindow::showSplitView(void)
 	menuList->setFocus();
 }
 
-void ConfigMainWindow::conflictSelected(struct menu * men)
+void ConfigMainWindow::conflictSelected(struct menu *men)
 {
 	configList->clearSelection();
 	menuList->clearSelection();
@@ -1899,7 +1903,8 @@ void ConflictsView::addPicoSatNote(QToolBar &toolbar)
 		style()->standardIcon(
 			       QStyle::StandardPixmap::SP_MessageBoxInformation)
 			.pixmap(20, 20));
-	label.setText("The conflict resolver requires that PicoSAT is available as a library.");
+	label.setText(
+		"The conflict resolver requires that PicoSAT is available as a library.");
 	QAction &showDialog = *new QAction();
 	showDialog.setIconText("Install PicoSAT...");
 	toolbar.addWidget(&iconLabel);
@@ -1941,7 +1946,8 @@ ConflictsView::ConflictsView(QWidget *parent, const char *name)
 	QHBoxLayout *horizontalLayout = new QHBoxLayout(conflictsViewContainer);
 	QVBoxLayout *verticalLayout = new QVBoxLayout;
 	verticalLayout->setContentsMargins(0, 0, 0, 0);
-	conflictsToolBar = new QToolBar("ConflictTools", conflictsViewContainer);
+	conflictsToolBar =
+		new QToolBar("ConflictTools", conflictsViewContainer);
 	// toolbar buttons [n] [m] [y] [calculate fixes] [remove]
 	QAction *addSymbol = new QAction("Add Symbol");
 	QAction *setConfigSymbolAsNo = new QAction("N");
@@ -1976,27 +1982,33 @@ ConflictsView::ConflictsView(QWidget *parent, const char *name)
 	loadingAction = conflictsToolBar->addWidget(loadingLabel);
 	loadingAction->setVisible(false);
 
-
 	verticalLayout->addWidget(conflictsToolBar);
 
-	connect(addSymbol, &QAction::triggered, this, &ConflictsView::addSymbol);
-	connect(setConfigSymbolAsNo, &QAction::triggered,this, &ConflictsView::changeToNo);
-	connect(setConfigSymbolAsModule, &QAction::triggered,this, &ConflictsView::changeToModule);
-	connect(setConfigSymbolAsYes, &QAction::triggered,this, &ConflictsView::changeToYes);
-	connect(removeSymbol, &QAction::triggered,this, &ConflictsView::removeSymbol);
+	connect(addSymbol, &QAction::triggered, this,
+		&ConflictsView::addSymbol);
+	connect(setConfigSymbolAsNo, &QAction::triggered, this,
+		&ConflictsView::changeToNo);
+	connect(setConfigSymbolAsModule, &QAction::triggered, this,
+		&ConflictsView::changeToModule);
+	connect(setConfigSymbolAsYes, &QAction::triggered, this,
+		&ConflictsView::changeToYes);
+	connect(removeSymbol, &QAction::triggered, this,
+		&ConflictsView::removeSymbol);
 	connect(this, &ConflictsView::resultsReady, this,
 		&ConflictsView::updateResults);
 	//connect clicking 'calculate fixes' to 'change all symbol values to fix all conflicts'
 	// no longer used anymore for now.
-	connect(fixConflictsAction_, &QAction::triggered,this, &ConflictsView::calculateFixes);
+	connect(fixConflictsAction_, &QAction::triggered, this,
+		&ConflictsView::calculateFixes);
 
-	conflictsTable = (QTableWidget *) new dropAbleView(this);
+	conflictsTable = (QTableWidget *)new dropAbleView(this);
 	conflictsTable->setRowCount(0);
 	conflictsTable->setColumnCount(3);
 	conflictsTable->setSelectionBehavior(QAbstractItemView::SelectRows);
 	conflictsTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-	conflictsTable->setHorizontalHeaderLabels(QStringList()  << "Name" << "Wanted value" << "Current value" );
+	conflictsTable->setHorizontalHeaderLabels(
+		QStringList() << "Name" << "Wanted value" << "Current value");
 	verticalLayout->addWidget(conflictsTable);
 
 	conflictsTable->setDragDropMode(QAbstractItemView::DropOnly);
@@ -2010,12 +2022,14 @@ ConflictsView::ConflictsView(QWidget *parent, const char *name)
 	QVBoxLayout *solutionLayout = new QVBoxLayout();
 	solutionLayout->setContentsMargins(0, 0, 0, 0);
 	solutionSelector = new QComboBox();
-	connect(solutionSelector, QOverload<int>::of(&QComboBox::currentIndexChanged),
-		[=](int index){ changeSolutionTable(index); });
+	connect(solutionSelector,
+		QOverload<int>::of(&QComboBox::currentIndexChanged),
+		[=](int index) { changeSolutionTable(index); });
 	solutionTable = new QTableWidget();
 	solutionTable->setRowCount(0);
 	solutionTable->setColumnCount(2);
-	solutionTable->setHorizontalHeaderLabels(QStringList()  << "Name" << "New Value" );
+	solutionTable->setHorizontalHeaderLabels(QStringList()
+						 << "Name" << "New Value");
 	solutionTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
 	applyFixButton = new QPushButton("Apply Selected solution");
@@ -2031,7 +2045,8 @@ ConflictsView::ConflictsView(QWidget *parent, const char *name)
 	horizontalLayout->addLayout(solutionLayout);
 }
 
-void ConflictsView::applyFixButtonClick(){
+void ConflictsView::applyFixButtonClick()
+{
 	signed int solution_number = solutionSelector->currentIndex();
 
 	if (solution_number == -1 || solution_output == NULL) {
@@ -2040,11 +2055,10 @@ void ConflictsView::applyFixButtonClick(){
 
 	apply_fix(solution_output[solution_number]);
 
-
 	ConfigList::updateListForAll();
-	for (int i = 0;i < conflictsTable->rowCount(); i++)
-	{
-		conflictsTable->item(i,2)->setText(conflictsTable->item(i,1)->text());
+	for (int i = 0; i < conflictsTable->rowCount(); i++) {
+		conflictsTable->item(i, 2)->setText(
+			conflictsTable->item(i, 1)->text());
 	}
 	updateConflictsViewColorization();
 	QMessageBox msgBox;
@@ -2052,38 +2066,36 @@ void ConflictsView::applyFixButtonClick(){
 	msgBox.exec();
 }
 
-void ConflictsView::changeToYes(){
+void ConflictsView::changeToYes()
+{
 	QItemSelectionModel *select = conflictsTable->selectionModel();
-	if (select->hasSelection()){
+	if (select->hasSelection()) {
 		QModelIndexList rows = select->selectedRows();
-		for (int i = 0;i < rows.count(); i++)
-		{
+		for (int i = 0; i < rows.count(); i++) {
 			conflictsTable->item(rows[i].row(), 1)
 				->setText(tristate_value_to_string(yes));
 		}
 	}
-
 }
 
-void ConflictsView::changeToModule() {
+void ConflictsView::changeToModule()
+{
 	QItemSelectionModel *select = conflictsTable->selectionModel();
-	if (select->hasSelection()){
+	if (select->hasSelection()) {
 		QModelIndexList rows = select->selectedRows();
-		for (int i = 0;i < rows.count(); i++)
-		{
+		for (int i = 0; i < rows.count(); i++) {
 			conflictsTable->item(rows[i].row(), 1)
 				->setText(tristate_value_to_string(mod));
 		}
 	}
-
 }
 
-void ConflictsView::changeToNo(){
+void ConflictsView::changeToNo()
+{
 	QItemSelectionModel *select = conflictsTable->selectionModel();
-	if (select->hasSelection()){
+	if (select->hasSelection()) {
 		QModelIndexList rows = select->selectedRows();
-		for (int i = 0;i < rows.count(); i++)
-		{
+		for (int i = 0; i < rows.count(); i++) {
 			conflictsTable->item(rows[i].row(), 1)
 				->setText(tristate_value_to_string(no));
 		}
@@ -2103,62 +2115,76 @@ void ConflictsView::addSymbol()
 void ConflictsView::selectionChanged(QList<QTreeWidgetItem *> selection)
 {
 	currentSelection = selection;
-
 }
 
 void ConflictsView::addSymbolFromMenu(struct menu *m)
 {
 	// adds a symbol to the conflict resolver list
-	if (m != nullptr){
-		if (m->sym != nullptr){
+	if (m != nullptr) {
+		if (m->sym != nullptr) {
 			struct symbol *sym = m->sym;
 			tristate currentval = sym_get_tristate_value(sym);
 			//if symbol is not added yet:
-			QAbstractItemModel *tableModel = conflictsTable->model();
-			QModelIndexList matches = tableModel->match(tableModel->index(0,0), Qt::DisplayRole, QString(sym->name));
-			if (matches.isEmpty()){
-				conflictsTable->insertRow(conflictsTable->rowCount());
-				conflictsTable->setItem(conflictsTable->rowCount()-1,0,new QTableWidgetItem(sym->name));
-				conflictsTable->setItem(conflictsTable->rowCount()-1,1,new QTableWidgetItem(tristate_value_to_string(currentval)));
-				conflictsTable->setItem(conflictsTable->rowCount()-1,2,new QTableWidgetItem(tristate_value_to_string(currentval)));
-			}else{
-				conflictsTable->item(matches[0].row(),2)->setText(tristate_value_to_string(currentval));
+			QAbstractItemModel *tableModel =
+				conflictsTable->model();
+			QModelIndexList matches = tableModel->match(
+				tableModel->index(0, 0), Qt::DisplayRole,
+				QString(sym->name));
+			if (matches.isEmpty()) {
+				conflictsTable->insertRow(
+					conflictsTable->rowCount());
+				conflictsTable->setItem(
+					conflictsTable->rowCount() - 1, 0,
+					new QTableWidgetItem(sym->name));
+				conflictsTable->setItem(
+					conflictsTable->rowCount() - 1, 1,
+					new QTableWidgetItem(
+						tristate_value_to_string(
+							currentval)));
+				conflictsTable->setItem(
+					conflictsTable->rowCount() - 1, 2,
+					new QTableWidgetItem(
+						tristate_value_to_string(
+							currentval)));
+			} else {
+				conflictsTable->item(matches[0].row(), 2)
+					->setText(tristate_value_to_string(
+						currentval));
 			}
 		}
 	}
 }
 
-void ConflictsView::addSymbolFromContextMenu() {
+void ConflictsView::addSymbolFromContextMenu()
+{
 	struct menu *menu;
 
-	if (currentSelection.count() < 0){
+	if (currentSelection.count() < 0) {
 		return;
 	}
-	for (auto el: currentSelection){
+	for (auto el : currentSelection) {
 		ConfigItem *item = (ConfigItem *)el;
-		if (!item)
-		{
+		if (!item) {
 			continue;
 		}
 		menu = item->menu;
 		addSymbolFromMenu(menu);
 	}
-
 }
 
 void ConflictsView::removeSymbol()
 {
 	QItemSelectionModel *select = conflictsTable->selectionModel();
 	QAbstractItemModel *itemModel = select->model();
-	if (select->hasSelection()){
+	if (select->hasSelection()) {
 		QModelIndexList rows = select->selectedRows();
-		itemModel->removeRows(rows[0].row(),rows.size());
+		itemModel->removeRows(rows[0].row(), rows.size());
 	}
 }
 
 void ConflictsView::cellClicked(int row, int column)
 {
-	auto itemText = conflictsTable->item(row,0)->text().toUtf8().data();
+	auto itemText = conflictsTable->item(row, 0)->text().toUtf8().data();
 	struct property *prop;
 	struct menu *men;
 	struct symbol *sym = sym_find(itemText);
@@ -2199,7 +2225,8 @@ void ConflictsView::cellClicked(int row, int column)
 	emit(conflictSelected(men));
 }
 
-void ConflictsView::changeSolutionTable(int solution_number){
+void ConflictsView::changeSolutionTable(int solution_number)
+{
 	size_t i;
 
 	if (solution_output == nullptr || solution_number < 0) {
@@ -2218,7 +2245,8 @@ void ConflictsView::changeSolutionTable(int solution_number){
 		QTableWidgetItem *symbol_name =
 			new QTableWidgetItem(cur_symbol->sym->name);
 
-		solutionTable->setItem(solutionTable->rowCount()-1,0,symbol_name);
+		solutionTable->setItem(solutionTable->rowCount() - 1, 0,
+				       symbol_name);
 
 		if (cur_symbol->type == symbolfix_type::SF_BOOLEAN) {
 			QTableWidgetItem *symbol_value = new QTableWidgetItem(
@@ -2242,15 +2270,15 @@ void ConflictsView::changeSolutionTable(int solution_number){
 
 void ConflictsView::updateConflictsViewColorization(void)
 {
-	auto green = QColor(0,170,0);
-	auto red = QColor(255,0,0);
-	auto grey = QColor(180,180,180);
+	auto green = QColor(0, 170, 0);
+	auto red = QColor(255, 0, 0);
+	auto grey = QColor(180, 180, 180);
 
 	if (solutionTable->rowCount() == 0 || current_solution_number < 0)
 		return;
 
-	for (int i=0; i< solutionTable->rowCount(); i++) {
-		QTableWidgetItem *symbol =  solutionTable->item(i,0);
+	for (int i = 0; i < solutionTable->rowCount(); i++) {
+		QTableWidgetItem *symbol = solutionTable->item(i, 0);
 		//symbol from solution list
 		struct symbol_fix *cur_symbol = select_symbol(
 			solution_output[current_solution_number], i);
@@ -2259,24 +2287,31 @@ void ConflictsView::updateConflictsViewColorization(void)
 		// if symbol is editable but the value is the target value from solution we got, the color is green
 		// if symbol is not editable , the value is not the target value, the color is grey
 		// if symbol is not editable , the value is the target value, the color is green
-		auto editable = sym_string_within_range(cur_symbol->sym, tristate_value_to_string(cur_symbol->tri).toStdString().c_str());
-		auto _symbol = solutionTable->item(i,0)->text().toUtf8().data();
+		auto editable = sym_string_within_range(
+			cur_symbol->sym,
+			tristate_value_to_string(cur_symbol->tri)
+				.toStdString()
+				.c_str());
+		auto _symbol =
+			solutionTable->item(i, 0)->text().toUtf8().data();
 		struct symbol *sym_ = sym_find(_symbol);
 
 		tristate current_value_of_symbol = sym_get_tristate_value(sym_);
-		tristate target_value_of_symbol = string_value_to_tristate(solutionTable->item(i,1)->text());
-		bool symbol_value_same_as_target = current_value_of_symbol == target_value_of_symbol;
+		tristate target_value_of_symbol = string_value_to_tristate(
+			solutionTable->item(i, 1)->text());
+		bool symbol_value_same_as_target = current_value_of_symbol ==
+						   target_value_of_symbol;
 
-		if (editable && !symbol_value_same_as_target){
+		if (editable && !symbol_value_same_as_target) {
 			symbol->setForeground(red);
-		} else if (editable && symbol_value_same_as_target){
+		} else if (editable && symbol_value_same_as_target) {
 			symbol->setForeground(green);
-		} else if (!editable && !symbol_value_same_as_target){
+		} else if (!editable && !symbol_value_same_as_target) {
 			symbol->setForeground(grey);
-		} else if (!editable && symbol_value_same_as_target){
+		} else if (!editable && symbol_value_same_as_target) {
 			symbol->setForeground(green);
 		}
-    }
+	}
 }
 
 void ConflictsView::runSatConfAsync()
@@ -2285,35 +2320,36 @@ void ConflictsView::runSatConfAsync()
 	struct symbol_dvalue *p = nullptr;
 	std::vector<struct symbol_dvalue *> wanted_symbols;
 
-	p = static_cast<struct symbol_dvalue *>(calloc(conflictsTable->rowCount(),sizeof(struct symbol_dvalue)));
-	if (!p)
-	{
+	p = static_cast<struct symbol_dvalue *>(calloc(
+		conflictsTable->rowCount(), sizeof(struct symbol_dvalue)));
+	if (!p) {
 		printf("memory allocation error\n");
 		return;
 	}
 
-	for (int i = 0; i < conflictsTable->rowCount(); i++)
-	{
-
-		struct symbol_dvalue *tmp = (p+i);
-		auto _symbol = conflictsTable->item(i,0)->text().toUtf8().data();
+	for (int i = 0; i < conflictsTable->rowCount(); i++) {
+		struct symbol_dvalue *tmp = (p + i);
+		auto _symbol =
+			conflictsTable->item(i, 0)->text().toUtf8().data();
 		struct symbol *sym = sym_find(_symbol);
 
 		tmp->sym = sym;
-		tmp->type = static_cast<symboldv_type>(sym->type == symbol_type::S_BOOLEAN?0:1);
-		tmp->tri = string_value_to_tristate(conflictsTable->item(i,1)->text());
+		tmp->type = static_cast<symboldv_type>(
+			sym->type == symbol_type::S_BOOLEAN ? 0 : 1);
+		tmp->tri = string_value_to_tristate(
+			conflictsTable->item(i, 1)->text());
 		wanted_symbols.push_back(tmp);
 	}
 	fixConflictsAction_->setText("Cancel");
 	loadingAction->setVisible(true);
 
-	solution_output = run_satconf(
-		wanted_symbols.data(), wanted_symbols.size(), &num_solutions);
+	solution_output = run_satconf(wanted_symbols.data(),
+				      wanted_symbols.size(), &num_solutions);
 
 	free(p);
 	emit resultsReady();
 	{
-		std::lock_guard<std::mutex> lk{satconf_mutex};
+		std::lock_guard<std::mutex> lk{ satconf_mutex };
 		satconf_cancelled = true;
 	}
 	satconf_cancellation_cv.notify_one();
@@ -2323,51 +2359,50 @@ void ConflictsView::updateResults(void)
 {
 	fixConflictsAction_->setText("Calculate Fixes");
 	loadingAction->setVisible(false);
-	if (!(solution_output == nullptr || num_solutions == 0))
-	{
+	if (!(solution_output == nullptr || num_solutions == 0)) {
 		solutionSelector->clear();
 		for (unsigned int i = 0; i < num_solutions; i++)
-			solutionSelector->addItem(QString::number(i+1));
+			solutionSelector->addItem(QString::number(i + 1));
 		// populate the solution table from the first solution gotten
 		numSolutionLabel->setText(
 			QString("Solutions: (%1) found").arg(num_solutions));
 		changeSolutionTable(0);
-	}
-	else {
+	} else {
 		QMessageBox msgBox;
 		msgBox.setText("All symbols are already within range.");
 		msgBox.exec();
 	}
-	if (runSatConfAsyncThread->joinable()){
+	if (runSatConfAsyncThread->joinable()) {
 		runSatConfAsyncThread->join();
 		delete runSatConfAsyncThread;
-		runSatConfAsyncThread  = nullptr;
+		runSatConfAsyncThread = nullptr;
 	}
 }
 
 void ConflictsView::calculateFixes()
 {
-	if(conflictsTable->rowCount() == 0)
-	{
+	if (conflictsTable->rowCount() == 0) {
 		printd("table is empty\n");
 		return;
 	}
 
-	if (runSatConfAsyncThread == nullptr)
-	{
+	if (runSatConfAsyncThread == nullptr) {
 		// fire away asynchronous call
-		std::unique_lock<std::mutex> lk{satconf_mutex};
+		std::unique_lock<std::mutex> lk{ satconf_mutex };
 
 		numSolutionLabel->setText(QString("Solutions: "));
 		solutionSelector->clear();
 		solutionTable->setRowCount(0);
 		satconf_cancelled = false;
-		runSatConfAsyncThread = new std::thread(&ConflictsView::runSatConfAsync,this);
-	}else{
+		runSatConfAsyncThread =
+			new std::thread(&ConflictsView::runSatConfAsync, this);
+	} else {
 		printd("Interrupting rangefix\n");
 		interrupt_rangefix();
-		std::unique_lock<std::mutex> lk{satconf_mutex};
-		satconf_cancellation_cv.wait(lk,[this] {return satconf_cancelled == true;});
+		std::unique_lock<std::mutex> lk{ satconf_mutex };
+		satconf_cancellation_cv.wait(lk, [this] {
+			return satconf_cancelled == true;
+		});
 	}
 }
 
@@ -2379,9 +2414,7 @@ void ConflictsView::changeAll(void)
 
 ConflictsView::~ConflictsView(void)
 {
-
 }
-
 
 void fixup_rootmenu(struct menu *menu)
 {
@@ -2455,18 +2488,22 @@ int main(int ac, char** av)
 	return 0;
 }
 
-dropAbleView::dropAbleView(QWidget *parent) :
-    QTableWidget(parent) {}
+dropAbleView::dropAbleView(QWidget *parent)
+	: QTableWidget(parent)
+{
+}
 
-dropAbleView::~dropAbleView() {}
+dropAbleView::~dropAbleView()
+{
+}
 void dropAbleView::dropEvent(QDropEvent *event)
 {
-   event->acceptProposedAction();
+	event->acceptProposedAction();
 }
 
 static QString tristate_value_to_string(tristate val)
 {
-	switch ( val ) {
+	switch (val) {
 	case yes:
 		return QString::fromStdString("Y");
 	case mod:
@@ -2476,10 +2513,10 @@ static QString tristate_value_to_string(tristate val)
 	default:
 		return QString::fromStdString("");
 	}
-
 }
 
-static tristate string_value_to_tristate(QString s){
+static tristate string_value_to_tristate(QString s)
+{
 	if (s == "Y")
 		return tristate::yes;
 	else if (s == "M")
