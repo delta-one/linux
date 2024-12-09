@@ -22,25 +22,30 @@ int (*picosat_added_original_clauses)(PicoSAT *pico);
 int (*picosat_enable_trace_generation)(PicoSAT *pico);
 void (*picosat_print)(PicoSAT *pico, FILE *file);
 
-#define PICOSAT_FUNCTION_LIST             \
-	X(picosat_init)                   \
-	X(picosat_add)                    \
-	X(picosat_deref)                  \
-	X(picosat_assume)                 \
-	X(picosat_sat)                    \
-	X(picosat_failed_assumptions)     \
-	X(picosat_added_original_clauses) \
-	X(picosat_enable_trace_generation)\
+#define PICOSAT_FUNCTION_LIST              \
+	X(picosat_init)                    \
+	X(picosat_add)                     \
+	X(picosat_deref)                   \
+	X(picosat_assume)                  \
+	X(picosat_sat)                     \
+	X(picosat_failed_assumptions)      \
+	X(picosat_added_original_clauses)  \
+	X(picosat_enable_trace_generation) \
 	X(picosat_print)
 
-static void load_function(const char *name, void **ptr, void *handle, bool *failed)
+static void load_function(const char *name, void **ptr, void *handle,
+			  bool *failed)
 {
+	const char *error_str;
+
 	if (*failed)
 		return;
 
+	dlerror(); // clear error
 	*ptr = dlsym(handle, name);
-	if (!*ptr) {
-		printd("While loading %s: %s\n", name, dlerror());
+	error_str = dlerror();
+	if (error_str) {
+		printd("While loading %s: %s\n", name, error_str);
 		*failed = true;
 	}
 }
