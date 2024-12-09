@@ -790,7 +790,7 @@ static void add_choice_constraints(struct symbol *sym, struct cfdata *data)
 		struct sym_node *node2;
 
 		choice = node->elem;
-		list_for_each_entry_from(node2,
+		cflist_for_each_entry_from(node2,
 					 &list_next_entry(node, node)->node,
 					 &promptItems->list, node) {
 			choice2 = node2->elem;
@@ -816,7 +816,7 @@ static void add_choice_constraints(struct symbol *sym, struct cfdata *data)
 			choice = node->elem;
 
 			tmp = CF_LIST_INIT(sym);
-			list_for_each_entry_from(
+			cflist_for_each_entry_from(
 				node2, &list_next_entry(node, node)->node,
 				&promptItems->list, node) {
 				choice2 = node2->elem;
@@ -1715,7 +1715,7 @@ unsigned int count_constraints(void)
 		if (sym->type == S_UNKNOWN)
 			continue;
 
-		c += list_size(&sym->constraints->list);
+		c += cflist_size(&sym->constraints->list);
 	}
 
 	return c;

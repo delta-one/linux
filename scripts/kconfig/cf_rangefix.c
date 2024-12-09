@@ -1023,7 +1023,7 @@ struct sfix_list *ask_user_choose_fix(struct sfl_list *diag)
 	if (choice == 0)
 		return NULL;
 
-	ret = list_at_index(choice - 1, &diag->list, struct sfl_node, node);
+	ret = cflist_at_index(choice - 1, &diag->list, struct sfl_node, node);
 	return ret ? ret->elem : NULL;
 }
 
