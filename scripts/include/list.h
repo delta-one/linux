@@ -220,6 +220,20 @@ static inline int list_empty(const struct list_head *head)
 }
 
 /**
+ * list_count_nodes - count nodes in the list
+ * @head:	the head for your list.
+ */
+static inline size_t list_count_nodes(struct list_head *head)
+{
+	size_t count = 0;
+
+	for (struct list_head *pos = head->next; pos != head; pos = pos->next)
+		++count;
+
+	return count;
+}
+
+/**
  * list_entry - get the struct for this entry
  * @ptr:	the &struct list_head pointer.
  * @type:	the type of the struct this is embedded in.
@@ -309,6 +323,18 @@ static inline int list_empty(const struct list_head *head)
 		n = list_next_entry(pos, member);			\
 	     !list_entry_is_head(pos, head, member);			\
 	     pos = n, n = list_next_entry(n, member))
+
+/**
+ * list_for_each_entry_from - iterate over list of given type from the current point
+ * @pos:	the type * to use as a loop cursor.
+ * @head:	the head for your list.
+ * @member:	the name of the list_head within the struct.
+ *
+ * Iterate over list of given type, continuing from current position.
+ */
+#define list_for_each_entry_from(pos, head, member)			\
+	for (; !list_entry_is_head(pos, head, member);			\
+	     pos = list_next_entry(pos, member))
 
 /*
  * Double linked lists with a single pointer list head.
