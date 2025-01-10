@@ -11,37 +11,8 @@
 #include "picosat_functions.h"
 #include "../include/list.h"
 
-/* Additional helper functions/macros for use with lists */
-
 /**
- * list_size - counts the number of entries in a list
- * @head: the list whose entries are counted
- */
-static inline size_t cflist_size(const struct list_head *head)
-{
-	size_t ret = 0;
-
-	for (struct list_head *curr = head->next; curr != head;
-	     curr = curr->next)
-		++ret;
-
-	return ret;
-}
-
-/**
- * list_for_each_entry_from - iterate over list of given type starting at a given node
- * @pos:	the type * to use as a loop cursor.
- * @start:	the node to start iterating at
- * @head:	the head for your list.
- * @member:	the name of the list_head within the struct.
- */
-#define cflist_for_each_entry_from(pos, start, head, member)  \
-	for (pos = list_entry(start, typeof(*pos), member); \
-	     !list_entry_is_head(pos, head, member);        \
-	     pos = list_next_entry(pos, member))
-
-/**
- * list_at_index - retrieve the entry at index i in O(n)
+ * cflist_at_index - retrieve the entry at index i in O(n)
  * @i:		index of entry to retrieve.
  * @head:	the head for your list.
  * @type:	the type of the struct the entries are embedded in.

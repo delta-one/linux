@@ -50,7 +50,7 @@ struct sfix_list **run_satconf(struct symbol_dvalue **symbols, size_t n,
 		CF_PUSH_BACK(symbols_list, symbols[i], sdv);
 
 	solutions = run_satconf_list(symbols_list);
-	*num_solutions = cflist_size(&solutions->list);
+	*num_solutions = list_count_nodes(&solutions->list);
 	solutions_arr = xcalloc(*num_solutions, sizeof(struct sfix_list *));
 	i = 0;
 	CF_LIST_FOR_EACH(node, solutions, sfl)
@@ -229,7 +229,7 @@ int apply_fix(struct sfix_list *fix)
 	struct symbol_fix *sfix;
 	struct sfix_node *node, *next;
 	unsigned int no_symbols_set = 0, iterations = 0, manually_changed = 0;
-	size_t fix_size = cflist_size(&fix->list);
+	size_t fix_size = list_count_nodes(&fix->list);
 	struct sfix_list *tmp = CF_LIST_COPY(fix, sfix);
 
 	printd("Trying to apply fixes now...\n");

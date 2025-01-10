@@ -21,6 +21,7 @@
 #include "internal.h"
 #include "cf_expr.h"
 #include "cf_constraints.h"
+#include "../include/list.h"
 
 #define KCR_CMP false
 #define NPC_OPTIMISATION true
@@ -787,12 +788,10 @@ static void add_choice_constraints(struct symbol *sym, struct cfdata *data)
 
 	/* all choice options are mutually exclusive for yes */
 	CF_LIST_FOR_EACH(node, promptItems, sym) {
-		struct sym_node *node2;
+		struct sym_node *node2 = list_next_entry(node, node);
 
 		choice = node->elem;
-		cflist_for_each_entry_from(node2,
-					 &list_next_entry(node, node)->node,
-					 &promptItems->list, node) {
+		list_for_each_entry_from(node2, &promptItems->list, node) {
 			choice2 = node2->elem;
 			c1 = pexpr_or(
 				pexpr_not(pexpr_alloc_symbol(choice->fexpr_y),
@@ -811,14 +810,13 @@ static void add_choice_constraints(struct symbol *sym, struct cfdata *data)
 	if (sym->type == S_TRISTATE) {
 		CF_LIST_FOR_EACH(node, promptItems, sym) {
 			struct sym_list *tmp;
-			struct sym_node *node2;
+			struct sym_node *node2 = list_next_entry(node, node);
 
 			choice = node->elem;
 
 			tmp = CF_LIST_INIT(sym);
-			cflist_for_each_entry_from(
-				node2, &list_next_entry(node, node)->node,
-				&promptItems->list, node) {
+			list_for_each_entry_from(node2, &promptItems->list,
+						 node) {
 				choice2 = node2->elem;
 				if (choice2->type == S_TRISTATE)
 					CF_PUSH_BACK(tmp, choice2, sym);
@@ -1715,7 +1713,7 @@ unsigned int count_constraints(void)
 		if (sym->type == S_UNKNOWN)
 			continue;
 
-		c += cflist_size(&sym->constraints->list);
+		c += list_count_nodes(&sym->constraints->list);
 	}
 
 	return c;
