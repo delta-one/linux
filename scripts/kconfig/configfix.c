@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
  * Copyright (C) 2023 Patrick Franz <deltaone@debian.org>
+ * ConfigFix documentation and contributors: http://github.com/isselab/configfix
  */
 
 #define _GNU_SOURCE
