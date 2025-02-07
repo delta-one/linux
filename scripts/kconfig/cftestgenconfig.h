@@ -6,6 +6,7 @@
  * Copyright (C) 2019 Ibrahim Fayaz <phayax@gmail.com>
 **/
 
+#include "cf_defs.h"
 #include "configfix.h"
 #include <vector>
 #include <string>
@@ -64,7 +65,8 @@ private:
     SymbolMap base_config;
     MenuIterator menu_iterator_all;
     ConflictCandidateList conflict_candidate_list;
-    struct sfl_list* solution_output{nullptr};
+    struct sfix_list** solution_output{nullptr};
+	size_t num_solution_output;
 
     // Persistent configuration statistics
      int sym_count = 0;
@@ -88,7 +90,7 @@ public:
 
     void generate_conflict_candidate(std::uniform_int_distribution<int> dist);
     std::tuple<std::string,int> save_conflict_candidate();
-    std::tuple<double, int>  calculate_fixes();
+    double  calculate_fixes();
 
     void verify_diagnosis_all(const std::stringstream &csv_row);
     bool verify_diagnosis(int i, const std::stringstream& csv_row, struct sfix_list *diag);
@@ -121,7 +123,6 @@ static const char *sym_fix_get_string_value(struct symbol_fix *sym_fix);
 static bool verify_fix_target_values(struct sfix_list *diag);
 
 static std::string get_conflict_dir(const std::string &config_dir);
-static struct sfix_list* sfl_list_idx(struct sfl_list* list, int index);
 
 static std::string get_working_path();
 static std::string get_root_path();

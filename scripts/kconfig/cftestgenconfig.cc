@@ -6,6 +6,7 @@
  * Copyright (C) 2019 Ibrahim Fayaz <phayax@gmail.com>
 **/
 
+#include <memory>
 #include <string>
 #include <time.h>
 #include <dirent.h>
@@ -28,8 +29,11 @@
 #include "for_each_symbol_pp.h"
 
 extern "C" {
+#include "lists_cpp_wrapper.h"
 #include "cf_utils.h"
 #include "lkc.h"
+#include "cf_defs.h"
+#include "cf_fixgen.h"
 }
 
 using namespace std;
@@ -376,17 +380,17 @@ void ConflictGenerator::test_random_conflict(void) {
         // generate conflict & find fixes
         generate_conflict_candidate(dist);
         auto[filename, conflict_number] = save_conflict_candidate();
-        auto[time, solutions_size] = calculate_fixes();
+        auto time = calculate_fixes();
 
         csv_row << filename << ",";
         csv_row << conflict_number << ",";
 
         csv_row << std::setprecision(6) << time << ",";
-        csv_row << solution_output->size << ",";
+        csv_row << num_solution_output << ",";
 
         csv_row << ",";
         // output result and continue if no solution found and if yes verify diagnosis
-        if (solution_output == nullptr || solution_output->size == 0) {
+        if (solution_output == nullptr || num_solution_output == 0) {
             // set remaining result columns to "-"
             // column 13 - Diag. index
             // column 14 - Diag. size
@@ -500,15 +504,15 @@ std::tuple<std::string, int> ConflictGenerator::save_conflict_candidate() {
 /**
  * The function runs the RangeFix Algorithm to solve the conflict candidates
 */
-std::tuple<double, int> ConflictGenerator::calculate_fixes() {
+double ConflictGenerator::calculate_fixes() {
 
     /// Create wanted symbols from conflict_candidate_list
-    struct sdv_list *wanted_symbols = sdv_list_init();
+	std::vector<struct symbol_dvalue *> wanted_symbols;
     //loop through the rows in conflicts table adding each row into the array:
     struct symbol_dvalue *p = nullptr;
     p = static_cast<struct symbol_dvalue *>(calloc(conflict_candidate_list.size(), sizeof(struct symbol_dvalue)));
     if (!p)
-        return {0, 0};
+        return 0;
     for (unsigned int i = 0; i < conflict_candidate_list.size(); i++) {
         struct symbol_dvalue *tmp = (p + i);
         auto _symbol = conflict_candidate_list[i][0].c_str();
@@ -516,7 +520,7 @@ std::tuple<double, int> ConflictGenerator::calculate_fixes() {
         tmp->sym = sym;
         tmp->type = static_cast<symboldv_type>(sym->type == symbol_type::S_BOOLEAN ? 0 : 1);
         tmp->tri = std_string_value_to_tristate(conflict_candidate_list[i][1]);
-        sdv_list_add(wanted_symbols, tmp);
+        wanted_symbols.push_back(tmp);
     }
 
     /// Run the RangeFix algorithm with the created wanted_symbols
@@ -525,16 +529,15 @@ std::tuple<double, int> ConflictGenerator::calculate_fixes() {
     start = clock();
 
     /// starting solving the conflict
-    solution_output = run_satconf(wanted_symbols);
+    solution_output = run_satconf(wanted_symbols.data(), wanted_symbols.size(), &num_solution_output);
 
     end = clock();
     time = ((double) (end - start)) / CLOCKS_PER_SEC;
     spdlog::info("Conflict resolution time = {}", time);
 
     free(p);
-    sdv_list_free(wanted_symbols);
-    spdlog::info("solution length = {}", unsigned(solution_output->size));
-    return {time, solution_output->size};
+    spdlog::info("solution length = {}", unsigned(num_solution_output));
+    return time;
 }
 
 /**
@@ -545,8 +548,8 @@ std::tuple<double, int> ConflictGenerator::calculate_fixes() {
 void ConflictGenerator::verify_diagnosis_all(const std::stringstream &csv_row)
 {
     conflict_candidate_list.clear();
-    for (unsigned int i = 0; i < solution_output->size; i++) {
-        verify_diagnosis(i + 1, csv_row, sfl_list_idx(solution_output, i));
+    for (unsigned int i = 0; i < num_solution_output; i++) {
+        verify_diagnosis(i + 1, csv_row, solution_output[i]);
         SymbolMap initial_config = config_reset();
         if (config_compare(initial_config) != 0)
             spdlog::error("Could not reset configuration after verifying diagnosis");
@@ -562,7 +565,7 @@ void ConflictGenerator::verify_diagnosis_all(const std::stringstream &csv_row)
  * - restoring initial configuration
  */
 bool ConflictGenerator::verify_diagnosis(int i, const std::stringstream &csv_row, struct sfix_list *diag) {
-    int size = diag->size;
+    int size = cpp_list_count_nodes(&diag->list);
 
     std::stringstream csv_row_diag;
     csv_row_diag << csv_row.str();
@@ -580,21 +583,27 @@ bool ConflictGenerator::verify_diagnosis(int i, const std::stringstream &csv_row
     // check 2 - fix fully applied
     bool APPLIED = false;
 
-    /// Creates the permutation structure
-    struct sfix_list *permutation = sfix_list_init();
     while (permutation_count < 2) {
         /// Copy the fixes found in the diagnosis
-        permutation = sfix_list_copy(diag);
+		std::unique_ptr<sfix_list> permutation = make_unique<sfix_list>();
+		CPP_INIT_LIST_HEAD(&permutation->list);
+		cpp_for_each_sfix(diag, [](sfix_node *node, void *usr_args) {
+			struct sfix_node &new_ = *new sfix_node();
+			new_.elem = node->elem;
+			CPP_INIT_LIST_HEAD(&new_.node);
+			cpp_list_add_tail(&new_.node, &static_cast<sfix_list*>(usr_args)->list);
+			return false;
+		}, permutation.get());
         permutation_count++;
 
-        if (apply_fix(permutation)) {
+        if (apply_fix(permutation.get())) {
             conf_write(".config.applied");
             /// check 1 - conflict resolved
             if (verify_resolution()) {
                 RESOLVED = true;
             }
             /// check 2 - fix applied
-            if (verify_fix_target_values(permutation)) {
+            if (verify_fix_target_values(permutation.get())) {
                 APPLIED = true;
             }
             // exit loop if the conflict is resolved
@@ -605,7 +614,7 @@ bool ConflictGenerator::verify_diagnosis(int i, const std::stringstream &csv_row
             SymbolMap initial_config = config_reset();
             if (config_compare(initial_config) != 0) {
                 spdlog::error("Could not reset configuration after testing permutation:");
-                print_diagnosis_symbol(permutation);
+                print_diagnosis_symbol(permutation.get());
                 break;
             }
             spdlog::info("TEST FAILED");
@@ -666,9 +675,9 @@ void ConflictGenerator::save_diagnosis(struct sfix_list *diag, char *file_prefix
         spdlog::error("ERROR: could not save diagnosis");
         return;
     }
+    cpp_for_each_sfix(diag, [](struct sfix_node *node, void *usr_args) {
     struct symbol_fix *fix;
-    struct sfix_node *node;
-    sfix_list_for_each(node, diag) {
+		ofstream &file = *static_cast<ofstream *>(usr_args);
         fix = node->elem;
         if (fix->type == SF_BOOLEAN)
             file << fix->sym->name << " => " << tristate_get_char(fix->tri) << "\n";
@@ -676,7 +685,8 @@ void ConflictGenerator::save_diagnosis(struct sfix_list *diag, char *file_prefix
             file << fix->sym->name << " => " << str_get(&fix->nb_val) << "\n";
         else
             perror("NB not yet implemented.");
-    }
+		return false;
+    }, &file);
     file.close();
     spdlog::info("diagnosis saved to {}", std::string(filename));
 }
@@ -1080,36 +1090,45 @@ static const char *sym_fix_get_string_value(struct symbol_fix *fix) {
 /**
  * Check if all symbols in the diagnosis have their target values.
  */
-static bool verify_fix_target_values(struct sfix_list *diag) {
-    struct symbol *sym;
-    struct symbol_fix *fix;
-    struct sfix_node *node;
+static bool verify_fix_target_values(struct sfix_list *diag)
+{
+	bool ret_false = false;
+	cpp_for_each_sfix(diag, [](sfix_node *node, void *usr_args) {
+		struct symbol *sym;
+		struct symbol_fix *fix;
+		bool &ret_false = *(bool *) usr_args;
 
-    sfix_list_for_each(node, diag) {
-        fix = node->elem;
-        sym = fix->sym;
-        switch (sym_get_type(sym)) {
-            case S_BOOLEAN:
-            case S_TRISTATE:
-                if (fix->tri != sym_get_tristate_value(fix->sym)) {
-                    spdlog::info("Fix symbol {}: target {} != actual {}",
-                                 sym_get_unique_name(*sym),
-                                 sym_fix_get_string_value(fix),
-                                 sym_get_string_value(sym));
-                    return false;
-                }
-                break;
-            default:
-                if (strcmp(str_get(&fix->nb_val), sym_get_string_value(fix->sym)) != 0) {
-                    spdlog::info("{}: target {} != actual {}",
-                                 sym_get_unique_name(*sym),
-                                 sym_fix_get_string_value(fix),
-                                 sym_get_string_value(sym));
-                    return false;
-                }
-        }
-    }
-    return true;
+		fix = node->elem;
+		sym = fix->sym;
+		switch (sym_get_type(sym)) {
+		case S_BOOLEAN:
+		case S_TRISTATE:
+			if (fix->tri != sym_get_tristate_value(fix->sym)) {
+				spdlog::info(
+					"Fix symbol {}: target {} != actual {}",
+					sym_get_unique_name(*sym),
+					sym_fix_get_string_value(fix),
+					sym_get_string_value(sym));
+				ret_false = true;
+				return true;
+			}
+			break;
+		default:
+			if (strcmp(str_get(&fix->nb_val),
+				   sym_get_string_value(fix->sym)) != 0) {
+				spdlog::info("{}: target {} != actual {}",
+					     sym_get_unique_name(*sym),
+					     sym_fix_get_string_value(fix),
+					     sym_get_string_value(sym));
+				ret_false = true;
+				return true;
+			}
+		}
+		return false;
+	}, &ret_false);
+	if (ret_false)
+		return false;
+	return true;
 }
 
 /**
@@ -1143,23 +1162,6 @@ std::string get_conflict_dir(const std::string &config_dir) {
             sizeof(char) * (strlen(config_dir.c_str()) + strlen("/conflict.XXX/") + 1));
     sprintf(conflict_dir, "%s/conflict.%.3d/", config_dir.c_str(), next_conflict_num);
     return std::string(conflict_dir);
-}
-
-/**
- * Return the sfix_list from a specific index
- */
-struct sfix_list* sfl_list_idx(struct sfl_list* list, int index)
-{
-    struct sfl_node* current = list->head;
-
-    int count = 0;
-    while (current != NULL) {
-        if (count == index)
-            return (current->elem);
-        count++;
-        current = current->next;
-    }
-    return nullptr;
 }
 
 /**

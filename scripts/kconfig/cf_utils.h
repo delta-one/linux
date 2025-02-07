@@ -9,7 +9,9 @@
 #include "expr.h"
 #include "cf_defs.h"
 #include "picosat_functions.h"
+#if !__cplusplus
 #include "../include/list.h"
+#endif
 
 /**
  * cflist_at_index - retrieve the entry at index i in O(n)

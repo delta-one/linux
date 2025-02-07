@@ -214,7 +214,7 @@ HOSTCFLAGS_picosat.o = -DTRACE -Wno-missing-prototypes -Wno-pointer-compare
 # cftestgenconfig: Used for the cftestgenconfig target based on C++
 hostprogs	+= cftestgenconfig
 cftestgenconfig-cxxobjs	:= cftestgenconfig.o for_each_symbol_pp.o
-cftestgenconfig-objs	:= images.o for_each_symbol.o $(common-objs) $(cfconf-objs)
+cftestgenconfig-objs	:= images.o for_each_symbol.o lists_cpp_wrapper.o $(common-objs) $(cfconf-objs)
 
 HOSTLDLIBS_cftestgenconfig	= $(shell . $(obj)/cftestgenconfig-cfg && echo $$libs)
 HOSTCXXFLAGS_cftestgenconfig.o	= $(shell . $(obj)/cftestgenconfig-cfg && echo $$cflags)
@@ -224,7 +224,7 @@ $(obj)/cftestgenconfig.o: $(src)/cftestgenconfig.h $(obj)/cftestgenconfig-cfg
 # cftestconfig: Used for the cftestconfig target based on C++
 hostprogs	+= cftestconfig
 cftestconfig-cxxobjs	:= cftestconfig.o for_each_symbol_pp.o
-cftestconfig-objs	:= images.o for_each_symbol.o $(common-objs) $(cfconf-objs)
+cftestconfig-objs	:= images.o for_each_symbol.o lists_cpp_wrapper.o $(common-objs) $(cfconf-objs)
 
 HOSTLDLIBS_cftestconfig	= $(shell . $(obj)/cftestconfig-cfg && echo $$libs)
 HOSTCXXFLAGS_cftestconfig.o	= $(shell . $(obj)/cftestconfig-cfg && echo $$cflags)
