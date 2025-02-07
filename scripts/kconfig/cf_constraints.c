@@ -745,18 +745,6 @@ static void add_choice_constraints(struct symbol *sym, struct cfdata *data)
 		PEXPR_PUT(c1, c2);
 	}
 
-	/*
-	 * every choice option (even those without a prompt) implies the choice
-	 */
-	CF_LIST_FOR_EACH(node, items, sym) {
-		choice = node->elem;
-		c1 = pexpr_implies(sym_get_fexpr_both(choice, data),
-					sym_get_fexpr_both(sym, data), data,
-					PEXPR_ARGX);
-		sym_add_constraint(sym, c1, data);
-		pexpr_put(c1);
-	}
-
 	/* choice options can only select mod, if the entire choice is mod */
 	if (sym->type == S_TRISTATE) {
 		CF_LIST_FOR_EACH(node, items, sym) {
