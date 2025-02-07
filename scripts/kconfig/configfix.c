@@ -19,14 +19,14 @@
 #include "picosat_functions.h"
 #include "cf_utils.h"
 #include "cf_constraints.h"
-#include "cf_rangefix.h"
+#include "cf_fixgen.h"
 #include "cf_defs.h"
 #include "expr.h"
 #include "list.h"
 #include "lkc.h"
 
 bool CFDEBUG;
-bool stop_rangefix;
+bool stop_fixgen;
 
 static PicoSAT *pico;
 static bool init_done;
@@ -166,7 +166,7 @@ struct sfl_list *run_satconf_list(struct sdv_list *symbols)
 		printd("===> PROBLEM IS UNSATISFIABLE <===\n");
 		printd("\n");
 
-		ret = rangefix_run(pico, &data);
+		ret = fixgen_run(pico, &data);
 	} else {
 		printd("Unknown if satisfiable.\n");
 
@@ -305,11 +305,11 @@ int apply_fix(struct sfix_list *fix)
 }
 
 /*
- * stop RangeFix after the next iteration
+ * stop fix generation after the next iteration
  */
-void interrupt_rangefix(void)
+void interrupt_fix_generation(void)
 {
-	stop_rangefix = true;
+	stop_fixgen = true;
 }
 
 /*

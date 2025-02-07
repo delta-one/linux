@@ -3,14 +3,14 @@
  * Copyright (C) 2023 Patrick Franz <deltaone@debian.org>
  */
 
-#ifndef CF_RANGEFIX_H
-#define CF_RANGEFIX_H
+#ifndef CF_FIXGEN_H
+#define CF_FIXGEN_H
 
 #include "picosat_functions.h"
 #include "cf_defs.h"
 
-/* initialize RangeFix and return the diagnoses */
-struct sfl_list *rangefix_run(PicoSAT *pico, struct cfdata *data);
+/* initialize fixgen and return the diagnoses */
+struct sfl_list *fixgen_run(PicoSAT *pico, struct cfdata *data);
 
 /* ask user which fix to apply */
 struct sfix_list *ask_user_choose_fix(struct sfl_list *diag);

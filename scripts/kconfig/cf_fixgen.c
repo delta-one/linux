@@ -21,7 +21,7 @@
 #include "cf_expr.h"
 #include "list.h"
 #include "list_types.h"
-#include "cf_rangefix.h"
+#include "cf_fixgen.h"
 #include "internal.h"
 #include "cf_utils.h"
 #include "cf_defs.h"
@@ -87,14 +87,14 @@ static unsigned int nr_of_assumptions = 0, nr_of_assumptions_true;
 
 /* -------------------------------------- */
 
-struct sfl_list *rangefix_run(PicoSAT *pico, struct cfdata *data)
+struct sfl_list *fixgen_run(PicoSAT *pico, struct cfdata *data)
 {
 	clock_t start, end;
 	double time;
 	struct fexl_list *diagnoses;
 	struct fexl_node *node;
 
-	printd("Starting RangeFix...\n");
+	printd("Starting fix generation...\n");
 	printd("Generating diagnoses...");
 
 	/* generate the diagnoses */
@@ -204,8 +204,8 @@ static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data)
 			goto DIAGNOSES_FOUND;
 
 		/* abort and return results if cancelled by user */
-		if (stop_rangefix) {
-			stop_rangefix = false;
+		if (stop_fixgen) {
+			stop_fixgen = false;
 			goto DIAGNOSES_FOUND;
 		}
 

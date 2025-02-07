@@ -18,7 +18,7 @@
 #include "list_types.h"
 
 extern bool CFDEBUG;
-extern bool stop_rangefix;
+extern bool stop_fixgen;
 
 #define printd(fmt...) do { \
 	if (CFDEBUG) \

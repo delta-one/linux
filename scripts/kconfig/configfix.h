@@ -20,7 +20,7 @@ struct sfix_list **run_satconf(struct symbol_dvalue **symbols, size_t n,
 struct sfl_list *run_satconf_list(struct sdv_list *symbols);
 int apply_fix(struct sfix_list *fix);
 int run_satconf_cli(const char *Kconfig_file);
-void interrupt_rangefix(void);
+void interrupt_fix_generation(void);
 struct sfix_list *select_solution(struct sfl_list *solutions, int index);
 struct symbol_fix *select_symbol(struct sfix_list *solution, int index);
 

@@ -202,7 +202,7 @@ $(addprefix $(obj)/, mconf.o $(lxdialog)): | $(obj)/mconf-cflags
 
 # configfix: Used for the xconfig target as well as for its debugging tools
 hostprogs        += cfoutconfig
-cfconf-objs      := configfix.o cf_constraints.o cf_expr.o cf_rangefix.o cf_utils.o picosat_functions.o
+cfconf-objs      := configfix.o cf_constraints.o cf_expr.o cf_fixgen.o cf_utils.o picosat_functions.o
 cfoutconfig-objs := cfoutconfig.o $(common-objs) $(cfconf-objs)
 
 # qconf: Used for the xconfig target based on Qt

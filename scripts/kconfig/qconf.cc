@@ -2344,8 +2344,8 @@ void ConflictsView::calculateFixes()
 		runSatConfAsyncThread =
 			new std::thread(&ConflictsView::runSatConfAsync, this);
 	} else {
-		printd("Interrupting rangefix\n");
-		interrupt_rangefix();
+		printd("Interrupting fix generation\n");
+		interrupt_fix_generation();
 		std::unique_lock<std::mutex> lk{ satconf_mutex };
 		satconf_cancellation_cv.wait(lk, [this] {
 			return satconf_cancelled == true;
