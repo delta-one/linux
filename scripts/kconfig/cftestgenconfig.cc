@@ -6,6 +6,7 @@
  * Copyright (C) 2019 Ibrahim Fayaz <phayax@gmail.com>
 **/
 
+#include <cassert>
 #include <memory>
 #include <string>
 #include <time.h>
@@ -17,7 +18,6 @@
 #include <string.h>
 #include <fstream>
 #include <vector>
-#include <algorithm>
 #include <random>
 #include <filesystem>
 #include <map>
@@ -49,6 +49,7 @@ static std::string WORKING_PATH_RELATIVE = ".";
 static std::string ROOT_PATH_RELATIVE = "..";
 
 int main() {
+	assert(load_picosat());
     /// set the logger pattern
     spdlog::set_pattern("[%^%l%$] %v");
 
