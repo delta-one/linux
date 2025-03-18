@@ -1739,9 +1739,6 @@ void sym_add_constraint(struct symbol *sym, struct pexpr *constraint,
 		perror("Adding const_false.");
 
 	CF_PUSH_BACK(sym->constraints, pexpr_get(constraint), pexpr);
-
-	if (!pexpr_is_nnf(constraint))
-		pexpr_print("Not NNF:", constraint, -1);
 }
 
 /*
@@ -1771,7 +1768,4 @@ void sym_add_constraint_unique(struct symbol *sym, struct pexpr *constraint,
 			return;
 
 	CF_PUSH_BACK(sym->constraints, pexpr_get(constraint), pexpr);
-
-	if (!pexpr_is_nnf(constraint))
-		pexpr_print("Not NNF:", constraint, -1);
 }

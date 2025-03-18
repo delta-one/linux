@@ -571,17 +571,17 @@ static int build_cnf_tseytin_tmp(struct pexpr *e, struct cfdata *data)
 {
 	if (e->satval != 0)
 		return e->satval;
-	if (pexpr_is_symbol(e)) {
-		e->satval = pexpr_get_satval(e);
-		return e->satval;
-	}
 	switch (e->type) {
 	case PE_AND:
 		return build_cnf_tseytin_and(e, data);
 	case PE_OR:
 		return build_cnf_tseytin_or(e, data);
-	default:
-		assert(false);
+	case PE_NOT:
+		e->satval = -build_cnf_tseytin_tmp(e->left.pexpr, data);
+		return e->satval;
+	case PE_SYMBOL:
+		e->satval = e->left.fexpr->satval;
+		return e->satval;
 	}
 }
 
@@ -656,28 +656,6 @@ void sat_add_clause(int num, ...)
 	picosat_add(pico, 0);
 
 	va_end(valist);
-}
-
-/*
- * return the SAT-variable for a pexpr that is a symbol
- */
-static int pexpr_get_satval(struct pexpr *e)
-{
-	if (!pexpr_is_symbol(e)) {
-		perror("pexpr is not a symbol.");
-		return -1;
-	}
-
-	switch (e->type) {
-	case PE_SYMBOL:
-		return e->left.fexpr->satval;
-	case PE_NOT:
-		return -(e->left.pexpr->left.fexpr->satval);
-	default:
-		perror("Not a symbol.");
-	}
-
-	return -1;
 }
 
 /*

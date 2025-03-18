@@ -65,9 +65,6 @@ struct pexpr *pexpr_not(struct pexpr *a, struct cfdata *data);
 /* check whether a pexpr is in CNF */
 bool pexpr_is_cnf(struct pexpr *e);
 
-/* check whether a pexpr is in NNF */
-bool pexpr_is_nnf(struct pexpr *e);
-
 /* return fexpr_both for a symbol */
 struct pexpr *sym_get_fexpr_both(struct symbol *sym, struct cfdata *data);
 

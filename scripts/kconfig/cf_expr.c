@@ -928,7 +928,7 @@ struct pexpr *pexpr_and(struct pexpr *a, struct pexpr *b, struct cfdata *data,
 }
 
 /*
- * macro to create a pexpr of type AND
+ * function to create a pexpr of type AND
  */
 struct pexpr *pexpr_and_share(struct pexpr *a, struct pexpr *b,
 			      struct cfdata *data)
@@ -1022,7 +1022,7 @@ struct pexpr *pexpr_or(struct pexpr *a, struct pexpr *b, struct cfdata *data,
 }
 
 /*
- * macro to create a pexpr of type OR
+ * function to create a pexpr of type OR
  */
 struct pexpr *pexpr_or_share(struct pexpr *a, struct pexpr *b,
 			     struct cfdata *data)
@@ -1169,18 +1169,6 @@ struct pexpr *pexpr_not_share(struct pexpr *a, struct cfdata *data)
 	else if (a->type == PE_NOT) {
 		ret_val = a->left.pexpr;
 		pexpr_get(ret_val);
-	}
-	/* De Morgan */
-	else if (a->type == PE_AND) {
-		ret_val = xmalloc(sizeof(*ret_val));
-		pexpr_construct_or(ret_val,
-				   pexpr_not_share(a->left.pexpr, data),
-				   pexpr_not_share(a->right.pexpr, data), 1);
-	} else if (a->type == PE_OR) {
-		ret_val = xmalloc(sizeof(*ret_val));
-		pexpr_construct_and(ret_val,
-				    pexpr_not_share(a->left.pexpr, data),
-				    pexpr_not_share(a->right.pexpr, data), 1);
 	} else {
 		ret_val = xmalloc(sizeof(*ret_val));
 		pexpr_get(a);
@@ -1242,28 +1230,6 @@ bool pexpr_is_cnf(struct pexpr *e)
 	case PE_OR:
 		return pexpr_is_cnf(e->left.pexpr) &&
 		       pexpr_is_cnf(e->right.pexpr);
-	case PE_NOT:
-		return e->left.pexpr->type == PE_SYMBOL;
-	}
-
-	return false;
-}
-
-/*
- * check whether a pexpr is in NNF
- */
-bool pexpr_is_nnf(struct pexpr *e)
-{
-	if (!e)
-		return false;
-
-	switch (e->type) {
-	case PE_SYMBOL:
-		return true;
-	case PE_AND:
-	case PE_OR:
-		return pexpr_is_nnf(e->left.pexpr) &&
-		       pexpr_is_nnf(e->right.pexpr);
 	case PE_NOT:
 		return e->left.pexpr->type == PE_SYMBOL;
 	}
