@@ -1973,6 +1973,7 @@ void pexpr_construct_or(struct pexpr *e, struct pexpr *left,
 	e->left.pexpr = left;
 	e->right.pexpr = right;
 	e->ref_count = ref_count;
+	e->satval = 0;
 }
 
 void pexpr_construct_and(struct pexpr *e, struct pexpr *left,
@@ -1982,6 +1983,7 @@ void pexpr_construct_and(struct pexpr *e, struct pexpr *left,
 	e->left.pexpr = left;
 	e->right.pexpr = right;
 	e->ref_count = ref_count;
+	e->satval = 0;
 }
 
 void pexpr_construct_not(struct pexpr *e, struct pexpr *left,
@@ -1991,6 +1993,7 @@ void pexpr_construct_not(struct pexpr *e, struct pexpr *left,
 	e->left.pexpr = left;
 	e->right.pexpr = NULL;
 	e->ref_count = ref_count;
+	e->satval = 0;
 }
 
 void pexpr_construct_sym(struct pexpr *e, struct fexpr *left,
@@ -2000,4 +2003,5 @@ void pexpr_construct_sym(struct pexpr *e, struct fexpr *left,
 	e->left.fexpr = left;
 	e->right.pexpr = NULL;
 	e->ref_count = ref_count;
+	e->satval = 0;
 }

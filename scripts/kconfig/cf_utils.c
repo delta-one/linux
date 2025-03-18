@@ -20,6 +20,7 @@
 #include "internal.h"
 #include "picosat_functions.h"
 #include "cf_utils.h"
+#include "cf_defs.h"
 #include "cf_expr.h"
 #include "list.h"
 
@@ -33,12 +34,9 @@ static void build_cnf_tseytin(struct pexpr *e, struct cfdata *data);
 static void build_cnf_tseytin_top_and(struct pexpr *e, struct cfdata *data);
 static void build_cnf_tseytin_top_or(struct pexpr *e, struct cfdata *data);
 
-static void build_cnf_tseytin_tmp(struct pexpr *e, struct fexpr *t,
-				  struct cfdata *data);
-static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t,
-				  struct cfdata *data);
-static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t,
-				 struct cfdata *data);
+static int build_cnf_tseytin_tmp(struct pexpr *e, struct cfdata *data);
+static int build_cnf_tseytin_and(struct pexpr *e, struct cfdata *data);
+static int build_cnf_tseytin_or(struct pexpr *e, struct cfdata *data);
 static int pexpr_get_satval(struct pexpr *e);
 
 /*
@@ -562,89 +560,42 @@ static void build_cnf_tseytin_top_and(struct pexpr *e, struct cfdata *data)
 
 static void build_cnf_tseytin_top_or(struct pexpr *e, struct cfdata *data)
 {
-	struct fexpr *t1 = NULL, *t2 = NULL;
-	int a, b;
-
-	/* set left side */
-	if (pexpr_is_symbol(e->left.pexpr)) {
-		a = pexpr_get_satval(e->left.pexpr);
-	} else {
-		t1 = create_tmpsatvar(data);
-		a = t1->satval;
-	}
-
-	/* set right side */
-	if (pexpr_is_symbol(e->right.pexpr)) {
-		b = pexpr_get_satval(e->right.pexpr);
-	} else {
-		t2 = create_tmpsatvar(data);
-		b = t2->satval;
-	}
-
-	/* A v B */
-	sat_add_clause(3, pico, a, b);
-
-	/* traverse down the tree to build more constraints if needed */
-	if (!pexpr_is_symbol(e->left.pexpr)) {
-		if (t1 == NULL)
-			perror("t1 is NULL.");
-
-		build_cnf_tseytin_tmp(e->left.pexpr, t1, data);
-	}
-
-	if (!pexpr_is_symbol(e->right.pexpr)) {
-		if (t2 == NULL)
-			perror("t2 is NULL.");
-
-		build_cnf_tseytin_tmp(e->right.pexpr, t2, data);
-	}
+	sat_add_clause(3, pico, build_cnf_tseytin_tmp(e->left.pexpr, data),
+		       build_cnf_tseytin_tmp(e->right.pexpr, data));
 }
 
 /*
  * build the sub-expressions
  */
-static void build_cnf_tseytin_tmp(struct pexpr *e, struct fexpr *t,
-				  struct cfdata *data)
+static int build_cnf_tseytin_tmp(struct pexpr *e, struct cfdata *data)
 {
+	if (e->satval != 0)
+		return e->satval;
+	if (pexpr_is_symbol(e)) {
+		e->satval = pexpr_get_satval(e);
+		return e->satval;
+	}
 	switch (e->type) {
 	case PE_AND:
-		build_cnf_tseytin_and(e, t, data);
-		break;
+		return build_cnf_tseytin_and(e, data);
 	case PE_OR:
-		build_cnf_tseytin_or(e, t, data);
-		break;
+		return build_cnf_tseytin_or(e, data);
 	default:
-		perror("Expression not a propositional logic formula. root.");
+		assert(false);
 	}
 }
 
 /*
  * build the Tseytin sub-expressions for a pexpr of type AND
  */
-static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t,
-				  struct cfdata *data)
+static int build_cnf_tseytin_and(struct pexpr *e, struct cfdata *data)
 {
-	struct fexpr *t1 = NULL, *t2 = NULL;
+	struct fexpr *t;
 	int a, b, c;
 
-	assert(t != NULL);
-
-	/* set left side */
-	if (pexpr_is_symbol(e->left.pexpr)) {
-		a = pexpr_get_satval(e->left.pexpr);
-	} else {
-		t1 = create_tmpsatvar(data);
-		a = t1->satval;
-	}
-
-	/* set right side */
-	if (pexpr_is_symbol(e->right.pexpr)) {
-		b = pexpr_get_satval(e->right.pexpr);
-	} else {
-		t2 = create_tmpsatvar(data);
-		b = t2->satval;
-	}
-
+	t = create_tmpsatvar(data);
+	a = build_cnf_tseytin_tmp(e->left.pexpr, data);
+	b = build_cnf_tseytin_tmp(e->right.pexpr, data);
 	c = t->satval;
 
 	/* -A v -B v C */
@@ -653,49 +604,21 @@ static void build_cnf_tseytin_and(struct pexpr *e, struct fexpr *t,
 	sat_add_clause(3, pico, a, -c);
 	/* B v -C */
 	sat_add_clause(3, pico, b, -c);
-
-	/* traverse down the tree to build more constraints if needed */
-	if (!pexpr_is_symbol(e->left.pexpr)) {
-		if (t1 == NULL)
-			perror("t1 is NULL.");
-
-		build_cnf_tseytin_tmp(e->left.pexpr, t1, data);
-	}
-	if (!pexpr_is_symbol(e->right.pexpr)) {
-		if (t2 == NULL)
-			perror("t2 is NULL.");
-
-		build_cnf_tseytin_tmp(e->right.pexpr, t2, data);
-	}
+	e->satval = c;
+	return c;
 }
 
 /*
  * build the Tseytin sub-expressions for a pexpr of type
  */
-static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t,
-				 struct cfdata *data)
+static int build_cnf_tseytin_or(struct pexpr *e, struct cfdata *data)
 {
-	struct fexpr *t1 = NULL, *t2 = NULL;
+	struct fexpr *t;
 	int a, b, c;
 
-	assert(t != NULL);
-
-	/* set left side */
-	if (pexpr_is_symbol(e->left.pexpr)) {
-		a = pexpr_get_satval(e->left.pexpr);
-	} else {
-		t1 = create_tmpsatvar(data);
-		a = t1->satval;
-	}
-
-	/* set right side */
-	if (pexpr_is_symbol(e->right.pexpr)) {
-		b = pexpr_get_satval(e->right.pexpr);
-	} else {
-		t2 = create_tmpsatvar(data);
-		b = t2->satval;
-	}
-
+	t = create_tmpsatvar(data);
+	a = build_cnf_tseytin_tmp(e->left.pexpr, data);
+	b = build_cnf_tseytin_tmp(e->right.pexpr, data);
 	c = t->satval;
 
 	/* A v B v -C */
@@ -704,20 +627,8 @@ static void build_cnf_tseytin_or(struct pexpr *e, struct fexpr *t,
 	sat_add_clause(3, pico, -a, c);
 	/* -B v C */
 	sat_add_clause(3, pico, -b, c);
-
-	/* traverse down the tree to build more constraints if needed */
-	if (!pexpr_is_symbol(e->left.pexpr)) {
-		if (t1 == NULL)
-			perror("t1 is NULL.");
-
-		build_cnf_tseytin_tmp(e->left.pexpr, t1, data);
-	}
-	if (!pexpr_is_symbol(e->right.pexpr)) {
-		if (t2 == NULL)
-			perror("t2 is NULL.");
-
-		build_cnf_tseytin_tmp(e->right.pexpr, t2, data);
-	}
+	e->satval = c;
+	return c;
 }
 
 /*
