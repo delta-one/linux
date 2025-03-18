@@ -297,6 +297,8 @@ union pexpr_data {
  * @right: right-hand-side for AND and OR
  * @ref_count: Number of calls to pexpr_put() that need to effectuated with this
  * pexpr for it to get free'd.
+ * @satval: value of the corresponding the in the sat solver, or 0 if it doesn't
+ * correspond to any sat variable. Used during the Tseytin-transformation.
  *
  * Functions that return new struct pexpr instances (like pexpr_or(),
  * pexpr_or_share(), pexf(), ...) set @ref_count in a way that accounts for the
@@ -315,6 +317,7 @@ struct pexpr {
 	enum pexpr_type type;
 	union pexpr_data left, right;
 	unsigned int ref_count;
+	unsigned int satval;
 };
 
 enum symboldv_type {
