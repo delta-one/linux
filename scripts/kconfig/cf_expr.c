@@ -76,7 +76,7 @@ void sym_create_fexpr(struct symbol *sym, struct cfdata *data)
 static void create_fexpr_selected(struct symbol *sym, struct cfdata *data)
 {
 	struct fexpr *fexpr_sel_y;
-	struct fexpr *fexpr_sel_m;
+	struct fexpr *fexpr_sel_both;
 
 	/* fexpr_sel_y */
 	fexpr_sel_y =
@@ -87,17 +87,17 @@ static void create_fexpr_selected(struct symbol *sym, struct cfdata *data)
 
 	sym->fexpr_sel_y = fexpr_sel_y;
 
-	/* fexpr_sel_m */
+	/* fexpr_sel_both */
 	if (sym->type == S_BOOLEAN)
 		return;
 
-	fexpr_sel_m =
+	fexpr_sel_both =
 		fexpr_create(data->sat_variable_nr++, FE_SELECT, sym->name);
-	str_append(&fexpr_sel_m->name, "_sel_m");
-	fexpr_sel_m->sym = sym;
-	fexpr_add_to_satmap(fexpr_sel_m, data);
+	str_append(&fexpr_sel_both->name, "_sel_both");
+	fexpr_sel_both->sym = sym;
+	fexpr_add_to_satmap(fexpr_sel_both, data);
 
-	sym->fexpr_sel_m = fexpr_sel_m;
+	sym->fexpr_sel_both = fexpr_sel_both;
 }
 
 /*
@@ -106,7 +106,7 @@ static void create_fexpr_selected(struct symbol *sym, struct cfdata *data)
 static void create_fexpr_bool(struct symbol *sym, struct cfdata *data)
 {
 	struct fexpr *fexpr_y;
-	struct fexpr *fexpr_m;
+	struct fexpr *fexpr_both;
 
 	fexpr_y = fexpr_create(data->sat_variable_nr++, FE_SYMBOL, sym->name);
 	fexpr_y->sym = sym;
@@ -117,17 +117,17 @@ static void create_fexpr_bool(struct symbol *sym, struct cfdata *data)
 
 
 	if (sym->type == S_TRISTATE) {
-		fexpr_m = fexpr_create(data->sat_variable_nr++, FE_SYMBOL,
+		fexpr_both = fexpr_create(data->sat_variable_nr++, FE_SYMBOL,
 				       sym->name);
-		str_append(&fexpr_m->name, "_MODULE");
-		fexpr_m->sym = sym;
-		fexpr_m->tri = mod;
-		fexpr_add_to_satmap(fexpr_m, data);
+		str_append(&fexpr_both->name, "_BOTH");
+		fexpr_both->sym = sym;
+		fexpr_both->tri = mod;
+		fexpr_add_to_satmap(fexpr_both, data);
 	} else {
-		fexpr_m = data->constants->const_false;
+		fexpr_both = data->constants->const_false;
 	}
 
-	sym->fexpr_m = fexpr_m;
+	sym->fexpr_both = fexpr_both;
 
 	if (sym->rev_dep.expr)
 		create_fexpr_selected(sym, data);
@@ -144,7 +144,7 @@ static void create_fexpr_nonbool(struct symbol *sym, struct cfdata *data)
 	char string_values[][9] = {"n", "", "nonempty"};
 
 	sym->fexpr_y = data->constants->const_false;
-	sym->fexpr_m = data->constants->const_false;
+	sym->fexpr_both = data->constants->const_false;
 	sym->nb_vals = xmalloc(sizeof(*sym->nb_vals));
 	INIT_LIST_HEAD(&sym->nb_vals->list);
 
@@ -184,7 +184,7 @@ static void create_fexpr_nonbool(struct symbol *sym, struct cfdata *data)
 static void create_fexpr_unknown(struct symbol *sym, struct cfdata *data)
 {
 	sym->fexpr_y = data->constants->const_false;
-	sym->fexpr_m = data->constants->const_false;
+	sym->fexpr_both = data->constants->const_false;
 }
 
 /*
@@ -195,7 +195,7 @@ static void create_fexpr_choice(struct symbol *sym, struct cfdata *data)
 	struct property *prompt;
 	char *name, *write, *read;
 	struct fexpr *fexpr_y;
-	struct fexpr *fexpr_m;
+	struct fexpr *fexpr_both;
 
 	if (!sym_is_boolean(sym))
 		return;
@@ -225,17 +225,17 @@ static void create_fexpr_choice(struct symbol *sym, struct cfdata *data)
 	sym->fexpr_y = fexpr_y;
 
 	if (sym->type == S_TRISTATE) {
-		fexpr_m = fexpr_create(data->sat_variable_nr++, FE_CHOICE,
+		fexpr_both = fexpr_create(data->sat_variable_nr++, FE_CHOICE,
 				       "Choice_");
-		str_append(&fexpr_m->name, name);
-		str_append(&fexpr_m->name, "_MODULE");
-		fexpr_m->sym = sym;
-		fexpr_m->tri = mod;
-		fexpr_add_to_satmap(fexpr_m, data);
+		str_append(&fexpr_both->name, name);
+		str_append(&fexpr_both->name, "_BOTH");
+		fexpr_both->sym = sym;
+		fexpr_both->tri = mod;
+		fexpr_add_to_satmap(fexpr_both, data);
 	} else {
-		fexpr_m = data->constants->const_false;
+		fexpr_both = data->constants->const_false;
 	}
-	sym->fexpr_m = fexpr_m;
+	sym->fexpr_both = fexpr_both;
 	free(name);
 }
 
@@ -337,7 +337,7 @@ static struct pexpr *expr_eval_unequal_bool(struct symbol *left,
 		if (left->type == S_TRISTATE)
 			c = pexpr_or(
 				c,
-				pexpr_and(pexpr_alloc_symbol(left->fexpr_m),
+				pexpr_and(sym_get_fexpr_m(left, data),
 					  pexpr_alloc_symbol(right->fexpr_y),
 					  data, PEXPR_ARGX),
 				data, PEXPR_ARGX);
@@ -347,12 +347,11 @@ static struct pexpr *expr_eval_unequal_bool(struct symbol *left,
 			      pexpr_alloc_symbol(right->fexpr_y), data,
 			      PEXPR_ARGX);
 		if (left->type == S_TRISTATE)
-			c = pexpr_or(
-				c,
-				pexpr_and(pexpr_alloc_symbol(left->fexpr_m),
-					  sym_get_fexpr_both(right, data), data,
-					  PEXPR_ARGX),
-				data, PEXPR_ARGX);
+			c = pexpr_or(c,
+				     pexpr_and(sym_get_fexpr_m(left, data),
+					       sym_get_fexpr_both(right, data),
+					       data, PEXPR_ARGX),
+				     data, PEXPR_ARGX);
 		c = pexpr_or(c, pexpr_not(sym_get_fexpr_both(left, data), data),
 			     data, PEXPR_ARGX);
 		break;
@@ -364,7 +363,7 @@ static struct pexpr *expr_eval_unequal_bool(struct symbol *left,
 			c = pexpr_or(
 				c,
 				pexpr_and(pexpr_alloc_symbol(left->fexpr_y),
-					  pexpr_alloc_symbol(right->fexpr_m),
+					  sym_get_fexpr_m(right, data),
 					  data, PEXPR_ARGX),
 				data, PEXPR_ARGX);
 		break;
@@ -376,7 +375,7 @@ static struct pexpr *expr_eval_unequal_bool(struct symbol *left,
 			c = pexpr_or(
 				c,
 				pexpr_and(sym_get_fexpr_both(left, data),
-					  pexpr_alloc_symbol(right->fexpr_m),
+					  sym_get_fexpr_m(right, data),
 					  data, PEXPR_ARGX),
 				data, PEXPR_ARGX);
 		c = pexpr_or(c,
@@ -390,6 +389,7 @@ static struct pexpr *expr_eval_unequal_bool(struct symbol *left,
 
 	return c;
 }
+
 /*
  * calculate, when expr will evaluate to yes or mod
  */
@@ -403,9 +403,7 @@ struct pexpr *expr_calculate_pexpr_both(struct expr *e, struct cfdata *data)
 
 	switch (e->type) {
 	case E_SYMBOL:
-		return pexpr_or(expr_calculate_pexpr_m(e, data),
-				expr_calculate_pexpr_y(e, data), data,
-				PEXPR_ARGX);
+		return pexpr_alloc_symbol(e->left.sym->fexpr_both);
 	case E_AND:
 		return expr_calculate_pexpr_both_and(e->left.expr,
 						     e->right.expr, data);
@@ -413,9 +411,8 @@ struct pexpr *expr_calculate_pexpr_both(struct expr *e, struct cfdata *data)
 		return expr_calculate_pexpr_both_or(e->left.expr, e->right.expr,
 						    data);
 	case E_NOT:
-		return pexpr_or(expr_calculate_pexpr_m(e, data),
-				expr_calculate_pexpr_y(e, data), data,
-				PEXPR_ARGX);
+		return pexpr_not(expr_calculate_pexpr_y(e->left.expr, data),
+				 data);
 	case E_EQUAL:
 		return expr_calculate_pexpr_y_equals(e, data);
 	case E_UNEQUAL:
@@ -471,27 +468,9 @@ struct pexpr *expr_calculate_pexpr_y(struct expr *e, struct cfdata *data)
  */
 struct pexpr *expr_calculate_pexpr_m(struct expr *e, struct cfdata *data)
 {
-	if (!e)
-		return NULL;
-
-	if (!expr_can_evaluate_to_mod(e))
-		return pexpr_alloc_symbol(data->constants->const_false);
-
-	switch (e->type) {
-	case E_SYMBOL:
-		return pexpr_alloc_symbol(e->left.sym->fexpr_m);
-	case E_AND:
-		return expr_calculate_pexpr_m_and(e->left.expr, e->right.expr,
-						  data);
-	case E_OR:
-		return expr_calculate_pexpr_m_or(e->left.expr, e->right.expr,
-						 data);
-	case E_NOT:
-		return expr_calculate_pexpr_m_not(e->left.expr, data);
-	default:
-		perror("Trying to evaluate to mod.");
-		return NULL;
-	}
+	return pexpr_and(expr_calculate_pexpr_both(e, data),
+			 pexpr_not(expr_calculate_pexpr_y(e, data), data), data,
+			 PEXPR_ARGX);
 }
 
 /*
@@ -507,41 +486,14 @@ struct pexpr *expr_calculate_pexpr_y_and(struct expr *a, struct expr *b,
 }
 
 /*
- * calculate, when expr of type AND will evaluate to mod
- * (A || A_m) && (B || B_m) && !(A && B)
- */
-struct pexpr *expr_calculate_pexpr_m_and(struct expr *a, struct expr *b,
-					 struct cfdata *data)
-{
-	struct pexpr *topright =
-		pexpr_not(pexpr_and(expr_calculate_pexpr_y(a, data),
-					      expr_calculate_pexpr_y(b, data),
-					      data, PEXPR_ARGX),
-			       data);
-	struct pexpr *ll_left = pexpr_or(expr_calculate_pexpr_y(a, data),
-					 expr_calculate_pexpr_m(a, data), data,
-					 PEXPR_ARGX);
-	struct pexpr *ll_right = pexpr_or(expr_calculate_pexpr_y(b, data),
-					  expr_calculate_pexpr_m(b, data), data,
-					  PEXPR_ARGX);
-	struct pexpr *topleft = pexpr_and(ll_left, ll_right, data, PEXPR_ARGX);
-
-	return pexpr_and(topleft, topright, data, PEXPR_ARGX);
-}
-
-/*
  * calculate, when expr of type AND will evaluate to mod or yes
  * (A || A_m) && (B || B_m)
  */
 struct pexpr *expr_calculate_pexpr_both_and(struct expr *a, struct expr *b,
 					    struct cfdata *data)
 {
-	struct pexpr *left = pexpr_or(expr_calculate_pexpr_y(a, data),
-				      expr_calculate_pexpr_m(a, data), data,
-				      PEXPR_ARGX);
-	struct pexpr *right = pexpr_or(expr_calculate_pexpr_y(b, data),
-				       expr_calculate_pexpr_m(b, data), data,
-				       PEXPR_ARGX);
+	struct pexpr *left = expr_calculate_pexpr_both(a, data);
+	struct pexpr *right = expr_calculate_pexpr_both(b, data);
 
 	return pexpr_and(left, right, data, PEXPR_ARGX);
 }
@@ -558,38 +510,14 @@ struct pexpr *expr_calculate_pexpr_y_or(struct expr *a, struct expr *b,
 }
 
 /*
- * calculate, when expr of type OR will evaluate to mod
- * (A_m || B_m) && !A && !B
- */
-struct pexpr *expr_calculate_pexpr_m_or(struct expr *a, struct expr *b,
-					struct cfdata *data)
-{
-	struct pexpr *topright =
-		pexpr_not(expr_calculate_pexpr_y(b, data), data);
-	struct pexpr *lowerleft = pexpr_or(expr_calculate_pexpr_m(a, data),
-						expr_calculate_pexpr_m(b, data),
-						data, PEXPR_ARGX);
-	struct pexpr *topleft = pexpr_and(
-		lowerleft,
-		pexpr_not(expr_calculate_pexpr_y(a, data), data), data,
-		PEXPR_ARGX);
-
-	return pexpr_and(topleft, topright, data, PEXPR_ARGX);
-}
-
-/*
  * calculate, when expr of type OR will evaluate to mod or yes
  * (A_m || A || B_m || B)
  */
 struct pexpr *expr_calculate_pexpr_both_or(struct expr *a, struct expr *b,
 					   struct cfdata *data)
 {
-	struct pexpr *left = pexpr_or(expr_calculate_pexpr_y(a, data),
-				      expr_calculate_pexpr_m(a, data), data,
-				      PEXPR_ARGX);
-	struct pexpr *right = pexpr_or(expr_calculate_pexpr_y(b, data),
-				       expr_calculate_pexpr_m(b, data), data,
-				       PEXPR_ARGX);
+	struct pexpr *left = expr_calculate_pexpr_both(a, data);
+	struct pexpr *right = expr_calculate_pexpr_both(b, data);
 
 	return pexpr_or(left, right, data, PEXPR_ARGX);
 }
@@ -600,19 +528,7 @@ struct pexpr *expr_calculate_pexpr_both_or(struct expr *a, struct expr *b,
  */
 struct pexpr *expr_calculate_pexpr_y_not(struct expr *e, struct cfdata *data)
 {
-	return pexpr_not(pexpr_or(expr_calculate_pexpr_y(e, data),
-					    expr_calculate_pexpr_m(e, data),
-					    data, PEXPR_ARGX),
-			      data);
-}
-
-/*
- * calculate, when expr of type NOT will evaluate to mod
- * A_m
- */
-struct pexpr *expr_calculate_pexpr_m_not(struct expr *e, struct cfdata *data)
-{
-	return expr_calculate_pexpr_m(e, data);
+	return pexpr_not(expr_calculate_pexpr_both(e, data), data);
 }
 
 static struct pexpr *equiv_pexpr_share(struct pexpr *a, struct pexpr *b,
@@ -758,8 +674,8 @@ struct pexpr *expr_calculate_pexpr_y_equals(struct expr *e, struct cfdata *data)
 			pexpr_alloc_symbol(e->right.sym->fexpr_y), data,
 			PEXPR_ARGX);
 		struct pexpr *mod = equiv_pexpr_move(
-			pexpr_alloc_symbol(e->left.sym->fexpr_m),
-			pexpr_alloc_symbol(e->right.sym->fexpr_m), data,
+			sym_get_fexpr_m(e->left.sym, data),
+			sym_get_fexpr_m(e->right.sym, data), data,
 			PEXPR_ARGX);
 
 		return pexpr_and(yes, mod, data, PEXPR_ARGX);
@@ -1243,10 +1159,21 @@ bool pexpr_is_cnf(struct pexpr *e)
 struct pexpr *sym_get_fexpr_both(struct symbol *sym, struct cfdata *data)
 {
 	return sym->type == S_TRISTATE ?
-		       pexpr_or(pexpr_alloc_symbol(sym->fexpr_m),
-				pexpr_alloc_symbol(sym->fexpr_y), data,
-				PEXPR_ARGX) :
+		       pexpr_alloc_symbol(sym->fexpr_both) :
 		       pexpr_alloc_symbol(sym->fexpr_y);
+}
+
+/*
+ * return fexpr_m for a symbol
+ */
+struct pexpr *sym_get_fexpr_m(struct symbol *sym, struct cfdata *data)
+{
+	return sym->type == S_TRISTATE ?
+		       pexpr_and(pexpr_alloc_symbol(sym->fexpr_both),
+				 pexpr_not(pexpr_alloc_symbol(sym->fexpr_y),
+					   data),
+				 data, PEXPR_ARGX) :
+		       pexpr_alloc_symbol(data->constants->const_false);
 }
 
 /*
@@ -1258,9 +1185,7 @@ struct pexpr *sym_get_fexpr_sel_both(struct symbol *sym, struct cfdata *data)
 		return pexpr_alloc_symbol(data->constants->const_false);
 
 	return sym->type == S_TRISTATE ?
-		       pexpr_or(pexpr_alloc_symbol(sym->fexpr_sel_m),
-				pexpr_alloc_symbol(sym->fexpr_sel_y), data,
-				PEXPR_ARGX) :
+		       pexpr_alloc_symbol(sym->fexpr_sel_both) :
 		       pexpr_alloc_symbol(sym->fexpr_sel_y);
 }
 

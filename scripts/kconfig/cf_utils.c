@@ -37,7 +37,6 @@ static void build_cnf_tseytin_top_or(struct pexpr *e, struct cfdata *data);
 static int build_cnf_tseytin_tmp(struct pexpr *e, struct cfdata *data);
 static int build_cnf_tseytin_and(struct pexpr *e, struct cfdata *data);
 static int build_cnf_tseytin_or(struct pexpr *e, struct cfdata *data);
-static int pexpr_get_satval(struct pexpr *e);
 
 /*
  * parse Kconfig-file and read .config
@@ -96,13 +95,13 @@ void create_constants(struct cfdata *data)
 
 	/* add fexpr of constants to tristate constants */
 	symbol_yes.fexpr_y = data->constants->const_true;
-	symbol_yes.fexpr_m = data->constants->const_false;
+	symbol_yes.fexpr_both = data->constants->const_true;
 
 	symbol_mod.fexpr_y = data->constants->const_false;
-	symbol_mod.fexpr_m = data->constants->const_true;
+	symbol_mod.fexpr_both = data->constants->const_true;
 
 	symbol_no.fexpr_y = data->constants->const_false;
-	symbol_no.fexpr_m = data->constants->const_false;
+	symbol_no.fexpr_both = data->constants->const_false;
 
 	/* create symbols yes/mod/no as fexpr */
 	data->constants->symbol_yes_fexpr = fexpr_create(0, FE_SYMBOL, "y");
@@ -537,7 +536,7 @@ static void build_cnf_tseytin(struct pexpr *e, struct cfdata *data)
 		build_cnf_tseytin_top_or(e, data);
 		break;
 	default:
-		perror("Expression not a propositional logic formula. root.");
+		sat_add_clause(2, pico, build_cnf_tseytin_tmp(e, data));
 	}
 }
 
@@ -583,6 +582,7 @@ static int build_cnf_tseytin_tmp(struct pexpr *e, struct cfdata *data)
 		e->satval = e->left.fexpr->satval;
 		return e->satval;
 	}
+	assert(false);
 }
 
 /*
@@ -799,26 +799,26 @@ void sym_add_assumption_tri(PicoSAT *pico, struct symbol *sym, tristate tri_val)
 	}
 	if (sym->type == S_TRISTATE) {
 		int a = sym->fexpr_y->satval;
-		int a_m = sym->fexpr_m->satval;
+		int a_both = sym->fexpr_both->satval;
 
 		switch (tri_val) {
 		case no:
 			picosat_assume(pico, -a);
-			picosat_assume(pico, -a_m);
+			picosat_assume(pico, -a_both);
 			sym->fexpr_y->assumption = false;
-			sym->fexpr_m->assumption = false;
+			sym->fexpr_both->assumption = false;
 			break;
 		case mod:
 			picosat_assume(pico, -a);
-			picosat_assume(pico, a_m);
+			picosat_assume(pico, a_both);
 			sym->fexpr_y->assumption = false;
-			sym->fexpr_m->assumption = true;
+			sym->fexpr_both->assumption = true;
 			break;
 		case yes:
 			picosat_assume(pico, a);
-			picosat_assume(pico, -a_m);
+			picosat_assume(pico, a_both);
 			sym->fexpr_y->assumption = true;
-			sym->fexpr_m->assumption = false;
+			sym->fexpr_both->assumption = true;
 			break;
 		}
 	}
@@ -831,7 +831,7 @@ void sym_add_assumption_sdv(PicoSAT *pico, struct sdv_list *list)
 {
 	struct symbol_dvalue *sdv;
 	struct sdv_node *node;
-	int lit_y, lit_m;
+	int lit_y, lit_both;
 
 	CF_LIST_FOR_EACH(node, list, sdv) {
 		sdv = node->elem;
@@ -849,20 +849,20 @@ void sym_add_assumption_sdv(PicoSAT *pico, struct sdv_list *list)
 				perror("Should not happen.\n");
 			}
 		} else if (sdv->sym->type == S_TRISTATE) {
-			lit_m = sdv->sym->fexpr_m->satval;
+			lit_both = sdv->sym->fexpr_both->satval;
 
 			switch (sdv->tri) {
 			case yes:
 				picosat_assume(pico, lit_y);
-				picosat_assume(pico, -lit_m);
+				picosat_assume(pico, lit_both);
 				break;
 			case mod:
 				picosat_assume(pico, -lit_y);
-				picosat_assume(pico, lit_m);
+				picosat_assume(pico, lit_both);
 				break;
 			case no:
 				picosat_assume(pico, -lit_y);
-				picosat_assume(pico, -lit_m);
+				picosat_assume(pico, -lit_both);
 			}
 		}
 	}

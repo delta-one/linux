@@ -323,7 +323,7 @@ static void add_fexpr_to_constraint_set(struct fexpr_list *C,
 			CF_PUSH_BACK(C, sym->fexpr_y, fexpr);
 		else if (sym->type == S_TRISTATE) {
 			CF_PUSH_BACK(C, sym->fexpr_y, fexpr);
-			CF_PUSH_BACK(C, sym->fexpr_m, fexpr);
+			CF_PUSH_BACK(C, sym->fexpr_both, fexpr);
 		} else if (sym->type == S_INT || sym->type == S_HEX ||
 			   sym->type == S_STRING) {
 			struct fexpr_node *node;
@@ -380,27 +380,27 @@ static void set_assumptions_sdv(PicoSAT *pico, struct sdv_list *arr)
 			}
 			nr_of_assumptions++;
 		} else if (sym->type == S_TRISTATE) {
-			int lit_m = sym->fexpr_m->satval;
+			int lit_both = sym->fexpr_both->satval;
 
 			switch (sdv->tri) {
 			case yes:
 				picosat_assume(pico, lit_y);
 				sym->fexpr_y->assumption = true;
-				picosat_assume(pico, -lit_m);
-				sym->fexpr_m->assumption = false;
+				picosat_assume(pico, lit_both);
+				sym->fexpr_both->assumption = true;
 				nr_of_assumptions_true++;
 				break;
 			case mod:
 				picosat_assume(pico, -lit_y);
 				sym->fexpr_y->assumption = false;
-				picosat_assume(pico, lit_m);
-				sym->fexpr_m->assumption = true;
+				picosat_assume(pico, lit_both);
+				sym->fexpr_both->assumption = true;
 				nr_of_assumptions_true++;
 				break;
 			case no:
 				picosat_assume(pico, -lit_y);
 				sym->fexpr_y->assumption = false;
-				picosat_assume(pico, -lit_m);
+				picosat_assume(pico, -lit_both);
 				sym->fexpr_y->assumption = false;
 			}
 			nr_of_assumptions += 2;
@@ -448,6 +448,7 @@ static void fexpr_add_assumption(PicoSAT *pico, struct fexpr *e, int satval)
 		int tri_val = sym_get_tristate_value(sym);
 
 		if (e->tri == yes) {
+			/* fexpr_y */
 			if (tri_val == yes) {
 				picosat_assume(pico, satval);
 				e->assumption = true;
@@ -457,7 +458,8 @@ static void fexpr_add_assumption(PicoSAT *pico, struct fexpr *e, int satval)
 				e->assumption = false;
 			}
 		} else if (e->tri == mod) {
-			if (tri_val == mod) {
+			/* fexpr_both */
+			if (tri_val == mod || tri_val == yes) {
 				picosat_assume(pico, satval);
 				e->assumption = true;
 				nr_of_assumptions_true++;
@@ -984,9 +986,15 @@ static struct sfl_list *minimise_diagnoses(PicoSAT *pico,
 				deref = picosat_deref(
 					pico, fix->sym->fexpr_sel_y->satval);
 			else if (fix->sym->type == S_TRISTATE &&
-				 fix->tri == mod)
-				deref = picosat_deref(
-					pico, fix->sym->fexpr_sel_m->satval);
+				 fix->tri == mod) {
+				bool is_y, is_both;
+
+				is_y = picosat_deref(
+					pico, fix->sym->fexpr_sel_y->satval);
+				is_both = picosat_deref(
+					pico, fix->sym->fexpr_sel_both->satval);
+				deref = is_both && !is_y ? 1 : 0;
+			}
 
 			if (deref == 1)
 				list_del(&snode->node);
@@ -1040,49 +1048,59 @@ static tristate calculate_new_tri_val(struct fexpr *e,
 	if (e->sym->type == S_BOOLEAN)
 		return e->assumption ? no : yes;
 
-	/* new values for tristate must be deduced from the diagnosis */
-	if (e->sym->type == S_TRISTATE) {
-		/* fexpr_y */
-		if (e->tri == yes) {
-			if (e->assumption == true)
-				/*
-				 * if diagnosis contains fexpr_m, fexpr_m was
-				 * false => new value is mod
-				 */
-				return diagnosis_contains_fexpr(
-					       diagnosis, e->sym->fexpr_m) ?
-					       mod :
-					       no;
-			else if (e->assumption == false)
-				/*
-				 * if fexpr_y is set to true, the new value
-				 * must be yes
-				 */
-				return yes;
-		}
-		/* fexpr_m */
-		if (e->tri == mod) {
-			if (e->assumption == true)
-				/*
-				 * if diagnosis contains fexpr_y, fexpr_y was
-				 * false => new value is yes
-				 */
-				return diagnosis_contains_fexpr(
-					       diagnosis, e->sym->fexpr_m) ?
-					       yes :
-					       no;
-			else if (e->assumption == false)
-				/*
-				 * if diagnosis contains fexpr_m, the new value
-				 * must be mod
-				 */
-				return mod;
-		}
-		perror("Should not get here.\n");
+	if (e->sym->type != S_TRISTATE) {
+		perror("Error calculating new tristate value.\n");
+		return no;
 	}
 
-	perror("Error calculating new tristate value.\n");
-	return no;
+	/* new values for tristate must be deduced from the diagnosis */
+	/* fexpr_y */
+	if (e->tri == yes) {
+		if (!e->assumption)
+			/*
+			 * if fexpr_y is set to true, the new value
+			 * must be yes
+			 */
+			return yes;
+		/*
+		 * yes was assumed => both was assumed =>
+		 * if diagnosis contains fexpr_both, new value
+		 * is no, else mod
+		 */
+		return diagnosis_contains_fexpr(diagnosis, e->sym->fexpr_both) ?
+			       no :
+			       mod;
+	}
+	/* fexpr_both */
+	if (e->tri == mod) {
+		bool assumed_yes = e->sym->fexpr_y->assumption;
+		bool contains_fexpr_y;
+
+		if (e->assumption == true)
+			/*
+			 * can't be both => new value is no
+			 */
+			return no;
+
+		contains_fexpr_y =
+			diagnosis_contains_fexpr(diagnosis, e->sym->fexpr_y);
+		if (assumed_yes) {
+			/*
+			 * If diagnosis contains fexpr_y, fexpr_y must be false
+			 * => mod, else yes
+			 */
+			return contains_fexpr_y ? mod : yes;
+		} else {
+			/*
+			 * If diagnosis contains fexpr_y, fexpr_y must be true
+			 * => yes, else mod
+			 */
+			return contains_fexpr_y ? yes : mod;
+		}
+	}
+
+	// no non-constant symbol should have e->tri == no
+	assert(false);
 }
 
 /*

@@ -68,6 +68,9 @@ bool pexpr_is_cnf(struct pexpr *e);
 /* return fexpr_both for a symbol */
 struct pexpr *sym_get_fexpr_both(struct symbol *sym, struct cfdata *data);
 
+/* return fexpr_m for a symbol */
+struct pexpr *sym_get_fexpr_m(struct symbol *sym, struct cfdata *data);
+
 /* return fexpr_sel_both for a symbol */
 struct pexpr *sym_get_fexpr_sel_both(struct symbol *sym, struct cfdata *data);
 

@@ -209,7 +209,7 @@ static void build_constraints_select(struct cfdata *data)
 	struct symbol *sym;
 
 	for_all_symbols(sym) {
-		struct pexpr *sel_y, *sel_m;
+		struct pexpr *sel_y, *sel_both;
 		struct pexpr *c1, *c2;
 
 		if (KCR_CMP)
@@ -240,15 +240,15 @@ static void build_constraints_select(struct cfdata *data)
 		if (sym->type == S_BOOLEAN)
 			continue;
 
-		sel_m = pexpr_implies(pexpr_alloc_symbol(sym->fexpr_sel_m),
+		sel_both = pexpr_implies(pexpr_alloc_symbol(sym->fexpr_sel_both),
 					   sym_get_fexpr_both(sym, data), data,
 					   PEXPR_ARGX);
-		sym_add_constraint(sym, sel_m, data);
+		sym_add_constraint(sym, sel_both, data);
 
-		c2 = pexpr_implies(pexpr_alloc_symbol(sym->fexpr_sel_m),
-				   sym->list_sel_m, data, PEXPR_ARG1);
+		c2 = pexpr_implies(pexpr_alloc_symbol(sym->fexpr_sel_both),
+				   sym->list_sel_both, data, PEXPR_ARG1);
 		sym_add_constraint(sym, c2, data);
-		PEXPR_PUT(sel_y, sel_m, c1, c2);
+		PEXPR_PUT(sel_y, sel_both, c1, c2);
 	}
 }
 
@@ -290,28 +290,31 @@ static void build_constraints_nonbool(struct cfdata *data)
 static void build_tristate_constraint_clause(struct symbol *sym,
 					     struct cfdata *data)
 {
-	struct pexpr *X, *X_m, *modules, *c;
+	struct pexpr *X_y, *X_both, *modules, *c;
 
 	if (sym->type != S_TRISTATE)
 		return;
 
-	X = pexpr_alloc_symbol(sym->fexpr_y);
-	X_m = pexpr_alloc_symbol(sym->fexpr_m);
+	X_y = pexpr_alloc_symbol(sym->fexpr_y);
+	X_both = pexpr_alloc_symbol(sym->fexpr_both);
 	modules = pexpr_alloc_symbol(modules_sym->fexpr_y);
 
-	/* -X v -X_m */
-	c = pexpr_or(pexpr_not_share(X, data), pexpr_not_share(X_m, data),
-			  data, PEXPR_ARGX);
+	/* X_y => X_both */
+	c = pexpr_implies_share(X_y, X_both, data);
 	sym_add_constraint(sym, c, data);
 
-	/* X_m -> MODULES */
+	/* -MODULES -> -(X_both /\ -X_y) (<-> MODULE v -X_both v X_y) */
 	if (modules_sym->fexpr_y != NULL) {
-		struct pexpr *c2 = pexpr_implies_share(X_m, modules, data);
+		struct pexpr *c2 =
+			pexpr_or(modules,
+				 pexpr_or(pexpr_not_share(X_both, data), X_y,
+					  data, PEXPR_ARG1),
+				 data, PEXPR_ARG2);
 
 		sym_add_constraint(sym, c2, data);
 		PEXPR_PUT(c2);
 	}
-	PEXPR_PUT(X, X_m, modules, c);
+	PEXPR_PUT(X_y, X_both, modules, c);
 }
 
 /*
@@ -404,20 +407,20 @@ static void add_selects(struct symbol *sym, struct cfdata *data)
 					pexpr_or(selected->list_sel_y, e2,
 						      data, PEXPR_ARG1);
 
-			/* imply that symbol is selected to m */
+			/* imply that symbol is selected to both */
 			e3 = pexpr_and(cond_both, sym_get_fexpr_both(sym, data),
 				       data, PEXPR_ARG2);
 			c3 = pexpr_implies(
-				e3, pexpr_alloc_symbol(selected->fexpr_sel_m),
+				e3, pexpr_alloc_symbol(selected->fexpr_sel_both),
 				data, PEXPR_ARG2);
 			sym_add_constraint(selected, c3, data);
 
-			if (selected->list_sel_m == NULL)
-				selected->list_sel_m = pexpr_get(e3);
+			if (selected->list_sel_both == NULL)
+				selected->list_sel_both = pexpr_get(e3);
 			else
-				selected->list_sel_m =
-					pexpr_or(selected->list_sel_m, e3,
-						      data, PEXPR_ARG1);
+				selected->list_sel_both =
+					pexpr_or(selected->list_sel_both, e3,
+						 data, PEXPR_ARG1);
 			PEXPR_PUT(e2, c2, e3, c3);
 		}
 		PEXPR_PUT(cond_y, cond_both);
@@ -471,14 +474,14 @@ static void add_dependencies_bool(struct symbol *sym, struct cfdata *data)
 	if (sym->type == S_TRISTATE) {
 		struct pexpr *c1;
 		struct pexpr *c2;
+		struct pexpr *c3;
 		struct pexpr *dep_y =
 			expr_calculate_pexpr_y(sym->dir_dep.expr, data);
 		struct pexpr *sel_both = sym_get_fexpr_sel_both(sym, data);
 		struct pexpr *cond_y1;
 		struct pexpr *cond_y2;
 		struct pexpr *cond_y;
-		struct pexpr *cond_m1;
-		struct pexpr *cond_m2;
+		struct pexpr *cond_both;
 		struct pexpr *cond_m;
 
 		cond_y1 = pexpr_implies(pexpr_not_share(has_prompt, data),
@@ -486,23 +489,24 @@ static void add_dependencies_bool(struct symbol *sym, struct cfdata *data)
 					data, PEXPR_ARGX);
 		cond_y2 = pexpr_implies_share(has_prompt, visible_y, data);
 		cond_y = pexpr_and_share(cond_y1, cond_y2, data);
-		cond_m1 =
+		cond_both =
 			pexpr_implies(pexpr_not_share(has_prompt, data),
 				      pexpr_or_share(dep_both, sel_both, data),
 				      data, PEXPR_ARGX);
-		cond_m2 = pexpr_implies(has_prompt,
-					pexpr_not_share(sel_y, data), data,
-					PEXPR_ARG2);
-		cond_m = pexpr_and_share(cond_m1, cond_m2, data);
+		cond_m = pexpr_implies(has_prompt, pexpr_not_share(sel_y, data),
+				       data, PEXPR_ARG2);
 		c1 = pexpr_implies(pexpr_alloc_symbol(sym->fexpr_y), cond_y,
 				   data, PEXPR_ARG1);
-		c2 = pexpr_implies(pexpr_alloc_symbol(sym->fexpr_m), cond_m,
-				   data, PEXPR_ARG1);
+		c2 = pexpr_implies(pexpr_alloc_symbol(sym->fexpr_both),
+				   cond_both, data, PEXPR_ARG1);
+		c3 = pexpr_implies(sym_get_fexpr_m(sym, data), cond_m, data,
+				   PEXPR_ARG1);
 
 		sym_add_constraint(sym, c1, data);
 		sym_add_constraint(sym, c2, data);
-		PEXPR_PUT(c1, c2, dep_y, sel_both, cond_y1,
-			  cond_y2, cond_y, cond_m1, cond_m2, cond_m);
+		sym_add_constraint(sym, c3, data);
+		PEXPR_PUT(c1, c2, c3, dep_y, sel_both, cond_y1, cond_y2, cond_y,
+			  cond_both, cond_m, cond_both);
 	} else if (sym->type == S_BOOLEAN) {
 		struct pexpr *cond1;
 		struct pexpr *cond2;
@@ -510,7 +514,7 @@ static void add_dependencies_bool(struct symbol *sym, struct cfdata *data)
 
 		cond1 = pexpr_implies(pexpr_not_share(has_prompt, data),
 				      pexpr_or(dep_both,
-					       pexpr_alloc_symbol(sym->fexpr_m),
+					       pexpr_alloc_symbol(sym->fexpr_y),
 					       data, PEXPR_ARG2),
 				      data, PEXPR_ARGX);
 		cond2 = pexpr_implies_share(has_prompt, visible_y, data);
@@ -559,7 +563,7 @@ static void add_dependencies_bool_kcr(struct symbol *sym, struct cfdata *data)
 							      data, PEXPR_ARGX),
 						data, PEXPR_ARGX);
 		}
-		c2 = pexpr_implies(pexpr_alloc_symbol(sym->fexpr_m),
+		c2 = pexpr_implies(pexpr_alloc_symbol(sym->fexpr_both),
 					pexpr_or_share(dep_both, sel_both,
 						       data),
 					data, PEXPR_ARGX);
@@ -679,7 +683,7 @@ static void add_choice_dependencies(struct symbol *sym, struct cfdata *data)
 			pexpr_implies(pexpr_alloc_symbol(sym->fexpr_y), dep_y,
 				      data, PEXPR_ARG1);
 		struct pexpr *c2 =
-			pexpr_implies(pexpr_alloc_symbol(sym->fexpr_m),
+			pexpr_implies(pexpr_alloc_symbol(sym->fexpr_both),
 				      dep_both, data, PEXPR_ARG1);
 
 		sym_add_constraint_unique(sym, c1, data);
@@ -763,8 +767,8 @@ static void add_choice_constraints(struct symbol *sym, struct cfdata *data)
 			choice = node->elem;
 			if (choice->type == S_TRISTATE) {
 				c1 = pexpr_implies(
-					pexpr_alloc_symbol(choice->fexpr_m),
-					pexpr_alloc_symbol(sym->fexpr_m), data,
+					sym_get_fexpr_m(choice, data),
+					sym_get_fexpr_m(sym, data), data,
 					PEXPR_ARGX);
 				sym_add_constraint(sym, c1, data);
 				pexpr_put(c1);
@@ -778,7 +782,7 @@ static void add_choice_constraints(struct symbol *sym, struct cfdata *data)
 			choice = node->elem;
 			if (choice->type == S_TRISTATE) {
 				struct pexpr *e = pexpr_not(
-					pexpr_alloc_symbol(choice->fexpr_m),
+					sym_get_fexpr_m(choice, data),
 					data);
 				sym_add_constraint(sym, e, data);
 				pexpr_put(e);
@@ -826,7 +830,7 @@ static void add_choice_constraints(struct symbol *sym, struct cfdata *data)
 
 			CF_LIST_FOR_EACH(node2, tmp, sym) {
 				struct pexpr *choice2_mod =
-					pexpr_alloc_symbol(choice2->fexpr_m);
+					sym_get_fexpr_m(choice2, data);
 
 				choice2 = node2->elem;
 				if (list_is_first(&node2->node, &tmp->list))
@@ -943,32 +947,24 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 	 * deactivated by its reverse dependencies
 	 */
 	if (sym->type == S_TRISTATE) {
-		struct pexpr *sel_y, *sel_m, *sel_both;
+		struct pexpr *sel_y, *sel_both;
 		struct pexpr *c1, *c2, *c3;
-		struct pexpr *d1, *d2, *d3;
-		struct pexpr *e1, *e2, *e3;
+		struct pexpr *d1, *d2;
 
 		if (sym->fexpr_sel_y != NULL) {
 			sel_y = pexpr_implies(
 				pexpr_alloc_symbol(sym->fexpr_y),
 				pexpr_alloc_symbol(sym->fexpr_sel_y), data,
 				PEXPR_ARGX);
-			sel_m = pexpr_implies(
-				pexpr_alloc_symbol(sym->fexpr_m),
-				pexpr_alloc_symbol(sym->fexpr_sel_m), data,
-				PEXPR_ARGX);
 			sel_both = pexpr_implies(
-				pexpr_alloc_symbol(sym->fexpr_y),
-				pexpr_or(pexpr_alloc_symbol(sym->fexpr_sel_m),
-					 pexpr_alloc_symbol(sym->fexpr_sel_y),
-					 data, PEXPR_ARGX),
-				data, PEXPR_ARGX);
+				pexpr_alloc_symbol(sym->fexpr_both),
+				pexpr_alloc_symbol(sym->fexpr_sel_both), data,
+				PEXPR_ARGX);
 		} else {
 			sel_y = pexpr_not(pexpr_alloc_symbol(sym->fexpr_y),
 					  data);
-			sel_m = pexpr_not(pexpr_alloc_symbol(sym->fexpr_m),
+			sel_both = pexpr_not(pexpr_alloc_symbol(sym->fexpr_both),
 					  data);
-			sel_both = pexpr_get(sel_y);
 		}
 
 		c1 = pexpr_implies(pexpr_not_share(default_y, data), sel_y,
@@ -978,23 +974,11 @@ static void add_invisible_constraints(struct symbol *sym, struct cfdata *data)
 		c3 = pexpr_implies_share(npc, c2, data);
 		sym_add_constraint(sym, c3, data);
 
-		d1 = pexpr_implies(pexpr_not_share(default_m, data), sel_m,
+		d1 = pexpr_implies(pexpr_not_share(default_both, data), sel_both,
 				   data, PEXPR_ARG1);
-		d2 = pexpr_implies(pexpr_alloc_symbol(modules_sym->fexpr_y), d1,
-				   data, PEXPR_ARG1);
-		d3 = pexpr_implies_share(npc, d2, data);
-		sym_add_constraint(sym, d3, data);
-
-		e1 = pexpr_implies(pexpr_not_share(default_both, data),
-				   sel_both, data, PEXPR_ARG1);
-		e2 = pexpr_implies(
-			pexpr_not(pexpr_alloc_symbol(modules_sym->fexpr_y),
-				  data),
-			e1, data, PEXPR_ARG1);
-		e3 = pexpr_implies_share(npc, e2, data);
-		sym_add_constraint(sym, e3, data);
-		PEXPR_PUT(sel_y, sel_m, sel_both, c1, c2, c3, d1, d2, d3, e1,
-			  e2, e3);
+		d2 = pexpr_implies_share(npc, d1, data);
+		sym_add_constraint(sym, d2, data);
+		PEXPR_PUT(sel_y, sel_both, c1, c2, c3, d1, d2);
 	} else if (sym->type == S_BOOLEAN) {
 		struct pexpr *sel_y;
 		struct pexpr *e1, *e2;
