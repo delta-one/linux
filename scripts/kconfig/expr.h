@@ -145,11 +145,11 @@ struct symbol {
 	 * ConfigFix
 	 */
 	struct fexpr *fexpr_y;
-	struct fexpr *fexpr_m;
+	struct fexpr *fexpr_both;
 	struct fexpr *fexpr_sel_y;
-	struct fexpr *fexpr_sel_m;
+	struct fexpr *fexpr_sel_both;
 	struct pexpr *list_sel_y;
-	struct pexpr *list_sel_m;
+	struct pexpr *list_sel_both;
 	struct fexpr *noPromptCond;
 	struct fexpr_list *nb_vals; /* list of struct fexpr_node's; used for non-booleans */
 	struct pexpr_list *constraints; /* list of constraints for symbol */

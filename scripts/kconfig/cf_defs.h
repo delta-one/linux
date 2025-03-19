@@ -176,6 +176,7 @@ struct fexpr {
 	union {
 		/* symbol */
 		struct {
+			/* fexpr_y => yes, fexpr_both => mod */
 			tristate tri;
 		};
 		/* EQUALS */
