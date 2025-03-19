@@ -761,35 +761,6 @@ static void add_choice_constraints(struct symbol *sym, struct cfdata *data)
 		pexpr_put(c1);
 	}
 
-	/* choice options can only select mod, if the entire choice is mod */
-	if (sym->type == S_TRISTATE) {
-		CF_LIST_FOR_EACH(node, items, sym) {
-			choice = node->elem;
-			if (choice->type == S_TRISTATE) {
-				c1 = pexpr_implies(
-					sym_get_fexpr_m(choice, data),
-					sym_get_fexpr_m(sym, data), data,
-					PEXPR_ARGX);
-				sym_add_constraint(sym, c1, data);
-				pexpr_put(c1);
-			}
-		}
-	}
-
-	/* tristate options cannot be m, if the choice symbol is boolean */
-	if (sym->type == S_BOOLEAN) {
-		CF_LIST_FOR_EACH(node, items, sym) {
-			choice = node->elem;
-			if (choice->type == S_TRISTATE) {
-				struct pexpr *e = pexpr_not(
-					sym_get_fexpr_m(choice, data),
-					data);
-				sym_add_constraint(sym, e, data);
-				pexpr_put(e);
-			}
-		}
-	}
-
 	/* all choice options are mutually exclusive for yes */
 	CF_LIST_FOR_EACH(node, promptItems, sym) {
 		struct sym_node *node2 = list_next_entry(node, node);
@@ -803,49 +774,6 @@ static void add_choice_constraints(struct symbol *sym, struct cfdata *data)
 				pexpr_not(pexpr_alloc_symbol(choice2->fexpr_y),
 					  data),
 				data, PEXPR_ARGX);
-			sym_add_constraint(sym, c1, data);
-			pexpr_put(c1);
-		}
-	}
-
-	/* if one choice option with a prompt is set to yes,
-	 * then no other option may be set to mod
-	 */
-	if (sym->type == S_TRISTATE) {
-		CF_LIST_FOR_EACH(node, promptItems, sym) {
-			struct sym_list *tmp;
-			struct sym_node *node2 = list_next_entry(node, node);
-
-			choice = node->elem;
-
-			tmp = CF_LIST_INIT(sym);
-			list_for_each_entry_from(node2, &promptItems->list,
-						 node) {
-				choice2 = node2->elem;
-				if (choice2->type == S_TRISTATE)
-					CF_PUSH_BACK(tmp, choice2, sym);
-			}
-			if (list_empty(&tmp->list))
-				continue;
-
-			CF_LIST_FOR_EACH(node2, tmp, sym) {
-				struct pexpr *choice2_mod =
-					sym_get_fexpr_m(choice2, data);
-
-				choice2 = node2->elem;
-				if (list_is_first(&node2->node, &tmp->list))
-					c1 = pexpr_not_share(choice2_mod, data);
-				else
-					c1 = pexpr_and(
-						c1,
-						pexpr_not_share(choice2_mod,
-								data),
-						data, PEXPR_ARGX);
-
-				PEXPR_PUT(choice2_mod);
-			}
-			c1 = pexpr_implies(pexpr_alloc_symbol(choice->fexpr_y),
-					   c1, data, PEXPR_ARGX);
 			sym_add_constraint(sym, c1, data);
 			pexpr_put(c1);
 		}
