@@ -1127,7 +1127,7 @@ struct pexpr *pexpr_implies_share(struct pexpr *a, struct pexpr *b,
 				  pexpr_test_eq(a->right.pexpr, b, data)))
 		return pexpr_alloc_symbol(data->constants->const_true);
 
-	return pexpr_or(pexpr_not_share(a, data), b, data, PEXPR_ARG1);
+	return pexpr_or(pexpr_not_share(a, data), pexpr_get(b), data, PEXPR_ARG1);
 }
 
 /*
