@@ -1,12 +1,18 @@
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lkc.h"
 
-#define fatal(format_str, ...)                            \
-	do {                                              \
-		fprintf(stderr, format_str, __VA_ARGS__); \
-		exit(EXIT_FAILURE);                       \
+#define fatal(...)                            \
+	do {                                  \
+		fprintf(stderr, __VA_ARGS__); \
+		exit(EXIT_FAILURE);           \
 	} while (0)
+
+static const char *dot_config_input_name = NULL;
+static const char *dot_config_out_name = NULL;
+static const char *kconfig_name = NULL;
 
 static void usage(void)
 {
@@ -27,11 +33,37 @@ static void usage(void)
 	fprintf(stderr, "%s", msg);
 }
 
-int main(int argc, char *argv[])
+static void handle_line(const char *in)
 {
-	const char *dot_config_input_name = NULL;
-	const char *dot_config_out_name = NULL;
-	const char *kconfig_name = NULL;
+	printf("%s\n", in);
+}
+
+static void read_loop(void)
+{
+	while (true) {
+		struct gstr in = str_new();
+		printf("> ");
+		do {
+			int next_char = fgetc(stdin);
+			if (next_char == EOF) {
+				if (ferror(stdin))
+					fatal("Error reading stdin\n");
+				assert(feof(stdin));
+				printf("\n");
+				return;
+			} else if (next_char == '\n') {
+				break;
+			} else {
+				str_append(&in, (char[]){ next_char, '\0' });
+			}
+		} while (true);
+		handle_line(str_get(&in));
+		str_free(&in);
+	}
+}
+
+static void parse_args(int argc, char *argv[])
+{
 	for (int i = 1; i < argc; ++i) {
 		const char *const arg = argv[i];
 		if (!strcmp(arg, "-h") || !strcmp(arg, "--help")) {
@@ -61,5 +93,11 @@ int main(int argc, char *argv[])
 		dot_config_out_name = ".config";
 	if (!kconfig_name)
 		kconfig_name = "Kconfig";
+}
+
+int main(int argc, char *argv[])
+{
+	parse_args(argc, argv);
+	read_loop();
 	return EXIT_SUCCESS;
 }
