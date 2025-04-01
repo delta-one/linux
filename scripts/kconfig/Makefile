@@ -38,12 +38,13 @@ endif
 # We need this, in case the user has it in its environment
 unexport CONFIG_
 
-config-prog	:= conf
-menuconfig-prog	:= mconf
-nconfig-prog	:= nconf
-gconfig-prog	:= gconf
-xconfig-prog	:= qconf
-cfoutconfig-prog := cfoutconfig
+config-prog		:= conf
+menuconfig-prog		:= mconf
+nconfig-prog		:= nconf
+gconfig-prog		:= gconf
+xconfig-prog		:= qconf
+cfoutconfig-prog	:= cfoutconfig
+cfixconfig-prog	:= cfixconf
 
 define config_rule
 PHONY += $(1)
@@ -54,7 +55,7 @@ PHONY += build_$(1)
 build_$(1): $(obj)/$($(1)-prog)
 endef
 
-$(foreach c, config menuconfig nconfig gconfig xconfig cfoutconfig, $(eval $(call config_rule,$(c))))
+$(foreach c, config menuconfig nconfig gconfig xconfig cfoutconfig cfixconfig, $(eval $(call config_rule,$(c))))
 
 PHONY += localmodconfig localyesconfig
 localyesconfig localmodconfig: $(obj)/conf
@@ -156,6 +157,7 @@ help:
 	@echo  '  tinyconfig	  - Configure the tiniest possible kernel'
 	@echo  '  testconfig	  - Run Kconfig unit tests (requires python3 and pytest)'
 	@echo  '  cfoutconfig     - Print constraints and DIMACS-output into files (requires PicoSAT)'
+	@echo  '  cfixconfig	  - Propose possible resolution for conflicts'
 	@echo  ''
 	@echo  'Configuration topic targets:'
 	@$(foreach f, $(all-config-fragments), \
@@ -204,6 +206,10 @@ $(addprefix $(obj)/, mconf.o $(lxdialog)): | $(obj)/mconf-cflags
 hostprogs        += cfoutconfig
 cfconf-objs      := configfix.o cf_constraints.o cf_expr.o cf_fixgen.o cf_utils.o picosat_functions.o
 cfoutconfig-objs := cfoutconfig.o $(common-objs) $(cfconf-objs)
+
+# cfixconfig
+hostprogs        += cfixconf
+cfixconf-objs  := cfixconf.o $(common-objs) $(cfconf-objs)
 
 # qconf: Used for the xconfig target based on Qt
 hostprogs	+= qconf
