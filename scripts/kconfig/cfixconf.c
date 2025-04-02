@@ -1,8 +1,11 @@
 #include <assert.h>
+#include <errno.h>
 #include <ctype.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 
 #include "expr.h"
 #include "cf_utils.h"
@@ -12,7 +15,7 @@
 #include "lkc.h"
 #include "cf_defs.h"
 #include "picosat_functions.h"
-#include <strings.h>
+#include "configfix.h"
 
 #define fatal(...)                            \
 	do {                                  \
@@ -24,6 +27,9 @@ static const char *dot_config_input_name = NULL;
 static const char *dot_config_out_name = NULL;
 static const char *kconfig_name = NULL;
 static struct sdv_list *conflict;
+static struct sfl_list *fixes;
+static bool interrupted = false;
+static bool running_cf = false;
 
 struct string_list {
 	struct list_head list;
@@ -33,6 +39,28 @@ struct string_node {
 	const char *elem;
 	struct list_head node;
 };
+
+static const char *symbol_value_to_str(struct symbol *sym)
+{
+	if (sym_is_boolean(sym)) {
+		return tristate_get_char(sym->curr.tri);
+	} else {
+		return sym->curr.val;
+	}
+}
+
+/**
+ * Returned string has static life-time or that of fix->nb_val
+ */
+static const char *symbol_fix_to_str(struct symbol_fix *fix)
+{
+	if (fix->type == SF_BOOLEAN) {
+		return tristate_get_char(fix->tri);
+	} else {
+		assert(fix->type == SF_NONBOOLEAN);
+		return str_get(&fix->nb_val);
+	}
+}
 
 static void usage(void)
 {
@@ -276,6 +304,165 @@ static void handle_show(struct string_list *tokens)
 		printf("No symbols in conflict\n");
 }
 
+static void handle_solve(struct string_list *tokens)
+{
+	struct sfl_list *new_fixes;
+	struct sfl_node *fix;
+	struct sdv_node *entry;
+	int i = 0;
+	bool first;
+
+	if (list_count_nodes(&tokens->list) != 1) {
+		printf("Too many arguments, expected: show\n");
+		return;
+	}
+	if (list_empty(&conflict->list)) {
+		printf("No symbols in conflict\n");
+		return;
+	}
+	printf("Solving for: ");
+	first = true;
+	CF_LIST_FOR_EACH(entry, conflict, sdv) {
+		if (first)
+			first = false;
+		else
+			printf("; ");
+		printf("%s=%s", entry->elem->sym->name,
+		       tristate_get_char(entry->elem->tri));
+	}
+	printf("\n");
+	stop_fixgen = false;
+	running_cf = true;
+	new_fixes = run_satconf_list(conflict);
+	running_cf = false;
+	if (interrupted) {
+		interrupted = false;
+		CF_LIST_FOR_EACH(fix, new_fixes, sfl) {
+			CF_LIST_FREE(fix->elem, sfix);
+		}
+		CF_LIST_FREE(new_fixes, sfl);
+		return;
+	}
+
+	CF_LIST_FOR_EACH(fix, new_fixes, sfl) {
+		struct sfix_node *entry;
+
+		printf("Fix %d:\n", i + 1);
+		CF_LIST_FOR_EACH(entry, fix->elem, sfix) {
+			struct symbol *sym = entry->elem->sym;
+
+			sym_calc_value(sym);
+			printf("    %s: %s -> %s\n", entry->elem->sym->name,
+			       symbol_value_to_str(sym),
+			       symbol_fix_to_str(entry->elem));
+		}
+		++i;
+	}
+	if (i == 0) {
+		printf("No fixes found\n");
+	}
+	if (fixes) {
+		CF_LIST_FOR_EACH(fix, fixes, sfl) {
+			CF_LIST_FREE(fix->elem, sfix);
+		}
+		CF_LIST_FREE(fixes, sfl);
+	}
+	fixes = new_fixes;
+}
+
+static bool parse_apply(struct string_list *tokens, long *fix_no)
+{
+	struct string_node *entry;
+	const char *const err_msg = "%s, expected: apply <fix-no>\n";
+	const char *fix_no_str = NULL;
+	char *endptr;
+	int i = 0;
+
+	CF_LIST_FOR_EACH(entry, tokens, string) {
+		switch (i) {
+		case 0:
+			break;
+		case 1:
+			fix_no_str = entry->elem;
+			break;
+		default:
+			printf(err_msg, "Too many arguments");
+			return false;
+		}
+		++i;
+	}
+	if (!fix_no_str) {
+		printf(err_msg, "Too few arguments");
+		return false;
+	}
+	assert(fix_no_str[0] != '\0');
+	errno = 0;
+	*fix_no = strtol(fix_no_str, &endptr, 10);
+	if (errno == ERANGE) {
+		printf("Number \"%s\" out of range\n", fix_no_str);
+		return false;
+	}
+	if (*endptr != '\0') {
+		printf("Invalid number \"%s\"\n", fix_no_str);
+		return false;
+	}
+	if (*fix_no <= 0) {
+		printf("The fix number must be postive\n");
+		return false;
+	}
+	return true;
+}
+
+static void handle_apply(struct string_list *tokens)
+{
+	long fix_no;
+	bool parse_succ;
+	int num_fixes;
+	int i;
+	struct sfl_node *fix;
+	struct sfix_node *entry;
+
+	parse_succ = parse_apply(tokens, &fix_no);
+	if (!parse_succ)
+		return;
+	if (!fixes) {
+		printf("No fixes have been computed\n");
+		return;
+	}
+	num_fixes = list_count_nodes(&fixes->list);
+	if (fix_no > num_fixes) {
+		printf("Invalid fix number %ld (max.: %d)\n", fix_no, num_fixes);
+		return;
+	}
+	i = 1;
+	CF_LIST_FOR_EACH(fix, fixes, sfl) {
+		if (i == fix_no)
+			break;
+		++i;
+	}
+	apply_fix(fix->elem);
+	printf("Updated values:\n");
+	CF_LIST_FOR_EACH(entry, fix->elem, sfix) {
+		struct symbol *sym = entry->elem->sym;
+		const char *succ_str;
+		const char *const SUCCESS_STR = "";
+		const char *const FAILURE_STR = " (failed)";
+
+		sym_calc_value(sym);
+		if (sym_is_boolean(sym))
+			succ_str = sym->curr.tri == entry->elem->tri ?
+					   SUCCESS_STR :
+					   FAILURE_STR;
+		else
+			succ_str = !strcmp(sym->curr.val,
+					   str_get(&entry->elem->nb_val)) ?
+					   SUCCESS_STR :
+					   FAILURE_STR;
+
+		printf("    %s: %s%s\n", sym->name, symbol_value_to_str(sym), succ_str);
+	}
+}
+
 static void handle_help(void)
 {
 	const char *text = "\
@@ -284,6 +471,8 @@ Commands:\n\
     show                  List all symbols in conflict\n\
     rm <symbol>           Remove symbol from conflict\n\
     clear                 Clear conflict\n\
+    solve                 Compute and propose fixes for conflict\n\
+    apply <fix-no>        Apply a previously computed fix\n\
     help                  Show this help text\n\
 ";
 	printf("%s", text);
@@ -306,6 +495,10 @@ static void handle_line(struct string_list *tokens)
 		handle_rm(tokens);
 	else if (!strcasecmp(cmd, "clear"))
 		handle_clear(tokens);
+	else if (!strcasecmp(cmd, "solve"))
+		handle_solve(tokens);
+	else if (!strcasecmp(cmd, "apply"))
+		handle_apply(tokens);
 	else
 		printf("Unknown command \"%s\", type \"help\" for a list of commands\n",
 		       cmd);
@@ -338,11 +531,18 @@ static void read_loop(void)
 		do {
 			int next_char = fgetc(stdin);
 			if (next_char == EOF) {
-				if (ferror(stdin))
-					fatal("Error reading stdin\n");
-				assert(feof(stdin));
-				printf("\n");
-				return;
+				if (ferror(stdin)) {
+					if (interrupted) {
+						interrupted = false;
+						clearerr(stdin);
+					} else {
+						fatal("Error reading stdin\n");
+					}
+				} else {
+					assert(feof(stdin));
+					printf("\n");
+					return;
+				}
 			} else if (next_char == '\n') {
 				break;
 			} else {
@@ -389,8 +589,17 @@ static void parse_args(int argc, char *argv[])
 		kconfig_name = "Kconfig";
 }
 
+static void on_int(int signum)
+{
+	printf("\nInterrupting...\n");
+	if (running_cf)
+		interrupt_fix_generation();
+	interrupted = true;
+}
+
 int main(int argc, char *argv[])
 {
+	sigaction(SIGINT, (struct sigaction[]){{ .sa_handler = on_int }}, NULL);
 	parse_args(argc, argv);
 	if (!load_picosat())
 		fatal("Could not load PicoSAT\n");
