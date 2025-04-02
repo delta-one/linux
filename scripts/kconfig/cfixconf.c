@@ -1,8 +1,13 @@
+#include "list_types.h"
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "lkc.h"
+#include "cf_defs.h"
+#include "list.h"
+#include "picosat_functions.h"
 
 #define fatal(...)                            \
 	do {                                  \
@@ -13,6 +18,11 @@
 static const char *dot_config_input_name = NULL;
 static const char *dot_config_out_name = NULL;
 static const char *kconfig_name = NULL;
+static struct sdv_list *conflict;
+struct str_list {
+	const char *str;
+	struct list_head list;
+};
 
 static void usage(void)
 {
@@ -33,15 +43,44 @@ static void usage(void)
 	fprintf(stderr, "%s", msg);
 }
 
-static void handle_line(const char *in)
+static void handle_line(struct list_head *tokens)
 {
-	printf("%s\n", in);
+	struct str_list *entry;
+
+	list_for_each_entry(entry, tokens, list) {
+		printf("%s\n", entry->str);
+	}
+}
+
+static struct list_head *tokenize_line(char *in)
+{
+	char *saveptr;
+	char *str = in;
+	struct list_head *tokens = xmalloc(sizeof *tokens);
+
+	INIT_LIST_HEAD(tokens);
+	while (true) {
+		char *token = strtok_r(str, " \t\n", &saveptr);
+		struct str_list *entry;
+
+		str = NULL;
+		if (!token)
+			break;
+		entry = xmalloc(sizeof *entry);
+		entry->str = token;
+		list_add_tail(&entry->list, tokens);
+	}
+
+	return tokens;
 }
 
 static void read_loop(void)
 {
 	while (true) {
 		struct gstr in = str_new();
+		struct list_head *tokens;
+		struct str_list *entry, *entry2;
+
 		printf("> ");
 		do {
 			int next_char = fgetc(stdin);
@@ -57,7 +96,13 @@ static void read_loop(void)
 				str_append(&in, (char[]){ next_char, '\0' });
 			}
 		} while (true);
-		handle_line(str_get(&in));
+		tokens = tokenize_line(str_get(&in));
+		handle_line(tokens);
+		list_for_each_entry_safe(entry, entry2, tokens, list) {
+			list_del(&entry->list);
+			free(entry);
+		}
+		free(tokens);
 		str_free(&in);
 	}
 }
@@ -98,6 +143,11 @@ static void parse_args(int argc, char *argv[])
 int main(int argc, char *argv[])
 {
 	parse_args(argc, argv);
+	if (!load_picosat())
+		fatal("Could not load PicoSAT\n");
+	conf_parse(kconfig_name);
+	conf_read(dot_config_input_name);
+	conflict = CF_LIST_INIT(sdv);
 	read_loop();
 	return EXIT_SUCCESS;
 }
