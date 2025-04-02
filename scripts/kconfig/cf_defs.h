@@ -16,6 +16,9 @@
 #include "lkc.h"
 #include "expr.h"
 #include "list_types.h"
+#ifndef __cplusplus
+#include "list.h"
+#endif
 
 extern bool CFDEBUG;
 extern bool stop_fixgen;

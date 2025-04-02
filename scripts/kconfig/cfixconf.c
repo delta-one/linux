@@ -6,7 +6,6 @@
 
 #include "lkc.h"
 #include "cf_defs.h"
-#include "list.h"
 #include "picosat_functions.h"
 
 #define fatal(...)                            \
@@ -19,9 +18,14 @@ static const char *dot_config_input_name = NULL;
 static const char *dot_config_out_name = NULL;
 static const char *kconfig_name = NULL;
 static struct sdv_list *conflict;
-struct str_list {
-	const char *str;
+
+struct string_list {
 	struct list_head list;
+};
+
+struct string_node {
+	const char *elem;
+	struct list_head node;
 };
 
 static void usage(void)
@@ -43,32 +47,27 @@ static void usage(void)
 	fprintf(stderr, "%s", msg);
 }
 
-static void handle_line(struct list_head *tokens)
+static void handle_line(struct string_list *tokens)
 {
-	struct str_list *entry;
+	struct string_node *entry;
 
-	list_for_each_entry(entry, tokens, list) {
-		printf("%s\n", entry->str);
+	CF_LIST_FOR_EACH(entry, tokens, string) {
+		printf("%s\n", entry->elem);
 	}
 }
 
-static struct list_head *tokenize_line(char *in)
+static struct string_list *tokenize_line(char *in)
 {
 	char *saveptr;
 	char *str = in;
-	struct list_head *tokens = xmalloc(sizeof *tokens);
+	CF_DEF_LIST(tokens, string);
 
-	INIT_LIST_HEAD(tokens);
 	while (true) {
 		char *token = strtok_r(str, " \t\n", &saveptr);
-		struct str_list *entry;
-
 		str = NULL;
 		if (!token)
 			break;
-		entry = xmalloc(sizeof *entry);
-		entry->str = token;
-		list_add_tail(&entry->list, tokens);
+		CF_PUSH_BACK(tokens, token, string);
 	}
 
 	return tokens;
@@ -78,8 +77,7 @@ static void read_loop(void)
 {
 	while (true) {
 		struct gstr in = str_new();
-		struct list_head *tokens;
-		struct str_list *entry, *entry2;
+		struct string_list *tokens;
 
 		printf("> ");
 		do {
@@ -98,11 +96,7 @@ static void read_loop(void)
 		} while (true);
 		tokens = tokenize_line(str_get(&in));
 		handle_line(tokens);
-		list_for_each_entry_safe(entry, entry2, tokens, list) {
-			list_del(&entry->list);
-			free(entry);
-		}
-		free(tokens);
+		CF_LIST_FREE(tokens, string);
 		str_free(&in);
 	}
 }
