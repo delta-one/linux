@@ -463,6 +463,66 @@ static void handle_apply(struct string_list *tokens)
 	}
 }
 
+static void handle_read(struct string_list *tokens)
+{
+	struct string_node *entry;
+	const char *const err_msg = "%s, expected: read [config-file]\n";
+	const char *config_file = NULL;
+	int i = 0;
+	bool succ;
+
+	CF_LIST_FOR_EACH(entry, tokens, string) {
+		switch (i) {
+		case 0:
+			break;
+		case 1:
+			config_file = entry->elem;
+			break;
+		default:
+			printf(err_msg, "Too many arguments");
+			return;
+		}
+		++i;
+	}
+
+	if (config_file == NULL)
+		config_file = dot_config_input_name;
+	succ = conf_read(config_file) == 0;
+	if (!succ)
+		printf("Could not read configuration\n");
+	else
+		printf("Read configuration from %s\n", config_file);
+}
+
+static void handle_write(struct string_list *tokens)
+{
+	struct string_node *entry;
+	const char *const err_msg = "%s, expected: write [config-file]\n";
+	const char *config_file = NULL;
+	int i = 0;
+	bool succ;
+
+	CF_LIST_FOR_EACH(entry, tokens, string) {
+		switch (i) {
+		case 0:
+			break;
+		case 1:
+			config_file = entry->elem;
+			break;
+		default:
+			printf(err_msg, "Too many arguments");
+			return;
+		}
+		++i;
+	}
+
+	if (config_file == NULL)
+		config_file = dot_config_out_name;
+	succ = conf_write(config_file) == 0;
+	if (!succ)
+		printf("Could not write configuration\n");
+}
+
 static void handle_help(void)
 {
 	const char *text = "\
@@ -473,6 +533,10 @@ Commands:\n\
     clear                 Clear conflict\n\
     solve                 Compute and propose fixes for conflict\n\
     apply <fix-no>        Apply a previously computed fix\n\
+    read [config-file]    Read configuration from a file. If none given, uses\n\
+                          the default supplied in the program invocation.\n\
+    write [config-file]   Write configuration to a file. If none given, uses\n\
+                          the default supplied in the program invocation.\n\
     help                  Show this help text\n\
 ";
 	printf("%s", text);
@@ -499,6 +563,10 @@ static void handle_line(struct string_list *tokens)
 		handle_solve(tokens);
 	else if (!strcasecmp(cmd, "apply"))
 		handle_apply(tokens);
+	else if (!strcasecmp(cmd, "read"))
+		handle_read(tokens);
+	else if (!strcasecmp(cmd, "write"))
+		handle_write(tokens);
 	else
 		printf("Unknown command \"%s\", type \"help\" for a list of commands\n",
 		       cmd);
