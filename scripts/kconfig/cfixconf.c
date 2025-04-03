@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
+#include <stddef.h>
 
 #include "expr.h"
 #include "cf_utils.h"
@@ -16,6 +17,7 @@
 #include "cf_defs.h"
 #include "picosat_functions.h"
 #include "configfix.h"
+#include "xalloc.h"
 
 #define fatal(...)                            \
 	do {                                  \
@@ -60,6 +62,66 @@ static const char *symbol_fix_to_str(struct symbol_fix *fix)
 		assert(fix->type == SF_NONBOOLEAN);
 		return str_get(&fix->nb_val);
 	}
+}
+
+static struct gstr table_str(struct string_list **columns,
+			     size_t num_columns, bool vert_separator)
+{
+	struct gstr ret = str_new();
+	unsigned int *max_lens;
+	size_t num_rows;
+	const char **entries;
+
+	if (num_columns == 0)
+		return ret;
+	// max_lens[j] = max length of an entry in column j
+	max_lens = xcalloc(num_columns, sizeof *max_lens);
+	num_rows = list_count_nodes(&columns[0]->list);
+	// entries[i * num_columns + j] = row i, column j
+	entries = xmalloc(num_columns * num_rows * sizeof *entries);
+	for (size_t col = 0; col < num_columns; ++col) {
+		struct string_node *entry;
+		size_t row = 0;
+
+		CF_LIST_FOR_EACH(entry, columns[col], string) {
+			size_t len = strlen(entry->elem);
+
+			if (len > max_lens[col])
+				max_lens[col] = len;
+			entries[row * num_columns + col] = entry->elem;
+			++row;
+		}
+	}
+
+	for (size_t row = 0; row < num_rows; ++row) {
+		if (row > 0)
+			str_append(&ret, "\n");
+		for (size_t col = 0; col < num_columns; ++col) {
+			const char *entry = entries[row * num_columns + col];
+			size_t len = strlen(entry);
+
+			if (col > 0)
+				str_append(&ret, "|");
+			str_append(&ret, " ");
+			str_append(&ret, entry);
+			str_append(&ret, " ");
+			for (size_t i = len; i < max_lens[col]; ++i)
+				str_append(&ret, " ");
+		}
+		if (vert_separator && row == 0) {
+			str_append(&ret, "\n");
+			for (size_t col = 0; col < num_columns; ++col) {
+				if (col > 0)
+					str_append(&ret, "+");
+				for (size_t i = 0; i < max_lens[col] + 2; ++i)
+					str_append(&ret, "-");
+			}
+		}
+	}
+
+	free(max_lens);
+	free(entries);
+	return ret;
 }
 
 static void usage(void)
@@ -286,22 +348,38 @@ static void handle_show(struct string_list *tokens)
 {
 	struct sdv_node *entry;
 	int conflict_len = 0;
+	struct string_list **columns;
+	struct gstr out;
 
 	if (list_count_nodes(&tokens->list) != 1) {
 		printf("Too many arguments, expected: show\n");
 		return;
 	}
-	CF_LIST_FOR_EACH(entry, conflict, sdv)
-	{
+	columns = xcalloc(3, sizeof *columns);
+	columns[0] = CF_LIST_INIT(string);
+	CF_PUSH_BACK(columns[0], "Symbol", string);
+	columns[1] = CF_LIST_INIT(string);
+	CF_PUSH_BACK(columns[1], "Current", string);
+	columns[2] = CF_LIST_INIT(string);
+	CF_PUSH_BACK(columns[2], "Target", string);
+	CF_LIST_FOR_EACH(entry, conflict, sdv) {
 		const struct symbol_dvalue *sdv = entry->elem;
 
 		sym_calc_value(sdv->sym);
-		printf("%s: %s -> %s\n", sdv->sym->name, tristate_get_char(sdv->sym->curr.tri),
-		       tristate_get_char(sdv->tri));
+		CF_PUSH_BACK(columns[0], sdv->sym->name, string);
+		CF_PUSH_BACK(columns[1], tristate_get_char(sdv->sym->curr.tri), string);
+		CF_PUSH_BACK(columns[2], tristate_get_char(sdv->tri), string);
 		++conflict_len;
 	}
+	out = table_str(columns, 3, true);
 	if (conflict_len == 0)
 		printf("No symbols in conflict\n");
+	else
+		printf("%s\n", str_get(&out));
+	str_free(&out);
+	for (size_t i = 0; i < 3; ++i)
+		CF_LIST_FREE(columns[i], string);
+	free(columns);
 }
 
 static void handle_solve(struct string_list *tokens)
@@ -346,23 +424,44 @@ static void handle_solve(struct string_list *tokens)
 
 	CF_LIST_FOR_EACH(fix, new_fixes, sfl) {
 		struct sfix_node *entry;
+		struct string_list **columns;
+		struct gstr table;
 
+		if (i > 0)
+			printf("\n");
 		printf("Fix %d:\n", i + 1);
+		columns = xcalloc(3, sizeof *columns);
+		columns[0] = CF_LIST_INIT(string);
+		CF_PUSH_BACK(columns[0], "Symbol", string);
+		columns[1] = CF_LIST_INIT(string);
+		CF_PUSH_BACK(columns[1], "Current", string);
+		columns[2] = CF_LIST_INIT(string);
+		CF_PUSH_BACK(columns[2], "New", string);
 		CF_LIST_FOR_EACH(entry, fix->elem, sfix) {
 			struct symbol *sym = entry->elem->sym;
 
 			sym_calc_value(sym);
-			printf("    %s: %s -> %s\n", entry->elem->sym->name,
-			       symbol_value_to_str(sym),
-			       symbol_fix_to_str(entry->elem));
+			CF_PUSH_BACK(columns[0], entry->elem->sym->name,
+				     string);
+			CF_PUSH_BACK(columns[1], symbol_value_to_str(sym),
+				     string);
+			CF_PUSH_BACK(columns[2], symbol_fix_to_str(entry->elem),
+				     string);
 		}
+		table = table_str(columns, 3, true);
+		printf("%s\n", str_get(&table));
+
+		for (int i = 0; i < 3; ++i)
+			CF_LIST_FREE(columns[i], string);
+		free(columns);
+		str_free(&table);
 		++i;
 	}
-	if (i == 0) {
+	if (i == 0)
 		printf("No fixes found\n");
-	}
 	if (fixes) {
-		CF_LIST_FOR_EACH(fix, fixes, sfl) {
+		CF_LIST_FOR_EACH(fix, fixes, sfl)
+		{
 			CF_LIST_FREE(fix->elem, sfix);
 		}
 		CF_LIST_FREE(fixes, sfl);
@@ -421,6 +520,8 @@ static void handle_apply(struct string_list *tokens)
 	int i;
 	struct sfl_node *fix;
 	struct sfix_node *entry;
+	struct string_list **columns;
+	struct gstr table;
 
 	parse_succ = parse_apply(tokens, &fix_no);
 	if (!parse_succ)
@@ -441,26 +542,43 @@ static void handle_apply(struct string_list *tokens)
 		++i;
 	}
 	apply_fix(fix->elem);
-	printf("Updated values:\n");
+	columns = xcalloc(2, sizeof *columns);
+	columns[0] = CF_LIST_INIT(string);
+	CF_PUSH_BACK(columns[0], xstrdup("Symbol"), string);
+	columns[1] = CF_LIST_INIT(string);
+	CF_PUSH_BACK(columns[1], xstrdup("New"), string);
 	CF_LIST_FOR_EACH(entry, fix->elem, sfix) {
 		struct symbol *sym = entry->elem->sym;
-		const char *succ_str;
-		const char *const SUCCESS_STR = "";
 		const char *const FAILURE_STR = " (failed)";
+		struct gstr s;
 
+		CF_PUSH_BACK(columns[0], xstrdup(sym->name), string);
+
+		s = str_new();
 		sym_calc_value(sym);
-		if (sym_is_boolean(sym))
-			succ_str = sym->curr.tri == entry->elem->tri ?
-					   SUCCESS_STR :
-					   FAILURE_STR;
-		else
-			succ_str = !strcmp(sym->curr.val,
-					   str_get(&entry->elem->nb_val)) ?
-					   SUCCESS_STR :
-					   FAILURE_STR;
-
-		printf("    %s: %s%s\n", sym->name, symbol_value_to_str(sym), succ_str);
+		str_append(&s, symbol_value_to_str(sym));
+		if (sym_is_boolean(sym)) {
+			if (sym->curr.tri != entry->elem->tri)
+				str_append(&s, FAILURE_STR);
+		} else {
+			if (strcmp(sym->curr.val,
+				   str_get(&entry->elem->nb_val)))
+				str_append(&s, FAILURE_STR);
+		}
+		CF_PUSH_BACK(columns[1], str_get(&s), string);
 	}
+	table = table_str(columns, 2, true);
+	printf("Updated values:\n%s\n", str_get(&table));
+
+	for (int i = 0; i < 2; ++i) {
+		struct string_node *str_entry;
+
+		CF_LIST_FOR_EACH(str_entry, columns[i], string)
+			free((char *) str_entry->elem);
+		CF_LIST_FREE(columns[i], string);
+	}
+	free(columns);
+	str_free(&table);
 }
 
 static void handle_read(struct string_list *tokens)
