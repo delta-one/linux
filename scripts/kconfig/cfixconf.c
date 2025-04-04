@@ -25,8 +25,7 @@
 		exit(EXIT_FAILURE);           \
 	} while (0)
 
-static const char *dot_config_input_name = NULL;
-static const char *dot_config_out_name = NULL;
+static char *conf_filename = NULL;
 static const char *kconfig_name = NULL;
 static struct sdv_list *conflict;
 static struct sfl_list *fixes;
@@ -128,16 +127,9 @@ static void usage(void)
 {
 	const char *msg = "\
   Usage:\n\
-      ./cfixconf [<Kconfig>] [options]\n\
+      ./cfixconf [<Kconfig>]\n\
       where <Kconfig> is the root file of the Kconfig model. If not specified,\n\
       <Kconfig> is \"Kconfig\".\n\
-\n\
-  Options:\n\
-      -i --input   (\".config\" by default) .config file to load the initial\n\
-                   configuration from.\n\
-      -o --output  (\".config\" by default) .config file to store the\n\
-                   configuration.\n\
-      -h --help    Show this help text.\n\
 \n\
 ";
 	fprintf(stderr, "%s", msg);
@@ -581,20 +573,24 @@ static void handle_apply(struct string_list *tokens)
 	str_free(&table);
 }
 
-static void handle_read(struct string_list *tokens)
+static void handle_open(struct string_list *tokens)
 {
 	struct string_node *entry;
-	const char *const err_msg = "%s, expected: read [config-file]\n";
-	const char *config_file = NULL;
+	const char *const err_msg = "%s, expected: open [config-file]\n";
 	int i = 0;
-	bool succ;
+	bool succ, reload = true;
+	const char *verb;
 
-	CF_LIST_FOR_EACH(entry, tokens, string) {
+	CF_LIST_FOR_EACH(entry, tokens, string)
+	{
 		switch (i) {
 		case 0:
 			break;
 		case 1:
-			config_file = entry->elem;
+			reload = conf_filename &&
+				 !strcmp(entry->elem, conf_filename);
+			free(conf_filename);
+			conf_filename = xstrdup(entry->elem);
 			break;
 		default:
 			printf(err_msg, "Too many arguments");
@@ -603,20 +599,22 @@ static void handle_read(struct string_list *tokens)
 		++i;
 	}
 
-	if (config_file == NULL)
-		config_file = dot_config_input_name;
-	succ = conf_read(config_file) == 0;
-	if (!succ)
-		printf("Could not read configuration\n");
-	else
-		printf("Read configuration from %s\n", config_file);
+	succ = conf_read(conf_filename) == 0;
+	verb = reload ? "Reloaded" : "Opened";
+	if (succ) {
+		if (conf_filename)
+			printf("%s configuration file (%s)\n", verb, conf_filename);
+		else
+			printf("%s configuration file\n", verb);
+	} else
+		printf("Could not open configuration file\n");
 }
 
 static void handle_write(struct string_list *tokens)
 {
 	struct string_node *entry;
 	const char *const err_msg = "%s, expected: write [config-file]\n";
-	const char *config_file = NULL;
+	const char *write_config_file = NULL;
 	int i = 0;
 	bool succ;
 
@@ -625,7 +623,7 @@ static void handle_write(struct string_list *tokens)
 		case 0:
 			break;
 		case 1:
-			config_file = entry->elem;
+			write_config_file = entry->elem;
 			break;
 		default:
 			printf(err_msg, "Too many arguments");
@@ -634,10 +632,13 @@ static void handle_write(struct string_list *tokens)
 		++i;
 	}
 
-	if (config_file == NULL)
-		config_file = dot_config_out_name;
-	succ = conf_write(config_file) == 0;
-	if (!succ)
+	if (write_config_file == NULL)
+		write_config_file = conf_filename;
+	succ = conf_write(write_config_file) == 0;
+	if (succ) {
+		if (!conf_filename)
+			conf_filename = xstrdup(conf_get_configname());
+	} else
 		printf("Could not write configuration\n");
 }
 
@@ -645,17 +646,17 @@ static void handle_help(void)
 {
 	const char *text = "\
 Commands:\n\
-    add <symbol> <value>  Add symbol with value to conflict\n\
-    show                  List all symbols in conflict\n\
-    rm <symbol>           Remove symbol from conflict\n\
-    clear                 Clear conflict\n\
-    solve                 Compute and propose fixes for conflict\n\
-    apply <fix-no>        Apply a previously computed fix\n\
-    read [config-file]    Read configuration from a file. If none given, uses\n\
-                          the default supplied in the program invocation.\n\
-    write [config-file]   Write configuration to a file. If none given, uses\n\
-                          the default supplied in the program invocation.\n\
-    help                  Show this help text\n\
+    add <symbol> <value>  Add symbol with value to conflict.\n\
+    show                  List all symbols in conflict.\n\
+    rm <symbol>           Remove symbol from conflict.\n\
+    clear                 Clear conflict.\n\
+    solve                 Compute and propose fixes for conflict.\n\
+    apply <fix-no>        Apply a previously computed fix.\n\
+    open [config-file]    Open configuration file. If none given, reloads\n\
+                          the currently opened configuration file.\n\
+    write [config-file]   Write configuration to a file. If none given, writes\n\
+                          to currently opened configuration file.\n\
+    help                  Show this help text.\n\
 ";
 	printf("%s", text);
 }
@@ -681,8 +682,8 @@ static void handle_line(struct string_list *tokens)
 		handle_solve(tokens);
 	else if (!strcasecmp(cmd, "apply"))
 		handle_apply(tokens);
-	else if (!strcasecmp(cmd, "read"))
-		handle_read(tokens);
+	else if (!strcasecmp(cmd, "open"))
+		handle_open(tokens);
 	else if (!strcasecmp(cmd, "write"))
 		handle_write(tokens);
 	else
@@ -744,35 +745,24 @@ static void read_loop(void)
 
 static void parse_args(int argc, char *argv[])
 {
-	for (int i = 1; i < argc; ++i) {
-		const char *const arg = argv[i];
-		if (!strcmp(arg, "-h") || !strcmp(arg, "--help")) {
-			usage();
-			exit(EXIT_SUCCESS);
-		} else if (!strcmp(arg, "-i") || !strcmp(arg, "--input")) {
-			++i;
-			if (i == argc)
-				fatal("%s needs to be followed by a file name.\n",
-				      arg);
-			dot_config_input_name = argv[i];
-		} else if (!strcmp(arg, "-o") || !strcmp(arg, "--output")) {
-			++i;
-			if (i == argc)
-				fatal("%s needs to be followed by a file name.\n",
-				      arg);
-			dot_config_out_name = argv[i];
-		} else if (i == 1) {
-			kconfig_name = arg;
-		} else {
-			fatal("Unknown flag %s\n", arg);
-		}
-	}
-	if (!dot_config_input_name)
-		dot_config_input_name = ".config";
-	if (!dot_config_out_name)
-		dot_config_out_name = ".config";
-	if (!kconfig_name)
+	if (argc == 0) {
 		kconfig_name = "Kconfig";
+		return;
+	}
+
+	const char *const arg = argv[1];
+	if (argc > 2) {
+		fprintf(stderr, "Too many arguments\n");
+		usage();
+		exit(EXIT_FAILURE);
+	}
+
+	if (!strcmp(arg, "-h") || !strcmp(arg, "--help")) {
+		usage();
+		exit(EXIT_SUCCESS);
+	}
+
+	kconfig_name = arg;
 }
 
 static void on_int(int signum)
@@ -790,7 +780,7 @@ int main(int argc, char *argv[])
 	if (!load_picosat())
 		fatal("Could not load PicoSAT\n");
 	conf_parse(kconfig_name);
-	conf_read(dot_config_input_name);
+	conf_read(NULL);
 	conflict = CF_LIST_INIT(sdv);
 	read_loop();
 	return EXIT_SUCCESS;
