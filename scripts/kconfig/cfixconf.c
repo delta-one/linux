@@ -32,6 +32,7 @@ static struct sdv_list *conflict;
 static struct sfl_list *fixes;
 static bool interrupted = false;
 static bool running_cf = false;
+static bool reading = false;
 
 struct string_list {
 	struct list_head list;
@@ -728,6 +729,8 @@ static void read_loop(void)
 					if (interrupted) {
 						interrupted = false;
 						clearerr(stdin);
+						printf("\n");
+						break;
 					} else {
 						fatal("Error reading stdin\n");
 					}
@@ -773,10 +776,12 @@ static void parse_args(int argc, char *argv[])
 
 static void on_int(int signum)
 {
-	printf("\nInterrupting...\n");
-	if (running_cf)
-		interrupt_fix_generation();
 	interrupted = true;
+	if (running_cf) {
+		printf("\nInterrupting...\n");
+		interrupt_fix_generation();
+	} else if (!reading)
+		exit(EXIT_SUCCESS);
 }
 
 int main(int argc, char *argv[])
@@ -788,6 +793,7 @@ int main(int argc, char *argv[])
 	conf_parse(kconfig_name);
 	conf_read(NULL);
 	conflict = CF_LIST_INIT(sdv);
+	reading = true;
 	read_loop();
 	return EXIT_SUCCESS;
 }
