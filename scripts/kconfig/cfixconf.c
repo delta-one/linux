@@ -720,7 +720,7 @@ static void read_loop(void)
 		struct gstr in = str_new();
 		struct string_list *tokens;
 
-		printf("> ");
+		printf(">>> ");
 		do {
 			int next_char = fgetc(stdin);
 			if (next_char == EOF) {
