@@ -41,6 +41,7 @@
 #include "qconf.h"
 #include "configfix.h"
 #include "picosat_functions.h"
+#include "cf_fixgen.h"
 
 #include "images.h"
 
@@ -2291,6 +2292,11 @@ void ConflictsView::runSatConfAsync()
 	fixConflictsAction_->setText("Cancel");
 	loadingAction->setVisible(true);
 
+	if (solution_output != nullptr) {
+		for (size_t i = 0; i < num_solutions; ++i)
+			cf_sfix_list_free(solution_output[i]);
+		free(solution_output);
+	}
 	solution_output = run_satconf(wanted_symbols.data(),
 				      wanted_symbols.size(), &num_solutions,
 				      &solution_trivial, &fixgen_status);
