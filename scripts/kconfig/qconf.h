@@ -179,6 +179,7 @@ public:
 	QPushButton *applyFixButton{nullptr};
 
 	struct sfix_list **solution_output{nullptr};
+	bool solution_trivial;
 	size_t num_solutions;
 
 	QToolBar *conflictsToolBar;

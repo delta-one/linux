@@ -31,6 +31,7 @@
 #include <QBrush>
 #include <QColor>
 
+#include <cassert>
 #include <xalloc.h>
 #include "lkc.h"
 #include <vector>
@@ -2291,7 +2292,8 @@ void ConflictsView::runSatConfAsync()
 	loadingAction->setVisible(true);
 
 	solution_output = run_satconf(wanted_symbols.data(),
-				      wanted_symbols.size(), &num_solutions);
+				      wanted_symbols.size(), &num_solutions,
+				      &solution_trivial);
 
 	free(p);
 	emit resultsReady();
@@ -2306,7 +2308,8 @@ void ConflictsView::updateResults(void)
 {
 	fixConflictsAction_->setText("Calculate Fixes");
 	loadingAction->setVisible(false);
-	if (!(solution_output == nullptr || num_solutions == 0)) {
+	assert(solution_output != nullptr);
+	if (num_solutions > 0) {
 		solutionSelector->clear();
 		for (unsigned int i = 0; i < num_solutions; i++)
 			solutionSelector->addItem(QString::number(i + 1));
@@ -2314,10 +2317,12 @@ void ConflictsView::updateResults(void)
 		numSolutionLabel->setText(
 			QString("Solutions: (%1) found").arg(num_solutions));
 		changeSolutionTable(0);
-	} else {
-		QMessageBox msgBox;
-		msgBox.setText("All symbols are already within range.");
-		msgBox.exec();
+		if (solution_trivial) {
+			QMessageBox msgBox;
+
+			msgBox.setText("All symbols are already within range.");
+			msgBox.exec();
+		}
 	}
 	if (runSatConfAsyncThread->joinable()) {
 		runSatConfAsyncThread->join();

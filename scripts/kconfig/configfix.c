@@ -34,11 +34,16 @@ static bool init_done;
 static struct sym_list *conflict_syms;
 
 static bool sdv_within_range(struct sdv_list *symbols);
+static struct sfl_list *sdv_list_to_sfl_list(struct sdv_list *symbols);
 
 /* -------------------------------------- */
 
+/**
+ * @trivial: Set to whether all changes specified by symbols can already be
+ *	     made. In this case an equivalent array of sfix_lists is returned.
+ */
 struct sfix_list **run_satconf(struct symbol_dvalue **symbols, size_t n,
-			       size_t *num_solutions)
+			       size_t *num_solutions, bool *trivial)
 {
 	CF_DEF_LIST(symbols_list, sdv);
 	struct sfl_list *solutions;
@@ -50,7 +55,7 @@ struct sfix_list **run_satconf(struct symbol_dvalue **symbols, size_t n,
 	for (i = 0; i < n; ++i)
 		CF_PUSH_BACK(symbols_list, symbols[i], sdv);
 
-	solutions = run_satconf_list(symbols_list);
+	solutions = run_satconf_list(symbols_list, trivial);
 	*num_solutions = list_count_nodes(&solutions->list);
 	solutions_arr = xcalloc(*num_solutions, sizeof(struct sfix_list *));
 	i = 0;
@@ -60,7 +65,7 @@ struct sfix_list **run_satconf(struct symbol_dvalue **symbols, size_t n,
 	return solutions_arr;
 }
 
-struct sfl_list *run_satconf_list(struct sdv_list *symbols)
+struct sfl_list *run_satconf_list(struct sdv_list *symbols, bool *trivial)
 {
 	clock_t start, end;
 	double time;
@@ -82,9 +87,11 @@ struct sfl_list *run_satconf_list(struct sdv_list *symbols)
 
 	/* check whether all values can be applied -> no need to run */
 	if (sdv_within_range(symbols)) {
+		*trivial = true;
 		printd("\nAll symbols are already within range.\n\n");
-		return CF_LIST_INIT(sfl);
+		return sdv_list_to_sfl_list(symbols);
 	}
+	*trivial = false;
 
 	if (!init_done) {
 		printd("\n");
@@ -161,8 +168,7 @@ struct sfl_list *run_satconf_list(struct sdv_list *symbols)
 	if (res == PICOSAT_SATISFIABLE) {
 		printd("===> PROBLEM IS SATISFIABLE <===\n");
 
-		ret = CF_LIST_INIT(sfl);
-
+		ret = sdv_list_to_sfl_list(symbols);
 	} else if (res == PICOSAT_UNSATISFIABLE) {
 		printd("===> PROBLEM IS UNSATISFIABLE <===\n");
 		printd("\n");
@@ -349,4 +355,33 @@ struct symbol_fix *select_symbol(struct sfix_list *solution, int index)
 {
 	return cflist_at_index(index, &solution->list, struct sfix_node, node)
 		->elem;
+}
+
+static struct sfl_list *sdv_list_to_sfl_list(struct sdv_list *symbols)
+{
+	CF_DEF_LIST(fix, sfix);
+	CF_DEF_LIST(ret, sfl);
+	struct sdv_node *node;
+
+	CF_LIST_FOR_EACH(node, symbols, sdv)
+	{
+		struct symbol_fix *entry = xmalloc(sizeof *entry);
+
+		entry->sym = node->elem->sym;
+		switch (node->elem->type) {
+		case SDV_BOOLEAN:
+			entry->type = SF_BOOLEAN;
+			entry->tri = node->elem->tri;
+			break;
+		case SDV_NONBOOLEAN:
+			entry->type = SF_NONBOOLEAN;
+			entry->nb_val = str_new();
+			str_append(&entry->nb_val,
+				   str_get(&node->elem->nb_val));
+			break;
+		}
+		CF_PUSH_BACK(fix, entry, sfix);
+	}
+	CF_PUSH_BACK(ret, fix, sfl);
+	return ret;
 }
