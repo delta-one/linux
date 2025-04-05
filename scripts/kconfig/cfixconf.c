@@ -380,7 +380,7 @@ static void handle_solve(struct string_list *tokens)
 	struct sfl_node *fix;
 	struct sdv_node *entry;
 	int i = 0;
-	bool first;
+	bool first, trivial;
 
 	if (list_count_nodes(&tokens->list) != 1) {
 		printf("Too many arguments, expected: show\n");
@@ -403,7 +403,7 @@ static void handle_solve(struct string_list *tokens)
 	printf("\n");
 	stop_fixgen = false;
 	running_cf = true;
-	new_fixes = run_satconf_list(conflict);
+	new_fixes = run_satconf_list(conflict, &trivial);
 	running_cf = false;
 	if (interrupted) {
 		interrupted = false;
@@ -451,6 +451,8 @@ static void handle_solve(struct string_list *tokens)
 	}
 	if (i == 0)
 		printf("No fixes found\n");
+	if (trivial)
+		printf("(All changes can already be made manually)\n");
 	if (fixes) {
 		CF_LIST_FOR_EACH(fix, fixes, sfl)
 		{
