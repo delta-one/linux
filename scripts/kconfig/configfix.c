@@ -389,3 +389,11 @@ static struct sfl_list *sdv_list_to_sfl_list(struct sdv_list *symbols)
 	CF_PUSH_BACK(ret, fix, sfl);
 	return ret;
 }
+
+/*
+ * for use in .cc files
+ */
+void cf_sfix_list_free(struct sfix_list *list)
+{
+	CF_LIST_FREE(list, sfix);
+}
