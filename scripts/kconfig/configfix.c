@@ -88,7 +88,14 @@ struct sfl_list *run_satconf_list(struct sdv_list *symbols, bool *trivial,
 		NULL // array with conflict-symbols
 	};
 
+	/* store the conflict symbols */
+	if (conflict_syms)
+		CF_LIST_FREE(conflict_syms, sym);
+	conflict_syms = CF_LIST_INIT(sym);
+	CF_LIST_FOR_EACH(node, symbols, sdv)
+		CF_PUSH_BACK(conflict_syms, node->elem->sym, sym);
 
+	*status = CFGEN_STATUS_NORMAL;
 	/* check whether all values can be applied -> no need to run */
 	if (sdv_within_range(symbols)) {
 		*trivial = true;
@@ -154,11 +161,6 @@ struct sfl_list *run_satconf_list(struct sdv_list *symbols, bool *trivial,
 		if (!sym_is_sdv(data.sdv_symbols, sym))
 			sym_add_assumption(pico, sym);
 	}
-
-	/* store the conflict symbols */
-	conflict_syms = CF_LIST_INIT(sym);
-	CF_LIST_FOR_EACH(node, data.sdv_symbols, sdv)
-		CF_PUSH_BACK(conflict_syms, node->elem->sym, sym);
 
 	printd("Solving SAT-problem...");
 	start = clock();
