@@ -1,3 +1,4 @@
+#include "cf_fixgen.h"
 #include <assert.h>
 #include <errno.h>
 #include <ctype.h>
@@ -381,6 +382,7 @@ static void handle_solve(struct string_list *tokens)
 	struct sdv_node *entry;
 	int i = 0;
 	bool first, trivial;
+	enum fixgen_exit_status fixgen_status;
 
 	if (list_count_nodes(&tokens->list) != 1) {
 		printf("Too many arguments, expected: show\n");
@@ -403,9 +405,9 @@ static void handle_solve(struct string_list *tokens)
 	printf("\n");
 	stop_fixgen = false;
 	running_cf = true;
-	new_fixes = run_satconf_list(conflict, &trivial);
+	new_fixes = run_satconf_list(conflict, &trivial, &fixgen_status);
 	running_cf = false;
-	if (interrupted) {
+	if (interrupted || fixgen_status == CFGEN_STATUS_CANCELED) {
 		interrupted = false;
 		CF_LIST_FOR_EACH(fix, new_fixes, sfl) {
 			CF_LIST_FREE(fix->elem, sfix);
@@ -453,6 +455,8 @@ static void handle_solve(struct string_list *tokens)
 		printf("No fixes found\n");
 	if (trivial)
 		printf("(All changes can already be made manually)\n");
+	if (fixgen_status == CFGEN_STATUS_TIMEOUT)
+		printf("(Fix generation stopped due to timeout)\n");
 	if (fixes) {
 		CF_LIST_FOR_EACH(fix, fixes, sfl)
 		{

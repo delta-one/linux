@@ -2293,7 +2293,7 @@ void ConflictsView::runSatConfAsync()
 
 	solution_output = run_satconf(wanted_symbols.data(),
 				      wanted_symbols.size(), &num_solutions,
-				      &solution_trivial);
+				      &solution_trivial, &fixgen_status);
 
 	free(p);
 	emit resultsReady();
@@ -2323,6 +2323,17 @@ void ConflictsView::updateResults(void)
 			msgBox.setText("All symbols are already within range.");
 			msgBox.exec();
 		}
+	} else {
+		QMessageBox msgBox;
+
+		msgBox.setText("No solutions found.");
+		msgBox.exec();
+	}
+	if (fixgen_status == CFGEN_STATUS_TIMEOUT) {
+		QMessageBox msgBox;
+
+		msgBox.setText("Fix generation stopped due to timeout.");
+		msgBox.exec();
 	}
 	if (runSatConfAsyncThread->joinable()) {
 		runSatConfAsyncThread->join();
