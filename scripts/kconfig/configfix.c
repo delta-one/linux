@@ -41,9 +41,12 @@ static struct sfl_list *sdv_list_to_sfl_list(struct sdv_list *symbols);
 /**
  * @trivial: Set to whether all changes specified by symbols can already be
  *	     made. In this case an equivalent array of sfix_lists is returned.
+ * @status: Set to the exit status of the fix generation (normal, timeout,
+ *	    canceled).
  */
 struct sfix_list **run_satconf(struct symbol_dvalue **symbols, size_t n,
-			       size_t *num_solutions, bool *trivial)
+			       size_t *num_solutions, bool *trivial,
+			       enum fixgen_exit_status *status)
 {
 	CF_DEF_LIST(symbols_list, sdv);
 	struct sfl_list *solutions;
@@ -55,7 +58,7 @@ struct sfix_list **run_satconf(struct symbol_dvalue **symbols, size_t n,
 	for (i = 0; i < n; ++i)
 		CF_PUSH_BACK(symbols_list, symbols[i], sdv);
 
-	solutions = run_satconf_list(symbols_list, trivial);
+	solutions = run_satconf_list(symbols_list, trivial, status);
 	*num_solutions = list_count_nodes(&solutions->list);
 	solutions_arr = xcalloc(*num_solutions, sizeof(struct sfix_list *));
 	i = 0;
@@ -65,7 +68,8 @@ struct sfix_list **run_satconf(struct symbol_dvalue **symbols, size_t n,
 	return solutions_arr;
 }
 
-struct sfl_list *run_satconf_list(struct sdv_list *symbols, bool *trivial)
+struct sfl_list *run_satconf_list(struct sdv_list *symbols, bool *trivial,
+				  enum fixgen_exit_status *status)
 {
 	clock_t start, end;
 	double time;
@@ -173,7 +177,7 @@ struct sfl_list *run_satconf_list(struct sdv_list *symbols, bool *trivial)
 		printd("===> PROBLEM IS UNSATISFIABLE <===\n");
 		printd("\n");
 
-		ret = fixgen_run(pico, &data);
+		ret = fixgen_run(pico, &data, status);
 	} else {
 		printd("Unknown if satisfiable.\n");
 

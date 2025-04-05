@@ -36,7 +36,8 @@
 
 static struct sfl_list *diagnoses_symbol;
 
-static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data);
+static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data,
+					    enum fixgen_exit_status *status);
 
 static void add_fexpr_to_constraint_set(struct fexpr_list *C,
 					struct cfdata *data);
@@ -87,7 +88,11 @@ static unsigned int nr_of_assumptions = 0, nr_of_assumptions_true;
 
 /* -------------------------------------- */
 
-struct sfl_list *fixgen_run(PicoSAT *pico, struct cfdata *data)
+/*
+ * @status: returns the exit status
+ */
+struct sfl_list *fixgen_run(PicoSAT *pico, struct cfdata *data,
+			    enum fixgen_exit_status *status)
 {
 	clock_t start, end;
 	double time;
@@ -99,7 +104,7 @@ struct sfl_list *fixgen_run(PicoSAT *pico, struct cfdata *data)
 
 	/* generate the diagnoses */
 	start = clock();
-	diagnoses = generate_diagnoses(pico, data);
+	diagnoses = generate_diagnoses(pico, data, status);
 	end = clock();
 
 	time = ((double) (end - start)) / CLOCKS_PER_SEC;
@@ -128,8 +133,10 @@ struct sfl_list *fixgen_run(PicoSAT *pico, struct cfdata *data)
 
 /*
  * generate the diagnoses
+ * @status: returns the exit status
  */
-static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data)
+static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data,
+					    enum fixgen_exit_status *status)
 {
 	CF_DEF_LIST(C, fexpr);
 	CF_DEF_LIST(empty_diagnosis, fexpr);
@@ -153,6 +160,7 @@ static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data)
 	/* start the clock */
 	start_t = clock();
 
+	*status = CFGEN_STATUS_NORMAL;
 	while (!list_empty(&E->list)) {
 		/* get random diagnosis */
 		struct fexl_node *E0_node =
@@ -200,12 +208,15 @@ static struct fexl_list *generate_diagnoses(PicoSAT *pico, struct cfdata *data)
 		/* check elapsed time */
 		end_t = clock();
 		time_t = ((double) (end_t - start_t)) / CLOCKS_PER_SEC;
-		if (time_t > (double) MAX_SECONDS)
+		if (time_t > (double) MAX_SECONDS) {
+			*status = CFGEN_STATUS_TIMEOUT;
 			goto DIAGNOSES_FOUND;
+		}
 
 		/* abort and return results if cancelled by user */
 		if (stop_fixgen) {
 			stop_fixgen = false;
+			*status = CFGEN_STATUS_CANCELED;
 			goto DIAGNOSES_FOUND;
 		}
 

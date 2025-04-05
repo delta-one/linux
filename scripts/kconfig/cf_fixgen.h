@@ -9,8 +9,13 @@
 #include "picosat_functions.h"
 #include "cf_defs.h"
 
+enum fixgen_exit_status {
+	CFGEN_STATUS_NORMAL, CFGEN_STATUS_TIMEOUT, CFGEN_STATUS_CANCELED
+};
+
 /* initialize fixgen and return the diagnoses */
-struct sfl_list *fixgen_run(PicoSAT *pico, struct cfdata *data);
+struct sfl_list *fixgen_run(PicoSAT *pico, struct cfdata *data,
+			    enum fixgen_exit_status *status);
 
 /* ask user which fix to apply */
 struct sfix_list *ask_user_choose_fix(struct sfl_list *diag);
