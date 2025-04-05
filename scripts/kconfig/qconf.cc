@@ -4,6 +4,7 @@
  * Copyright (C) 2015 Boris Barbulovski <bbarbulovski@gmail.com>
  */
 
+#include "cf_defs.h"
 #include <QAction>
 #include <QActionGroup>
 #include <QApplication>
@@ -2283,8 +2284,11 @@ void ConflictsView::runSatConfAsync()
 		struct symbol *sym = sym_find(_symbol);
 
 		tmp->sym = sym;
-		tmp->type = static_cast<symboldv_type>(
-			sym->type == symbol_type::S_BOOLEAN ? 0 : 1);
+		tmp->type =
+			(sym->type == S_BOOLEAN || sym->type == S_TRISTATE) ?
+				SDV_BOOLEAN :
+				SDV_NONBOOLEAN;
+		assert(tmp->type == SDV_BOOLEAN);
 		tmp->tri = string_value_to_tristate(
 			conflictsTable->item(i, 1)->text());
 		wanted_symbols.push_back(tmp);
@@ -2478,7 +2482,7 @@ static QString tristate_value_to_string(tristate val)
 	case no:
 		return QString::fromStdString("N");
 	default:
-		return QString::fromStdString("");
+		assert(false);
 	}
 }
 
