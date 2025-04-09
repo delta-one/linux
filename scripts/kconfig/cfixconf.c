@@ -1,4 +1,6 @@
-#include "cf_fixgen.h"
+// SPDX-License-Identifier: GPL-2.0
+
+#define _GNU_SOURCE
 #include <assert.h>
 #include <errno.h>
 #include <ctype.h>
@@ -19,6 +21,7 @@
 #include "picosat_functions.h"
 #include "configfix.h"
 #include "xalloc.h"
+#include "cf_fixgen.h"
 
 #define fatal(...)                            \
 	do {                                  \
@@ -26,12 +29,12 @@
 		exit(EXIT_FAILURE);           \
 	} while (0)
 
-static char *conf_filename = NULL;
-static const char *kconfig_name = NULL;
+static char *conf_filename;
+static const char *kconfig_name;
 static struct sdv_list *conflict;
 static struct sfl_list *fixes;
-static volatile sig_atomic_t interrupted = false;
-static volatile sig_atomic_t running_cf = false;
+static volatile sig_atomic_t interrupted;
+static volatile sig_atomic_t running_cf;
 
 struct string_list {
 	struct list_head list;
@@ -44,11 +47,9 @@ struct string_node {
 
 static const char *symbol_value_to_str(struct symbol *sym)
 {
-	if (sym_is_boolean(sym)) {
+	if (sym_is_boolean(sym))
 		return tristate_get_char(sym->curr.tri);
-	} else {
-		return sym->curr.val;
-	}
+	return sym->curr.val;
 }
 
 /**
@@ -56,11 +57,13 @@ static const char *symbol_value_to_str(struct symbol *sym)
  */
 static const char *symbol_fix_to_str(struct symbol_fix *fix)
 {
-	if (fix->type == SF_BOOLEAN) {
+	switch (fix->type) {
+	case SF_BOOLEAN:
 		return tristate_get_char(fix->tri);
-	} else {
-		assert(fix->type == SF_NONBOOLEAN);
+	case SF_NONBOOLEAN:
 		return str_get(&fix->nb_val);
+	default:
+		assert(false);
 	}
 }
 
@@ -75,10 +78,10 @@ static struct gstr table_str(struct string_list **columns,
 	if (num_columns == 0)
 		return ret;
 	// max_lens[j] = max length of an entry in column j
-	max_lens = xcalloc(num_columns, sizeof *max_lens);
+	max_lens = xcalloc(num_columns, sizeof(*max_lens));
 	num_rows = list_count_nodes(&columns[0]->list);
 	// entries[i * num_columns + j] = row i, column j
-	entries = xmalloc(num_columns * num_rows * sizeof *entries);
+	entries = xmalloc(num_columns * num_rows * sizeof(*entries));
 	for (size_t col = 0; col < num_columns; ++col) {
 		struct string_node *entry;
 		size_t row = 0;
@@ -153,7 +156,7 @@ static char *to_upper(const char *str)
 
 static void add_conflict_symbol(struct symbol *sym, tristate val)
 {
-	struct symbol_dvalue *conflict_entry = xmalloc(sizeof *conflict_entry);
+	struct symbol_dvalue *conflict_entry = xmalloc(sizeof(*conflict_entry));
 	struct sdv_node *entry, *entry2;
 
 	conflict_entry->type = SDV_BOOLEAN;
@@ -348,7 +351,7 @@ static void handle_show(struct string_list *tokens)
 		printf("Too many arguments, expected: show\n");
 		return;
 	}
-	columns = xcalloc(3, sizeof *columns);
+	columns = xcalloc(3, sizeof(*columns));
 	columns[0] = CF_LIST_INIT(string);
 	CF_PUSH_BACK(columns[0], "Symbol", string);
 	columns[1] = CF_LIST_INIT(string);
@@ -424,7 +427,7 @@ static void handle_solve(struct string_list *tokens)
 		if (i > 0)
 			printf("\n");
 		printf("Fix %d:\n", i + 1);
-		columns = xcalloc(3, sizeof *columns);
+		columns = xcalloc(3, sizeof(*columns));
 		columns[0] = CF_LIST_INIT(string);
 		CF_PUSH_BACK(columns[0], "Symbol", string);
 		columns[1] = CF_LIST_INIT(string);
@@ -540,7 +543,7 @@ static void handle_apply(struct string_list *tokens)
 		++i;
 	}
 	apply_fix(fix->elem);
-	columns = xcalloc(2, sizeof *columns);
+	columns = xcalloc(2, sizeof(*columns));
 	columns[0] = CF_LIST_INIT(string);
 	CF_PUSH_BACK(columns[0], xstrdup("Symbol"), string);
 	columns[1] = CF_LIST_INIT(string);
@@ -705,6 +708,7 @@ static struct string_list *tokenize_line(char *in)
 
 	while (true) {
 		char *token = strtok_r(str, " \t\n", &saveptr);
+
 		str = NULL;
 		if (!token)
 			break;
@@ -723,6 +727,7 @@ static void read_loop(void)
 		printf(">>> ");
 		do {
 			int next_char = fgetc(stdin);
+
 			if (next_char == EOF) {
 				if (ferror(stdin)) {
 					if (interrupted) {
@@ -730,9 +735,8 @@ static void read_loop(void)
 						clearerr(stdin);
 						printf("\n");
 						break;
-					} else {
-						fatal("Error reading stdin\n");
 					}
+					fatal("Error reading stdin\n");
 				} else {
 					assert(feof(stdin));
 					printf("\n");
@@ -753,12 +757,13 @@ static void read_loop(void)
 
 static void parse_args(int argc, char *argv[])
 {
+	const char *arg;
+
 	if (argc == 0) {
 		kconfig_name = "Kconfig";
 		return;
 	}
-
-	const char *const arg = argv[1];
+	arg = argv[1];
 	if (argc > 2) {
 		fprintf(stderr, "Too many arguments\n");
 		usage();
