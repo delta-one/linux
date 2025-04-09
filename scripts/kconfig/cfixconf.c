@@ -32,7 +32,6 @@ static struct sdv_list *conflict;
 static struct sfl_list *fixes;
 static volatile sig_atomic_t interrupted = false;
 static volatile sig_atomic_t running_cf = false;
-static volatile sig_atomic_t reading = false;
 
 struct string_list {
 	struct list_head list;
@@ -780,20 +779,18 @@ static void on_int(int signum)
 	if (running_cf) {
 		printf("\nInterrupting...\n");
 		interrupt_fix_generation();
-	} else if (!reading)
-		exit(EXIT_SUCCESS);
+	}
 }
 
 int main(int argc, char *argv[])
 {
-	sigaction(SIGINT, (struct sigaction[]){{ .sa_handler = on_int }}, NULL);
 	parse_args(argc, argv);
 	if (!load_picosat())
 		fatal("Could not load PicoSAT\n");
 	conf_parse(kconfig_name);
 	conf_read(NULL);
 	conflict = CF_LIST_INIT(sdv);
-	reading = true;
+	sigaction(SIGINT, (struct sigaction[]){{ .sa_handler = on_int }}, NULL);
 	read_loop();
 	return EXIT_SUCCESS;
 }
