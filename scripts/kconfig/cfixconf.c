@@ -30,9 +30,9 @@ static char *conf_filename = NULL;
 static const char *kconfig_name = NULL;
 static struct sdv_list *conflict;
 static struct sfl_list *fixes;
-static bool interrupted = false;
-static bool running_cf = false;
-static bool reading = false;
+static volatile sig_atomic_t interrupted = false;
+static volatile sig_atomic_t running_cf = false;
+static volatile sig_atomic_t reading = false;
 
 struct string_list {
 	struct list_head list;
