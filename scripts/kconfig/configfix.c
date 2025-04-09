@@ -371,7 +371,7 @@ static struct sfl_list *sdv_list_to_sfl_list(struct sdv_list *symbols)
 
 	CF_LIST_FOR_EACH(node, symbols, sdv)
 	{
-		struct symbol_fix *entry = xmalloc(sizeof *entry);
+		struct symbol_fix *entry = xmalloc(sizeof(*entry));
 
 		entry->sym = node->elem->sym;
 		switch (node->elem->type) {
