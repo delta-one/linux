@@ -5,6 +5,7 @@
 
 #include "cf_defs.h"
 #include "expr.h"
+#include <limits.h>
 #include <xalloc.h>
 #include "list.h"
 #define _GNU_SOURCE
@@ -78,6 +79,223 @@ void build_constraints(struct cfdata *data)
 }
 
 /*
+ * the base kconfig parses @sym's values with, @fallback if @sym is untyped
+ */
+static int range_bound_base(const struct symbol *sym, int fallback)
+{
+	switch (sym->type) {
+	case S_INT:
+		return 10;
+	case S_HEX:
+		return 16;
+	default:
+		return fallback;
+	}
+}
+
+/*
+ * Register @other as a known value of @sym if @sym is a non-Boolean symbol and
+ * @other is a constant it is compared against.
+ */
+static void collect_cmp_const(struct symbol *sym, struct symbol *other,
+			      struct cfdata *data)
+{
+	if (!sym || !other)
+		return;
+	if (!sym_is_nonboolean(sym) || !sym_is_nonbool_constant(other))
+		return;
+
+	sym_create_nonbool_fexpr(sym, other->name, data);
+}
+
+/*
+ * Walk @e and register the constants of every comparison in it.
+ *
+ * expr_calculate_pexpr_both() creates known values as a side effect, but only
+ * for equalities: the inequality path (expr_eval_unequal_nonbool_const())
+ * merely iterates over the values that already exist. So "depends on FOO > 3"
+ * never put 3 into FOO's known values, and the comparison was then evaluated
+ * against a set of values that does not even mention its own bound.
+ */
+static void collect_cmp_consts(struct expr *e, struct cfdata *data)
+{
+	if (!e)
+		return;
+
+	switch (e->type) {
+	case E_AND:
+	case E_OR:
+		collect_cmp_consts(e->left.expr, data);
+		collect_cmp_consts(e->right.expr, data);
+		break;
+	case E_NOT:
+		collect_cmp_consts(e->left.expr, data);
+		break;
+	case E_EQUAL:
+	case E_UNEQUAL:
+	case E_LTH:
+	case E_LEQ:
+	case E_GTH:
+	case E_GEQ:
+		collect_cmp_const(e->left.sym, e->right.sym, data);
+		collect_cmp_const(e->right.sym, e->left.sym, data);
+		break;
+	default:
+		break;
+	}
+}
+
+/* a value still to be added to a symbol's known values */
+struct gap_val {
+	struct symbol *sym;
+	long long val;
+	struct gap_val *next;
+};
+
+static void gap_val_push(struct gap_val **head, struct symbol *sym,
+			 long long val)
+{
+	struct gap_val *g = xmalloc(sizeof(*g));
+
+	g->sym = sym;
+	g->val = val;
+	g->next = *head;
+	*head = g;
+}
+
+/*
+ * add @val to @sym's known values, formatted the way kconfig writes it
+ */
+static void sym_add_nonbool_int_value(struct symbol *sym, long long val,
+				      struct cfdata *data)
+{
+	char buf[32];
+
+	if (sym->type == S_HEX)
+		snprintf(buf, sizeof(buf), "0x%llx",
+			 (unsigned long long) val);
+	else
+		snprintf(buf, sizeof(buf), "%lld", val);
+
+	sym_create_nonbool_fexpr(sym, buf, data);
+}
+
+static int cmp_longlong(const void *a, const void *b)
+{
+	long long x = *(const long long *) a, y = *(const long long *) b;
+
+	return (x > y) - (x < y);
+}
+
+/*
+ * collect the numeric values @sym is known to take into @vals, returning how
+ * many were written
+ */
+static size_t sym_collect_boundaries(struct symbol *sym, int base,
+				     long long *vals)
+{
+	struct fexpr_node *node;
+	size_t n = 0;
+	bool first = true;
+
+	CF_LIST_FOR_EACH(node, sym->nb_vals, fexpr) {
+		const char *val;
+
+		if (first) {
+			first = false;
+			/* the head entry stands for the implicit value */
+			val = sym_nonbool_unset_val(sym);
+			if (!val)
+				continue;
+		} else {
+			val = str_get(&node->elem->nb_val);
+		}
+		vals[n++] = strtoll(val, NULL, range_bound_base(sym, base));
+	}
+
+	return n;
+}
+
+/*
+ * Work out which representative values @sym needs and queue them on @head.
+ *
+ * Every atomic constraint on a non-Boolean symbol compares it against a
+ * constant, or against a range bound (see range_bound_vals()). The truth of all
+ * of them is therefore constant on each interval those boundaries cut the
+ * integers into, so one value per interval decides satisfiability - but
+ * ConfigFix only ever knew the boundaries themselves. With "range 1 10" and
+ * "depends on FOO > 3 && FOO < 5" the known values were {1, 10}, so FOO=4 was
+ * not expressible and the dependency looked unsatisfiable although kconfig
+ * accepts it.
+ *
+ * Queue one value strictly inside each gap, plus one below the smallest and one
+ * above the largest boundary. Values a range forbids are pruned by
+ * sym_add_range_constraints() as usual. The number of values added is bounded
+ * by the number of constants the model mentions, not by the width of the
+ * ranges.
+ */
+static void sym_queue_gap_values(struct symbol *sym, struct gap_val **head)
+{
+	struct property *prop;
+	long long *vals;
+	size_t n, cap;
+	int base;
+
+	if (sym->type != S_INT && sym->type != S_HEX)
+		return;
+
+	base = range_bound_base(sym, 10);
+
+	cap = list_count_nodes(&sym->nb_vals->list);
+	for_all_properties(sym, prop, P_RANGE) {
+		if (prop == NULL)
+			continue;
+		if (sym_is_nonboolean(prop->expr->left.sym))
+			cap += list_count_nodes(
+				&prop->expr->left.sym->nb_vals->list);
+		if (sym_is_nonboolean(prop->expr->right.sym))
+			cap += list_count_nodes(
+				&prop->expr->right.sym->nb_vals->list);
+	}
+	if (cap == 0)
+		return;
+
+	vals = xmalloc(cap * sizeof(*vals));
+	n = sym_collect_boundaries(sym, base, vals);
+
+	/* a range bound that is a symbol contributes its values as boundaries */
+	for_all_properties(sym, prop, P_RANGE) {
+		if (prop == NULL)
+			continue;
+		if (sym_is_nonboolean(prop->expr->left.sym))
+			n += sym_collect_boundaries(prop->expr->left.sym, base,
+						    vals + n);
+		if (sym_is_nonboolean(prop->expr->right.sym))
+			n += sym_collect_boundaries(prop->expr->right.sym,
+						    base, vals + n);
+	}
+
+	if (n == 0) {
+		free(vals);
+		return;
+	}
+
+	qsort(vals, n, sizeof(*vals), cmp_longlong);
+
+	for (size_t i = 0; i + 1 < n; i++)
+		if (vals[i] < LLONG_MAX && vals[i] + 1 < vals[i + 1])
+			gap_val_push(head, sym, vals[i] + 1);
+
+	/* hex values are unsigned, so do not step below zero */
+	if (vals[0] > LLONG_MIN && (sym->type != S_HEX || vals[0] > 0))
+		gap_val_push(head, sym, vals[0] - 1);
+	if (vals[n - 1] < LLONG_MAX)
+		gap_val_push(head, sym, vals[n - 1] + 1);
+
+	free(vals);
+}
+
+/*
  * need to go through the constraints once to find all "known values"
  * for the non-Boolean symbols (and add them to sym->nb_vals for the given
  * symbols).
@@ -143,6 +361,44 @@ static void find_nonboolean_known_vals(struct cfdata *data)
 
 		if (sym->type == S_HEX || sym->type == S_INT)
 			sym_add_nonbool_values_from_default_range(sym, data);
+	}
+
+	/*
+	 * The loop above misses the constants of inequalities, so pick those
+	 * up from every expression in the model.
+	 */
+	for_all_symbols(sym) {
+		if (sym->type == S_UNKNOWN)
+			continue;
+
+		collect_cmp_consts(sym->dir_dep.expr, data);
+		collect_cmp_consts(sym->rev_dep.expr, data);
+
+		for (p = sym->prop; p; p = p->next)
+			collect_cmp_consts(p->visible.expr, data);
+	}
+
+	/*
+	 * Now that every boundary is known, fill in the gaps between them.
+	 * Queue the values first and add them afterwards, so that a value
+	 * generated for one symbol is never treated as a boundary of the next
+	 * one - which would make the result depend on the order
+	 * for_all_symbols() visits symbols in.
+	 */
+	{
+		struct gap_val *queued = NULL;
+
+		for_all_symbols(sym)
+			sym_queue_gap_values(sym, &queued);
+
+		while (queued) {
+			struct gap_val *next = queued->next;
+
+			sym_add_nonbool_int_value(queued->sym, queued->val,
+						  data);
+			free(queued);
+			queued = next;
+		}
 	}
 }
 
@@ -1057,21 +1313,6 @@ struct range_bound_val {
 	long long val;
 	struct fexpr *cond;
 };
-
-/*
- * the base kconfig parses @sym's values with, @fallback if @sym is untyped
- */
-static int range_bound_base(const struct symbol *sym, int fallback)
-{
-	switch (sym->type) {
-	case S_INT:
-		return 10;
-	case S_HEX:
-		return 16;
-	default:
-		return fallback;
-	}
-}
 
 /*
  * Collect the values a range bound can take into a newly allocated array and
