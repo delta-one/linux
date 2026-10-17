@@ -5,6 +5,7 @@
 
 #include "cf_defs.h"
 #include "expr.h"
+#include <xalloc.h>
 #include "list.h"
 #define _GNU_SOURCE
 #include <assert.h>
@@ -1048,9 +1049,127 @@ static void sym_add_nonbool_values_from_default_range(struct symbol *sym,
 }
 
 /*
+ * One alternative value of a range bound: the number it denotes, and the
+ * fexpr that has to hold for the bound to take it. A constant bound always
+ * has its value, so @cond is NULL for those.
+ */
+struct range_bound_val {
+	long long val;
+	struct fexpr *cond;
+};
+
+/*
+ * the base kconfig parses @sym's values with, @fallback if @sym is untyped
+ */
+static int range_bound_base(const struct symbol *sym, int fallback)
+{
+	switch (sym->type) {
+	case S_INT:
+		return 10;
+	case S_HEX:
+		return 16;
+	default:
+		return fallback;
+	}
+}
+
+/*
+ * Collect the values a range bound can take into a newly allocated array and
+ * return how many there are.
+ *
+ * A constant bound ("range 1 10") has a single, unconditional value. A bound
+ * that is another symbol ("range 1 ARCH_FORCE_MAX_ORDER") gets one entry per
+ * known value of that symbol, each guarded by the matching fexpr. Using the
+ * bound symbol's current value instead - as sym_get_range_val() does, and as
+ * kconfig itself can afford to do because it re-evaluates - would freeze a
+ * snapshot of it into the formula, so a fix that changes the bound symbol
+ * would be checked against the wrong range.
+ */
+static size_t range_bound_vals(struct symbol *bound, int base,
+			       struct range_bound_val **out)
+{
+	struct fexpr_node *node;
+	struct range_bound_val *vals;
+	size_t n = 0;
+	int bound_base;
+	bool first = true;
+
+	if (!sym_is_nonboolean(bound)) {
+		vals = xmalloc(sizeof(*vals));
+		vals[0].val = sym_get_range_val(bound, base);
+		vals[0].cond = NULL;
+		*out = vals;
+		return 1;
+	}
+
+	bound_base = range_bound_base(bound, base);
+	vals = xmalloc(list_count_nodes(&bound->nb_vals->list) * sizeof(*vals));
+
+	CF_LIST_FOR_EACH(node, bound->nb_vals, fexpr) {
+		const char *val;
+
+		if (first) {
+			first = false;
+			/*
+			 * The head entry is the "not set" state, which kconfig
+			 * evaluates as the symbol type's implicit value.
+			 */
+			val = sym_nonbool_unset_val(bound);
+			if (!val)
+				continue;
+		} else {
+			val = str_get(&node->elem->nb_val);
+		}
+		vals[n].val = strtoll(val, NULL, bound_base);
+		vals[n].cond = node->elem;
+		++n;
+	}
+
+	*out = vals;
+	return n;
+}
+
+/*
+ * For every known value of @sym outside [@range_min, @range_max], add
+ * "@guard implies @sym does not have that value".
+ */
+static void sym_add_range_exclusions(struct symbol *sym, struct pexpr *guard,
+				     long long range_min, long long range_max,
+				     int base, struct cfdata *data)
+{
+	struct fexpr_node *node;
+	bool first = true;
+
+	/* can skip the first non-boolean value, since this is 'n' */
+	CF_LIST_FOR_EACH(node, sym->nb_vals, fexpr) {
+		struct pexpr *not_nb_val;
+		struct pexpr *c;
+		long long tmp;
+
+		if (first) {
+			first = false;
+			continue;
+		}
+
+		tmp = strtoll(str_get(&node->elem->nb_val), NULL, base);
+
+		/* known value is in range, nothing to do here */
+		if (tmp >= range_min && tmp <= range_max)
+			continue;
+
+		not_nb_val = pexpr_not(pexpr_alloc_symbol(node->elem), data);
+		c = pexpr_implies_share(guard, not_nb_val, data);
+		sym_add_constraint(sym, c, data);
+		PEXPR_PUT(not_nb_val, c);
+	}
+}
+
+/*
  * build the range constraints for int/hex:
  * For each range and each value in `sym->nb_vals` that's not in the range:
  *	If the range's condition is fulfilled, then sym can't have this value.
+ * A range bound that is itself a symbol contributes its own condition, see
+ * range_bound_vals().
  */
 static void sym_add_range_constraints(struct symbol *sym, struct cfdata *data)
 {
@@ -1064,9 +1183,8 @@ static void sym_add_range_constraints(struct symbol *sym, struct cfdata *data)
 
 	for_all_properties(sym, prop, P_RANGE) {
 		int base;
-		long long range_min, range_max, tmp;
-		struct fexpr_node *node;
-		bool first;
+		struct range_bound_val *min_vals, *max_vals;
+		size_t nmin, nmax;
 
 		if (prop == NULL)
 			continue;
@@ -1104,32 +1222,39 @@ static void sym_add_range_constraints(struct symbol *sym, struct cfdata *data)
 			return;
 		}
 
-		range_min = sym_get_range_val(prop->expr->left.sym, base);
-		range_max = sym_get_range_val(prop->expr->right.sym, base);
+		/*
+		 * Either bound may be a symbol rather than a constant, so walk
+		 * the combinations of what the bounds can be and guard each
+		 * resulting range with the bounds' own conditions.
+		 */
+		nmin = range_bound_vals(prop->expr->left.sym, base, &min_vals);
+		nmax = range_bound_vals(prop->expr->right.sym, base, &max_vals);
 
-		first = true;
-		/* can skip the first non-boolean value, since this is 'n' */
-		CF_LIST_FOR_EACH(node, sym->nb_vals, fexpr) {
-			struct pexpr *not_nb_val;
-			struct pexpr *c;
+		for (size_t i = 0; i < nmin; i++) {
+			for (size_t j = 0; j < nmax; j++) {
+				struct pexpr *guard = pexpr_get(prevs);
 
-			if (first) {
-				first = false;
-				continue;
+				if (min_vals[i].cond)
+					guard = pexpr_and(
+						pexpr_alloc_symbol(
+							min_vals[i].cond),
+						guard, data, PEXPR_ARGX);
+				if (max_vals[j].cond)
+					guard = pexpr_and(
+						pexpr_alloc_symbol(
+							max_vals[j].cond),
+						guard, data, PEXPR_ARGX);
+
+				sym_add_range_exclusions(sym, guard,
+							 min_vals[i].val,
+							 max_vals[j].val,
+							 base, data);
+				pexpr_put(guard);
 			}
-
-			tmp = strtoll(str_get(&node->elem->nb_val), NULL, base);
-
-			/* known value is in range, nothing to do here */
-			if (tmp >= range_min && tmp <= range_max)
-				continue;
-
-			not_nb_val =
-				pexpr_not(pexpr_alloc_symbol(node->elem), data);
-			c = pexpr_implies_share(prevs, not_nb_val, data);
-			sym_add_constraint(sym, c, data);
-			PEXPR_PUT(not_nb_val, c);
 		}
+
+		free(min_vals);
+		free(max_vals);
 		PEXPR_PUT(prevs, propCond);
 	}
 

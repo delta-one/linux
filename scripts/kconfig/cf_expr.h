@@ -91,6 +91,12 @@ struct fexpr *sym_get_nonbool_fexpr(struct symbol *sym, char *value);
 struct fexpr *sym_get_or_create_nonbool_fexpr(struct symbol *sym, char *value,
 					      struct cfdata *data);
 
+/*
+ * return the value kconfig compares against for a non-boolean symbol's
+ * "not set" state ("0", "0x0" or ""), NULL if it has no implicit value
+ */
+const char *sym_nonbool_unset_val(const struct symbol *sym);
+
 /* macro to construct a pexpr for "A implies B" */
 struct pexpr *pexpr_implies_share(struct pexpr *a, struct pexpr *b,
 				  struct cfdata *data);

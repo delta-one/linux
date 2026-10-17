@@ -267,7 +267,7 @@ static struct fexpr *sym_nonbool_unset_fexpr(struct symbol *sym)
  * the value kconfig compares against for @sym's "not set" state, NULL if the
  * symbol has no such implicit value
  */
-static const char *sym_nonbool_unset_val(const struct symbol *sym)
+const char *sym_nonbool_unset_val(const struct symbol *sym)
 {
 	switch (sym->type) {
 	case S_INT:
