@@ -5,6 +5,7 @@
 
 #define _GNU_SOURCE
 #include <assert.h>
+#include <errno.h>
 #include <locale.h>
 #include <stdarg.h>
 #include <stdbool.h>
@@ -240,6 +241,93 @@ static void create_fexpr_choice(struct symbol *sym, struct cfdata *data)
 }
 
 /*
+ * kconfig gives a non-Boolean symbol that has no value an implicit one: "0"
+ * for S_INT, "0x0" for S_HEX and "" for S_STRING (see the leading switch in
+ * sym_calc_value()). ConfigFix represents that state with the dedicated "n"
+ * entry at the head of sym->nb_vals, and sym_nonbool_at_most_1() makes it
+ * mutually exclusive with every other value - including an explicit zero.
+ *
+ * Comparisons therefore have to treat the head entry as that implicit value.
+ * Otherwise a symbol that is merely unset is encoded as "!= 0", which
+ * contradicts the rest of the model: an unset "int" with no default (e.g.
+ * ARCH_FORCE_MAX_ORDER on x86) made the whole formula unsatisfiable, so no
+ * fix could ever be generated.
+ */
+
+/*
+ * the fexpr for @sym's "not set" state
+ */
+static struct fexpr *sym_nonbool_unset_fexpr(struct symbol *sym)
+{
+	return list_first_entry(&sym->nb_vals->list, struct fexpr_node,
+				node)->elem;
+}
+
+/*
+ * the value kconfig compares against for @sym's "not set" state, NULL if the
+ * symbol has no such implicit value
+ */
+static const char *sym_nonbool_unset_val(const struct symbol *sym)
+{
+	switch (sym->type) {
+	case S_INT:
+		return "0";
+	case S_HEX:
+		return "0x0";
+	case S_STRING:
+		return "";
+	default:
+		return NULL;
+	}
+}
+
+/*
+ * whether @sym's "not set" state compares equal to the constant @value, using
+ * the same numeric/string rules as expr_parse_string() in expr.c
+ */
+static bool nonbool_unset_equals(const struct symbol *sym, const char *value)
+{
+	char *tail;
+
+	if (!value)
+		return false;
+
+	switch (sym->type) {
+	case S_INT:
+		errno = 0;
+		return strtoll(value, &tail, 10) == 0 && !errno &&
+		       tail != value && *tail == '\0';
+	case S_HEX:
+		errno = 0;
+		return strtoull(value, &tail, 16) == 0 && !errno &&
+		       tail != value && *tail == '\0';
+	case S_STRING:
+		return *value == '\0';
+	default:
+		return false;
+	}
+}
+
+/*
+ * "@sym == @value" for a non-Boolean symbol and a constant, including the
+ * "not set" state when that compares equal to @value
+ */
+static struct pexpr *nonbool_equals_const(struct symbol *sym, char *value,
+					  struct cfdata *data)
+{
+	struct fexpr *val_fe =
+		sym_get_or_create_nonbool_fexpr(sym, value, data);
+	struct fexpr *unset_fe = sym_nonbool_unset_fexpr(sym);
+	struct pexpr *c = pexpr_alloc_symbol(val_fe);
+
+	if (val_fe != unset_fe && nonbool_unset_equals(sym, value))
+		c = pexpr_or(c, pexpr_alloc_symbol(unset_fe), data,
+			     PEXPR_ARGX);
+
+	return c;
+}
+
+/*
  * evaluate an unequality between a non-Boolean symbol and a constant
  */
 static struct pexpr *expr_eval_unequal_nonbool_const(struct symbol *sym,
@@ -275,12 +363,21 @@ static struct pexpr *expr_eval_unequal_nonbool_const(struct symbol *sym,
 	CF_LIST_FOR_EACH(node, sym->nb_vals, fexpr) {
 		long symval;
 
+		fe = node->elem;
 		if (first) {
 			first = false;
-			continue;
+			/*
+			 * The head entry is the "not set" state, which kconfig
+			 * evaluates as the implicit value 0 for S_INT/S_HEX, so
+			 * it takes part in numeric comparisons. A string symbol
+			 * has nothing to compare numerically.
+			 */
+			if (sym->type != S_INT && sym->type != S_HEX)
+				continue;
+			symval = 0;
+		} else {
+			symval = strtol(str_get(&fe->nb_val), NULL, base);
 		}
-		fe = node->elem;
-		symval = strtol(str_get(&fe->nb_val), NULL, base);
 
 		switch (type) {
 		case E_LTH:
@@ -684,13 +781,13 @@ struct pexpr *expr_calculate_pexpr_y_equals(struct expr *e, struct cfdata *data)
 	/* comparing nonboolean with a constant */
 	if (sym_is_nonboolean(e->left.sym) &&
 	    sym_is_nonbool_constant(e->right.sym))
-		return pexpr_alloc_symbol(sym_get_or_create_nonbool_fexpr(
-			e->left.sym, e->right.sym->name, data));
+		return nonbool_equals_const(e->left.sym, e->right.sym->name,
+					    data);
 
 	if (sym_is_nonbool_constant(e->left.sym) &&
 	    sym_is_nonboolean(e->right.sym))
-		return pexpr_alloc_symbol(sym_get_or_create_nonbool_fexpr(
-			e->right.sym, e->left.sym->name, data));
+		return nonbool_equals_const(e->right.sym, e->left.sym->name,
+					    data);
 
 	/* comparing nonboolean with tristate constant, will never be true */
 	if (sym_is_nonboolean(e->left.sym) &&
@@ -710,22 +807,32 @@ struct pexpr *expr_calculate_pexpr_y_equals(struct expr *e, struct cfdata *data)
 
 		CF_LIST_FOR_EACH(node1, e->left.sym->nb_vals, fexpr) {
 			bool first2 = true;
+			const char *val1;
 
-			if (first1) {
-				first1 = false;
-				continue;
-			}
 			e1 = node1->elem;
+			/*
+			 * The head entry is the "not set" state, which kconfig
+			 * compares as the symbol type's implicit value.
+			 */
+			val1 = first1 ? sym_nonbool_unset_val(e->left.sym) :
+					str_get(&e1->nb_val);
+			first1 = false;
+			if (!val1)
+				continue;
+
 			CF_LIST_FOR_EACH(node2, e->right.sym->nb_vals, fexpr)
 			{
-				if (first2) {
-					first2 = false;
-					continue;
-				}
+				const char *val2;
 
 				e2 = node2->elem;
-				if (!strcmp(str_get(&e1->nb_val),
-					    str_get(&e2->nb_val))) {
+				val2 = first2 ?
+					sym_nonbool_unset_val(e->right.sym) :
+					str_get(&e2->nb_val);
+				first2 = false;
+				if (!val2)
+					continue;
+
+				if (!strcmp(val1, val2)) {
 					c = pexpr_or(
 						c,
 						pexpr_and(
